@@ -1,0 +1,140 @@
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  .idcos-app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .idcos-app-header {
+      position: relative;
+      z-index: 10;
+      height: 50px;
+      box-shadow: 1px 0.1px 10px 1px rgba(55, 61, 72, 0.3);
+    }
+    .idcos-app-body {
+      flex: 1;
+      height: ~"calc(100% - 50px)";
+      position: relative;
+    }
+    .content-header{
+      height: 50px;
+      border-bottom: solid 1px #d6d6d6;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.86);
+      font-size: 18px;
+      padding: 12px 16px;
+      .header-tag {
+        border: solid 1px @color-highlight;
+        background-color: @color-highlight-light;
+        color: @color-highlight;
+        border-radius: 2px;
+        padding: 3px 6px;
+        font-size: 12px;
+        margin-left: 16px;
+        vertical-align: middle;
+      }
+      .header-btns {
+        float: right;
+        transform: translateY(-2px);
+      }
+    }
+
+    .no-border-header {
+      border-bottom: unset;
+    }
+
+    .content-body{
+      background-color: #f5f5f5;
+      padding: 16px;
+      height: 100%;
+      overflow: auto;
+    }
+
+    .idcos-content-body {
+      .ant-table thead > tr > th {
+        padding: 12px 16px;
+      }
+    }
+    .content-panel {
+      position: relative;
+      padding: 16px;
+      margin-bottom: 16px;
+      background-color: white;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      .ant-tabs-bar .ant-tabs-nav .ant-tabs-tab {
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 12px;
+      }
+    }
+
+    .panel-wrapper {
+      max-width: 848px;
+      margin: auto;
+    }
+
+    .panel-title {
+      line-height: 20px;
+      font-size: 16px;
+      color: @title-color;
+      font-weight: bold;
+      margin-bottom: 16px;
+      height: 20px;
+
+      &::before {
+        content: "";
+        display: inline-block;
+        height: 16px;
+        width: 2px;
+        background-color: @primary-color;
+        vertical-align: middle;
+        margin-right: 8px;
+        margin-bottom: 2px;
+      }
+
+      .ant-btn {
+        float: right;
+        &:not(:last-child) {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  /* FullScreen Center-Middle Container */
+  .idcos-fullscreen-center {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Card with Legend */
+  .idcos-legend-card {
+    border: 1px solid #ebebeb;
+    background: #ffffff;
+    padding: 16px 14px 0 14px;
+    margin-bottom: 16px;
+    > h2 {
+      font-size: 16px;
+      height: 16px;
+      line-height: 16px;
+      padding-left: 12px;
+      border-left: 2px solid @primary-color;
+    }
+  }
+
+  .idcos-alert-info {
+    background: #ffffff;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    position: relative;
+    border-radius: 2px;
+    border-left: 2px solid #00bcd4;
+    box-shadow: 0px 6px 14px 3px rgba(0, 0, 0, 0.02),
+      0px 3px 8px 0px rgba(0, 0, 0, 0.05), 0px 1px 3px -6px rgba(0, 0, 0, 0.08);
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "default": {
+    "api": "http://10.0.2.149",
+    "endpoints": [
+      "/catalog/v1/*",
+      "/wf/v2/*",
+      "/cmp/core/api/v1/*",
+      "/res/saas/api*",
+      "/uc/*",
+      "/rbac/*",
+      "/login*",
+      "/sso/*",
+      "/xmdb/v2/**"
+    ]
+  }
+}
