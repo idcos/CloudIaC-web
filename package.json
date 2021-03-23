@@ -1,7 +1,7 @@
 {
-  "name": "idcos-web-boilerplate",
-  "version": "0.0.2",
-  "description": "基于react-boilerplate@4.0.0",
+  "name": "cloudiac-web",
+  "version": "0.0.1",
+  "description": "cloudiac-web",
   "repository": {
     "type": "git",
     "url": "git@gitlab.idcos.com:Common/idcos-web-boilerplate.git"
