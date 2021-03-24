@@ -11,13 +11,15 @@ import App from 'containers/App';
 import LanguageProvider from 'containers/LanguageProvider';
 import { translationMessages } from './i18n';
 import './publicPath';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, notification } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'idcos-antd-theme/default/override.less';
 import 'containers/App/styles/index.less';
 moment.locale('zh-cn');
+
+import { orgsAPI } from 'services/base';
 
 const initialState = {};
 const store = configureStore(initialState, history);
@@ -68,7 +70,15 @@ if (!window.Intl) {
   render(translationMessages);
 }
 
-if (!window.__POWERED_BY_QIANKUN__) { // do sth not in qiankun 
+const fetchGlobalOrgs = async () => {
+  store.dispatch({
+    type: 'global/getOrgs',
+    payload: '1'
+  });
+};
+
+if (!window.__POWERED_BY_QIANKUN__) { // do sth not in qiankun
+  fetchGlobalOrgs();
   render(translationMessages);
 }
 
