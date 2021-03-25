@@ -10,7 +10,7 @@ module.exports = require('./webpack.base.babel')({
   mode: 'production',
   entry: {
     app: path.join(process.cwd(), 'app/app.js'),
-    testApp: path.join(process.cwd(), 'login/login.js')
+    login: path.join(process.cwd(), 'login/login.js')
   },
   output: {
     filename: 'js/[name].[chunkhash].js',
@@ -45,25 +45,8 @@ module.exports = require('./webpack.base.babel')({
       chunks: 'all',
       maxInitialRequests: 10,
       minSize: 0,
-      cacheGroups: {
-        aicons: {
-          test(module, chunks) {
-            const path = require('path');
-            return module.resource && module.resource.includes(`${path.sep}@ant-design${path.sep}icons`);
-          },
-          name: 'svgicons',
-          chunks: 'all'
-        },
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return `npm.${packageName.replace('@', '')}`;
-          }
-        }
-      }
+      cacheGroups: {},
+      name: 'vendor'
     }
   },
   plugins: [
@@ -83,7 +66,7 @@ module.exports = require('./webpack.base.babel')({
         minifyURLs: true
       },
       inject: true,
-      excludeChunks: ['testApp']
+      excludeChunks: ['login']
     }),
     new HtmlWebpackPlugin({
       template: 'login/login.html',
