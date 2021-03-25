@@ -8,7 +8,10 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = require('./webpack.base.babel')({
   mode: 'production',
-  entry: path.join(process.cwd(), 'app/app.js'),
+  entry: {
+    app: path.join(process.cwd(), 'app/app.js'),
+    testApp: path.join(process.cwd(), 'login/login.js')
+  },
   output: {
     filename: 'js/[name].[chunkhash].js',
     chunkFilename: 'js/[name].[chunkhash].chunk.js'
@@ -79,6 +82,25 @@ module.exports = require('./webpack.base.babel')({
         minifyCSS: true,
         minifyURLs: true
       },
+      inject: true,
+      excludeChunks: ['testApp']
+    }),
+    new HtmlWebpackPlugin({
+      template: 'login/login.html',
+      filename: 'login.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      },
+      excludeChunks: ['app'],
       inject: true
     }),
     new HashedModuleIdsPlugin({

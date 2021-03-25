@@ -32,13 +32,11 @@ function App({ location }) {
   const { pathname } = location;
   return (
     <div className='idcos-app'>
-      {
-        pathname.indexOf('userLogin') == -1 && <AppHeader
-          theme='dark'
-          navs={AppNav}
-          locationPathName={pathname}
-        />
-      }
+      <AppHeader
+        theme='dark'
+        navs={AppNav}
+        locationPathName={pathname}
+      />
       <RoutesList routes={routes()}/>
     </div>
   );

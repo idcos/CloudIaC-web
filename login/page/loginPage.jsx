@@ -5,7 +5,6 @@
  */
 import React, { useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
-import history from 'utils/history';
 
 import styles from './styles.less';
 
@@ -33,7 +32,7 @@ export default () => {
   }, []);
 
   const redirectToIndex = () => {
-    history.push('/');
+    window.location.pathname = '/';
   };
 
   return (

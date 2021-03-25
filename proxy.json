@@ -8,7 +8,6 @@
       "/res/saas/api*",
       "/uc/*",
       "/rbac/*",
-      "/login*",
       "/sso/*",
       "/xmdb/v2/**"
     ]

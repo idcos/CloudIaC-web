@@ -14,7 +14,7 @@ const SysStatus = (props) => {
       breadcrumb={false}
     />}
   >
-    <div className='container-inner-width whiteBg withPadding'>
+    <div className='container-inner-width'>
     </div>
   </Layout>;
 };

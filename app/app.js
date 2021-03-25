@@ -19,8 +19,6 @@ import 'idcos-antd-theme/default/override.less';
 import 'containers/App/styles/index.less';
 moment.locale('zh-cn');
 
-import { orgsAPI } from 'services/base';
-
 const initialState = {};
 const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
