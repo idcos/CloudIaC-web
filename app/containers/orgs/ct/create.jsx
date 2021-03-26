@@ -6,7 +6,7 @@ import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 
 
-const CloudTmp = (props) => {
+const CloudTmpCreate = (props) => {
   return <Layout
     extraHeader={<PageHeader
       title='创建云模板'
@@ -16,4 +16,4 @@ const CloudTmp = (props) => {
   </Layout>;
 };
 
-export default Eb_WP()(CloudTmp);
+export default Eb_WP()(CloudTmpCreate);

@@ -26,6 +26,12 @@ export default function createRoutes() {
       exact: true
     },
     {
+      path: '/:orgId/ct/detailCT/:ctId',
+      name: '云模板详情',
+      component: loadable(() => import('containers/orgs/ct/detail'), asyncLoadFallback),
+      exact: true
+    },
+    {
       path: '/:orgId/setting',
       name: '设置',
       component: loadable(() => import('containers/orgs/setting'), asyncLoadFallback),

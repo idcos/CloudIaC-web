@@ -7,3 +7,8 @@ export const orgsAPI = {
   }
 };
 
+export const ctAPI = {
+  list: (params) => {
+    return getWithArgs('/1/xxx', { ...params });
+  }
+};

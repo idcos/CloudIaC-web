@@ -1,0 +1,41 @@
+@import 'containers/App/styles/variable.less';
+
+.ct {
+  :global {
+    .searchPanel {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      .ant-radio-button-wrapper {
+        .anticon {
+          color: #DDDDDD;
+        }
+        &-checked {
+          .anticon {
+            color: @primary-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.ctDetail {
+  :global {
+    .overview {
+      display: flex;
+      align-items: start;
+      .right {
+        width: 320px;
+      }
+      .left {
+        flex: 1 0;
+        margin-right: 32px;
+        .card {
+          margin-bottom: 32px;
+        }
+      }
+    }
+  }
+}
