@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Card, List } from 'antd';
 import { Link } from "react-router-dom";
 
+import { BranchesOutlined, UserOutlined } from '@ant-design/icons';
+
 const data = [
   {
     title: 'Ant Design Title 1',
@@ -20,6 +22,27 @@ const data = [
     id: 'org4'
   }
 ];
+
+const jobInfoItems = {
+  num: {
+    text: '作业数量'
+  },
+  averageDuration: {
+    text: '平均plan作业时间'
+  },
+  averageApplyDuration: {
+    text: '平均aplly作业时间'
+  },
+  planFailedRate: {
+    text: 'plan作业失败率'
+  },
+  applyFailedRate: {
+    text: 'aplly作业失败率'
+  },
+  activeMember: {
+    text: '活动成员'
+  }
+};
 
 
 const Overview = (props) => {
@@ -52,7 +75,19 @@ const Overview = (props) => {
       </div>
     </div>
     <div className='right'>
-      <Card/>
+      <Card>
+        <div className='gitInfo'>
+          <p></p>
+          <p><BranchesOutlined/></p>
+          <p><UserOutlined/></p>
+        </div>
+        <div className='jobInfo'>
+          {Object.keys(jobInfoItems).map(i => <p className='item'>
+            <span className='label'>{jobInfoItems[i].text}</span>
+            <span className='value'>123</span>
+          </p>)}
+        </div>
+      </Card>
     </div>
   </div>;
 };

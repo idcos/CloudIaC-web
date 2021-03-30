@@ -28,6 +28,27 @@
       align-items: start;
       .right {
         width: 320px;
+        .gitInfo {
+          padding: 16px 0;
+          p {
+            line-height: 2em;
+            font-size: 16px;
+          }
+        }
+        .jobInfo {
+          border-top: 1px solid #ebebeb;
+          padding: 16px 0;
+          .item {
+            line-height: 2.5em;
+            .label {
+              font-weight: bold;
+            }
+            .value {
+              float: right;
+              word-break: break-all;
+            }
+          }
+        }
       }
       .left {
         flex: 1 0;
@@ -36,6 +57,73 @@
           margin-bottom: 32px;
         }
       }
+    }
+    .running {
+      .runningList {
+        margin-top: 16px;
+      }
+    }
+    .variable {
+      .tableWrapperForm {
+        margin-top: 16px;
+        .inlineOp {
+          .danger {
+            color: #FF4D4F;
+          }
+        }
+        .blockAdd {
+          margin-top: 16px;
+        }
+      }
+    }
+    .setting {
+      display: flex;
+      align-items: start;
+      .subNav {
+        width: 240px;
+        margin-right: 32px;
+      }
+      .rightPanel {
+        flex: 1 0;
+        .tipZone {
+          background-color: #fafafa;
+          padding: 16px;
+          margin: 16px 0;
+          border: 1px solid #EBEBEB;
+          & > p {
+            line-height: 1.5em;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.ctCreate {
+  :global {
+    .stepWrapper {
+      width: 50%;
+      margin: 0 auto 32px;
+    }
+    .hidden {
+      display: none;
+    }
+    .step1 {
+      .cardContent {
+        & > span {
+          font-size: 16px;
+          font-weight: bold;
+          color: rgba(0, 0, 0, 0.86);
+        }
+        & > a {
+          float: right;
+        }
+      }
+    }
+    .step2 {
+      width: 50%;
+      margin: 0 auto;
     }
   }
 }

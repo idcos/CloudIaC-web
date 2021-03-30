@@ -29,9 +29,9 @@ const CloudTmpDetail = (props) => {
     const PAGES = {
       overview: () => <Overview/>,
       running: () => <Running/>,
-      state: () => <Setting/>,
-      variable: () => <State/>,
-      setting: () => <Variable/>
+      state: () => <State/>,
+      variable: () => <Variable/>,
+      setting: () => <Setting/>
     };
     return PAGES[tab]();
   }, [tab]);
