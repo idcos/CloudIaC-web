@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Input, notification, Table, Card, Button } from 'antd';
 import { ctAPI } from "../../../../services/base";
 
-export default ({ stepHelper, selection, setSelection }) => {
+import moment from 'moment';
+
+export default ({ stepHelper, selection, setSelection, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [{ name: 1, id: 1 }],
+      list: [],
       total: 0
     }),
     [ query, setQuery ] = useState({
@@ -21,13 +23,16 @@ export default ({ stepHelper, selection, setSelection }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await ctAPI.list(query);
-      if (!res.isSuccess) {
+      const res = await ctAPI.listRepo({
+        ...query,
+        orgId: curOrg.id
+      });
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
       setResultMap({
-        list: res.resultObject.pageElements || [],
-        total: res.resultObject.total || 0
+        list: res.result.list || [],
+        total: res.result.total || 0
       });
       setLoading(false);
     } catch (e) {
@@ -53,9 +58,10 @@ export default ({ stepHelper, selection, setSelection }) => {
       width: '50%'
     },
     {
-      dataIndex: 'time',
+      dataIndex: 'taskUpdatedAt',
       title: '更新时间',
-      width: '50%'
+      width: '50%',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     }
   ];
 
@@ -80,6 +86,7 @@ export default ({ stepHelper, selection, setSelection }) => {
         onSearch={v => changeQuery({ name: v, pageNo: 1 })}
       />
       <Table
+        rowKey='id'
         columns={columns}
         dataSource={resultMap.list}
         loading={loading}
@@ -120,3 +127,4 @@ export default ({ stepHelper, selection, setSelection }) => {
     }
   </div>;
 };
+

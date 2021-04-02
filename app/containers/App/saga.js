@@ -2,16 +2,44 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { notification } from 'antd';
 
 import { orgsAPI } from 'services/base';
+import { getUserInfo as userInfo } from 'services/auth';
 
 function* getOrgs(action) {
   try {
     const res = yield call(orgsAPI.list, action.payload);
-    if (!res.isSuccess) {
+    if (res.code !== 200) {
       throw new Error(res.message);
     }
     yield put({
       type: 'global/set-orgs',
-      payload: res.resultObject || []
+      payload: res.result || {}
+    });
+    //url中默认存在orgId
+    const url_orgId = window.location.pathname.split('/').filter(i => i)[1];
+    if (url_orgId) {
+      yield put({
+        type: 'global/set-curOrg',
+        payload: {
+          orgId: url_orgId
+        }
+      });
+    }
+  } catch (err) {
+    notification.error({
+      message: err.message
+    });
+  }
+}
+
+function* getUserInfo(action) {
+  try {
+    const res = yield call(userInfo);
+    if (res.code !== 200) {
+      throw new Error(res.message);
+    }
+    yield put({
+      type: 'global/set-userInfo',
+      payload: res.result || {}
     });
   } catch (err) {
     notification.error({
@@ -22,4 +50,5 @@ function* getOrgs(action) {
 
 export default function* testSaga() {
   yield takeLatest('global/getOrgs', getOrgs);
+  yield takeLatest('global/getUserInfo', getUserInfo);
 }

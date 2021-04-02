@@ -6,9 +6,20 @@ import history from 'utils/history';
 import { SettingFilled, FundFilled } from '@ant-design/icons';
 import styles from './styles.less';
 
+const { Option } = Select;
 
 export default (props) => {
-  const { theme, navs, locationPathName } = props;
+  const { theme, navs, locationPathName, orgs, curOrg, dispatch, userInfo } = props;
+
+  const changeCurOrg = (orgId) => {
+    dispatch({
+      type: 'global/set-curOrg',
+      payload: {
+        orgId
+      }
+    });
+    history.push(`/org/${orgId}/ct`);
+  };
 
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'>
@@ -18,23 +29,25 @@ export default (props) => {
           className={styles.orgSwitcher}
           style={{ width: 164 }}
           placeholder='选择组织'
+          onChange={changeCurOrg}
+          value={curOrg && curOrg.guid}
         >
-
+          {orgs.map(it => <Option value={it.guid}>{it.name}</Option>)}
         </Select>
-        <Menu
-          mode='horizontal'
-          theme={theme}
-          selectedKeys={[(navs.find(it => locationPathName.indexOf(it.link) >= 0) || {}).key]}
-          className={styles.navs}
-        >
-          {navs.map(it => <Menu.Item key={it.key}><Link to={it.link}>{it.name}</Link></Menu.Item>)}
-        </Menu>
+        {
+          curOrg && <Menu
+            mode='horizontal'
+            theme={theme}
+            selectedKeys={[(navs.find(it => locationPathName.indexOf(it.link) >= 0) || {}).key]}
+            className={styles.navs}
+          >
+            {navs.map(it => <Menu.Item key={it.key}><Link to={`/org/${curOrg.guid}${it.link}`}>{it.name}</Link></Menu.Item>)}
+          </Menu>
+        }
         <div className='user'>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
-          <span onClick={() => history.push('/sys')}><SettingFilled/></span>
-          <span>
-            <span>{}-{}</span>
-          </span>
+          <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span>
+          <span>{userInfo.name || ''}</span>
         </div>
       </div>
     </div>

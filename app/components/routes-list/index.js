@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch } from 'react-router-dom';
 import PT from 'prop-types';
 
-import PrivateRoute from 'components/private-route';
+import PrivateRoute from '../private-route';
 
 class RoutesList extends React.Component {
   constructor(props) {
@@ -10,11 +10,11 @@ class RoutesList extends React.Component {
   }
 
   render() {
-    const { routes = [] } = this.props;
+    const { routes = [], routesParams } = this.props;
     return (
       <Switch>
         {routes.map((item, index) => (
-          <PrivateRoute key={index} {...item} />
+          <PrivateRoute key={index} {...item} routesParams={routesParams}/>
         ))}
       </Switch>
     );

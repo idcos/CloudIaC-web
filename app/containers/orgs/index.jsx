@@ -5,28 +5,20 @@ import { Link } from 'react-router-dom';
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
+import { connect } from "react-redux";
+import { compose } from 'redux';
 
+const Orgs = ({ orgs, dispatch }) => {
 
-const data = [
-  {
-    title: 'Ant Design Title 1',
-    id: 'org1'
-  },
-  {
-    title: 'Ant Design Title 2',
-    id: 'org2'
-  },
-  {
-    title: 'Ant Design Title 3',
-    id: 'org3'
-  },
-  {
-    title: 'Ant Design Title 4',
-    id: 'org4'
-  }
-];
+  const changeCurOrg = (orgId) => {
+    dispatch({
+      type: 'global/set-curOrg',
+      payload: {
+        orgId
+      }
+    });
+  };
 
-const Orgs = (props) => {
   return <Layout
     extraHeader={<PageHeader
       title='组织'
@@ -36,12 +28,19 @@ const Orgs = (props) => {
     <div className='container-inner-width whiteBg withPadding'>
       <List
         itemLayout='horizontal'
-        dataSource={data}
+        dataSource={orgs.list}
         renderItem={item => (
           <List.Item>
             <List.Item.Meta
-              title={<Link to={`/${item.id}/ct`}>{item.title}</Link>}
-              description='Ant Design, a design language for background applications, is refined by Ant UED Team'
+              title={<Link
+                to={`/org/${item.guid}/ct`}
+                onClick={() => {
+                  changeCurOrg(item.guid);
+                }}
+              >
+                {item.name}
+              </Link>}
+              description={item.description || '-'}
             />
           </List.Item>
         )}
@@ -51,4 +50,18 @@ const Orgs = (props) => {
 };
 
 
-export default Eb_WP()(Orgs);
+const mapStateToProps = (state) => {
+  return {
+    orgs: state.global.get('orgs').toJS()
+  };
+};
+
+const withConnect = connect(
+  mapStateToProps
+);
+const withEB = Eb_WP();
+
+export default compose(
+  withConnect,
+  withEB
+)(Orgs);

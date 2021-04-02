@@ -9,6 +9,8 @@ import Step1 from './createPages/step1';
 import Step2 from './createPages/step2';
 
 import styles from './styles.less';
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 const { Step } = Steps;
 
@@ -17,7 +19,7 @@ const steps = {
   step2: '其他信息'
 };
 
-const CloudTmpCreate = (props) => {
+const CloudTmpCreate = ({ routesParams }) => {
   const [ step, setStep ] = useState(0),
     [ selection, setSelection ] = useState({});
 
@@ -46,12 +48,14 @@ const CloudTmpCreate = (props) => {
             stepHelper={stepHelper()}
             selection={selection}
             setSelection={setSelection}
+            curOrg={routesParams.curOrg}
           />
         </div>
         <div className={`${step != 1 ? 'hidden' : ''}`}>
           <Step2
             selection={selection}
             stepHelper={stepHelper()}
+            curOrg={routesParams.curOrg}
           />
         </div>
       </div>
@@ -60,3 +64,4 @@ const CloudTmpCreate = (props) => {
 };
 
 export default Eb_WP()(CloudTmpCreate);
+

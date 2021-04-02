@@ -23,6 +23,9 @@
         .ant-select-selector {
           background-color: rgba(255,255,255, 0.16);;
           border-color: transparent;
+          & > .ant-select-selection-item {
+            color: #FFFFFF;
+          }
         }
       }
       .ant-menu-item {
@@ -43,7 +46,11 @@
          & > span {
            margin-right: 20px;
            cursor: pointer;
-           :hover {
+           &:last-child {
+             color: rgba(255,255,255, 0.86);
+             font-weight: 700;
+           }
+           &:hover {
              transition: all 300ms;
              color: #FFF;
            }

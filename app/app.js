@@ -68,15 +68,17 @@ if (!window.Intl) {
   render(translationMessages);
 }
 
-const fetchGlobalOrgs = async () => {
+const fetchGlobal = () => {
   store.dispatch({
-    type: 'global/getOrgs',
-    payload: '1'
+    type: 'global/getOrgs'
+  });
+  store.dispatch({
+    type: 'global/getUserInfo'
   });
 };
 
 if (!window.__POWERED_BY_QIANKUN__) { // do sth not in qiankun
-  fetchGlobalOrgs();
+  fetchGlobal();
   render(translationMessages);
 }
 

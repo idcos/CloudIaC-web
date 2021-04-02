@@ -1,14 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Radio, Menu, Form, Input, Button, InputNumber } from "antd";
+import { Space, Radio, Select, Form, Input, Button, InputNumber, notification } from "antd";
+
+import { ctAPI } from 'services/base';
+import history from 'utils/history';
 
 const FL = {
   labelCol: { span: 8 },
   wrapperCol: { span: 24 }
 };
+const { Option } = Select;
 
-export default ({ stepHelper, selection }) => {
-  const onFinish = (values) => {
-    console.log('Success:', values);
+export default ({ stepHelper, selection, curOrg }) => {
+  const { selectedRows } = selection;
+  const [ repoBranches, setRepoBranches ] = useState([]),
+    [ submitLoading, setSubmitLoading ] = useState(false);
+
+  useEffect(() => {
+    if (selectedRows && selectedRows[0]) {
+      fetchRepoBranch();
+    }
+  }, [selectedRows]);
+
+  const fetchRepoBranch = async () => {
+    try {
+      const res = await ctAPI.listRepoBranch({
+        repoId: selectedRows[0].id,
+        orgId: curOrg.id
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setRepoBranches(res.result || []);
+    } catch (e) {
+      console.log(e);
+      notification.error({
+        message: '获取仓库分支失败',
+        description: e.message
+      });
+    }
+  };
+
+  const onFinish = async (values) => {
+    try {
+      setSubmitLoading(true);
+      const res = await ctAPI.createCt({
+        ...values,
+        repoId: selectedRows[0].id,
+        repoAddr: selectedRows[0].http_url_to_repo,
+        orgId: curOrg.id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setSubmitLoading(false);
+      history.push(`/org/${curOrg.guid}/ct`);
+      notification.success({
+        message: '创建成功'
+      });
+    } catch (e) {
+      setSubmitLoading(false);
+      notification.error({
+        message: e.message
+      });
+    }
   };
 
   return <div className='step2'>
@@ -16,6 +70,10 @@ export default ({ stepHelper, selection }) => {
       {...FL}
       layout='vertical'
       onFinish={onFinish}
+      initialValues={{
+        timeout: 300,
+        saveState: false
+      }}
     >
       <Form.Item
         label='云模板名称'
@@ -31,10 +89,9 @@ export default ({ stepHelper, selection }) => {
       </Form.Item>
       <Form.Item
         label='描述'
-        name='des'
+        name='description'
         rules={[
           {
-            required: true,
             message: '请输入'
           }
         ]}
@@ -43,19 +100,21 @@ export default ({ stepHelper, selection }) => {
       </Form.Item>
       <Form.Item
         label='选择分支'
-        name='branch'
+        name='repoBranch'
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: '请选择'
           }
         ]}
       >
-        <Input placeholder='请输入描述' />
+        <Select placeholder='请选择分支'>
+          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
+        </Select>
       </Form.Item>
       <Form.Item
         label='保存状态'
-        name='save'
+        name='saveState'
         rules={[
           {
             required: true,
@@ -64,8 +123,8 @@ export default ({ stepHelper, selection }) => {
         ]}
       >
         <Radio.Group>
-          <Radio value='save'>不保存</Radio>
-          <Radio value='notSave'>保存</Radio>
+          <Radio value={false}>不保存</Radio>
+          <Radio value={true}>保存</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item label='运行超时' required={true}>
@@ -90,8 +149,8 @@ export default ({ stepHelper, selection }) => {
         </Space>
       </Form.Item>
       <Space>
-        <Button onClick={() => stepHelper.prev()}>上一步</Button>
-        <Button type='primary' htmlType={'submit'}>完成</Button>
+        <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
+        <Button type='primary' htmlType={'submit'} loading={submitLoading}>完成</Button>
       </Space>
     </Form>
   </div>;

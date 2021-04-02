@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Table, Radio, Input, notification } from 'antd';
-
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
@@ -31,7 +31,7 @@ const CT_STATUS_ICON = {
 };
 
 const CloudTmp = (props) => {
-  const { match } = props,
+  const { match, routesParams } = props,
     { params } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -43,13 +43,13 @@ const CloudTmp = (props) => {
       pageSize: 10,
       status: 'all'
     });
-  const tableFilterFieldName = 'status';
+  const tableFilterFieldName = 'taskStatus';
 
   const columns = [
     {
       dataIndex: 'name',
       title: '云模板名称',
-      render: (text, record) => <Link to={`/${params.orgId}/ct/detailCT/${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/org/${params.orgId}/ct/detailCT/${record.id}`}>{text}</Link>
     },
     {
       dataIndex: tableFilterFieldName,
@@ -60,16 +60,18 @@ const CloudTmp = (props) => {
       width: 150
     },
     {
-      dataIndex: '3',
+      dataIndex: 'taskGuid',
       title: '最后运行作业'
     },
     {
-      dataIndex: '4',
-      title: '仓库地址'
+      dataIndex: 'repoAddr',
+      title: '仓库地址',
+      render: (text) => <span>{routesParams.curOrg.name}/{text}</span>
     },
     {
-      dataIndex: '5',
-      title: '更新时间'
+      dataIndex: 'taskUpdatedAt',
+      title: '更新时间',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     }
   ];
 
@@ -84,20 +86,22 @@ const CloudTmp = (props) => {
       const { combinedStatus, status, ...restQuery } = query;
       const res = await ctAPI.list({
         ...restQuery,
-        status: combinedStatus || status
+        [tableFilterFieldName]: combinedStatus || status,
+        orgId: routesParams.curOrg.id
       });
-      if (res.isSuccess) {
-        setResultMap({
-          list: res.resultObject.pageElements || [],
-          total: res.resultObject.total || 0
-        });
-        setLoading(false);
+      if (res.code != 200) {
+        throw new Error(res.message);
       }
+      setResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
+      setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: '获取失败',
-        description: e + ''
+        description: e.message
       });
     }
   };
@@ -113,7 +117,7 @@ const CloudTmp = (props) => {
     extraHeader={<PageHeader
       title='云模板'
       breadcrumb={true}
-      subDes={<Button onClick={() => history.push(`/${params.orgId}/ct/createCT`)}>创建云模板</Button>}
+      subDes={<Button onClick={() => history.push(`/org/${params.orgId}/ct/createCT`)}>创建云模板</Button>}
     />}
   >
     <div className='container-inner-width'>

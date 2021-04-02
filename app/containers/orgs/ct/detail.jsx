@@ -49,7 +49,7 @@ const CloudTmpDetail = (props) => {
             <DefaultTabBar {...props}/>
           </div>;
         }}
-        activeKe={tab}
+        activeKey={tab}
         onChange={k => setTabs(k)}
       >
         {Object.keys(subNavs).map(it => <Tabs.TabPane tab={subNavs[it]} key={it}/>)}

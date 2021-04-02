@@ -1,12 +1,9 @@
-/**
- * 一个内置登录页，
- * 应该是要做多入口的。而不是在此处实现
- * 但考虑到后面又要接入uc，so...
- */
 import React, { useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, notification } from 'antd';
 
 import styles from './styles.less';
+
+import { authAPI } from "../services/auth";
 
 
 const layout = {
@@ -18,11 +15,19 @@ const tailLayout = {
 };
 
 export default () => {
-
-  const onFinish = (values) => {
-    console.log('Success:', values);
-    localStorage.accessToken = '123';
-    redirectToIndex();
+  const onFinish = async (values) => {
+    try {
+      const res = await authAPI.login(values);
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      localStorage.accessToken = res.result.token;
+      redirectToIndex();
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
   };
 
   useEffect(() => {
@@ -44,8 +49,8 @@ export default () => {
         onFinish={onFinish}
       >
         <Form.Item
-          label='用户名'
-          name='username'
+          label='邮箱'
+          name='email'
           rules={[{ required: true, message: '请输入用户名' }]}
         >
           <Input />
