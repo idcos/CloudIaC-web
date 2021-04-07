@@ -21,8 +21,8 @@ const subNavs = {
 };
 
 const CloudTmpDetail = (props) => {
-  const { match } = props,
-    { orgId, ctId } = match;
+  const { match, routesParams } = props,
+    { orgId, ctId } = match.params;
   const [ tab, setTabs ] = useState('overview');
 
   const renderByTab = useCallback(() => {
@@ -31,7 +31,7 @@ const CloudTmpDetail = (props) => {
       running: () => <Running/>,
       state: () => <State/>,
       variable: () => <Variable/>,
-      setting: () => <Setting/>
+      setting: () => <Setting curOrg={routesParams.curOrg} ctId={ctId}/>
     };
     return PAGES[tab]();
   }, [tab]);

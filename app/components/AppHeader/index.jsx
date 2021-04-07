@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Select, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import history from 'utils/history';
 import { SettingFilled, FundFilled } from '@ant-design/icons';
 import styles from './styles.less';
+import { connect } from "react-redux";
 
 const { Option } = Select;
+const KEY = 'global';
 
-export default (props) => {
+const AppHeader = (props) => {
   const { theme, navs, locationPathName, orgs, curOrg, dispatch, userInfo } = props;
 
   const changeCurOrg = (orgId) => {
@@ -21,6 +23,17 @@ export default (props) => {
     history.push(`/org/${orgId}/ct`);
   };
 
+  useEffect(() => {
+    if (locationPathName.indexOf('org') == -1) {
+      dispatch({
+        type: 'global/set-curOrg',
+        payload: {
+          orgId: null
+        }
+      });
+    }
+  }, [locationPathName]);
+
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
@@ -32,7 +45,7 @@ export default (props) => {
           onChange={changeCurOrg}
           value={curOrg && curOrg.guid}
         >
-          {orgs.map(it => <Option value={it.guid}>{it.name}</Option>)}
+          {(orgs.list || []).map(it => <Option value={it.guid}>{it.name}</Option>)}
         </Select>
         {
           curOrg && <Menu
@@ -53,3 +66,12 @@ export default (props) => {
     </div>
   </div>;
 };
+
+
+export default connect((state) => {
+  return {
+    orgs: state[KEY].get('orgs').toJS(),
+    curOrg: state[KEY].get('curOrg'),
+    userInfo: state[KEY].get('userInfo').toJS()
+  };
+})(AppHeader);

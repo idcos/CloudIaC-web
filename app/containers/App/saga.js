@@ -15,8 +15,9 @@ function* getOrgs(action) {
       payload: res.result || {}
     });
     //url中默认存在orgId
-    const url_orgId = window.location.pathname.split('/').filter(i => i)[1];
-    if (url_orgId) {
+    const { pathname } = window.location;
+    const url_orgId = pathname.split('/').filter(i => i)[1];
+    if (pathname.indexOf('/org') == 0 && url_orgId) {
       yield put({
         type: 'global/set-curOrg',
         payload: {

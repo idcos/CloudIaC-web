@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { Card, Radio, Menu, Form, Input, Button, InputNumber, Alert } from "antd";
+import { Card, Radio, Menu, Form, Input, Button, InputNumber, Alert, notification, Space } from "antd";
+
+import { ctAPI } from 'services/base';
 
 const subNavs = {
   basic: '基本信息',
@@ -12,15 +14,58 @@ const FL = {
   wrapperCol: { span: 10 }
 };
 
-const Variable = (props) => {
+const Setting = ({ curOrg, ctId }) => {
   const [ panel, setPanel ] = useState('basic');
+  const [ submitLoading, setSubmitLoading ] = useState(false);
+
+  const onFinish = async (values) => {
+    try {
+      setSubmitLoading(true);
+      const res = await ctAPI.edit({
+        ...values,
+        orgId: curOrg.id,
+        id: ctId - 0
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setSubmitLoading(false);
+      notification.success({
+        message: '操作成功'
+      });
+    } catch (e) {
+      setSubmitLoading(false);
+      notification.error({
+        message: e.message
+      });
+    }
+  };
+
+  const delCT = async () => {
+    try {
+      const res = await ctAPI.delCT({
+        orgId: curOrg.id,
+        id: ctId - 0
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
       basic: <>
         <Form.Item
           label='云模板ID'
-          name='ctId'
+          name='guid'
           rules={[
             {
               required: true,
@@ -28,11 +73,11 @@ const Variable = (props) => {
             }
           ]}
         >
-          <Input placeholder='请输入云模板ID' />
+          <Input placeholder='请输入云模板ID' disabled={true}/>
         </Form.Item>
         <Form.Item
           label='云模板名称'
-          name='ctName'
+          name='name'
           rules={[
             {
               required: true,
@@ -44,7 +89,7 @@ const Variable = (props) => {
         </Form.Item>
         <Form.Item
           label='保存状态'
-          name='save'
+          name='saveState'
           rules={[
             {
               required: true,
@@ -53,13 +98,13 @@ const Variable = (props) => {
           ]}
         >
           <Radio.Group>
-            <Radio value='save'>不保存</Radio>
-            <Radio value='notSave'>保存</Radio>
+            <Radio value={false}>不保存</Radio>
+            <Radio value={true}>保存</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item
           label='描述'
-          name='des'
+          name='description'
           rules={[
             {
               message: '请输入'
@@ -69,7 +114,7 @@ const Variable = (props) => {
           <Input.TextArea placeholder='请输入' />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>更新信息</Button>
+          <Button type='primary' htmlType='submit' loading={submitLoading}>更新信息</Button>
         </Form.Item>
       </>,
       repo: <>
@@ -83,7 +128,7 @@ const Variable = (props) => {
             }
           ]}
         >
-          <Input placeholder='请输入仓库地址' />
+          <Input placeholder='请输入仓库地址' disabled={true}/>
         </Form.Item>
         <Form.Item
           label='仓库分支'
@@ -95,19 +140,30 @@ const Variable = (props) => {
             }
           ]}
         >
-          <Input placeholder='请输入仓库分支' />
+          <Input placeholder='请输入仓库分支' disabled={true}/>
         </Form.Item>
-        <Form.Item
-          label='运行超时'
-          name='timeout'
-          rules={[
-            {
-              required: true,
-              message: '请输入'
-            }
-          ]}
-        >
-          <InputNumber /> 秒
+        <Form.Item label='运行超时' required={true}>
+          <Space>
+            <Form.Item
+              name='timeout'
+              rules={[
+                {
+                  required: true,
+                  message: '请输入'
+                }
+              ]}
+              style={{ display: 'inline-block' }}
+              noStyle={true}
+            >
+              <InputNumber min={0}/>
+            </Form.Item>
+            <Form.Item
+              style={{ display: 'inline-block' }}
+              noStyle={true}
+            >
+              秒
+            </Form.Item>
+          </Space>
         </Form.Item>
         <Form.Item
           label='其他信息'
@@ -119,7 +175,7 @@ const Variable = (props) => {
           </div>
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>更新信息</Button>
+          <Button type='primary' htmlType='submit' loading={submitLoading}>更新信息</Button>
         </Form.Item>
       </>,
       del: <>
@@ -130,7 +186,7 @@ const Variable = (props) => {
           closable={true}
         />
         <br/>
-        <Button type='primary' danger={true}>删除云模板</Button>
+        <Button type='primary' danger={true} onClick={delCT}>删除云模板</Button>
       </>
     };
     return PAGES[panel];
@@ -152,6 +208,11 @@ const Variable = (props) => {
         <Form
           {...FL}
           layout='vertical'
+          onFinish={onFinish}
+          initialValues={{
+            saveState: false,
+            guid: curOrg.guid
+          }}
         >
           {renderByPanel()}
         </Form>
@@ -160,4 +221,4 @@ const Variable = (props) => {
   </div>;
 };
 
-export default Variable;
+export default Setting;

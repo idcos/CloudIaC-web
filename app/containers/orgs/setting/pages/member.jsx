@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from "react-redux";
-import OrgModal from './components/orgModal';
+import React, { useEffect, useState } from 'react';
+import { Card, Button, Table, notification, Space, Divider, Popconfirm, Modal, Form, Input } from 'antd';
+import { orgsAPI } from 'services/base';
+import moment from 'moment';
 
-import { Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
-import { orgsAPI } from "../../../services/base";
+import { ORG_USER } from 'constants/types';
 
-const Orgs = ({ title, dispatch }) => {
+import OpModal from './components/memberModal';
+
+export default ({ title, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
+    [ curRecord, setCurRecord ] = useState(null),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -25,8 +28,9 @@ const Orgs = ({ title, dispatch }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await orgsAPI.list({
-        ...query
+      const res = await orgsAPI.listUser({
+        ...query,
+        orgId: curOrg.id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -52,22 +56,16 @@ const Orgs = ({ title, dispatch }) => {
     });
   };
 
-  const resfreshGlobalOrg = () => {
-    dispatch({
-      type: 'global/getOrgs',
-      payload: {
-        status: 'enable'
-      }
-    });
-  };
-
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        changeStatus: (param) => orgsAPI.changeStatus(param),
-        add: (param) => orgsAPI.create(param)
+        edit: (param) => orgsAPI.editUser(param),
+        add: (param) => orgsAPI.addUser(param),
+        resetUserPwd: ({ orgId, id }) => orgsAPI.resetUserPwd({ orgId, id }),
+        removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
       };
       const res = await method[doWhat]({
+        orgId: curOrg.id,
         ...payload
       });
       if (res.code != 200) {
@@ -77,7 +75,6 @@ const Orgs = ({ title, dispatch }) => {
         message: '操作成功'
       });
       fetchList();
-      resfreshGlobalOrg();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -90,6 +87,7 @@ const Orgs = ({ title, dispatch }) => {
 
   const toggleVisible = () => {
     if (visible) {
+      setCurRecord(null);
       setOpt(null);
     }
     setVisible(!visible);
@@ -98,53 +96,57 @@ const Orgs = ({ title, dispatch }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '组织名称',
+      title: '成员',
       render: (_, record) => <div className='tableRender'>
         <h2>{record.name}</h2>
-        <p>{record.guid}</p>
+        <p>{record.email}</p>
       </div>
     },
     {
-      dataIndex: 'status',
-      title: '状态',
-      render: (text) => <div className='tableRender'>
-        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
-      </div>
+      dataIndex: 'role',
+      title: '权限',
+      render: (text) => ORG_USER.role[text]
     },
     {
-      dataIndex: 'description',
-      title: '描述'
+      dataIndex: 'createdAt',
+      title: '加入时间',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
-          {
-            record.status == 'disable' ? <Popconfirm
-              title='确定要启用该资源账号？'
-              onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'enable' } })}
-            >
-              <a>启用</a>
-            </Popconfirm> : <Popconfirm
-              title='确定要禁用该资源账号？'
-              onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'disable' } })}
-            >
-              <a className='danger-text'>禁用</a>
-            </Popconfirm>
-          }
+          <a onClick={() => {
+            setOpt('edit');
+            setCurRecord(record);
+            toggleVisible();
+          }}
+          >编辑</a>
+          <Popconfirm
+            title='确定要重置密码？'
+            onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
+          >
+            <a>重置密码</a>
+          </Popconfirm>
+          <Popconfirm
+            title='确定要移除改用户？'
+            onConfirm={() => operation({ doWhat: 'removeUser', payload: { id: record.id } })}
+          >
+            <a>移除</a>
+          </Popconfirm>
         </Space>;
       }
     }
   ];
 
-  return <>
+  return <div className='member'>
     <Card
       title={title}
       extra={<Button onClick={() => {
         setOpt('add');
         toggleVisible();
       }}
-      >创建组织</Button>}
+      >添加成员</Button>}
     >
       <Table
         columns={columns}
@@ -167,14 +169,15 @@ const Orgs = ({ title, dispatch }) => {
       />
     </Card>
     {
-      visible && <OrgModal
+      visible && <OpModal
         visible={visible}
         toggleVisible={toggleVisible}
+        curOrg={curOrg}
         opt={opt}
+        curRecord={curRecord}
         operation={operation}
       />
     }
-  </>;
+  </div>;
 };
 
-export default connect()(Orgs);

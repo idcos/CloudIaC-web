@@ -5,7 +5,6 @@
   text-overflow: ellipsis;
 }
 
-
 .container-inner-width {
   width: @ctw;
   margin: 0 auto;
@@ -14,5 +13,35 @@
   }
   &.withPadding {
     padding: 16px;
+  }
+}
+
+.danger-text {
+  color: @color-error;
+  &:hover {
+    color: @color-error;
+  }
+}
+
+.tableRender {
+  h2 {
+    color: @subtitle-color;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  p {
+    color: @descriptions-color;
+  }
+  .status-tip {
+    &::before {
+      content: '●';
+      margin-right: 8px;
+    }
+    &.enabled::before {
+      color: @color-success;
+    }
+    &.disabled::before {
+      color: @color-error;
+    }
   }
 }

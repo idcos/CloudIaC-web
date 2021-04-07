@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { Table, Button, Menu, Alert } from 'antd';
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback, useRef } from 'react';
+import { Menu } from 'antd';
+import history from 'utils/history';
 
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
@@ -14,20 +14,22 @@ import Params from './pages/params';
 import styles from './styles.less';
 
 const subNavs = {
-  apiToken: 'API Token|Token',
+  apiToken: 'API Token',
   params: '参数设置',
-  org: '组织设置|组织'
+  org: '组织设置'
 };
 
-const Sys = (props) => {
+const Sys = () => {
   const [ panel, setPanel ] = useState('apiToken');
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      apiToken: <ApiToken/>,
-      params: <Params/>,
-      org: <Orgs/>
+      apiToken: (props) => <ApiToken {...props}/>,
+      params: (props) => <Params {...props}/>,
+      org: (props) => <Orgs {...props}/>
     };
-    return PAGES[panel];
+    return PAGES[panel]({
+      title: subNavs[panel]
+    });
   }, [panel]);
   return <Layout
     extraHeader={<PageHeader
@@ -41,35 +43,18 @@ const Sys = (props) => {
           mode='inline'
           className='subNav'
           defaultSelectedKeys={[panel]}
-          onClick={({ item, key }) => setPanel(key)}
+          onClick={({ item, key }) => {
+            setPanel(key);
+          }}
         >
-          {Object.keys(subNavs).map(it => <Menu.Item key={it}>{subNavs[it].split('|')[0]}</Menu.Item>)}
+          {Object.keys(subNavs).map(it => <Menu.Item key={it}>{subNavs[it]}</Menu.Item>)}
         </Menu>
         <div className='rightPanel'>
-          <div className='title'>
-            <h2>
-              {subNavs[panel].split('|')[0]}
-              {
-                /\|(.+)/.test(subNavs[panel]) && <Button>创建{RegExp.$1}</Button>
-              }
-            </h2>
-          </div>
-          <div className='gap'>
-            {
-              panel == 'apiToken' && <Alert
-                message='Token用于API访问你的全部数据，请注意保密，如有泄漏，请禁用/删除等操作'
-                type='warning'
-                showIcon={true}
-                closable={true}
-              />
-            }
-          </div>
           {renderByPanel()}
         </div>
       </div>
     </div>
   </Layout>;
 };
-
 
 export default Eb_WP()(Sys);

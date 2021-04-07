@@ -13,9 +13,5 @@ const OrgWrapper = ({ routes, curOrg }) => {
 };
 
 export default connect(
-  (state) => {
-    return {
-      curOrg: state.global.get('curOrg')
-    };
-  }
+  (state) => ({ curOrg: state.global.get('curOrg') })
 )(OrgWrapper);

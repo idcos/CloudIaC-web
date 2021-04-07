@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from "react-redux";
-import OrgModal from './components/orgModal';
-
 import { Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
-import { orgsAPI } from "../../../services/base";
+import { orgsAPI } from 'services/base';
 
-const Orgs = ({ title, dispatch }) => {
+import OpModal from './components/resAccountModal';
+import moment from 'moment';
+
+export default ({ title, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
+    [ curRecord, setCurRecord ] = useState(null),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -22,11 +23,13 @@ const Orgs = ({ title, dispatch }) => {
     fetchList();
   }, [query]);
 
+
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await orgsAPI.list({
-        ...query
+      const res = await orgsAPI.resAccountList({
+        ...query,
+        orgId: curOrg.id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -52,22 +55,79 @@ const Orgs = ({ title, dispatch }) => {
     });
   };
 
-  const resfreshGlobalOrg = () => {
-    dispatch({
-      type: 'global/getOrgs',
-      payload: {
-        status: 'enable'
-      }
-    });
+  const toggleVisible = () => {
+    if (visible) {
+      setOpt(null);
+      setCurRecord(null);
+    }
+    setVisible(!visible);
   };
+
+  const columns = [
+    {
+      dataIndex: 'name',
+      title: '成员'
+    },
+    {
+      dataIndex: 'status',
+      title: '状态',
+      render: (text) => <div className='tableRender'>
+        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
+      </div>
+    },
+    {
+      dataIndex: 'ctServiceIds',
+      title: 'CT Runner数量',
+      render: (_, record) => <span>{record.ctServiceIds.length}个</span>
+    },
+    {
+      dataIndex: 'createdAt',
+      title: '创建时间',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
+    {
+      title: '操作',
+      render: (_, record) => {
+        return <Space split={<Divider type='vertical' />}>
+          <a onClick={() => {
+            setOpt('edit');
+            setCurRecord(record);
+            toggleVisible();
+          }}
+          >编辑</a>
+          {
+            record.status == 'disable' ? <Popconfirm
+              title='确定要启用该资源账号？'
+              onConfirm={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}
+            >
+              <a>启用</a>
+            </Popconfirm> : <Popconfirm
+              title='确定要禁用该资源账号？'
+              onConfirm={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'disable' } })}
+            >
+              <a className='danger-text'>禁用</a>
+            </Popconfirm>
+          }
+          <Popconfirm
+            title='确定删除该资源账号？'
+            onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
+          >
+            <a className='danger-text'>删除</a>
+          </Popconfirm>
+        </Space>;
+      }
+    }
+  ];
 
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        changeStatus: (param) => orgsAPI.changeStatus(param),
-        add: (param) => orgsAPI.create(param)
+        add: (param) => orgsAPI.resAccountCreate(param),
+        del: ({ orgId, id }) => orgsAPI.resAccountDel({ orgId, id }),
+        edit: (param) => orgsAPI.resAccountUpdate(param)
       };
       const res = await method[doWhat]({
+        orgId: curOrg.id,
         ...payload
       });
       if (res.code != 200) {
@@ -77,7 +137,6 @@ const Orgs = ({ title, dispatch }) => {
         message: '操作成功'
       });
       fetchList();
-      resfreshGlobalOrg();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -88,63 +147,14 @@ const Orgs = ({ title, dispatch }) => {
     }
   };
 
-  const toggleVisible = () => {
-    if (visible) {
-      setOpt(null);
-    }
-    setVisible(!visible);
-  };
-
-  const columns = [
-    {
-      dataIndex: 'name',
-      title: '组织名称',
-      render: (_, record) => <div className='tableRender'>
-        <h2>{record.name}</h2>
-        <p>{record.guid}</p>
-      </div>
-    },
-    {
-      dataIndex: 'status',
-      title: '状态',
-      render: (text) => <div className='tableRender'>
-        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
-      </div>
-    },
-    {
-      dataIndex: 'description',
-      title: '描述'
-    },
-    {
-      title: '操作',
-      render: (_, record) => {
-        return <Space split={<Divider type='vertical' />}>
-          {
-            record.status == 'disable' ? <Popconfirm
-              title='确定要启用该资源账号？'
-              onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'enable' } })}
-            >
-              <a>启用</a>
-            </Popconfirm> : <Popconfirm
-              title='确定要禁用该资源账号？'
-              onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'disable' } })}
-            >
-              <a className='danger-text'>禁用</a>
-            </Popconfirm>
-          }
-        </Space>;
-      }
-    }
-  ];
-
-  return <>
+  return <div>
     <Card
       title={title}
       extra={<Button onClick={() => {
         setOpt('add');
         toggleVisible();
       }}
-      >创建组织</Button>}
+      >创建账号</Button>}
     >
       <Table
         columns={columns}
@@ -167,14 +177,16 @@ const Orgs = ({ title, dispatch }) => {
       />
     </Card>
     {
-      visible && <OrgModal
+      visible && <OpModal
         visible={visible}
-        toggleVisible={toggleVisible}
         opt={opt}
+        toggleVisible={toggleVisible}
+        curOrg={curOrg}
+        reload={fetchList}
         operation={operation}
+        curRecord={curRecord}
       />
     }
-  </>;
+  </div>;
 };
 
-export default connect()(Orgs);

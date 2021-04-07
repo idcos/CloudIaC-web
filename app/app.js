@@ -70,7 +70,10 @@ if (!window.Intl) {
 
 const fetchGlobal = () => {
   store.dispatch({
-    type: 'global/getOrgs'
+    type: 'global/getOrgs',
+    payload: {
+      status: 'enable'
+    }
   });
   store.dispatch({
     type: 'global/getUserInfo'
