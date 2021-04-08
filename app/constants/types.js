@@ -8,3 +8,10 @@ export const ORG_USER = {
     failure: '失败'
   }
 };
+
+
+export const SYS = {
+  status: {
+    passing: '1'
+  }
+};

@@ -115,7 +115,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                   valuePropName='checked'
                   initialValue={false}
                 >
-                  <Checkbox>密文</Checkbox>
+                  <Checkbox disabled={form.getFieldValue([ 'params', name, 'isSecret' ])}>密文</Checkbox>
                 </Form.Item>;
                 return <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='center'>
                   <Form.Item
