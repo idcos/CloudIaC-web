@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
 
-import { sysAPI } from "../../../services/base";
+import { sysAPI } from 'services/base';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 

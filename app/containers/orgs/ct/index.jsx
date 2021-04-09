@@ -12,21 +12,21 @@ import { AppstoreFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircle
 
 import styles from './styles.less';
 
-import { ctAPI } from "../../../services/base";
+import { ctAPI } from 'services/base';
 
 const CT_STATUS = {
   all: '全部',
-  success: '成功',
-  error: '错误',
-  queue: '排队',
+  complete: '成功',
+  failed: '错误',
+  pending: '排队',
   running: '运行中'
 };
 
 const CT_STATUS_ICON = {
   all: <AppstoreFilled/>,
-  success: <CheckCircleFilled/>,
-  error: <CloseCircleFilled/>,
-  queue: <ExclamationCircleFilled/>,
+  complete: <CheckCircleFilled/>,
+  failed: <CloseCircleFilled/>,
+  pending: <ExclamationCircleFilled/>,
   running: <ClockCircleFilled/>
 };
 

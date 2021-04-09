@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import OrgModal from './components/orgModal';
 
 import { Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
-import { orgsAPI } from "../../../services/base";
+import { orgsAPI } from 'services/base';
 
 const Orgs = ({ title, dispatch }) => {
   const [ loading, setLoading ] = useState(false),

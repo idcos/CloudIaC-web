@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, notification, Table, Card, Button } from 'antd';
-import { ctAPI } from "../../../../services/base";
+import { ctAPI } from 'services/base';
 
 import moment from 'moment';
 

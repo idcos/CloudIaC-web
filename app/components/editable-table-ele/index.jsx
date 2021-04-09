@@ -4,14 +4,24 @@ export const EditableCell = ({
   editing,
   dataIndex,
   title,
-  inputType,
+  inputType = 'input',
+  inputRender,
   inputFieldProps,
   record,
   index,
   children,
   ...restProps
 }) => {
-  const inputNode = inputType === 'number' ? <InputNumber min={0} {...inputFieldProps} /> : <Input {...inputFieldProps} />;
+  const insetInputType = {
+    number: <InputNumber min={0} {...inputFieldProps} />,
+    input: <Input {...inputFieldProps} />,
+    other: <Form.Item
+      noStyle={true}
+      shouldUpdate={true}
+    >
+      {inputRender}
+    </Form.Item>
+  };
   return (
     <td {...restProps}>
       {editing ? (
@@ -27,7 +37,7 @@ export const EditableCell = ({
             }
           ]}
         >
-          {inputNode}
+          {insetInputType[inputType]}
         </Form.Item>
       ) : (
         children
@@ -46,6 +56,7 @@ export const columnsOverride = (_columns = [], isEditing, inputFieldProps) => {
       onCell: record => ({
         record,
         inputType: col.inputType,
+        inputRender: col.inputRender,
         inputFieldProps: col.inputFieldProps,
         dataIndex: col.dataIndex,
         title: col.title,

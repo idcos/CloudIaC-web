@@ -124,12 +124,20 @@ export const orgsAPI = {
 };
 
 export const ctAPI = {
-  list: ({ orgId, pageNo, pageSize, name, taskStatus }) => {
+  list: ({ orgId, pageNo, pageSize, name, status, taskStatus }) => {
     return getWithArgs('/api/v1/template/search', {
       taskStatus,
+      status,
       q: name,
       pageSize,
       currentPage: pageNo
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  detail: ({ orgId, id }) => {
+    return getWithArgs('/api/v1/template/detail', {
+      id
     }, {
       'IaC-Org-Id': orgId
     });

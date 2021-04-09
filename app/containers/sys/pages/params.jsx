@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Card, Form, Button, InputNumber, Select, Space, notification } from 'antd';
 
-import { sysAPI } from "../../../services/base";
+import { sysAPI } from 'services/base';
 
 const layout = {
   labelCol: {

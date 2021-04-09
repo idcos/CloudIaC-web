@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { Button, Tabs } from 'antd';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Button, notification, Tabs } from 'antd';
 
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
@@ -12,8 +12,10 @@ import Setting from './detailPages/setting';
 import State from './detailPages/state';
 import Variable from './detailPages/variable';
 
+import { ctAPI } from 'services/base';
+
 const subNavs = {
-  overview: '概述',
+  //overview: '概述',
   running: '运行',
   state: '状态',
   variable: '变量',
@@ -22,26 +24,54 @@ const subNavs = {
 
 const CloudTmpDetail = (props) => {
   const { match, routesParams } = props,
-    { orgId, ctId } = match.params;
-  const [ tab, setTabs ] = useState('overview');
+    { ctId } = match.params;
+  const [ tab, setTabs ] = useState('running'),
+    [ detailInfo, setDetailInfo ] = useState({});
+
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
+  const fetchInfo = async () => {
+    try {
+      const res = await ctAPI.detail({
+        id: ctId,
+        orgId: routesParams.curOrg.id
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setDetailInfo(res.result || {});
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   const renderByTab = useCallback(() => {
     const PAGES = {
-      overview: () => <Overview/>,
-      running: () => <Running/>,
-      state: () => <State/>,
-      variable: () => <Variable/>,
-      setting: () => <Setting curOrg={routesParams.curOrg} ctId={ctId}/>
+      overview: (props) => <Overview/>,
+      running: (props) => <Running/>,
+      state: (props) => <State/>,
+      variable: (props) => <Variable {...props}/>,
+      setting: (props) => <Setting {...props}/>
     };
-    return PAGES[tab]();
-  }, [tab]);
+    return PAGES[tab]({
+      curOrg: routesParams.curOrg,
+      ctId,
+      detailInfo,
+      reload: fetchInfo
+    });
+  }, [ tab, detailInfo ]);
 
   return <Layout
     extraHeader={<PageHeader
-      title='云模板详情'
+      title={detailInfo.name || '-'}
       breadcrumb={true}
-      des={'123'}
-      subDes={'123,123,123'}
+      des={detailInfo.description}
+      //subDes={'123,123,123'}
       renderFooter={() => <Tabs
         tabBarExtraContent={<Button type='primary'>新建作业</Button>}
         renderTabBar={(props, DefaultTabBar) => {

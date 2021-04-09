@@ -1,23 +1,14 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { EditableCell, columnsOverride } from 'components/editable-table-ele';
 
-import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col } from 'antd';
+import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox } from 'antd';
+import { ctAPI } from 'services/base';
+import uuid from 'utils/uuid.js';
 
-const MOCK_DATA = [{
-  key: '1',
-  value: '1',
-  des: '123'
-}];
+const pseudoID = 'a-new-id';
 
-const FL = {
-  labelCol: { span: 0 },
-  wrapperCol: { span: 24 }
-};
-
-const pseudoKEY = 'a-new-key';
-
-const Variable = (props) => {
-  const genColumns = ({ editingKey, cancel, edit, save, del }) => {
+const Variable = ({ detailInfo, curOrg, reload }) => {
+  const genColumns = ({ editingKey, cancel, edit, save, del, form }) => {
     return [
       {
         title: 'key',
@@ -27,18 +18,40 @@ const Variable = (props) => {
       {
         title: 'value',
         dataIndex: 'value',
-        editable: true
+        editable: true,
+        inputType: 'other',
+        inputRender: ({ getFieldValue, setFieldsValue }) => {
+          const isSecret = <Form.Item
+            name={'isSecret'}
+            noStyle={true}
+            valuePropName='checked'
+            initialValue={false}
+          >
+            <Checkbox
+              onChange={() => setFieldsValue({ value: undefined })}
+            >
+              密文
+            </Checkbox>
+          </Form.Item>;
+          return <Form.Item
+            name='value'
+            noStyle={true}
+          >
+            {getFieldValue('isSecret') ? <Input.Password addonAfter={isSecret} visibilityToggle={false}/> : <Input addonAfter={isSecret}/>}
+          </Form.Item>;
+        },
+        render: (text, record) => record.isSecret ? '***' : text
       },
       {
         title: '描述信息',
-        dataIndex: 'des',
+        dataIndex: 'description',
         editable: true
       },
       {
         title: '操作',
         width: 100,
         render: (_, record) => {
-          const editable = editingKey == record.key;
+          const editable = editingKey == record.id;
           return editable ? (
             <span>
               <a type='link' onClick={() => save(record)}>保存</a>
@@ -55,25 +68,51 @@ const Variable = (props) => {
     ];
   };
 
+  const api = async ({ doWhat, varfile, ...payload }, cb) => {
+    try {
+      const method = {
+        del: ({ id }) => (detailInfo.vars || []).filter(it => it.id !== id),
+        edit: ({ id, ...payload }) => (detailInfo.vars || []).map(it => (it.id == id ? { id, ...payload } : it)),
+        add: (param) => [ ...detailInfo.vars || [], param ]
+      };
+
+      const reqPayload = varfile ? { varfile } : { vars: method[doWhat](payload) };
+      const res = await ctAPI.edit({
+        orgId: curOrg.id,
+        id: detailInfo.id,
+        ...reqPayload
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      reload();
+      cb && cb();
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
+
   return <div className='variable'>
     <Card
-      title='全局参数'
+      title='Terraform变量'
     >
       <Alert
-        message='全局参数会在保存后自动加TF_VARS前缀'
+        message='Terraform变量参数会在保存后自动加TF_VAR_前缀'
         type='info'
         showIcon={true}
         closable={true}
       />
       <FormWithInTable
         genColumns={genColumns}
-        addBtnTxt={'添加全局变量'}
-        apis={{
-          list: '',
-          add: '',
-          del: '',
-          edit: ''
-        }}
+        addBtnTxt={'添加Terraform变量'}
+        dataSource={(detailInfo.vars || []).filter(it => it.type == 'global')}
+        dataType='global'
+        api={api}
       />
     </Card>
     <Card
@@ -83,12 +122,9 @@ const Variable = (props) => {
       <FormWithInTable
         genColumns={genColumns}
         addBtnTxt={'添加环境变量'}
-        apis={{
-          list: '',
-          add: '',
-          del: '',
-          edit: ''
-        }}
+        dataSource={(detailInfo.vars || []).filter(it => it.type == 'env')}
+        dataType='env'
+        api={api}
       />
     </Card>
     <Card
@@ -97,13 +133,16 @@ const Variable = (props) => {
     >
       <Form
         onFinish={(values) => {
-          console.log('Success:', values);
+          api({ varfile: values.varfile });
+        }}
+        initialValues={{
+          varfile: detailInfo.varfile
         }}
       >
         <Row gutter={8}>
           <Col span={20}>
             <Form.Item
-              name='tfvarsPath'
+              name='varfile'
               rules={[
                 {
                   required: true,
@@ -124,88 +163,61 @@ const Variable = (props) => {
 };
 
 
-const FormWithInTable = ({ genColumns, addBtnTxt, apis }) => {
+const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType }) => {
+  const [ editingKey, setEditingKey ] = useState(null),
+    [ resultList, setResultList ] = useState(dataSource);
 
-  const [ loading, setLoading ] = useState(false),
-    [ editingKey, setEditingKey ] = useState(null),
-    [ resultMap, setResultMap ] = useState({
-      list: MOCK_DATA,
-      total: 0
-    });
+  useEffect(() => {
+    setResultList(dataSource);
+  }, [dataSource]);
 
   const [form] = Form.useForm();
   const isEditing = useCallback((record) => {
-    return record.key === editingKey;
+    return record.id === editingKey;
   }, [editingKey]);
 
   const edit = (record) => {
     form.setFieldsValue({
       ...record
     });
-    setEditingKey(record.key);
+    setEditingKey(record.id);
   };
 
   const cancel = (record) => {
-    if (record.key == pseudoKEY) {
-      setResultMap({
-        ...resultMap,
-        list: resultMap.list.slice(0, resultMap.list.length - 1)
-      });
+    if (record.id == pseudoID) {
+      setResultList(resultList.slice(0, resultList.length - 1));
     }
     setEditingKey(null);
   };
 
   const add = () => {
     form.resetFields();
-    setResultMap({
-      ...resultMap,
-      list: [ ... resultMap.list, { key: pseudoKEY }]
-    });
-
-    setEditingKey(pseudoKEY);
+    setResultList([
+      ...resultList,
+      { id: pseudoID }
+    ]);
+    setEditingKey(pseudoID);
   };
 
   const save = async (record) => {
     const values = await form.validateFields();
-    const doWhat = record.key == pseudoKEY ? apis.add : apis.edit;
-    const res = await doWhat({
-      id: record.key,
-      ...values
+    const doWhat = record.id == pseudoID ? 'add' : 'edit';
+    await api({
+      id: record.id == pseudoID ? uuid() : record.id,
+      ...values,
+      doWhat,
+      type: dataType
+    }, () => {
+      setEditingKey(null);
     });
-    fetchList();
-    setEditingKey(null);
   };
 
-  const del = async (record) => {
-    //删除
-    const res = await apis.del(record.key);
-    fetchList();
-    setEditingKey(null);
-  };
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const res = await apis.list();
-      if (!res.isSuccess) {
-        throw new Error(res.message);
-      }
-      setResultMap({
-        list: res.list || [],
-        total: res.meta.total || 0
-      });
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: e.message
-      });
+  const del = (record) => api(
+    { id: record.id, doWhat: 'del' },
+    () => {
+      setEditingKey(null);
     }
-  };
-
-  useEffect(() => {
-    fetchList();
-  }, []);
+  );
 
   return <Form
     form={form}
@@ -223,11 +235,11 @@ const FormWithInTable = ({ genColumns, addBtnTxt, apis }) => {
           edit,
           editingKey,
           del,
-          save
+          save,
+          form
         }), isEditing)
       }
-      dataSource={resultMap.list}
-      loading={loading}
+      dataSource={resultList}
       pagination={false}
     />
     <Button

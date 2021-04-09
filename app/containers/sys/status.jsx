@@ -119,4 +119,9 @@ const AlertMsg = ({ type, message }) => {
 };
 
 
+AlertMsg.defaultProps = {
+  type: 'success',
+  message: '-'
+};
+
 export default Eb_WP()(SysStatus);

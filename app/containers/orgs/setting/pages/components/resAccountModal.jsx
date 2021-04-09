@@ -115,7 +115,17 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                   valuePropName='checked'
                   initialValue={false}
                 >
-                  <Checkbox disabled={form.getFieldValue([ 'params', name, 'isSecret' ])}>密文</Checkbox>
+                  <Checkbox
+                    onChange={() => {
+                      let rawData = form.getFieldValue('params').slice();
+                      rawData[name].value = undefined;
+                      form.setFieldsValue({
+                        params: rawData
+                      });
+                    }}
+                  >
+                    密文
+                  </Checkbox>
                 </Form.Item>;
                 return <Space key={key} style={{ display: 'flex', marginBottom: 8 }} align='center'>
                   <Form.Item

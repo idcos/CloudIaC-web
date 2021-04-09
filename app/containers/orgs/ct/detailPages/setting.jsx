@@ -14,7 +14,7 @@ const FL = {
   wrapperCol: { span: 10 }
 };
 
-const Setting = ({ curOrg, ctId }) => {
+const Setting = ({ curOrg, ctId, detailInfo, reload }) => {
   const [ panel, setPanel ] = useState('basic');
   const [ submitLoading, setSubmitLoading ] = useState(false);
 
@@ -33,6 +33,7 @@ const Setting = ({ curOrg, ctId }) => {
       notification.success({
         message: '操作成功'
       });
+      reload();
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
@@ -120,7 +121,7 @@ const Setting = ({ curOrg, ctId }) => {
       repo: <>
         <Form.Item
           label='仓库地址'
-          name='link'
+          name='repoAddr'
           rules={[
             {
               required: true,
@@ -132,7 +133,7 @@ const Setting = ({ curOrg, ctId }) => {
         </Form.Item>
         <Form.Item
           label='仓库分支'
-          name='branch'
+          name='repoBranch'
           rules={[
             {
               required: true,
@@ -211,7 +212,7 @@ const Setting = ({ curOrg, ctId }) => {
           onFinish={onFinish}
           initialValues={{
             saveState: false,
-            guid: curOrg.guid
+            ...detailInfo
           }}
         >
           {renderByPanel()}
