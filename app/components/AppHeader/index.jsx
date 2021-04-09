@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 
-import { Select, Menu } from 'antd';
+import { Select, Menu, Dropdown } from 'antd';
 import { Link } from 'react-router-dom';
 import history from 'utils/history';
 import { SettingFilled, FundFilled } from '@ant-design/icons';
 import styles from './styles.less';
 import { connect } from "react-redux";
+import { logout } from 'services/logout';
 
 const { Option } = Select;
 const KEY = 'global';
@@ -60,7 +61,29 @@ const AppHeader = (props) => {
         <div className='user'>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
           <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span>
-          <span>{userInfo.name || ''}</span>
+          <Dropdown
+            overlay={<Menu
+              onClick={({ key }) => {
+                switch (key) {
+                  case 'setting':
+                  case 'pwd':
+                    console.log(key);
+                    break;
+                  case 'logout':
+                    logout();
+                    break;
+                  default:
+                    return;
+                }
+              }}
+            >
+              <Menu.Item key='setting'>用户设置</Menu.Item>
+              <Menu.Item key='pwd'>修改密码</Menu.Item>
+              <Menu.Item danger={true} key='logout'>退出登录</Menu.Item>
+            </Menu>}
+          >
+            <span>{userInfo.name || ''}</span>
+          </Dropdown>
         </div>
       </div>
     </div>

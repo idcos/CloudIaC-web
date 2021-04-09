@@ -49,6 +49,21 @@ const SysStatus = (props) => {
     }
   };
 
+  const statusTextCls = (status) => {
+    let cls = '';
+    switch (status) {
+      case 'failed':
+        cls = 'danger';
+        break;
+      case 'pending':
+        cls = 'normal';
+        break;
+      default:
+        return;
+    }
+    return cls;
+  };
+
   return <Layout
     extraHeader={<PageHeader
       title='系统状态'
@@ -77,12 +92,12 @@ const SysStatus = (props) => {
                           description={
                             <>
                               <p className='tags'>{item.tags.map(tag => <Tag>{tag}</Tag>)}</p>
-                              <AlertMsg message={item.outpu} type={item.status}/>
+                              <AlertMsg message={item.output} type={item.status}/>
                             </>
                           }
                         />
-                        <p className={`status-tip ${item.status}`}>
-                          {statusIcons[item.status]} <span>{SYS.status[item.status]}</span>
+                        <p className='tableRender'>
+                          <span className={`status-text ${statusTextCls(item.status)}`}>{statusIcons[item.status]} <span>{SYS.status[item.status]}</span></span>
                         </p>
                       </List.Item>
                     )}

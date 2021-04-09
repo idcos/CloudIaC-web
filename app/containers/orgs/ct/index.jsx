@@ -45,6 +45,21 @@ const CloudTmp = (props) => {
     });
   const tableFilterFieldName = 'taskStatus';
 
+  const statusTextCls = (status) => {
+    let cls = '';
+    switch (status) {
+      case 'failed':
+        cls = 'danger';
+        break;
+      case 'pending':
+        cls = 'normal';
+        break;
+      default:
+        return;
+    }
+    return cls;
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -57,7 +72,10 @@ const CloudTmp = (props) => {
       filters: query.status == 'all' && Object.keys(CT_STATUS)
         .filter(it => it !== 'all')
         .map(it => ({ text: CT_STATUS[it], value: it })),
-      width: 150
+      width: 150,
+      render: (text) => <div className='tableRender'>
+        <span className={`status-text ${statusTextCls(text)}`}>{CT_STATUS_ICON[text]} {CT_STATUS[text]}</span>
+      </div>
     },
     {
       dataIndex: 'taskGuid',

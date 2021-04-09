@@ -178,6 +178,20 @@ export const ctAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  listTask: ({ orgId, templateId, name, status, pageSize, pageNo }) => {
+    return getWithArgs('/api/v1/task/search', {
+      templateId, name, status, pageSize, currentPage: pageNo
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  createTask: ({ orgId, name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType }) => {
+    return post('/api/v1/task/create', {
+      name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType
+    }, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
