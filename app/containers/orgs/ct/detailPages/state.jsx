@@ -5,6 +5,7 @@ import Coder from 'components/coder';
 import { CT } from 'constants/types';
 
 import { ctAPI } from 'services/base';
+import { timeUtils } from 'utils/time';
 
 
 const data = [
@@ -58,7 +59,7 @@ const State = ({ curOrg, detailInfo }) => {
               />
               <div className='list-content'>
                 <span className={`status-text`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
-                <p>{item.updatedAt && moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}</p>
+                <p>{timeUtils.format(item.updatedAt)}</p>
               </div>
             </List.Item>
           )}

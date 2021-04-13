@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { notification } from 'antd';
 
 import { orgsAPI } from 'services/base';
-import { getUserInfo as userInfo } from 'services/auth';
+import { userAPI } from 'services/auth';
 
 function* getOrgs(action) {
   try {
@@ -34,7 +34,7 @@ function* getOrgs(action) {
 
 function* getUserInfo(action) {
   try {
-    const res = yield call(userInfo);
+    const res = yield call(userAPI.info);
     if (res.code !== 200) {
       throw new Error(res.message);
     }
@@ -49,7 +49,30 @@ function* getUserInfo(action) {
   }
 }
 
+function* updateUserInfo({ payload, cb }) {
+  try {
+    const res = yield call(userAPI.update, payload);
+    if (res.code !== 200) {
+      throw new Error(res.message);
+    }
+    notification.success({
+      message: '操作成功'
+    });
+    yield put({
+      type: 'global/set-userInfo',
+      payload: res.result || {}
+    });
+    cb && cb();
+  } catch (err) {
+    cb && cb(err);
+    notification.error({
+      message: err.message
+    });
+  }
+}
+
 export default function* testSaga() {
   yield takeLatest('global/getOrgs', getOrgs);
   yield takeLatest('global/getUserInfo', getUserInfo);
+  yield takeLatest('global/updateUserInfo', updateUserInfo);
 }

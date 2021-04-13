@@ -18,7 +18,7 @@ const statusColor = (status) => {
       color = 'green';
       break;
     default:
-      return;
+      break;
   }
   return color;
 };
@@ -76,10 +76,14 @@ const items = [
 
 export default ({ curOrg, curTask }) => {
   const [ taskInfo, setTaskInfo ] = useState({}),
+    [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false);
+
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchInfo();
+    fetchComments();
   }, []);
 
   const fetchInfo = async () => {
@@ -103,9 +107,29 @@ export default ({ curOrg, curTask }) => {
     }
   };
 
-  const onFinish = async (values) => {
+  const fetchComments = async () => {
     try {
       const res = await ctAPI.taskComment({
+        orgId: curOrg.id,
+        taskId: curTask
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setComments((res.result || []).list);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  const onFinish = async (values) => {
+    try {
+      const res = await ctAPI.createTaskComment({
+        orgId: curOrg.id,
+        taskId: curTask,
         ...values
       });
       if (res.code !== 200) {
@@ -114,6 +138,8 @@ export default ({ curOrg, curTask }) => {
       notification.success({
         message: '操作成功'
       });
+      form.resetFields();
+      fetchComments();
     } catch (e) {
       notification.error({
         message: e.message
@@ -150,7 +176,9 @@ export default ({ curOrg, curTask }) => {
         </Panel>
       </Collapse>
 
-      <Collapse>
+      <Collapse
+        className='collapse-panel'
+      >
         <Panel header={
           <h2>评论</h2>
         }
@@ -158,12 +186,12 @@ export default ({ curOrg, curTask }) => {
           <List
             loading={loading}
             itemLayout='horizontal'
-            dataSource={[]}
+            dataSource={comments}
             renderItem={item => (
               <List.Item>
                 <List.Item.Meta
-                  title={<h2>---</h2>}
-                  description={'--'}
+                  title={<h2 className='title'>{item.creator}<span className='subTitle'>{timeUtils.format(item.createdAt)}</span></h2>}
+                  description={<p>{item.comment}</p>}
                 />
               </List.Item>
             )}
@@ -171,10 +199,11 @@ export default ({ curOrg, curTask }) => {
           <Form
             layout='vertical'
             onFinish={onFinish}
+            form={form}
           >
             <Form.Item
               label='描述'
-              name='name'
+              name='comment'
               rules={[
                 {
                   message: '请输入'
@@ -186,7 +215,7 @@ export default ({ curOrg, curTask }) => {
             <Form.Item
               shouldUpdate={true}
             >
-              {({ getFieldValue }) => <Button type='primary' disabled={!getFieldValue('name')}>发表评论</Button>}
+              {({ getFieldValue }) => <Button type='primary' htmlType='submit' disabled={!getFieldValue('comment')}>发表评论</Button>}
             </Form.Item>
           </Form>
         </Panel>

@@ -59,7 +59,7 @@ const SysStatus = (props) => {
         cls = 'normal';
         break;
       default:
-        return;
+        break;
     }
     return cls;
   };

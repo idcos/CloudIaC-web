@@ -6,6 +6,21 @@ import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
 import DetailContext from '../DetailContext';
 
+const statusTextCls = (status) => {
+  let cls = '';
+  switch (status) {
+    case 'failed':
+      cls = 'danger';
+      break;
+    case 'pending':
+      cls = 'normal';
+      break;
+    default:
+      break;
+  }
+  return cls;
+};
+
 const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -93,7 +108,7 @@ const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
                   }
                 />
                 <div className='list-content'>
-                  <span className={`status-text`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                  <span className={`status-text ${statusTextCls(item.status)}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
                   <p>{timeUtils.format(item.endAt)}</p>
                 </div>
               </List.Item>

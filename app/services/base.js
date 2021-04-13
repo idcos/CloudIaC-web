@@ -207,8 +207,19 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  taskComment: () => {
-    return post('/xx/xxx/x');
+  taskComment: ({ orgId, taskId }) => {
+    return getWithArgs('/api/v1/taskComment/search', {
+      taskId
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  createTaskComment: ({ orgId, taskId, comment }) => {
+    return post('/api/v1/taskComment/create', {
+      taskId, comment
+    }, {
+      'IaC-Org-Id': orgId
+    });
   },
   repoReadme: ({ orgId, repoId, branch }) => {
     return getWithArgs('/api/v1/gitlab/getReadme', {
@@ -218,7 +229,7 @@ export const ctAPI = {
     });
   },
   stateFile: ({ orgId, filePath }) => {
-    return getWithArgs('/api/v1/consul_kv/search', {
+    return getWithArgs('/api/v1/consulKv/search', {
       key: filePath
     }, {
       'IaC-Org-Id': orgId
@@ -247,7 +258,7 @@ export const sysAPI = {
     });
   },
   listCTRunner: () => {
-    return get('/api/v1/runner_list/search');
+    return get('/api/v1/runnerList/search');
   },
   getParams: () => {
     return get('/api/v1/system/search');

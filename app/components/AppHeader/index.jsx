@@ -65,9 +65,14 @@ const AppHeader = (props) => {
             overlay={<Menu
               onClick={({ key }) => {
                 switch (key) {
-                  case 'setting':
+                  case 'basic':
                   case 'pwd':
-                    console.log(key);
+                    history.push({
+                      pathname: `/user/setting`,
+                      state: {
+                        panel: key
+                      }
+                    });
                     break;
                   case 'logout':
                     logout();
@@ -77,7 +82,7 @@ const AppHeader = (props) => {
                 }
               }}
             >
-              <Menu.Item key='setting'>用户设置</Menu.Item>
+              <Menu.Item key='basic'>用户设置</Menu.Item>
               <Menu.Item key='pwd'>修改密码</Menu.Item>
               <Menu.Item danger={true} key='logout'>退出登录</Menu.Item>
             </Menu>}

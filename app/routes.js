@@ -57,6 +57,12 @@ export default function createRoutes() {
       exact: true
     },
     {
+      path: '/user/setting',
+      name: '用户设置',
+      component: loadable(() => import('containers/user'), asyncLoadFallback),
+      exact: true
+    },
+    {
       path: '*',
       name: 'NotFoundPage',
       component: loadable(() => import('containers/NotFoundPage'), asyncLoadFallback)
