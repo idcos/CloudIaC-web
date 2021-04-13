@@ -23,6 +23,20 @@
 
 .ctDetail {
   :global {
+    .List {
+      &.gap {
+        margin-top: 16px;
+      }
+      .list-title {
+        cursor: pointer;
+        &:hover {
+          color: @primary-color;
+        }
+      }
+      .list-content {
+        text-align: right;
+      }
+    }
     .overview {
       display: flex;
       align-items: start;
@@ -56,19 +70,13 @@
       .left {
         flex: 1 0;
         margin-right: 32px;
+        max-width: ~'calc(100% - 320px)';
         .card {
           margin-bottom: 32px;
         }
       }
     }
-    .running {
-      .runningList {
-        margin-top: 16px;
-        .list-content {
-          text-align: right;
-        }
-      }
-    }
+    .running {}
     .variable {
       .tableWrapperForm {
         margin-top: 16px;

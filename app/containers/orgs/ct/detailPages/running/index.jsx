@@ -82,7 +82,7 @@ const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
       <Radio.Button value='running'>当前运行</Radio.Button>
       <Radio.Button value='all'>全部运行</Radio.Button>
     </Radio.Group>
-    <div className='runningList'>
+    <div className='List gap'>
       <Card>
         <div className='tableRender'>
           <List
@@ -92,12 +92,14 @@ const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
             renderItem={item => (
               <List.Item>
                 <List.Item.Meta
-                  title={<h2 onClick={() => {
-                    setCurTask(item.id);
-                    setTabs('task');
-                  }}
+                  title={<h2
+                    className='list-title'
+                    onClick={() => {
+                      setCurTask(item.id);
+                      setTabs('task');
+                    }}
                   >
-                    <a>{item.creator || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}</a>
+                    {item.creator || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}
                   </h2>}
                   description={
                     <Space split={<Divider type='vertical' />}>

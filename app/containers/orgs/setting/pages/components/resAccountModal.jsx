@@ -35,7 +35,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
 
   const fetchCTRunner = async () => {
     try {
-      const res = await sysAPI.listCTRunner();
+      const res = await sysAPI.listCTRunner({ orgId: curOrg.id });
       if (res.code !== 200) {
         throw new Error(res.message);
       }

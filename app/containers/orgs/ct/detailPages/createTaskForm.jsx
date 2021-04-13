@@ -21,7 +21,7 @@ export default ({ closePopover, taskType, orgId, ctDetailInfo }) => {
 
   const fetchCTRunner = async () => {
     try {
-      const res = await sysAPI.listCTRunner();
+      const res = await sysAPI.listCTRunner({ orgId });
       if (res.code !== 200) {
         throw new Error(res.message);
       }

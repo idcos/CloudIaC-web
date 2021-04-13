@@ -39,7 +39,7 @@ export default ({ visible, toggleVisible, curOrg, operation, opt }) => {
     >
       <Form.Item
         label='组织名称'
-        name='email'
+        name='name'
         rules={[
           {
             required: true,
@@ -51,7 +51,7 @@ export default ({ visible, toggleVisible, curOrg, operation, opt }) => {
       </Form.Item>
       <Form.Item
         label='组织描述'
-        name='name'
+        name='description'
         rules={[
           {
             required: true,

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, Divider, Input } from 'antd';
+import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, Input } from 'antd';
 
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
 import { timeUtils } from 'utils/time';
+import { useEventSource } from 'utils/hooks';
+import Coder from 'components/coder';
 
 const { Panel } = Collapse;
 const { Item } = Descriptions;
@@ -77,14 +79,22 @@ const items = [
 export default ({ curOrg, curTask }) => {
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
-    [ loading, setLoading ] = useState(false);
+    [ loading, setLoading ] = useState(false),
+    [ taskLog, setTaskLog ] = useState('');
 
   const [form] = Form.useForm();
+  const [ evtSource, evtSourceInit ] = useEventSource();
 
   useEffect(() => {
     fetchInfo();
     fetchComments();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      evtSource && evtSource.close();
+    };
+  }, [evtSource]);
 
   const fetchInfo = async () => {
     try {
@@ -96,6 +106,15 @@ export default ({ curOrg, curTask }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      evtSourceInit(
+        {
+          onmessage: (data) => setTaskLog(prevLog => prevLog ? `${prevLog}\n${data}` : data)
+        },
+        {
+          url: `/api/v1/taskLog/sse?logPath=${res.result.backendInfo.log_file}`,
+          options: { withCredentials: true }
+        }
+      );
       setTaskInfo(res.result || {});
       setLoading(false);
     } catch (e) {
@@ -172,7 +191,7 @@ export default ({ curOrg, curTask }) => {
           header={<h2>作业内容</h2>}
           key={'1'}
         >
-
+          <Coder value={taskLog} onChange={() => ''}/>
         </Panel>
       </Collapse>
 

@@ -207,6 +207,18 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  latestTask: ({ orgId, templateId }) => {
+    return getWithArgs('/api/v1/task/last', {
+      templateId
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  pollingTask: ({ template_uuid, task_id, container_id, offset }) => {
+    return post('/api/task/status', {
+      template_uuid, task_id, container_id, offset
+    });
+  },
   taskComment: ({ orgId, taskId }) => {
     return getWithArgs('/api/v1/taskComment/search', {
       taskId
@@ -257,8 +269,10 @@ export const sysAPI = {
       id
     });
   },
-  listCTRunner: () => {
-    return get('/api/v1/runnerList/search');
+  listCTRunner: ({ orgId }) => {
+    return get('/api/v1/runnerList/search', {
+      'IaC-Org-Id': orgId
+    });
   },
   getParams: () => {
     return get('/api/v1/system/search');
