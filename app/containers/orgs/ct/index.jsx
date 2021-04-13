@@ -7,28 +7,10 @@ import moment from 'moment';
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
-
-import { AppstoreFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, ClockCircleFilled } from '@ant-design/icons';
-
 import styles from './styles.less';
 
 import { ctAPI } from 'services/base';
-
-const CT_STATUS = {
-  all: '全部',
-  complete: '成功',
-  failed: '错误',
-  pending: '排队',
-  running: '运行中'
-};
-
-const CT_STATUS_ICON = {
-  all: <AppstoreFilled/>,
-  complete: <CheckCircleFilled/>,
-  failed: <CloseCircleFilled/>,
-  pending: <ExclamationCircleFilled/>,
-  running: <ClockCircleFilled/>
-};
+import { CT } from 'constants/types';
 
 const CloudTmp = (props) => {
   const { match, routesParams } = props,
@@ -69,12 +51,12 @@ const CloudTmp = (props) => {
     {
       dataIndex: tableFilterFieldName,
       title: '最后运行状态',
-      filters: query.status == 'all' && Object.keys(CT_STATUS)
+      filters: query.status == 'all' && Object.keys(CT.taskStatus)
         .filter(it => it !== 'all')
-        .map(it => ({ text: CT_STATUS[it], value: it })),
+        .map(it => ({ text: CT.taskStatus[it], value: it })),
       width: 150,
       render: (text) => <div className='tableRender'>
-        <span className={`status-text ${statusTextCls(text)}`}>{CT_STATUS_ICON[text]} {CT_STATUS[text]}</span>
+        <span className={`status-text ${statusTextCls(text)}`}>{CT.taskStatusIcon[text]} {CT.taskStatus[text]}</span>
       </div>
     },
     {
@@ -83,8 +65,7 @@ const CloudTmp = (props) => {
     },
     {
       dataIndex: 'repoAddr',
-      title: '仓库地址',
-      render: (text) => <span>{routesParams.curOrg.name}/{text}</span>
+      title: '仓库地址'
     },
     {
       dataIndex: 'taskUpdatedAt',
@@ -151,7 +132,7 @@ const CloudTmp = (props) => {
             }
             value={query.status}
           >
-            {Object.keys(CT_STATUS).map(it => <Radio.Button value={it}>{CT_STATUS_ICON[it]} {CT_STATUS[it]}</Radio.Button>)}
+            {Object.keys(CT.taskStatus).map(it => <Radio.Button value={it}>{CT.taskStatusIcon[it]} {CT.taskStatus[it]}</Radio.Button>)}
           </Radio.Group>
           <Input.Search
             placeholder='请输入云模板名称搜索'

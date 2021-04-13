@@ -142,6 +142,13 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  overview: ({ orgId, id }) => {
+    return getWithArgs('/api/v1/template/overview', {
+      id
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
   listRepo: ({ orgId, pageNo, pageSize, name }) => {
     return getWithArgs('/api/v1/gitlab/listRepos', {
       q: name,
@@ -189,6 +196,30 @@ export const ctAPI = {
   createTask: ({ orgId, name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType }) => {
     return post('/api/v1/task/create', {
       name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  detailTask: ({ orgId, taskId }) => {
+    return getWithArgs('/api/v1/task/detail', {
+      taskId
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  taskComment: () => {
+    return post('/xx/xxx/x');
+  },
+  repoReadme: ({ orgId, repoId, branch }) => {
+    return getWithArgs('/api/v1/gitlab/getReadme', {
+      repoId, branch
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  stateFile: ({ orgId, filePath }) => {
+    return getWithArgs('/api/v1/consul_kv/search', {
+      key: filePath
     }, {
       'IaC-Org-Id': orgId
     });

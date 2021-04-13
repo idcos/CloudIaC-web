@@ -1,5 +1,10 @@
-import React from 'react';
-import { Card, List, Button } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, Divider, List, notification, Space } from 'antd';
+import moment from 'moment';
+import Coder from 'components/coder';
+import { CT } from 'constants/types';
+
+import { ctAPI } from 'services/base';
 
 
 const data = [
@@ -9,27 +14,59 @@ const data = [
   }
 ];
 
-const State = (props) => {
+const State = ({ curOrg, detailInfo }) => {
+  const [ stateFileStr, setStateFileStr ] = useState('');
+
+  useEffect(() => {
+    fetchCode();
+  }, []);
+
+  const fetchCode = async () => {
+    try {
+      const res = await ctAPI.stateFile({
+        orgId: curOrg.id,
+        filePath: `${curOrg.guid}/${detailInfo.guid}.tfstate`
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setStateFileStr(res.result || '');
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
+
   return <div className='state'>
     <Card>
-      <List
-        itemLayout='horizontal'
-        dataSource={data}
-        renderItem={item => (
-          <List.Item
-            actions={[<Button>下载</Button>]}
-          >
-            <List.Item.Meta
-              title={<h2>{item.title}</h2>}
-              description='Ant Design, a design language for background applications, is refined by Ant UED Team'
-            />
-            <div>Content</div>
-          </List.Item>
-        )}
-      />
+      <div className='tableRender'>
+        <List
+          itemLayout='horizontal'
+          dataSource={data}
+          renderItem={item => (
+            <List.Item>
+              <List.Item.Meta
+                title={<h2>{item.name || '-'}{item.commitId}</h2>}
+                description={
+                  <Space split={<Divider type='vertical' />}>
+                    <span>{item.guid}</span>
+                    <span>{CT.taskType[item.taskType]}</span>
+                    <span>{item.ctServiceId}</span>
+                  </Space>
+                }
+              />
+              <div className='list-content'>
+                <span className={`status-text`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                <p>{item.updatedAt && moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss')}</p>
+              </div>
+            </List.Item>
+          )}
+        />
+      </div>
     </Card>
     <Card style={{ marginTop: 16 }}>
-
+      <Coder value={stateFileStr} onChange={() => ''}/>
     </Card>
   </div>;
 };

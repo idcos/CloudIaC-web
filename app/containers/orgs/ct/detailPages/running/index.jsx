@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Card, List, notification, Radio } from 'antd';
+import { Card, Divider, List, notification, Radio, Space } from 'antd';
+import { timeUtils } from 'utils/time';
 
 import { ctAPI } from 'services/base';
+import { CT } from 'constants/types';
 import DetailContext from '../DetailContext';
 
-const Running = ({ curOrg, detailInfo, ctId }) => {
+const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -67,34 +69,51 @@ const Running = ({ curOrg, detailInfo, ctId }) => {
     </Radio.Group>
     <div className='runningList'>
       <Card>
-        <List
-          loading={loading}
-          itemLayout='horizontal'
-          dataSource={resultMap.list}
-          renderItem={item => (
-            <List.Item>
-              <List.Item.Meta
-                title={<h2>{item.name}</h2>}
-                description='Ant Design, a design language for background applications, is refined by Ant UED Team'
-              />
-              <div>Content</div>
-            </List.Item>
-          )}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
-            onChange: (page, pageSize) => {
-              changeQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
-          }}
-        />
+        <div className='tableRender'>
+          <List
+            loading={loading}
+            itemLayout='horizontal'
+            dataSource={resultMap.list}
+            renderItem={item => (
+              <List.Item>
+                <List.Item.Meta
+                  title={<h2 onClick={() => {
+                    setCurTask(item.id);
+                    setTabs('task');
+                  }}
+                  >
+                    <a>{item.creator || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}</a>
+                  </h2>}
+                  description={
+                    <Space split={<Divider type='vertical' />}>
+                      <span>{item.guid}</span>
+                      <span>{CT.taskType[item.taskType]}</span>
+                      <span>{item.ctServiceId}</span>
+                    </Space>
+                  }
+                />
+                <div className='list-content'>
+                  <span className={`status-text`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                  <p>{timeUtils.format(item.endAt)}</p>
+                </div>
+              </List.Item>
+            )}
+            pagination={{
+              current: query.pageNo,
+              pageSize: query.pageSize,
+              total: resultMap.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total) => `共${total}条`,
+              onChange: (page, pageSize) => {
+                changeQuery({
+                  pageNo: page,
+                  pageSize
+                });
+              }
+            }}
+          />
+        </div>
       </Card>
     </div>
   </div>;

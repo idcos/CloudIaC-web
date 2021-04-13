@@ -12,10 +12,12 @@ import Setting from './detailPages/setting';
 import State from './detailPages/state';
 import Variable from './detailPages/variable';
 import CreateTaskForm from './detailPages/createTaskForm';
+import Task from './detailPages/running/task';
 
 import { DownOutlined } from '@ant-design/icons';
 
 import { ctAPI } from 'services/base';
+import { CT } from 'constants/types';
 
 import DetailContext from './detailPages/DetailContext';
 
@@ -34,7 +36,8 @@ const CloudTmpDetail = (props) => {
     [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),
     [ refreshTimeStamp, setRefreshTimeStamp ] = useState(new Date() - 0),
-    [ detailInfo, setDetailInfo ] = useState({});
+    [ detailInfo, setDetailInfo ] = useState({}),
+    [ curTask, setCurTask ] = useState(null);
 
   useEffect(() => {
     fetchInfo();
@@ -42,15 +45,26 @@ const CloudTmpDetail = (props) => {
 
   const fetchInfo = async () => {
     try {
-      const res = await ctAPI.detail({
+      const resList = [ ctAPI.detail, ctAPI.overview ].map(async api => await api({
         id: ctId,
         orgId: routesParams.curOrg.id
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
+      }));
+      let info = [];
+      for (let resItem of resList) {
+        const res = await resItem;
+        if (res.code != 200) {
+          throw new Error(res.message);
+        }
+        info.push(res.result || {});
       }
-      setDetailInfo(res.result || {});
+      setDetailInfo({
+        ...info[0] || {},
+        overviewInfo: {
+          ...info[1]
+        }
+      });
     } catch (e) {
+      console.log(e);
       notification.error({
         message: '获取失败',
         description: e.message
@@ -67,16 +81,20 @@ const CloudTmpDetail = (props) => {
 
   const renderByTab = useCallback(() => {
     const PAGES = {
-      overview: (props) => <Overview/>,
+      overview: ({ curOrg, detailInfo, setTabs }) => <Overview curOrg={curOrg} detailInfo={detailInfo} setTabs={setTabs}/>,
       running: (props) => <Running {...props}/>,
-      state: (props) => <State/>,
+      state: (props) => <State {...props}/>,
       variable: (props) => <Variable {...props}/>,
-      setting: (props) => <Setting {...props}/>
+      setting: (props) => <Setting {...props}/>,
+      task: (props) => <Task {...props}/>
     };
     return PAGES[tab]({
       curOrg: routesParams.curOrg,
       ctId,
       detailInfo,
+      setTabs,
+      setCurTask,
+      curTask,
       reload: fetchInfo
     });
   }, [ tab, detailInfo ]);
@@ -99,8 +117,7 @@ const CloudTmpDetail = (props) => {
               <Menu
                 onClick={({ key }) => toggleVisible({ taskType: key, visible: true })}
               >
-                <Menu.Item key='plan'>新建plan作业</Menu.Item>
-                <Menu.Item key='apply'>新建apply作业</Menu.Item>
+                {Object.keys(CT.taskType).map(it => <Menu.Item key={it}>新建{CT.taskType[it]}</Menu.Item>)}
               </Menu>
             }
           >
@@ -129,7 +146,7 @@ const CloudTmpDetail = (props) => {
           activeKey={tab}
           onChange={k => setTabs(k)}
         >
-          {Object.keys(subNavs).map(it => <Tabs.TabPane tab={subNavs[it]} key={it}/>)}
+          {Object.keys(subNavs).map(it => <Tabs.TabPane tab={subNavs[it]} key={it} disabled={it == 'state' && !detailInfo.saveState}/>)}
         </Tabs>}
       />}
     >

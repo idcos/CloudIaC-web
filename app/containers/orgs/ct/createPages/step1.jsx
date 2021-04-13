@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Input, notification, Table, Card, Button } from 'antd';
 import { ctAPI } from 'services/base';
 
+import MarkdownParser from 'components/coder/markdown-parser';
+
 import moment from 'moment';
 
 export default ({ stepHelper, selection, setSelection, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
+    [ codeStr, setCodeStr ] = useState(''),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -44,6 +47,25 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
     }
   };
 
+  const fetchReadme = async ({ repoId }) => {
+    try {
+      const res = await ctAPI.repoReadme({
+        repoId,
+        orgId: curOrg.id,
+        branch: 'master'
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      const { content = '' } = res.result || {};
+      setCodeStr(content);
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
+
   const changeQuery = (payload) => {
     setQuery({
       ...query,
@@ -72,6 +94,9 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
       setSelection({
         selectedRowKeys,
         selectedRows
+      });
+      fetchReadme({
+        repoId: selectedRowKeys[0]
       });
     }
   };
@@ -121,6 +146,9 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
           title={'README.md'}
           style={{ marginBottom: 16 }}
         >
+          <MarkdownParser
+            value={codeStr}
+          />
         </Card>
         <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
       </> : null
