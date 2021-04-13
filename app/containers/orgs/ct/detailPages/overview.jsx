@@ -4,6 +4,9 @@ import { Card, List, Space, Divider, notification } from 'antd';
 import MarkdownParser from 'components/coder/markdown-parser';
 
 import { ctAPI } from 'services/base';
+import { CT } from 'constants/types';
+import { timeUtils } from 'utils/time';
+
 import { BranchesOutlined, UserOutlined, GitlabFilled } from '@ant-design/icons';
 
 const jobInfoItems = {
@@ -45,7 +48,20 @@ const jobInfoItems = {
     getValue: (overviewInfo) => <span>{(overviewInfo.activeCreatorName || []).join('、')}</span>
   }
 };
-
+const statusTextCls = (status) => {
+  let cls = '';
+  switch (status) {
+    case 'failed':
+      cls = 'danger';
+      break;
+    case 'pending':
+      cls = 'normal';
+      break;
+    default:
+      break;
+  }
+  return cls;
+};
 
 const Overview = ({ curOrg, detailInfo, setTabs }) => {
   const { overviewInfo = {}, repoId, repoBranch } = detailInfo;
@@ -78,25 +94,39 @@ const Overview = ({ curOrg, detailInfo, setTabs }) => {
 
   return <div className='overview'>
     <div className='left'>
-      <div className='card'>
-        <Card
-          title='最新运行'
-          extra={<a onClick={() => setTabs('running')}>全部运行</a>}
-        >
-          <List
-            itemLayout='horizontal'
-            dataSource={overviewInfo.task || []}
-            renderItem={item => (
-              <List.Item>
-                <List.Item.Meta
-                  title={<h2>{item.creatorName} {item.createAt}</h2>}
-                  description='Ant Design, a design language for background applications, is refined by Ant UED Team'
-                />
-                <div>Content</div>
-              </List.Item>
-            )}
-          />
-        </Card>
+      <div className='List gap'>
+        <div className='card'>
+          <Card
+            title='最新运行'
+            extra={<a onClick={() => setTabs('running')}>全部运行</a>}
+          >
+            <div className='tableRender'>
+              <List
+                itemLayout='horizontal'
+                dataSource={overviewInfo.task || []}
+                renderItem={item => (
+                  <List.Item>
+                    <List.Item.Meta
+                      title={<h2>
+                        {item.creatorName || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}
+                      </h2>}
+                      description={
+                        <Space split={<Divider type='vertical' />}>
+                          <span>{item.guid}</span>
+                          <span>{CT.taskType[item.taskType]}</span>
+                        </Space>
+                      }
+                    />
+                    <div className='list-content'>
+                      <span className={`status-text ${statusTextCls(item.status)}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                      <p>{timeUtils.format(item.endAt)}</p>
+                    </div>
+                  </List.Item>
+                )}
+              />
+            </div>
+          </Card>
+        </div>
       </div>
       <div className='card'>
         <Card
