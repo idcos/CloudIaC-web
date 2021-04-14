@@ -14,7 +14,7 @@ export const ORG_USER = {
 
 export const SYS = {
   status: {
-    passing: '1'
+    passing: '正常'
   }
 };
 

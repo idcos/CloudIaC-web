@@ -86,7 +86,7 @@ const ApiToken = ({ title }) => {
       width: 100
     },
     {
-      dataIndex: 'role',
+      dataIndex: 'status',
       title: '状态',
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>

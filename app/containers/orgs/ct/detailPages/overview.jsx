@@ -94,7 +94,7 @@ const Overview = ({ curOrg, detailInfo, setTabs }) => {
 
   return <div className='overview'>
     <div className='left'>
-      <div className='List gap'>
+      <div className='List'>
         <div className='card'>
           <Card
             title='最新运行'
