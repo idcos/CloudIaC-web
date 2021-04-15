@@ -79,6 +79,15 @@
     .running {}
     .variable {
       .tableWrapperForm {
+        .editable-table {
+          //避免formItem提示信息导致错位
+          tr[class*="ant-"] {
+            vertical-align: top;
+            td:last-child {
+              vertical-align: middle;
+            }
+          }
+        }
         margin-top: 16px;
         .inlineOp {
           .danger {
@@ -107,6 +116,9 @@
           & > p {
             line-height: 1.5em;
           }
+        }
+        .tipText {
+          line-height: 3em;
         }
       }
     }

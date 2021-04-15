@@ -22,9 +22,31 @@ export function flatObj(obj) {
 
 /**
  * qiankun框架内修正图片路径
- * @param {String} url 
+ * @param {String} url
  */
 export function formatImgUrl(url) {
   // eslint-disable-next-line no-undef
   return window.__POWERED_BY_QIANKUN__ ? `${__webpack_public_path__}/${url}` : url;
 }
+
+
+export const statusTextCls = (status) => {
+  let cls = '',
+    color = 'blue';
+  switch (status) {
+    case 'failed':
+      cls = 'danger';
+      color = 'red';
+      break;
+    case 'pending':
+      cls = 'normal';
+      color = 'green';
+      break;
+    default:
+      break;
+  }
+  return {
+    cls,
+    color
+  };
+};

@@ -11,6 +11,7 @@ import styles from './styles.less';
 
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
+import { statusTextCls } from 'utils/util';
 
 const CloudTmp = (props) => {
   const { match, routesParams } = props,
@@ -27,21 +28,6 @@ const CloudTmp = (props) => {
     });
   const tableFilterFieldName = 'taskStatus';
 
-  const statusTextCls = (status) => {
-    let cls = '';
-    switch (status) {
-      case 'failed':
-        cls = 'danger';
-        break;
-      case 'pending':
-        cls = 'normal';
-        break;
-      default:
-        return;
-    }
-    return cls;
-  };
-
   const columns = [
     {
       dataIndex: 'name',
@@ -56,7 +42,7 @@ const CloudTmp = (props) => {
         .map(it => ({ text: CT.taskStatus[it], value: it })),
       width: 150,
       render: (text) => <div className='tableRender'>
-        <span className={`status-text ${statusTextCls(text)}`}>{CT.taskStatusIcon[text]} {CT.taskStatus[text]}</span>
+        <span className={`status-text ${statusTextCls(text).cls}`}>{CT.taskStatusIcon[text]} {CT.taskStatus[text]}</span>
       </div>
     },
     {

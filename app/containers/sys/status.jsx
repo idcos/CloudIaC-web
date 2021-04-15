@@ -9,6 +9,7 @@ import { sysAPI } from 'services/base';
 import styles from './styles.less';
 
 import { SYS } from 'constants/types';
+import { statusTextCls } from 'utils/util';
 
 import { CheckCircleFilled, GlobalOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 
@@ -49,21 +50,6 @@ const SysStatus = (props) => {
     }
   };
 
-  const statusTextCls = (status) => {
-    let cls = '';
-    switch (status) {
-      case 'failed':
-        cls = 'danger';
-        break;
-      case 'pending':
-        cls = 'normal';
-        break;
-      default:
-        break;
-    }
-    return cls;
-  };
-
   return <Layout
     extraHeader={<PageHeader
       title='系统状态'
@@ -97,7 +83,7 @@ const SysStatus = (props) => {
                           }
                         />
                         <p className='tableRender'>
-                          <span className={`status-text ${statusTextCls(item.status)}`}>{statusIcons[item.status]} <span>{SYS.status[item.status]}</span></span>
+                          <span className={`status-text ${statusTextCls(item.status).cls}`}>{statusIcons[item.status]} <span>{SYS.status[item.status]}</span></span>
                         </p>
                       </List.Item>
                     )}

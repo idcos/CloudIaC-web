@@ -3,27 +3,15 @@ import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, I
 
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
+import { statusTextCls } from 'utils/util';
 import { timeUtils } from 'utils/time';
 import { useEventSource } from 'utils/hooks';
 import Coder from 'components/coder';
+import moment from 'moment';
 
 const { Panel } = Collapse;
 const { Item } = Descriptions;
 
-const statusColor = (status) => {
-  let color = 'blue';
-  switch (status) {
-    case 'failed':
-      color = 'red';
-      break;
-    case 'pending':
-      color = 'green';
-      break;
-    default:
-      break;
-  }
-  return color;
-};
 const items = [
   {
     label: '作业ID',
@@ -33,7 +21,7 @@ const items = [
     key: 'status',
     render: (taskInfo) => {
       return <>
-        <Badge color={statusColor(taskInfo.status)}/>
+        <Badge color={statusTextCls(taskInfo.status).color}/>
         <span>{CT.taskStatus[taskInfo.status]}</span>
       </>;
     }
@@ -43,7 +31,7 @@ const items = [
     render: (taskInfo) => CT.taskType[taskInfo.taskType]
   }, {
     label: '创建人',
-    key: 'creator'
+    key: 'creatorName'
   }, {
     label: '创建时间',
     key: 'createdAt',
@@ -58,7 +46,7 @@ const items = [
     label: '分支',
     key: 'repoBranch'
   }, {
-    label: 'commit',
+    label: 'commitId',
     key: 'commitId',
     span: 2
   }, {
@@ -171,8 +159,8 @@ export default ({ curOrg, curTask }) => {
       <Collapse className='collapse-panel'>
         <Panel header={
           <h2>
-            {taskInfo.creator || '-'} {timeUtils.format(taskInfo.createdAt) || '-'} 从 {taskInfo.repoBranch} {taskInfo.commitId}
-            <Tag color={statusColor(taskInfo.status)}>{CT.taskStatus[taskInfo.status]}</Tag>
+            {taskInfo.creatorName || '-'} {moment(taskInfo.createdAt).fromNow() || '-'} 从 {taskInfo.repoBranch} {taskInfo.repoCommit} 执行作业
+            &nbsp;<Tag color={statusTextCls(taskInfo.status).color}>{CT.taskStatus[taskInfo.status]}</Tag>
           </h2>
         }
         >
@@ -209,7 +197,7 @@ export default ({ curOrg, curTask }) => {
             renderItem={item => (
               <List.Item>
                 <List.Item.Meta
-                  title={<h2 className='title'>{item.creator}<span className='subTitle'>{timeUtils.format(item.createdAt)}</span></h2>}
+                  title={<h2 className='title'>{item.creatorName}<span className='subTitle'>{timeUtils.format(item.createdAt)}</span></h2>}
                   description={<p>{item.comment}</p>}
                 />
               </List.Item>

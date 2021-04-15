@@ -35,7 +35,15 @@ const Variable = ({ detailInfo, curOrg, reload }) => {
           </Form.Item>;
           return <Form.Item
             name='value'
-            noStyle={true}
+            rules={[
+              {
+                required: true,
+                message: '请输入'
+              }
+            ]}
+            style={{
+              margin: 0
+            }}
           >
             {getFieldValue('isSecret') ? <Input.Password addonAfter={isSecret} visibilityToggle={false}/> : <Input addonAfter={isSecret}/>}
           </Form.Item>;
@@ -45,7 +53,10 @@ const Variable = ({ detailInfo, curOrg, reload }) => {
       {
         title: '描述信息',
         dataIndex: 'description',
-        editable: true
+        editable: true,
+        fieldItemProps: {
+          rules: [{ message: '请输入' }]
+        }
       },
       {
         title: '操作',
@@ -110,8 +121,8 @@ const Variable = ({ detailInfo, curOrg, reload }) => {
       <FormWithInTable
         genColumns={genColumns}
         addBtnTxt={'添加Terraform变量'}
-        dataSource={(detailInfo.vars || []).filter(it => it.type == 'global')}
-        dataType='global'
+        dataSource={(detailInfo.vars || []).filter(it => it.type == 'terraform')}
+        dataType='terraform'
         api={api}
       />
     </Card>
@@ -224,6 +235,7 @@ const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType }) =
     className='tableWrapperForm'
   >
     <Table
+      className='editable-table'
       components={{
         body: {
           cell: EditableCell

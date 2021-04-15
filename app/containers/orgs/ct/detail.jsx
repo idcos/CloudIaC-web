@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Button, notification, Tabs, Dropdown, Menu, Popover } from 'antd';
+import { Button, notification, Tabs, Dropdown, Menu, Popover, Tag, Alert } from 'antd';
 
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
@@ -36,6 +36,7 @@ const CloudTmpDetail = (props) => {
     [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),
     [ refreshTimeStamp, setRefreshTimeStamp ] = useState(new Date() - 0),
+    [ initSettingPanel, setInitSettingPanel ] = useState(null),
     [ detailInfo, setDetailInfo ] = useState({}),
     [ curTask, setCurTask ] = useState(null);
 
@@ -102,14 +103,16 @@ const CloudTmpDetail = (props) => {
   return <DetailContext.Provider
     value={{
       refreshTimeStamp,
-      setRefreshTimeStamp
+      setRefreshTimeStamp,
+      initSettingPanel,
+      setInitSettingPanel
     }}
   >
     <Layout
       extraHeader={<PageHeader
         title={detailInfo.name || '-'}
         breadcrumb={true}
-        des={detailInfo.description}
+        des={<>{detailInfo.status == 'disable' && <Tag color='red'>已禁用</Tag>} {detailInfo.description} </>}
         //subDes={'123,123,123'}
         renderFooter={() => <Tabs
           tabBarExtraContent={<Dropdown
@@ -151,6 +154,26 @@ const CloudTmpDetail = (props) => {
       />}
     >
       <div className='container-inner-width'>
+        {
+          detailInfo.status == 'disable' && <Alert
+            message={<>
+              当前云模板为禁用状态，仅能正常访问云模板数据，不可发起作业、修改变量等操作
+              <Button
+                type='link'
+                size='small'
+                onClick={() => {
+                  setTabs('setting');
+                  setInitSettingPanel('del');
+                }}
+              >
+                去修改状态
+              </Button>
+            </>}
+            showIcon={true}
+            type='warning'
+            banner={true}
+          />
+        }
         <div className={styles.ctDetail}>
           {renderByTab()}
         </div>

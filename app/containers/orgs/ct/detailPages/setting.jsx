@@ -1,12 +1,13 @@
-import React, { useState, useCallback } from 'react';
-import { Card, Radio, Menu, Form, Input, Button, InputNumber, Alert, notification, Space } from "antd";
+import React, { useState, useCallback, useContext, useEffect } from 'react';
+import { Card, Radio, Menu, Form, Input, Button, InputNumber, Divider, notification, Space } from "antd";
 
 import { ctAPI } from 'services/base';
+import DetailContext from "./DetailContext";
 
 const subNavs = {
   basic: '基本信息',
   repo: '仓库信息',
-  del: '删除云模板'
+  del: '操作权限'
 };
 
 const FL = {
@@ -15,8 +16,18 @@ const FL = {
 };
 
 const Setting = ({ curOrg, ctId, detailInfo, reload }) => {
-  const [ panel, setPanel ] = useState('basic');
+  const { initSettingPanel, setInitSettingPanel } = useContext(DetailContext);
+
+  const [ panel, setPanel ] = useState(initSettingPanel || 'basic');
+
   const [ submitLoading, setSubmitLoading ] = useState(false);
+
+  useEffect(() => {
+    initSettingPanel && setPanel(initSettingPanel);
+    return () => {
+      setInitSettingPanel(null);
+    };
+  }, [initSettingPanel]);
 
   const onFinish = async (values) => {
     try {
@@ -180,25 +191,43 @@ const Setting = ({ curOrg, ctId, detailInfo, reload }) => {
         </Form.Item>
       </>,
       del: <>
-        <Alert
-          message='删除云模板将删除所有作业、状态、变量、设置等记录，有问题请联系laC管理员'
-          type='warning'
-          showIcon={true}
-          closable={true}
-        />
-        <br/>
+        {
+          detailInfo.status == 'disable' ? <>
+            <Button
+              type='primary'
+              onClick={() => onFinish({ status: 'enable' })}
+            >
+              启用云模板
+            </Button>
+            <p className='tipText'>启用云模板后所有功能都可正常操作(发起作业、变量修改、设置修改等</p>
+          </> : <>
+            <Button
+              type='primary'
+              danger={true}
+              onClick={() => onFinish({ status: 'disable' })}
+            >
+              禁用云模板
+            </Button>
+            <p className='tipText'>禁用云模板后所有操作(发起作业、修改变量等)都将禁用，仅能够正常访问云模板数据</p>
+          </>
+        }
+        <Divider/>
         <Button type='primary' danger={true} onClick={delCT}>删除云模板</Button>
+        <p className='tipText'>删除云模板将删除所有作业、状态、变量、设置等记录，请谨慎操作</p>
       </>
     };
     return PAGES[panel];
-  }, [panel]);
+  }, [ panel, detailInfo ]);
 
   return <div className='setting'>
     <Menu
       mode='inline'
       className='subNav'
-      defaultSelectedKeys={[panel]}
-      onClick={({ item, key }) => setPanel(key)}
+      selectedKeys={[panel]}
+      onClick={({ item, key }) => {
+        setPanel(key);
+        setInitSettingPanel(key);
+      }}
     >
       {Object.keys(subNavs).map(it => <Menu.Item key={it}>{subNavs[it]}</Menu.Item>)}
     </Menu>

@@ -34,9 +34,6 @@ const Pwd = ({ title, userInfo, updateUserInfo }) => {
         {...layout}
         layout='vertical'
         onFinish={onFinish}
-        initialValues={{
-          oldPassword: userInfo.initPass
-        }}
       >
         <Form.Item
           label='原密码'

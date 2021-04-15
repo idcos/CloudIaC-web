@@ -1,25 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Divider, List, notification, Radio, Space } from 'antd';
-import { timeUtils } from 'utils/time';
 
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
+import { statusTextCls } from 'utils/util';
 import DetailContext from '../DetailContext';
-
-const statusTextCls = (status) => {
-  let cls = '';
-  switch (status) {
-    case 'failed':
-      cls = 'danger';
-      break;
-    case 'pending':
-      cls = 'normal';
-      break;
-    default:
-      break;
-  }
-  return cls;
-};
+import moment from 'moment';
 
 const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
   const [ loading, setLoading ] = useState(false),
@@ -99,7 +85,7 @@ const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
                       setTabs('task');
                     }}
                   >
-                    {item.creator || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}
+                    {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {item.repoBranch} {item.commitId}执行作业
                   </h2>}
                   description={
                     <Space split={<Divider type='vertical' />}>
@@ -110,8 +96,8 @@ const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
                   }
                 />
                 <div className='list-content'>
-                  <span className={`status-text ${statusTextCls(item.status)}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
-                  <p>{timeUtils.format(item.endAt)}</p>
+                  <span className={`status-text ${statusTextCls(item.status).cls}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                  <p>{moment(item.endAt).fromNow()}</p>
                 </div>
               </List.Item>
             )}

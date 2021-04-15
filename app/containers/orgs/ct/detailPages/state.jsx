@@ -5,6 +5,8 @@ import { CT } from 'constants/types';
 
 import { ctAPI } from 'services/base';
 import { timeUtils } from 'utils/time';
+import { statusTextCls } from 'utils/util';
+import moment from 'moment';
 
 const State = ({ curOrg, detailInfo }) => {
   const [ stateFileStr, setStateFileStr ] = useState('');
@@ -59,7 +61,7 @@ const State = ({ curOrg, detailInfo }) => {
             renderItem={item => (
               <List.Item>
                 <List.Item.Meta
-                  title={<h2>{item.creator || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}</h2>}
+                  title={<h2>{item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {item.repoBranch} {item.commitId}</h2>}
                   description={
                     <Space split={<Divider type='vertical' />}>
                       <span>{item.guid}</span>
@@ -69,8 +71,8 @@ const State = ({ curOrg, detailInfo }) => {
                   }
                 />
                 <div className='list-content'>
-                  <span className={`status-text`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
-                  <p>{timeUtils.format(item.endAt)}</p>
+                  <span className={`status-text ${statusTextCls(item.status).cls}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                  <p>{moment(item.endAt).fromNow()}</p>
                 </div>
               </List.Item>
             )}

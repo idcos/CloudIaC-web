@@ -5,7 +5,8 @@ import MarkdownParser from 'components/coder/markdown-parser';
 
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
-import { timeUtils } from 'utils/time';
+import { statusTextCls } from 'utils/util';
+import moment from 'moment';
 
 import { BranchesOutlined, UserOutlined, GitlabFilled } from '@ant-design/icons';
 
@@ -47,20 +48,6 @@ const jobInfoItems = {
     text: '活动成员',
     getValue: (overviewInfo) => <span>{(overviewInfo.activeCreatorName || []).join('、')}</span>
   }
-};
-const statusTextCls = (status) => {
-  let cls = '';
-  switch (status) {
-    case 'failed':
-      cls = 'danger';
-      break;
-    case 'pending':
-      cls = 'normal';
-      break;
-    default:
-      break;
-  }
-  return cls;
 };
 
 const Overview = ({ curOrg, detailInfo, setTabs }) => {
@@ -108,7 +95,7 @@ const Overview = ({ curOrg, detailInfo, setTabs }) => {
                   <List.Item>
                     <List.Item.Meta
                       title={<h2>
-                        {item.creatorName || '-'} {timeUtils.format(item.createdAt) || '-'} 从 {item.repoBranch} {item.commitId}
+                        {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {overviewInfo.repoBranch} {item.commitId}执行作业
                       </h2>}
                       description={
                         <Space split={<Divider type='vertical' />}>
@@ -118,8 +105,8 @@ const Overview = ({ curOrg, detailInfo, setTabs }) => {
                       }
                     />
                     <div className='list-content'>
-                      <span className={`status-text ${statusTextCls(item.status)}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
-                      <p>{timeUtils.format(item.endAt)}</p>
+                      <span className={`status-text ${statusTextCls(item.status).cls}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
+                      <p>{item.endTime && moment(moment().subtract(item.endTime, 'seconds')).fromNow()}</p>
                     </div>
                   </List.Item>
                 )}
@@ -141,7 +128,7 @@ const Overview = ({ curOrg, detailInfo, setTabs }) => {
     <div className='right'>
       <Card>
         <div className='gitInfo'>
-          <p className='idcos-text-ellipsis'><GitlabFilled style={{ color: '#FCA326' }}/>{overviewInfo.repoAddr}</p>
+          <p className='idcos-text-ellipsis' title={overviewInfo.repoAddr}><GitlabFilled style={{ color: '#FCA326' }}/>{overviewInfo.repoAddr}</p>
           <p><BranchesOutlined/> {overviewInfo.repoBranch}</p>
           <p><UserOutlined/> {}</p>
         </div>

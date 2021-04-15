@@ -7,6 +7,7 @@ export const EditableCell = ({
   inputType = 'input',
   inputRender,
   inputFieldProps,
+  fieldItemProps,
   record,
   index,
   children,
@@ -25,7 +26,7 @@ export const EditableCell = ({
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item
+        inputType == 'other' ? insetInputType.other : <Form.Item
           name={dataIndex}
           style={{
             margin: 0
@@ -36,6 +37,7 @@ export const EditableCell = ({
               message: '请输入'
             }
           ]}
+          {...fieldItemProps}
         >
           {insetInputType[inputType]}
         </Form.Item>
@@ -58,6 +60,7 @@ export const columnsOverride = (_columns = [], isEditing, inputFieldProps) => {
         inputType: col.inputType,
         inputRender: col.inputRender,
         inputFieldProps: col.inputFieldProps,
+        fieldItemProps: col.fieldItemProps,
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record)
