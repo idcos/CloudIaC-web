@@ -6,6 +6,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/javascript/javascript';
+import './ansi';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
 import styled from 'styled-components';
 
@@ -36,7 +37,11 @@ const FormCoder = ({
           theme: 'material', // now we only support one theme
           indentUnit: 2, // 2 space indent
           tabSize: 2, // one tab size equals to 2 whitespace
-          mode: 'markdown'
+          mode: 'ansi',
+          specialChars: /\u001B/,
+          specialCharPlaceholder: function (char) {
+            return document.createElement('span');
+          }
         }}
         className='Form_CodeMirror'
       />

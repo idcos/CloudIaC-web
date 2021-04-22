@@ -8,6 +8,7 @@ import { timeUtils } from 'utils/time';
 import { useEventSource } from 'utils/hooks';
 import Coder from 'components/coder';
 import moment from 'moment';
+import AnsiRegex from 'ansi-regex';
 
 const { Panel } = Collapse;
 const { Item } = Descriptions;
@@ -96,7 +97,10 @@ export default ({ curOrg, curTask }) => {
       }
       evtSourceInit(
         {
-          onmessage: (data) => setTaskLog(prevLog => prevLog ? `${prevLog}\n${data}` : data)
+          onmessage: (data) => {
+            data = data.replace(AnsiRegex(), '\u001B');
+            return setTaskLog(prevLog => prevLog ? `${prevLog}\n${data}` : data);
+          }
         },
         {
           url: `/api/v1/taskLog/sse?logPath=${res.result.backendInfo.log_file}`,
