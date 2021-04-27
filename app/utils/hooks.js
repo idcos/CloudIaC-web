@@ -20,6 +20,7 @@ export const useEventSource = () => {
 
     this.onerror = function() {
       console.log("EventSource failed.");
+      this.close();
     };
   }
 
