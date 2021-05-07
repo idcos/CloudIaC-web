@@ -22,7 +22,7 @@ import { CT } from 'constants/types';
 import DetailContext from './detailPages/DetailContext';
 
 const subNavs = {
-  overview: '概述',
+  overview: '概览',
   running: '运行',
   state: '状态',
   variable: '变量',
