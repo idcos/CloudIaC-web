@@ -61,8 +61,8 @@ const SysStatus = (props) => {
         loading ? <Spin/> : <div className={styles.status}>
           {
             resultList.map(it => {
-              return <Collapse className='collapse-panel'>
-                <Panel header={it.service}>
+              return <Collapse defaultActiveKey={['defaultOpen']} className='collapse-panel'>
+                <Panel header={it.service} key='defaultOpen'>
                   <List
                     itemLayout='horizontal'
                     dataSource={it.Children}
