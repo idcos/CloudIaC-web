@@ -211,9 +211,9 @@ const Setting = ({ curOrg, ctId, detailInfo, reload }) => {
             <p className='tipText'>禁用云模板后所有操作(发起作业、修改变量等)都将禁用，仅能够正常访问云模板数据</p>
           </>
         }
-        <Divider/>
+        {/* <Divider/>
         <Button type='primary' danger={true} onClick={delCT}>删除云模板</Button>
-        <p className='tipText'>删除云模板将删除所有作业、状态、变量、设置等记录，请谨慎操作</p>
+        <p className='tipText'>删除云模板将删除所有作业、状态、变量、设置等记录，请谨慎操作</p> */}
       </>
     };
     return PAGES[panel];
