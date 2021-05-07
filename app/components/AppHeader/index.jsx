@@ -60,7 +60,7 @@ const AppHeader = (props) => {
         }
         <div className='user'>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
-          <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span>
+          {userInfo.isAdmin ? <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span> : null}
           <Dropdown
             overlay={<Menu
               onClick={({ key }) => {
