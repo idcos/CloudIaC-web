@@ -7,15 +7,18 @@ import { ctAPI } from 'services/base';
 import { timeUtils } from 'utils/time';
 import { statusTextCls } from 'utils/util';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
 
-const State = ({ curOrg, detailInfo }) => {
+const State = ({ routesParams: { curOrg, detailInfo } }) => {
   const [ stateFileStr, setStateFileStr ] = useState('');
   const [ taskInfo, setTaskInfo ] = useState({});
 
   useEffect(() => {
-    fetchCode();
-    fetchTaskInfo();
-  }, []);
+    if (!isEmpty(detailInfo)) {
+      fetchCode();
+      fetchTaskInfo();
+    }
+  }, [detailInfo]);
 
   const fetchCode = async () => {
     try {

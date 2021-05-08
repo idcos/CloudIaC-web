@@ -65,7 +65,10 @@ const items = [
     </span>
   }];
 
-export default ({ curOrg, curTask }) => {
+export default (props) => {
+  const { match, routesParams } = props;
+  const { curTask } = match.params;
+  const { curOrg } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
@@ -75,9 +78,11 @@ export default ({ curOrg, curTask }) => {
   const [ evtSource, evtSourceInit ] = useEventSource();
 
   useEffect(() => {
-    fetchInfo();
-    fetchComments();
-  }, []);
+    if (curTask) {
+      fetchInfo();
+      fetchComments();
+    }
+  }, [curTask]);
 
   useEffect(() => {
     return () => {

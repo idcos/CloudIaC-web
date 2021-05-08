@@ -6,6 +6,7 @@ import MarkdownParser from 'components/coder/markdown-parser';
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
 import { statusTextCls } from 'utils/util';
+import history from 'utils/history';
 import moment from 'moment';
 
 import { BranchesOutlined, UserOutlined, GitlabFilled } from '@ant-design/icons';
@@ -50,15 +51,37 @@ const jobInfoItems = {
   }
 };
 
-const Overview = ({ curOrg, detailInfo, setTabs }) => {
-  const { overviewInfo = {}, repoId, repoBranch } = detailInfo;
+const Overview = ({ routesParams: { curOrg, detailInfo, ctId, setTabs, ctDetailTabKey, baseUrl } }) => {
+  const { repoId, repoBranch } = detailInfo;
+  const [ overviewInfo, setOverviewInfo ] = useState({});
   const [ codeStr, setCodeStr ] = useState('');
+
+  useEffect(() => {
+    featchOverviewInfo();
+  }, []);
 
   useEffect(() => {
     if (repoId) {
       fetchReadme();
     }
   }, [repoId]);
+
+  const featchOverviewInfo = async () => {
+    try {
+      const res = await ctAPI.overview({
+        id: ctId,
+        orgId: curOrg.id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setOverviewInfo(res.result || {});
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
 
   const fetchReadme = async () => {
     try {
@@ -94,7 +117,12 @@ const Overview = ({ curOrg, detailInfo, setTabs }) => {
                 renderItem={item => (
                   <List.Item>
                     <List.Item.Meta
-                      title={<h2>
+                      title={<h2 
+                        className='list-title'
+                        onClick={() => {
+                          history.push(`${baseUrl + ctDetailTabKey}/taskDetail/${item.id}`);
+                        }}
+                      >
                         {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {overviewInfo.repoBranch} {item.commitId}执行作业
                       </h2>}
                       description={

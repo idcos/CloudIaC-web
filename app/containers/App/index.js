@@ -29,6 +29,7 @@ function App(props) {
   const { pathname } = location;
   useInjectReducer({ key: KEY, reducer });
   useInjectSaga({ key: KEY, saga });
+
   return (
     <div className='idcos-app'>
       <AppHeader

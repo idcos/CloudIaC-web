@@ -15,7 +15,7 @@ const FL = {
   wrapperCol: { span: 10 }
 };
 
-const Setting = ({ curOrg, ctId, detailInfo, reload }) => {
+const Setting = ({ routesParams: { curOrg, ctId, detailInfo, reload } }) => {
   const { initSettingPanel, setInitSettingPanel } = useContext(DetailContext);
 
   const [ panel, setPanel ] = useState(initSettingPanel || 'basic');

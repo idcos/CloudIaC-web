@@ -1,9 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { Button, notification, Tabs, Dropdown, Menu, Popover, Tag, Alert } from 'antd';
-
+import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
+import RoutesList from 'components/routes-list';
 import styles from "./styles.less";
 
 import Overview from './detailPages/overview';
@@ -30,45 +31,36 @@ const subNavs = {
 };
 
 const CloudTmpDetail = (props) => {
-  const { match, routesParams } = props,
-    { ctId } = match.params;
-  const [ tab, setTabs ] = useState('overview'),
-    [ popOverVisible, setPopoverVisible ] = useState(false),
+  const { match, routesParams, routes } = props,
+    { ctId, orgId, ctDetailTabKey } = match.params,
+    baseUrl = `/org/${orgId}/ct/${ctId}/`;
+  const [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),
     [ refreshTimeStamp, setRefreshTimeStamp ] = useState(new Date() - 0),
     [ initSettingPanel, setInitSettingPanel ] = useState(null),
-    [ detailInfo, setDetailInfo ] = useState({}),
-    [ curTask, setCurTask ] = useState(null);
+    [ detailInfo, setDetailInfo ] = useState({});
 
   useEffect(() => {
-    fetchInfo();
+    fetchDetailInfo();
   }, []);
 
-  const fetchInfo = async () => {
+  const setTabs = (key) => {
+    history.push(baseUrl + key);
+  };
+
+  const fetchDetailInfo = async () => {
     try {
-      const resList = [ ctAPI.detail, ctAPI.overview ].map(async api => await api({
+      const res = await ctAPI.detail({
         id: ctId,
         orgId: routesParams.curOrg.id
-      }));
-      let info = [];
-      for (let resItem of resList) {
-        const res = await resItem;
-        if (res.code != 200) {
-          throw new Error(res.message);
-        }
-        info.push(res.result || {});
-      }
-      setDetailInfo({
-        ...info[0] || {},
-        overviewInfo: {
-          ...info[1]
-        }
       });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setDetailInfo(res.result || {});
     } catch (e) {
-      console.log(e);
       notification.error({
-        message: '获取失败',
-        description: e.message
+        message: e.message
       });
     }
   };
@@ -79,26 +71,6 @@ const CloudTmpDetail = (props) => {
   };
 
   const closePopover = () => toggleVisible({ taskType: null, visible: false });
-
-  const renderByTab = useCallback(() => {
-    const PAGES = {
-      overview: ({ curOrg, detailInfo, setTabs }) => <Overview curOrg={curOrg} detailInfo={detailInfo} setTabs={setTabs}/>,
-      running: (props) => <Running {...props}/>,
-      state: (props) => <State {...props}/>,
-      variable: (props) => <Variable {...props}/>,
-      setting: (props) => <Setting {...props}/>,
-      task: (props) => <Task {...props}/>
-    };
-    return PAGES[tab]({
-      curOrg: routesParams.curOrg,
-      ctId,
-      detailInfo,
-      setTabs,
-      setCurTask,
-      curTask,
-      reload: fetchInfo
-    });
-  }, [ tab, detailInfo ]);
 
   return <DetailContext.Provider
     value={{
@@ -113,7 +85,6 @@ const CloudTmpDetail = (props) => {
         title={detailInfo.name || '-'}
         breadcrumb={true}
         des={<>{detailInfo.status == 'disable' && <Tag color='red'>已禁用</Tag>} {detailInfo.description} </>}
-        //subDes={'123,123,123'}
         renderFooter={() => <Tabs
           tabBarExtraContent={<Dropdown
             overlay={
@@ -146,10 +117,16 @@ const CloudTmpDetail = (props) => {
               <DefaultTabBar {...props}/>
             </div>;
           }}
-          activeKey={tab}
+          activeKey={ctDetailTabKey}
           onChange={k => setTabs(k)}
         >
-          {Object.keys(subNavs).map(it => <Tabs.TabPane tab={subNavs[it]} key={it} disabled={it == 'state' && !detailInfo.saveState}/>)}
+          {Object.keys(subNavs).map(it => 
+            <Tabs.TabPane 
+              tab={subNavs[it]} 
+              key={it} 
+              disabled={it == 'state' && !detailInfo.saveState}
+            />
+          )}
         </Tabs>}
       />}
     >
@@ -175,7 +152,18 @@ const CloudTmpDetail = (props) => {
           />
         }
         <div className={styles.ctDetail}>
-          {renderByTab()}
+          <RoutesList
+            routes={routes}
+            routesParams={{
+              curOrg: routesParams.curOrg,
+              ctId,
+              detailInfo,
+              setTabs,
+              ctDetailTabKey,
+              baseUrl,
+              reload: fetchDetailInfo
+            }}
+          />
         </div>
       </div>
     </Layout>

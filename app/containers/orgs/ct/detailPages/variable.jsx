@@ -7,7 +7,7 @@ import uuid from 'utils/uuid.js';
 
 const pseudoID = 'a-new-id';
 
-const Variable = ({ detailInfo, curOrg, reload }) => {
+const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
   const genColumns = ({ editingKey, cancel, edit, save, del, form }) => {
     return [
       {

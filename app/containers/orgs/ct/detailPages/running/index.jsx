@@ -4,10 +4,11 @@ import { Card, Divider, List, notification, Radio, Space } from 'antd';
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
 import { statusTextCls } from 'utils/util';
+import history from 'utils/history';
 import DetailContext from '../DetailContext';
 import moment from 'moment';
 
-const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
+const Running = ({ routesParams: { curOrg, ctId, ctDetailTabKey, baseUrl } }) => {
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -81,8 +82,7 @@ const Running = ({ curOrg, detailInfo, ctId, setTabs, setCurTask }) => {
                   title={<h2
                     className='list-title'
                     onClick={() => {
-                      setCurTask(item.id);
-                      setTabs('task');
+                      history.push(`${baseUrl + ctDetailTabKey}/taskDetail/${item.id}`);
                     }}
                   >
                     {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {item.repoBranch} {item.commitId}执行作业

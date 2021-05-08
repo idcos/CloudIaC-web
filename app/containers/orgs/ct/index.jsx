@@ -32,7 +32,7 @@ const CloudTmp = (props) => {
     {
       dataIndex: 'name',
       title: '云模板名称',
-      render: (text, record) => <Link to={`/org/${params.orgId}/ct/detailCT/${record.id}`}>{text}</Link>
+      render: (text, record) => <Link to={`/org/${params.orgId}/ct/${record.id}/overview`}>{text}</Link>
     },
     {
       dataIndex: tableFilterFieldName,

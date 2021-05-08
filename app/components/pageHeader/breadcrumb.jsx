@@ -18,7 +18,11 @@ const breadcrumbNameMap = {
   ct: '云模板',
   setting: '设置',
   createCT: '创建云模板',
-  detailCT: '概览'
+  overview: '概览',
+  running: '运行',
+  state: '状态',
+  variable: '变量',
+  taskDetail: '任务详情'
 };
 
 
