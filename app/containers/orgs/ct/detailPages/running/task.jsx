@@ -67,7 +67,7 @@ const items = [
 
 export default (props) => {
   const { match, routesParams } = props;
-  const { curTask } = match.params;
+  const curTask = Number(match.params.curTask);
   const { curOrg } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),

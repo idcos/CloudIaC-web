@@ -1,51 +1,66 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Button, notification, Tabs, Dropdown, Menu, Popover, Tag, Alert } from 'antd';
-import history from 'utils/history';
-import PageHeader from 'components/pageHeader';
-import { Eb_WP } from 'components/error-boundary';
-import Layout from 'components/common/layout';
-import RoutesList from 'components/routes-list';
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  notification,
+  Tabs,
+  Dropdown,
+  Menu,
+  Popover,
+  Tag,
+  Alert
+} from "antd";
+import history from "utils/history";
+import PageHeader from "components/pageHeader";
+import { Eb_WP } from "components/error-boundary";
+import Layout from "components/common/layout";
+import RoutesList from "components/routes-list";
 import styles from "./styles.less";
-
-import Overview from './detailPages/overview';
-import Running from './detailPages/running';
-import Setting from './detailPages/setting';
-import State from './detailPages/state';
-import Variable from './detailPages/variable';
-import CreateTaskForm from './detailPages/createTaskForm';
-import Task from './detailPages/running/task';
-
-import { DownOutlined } from '@ant-design/icons';
-
-import { ctAPI } from 'services/base';
-import { CT } from 'constants/types';
-
-import DetailContext from './detailPages/DetailContext';
+import CreateTaskForm from "./detailPages/createTaskForm";
+import { DownOutlined } from "@ant-design/icons";
+import { ctAPI } from "services/base";
+import { CT } from "constants/types";
 
 const subNavs = {
-  overview: '概览',
-  running: '运行',
-  state: '状态',
-  variable: '变量',
-  setting: '设置'
+  overview: "概览",
+  running: "运行",
+  state: "状态",
+  variable: "变量",
+  setting: "设置"
 };
 
 const CloudTmpDetail = (props) => {
-  const { match, routesParams, routes } = props,
+  const { match, routesParams, routes, location } = props,
     { ctId, orgId, ctDetailTabKey } = match.params,
-    baseUrl = `/org/${orgId}/ct/${ctId}/`;
+    { cacheDetailInfo } = location.state || {},
+    baseUrl = `/org/${orgId}/ct/${ctId}`;
+
   const [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),
-    [ refreshTimeStamp, setRefreshTimeStamp ] = useState(new Date() - 0),
-    [ initSettingPanel, setInitSettingPanel ] = useState(null),
-    [ detailInfo, setDetailInfo ] = useState({});
+    [ detailInfo, setDetailInfo ] = useState(cacheDetailInfo || {});
 
   useEffect(() => {
-    fetchDetailInfo();
+    if (!cacheDetailInfo) {
+      fetchDetailInfo();
+    }
   }, []);
 
-  const setTabs = (key) => {
-    history.push(baseUrl + key);
+  const changeTab = (key, cacheData) => {
+    linkTo(`${baseUrl}/${key}`, cacheData);
+  };
+
+  // 去运行详情页面
+  const linkToRunningDetail = (taskId) => {
+    linkTo(`${baseUrl}/running/runningDetail/${taskId}`);
+  };
+
+  /**
+   * @param {string} url 跳转的url地址
+   * @param {Object} cacheData 需要缓存的数据
+   */
+  const linkTo = (url, cacheData = {}) => {
+    const baseCacheState = { cacheDetailInfo: detailInfo };
+    const cacheState = { ...baseCacheState, ...cacheData };
+    history.push(url, cacheState);
   };
 
   const fetchDetailInfo = async () => {
@@ -72,85 +87,104 @@ const CloudTmpDetail = (props) => {
 
   const closePopover = () => toggleVisible({ taskType: null, visible: false });
 
-  return <DetailContext.Provider
-    value={{
-      refreshTimeStamp,
-      setRefreshTimeStamp,
-      initSettingPanel,
-      setInitSettingPanel
-    }}
-  >
+  return (
     <Layout
-      extraHeader={<PageHeader
-        title={detailInfo.name || '-'}
-        breadcrumb={true}
-        des={<>{detailInfo.status == 'disable' && <Tag color='red'>已禁用</Tag>} {detailInfo.description} </>}
-        renderFooter={() => <Tabs
-          tabBarExtraContent={<Dropdown
-            overlay={
-              <Menu
-                onClick={({ key }) => toggleVisible({ taskType: key, visible: true })}
-              >
-                {Object.keys(CT.taskType).map(it => <Menu.Item key={it}>新建{CT.taskType[it]}</Menu.Item>)}
-              </Menu>
-            }
-          >
-            <Popover
-              placement='bottomRight'
-              content={popOverVisible && <CreateTaskForm
-                closePopover={closePopover}
-                taskType={taskType}
-                orgId={routesParams.curOrg.id}
-                ctDetailInfo={detailInfo}
-              />}
-              visible={popOverVisible}
-              trigger={'click'}
-              onMouseLeave={closePopover}
-              overlayStyle={{ width: 500 }}
-              onVisibleChange={closePopover}
+      extraHeader={
+        <PageHeader
+          title={detailInfo.name || "-"}
+          breadcrumb={true}
+          des={
+            <>
+              {detailInfo.status == "disable" && <Tag color='red'>已禁用</Tag>}{" "}
+              {detailInfo.description}{" "}
+            </>
+          }
+          renderFooter={() => (
+            <Tabs
+              animated={false}
+              tabBarExtraContent={
+                <Dropdown
+                  overlay={
+                    <Menu
+                      onClick={({ key }) =>
+                        toggleVisible({ taskType: key, visible: true })
+                      }
+                    >
+                      {Object.keys(CT.taskType).map((it) => (
+                        <Menu.Item key={it}>新建{CT.taskType[it]}</Menu.Item>
+                      ))}
+                    </Menu>
+                  }
+                >
+                  <Popover
+                    placement='bottomRight'
+                    content={
+                      popOverVisible && (
+                        <CreateTaskForm
+                          linkToRunningDetail={linkToRunningDetail}
+                          closePopover={closePopover}
+                          taskType={taskType}
+                          orgId={routesParams.curOrg.id}
+                          ctDetailInfo={detailInfo}
+                        />
+                      )
+                    }
+                    visible={popOverVisible}
+                    trigger={"click"}
+                    onMouseLeave={closePopover}
+                    overlayStyle={{ width: 500 }}
+                    onVisibleChange={closePopover}
+                  >
+                    <Button type='primary' icon={<DownOutlined />}>
+                      新建作业
+                    </Button>
+                  </Popover>
+                </Dropdown>
+              }
+              renderTabBar={(props, DefaultTabBar) => {
+                return (
+                  <div style={{ marginBottom: -16 }}>
+                    <DefaultTabBar {...props} />
+                  </div>
+                );
+              }}
+              activeKey={ctDetailTabKey}
+              onChange={(k) => changeTab(k)}
             >
-              <Button type='primary' icon={<DownOutlined/>}>新建作业</Button>
-            </Popover>
-          </Dropdown>}
-          renderTabBar={(props, DefaultTabBar) => {
-            return <div style={{ marginBottom: -16 }}>
-              <DefaultTabBar {...props}/>
-            </div>;
-          }}
-          activeKey={ctDetailTabKey}
-          onChange={k => setTabs(k)}
-        >
-          {Object.keys(subNavs).map(it => 
-            <Tabs.TabPane 
-              tab={subNavs[it]} 
-              key={it} 
-              disabled={it == 'state' && !detailInfo.saveState}
-            />
+              {Object.keys(subNavs).map((it) => (
+                <Tabs.TabPane
+                  tab={subNavs[it]}
+                  key={it}
+                  disabled={it == "state" && !detailInfo.saveState}
+                />
+              ))}
+            </Tabs>
           )}
-        </Tabs>}
-      />}
+        />
+      }
     >
       <div className='container-inner-width'>
-        {
-          detailInfo.status == 'disable' && <Alert
-            message={<>
-              当前云模板为禁用状态，仅能正常访问云模板数据，不可发起作业、修改变量等操作
-              <Button
-                type='link'
-                size='small'
-                onClick={() => {
-                  setTabs('setting');
-                  setInitSettingPanel('del');
-                }}
-              >
-                去修改状态
-              </Button>
-            </>}
+        {detailInfo.status == "disable" && (
+          <Alert
+            message={
+              <>
+                当前云模板为禁用状态，仅能正常访问云模板数据，不可发起作业、修改变量等操作
+                <Button
+                  type='link'
+                  size='small'
+                  onClick={() => {
+                    changeTab("setting", { initSettingPanel: "del" });
+                  }}
+                >
+                  去修改状态
+                </Button>
+              </>
+            }
             showIcon={true}
             type='warning'
             banner={true}
           />
-        }
+        )}
         <div className={styles.ctDetail}>
           <RoutesList
             routes={routes}
@@ -158,16 +192,15 @@ const CloudTmpDetail = (props) => {
               curOrg: routesParams.curOrg,
               ctId,
               detailInfo,
-              setTabs,
-              ctDetailTabKey,
-              baseUrl,
+              changeTab,
+              linkToRunningDetail,
               reload: fetchDetailInfo
             }}
           />
         </div>
       </div>
     </Layout>
-  </DetailContext.Provider>;
+  );
 };
 
 export default Eb_WP()(CloudTmpDetail);

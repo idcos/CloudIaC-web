@@ -2,7 +2,6 @@ import React, { useState, useCallback, useContext, useEffect } from 'react';
 import { Card, Radio, Menu, Form, Input, Button, InputNumber, Divider, notification, Space } from "antd";
 
 import { ctAPI } from 'services/base';
-import DetailContext from "./DetailContext";
 
 const subNavs = {
   basic: '基本信息',
@@ -15,19 +14,14 @@ const FL = {
   wrapperCol: { span: 10 }
 };
 
-const Setting = ({ routesParams: { curOrg, ctId, detailInfo, reload } }) => {
-  const { initSettingPanel, setInitSettingPanel } = useContext(DetailContext);
+const Setting = (props) => {
 
+  const { routesParams, location } = props;
+  const { curOrg, ctId, detailInfo, reload } = routesParams;
+  const { initSettingPanel } = location.state || {};
   const [ panel, setPanel ] = useState(initSettingPanel || 'basic');
-
   const [ submitLoading, setSubmitLoading ] = useState(false);
-
-  useEffect(() => {
-    initSettingPanel && setPanel(initSettingPanel);
-    return () => {
-      setInitSettingPanel(null);
-    };
-  }, [initSettingPanel]);
+  const [form] = Form.useForm();
 
   const onFinish = async (values) => {
     try {
@@ -71,6 +65,10 @@ const Setting = ({ routesParams: { curOrg, ctId, detailInfo, reload } }) => {
       });
     }
   };
+
+  useEffect(() => {
+    form.setFieldsValue({ saveState: false, ...detailInfo });
+  }, [detailInfo]);
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
@@ -226,7 +224,6 @@ const Setting = ({ routesParams: { curOrg, ctId, detailInfo, reload } }) => {
       selectedKeys={[panel]}
       onClick={({ item, key }) => {
         setPanel(key);
-        setInitSettingPanel(key);
       }}
     >
       {Object.keys(subNavs).map(it => <Menu.Item key={it}>{subNavs[it]}</Menu.Item>)}
@@ -239,10 +236,7 @@ const Setting = ({ routesParams: { curOrg, ctId, detailInfo, reload } }) => {
           {...FL}
           layout='vertical'
           onFinish={onFinish}
-          initialValues={{
-            saveState: false,
-            ...detailInfo
-          }}
+          form={form}
         >
           {renderByPanel()}
         </Form>

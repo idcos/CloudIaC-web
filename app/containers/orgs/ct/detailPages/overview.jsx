@@ -6,7 +6,6 @@ import MarkdownParser from 'components/coder/markdown-parser';
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
 import { statusTextCls } from 'utils/util';
-import history from 'utils/history';
 import moment from 'moment';
 
 import { BranchesOutlined, UserOutlined, GitlabFilled } from '@ant-design/icons';
@@ -51,7 +50,7 @@ const jobInfoItems = {
   }
 };
 
-const Overview = ({ routesParams: { curOrg, detailInfo, ctId, setTabs, ctDetailTabKey, baseUrl } }) => {
+const Overview = ({ routesParams: { curOrg, detailInfo, ctId, changeTab, linkToRunningDetail } }) => {
   const { repoId, repoBranch } = detailInfo;
   const [ overviewInfo, setOverviewInfo ] = useState({});
   const [ codeStr, setCodeStr ] = useState('');
@@ -108,7 +107,7 @@ const Overview = ({ routesParams: { curOrg, detailInfo, ctId, setTabs, ctDetailT
         <div className='card'>
           <Card
             title='最新运行'
-            extra={<a onClick={() => setTabs('running')}>全部运行</a>}
+            extra={<a onClick={() => changeTab('running')}>全部运行</a>}
           >
             <div className='tableRender'>
               <List
@@ -120,7 +119,7 @@ const Overview = ({ routesParams: { curOrg, detailInfo, ctId, setTabs, ctDetailT
                       title={<h2 
                         className='list-title'
                         onClick={() => {
-                          history.push(`${baseUrl + ctDetailTabKey}/taskDetail/${item.id}`);
+                          linkToRunningDetail(item.id);
                         }}
                       >
                         {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {overviewInfo.repoBranch} {item.commitId}执行作业

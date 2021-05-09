@@ -22,7 +22,7 @@ const breadcrumbNameMap = {
   running: '运行',
   state: '状态',
   variable: '变量',
-  taskDetail: '任务详情'
+  runningDetail: '运行详情'
 };
 
 
@@ -33,28 +33,26 @@ const BreadcrumbWrapper = ({ location, params, externalData }) => {
         orgId: (curOrg || {}).name
       },
       routeParamKey = isRouteParam(params, snippet);
-    return _map[routeParamKey] || snippet;
+    return _map[routeParamKey];
   };
-
   const pathSnippets = location.pathname.split('/')
     .filter(i => i)
-    .filter(i => !!isRouteParam({ orgId: params.orgId }, i) || breadcrumbNameMap.hasOwnProperty(i));
+    .filter(i => !!isRouteParam({ orgId: params.orgId, ctId: params.ctId }, i) || breadcrumbNameMap.hasOwnProperty(i));
   const extraBreadcrumbItems = pathSnippets.map((snippet, index) => {
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
     const isLastOne = index == pathSnippets.length - 1;
-    return (
+    const linkText = breadcrumbNameMap.hasOwnProperty(snippet) ?
+      breadcrumbNameMap[snippet] : externalDataGetter(snippet);
+    return linkText ? (
       <Breadcrumb.Item key={url}>
         <Link
           to={index == 0 ? '/' : url}
           disabled={isLastOne || index == 1}
         >
-          {
-            breadcrumbNameMap.hasOwnProperty(snippet) ?
-              breadcrumbNameMap[snippet] : externalDataGetter(snippet)
-          }
+          {linkText}
         </Link>
       </Breadcrumb.Item>
-    );
+    ) : null;
   });
   return <div className='breadcrumbWrapper'>
     <Breadcrumb>{extraBreadcrumbItems}</Breadcrumb>

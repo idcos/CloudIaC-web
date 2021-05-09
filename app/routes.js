@@ -31,7 +31,7 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/ct/:ctId/:ctDetailTabKey',
+          path: '/org/:orgId/ct/:ctId/:ctDetailTabKey(overview|running|state|variable|setting)',
           name: '云模板详情',
           component: loadable(() => import('containers/orgs/ct/detail'), asyncLoadFallback),
           routes: [
@@ -45,6 +45,12 @@ export default function createRoutes() {
               path: '/org/:orgId/ct/:ctId/running',
               name: '运行',
               component: loadable(() => import('containers/orgs/ct/detailPages/running'), asyncLoadFallback),
+              exact: true
+            },
+            {
+              path: '/org/:orgId/ct/:ctId/running/runningDetail/:curTask',
+              name: '任务详情',
+              component: loadable(() => import('containers/orgs/ct/detailPages/running/task'), asyncLoadFallback),
               exact: true
             },
             {
@@ -63,12 +69,6 @@ export default function createRoutes() {
               path: '/org/:orgId/ct/:ctId/setting',
               name: '设置',
               component: loadable(() => import('containers/orgs/ct/detailPages/setting'), asyncLoadFallback),
-              exact: true
-            },
-            {
-              path: '/org/:orgId/ct/:ctId/:ctDetailTabKey/taskDetail/:curTask',
-              name: '任务详情',
-              component: loadable(() => import('containers/orgs/ct/detailPages/running/task'), asyncLoadFallback),
               exact: true
             }
           ]

@@ -3,7 +3,6 @@ import { Form, Input, notification, Select, Space, Button } from 'antd';
 import { sysAPI } from 'services/base';
 import { ctAPI } from 'services/base';
 
-import DetailContext from './DetailContext';
 
 const { Option } = Select;
 const FL = {
@@ -11,9 +10,8 @@ const FL = {
   wrapperCol: { span: 18 }
 };
 
-export default ({ closePopover, taskType, orgId, ctDetailInfo }) => {
+export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDetail }) => {
   const [ ctRunnerList, setCtRunnerList ] = useState([]);
-  const { setRefreshTimeStamp } = useContext(DetailContext);
 
   useEffect(() => {
     fetchCTRunner();
@@ -56,10 +54,10 @@ export default ({ closePopover, taskType, orgId, ctDetailInfo }) => {
         throw new Error(res.message);
       }
       closePopover();
-      setRefreshTimeStamp(new Date() - 0);
       notification.success({
         message: '操作成功'
       });
+      linkToRunningDetail(res.result && res.result.id);
     } catch (e) {
       notification.error({
         message: '获取失败',
