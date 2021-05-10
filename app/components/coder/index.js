@@ -37,7 +37,7 @@ const FormCoder = ({
           theme: 'material', // now we only support one theme
           indentUnit: 2, // 2 space indent
           tabSize: 2, // one tab size equals to 2 whitespace
-          mode: 'ansi',
+          mode: 'application/json',
           specialChars: /\u001B/,
           specialCharPlaceholder: function (char) {
             return document.createElement('span');
