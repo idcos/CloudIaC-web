@@ -95,7 +95,7 @@ export default ({ title, curOrg }) => {
         return <Space split={<Divider type='vertical' />}>
           {
             record.status == 'disable' ? 
-            	<a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>启用</a>
+              <a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>启用</a>
            	 	: <a className='danger-text' onClick={() => disableConfirm(record)}>禁用</a>
           }
           <a className='danger-text' onClick={() => delConfirm(record)}>删除</a>
@@ -104,31 +104,31 @@ export default ({ title, curOrg }) => {
     }
   ];
 
-	const disableConfirm = (record) => {
-		Modal.confirm({
-			title: `你确定要禁用${record.name}吗？`,
-			icon: <ExclamationCircleOutlined />,
-			content: `禁用将导致引用该VCS仓库的云模板不可用，确定要禁用吗`,
-			okText: '确认',
+  const disableConfirm = (record) => {
+    Modal.confirm({
+      title: `你确定要禁用${record.name}吗？`,
+      icon: <ExclamationCircleOutlined />,
+      content: `禁用将导致引用该VCS仓库的云模板不可用，确定要禁用吗`,
+      okText: '确认',
     	cancelText: '取消',
-			onOk: () => {
-				operation({ doWhat: 'edit', payload: { id: record.id, status: 'disable' } });
-			}
+      onOk: () => {
+        operation({ doWhat: 'edit', payload: { id: record.id, status: 'disable' } });
+      }
     });
-	}
+  };
 
-	const delConfirm = (record) => {
-		Modal.confirm({
-			title: `你确定要删除${record.name}吗？`,
-			icon: <ExclamationCircleOutlined />,
-			content: `删除将导致引用该VCS仓库的云模板不可用，确定要删除吗`,
-			okText: '确认',
+  const delConfirm = (record) => {
+    Modal.confirm({
+      title: `你确定要删除${record.name}吗？`,
+      icon: <ExclamationCircleOutlined />,
+      content: `删除将导致引用该VCS仓库的云模板不可用，确定要删除吗`,
+      okText: '确认',
     	cancelText: '取消',
-			onOk: () => {
-				operation({ doWhat: 'del', payload: { id: record.id } });
-			}
+      onOk: () => {
+        operation({ doWhat: 'del', payload: { id: record.id } });
+      }
     });
-	}
+  };
 
   const operation = async ({ doWhat, payload }, cb) => {
     try {

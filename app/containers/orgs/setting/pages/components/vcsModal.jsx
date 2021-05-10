@@ -50,7 +50,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
   };
 
   return <Modal
-    title="添加VCS"
+    title='添加VCS'
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{

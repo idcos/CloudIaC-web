@@ -55,7 +55,7 @@ const OrgSetting = ({ routesParams, dispatch }) => {
       member: (props) => <Member {...props}/>,
       notification: (props) => <Notification {...props}/>,
       resAccount: (props) => <ResAccount {...props}/>,
-      vcs: (props) => <Vcs {...props}/>,
+      vcs: (props) => <Vcs {...props}/>
     };
     return PAGES[panel]({
       title: subNavs[panel],
