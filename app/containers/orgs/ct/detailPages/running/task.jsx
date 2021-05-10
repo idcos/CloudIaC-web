@@ -79,7 +79,7 @@ export default (props) => {
 
   useEffect(() => {
     if (curTask) {
-      fetchInfo();
+      fetchInfo(fetchSse);
       fetchComments();
     }
   }, [curTask]);
@@ -90,7 +90,25 @@ export default (props) => {
     };
   }, [evtSource]);
 
-  const fetchInfo = async () => {
+  const fetchSse = (res) => {
+    evtSourceInit(
+      {
+        onmessage: (data) => {
+          data = data.replace(AnsiRegex(), '\u001B');
+          return setTaskLog(prevLog => prevLog ? `${prevLog}\n${data}` : data);
+        },
+        onerror: () => {
+          fetchInfo();
+        }
+      },
+      {
+        url: `/api/v1/taskLog/sse?logPath=${res.result.backendInfo.log_file}`,
+        options: { withCredentials: true }
+      }
+    );
+  };
+
+  const fetchInfo = async (cb) => {
     try {
       setLoading(true);
       const res = await ctAPI.detailTask({
@@ -100,18 +118,7 @@ export default (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      evtSourceInit(
-        {
-          onmessage: (data) => {
-            data = data.replace(AnsiRegex(), '\u001B');
-            return setTaskLog(prevLog => prevLog ? `${prevLog}\n${data}` : data);
-          }
-        },
-        {
-          url: `/api/v1/taskLog/sse?logPath=${res.result.backendInfo.log_file}`,
-          options: { withCredentials: true }
-        }
-      );
+      cb && cb(res);
       setTaskInfo(res.result || {});
       setLoading(false);
     } catch (e) {

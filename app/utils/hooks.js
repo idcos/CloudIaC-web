@@ -5,11 +5,10 @@ export const useEventSource = () => {
 
   const init = (listeners, { url, options }) => {
     eventSourceRef.current = new EventSource(url, options);
-
     _listeners.call(eventSourceRef.current, listeners);
   };
 
-  function _listeners({ onmessage }) {
+  function _listeners({ onmessage, onerror }) {
     this.onopen = function() {
       console.log("Connection to server opened.");
     };
@@ -18,10 +17,12 @@ export const useEventSource = () => {
       onmessage(e.data);
     };
 
-    this.onerror = function() {
+    this.onerror = function(e) {
       console.log("EventSource failed.");
       this.close();
+      onerror();
     };
+  
   }
 
   return [ eventSourceRef.current, init ];
