@@ -49,7 +49,7 @@ export default function createRoutes() {
             },
             {
               path: '/org/:orgId/ct/:ctId/running/runningDetail/:curTask',
-              name: '任务详情',
+              name: '运行详情',
               component: loadable(() => import('containers/orgs/ct/detailPages/running/task'), asyncLoadFallback),
               exact: true
             },

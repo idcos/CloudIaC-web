@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Radio, Select, Form, Input, Button, InputNumber, notification } from "antd";
+import { Space, Radio, Select, Form, Input, Button, InputNumber, notification, Row, Col } from "antd";
 
 import { ctAPI } from 'services/base';
 import history from 'utils/history';
 
 const FL = {
-  labelCol: { span: 8 },
+  labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
 const { Option } = Select;
@@ -121,33 +121,55 @@ export default ({ stepHelper, selection, curOrg }) => {
             message: '请选择'
           }
         ]}
+        extra='terraform不保存状态反复运行有极大的概率出现资源名字/IP地址冲突
+        ansible面向配置的目标做实时校验，状态是否保存不影响，可反复运行'
       >
         <Radio.Group>
           <Radio value={false}>不保存</Radio>
           <Radio value={true}>保存</Radio>
         </Radio.Group>
       </Form.Item>
-      <Form.Item label='运行超时' required={true}>
-        <Space>
+      <Row>
+        <Col span={12}>
+          <Form.Item label='运行超时' required={true}>
+            <Space>
+              <Form.Item
+                name='timeout'
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入'
+                  }
+                ]}
+                style={{ display: 'inline-block' }}
+              >
+                <InputNumber min={0}/>
+              </Form.Item>
+              <Form.Item
+                style={{ display: 'inline-block' }}
+              >
+                秒
+              </Form.Item>
+            </Space>
+          </Form.Item>
+        </Col>
+        {/* <Col span={12}>
           <Form.Item
-            name='timeout'
+            label='默认ct-runner'
+            name='ctRunner'
             rules={[
               {
                 required: true,
-                message: '请输入'
+                message: '请选择'
               }
             ]}
-            style={{ display: 'inline-block' }}
           >
-            <InputNumber min={0}/>
+            <Select placeholder='请选择ct-runner'>
+              {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
+            </Select>
           </Form.Item>
-          <Form.Item
-            style={{ display: 'inline-block' }}
-          >
-            秒
-          </Form.Item>
-        </Space>
-      </Form.Item>
+        </Col> */}
+      </Row>
       <Space>
         <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
         <Button type='primary' htmlType={'submit'} loading={submitLoading}>完成</Button>
