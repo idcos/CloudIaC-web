@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { List, notification, Tag, Collapse, Spin, Alert } from 'antd';
+import { List, notification, Collapse, Spin, Alert } from 'antd';
 
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 import { sysAPI } from 'services/base';
+
+import Tags from 'components/tags';
 
 import styles from './styles.less';
 
@@ -77,7 +79,9 @@ const SysStatus = (props) => {
                           }
                           description={
                             <>
-                              <p className='tags'>{item.tags.map(tag => <Tag>{tag}</Tag>)}</p>
+                              <p className='tags'>
+                                <Tags data={item.tags} canEdit={it.service === 'CT-Runner'} />
+                              </p>
                               <AlertMsg message={item.output} type={item.status}/>
                             </>
                           }
