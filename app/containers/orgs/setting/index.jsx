@@ -14,12 +14,14 @@ import Basic from './pages/basic';
 import Member from './pages/member';
 import Notification from './pages/notification';
 import ResAccount from './pages/resAccount';
+import Vcs from './pages/vcs';
 
 const subNavs = {
   basic: '基本信息',
   member: '组织成员',
   notification: '组织通知',
-  resAccount: '资源账号'
+  resAccount: '资源账号',
+  vcs: 'VCS'
 };
 
 const OrgSetting = ({ routesParams, dispatch }) => {
@@ -52,7 +54,8 @@ const OrgSetting = ({ routesParams, dispatch }) => {
       basic: (props) => <Basic {...props}/>,
       member: (props) => <Member {...props}/>,
       notification: (props) => <Notification {...props}/>,
-      resAccount: (props) => <ResAccount {...props}/>
+      resAccount: (props) => <ResAccount {...props}/>,
+      vcs: (props) => <Vcs {...props}/>,
     };
     return PAGES[panel]({
       title: subNavs[panel],

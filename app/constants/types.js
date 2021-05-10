@@ -11,13 +11,11 @@ export const ORG_USER = {
   }
 };
 
-
 export const SYS = {
   status: {
     passing: '正常'
   }
 };
-
 
 export const CT = {
   taskType: {
