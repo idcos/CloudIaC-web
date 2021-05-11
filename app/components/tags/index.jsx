@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { Tag, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import styles from './styles.less';
+import cloneDeep from 'lodash/cloneDeep';
 
-export default ({ data, canEdit = false, delTag, addTag }) => {
+export default ({ data, canEdit = false, update }) => {
   const [ isEdit, setIsEdit ] = useState(false);
   const [ editValue, setEditValue ] = useState('');
   const editInputRef = useRef();
@@ -12,11 +13,20 @@ export default ({ data, canEdit = false, delTag, addTag }) => {
     setEditValue(e.target.value);
   };
 
+  // 新增标签
   const handleInputConfirm = () => {
-    if (editValue && addTag) {
-      addTag(editValue);
+    if (editValue && update) {
+      update([ ...data, editValue ], resetEdit);
+    } else {
+      resetEdit();
     }
-    resetEdit();
+  };
+
+  // 删除标签
+  const delTag = (index) => {
+    let newTags = cloneDeep(data);
+    newTags.splice(index, 1);
+    update(newTags);
   };
 
   const resetEdit = () => {
@@ -42,7 +52,7 @@ export default ({ data, canEdit = false, delTag, addTag }) => {
           closable={canEdit}
           onClose={(e) => {
             e.preventDefault();
-            delTag && delTag(index);
+            delTag(index);
           }}
         >
           {tag}

@@ -52,6 +52,21 @@ const SysStatus = (props) => {
     }
   };
 
+  const updateTag = async ({ tags, serviceId }, cb) => {
+    try {
+      const res = await sysAPI.updateTags({ tags, serviceId });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      cb && cb();
+    } catch (e) {
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
   return <Layout
     extraHeader={<PageHeader
       title='系统状态'
@@ -80,7 +95,11 @@ const SysStatus = (props) => {
                           description={
                             <>
                               <p className='tags'>
-                                <Tags data={item.tags} canEdit={it.service === 'CT-Runner'} />
+                                <Tags data={item.tags} canEdit={it.service === 'CT-Runner'} 
+                                  update={(newTags, cb) => {
+                                    updateTag({ tags: newTags, serviceId: item.ID }, cb);
+                                  }}
+                                />
                               </p>
                               <AlertMsg message={item.output} type={item.status}/>
                             </>
