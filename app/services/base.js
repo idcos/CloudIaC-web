@@ -246,6 +246,13 @@ export const ctAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  tfvars: ({ orgId, repoId, repoBranch }) => {
+    return getWithArgs('/api/v1/templateTfvars/search', {
+      repoId, repoBranch
+    }, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

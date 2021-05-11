@@ -1,13 +1,44 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { EditableCell, columnsOverride } from 'components/editable-table-ele';
 
-import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox } from 'antd';
+import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox, Select } from 'antd';
 import { ctAPI } from 'services/base';
 import uuid from 'utils/uuid.js';
 
+const { Option } = Select;
 const pseudoID = 'a-new-id';
 
 const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
+
+  const [ tfvars, setTfvars ] = useState([]);
+
+  useEffect(() => {
+    const { repoId, repoBranch } = detailInfo;
+    if (repoId && repoBranch) {
+      fetchTfvars();
+    }
+  }, [detailInfo]);
+
+  const fetchTfvars = async () => {
+    try {
+      const { repoId, repoBranch } = detailInfo;
+      const res = await ctAPI.tfvars({
+        orgId: curOrg.id,
+        repoId,
+        repoBranch
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      console.log(res);
+      setTfvars(res.result || []);
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
+
   const genColumns = ({ editingKey, cancel, edit, save, del, form }) => {
     return [
       {
@@ -147,7 +178,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
           api({ varfile: values.varfile });
         }}
         initialValues={{
-          varfile: detailInfo.varfile
+          varfile: detailInfo.varfile || null
         }}
       >
         <Row gutter={8}>
@@ -157,11 +188,15 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               rules={[
                 {
                   required: true,
-                  message: '请输入'
+                  message: '请选择'
                 }
               ]}
             >
-              <Input placeholder='请输入tfvars路径' />
+              <Select
+                placeholder='请选择tfvars路径'
+              >
+                {tfvars.map(it => <Option value={it}>{it}</Option>)}
+              </Select>
             </Form.Item>
           </Col>
           <Col>
