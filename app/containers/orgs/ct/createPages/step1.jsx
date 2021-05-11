@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Input, notification, Table, Card, Button } from 'antd';
+import { Input, notification, Table, Card, Button, Select } from 'antd';
 import { ctAPI } from 'services/base';
 
 import MarkdownParser from 'components/coder/markdown-parser';
 
 import moment from 'moment';
+
+const { Option } = Select;
 
 export default ({ stepHelper, selection, setSelection, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
@@ -105,11 +107,16 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
 
   return <div className='step1'>
     <div className={hasSelection() ? 'hidden' : ''}>
-      <Input.Search
-        placeholder='请输入仓库名称搜索'
-        style={{ width: 240, marginBottom: 16 }}
-        onSearch={v => changeQuery({ name: v, pageNo: 1 })}
-      />
+      <div>
+        <Select style={{ width: 160, marginRight: 8 }} placeholder='请选择分支'>
+          {[{ name: '全部vcs', value: '' }, { name: '1', value: '1' }].map(it => <Option value={it.name}>{it.name}</Option>)}
+        </Select>
+        <Input.Search
+          placeholder='请输入仓库名称搜索'
+          style={{ width: 240, marginBottom: 16 }}
+          onSearch={v => changeQuery({ name: v, pageNo: 1 })}
+        />
+      </div>
       <Table
         rowKey='id'
         columns={columns}
