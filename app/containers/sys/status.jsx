@@ -56,13 +56,12 @@ const SysStatus = (props) => {
     }
   };
 
-  const updateTag = async ({ tags, serviceId }, cb) => {
+  const updateTag = async ({ tags, serviceId }) => {
     try {
       const res = await sysAPI.updateTags({ tags, serviceId });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      cb && cb();
     } catch (e) {
       notification.error({
         message: '操作失败',
@@ -100,8 +99,8 @@ const SysStatus = (props) => {
                             <>
                               <p className='tags'>
                                 <Tags data={item.tags} canEdit={it.service === 'CT-Runner'} 
-                                  update={(newTags, cb) => {
-                                    updateTag({ tags: newTags, serviceId: item.ID }, cb);
+                                  update={(newTags) => {
+                                    updateTag({ tags: newTags, serviceId: item.ID });
                                   }}
                                 />
                               </p>

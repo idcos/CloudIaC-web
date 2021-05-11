@@ -16,10 +16,9 @@ export default ({ data, canEdit = false, update }) => {
   // 新增标签
   const handleInputConfirm = () => {
     if (editValue && update) {
-      update([ ...data, editValue ], resetEdit);
-    } else {
-      resetEdit();
-    }
+      update([ ...data, editValue ]);
+    } 
+    resetEdit();
   };
 
   // 删除标签
