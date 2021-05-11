@@ -41,7 +41,11 @@ const SysStatus = (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setResultList(res.result || []);
+      const sortResultList = (res.result || []).sort((a, b) => {
+        const sortRuleList = [/** 其它系统状态的service... */ 'IaC-Portal', 'CT-Runner' ]; // index越大排序权重越高
+        return sortRuleList.indexOf(b.service) - sortRuleList.indexOf(a.service);
+      });
+      setResultList(sortResultList);
       setLoading(false);
     } catch (e) {
       setLoading(false);
