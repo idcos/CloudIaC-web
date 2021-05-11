@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, Input } from 'antd';
-
+import React, { useState, useEffect, useCallback } from 'react';
+import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, Input, Card, Space } from 'antd';
+import {
+  FullscreenExitOutlined, FullscreenOutlined
+} from '@ant-design/icons';
 import { ctAPI } from 'services/base';
 import { CT } from 'constants/types';
+import { fullScreenStyle } from 'constants/styles';
 import { statusTextCls } from 'utils/util';
 import { timeUtils } from 'utils/time';
 import { useEventSource } from 'utils/hooks';
@@ -71,11 +74,19 @@ export default (props) => {
   const { curOrg } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
+    [ fullScreen, setFullScreen ] = useState(false),
     [ loading, setLoading ] = useState(false),
     [ taskLog, setTaskLog ] = useState('');
 
   const [form] = Form.useForm();
   const [ evtSource, evtSourceInit ] = useEventSource();
+
+  const cardStyle = useCallback(
+    () => {
+      return fullScreen ? fullScreenStyle : null;
+    },
+    [fullScreen]
+  );
 
   useEffect(() => {
     if (curTask) {
@@ -195,7 +206,22 @@ export default (props) => {
           header={<h2>作业内容</h2>}
           key={'1'}
         >
-          <Coder value={taskLog} onChange={() => ''}/>
+          <Card
+            style={cardStyle()}
+            extra={
+              <Space>
+                <Button onClick={() => setFullScreen(!fullScreen)}>
+                  {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+                  全屏显示
+                </Button>
+              </Space>
+            }
+          >
+            <Coder 
+              style={{ height: "700px" }} 
+              value={taskLog} onChange={() => ''}
+            />
+          </Card>
         </Panel>
       </Collapse>
 
