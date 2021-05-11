@@ -34,9 +34,9 @@ const SysStatus = (props) => {
     fetchList();
   }, []);
 
-  const fetchList = async () => {
+  const fetchList = async (needLoading) => {
     try {
-      setLoading(true);
+      needLoading && setLoading(true);
       const res = await sysAPI.sysStatus();
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -46,9 +46,9 @@ const SysStatus = (props) => {
         return sortRuleList.indexOf(b.service) - sortRuleList.indexOf(a.service);
       });
       setResultList(sortResultList);
-      setLoading(false);
+      needLoading && setLoading(false);
     } catch (e) {
-      setLoading(false);
+      needLoading && setLoading(false);
       notification.error({
         message: '获取失败',
         description: e.message
@@ -62,6 +62,7 @@ const SysStatus = (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      fetchList();
     } catch (e) {
       notification.error({
         message: '操作失败',
