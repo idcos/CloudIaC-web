@@ -3,7 +3,7 @@ import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, I
 import {
   FullscreenExitOutlined, FullscreenOutlined
 } from '@ant-design/icons';
-import { ctAPI } from 'services/base';
+import { ctAPI, sysAPI } from 'services/base';
 import { CT } from 'constants/types';
 import { fullScreenStyle } from 'constants/styles';
 import { statusTextCls } from 'utils/util';
@@ -71,7 +71,7 @@ const items = [
 export default (props) => {
   const { match, routesParams } = props;
   const curTask = Number(match.params.curTask);
-  const { curOrg } = routesParams;
+  const { curOrg, linkToRunningDetail } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ fullScreen, setFullScreen ] = useState(false),
@@ -181,15 +181,62 @@ export default (props) => {
     }
   };
 
+  const applyTask = async (e) => {
+    e.preventDefault();
+    try {
+      const cTRunnerRes = await sysAPI.listCTRunner({ orgId: curOrg.id });
+      if (cTRunnerRes.code !== 200) {
+        throw new Error(cTRunnerRes.message);
+      }
+      const { name, ctServiceId, templateId, templateGuid } = taskInfo;
+      const ctInfo = cTRunnerRes.result.find(it => it.ID == ctServiceId);
+      if (!ctInfo) {
+        throw new Error('获取CT Runner失败');
+      }
+      const { Port, Address } = ctInfo;
+      const createTaskRes = await ctAPI.createTask({
+        taskType: 'apply',
+        orgId: curOrg.id,
+        name,
+        ctServiceId,
+        templateId,
+        templateGuid,
+        ctServiceIp: Address,
+        ctServicePort: Port
+      });
+      if (createTaskRes.code != 200) {
+        throw new Error(createTaskRes.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      linkToRunningDetail(createTaskRes.result && createTaskRes.result.id);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
   return <div className='task'>
     <div className={'tableRender'}>
       <Collapse className='collapse-panel'>
-        <Panel header={
-          <h2>
-            {taskInfo.creatorName || '-'} {moment(taskInfo.createdAt).fromNow() || '-'} 从 {taskInfo.repoBranch} {taskInfo.repoCommit} 执行作业
-            &nbsp;<Tag color={statusTextCls(taskInfo.status).color}>{CT.taskStatus[taskInfo.status]}</Tag>
-          </h2>
-        }
+        <Panel
+          header={
+            <div className='header'>
+              {taskInfo.creatorName || '-'} {moment(taskInfo.createdAt).fromNow() || '-'} 从 {taskInfo.repoBranch} {taskInfo.repoCommit} 执行作业
+              <Tag color={statusTextCls(taskInfo.status).color}>{CT.taskStatus[taskInfo.status]}</Tag>
+            </div>
+          }
+          extra={
+            taskInfo.taskType === 'plan' ?
+              <Button 
+                onClick={applyTask} size='small'
+                disabled={taskInfo.status !== 'complete'} 
+              >apply</Button> 
+              : null
+          }
         >
           <Descriptions
             column={2}
