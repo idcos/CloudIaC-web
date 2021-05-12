@@ -39,9 +39,9 @@ const CloudTmpDetail = (props) => {
     [ detailInfo, setDetailInfo ] = useState(cacheDetailInfo || {});
 
   useEffect(() => {
-    if (!cacheDetailInfo) {
-      fetchDetailInfo();
-    }
+    // if (!cacheDetailInfo) {
+    fetchDetailInfo();
+    // }
   }, []);
 
   const changeTab = (key, cacheData) => {

@@ -55,7 +55,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
             name={'isSecret'}
             noStyle={true}
             valuePropName='checked'
-            initialValue={false}
+            // initialValue={false}
           >
             <Checkbox >
               密文
@@ -65,7 +65,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
             name='value'
             rules={[
               {
-                required: true,
+                required: editingKey === pseudoID || !getFieldValue('isSecret'), // 编辑状态下密文value可留空
                 message: '请输入'
               }
             ]}
@@ -73,7 +73,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               margin: 0
             }}
           >
-            {getFieldValue('isSecret') ? <Input.Password addonAfter={isSecret} visibilityToggle={false}/> : <Input addonAfter={isSecret}/>}
+            {getFieldValue('isSecret') ? <Input.Password placeholder='空值保存时不会修改原有值' addonAfter={isSecret} visibilityToggle={false}/> : <Input addonAfter={isSecret}/>}
           </Form.Item>;
         },
         render: (text, record) => record.isSecret ? '***' : text
@@ -247,10 +247,6 @@ const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType, dis
   const save = async (record) => {
     const values = await form.validateFields();
     const doWhat = record.id == pseudoID ? 'add' : 'edit';
-    // 密文下没有改值的话value传空串
-    if (values.isSecret && values.value === record.value) {
-      values.value = '';
-    }
     await api({
       id: record.id == pseudoID ? uuid() : record.id,
       ...values,
