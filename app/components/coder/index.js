@@ -12,7 +12,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   width: 100%;
-  height: 350px;
+  height: 700px;
   .CodeMirror, .Form_CodeMirror {
     height: 100% !important;
   }
@@ -23,10 +23,11 @@ const FormCoder = ({
   value,
   style,
   onChange,
+  selfClassName,
   hight
 }) => {
   return (
-    <Container style={style} hight={hight}>
+    <Container style={style} hight={hight} className={selfClassName}>
       <ControlledEditor
         value={value}
         onBeforeChange={(editor, data, value) => onChange(value)}

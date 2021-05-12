@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Collapse, notification, Tag, Descriptions, Badge, List, Button, Input, Card, Space } from 'antd';
 import {
   FullscreenExitOutlined, FullscreenOutlined
 } from '@ant-design/icons';
 import { ctAPI, sysAPI } from 'services/base';
 import { CT } from 'constants/types';
-import { fullScreenStyle } from 'constants/styles';
 import { statusTextCls } from 'utils/util';
 import { timeUtils } from 'utils/time';
 import { useEventSource } from 'utils/hooks';
@@ -80,13 +79,6 @@ export default (props) => {
 
   const [form] = Form.useForm();
   const [ evtSource, evtSourceInit ] = useEventSource();
-
-  const cardStyle = useCallback(
-    () => {
-      return fullScreen ? fullScreenStyle : null;
-    },
-    [fullScreen]
-  );
 
   useEffect(() => {
     if (curTask) {
@@ -252,11 +244,13 @@ export default (props) => {
 
       <Collapse className='collapse-panel' defaultActiveKey={['1']}>
         <Panel
+          className='panel-content-no-paading'
+          style={{ padding: 0 }}
           header={<h2>作业内容</h2>}
           key={'1'}
         >
           <Card
-            style={cardStyle()}
+            className={`card-body-no-paading ${fullScreen ? 'full-card' : ''}`}
             extra={
               <Space>
                 <Button onClick={() => setFullScreen(!fullScreen)}>
@@ -267,7 +261,7 @@ export default (props) => {
             }
           >
             <Coder 
-              style={{ height: "700px" }} 
+              selfClassName='card-coder'
               value={taskLog} onChange={() => ''}
             />
           </Card>

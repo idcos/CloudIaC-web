@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Divider, List, notification, Space, Button } from 'antd';
 import Coder from 'components/coder';
 import { CT } from 'constants/types';
-import { fullScreenStyle } from 'constants/styles';
-
 import { ctAPI } from 'services/base';
 import {
   FullscreenExitOutlined, FullscreenOutlined
@@ -23,13 +21,6 @@ const State = ({ routesParams: { curOrg, detailInfo } }) => {
       fetchTaskInfo();
     }
   }, [detailInfo]);
-
-  const cardStyle = useCallback(
-    () => {
-      return fullScreen ? fullScreenStyle : { marginTop: 16 };
-    },
-    [fullScreen]
-  );
 
   const fetchCode = async () => {
     try {
@@ -109,7 +100,8 @@ const State = ({ routesParams: { curOrg, detailInfo } }) => {
         </Card>
       </div>
       <Card
-        style={cardStyle()}
+        className={`card-body-no-paading ${fullScreen ? 'full-card' : ''}`}
+        style={{ marginTop: 16 }}
         extra={
           <Space>
             <Button onClick={() => setFullScreen(!fullScreen)}>
@@ -120,7 +112,7 @@ const State = ({ routesParams: { curOrg, detailInfo } }) => {
         }
       >
         <Coder
-          style={{ height: "700px" }}
+          selfClassName='card-coder'
           value={stateFileStr}
           onChange={() => ""}
         />

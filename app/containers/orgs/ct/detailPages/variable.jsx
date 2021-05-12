@@ -30,7 +30,6 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      console.log(res);
       setTfvars(res.result || []);
     } catch (e) {
       notification.error({
@@ -58,9 +57,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
             valuePropName='checked'
             initialValue={false}
           >
-            <Checkbox
-              onChange={() => setFieldsValue({ value: undefined })}
-            >
+            <Checkbox >
               密文
             </Checkbox>
           </Form.Item>;
@@ -248,6 +245,10 @@ const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType }) =
   const save = async (record) => {
     const values = await form.validateFields();
     const doWhat = record.id == pseudoID ? 'add' : 'edit';
+    // 密文下没有改值的话value传空串
+    if (values.isSecret && values.value === record.value) {
+      values.value = '';
+    }
     await api({
       id: record.id == pseudoID ? uuid() : record.id,
       ...values,
