@@ -225,7 +225,9 @@ export default (props) => {
         <Panel
           header={
             <div className='header'>
-              {taskInfo.creatorName || '-'} {moment(taskInfo.createdAt).fromNow() || '-'} 从 {taskInfo.repoBranch} {taskInfo.repoCommit} 执行作业
+              <span className='title-text'>
+                {taskInfo.creatorName || '-'} {moment(taskInfo.createdAt).fromNow() || '-'} 从 {taskInfo.repoBranch} {taskInfo.repoCommit} 执行作业
+              </span>
               <Tag color={statusTextCls(taskInfo.status).color}>{CT.taskStatus[taskInfo.status]}</Tag>
             </div>
           }
