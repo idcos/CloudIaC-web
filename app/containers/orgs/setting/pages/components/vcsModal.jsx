@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Input, Modal, Select, Space, Button, Checkbox, notification } from "antd";
-import { DeleteOutlined } from '@ant-design/icons';
-
-import { sysAPI } from 'services/base';
+import React, { useState } from 'react';
+import { Form, Input, Modal, Select } from "antd";
 
 const FL = {
   labelCol: { span: 6 },
@@ -10,43 +7,21 @@ const FL = {
 };
 const { Option } = Select;
 
-export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operation }) => {
-  const [ submitLoading, setSubmitLoading ] = useState(false),
-    [ ctRunnerList, setCtRunnerList ] = useState([]);
+export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
+  const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
 
   const onOk = async () => {
     const values = await form.validateFields();
-    return console.warn('待联调接口');
     operation({
       doWhat: opt,
       payload: {
-        id: curRecord && curRecord.id,
         ...values
       }
     }, (hasError) => {
       setSubmitLoading(false);
       !hasError && toggleVisible();
     });
-  };
-
-  useEffect(() => {
-    fetchCTRunner();
-  }, []);
-
-  const fetchCTRunner = async () => {
-    try {
-      const res = await sysAPI.listCTRunner({ orgId: curOrg.id });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setCtRunnerList(res.result || []);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
   };
 
   return <Modal
@@ -78,7 +53,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
       </Form.Item>
       <Form.Item
         label='类型'
-        name='type'
+        name='vcsType'
         rules={[
           {
             required: true,
@@ -87,7 +62,8 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
         ]}
       >
         <Select placeholder='请选择VCS类型'>
-          {ctRunnerList.map(it => <Option value={it.ID}>{it.Service}</Option>)}
+          <Option value='gitea'>gitea</Option>
+          <Option value='gitlab'>gitlab</Option>
         </Select>
       </Form.Item>
       <Form.Item
@@ -104,7 +80,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
       </Form.Item>
       <Form.Item
         label='Token'
-        name='token'
+        name='vcsToken'
         rules={[
           {
             required: true,

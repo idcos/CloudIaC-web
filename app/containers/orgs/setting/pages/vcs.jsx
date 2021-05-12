@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Divider, notification, Popconfirm, Space, Table, Modal } from 'antd';
+import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import { orgsAPI } from 'services/base';
 import OpModal from './components/vcsModal';
-import moment from 'moment';
 
 export default ({ title, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
@@ -24,7 +23,6 @@ export default ({ title, curOrg }) => {
   }, [query]);
 
   const fetchList = async () => {
-    // return console.warn('待联调接口');
     try {
       setLoading(true);
       const res = await orgsAPI.searchVcs({
@@ -69,7 +67,7 @@ export default ({ title, curOrg }) => {
       title: '名称'
     },
     {
-      dataIndex: 'type',
+      dataIndex: 'vcsType',
       title: '类型'
     },
     {
@@ -80,14 +78,12 @@ export default ({ title, curOrg }) => {
       </div>
     },
     {
-      dataIndex: 'ctServiceIds',
-      title: '地址',
-      render: (_, record) => <span>{record.ctServiceIds && record.ctServiceIds.length || 0}个</span>
+      dataIndex: 'address',
+      title: '地址'
     },
     {
-      dataIndex: 'createdAt',
-      title: 'Token',
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      dataIndex: 'vcsToken',
+      title: 'Token'
     },
     {
       title: '操作',
@@ -105,27 +101,29 @@ export default ({ title, curOrg }) => {
   ];
 
   const disableConfirm = (record) => {
+    const { name, id } = record;
     Modal.confirm({
-      title: `你确定要禁用${record.name}吗？`,
+      title: `你确定要禁用${name}吗？`,
       icon: <ExclamationCircleOutlined />,
       content: `禁用将导致引用该VCS仓库的云模板不可用，确定要禁用吗`,
       okText: '确认',
     	cancelText: '取消',
       onOk: () => {
-        operation({ doWhat: 'edit', payload: { id: record.id, status: 'disable' } });
+        operation({ doWhat: 'edit', payload: { id, status: 'disable' } });
       }
     });
   };
 
   const delConfirm = (record) => {
+    const { name, id } = record;
     Modal.confirm({
-      title: `你确定要删除${record.name}吗？`,
+      title: `你确定要删除${name}吗？`,
       icon: <ExclamationCircleOutlined />,
       content: `删除将导致引用该VCS仓库的云模板不可用，确定要删除吗`,
       okText: '确认',
     	cancelText: '取消',
       onOk: () => {
-        operation({ doWhat: 'del', payload: { id: record.id } });
+        operation({ doWhat: 'del', payload: { id } });
       }
     });
   };
@@ -133,9 +131,9 @@ export default ({ title, curOrg }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => orgsAPI.resAccountCreate(param),
-        del: ({ orgId, id }) => orgsAPI.resAccountDel({ orgId, id }),
-        edit: (param) => orgsAPI.resAccountUpdate(param)
+        add: (param) => orgsAPI.createVcs(param),
+        del: ({ orgId, id }) => orgsAPI.deleteVcs({ orgId, id }),
+        edit: (param) => orgsAPI.updateVcs(param)
       };
       const res = await method[doWhat]({
         orgId: curOrg.id,

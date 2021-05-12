@@ -1,5 +1,5 @@
 import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
-
+import pickBy from 'lodash/pickBy';
 
 export const orgsAPI = {
   list: ({ status, q, pageNo, pageSize } = {}) => {
@@ -122,14 +122,31 @@ export const orgsAPI = {
     });
   },
   createVcs: ({ orgId, name, vcsType, address, vcsToken, status }) => {
-    return post('/api/v1/user/create', {
-      name, vcsType, address, vcsToken, status
+    return post('/api/v1/vcs/create', {
+      status: status || 'enable',
+      name, vcsType, address, vcsToken 
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  deleteVcs: ({ orgId, id }) => {
+    return del('/api/v1/vcs/delete', {
+      id
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  updateVcs: (param) => {
+    const { orgId, id, name, vcsType, address, vcsToken, status } = param;
+    return put('/api/v1/vcs/update', {
+      status: status || 'enable',
+      id, name, vcsType, address, vcsToken 
     }, {
       'IaC-Org-Id': orgId
     });
   },
   searchVcs: ({ orgId, pageSize, currentPage }) => {
-    return getWithArgs('/api/v1/user/search', {
+    return getWithArgs('/api/v1/vcs/search', {
       status,
       pageSize,
       currentPage
