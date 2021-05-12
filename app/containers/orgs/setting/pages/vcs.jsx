@@ -15,7 +15,7 @@ export default ({ title, curOrg }) => {
       total: 0
     }),
     [ query, setQuery ] = useState({
-      pageNo: 1,
+      currentPage: 1,
       pageSize: 10
     });
 
@@ -24,10 +24,10 @@ export default ({ title, curOrg }) => {
   }, [query]);
 
   const fetchList = async () => {
-    return console.warn('待联调接口');
+    // return console.warn('待联调接口');
     try {
       setLoading(true);
-      const res = await orgsAPI.resAccountList({
+      const res = await orgsAPI.searchVcs({
         ...query,
         orgId: curOrg.id
       });
@@ -172,7 +172,7 @@ export default ({ title, curOrg }) => {
         dataSource={resultMap.list}
         loading={loading}
         pagination={{
-          current: query.pageNo,
+          current: query.currentPage,
           pageSize: query.pageSize,
           total: resultMap.total,
           showSizeChanger: true,
@@ -180,7 +180,7 @@ export default ({ title, curOrg }) => {
           showTotal: (total) => `共${total}条`,
           onChange: (page, pageSize) => {
             changeQuery({
-              pageNo: page,
+              currentPage: page,
               pageSize
             });
           }

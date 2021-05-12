@@ -120,6 +120,22 @@ export const orgsAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  createVcs: ({ orgId, name, vcsType, address, vcsToken, status }) => {
+    return post('/api/v1/user/create', {
+      name, vcsType, address, vcsToken, status
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  searchVcs: ({ orgId, pageSize, currentPage }) => {
+    return getWithArgs('/api/v1/user/search', {
+      status,
+      pageSize,
+      currentPage
+    }, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

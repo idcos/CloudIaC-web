@@ -55,7 +55,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
             name={'isSecret'}
             noStyle={true}
             valuePropName='checked'
-            // initialValue={false}
+            initialValue={false}
           >
             <Checkbox >
               密文
