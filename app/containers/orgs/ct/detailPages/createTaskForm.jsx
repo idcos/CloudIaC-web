@@ -92,7 +92,7 @@ export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDeta
       ]}
     >
       <Select placeholder='请选择'>
-        {ctRunnerList.map(it => <Option value={it.ID}>{it.Service}</Option>)}
+        {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join()}</Option>)}
       </Select>
     </Form.Item>
     <div
