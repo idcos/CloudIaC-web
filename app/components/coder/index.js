@@ -24,26 +24,29 @@ const FormCoder = ({
   style,
   onChange,
   selfClassName,
-  hight
+  hight,
+  options
 }) => {
+  const _options = {
+    lineNumbers: true, // show linenumbers
+    lineWrapping: true, // auto wrap
+    lint: true, // auto lint code
+    theme: 'material', // now we only support one theme
+    indentUnit: 2, // 2 space indent
+    tabSize: 2, // one tab size equals to 2 whitespace
+    mode: 'application/json',
+    specialChars: /\u001B/,
+    specialCharPlaceholder: function (char) {
+      return document.createElement('span');
+    },
+    ...options
+  };
   return (
     <Container style={style} hight={hight} className={selfClassName}>
       <ControlledEditor
         value={value}
         onBeforeChange={(editor, data, value) => onChange(value)}
-        options={{
-          lineNumbers: true, // show linenumbers
-          lineWrapping: true, // auto wrap
-          lint: true, // auto lint code
-          theme: 'material', // now we only support one theme
-          indentUnit: 2, // 2 space indent
-          tabSize: 2, // one tab size equals to 2 whitespace
-          mode: 'application/json',
-          specialChars: /\u001B/,
-          specialCharPlaceholder: function (char) {
-            return document.createElement('span');
-          }
-        }}
+        options={_options}
         className='Form_CodeMirror'
       />
     </Container>

@@ -261,6 +261,9 @@ export default (props) => {
             }
           >
             <Coder 
+              options={{
+                mode: 'ansi'
+              }}
               selfClassName='card-coder'
               value={taskLog} onChange={() => ''}
             />
