@@ -285,8 +285,11 @@ export default (props) => {
             renderItem={item => (
               <List.Item>
                 <List.Item.Meta
-                  title={<h2 className='title'>{item.creatorName}<span className='subTitle'>{timeUtils.format(item.createdAt)}</span></h2>}
-                  description={<p>{item.comment}</p>}
+                  title={
+                    <h2 className='title'>
+                      {item.creator}<span className='subTitle'>{timeUtils.format(item.createdAt)}</span>
+                    </h2>}
+                  description={<p className='content'>{item.comment}</p>}
                 />
               </List.Item>
             )}
