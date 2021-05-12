@@ -38,7 +38,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     }
   };
 
-  const genColumns = ({ editingKey, cancel, edit, save, del, form }) => {
+  const genColumns = ({ disabled, editingKey, cancel, edit, save, del, form }) => {
     return [
       {
         title: 'key',
@@ -98,9 +98,9 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               <a type='link' onClick={() => cancel(record)}>取消</a>
             </span>
           ) : <span className='inlineOp'>
-            <a type='link' onClick={() => edit(record)} disabled={editingKey}>编辑</a>
+            <a type='link' onClick={() => edit(record)} disabled={editingKey || disabled}>编辑</a>
             <Divider type='vertical' />
-            <a type='link' className={editingKey ? '' : 'danger'} disabled={editingKey} onClick={() => del(record)}>删除</a>
+            <a type='link' className={(editingKey || disabled) ? '' : 'danger'} disabled={editingKey || disabled} onClick={() => del(record)}>删除</a>
           </span>;
         }
       }
@@ -147,6 +147,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
         closable={true}
       />
       <FormWithInTable
+        disabled={detailInfo.status === "disable"}
         genColumns={genColumns}
         addBtnTxt={'添加Terraform变量'}
         dataSource={(detailInfo.vars || []).filter(it => it.type == 'terraform')}
@@ -159,6 +160,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       style={{ marginTop: 16 }}
     >
       <FormWithInTable
+        disabled={detailInfo.status === "disable"}
         genColumns={genColumns}
         addBtnTxt={'添加环境变量'}
         dataSource={(detailInfo.vars || []).filter(it => it.type == 'env')}
@@ -197,7 +199,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
             </Form.Item>
           </Col>
           <Col>
-            <Button htmlType='submit'>保存</Button>
+            <Button disabled={detailInfo.status === "disable"} htmlType='submit'>保存</Button>
           </Col>
         </Row>
       </Form>
@@ -206,7 +208,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 };
 
 
-const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType }) => {
+const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType, disabled }) => {
   const [ editingKey, setEditingKey ] = useState(null),
     [ resultList, setResultList ] = useState(dataSource);
 
@@ -279,6 +281,7 @@ const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType }) =
       }}
       columns={
         columnsOverride(genColumns({
+          disabled,
           cancel,
           edit,
           editingKey,
@@ -295,7 +298,7 @@ const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType }) =
       type='dashed'
       className='blockAdd'
       onClick={() => add()}
-      disabled={editingKey}
+      disabled={editingKey || disabled}
     >
       {addBtnTxt}
     </Button>

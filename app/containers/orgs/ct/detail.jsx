@@ -104,6 +104,7 @@ const CloudTmpDetail = (props) => {
               animated={false}
               tabBarExtraContent={
                 <Dropdown
+                  disabled={detailInfo.status === "disable"}
                   overlay={
                     <Menu
                       onClick={({ key }) =>
@@ -135,7 +136,7 @@ const CloudTmpDetail = (props) => {
                     overlayStyle={{ width: 500 }}
                     onVisibleChange={closePopover}
                   >
-                    <Button type='primary' icon={<DownOutlined />}>
+                    <Button disabled={detailInfo.status === "disable"} type='primary' icon={<DownOutlined />}>
                       新建作业
                     </Button>
                   </Popover>

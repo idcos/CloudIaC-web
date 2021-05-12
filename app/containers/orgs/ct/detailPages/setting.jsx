@@ -124,7 +124,7 @@ const Setting = (props) => {
           <Input.TextArea placeholder='请输入' />
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit' loading={submitLoading}>更新信息</Button>
+          <Button disabled={detailInfo.status === "disable"} type='primary' htmlType='submit' loading={submitLoading}>更新信息</Button>
         </Form.Item>
       </>,
       repo: <>
@@ -185,7 +185,7 @@ const Setting = (props) => {
           </div>
         </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit' loading={submitLoading}>更新信息</Button>
+          <Button disabled={detailInfo.status === "disable"} type='primary' htmlType='submit' loading={submitLoading}>更新信息</Button>
         </Form.Item>
       </>,
       del: <>

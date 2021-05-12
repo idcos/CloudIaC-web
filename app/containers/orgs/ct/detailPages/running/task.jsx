@@ -70,7 +70,7 @@ const items = [
 export default (props) => {
   const { match, routesParams } = props;
   const curTask = Number(match.params.curTask);
-  const { curOrg, linkToRunningDetail } = routesParams;
+  const { curOrg, linkToRunningDetail, detailInfo } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ fullScreen, setFullScreen ] = useState(false),
@@ -227,7 +227,7 @@ export default (props) => {
             taskInfo.taskType === 'plan' ?
               <Button 
                 onClick={applyTask} size='small'
-                disabled={taskInfo.status !== 'complete'} 
+                disabled={taskInfo.status !== 'complete' || detailInfo.status === "disable"} 
               >apply</Button> 
               : null
           }
@@ -307,7 +307,7 @@ export default (props) => {
             <Form.Item
               shouldUpdate={true}
             >
-              {({ getFieldValue }) => <Button type='primary' htmlType='submit' disabled={!getFieldValue('comment')}>发表评论</Button>}
+              {({ getFieldValue }) => <Button type='primary' htmlType='submit' disabled={!getFieldValue('comment') || detailInfo.status === "disable"}>发表评论</Button>}
             </Form.Item>
           </Form>
         </Panel>
