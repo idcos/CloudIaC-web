@@ -8,7 +8,7 @@ import moment from 'moment';
 import find from 'lodash/find';
 import isEmpty from 'lodash/isEmpty';
 
-const { Option } = Select;
+const { Option } = Select; 
 
 export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsInfo }) => {
   const [ loading, setLoading ] = useState(false),
