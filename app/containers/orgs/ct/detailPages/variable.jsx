@@ -61,20 +61,32 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               密文
             </Checkbox>
           </Form.Item>;
-          return <Form.Item
-            name='value'
-            rules={[
-              {
-                required: editingKey === pseudoID || !getFieldValue('isSecret'), // 编辑状态下密文value可留空
-                message: '请输入'
-              }
-            ]}
-            style={{
-              margin: 0
-            }}
-          >
-            {getFieldValue('isSecret') ? <Input.Password placeholder='空值保存时不会修改原有值' addonAfter={isSecret} visibilityToggle={false}/> : <Input addonAfter={isSecret}/>}
-          </Form.Item>;
+          return (
+            <Form.Item
+              name='value'
+              rules={[
+                {
+                  required: !(
+                    editingKey !== pseudoID && getFieldValue("isSecret")
+                  ), // 编辑状态下密文value可留空
+                  message: "请输入"
+                }
+              ]}
+              style={{
+                margin: 0
+              }}
+            >
+              {getFieldValue("isSecret") ? (
+                <Input.Password
+                  placeholder={editingKey !== pseudoID ? "空值保存时不会修改原有值" : ""} // 编辑状态密文可留空
+                  addonAfter={isSecret}
+                  visibilityToggle={false}
+                />
+              ) : (
+                <Input addonAfter={isSecret} />
+              )}
+            </Form.Item>
+          );
         },
         render: (text, record) => record.isSecret ? '***' : text
       },
