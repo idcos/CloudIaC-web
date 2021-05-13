@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Input, notification, Table, Card, Button, Select } from 'antd';
 import { ctAPI, orgsAPI } from 'services/base';
 
 import MarkdownParser from 'components/coder/markdown-parser';
 
 import moment from 'moment';
+import find from 'lodash/find';
+import isEmpty from 'lodash/isEmpty';
 
 const { Option } = Select;
 
-export default ({ stepHelper, selection, setSelection, curOrg }) => {
+export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsInfo }) => {
   const [ loading, setLoading ] = useState(false),
     [ codeStr, setCodeStr ] = useState(''),
     [ vcsList, setVcsList ] = useState([]),
-    [ vcsValue, setVcsValue ] = useState(),
+    [ vcsId, setVcsId ] = useState(),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -27,13 +29,25 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
   }, []);
 
   useEffect(() => {
-    fetchList();
-  }, [query]);
+    const vcsItem = find(vcsList, [ 'id', vcsId ]);
+    if (vcsItem) {
+      setVcsInfo({
+        url: vcsItem.address,
+        token: vcsItem.vcsToken,
+        type: vcsItem.vcsType
+      });
+    }
+  }, [vcsId]);
+
+  useEffect(() => {
+    if (!isEmpty(vcsInfo)) {
+      fetchList();
+    }
+  }, [vcsInfo]);
 
   const fetchVcsList = async () => {
     try {
-      const res = await orgsAPI.searchVcs({
-        pageSize: 5000,
+      const res = await orgsAPI.searchEnableVcs({
         orgId: curOrg.id
       });
       if (res.code !== 200) {
@@ -41,7 +55,7 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
       }
       const list = res.result.list;
       setVcsList(list);
-      setVcsValue(list[0] && list[0].id);
+      setVcsId(list[0] && list[0].id);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -50,13 +64,13 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
     }
   };
 
-
   const fetchList = async () => {
     try {
       setLoading(true);
       const res = await ctAPI.listRepo({
+        orgId: curOrg.id,
         ...query,
-        orgId: curOrg.id
+        ...vcsInfo
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -80,7 +94,8 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
       const res = await ctAPI.repoReadme({
         repoId,
         orgId: curOrg.id,
-        branch: 'master'
+        branch: 'master',
+        ...vcsInfo
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -134,7 +149,7 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
   return <div className='step1'>
     <div className={hasSelection() ? 'hidden' : ''}>
       <div>
-        <Select style={{ width: 160, marginRight: 8 }} placeholder='请选择' value={vcsValue} onChange={setVcsValue}>
+        <Select style={{ width: 160, marginRight: 8 }} placeholder='请选择' value={vcsId} onChange={setVcsId}>
           {vcsList.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
         <Input.Search

@@ -1,5 +1,4 @@
 import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
-import pickBy from 'lodash/pickBy';
 
 export const orgsAPI = {
   list: ({ status, q, pageNo, pageSize } = {}) => {
@@ -153,6 +152,11 @@ export const orgsAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  searchEnableVcs: ({ orgId }) => {
+    return get('/api/v1/vcs/listEnableVcs', {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
@@ -182,18 +186,21 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  listRepo: ({ orgId, pageNo, pageSize, name }) => {
+  listRepo: ({ orgId, pageNo, pageSize, name, url, token, type }) => {
     return getWithArgs('/api/v1/gitlab/listRepos', {
       q: name,
+      currentPage: pageNo,
       pageSize,
-      currentPage: pageNo
+      url, 
+      token, 
+      type
     }, {
       'IaC-Org-Id': orgId
     });
   },
-  listRepoBranch: ({ repoId, orgId }) => {
+  listRepoBranch: ({ repoId, orgId, url, token, type }) => {
     return getWithArgs('/api/v1/gitlab/listBranches', {
-      repoId
+      repoId, url, token, type
     }, {
       'IaC-Org-Id': orgId
     });
@@ -270,9 +277,9 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  repoReadme: ({ orgId, repoId, branch }) => {
+  repoReadme: ({ orgId, repoId, branch, url, token, type }) => {
     return getWithArgs('/api/v1/gitlab/getReadme', {
-      repoId, branch
+      repoId, branch, url, token, type 
     }, {
       'IaC-Org-Id': orgId
     });

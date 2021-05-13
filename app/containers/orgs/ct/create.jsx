@@ -9,8 +9,6 @@ import Step1 from './createPages/step1';
 import Step2 from './createPages/step2';
 
 import styles from './styles.less';
-import { connect } from "react-redux";
-import { compose } from "redux";
 
 const { Step } = Steps;
 
@@ -21,6 +19,7 @@ const steps = {
 
 const CloudTmpCreate = ({ routesParams }) => {
   const [ step, setStep ] = useState(0),
+    [ vcsInfo, setVcsInfo ] = useState({}),
     [ selection, setSelection ] = useState({});
 
   const stepHelper = useCallback(() => {
@@ -48,6 +47,8 @@ const CloudTmpCreate = ({ routesParams }) => {
             stepHelper={stepHelper()}
             selection={selection}
             setSelection={setSelection}
+            vcsInfo={vcsInfo}
+            setVcsInfo={setVcsInfo}
             curOrg={routesParams.curOrg}
           />
         </div>
@@ -55,6 +56,7 @@ const CloudTmpCreate = ({ routesParams }) => {
           <Step2
             selection={selection}
             stepHelper={stepHelper()}
+            vcsInfo={vcsInfo}
             curOrg={routesParams.curOrg}
           />
         </div>

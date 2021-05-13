@@ -10,19 +10,16 @@ const FL = {
 };
 const { Option } = Select;
 
-export default ({ stepHelper, selection, curOrg }) => {
+export default ({ stepHelper, selection, curOrg, vcsInfo }) => {
   const { selectedRows } = selection;
   const [ repoBranches, setRepoBranches ] = useState([]),
     [ ctRunnerList, setCtRunnerList ] = useState([]),
     [ submitLoading, setSubmitLoading ] = useState(false);
   
   useEffect(() => {
-    fetchCTRunner();
-  }, []);
-
-  useEffect(() => {
     if (selectedRows && selectedRows[0]) {
       fetchRepoBranch();
+      fetchCTRunner();
     }
   }, [selectedRows]);
 
@@ -45,7 +42,8 @@ export default ({ stepHelper, selection, curOrg }) => {
     try {
       const res = await ctAPI.listRepoBranch({
         repoId: selectedRows[0].id,
-        orgId: curOrg.id
+        orgId: curOrg.id,
+        ...vcsInfo
       });
       if (res.code != 200) {
         throw new Error(res.message);
