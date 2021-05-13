@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Input, notification, Select, Space, Button } from 'antd';
 import { sysAPI } from 'services/base';
 import { ctAPI } from 'services/base';
-
+import findIndex from 'lodash/findIndex';
 
 const { Option } = Select;
 const FL = {
@@ -26,7 +26,9 @@ export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDeta
         throw new Error(res.message);
       }
       setCtRunnerList(res.result || []);
-      form.setFieldsValue({ ctServiceId: ctDetailInfo.defaultRunnerServiceId });
+      if (findIndex(res.result || [], [ 'ID', ctDetailInfo.defaultRunnerServiceId ]) !== -1) {
+        form.setFieldsValue({ ctServiceId: ctDetailInfo.defaultRunnerServiceId });
+      }
     } catch (e) {
       notification.error({
         message: '获取失败',
