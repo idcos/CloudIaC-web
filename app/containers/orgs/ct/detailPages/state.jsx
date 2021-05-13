@@ -3,6 +3,7 @@ import { Card, Divider, List, notification, Space, Button } from 'antd';
 import Coder from 'components/coder';
 import { CT } from 'constants/types';
 import { ctAPI } from 'services/base';
+import RunningTaskItem from './components/runningTaskItem';
 import {
   FullscreenExitOutlined, FullscreenOutlined
 } from '@ant-design/icons';
@@ -10,7 +11,7 @@ import { statusTextCls } from 'utils/util';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 
-const State = ({ routesParams: { curOrg, detailInfo } }) => {
+const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail } }) => {
   const [ stateFileStr, setStateFileStr ] = useState('');
   const [ taskInfo, setTaskInfo ] = useState({});
   const [ fullScreen, setFullScreen ] = useState(false);
@@ -64,37 +65,7 @@ const State = ({ routesParams: { curOrg, detailInfo } }) => {
             <List
               itemLayout='horizontal'
               dataSource={[taskInfo]}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={
-                      <h2>
-                        {item.creatorName || "-"}{" "}
-                        {moment(item.createdAt).fromNow() || "-"} 从{" "}
-                        {item.repoBranch} {item.commitId}
-                      </h2>
-                    }
-                    description={
-                      <Space split={<Divider type='vertical' />}>
-                        <span>{item.guid}</span>
-                        <span>{CT.taskType[item.taskType]}</span>
-                        <span>{item.ctServiceId}</span>
-                      </Space>
-                    }
-                  />
-                  <div className='list-content'>
-                    <span
-                      className={`status-text ${
-                        statusTextCls(item.status).cls
-                      }`}
-                    >
-                      {CT.taskStatusIcon[item.status]}{" "}
-                      {CT.taskStatus[item.status]}
-                    </span>
-                    <p>{moment(item.endAt).fromNow()}</p>
-                  </div>
-                </List.Item>
-              )}
+              renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail}/>}
             />
           </div>
         </Card>
