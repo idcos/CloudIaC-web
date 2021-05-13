@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Radio, Select, Form, Input, Button, InputNumber, notification, Row, Col } from "antd";
 
-import { ctAPI } from 'services/base';
+import { ctAPI, sysAPI } from 'services/base';
 import history from 'utils/history';
 
 const FL = {
@@ -13,13 +13,33 @@ const { Option } = Select;
 export default ({ stepHelper, selection, curOrg }) => {
   const { selectedRows } = selection;
   const [ repoBranches, setRepoBranches ] = useState([]),
+    [ ctRunnerList, setCtRunnerList ] = useState([]),
     [ submitLoading, setSubmitLoading ] = useState(false);
+  
+  useEffect(() => {
+    fetchCTRunner();
+  }, []);
 
   useEffect(() => {
     if (selectedRows && selectedRows[0]) {
       fetchRepoBranch();
     }
   }, [selectedRows]);
+
+  const fetchCTRunner = async () => {
+    try {
+      const res = await sysAPI.listCTRunner({ orgId: curOrg.id });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setCtRunnerList(res.result || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   const fetchRepoBranch = async () => {
     try {
@@ -43,11 +63,20 @@ export default ({ stepHelper, selection, curOrg }) => {
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
+      const { ctServiceId, ...restValues } = values;
+      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId);
+      if (!ctInfo) {
+        throw new Error('获取CT Runner失败');
+      }
+      const { Port, Address } = ctInfo;
       const res = await ctAPI.createCt({
-        ...values,
+        ...restValues,
         repoId: selectedRows[0].id,
         repoAddr: selectedRows[0].http_url_to_repo,
-        orgId: curOrg.id
+        orgId: curOrg.id,
+        defaultRunnerServiceId: ctServiceId,
+        defaultRunnerAddr: Address,
+        defaultRunnerPort: Port
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -153,10 +182,10 @@ export default ({ stepHelper, selection, curOrg }) => {
             </Space>
           </Form.Item>
         </Col>
-        {/* <Col span={12}>
+        <Col span={12}>
           <Form.Item
             label='默认ct-runner'
-            name='ctRunner'
+            name='ctServiceId'
             rules={[
               {
                 required: true,
@@ -165,10 +194,10 @@ export default ({ stepHelper, selection, curOrg }) => {
             ]}
           >
             <Select placeholder='请选择ct-runner'>
-              {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
+              {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join()}</Option>)}
             </Select>
           </Form.Item>
-        </Col> */}
+        </Col>
       </Row>
       <Space>
         <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>

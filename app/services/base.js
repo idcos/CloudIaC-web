@@ -198,9 +198,13 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  createCt: ({ orgId, name, description, repoId, repoAddr, repoBranch, saveState, varfile, timeout, vars, extra }) => {
+  createCt: ({ 
+    orgId, name, description, repoId, repoAddr, repoBranch, saveState, varfile, timeout, 
+    vars, extra, defaultRunnerAddr, defaultRunnerPort, defaultRunnerServiceId
+  }) => {
     return post('/api/v1/template/create', {
-      name, description, repoId, repoAddr, repoBranch, saveState, varfile, timeout, vars, extra
+      name, description, repoId, repoAddr, repoBranch, saveState, varfile, timeout, vars, extra,
+      defaultRunnerAddr, defaultRunnerPort, defaultRunnerServiceId
     }, {
       'IaC-Org-Id': orgId
     });
