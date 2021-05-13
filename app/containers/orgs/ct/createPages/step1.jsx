@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, notification, Table, Card, Button, Select } from 'antd';
-import { ctAPI } from 'services/base';
+import { ctAPI, orgsAPI } from 'services/base';
 
 import MarkdownParser from 'components/coder/markdown-parser';
 
@@ -11,6 +11,8 @@ const { Option } = Select;
 export default ({ stepHelper, selection, setSelection, curOrg }) => {
   const [ loading, setLoading ] = useState(false),
     [ codeStr, setCodeStr ] = useState(''),
+    [ vcsList, setVcsList ] = useState([]),
+    [ vcsValue, setVcsValue ] = useState(),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -21,8 +23,32 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
     });
 
   useEffect(() => {
+    fetchVcsList();
+  }, []);
+
+  useEffect(() => {
     fetchList();
   }, [query]);
+
+  const fetchVcsList = async () => {
+    try {
+      const res = await orgsAPI.searchVcs({
+        pageSize: 5000,
+        orgId: curOrg.id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      const list = res.result.list;
+      setVcsList(list);
+      setVcsValue(list[0] && list[0].id);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
 
   const fetchList = async () => {
@@ -108,8 +134,8 @@ export default ({ stepHelper, selection, setSelection, curOrg }) => {
   return <div className='step1'>
     <div className={hasSelection() ? 'hidden' : ''}>
       <div>
-        <Select style={{ width: 160, marginRight: 8 }} placeholder='请选择分支'>
-          {[{ name: '全部vcs', value: '' }, { name: '1', value: '1' }].map(it => <Option value={it.name}>{it.name}</Option>)}
+        <Select style={{ width: 160, marginRight: 8 }} placeholder='请选择' value={vcsValue} onChange={setVcsValue}>
+          {vcsList.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
         <Input.Search
           placeholder='请输入仓库名称搜索'
