@@ -11,6 +11,8 @@ const FL = {
 };
 
 export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDetail }) => {
+
+  const [form] = Form.useForm();
   const [ ctRunnerList, setCtRunnerList ] = useState([]);
 
   useEffect(() => {
@@ -24,6 +26,7 @@ export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDeta
         throw new Error(res.message);
       }
       setCtRunnerList(res.result || []);
+      form.setFieldsValue({ ctServiceId: ctDetailInfo.defaultRunnerServiceId });
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -67,6 +70,7 @@ export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDeta
   };
 
   return <Form
+    form={form}
     {...FL}
     onFinish={onFinish}
   >
