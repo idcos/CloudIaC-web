@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Card, Divider, List, notification, Radio, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Card, List, notification, Radio } from 'antd';
 
 import { ctAPI } from 'services/base';
-import { CT } from 'constants/types';
-import { statusTextCls } from 'utils/util';
-import moment from 'moment';
+import RunningTaskItem from '../components/runningTaskItem';
 
 const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail } }) => {
   const [ loading, setLoading ] = useState(false),
@@ -72,31 +70,7 @@ const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail } }) => {
             loading={loading}
             itemLayout='horizontal'
             dataSource={resultMap.list}
-            renderItem={item => (
-              <List.Item>
-                <List.Item.Meta
-                  title={<h2
-                    className='list-title'
-                    onClick={() => {
-                      linkToRunningDetail(item.id);
-                    }}
-                  >
-                    {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {item.repoBranch} {item.commitId}执行作业
-                  </h2>}
-                  description={
-                    <Space split={<Divider type='vertical' />}>
-                      <span>{item.guid}</span>
-                      <span>{CT.taskType[item.taskType]}</span>
-                      <span>{item.ctServiceId}</span>
-                    </Space>
-                  }
-                />
-                <div className='list-content'>
-                  <span className={`status-text ${statusTextCls(item.status).cls}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
-                  <p>{moment(item.endAt).fromNow()}</p>
-                </div>
-              </List.Item>
-            )}
+            renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail}/>}
             pagination={{
               current: query.pageNo,
               pageSize: query.pageSize,

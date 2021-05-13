@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Card, List, Space, Divider, notification } from 'antd';
-
-import MarkdownParser from 'components/coder/markdown-parser';
+import { BranchesOutlined, UserOutlined, GitlabFilled } from '@ant-design/icons';
 
 import { ctAPI } from 'services/base';
-import { CT } from 'constants/types';
-import { statusTextCls } from 'utils/util';
-import moment from 'moment';
-
-import { BranchesOutlined, UserOutlined, GitlabFilled } from '@ant-design/icons';
+import MarkdownParser from 'components/coder/markdown-parser';
+import RunningTaskItem from './components/runningTaskItem';
 
 const jobInfoItems = {
   num: {
@@ -113,30 +109,7 @@ const Overview = ({ routesParams: { curOrg, detailInfo, ctId, changeTab, linkToR
               <List
                 itemLayout='horizontal'
                 dataSource={overviewInfo.task || []}
-                renderItem={item => (
-                  <List.Item>
-                    <List.Item.Meta
-                      title={<h2 
-                        className='list-title'
-                        onClick={() => {
-                          linkToRunningDetail(item.id);
-                        }}
-                      >
-                        {item.creatorName || '-'} {moment(item.createdAt).fromNow() || '-'} 从 {overviewInfo.repoBranch} {item.commitId}执行作业
-                      </h2>}
-                      description={
-                        <Space split={<Divider type='vertical' />}>
-                          <span>{item.guid}</span>
-                          <span>{CT.taskType[item.taskType]}</span>
-                        </Space>
-                      }
-                    />
-                    <div className='list-content'>
-                      <span className={`status-text ${statusTextCls(item.status).cls}`}>{CT.taskStatusIcon[item.status]} {CT.taskStatus[item.status]}</span>
-                      <p>{item.endTime && moment(moment().subtract(item.endTime, 'seconds')).fromNow()}</p>
-                    </div>
-                  </List.Item>
-                )}
+                renderItem={item => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail}/>}
               />
             </div>
           </Card>
