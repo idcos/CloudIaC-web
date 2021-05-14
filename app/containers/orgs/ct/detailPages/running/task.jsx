@@ -227,7 +227,7 @@ export default (props) => {
             taskInfo.taskType === 'plan' ?
               <Button 
                 onClick={applyTask} size='small'
-                disabled={taskInfo.status !== 'complete' || detailInfo.status === "disable"} 
+                disabled={!taskInfo.allowApply || detailInfo.status === "disable"} 
               >apply</Button> 
               : null
           }
