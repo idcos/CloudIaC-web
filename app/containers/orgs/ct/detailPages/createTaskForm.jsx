@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, notification, Select, Space, Button } from 'antd';
-import { sysAPI } from 'services/base';
-import { ctAPI } from 'services/base';
 import findIndex from 'lodash/findIndex';
+
+import { ctAPI } from 'services/base';
 
 const { Option } = Select;
 const FL = {
@@ -10,32 +10,15 @@ const FL = {
   wrapperCol: { span: 18 }
 };
 
-export default ({ closePopover, taskType, orgId, ctDetailInfo, linkToRunningDetail }) => {
+export default ({ closePopover, ctRunnerList, taskType, orgId, ctDetailInfo, linkToRunningDetail }) => {
 
   const [form] = Form.useForm();
-  const [ ctRunnerList, setCtRunnerList ] = useState([]);
 
   useEffect(() => {
-    fetchCTRunner();
-  }, []);
-
-  const fetchCTRunner = async () => {
-    try {
-      const res = await sysAPI.listCTRunner({ orgId });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setCtRunnerList(res.result || []);
-      if (findIndex(res.result || [], [ 'ID', ctDetailInfo.defaultRunnerServiceId ]) !== -1) {
-        form.setFieldsValue({ ctServiceId: ctDetailInfo.defaultRunnerServiceId });
-      }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
+    if (findIndex(ctRunnerList || [], [ 'ID', ctDetailInfo.defaultRunnerServiceId ]) !== -1) {
+      form.setFieldsValue({ ctServiceId: ctDetailInfo.defaultRunnerServiceId });
     }
-  };
+  }, [ ctRunnerList, ctDetailInfo.defaultRunnerServiceId ]);
 
   const onFinish = async (values) => {
     try {

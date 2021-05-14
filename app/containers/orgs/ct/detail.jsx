@@ -17,7 +17,7 @@ import RoutesList from "components/routes-list";
 import styles from "./styles.less";
 import CreateTaskForm from "./detailPages/createTaskForm";
 import { DownOutlined } from "@ant-design/icons";
-import { ctAPI } from "services/base";
+import { ctAPI, sysAPI } from "services/base";
 import { CT } from "constants/types";
 
 const subNavs = {
@@ -30,17 +30,19 @@ const subNavs = {
 
 const CloudTmpDetail = (props) => {
   const { match, routesParams, routes, location } = props,
-    { ctId, orgId, ctDetailTabKey } = match.params,
+    { ctId, orgId: orgGuid, ctDetailTabKey } = match.params,
     { cacheDetailInfo } = location.state || {},
-    baseUrl = `/org/${orgId}/ct/${ctId}`;
+    baseUrl = `/org/${orgGuid}/ct/${ctId}`;
 
   const [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),
+    [ ctRunnerList, setCtRunnerList ] = useState([]),
     [ detailInfo, setDetailInfo ] = useState(cacheDetailInfo || {});
 
   useEffect(() => {
     // if (!cacheDetailInfo) {
     fetchDetailInfo();
+    fetchCTRunner();
     // }
   }, []);
 
@@ -76,6 +78,22 @@ const CloudTmpDetail = (props) => {
     } catch (e) {
       notification.error({
         message: e.message
+      });
+    }
+  };
+
+  const fetchCTRunner = async () => {
+    try {
+      const res = await sysAPI.listCTRunner({ orgId: routesParams.curOrg.id });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setCtRunnerList(res.result || []);
+     
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
       });
     }
   };
@@ -126,6 +144,7 @@ const CloudTmpDetail = (props) => {
                           closePopover={closePopover}
                           taskType={taskType}
                           orgId={routesParams.curOrg.id}
+                          ctRunnerList={ctRunnerList}
                           ctDetailInfo={detailInfo}
                         />
                       )
@@ -193,6 +212,7 @@ const CloudTmpDetail = (props) => {
               curOrg: routesParams.curOrg,
               ctId,
               detailInfo,
+              ctRunnerList,
               changeTab,
               linkToRunningDetail,
               reload: fetchDetailInfo

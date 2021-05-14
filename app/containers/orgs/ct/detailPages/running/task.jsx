@@ -70,7 +70,7 @@ const items = [
 export default (props) => {
   const { match, routesParams } = props;
   const curTask = Number(match.params.curTask);
-  const { curOrg, linkToRunningDetail, detailInfo } = routesParams;
+  const { curOrg, linkToRunningDetail, detailInfo, ctRunnerList } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ fullScreen, setFullScreen ] = useState(false),
@@ -176,15 +176,8 @@ export default (props) => {
   const applyTask = async (e) => {
     e.stopPropagation();
     try {
-      const cTRunnerRes = await sysAPI.listCTRunner({ orgId: curOrg.id });
-      if (cTRunnerRes.code !== 200) {
-        throw new Error(cTRunnerRes.message);
-      }
       const { name, ctServiceId, templateId, templateGuid } = taskInfo;
-      const ctInfo = cTRunnerRes.result.find(it => it.ID == ctServiceId);
-      if (!ctInfo) {
-        throw new Error('获取CT Runner失败');
-      }
+      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId) || {};
       const { Port, Address } = ctInfo;
       const createTaskRes = await ctAPI.createTask({
         taskType: 'apply',
