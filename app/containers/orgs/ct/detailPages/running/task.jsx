@@ -59,7 +59,7 @@ const items = [
     render: (taskInfo) => {
       const { backendInfo, ctRunnerList } = taskInfo;
       const { ctServiceId } = backendInfo || {};
-      return formatCTRunner(ctRunnerList, ctServiceId)
+      return formatCTRunner(ctRunnerList, ctServiceId);
     }
   }, {
     label: '作业运行时间',
@@ -233,7 +233,7 @@ export default (props) => {
             column={2}
           >
             {items.map(it => <Item label={it.label} span={it.span || 1}>
-              {it.render ? it.render({...(taskInfo || {}), ctRunnerList}) : taskInfo[it.key]}
+              {it.render ? it.render({ ...taskInfo, ctRunnerList }) : taskInfo[it.key]}
             </Item>)}
           </Descriptions>
         </Panel>

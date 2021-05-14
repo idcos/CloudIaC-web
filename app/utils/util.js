@@ -54,6 +54,6 @@ export const statusTextCls = (status) => {
 };
 
 export const formatCTRunner = (ctRunnerList, cTRunnerId) => {
-  const {Tags} = find(ctRunnerList, ['ID', cTRunnerId]) || {};
+  const { Tags } = find(ctRunnerList, [ 'ID', cTRunnerId ]) || {};
   return Tags && Tags.join();
-}
+};
