@@ -1,14 +1,14 @@
 import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { Card, Radio, Menu, Form, Input, Button, InputNumber, Divider, notification, Space } from "antd";
+import { Card, Radio, Menu, Form, Input, Button, InputNumber, Select, notification, Space } from "antd";
 
 import { ctAPI } from 'services/base';
 
+const { Option } = Select;
 const subNavs = {
   basic: '基本信息',
   repo: '仓库信息',
   del: '操作权限'
 };
-
 const FL = {
   labelCol: { span: 8 },
   wrapperCol: { span: 10 }
@@ -17,7 +17,7 @@ const FL = {
 const Setting = (props) => {
 
   const { routesParams, location } = props;
-  const { curOrg, ctId, detailInfo, reload } = routesParams;
+  const { curOrg, ctId, detailInfo, ctRunnerList, reload } = routesParams;
   const { initSettingPanel } = location.state || {};
   const [ panel, setPanel ] = useState(initSettingPanel || 'basic');
   const [ submitLoading, setSubmitLoading ] = useState(false);
@@ -26,10 +26,19 @@ const Setting = (props) => {
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
+      const { ctServiceId, ...restValues } = values;
+      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId);
+      if (!ctInfo) {
+        throw new Error('获取CT Runner失败');
+      }
+      const { Port, Address } = ctInfo;
       const res = await ctAPI.edit({
-        ...values,
+        ...restValues,
         orgId: curOrg.id,
-        id: ctId - 0
+        id: ctId - 0,
+        defaultRunnerServiceId: ctServiceId,
+        defaultRunnerAddr: Address,
+        defaultRunnerPort: Port
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -112,6 +121,38 @@ const Setting = (props) => {
             <Radio value={true}>保存</Radio>
           </Radio.Group>
         </Form.Item>
+        <Form.Item label='运行超时' required={true}>
+          <Space>
+            <Form.Item
+              name='timeout'
+              rules={[
+                {
+                  required: true,
+                  message: '请输入'
+                }
+              ]}
+              style={{ display: 'inline-block' }}
+              noStyle={true}
+            >
+              <InputNumber min={0}/>
+            </Form.Item>
+            <Form.Item
+              style={{ display: 'inline-block' }}
+              noStyle={true}
+            >
+              秒
+            </Form.Item>
+          </Space>
+        </Form.Item>
+        <Form.Item label='默认ct-runner' name='ctServiceId'
+          rules={[
+            { required: true, message: '请选择' }
+          ]}
+        >
+          <Select placeholder='请选择ct-runner'>
+            {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join()}</Option>)}
+          </Select>
+        </Form.Item>
         <Form.Item
           label='描述'
           name='description'
@@ -151,29 +192,6 @@ const Setting = (props) => {
           ]}
         >
           <Input placeholder='请输入仓库分支' disabled={true}/>
-        </Form.Item>
-        <Form.Item label='运行超时' required={true}>
-          <Space>
-            <Form.Item
-              name='timeout'
-              rules={[
-                {
-                  required: true,
-                  message: '请输入'
-                }
-              ]}
-              style={{ display: 'inline-block' }}
-              noStyle={true}
-            >
-              <InputNumber min={0}/>
-            </Form.Item>
-            <Form.Item
-              style={{ display: 'inline-block' }}
-              noStyle={true}
-            >
-              秒
-            </Form.Item>
-          </Space>
         </Form.Item>
         <Form.Item
           label='其他信息'
@@ -215,7 +233,7 @@ const Setting = (props) => {
       </>
     };
     return PAGES[panel];
-  }, [ panel, detailInfo ]);
+  }, [ panel, detailInfo, ctRunnerList ]);
 
   return <div className='setting'>
     <Menu

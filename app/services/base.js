@@ -214,9 +214,13 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  edit: ({ orgId, id, name, description, saveState, varfile, timeout, vars, extra, status }) => {
+  edit: ({ 
+    orgId, id, name, description, saveState, varfile, timeout, vars, extra, 
+    status, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
+  }) => {
     return put('/api/v1/template/update', {
-      id, name, description, saveState, varfile, timeout, vars, extra, status
+      id, name, description, saveState, varfile, timeout, vars, extra, 
+      status, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
     }, {
       'IaC-Org-Id': orgId
     });
