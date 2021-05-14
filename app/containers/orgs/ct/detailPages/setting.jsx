@@ -1,7 +1,8 @@
-import React, { useState, useCallback, useContext, useEffect } from 'react';
-import { Card, Radio, Menu, Form, Input, Button, InputNumber, Select, notification, Space } from "antd";
+import React, { useState, useCallback, useEffect } from 'react';
+import { Card, Radio, Menu, Form, Input, Button, InputNumber, Select, notification, Space, Tooltip } from "antd";
 
 import { ctAPI } from 'services/base';
+import { InfoIcon } from 'components/common/localIcon';
 
 const { Option } = Select;
 const subNavs = {
@@ -117,9 +118,17 @@ const Setting = (props) => {
           ]}
         >
           <Radio.Group>
-            <Radio value={false}>不保存</Radio>
-            <Radio value={true}>保存</Radio>
+            <Radio value={false}>
+              不保存
+            </Radio>
+            <Radio value={true}>
+              保存
+              <Tooltip title='不保存状态在反复运行时的极大概率会出现资源名字/IP地址冲突'>
+                <span> <InfoIcon/> </span>
+              </Tooltip>
+            </Radio>
           </Radio.Group>
+          
         </Form.Item>
         <Form.Item label='运行超时' required={true}>
           <Space>
