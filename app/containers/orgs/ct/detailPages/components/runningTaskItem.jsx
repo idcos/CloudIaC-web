@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import { CT } from 'constants/types';
 import { statusTextCls } from 'utils/util';
+import { CommitIdIcon, BranchesIcon } from 'components/common/localIcon';
 
 export default ({ item, linkToRunningDetail }) => {
   return (
@@ -25,8 +26,8 @@ export default ({ item, linkToRunningDetail }) => {
             { item.guid ? <span>{item.guid}</span> : null }
             { item.creatorName ? <span>{item.creatorName}</span> : null }
             { item.ctServiceId ? <span>{item.ctServiceId}</span> : null }
-            { item.repoBranch ? <span>{item.repoBranch}</span> : null }
-            { item.commitId ? <span>{item.commitId.slice(0, 8)}</span> : null }
+            { item.repoBranch ? <span><BranchesIcon/> {item.repoBranch} </span> : null }
+            { item.commitId ? <span><CommitIdIcon/> {item.commitId.slice(0, 8)} </span> : null }
             <span>
               <span className='code-number code-number-add'>+{item.add}</span>
               <span className='code-number code-number-change'>~{item.change}</span>
