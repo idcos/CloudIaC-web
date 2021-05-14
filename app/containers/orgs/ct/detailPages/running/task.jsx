@@ -174,7 +174,7 @@ export default (props) => {
   };
 
   const applyTask = async (e) => {
-    e.preventDefault();
+    e.stopPropagation();
     try {
       const cTRunnerRes = await sysAPI.listCTRunner({ orgId: curOrg.id });
       if (cTRunnerRes.code !== 200) {
