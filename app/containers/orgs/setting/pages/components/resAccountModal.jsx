@@ -108,7 +108,9 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                 );
               }}
             </Form.Item>
-            <DeleteOutlined onClick={() => remove(name)} />
+            <Form.Item>
+              <DeleteOutlined onClick={() => remove(name)} />
+            </Form.Item>
           </Space>
         );
       })}
