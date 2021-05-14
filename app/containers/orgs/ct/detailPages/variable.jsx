@@ -23,11 +23,12 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
   const fetchTfvars = async () => {
     try {
-      const { repoId, repoBranch } = detailInfo;
+      const { repoId, repoBranch, vcsId } = detailInfo;
       const res = await ctAPI.tfvars({
         orgId: curOrg.id,
         repoId,
-        repoBranch
+        repoBranch,
+        vcsId
       });
       if (res.code !== 200) {
         throw new Error(res.message);

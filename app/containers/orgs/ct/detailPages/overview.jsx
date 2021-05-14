@@ -83,7 +83,8 @@ const Overview = ({ routesParams: { curOrg, detailInfo, ctRunnerList, ctId, chan
       const res = await ctAPI.repoReadme({
         repoId,
         branch: repoBranch,
-        orgId: curOrg.id
+        orgId: curOrg.id,
+        vcsId: detailInfo.vcsId
       });
       if (res.code !== 200) {
         throw new Error(res.message);

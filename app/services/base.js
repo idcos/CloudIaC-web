@@ -205,11 +205,11 @@ export const ctAPI = {
   },
   createCt: ({ 
     orgId, name, description, repoId, repoAddr, repoBranch, saveState, varfile, timeout, 
-    vars, extra, defaultRunnerAddr, defaultRunnerPort, defaultRunnerServiceId
+    vars, extra, vcsId, defaultRunnerAddr, defaultRunnerPort, defaultRunnerServiceId
   }) => {
     return post('/api/v1/template/create', {
       name, description, repoId, repoAddr, repoBranch, saveState, varfile, timeout, vars, extra,
-      defaultRunnerAddr, defaultRunnerPort, defaultRunnerServiceId
+      vcsId, defaultRunnerAddr, defaultRunnerPort, defaultRunnerServiceId
     }, {
       'IaC-Org-Id': orgId
     });
@@ -239,9 +239,9 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  createTask: ({ orgId, name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType }) => {
+  createTask: ({ orgId, vcsId, name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType }) => {
     return post('/api/v1/task/create', {
-      name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType
+      vcsId, name, ctServiceIp, ctServicePort, ctServiceId, templateId, templateGuid, taskType
     }, {
       'IaC-Org-Id': orgId
     });
@@ -293,9 +293,9 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  tfvars: ({ orgId, repoId, repoBranch }) => {
+  tfvars: ({ orgId, repoId, repoBranch, vcsId }) => {
     return getWithArgs('/api/v1/templateTfvars/search', {
-      repoId, repoBranch
+      vcsId, repoId, repoBranch
     }, {
       'IaC-Org-Id': orgId
     });

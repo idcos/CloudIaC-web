@@ -190,6 +190,7 @@ export default (props) => {
         ctServiceId,
         templateId,
         templateGuid,
+        vcsId: detailInfo.vcsId,
         ctServiceIp: Address,
         ctServicePort: Port
       });

@@ -72,6 +72,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
         repoId: selectedRows[0].id,
         repoAddr: selectedRows[0].http_url_to_repo,
         orgId: curOrg.id,
+        vcsId,
         defaultRunnerServiceId: ctServiceId,
         defaultRunnerAddr: Address,
         defaultRunnerPort: Port

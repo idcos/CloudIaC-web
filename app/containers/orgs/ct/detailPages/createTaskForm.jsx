@@ -33,6 +33,7 @@ export default ({ closePopover, ctRunnerList, taskType, orgId, ctDetailInfo, lin
         orgId,
         ctServiceId,
         ...restValues,
+        vcsId: ctDetailInfo.vcsId,
         templateId: ctDetailInfo.id,
         templateGuid: ctDetailInfo.guid,
         ctServiceIp: Address,
