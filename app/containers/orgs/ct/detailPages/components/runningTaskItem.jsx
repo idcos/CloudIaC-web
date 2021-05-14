@@ -3,10 +3,10 @@ import { Tag, Divider, List, Space } from "antd";
 import moment from 'moment';
 
 import { CT } from 'constants/types';
-import { statusTextCls } from 'utils/util';
+import { statusTextCls, formatCTRunner } from 'utils/util';
 import { CommitIdIcon, BranchesIcon } from 'components/common/localIcon';
 
-export default ({ item, linkToRunningDetail }) => {
+export default ({ item, linkToRunningDetail, ctRunnerList }) => {
   return (
     <List.Item className='running-task-item'>
       <List.Item.Meta
@@ -25,7 +25,7 @@ export default ({ item, linkToRunningDetail }) => {
           <Space split={<Divider type='vertical' />}>
             { item.guid ? <span>{item.guid}</span> : null }
             { item.creatorName ? <span>{item.creatorName}</span> : null }
-            { item.ctServiceId ? <span>{item.ctServiceId}</span> : null }
+            { item.ctServiceId ? <span>{formatCTRunner(ctRunnerList, item.ctServiceId)}</span> : null }
             { item.repoBranch ? <span><BranchesIcon/> {item.repoBranch} </span> : null }
             { item.commitId ? <span><CommitIdIcon/> {item.commitId.slice(0, 8)} </span> : null }
             <span>

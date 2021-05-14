@@ -11,7 +11,7 @@ import { statusTextCls } from 'utils/util';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 
-const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail } }) => {
+const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunnerList } }) => {
   const [ stateFileStr, setStateFileStr ] = useState('');
   const [ taskInfo, setTaskInfo ] = useState({});
   const [ fullScreen, setFullScreen ] = useState(false);
@@ -65,7 +65,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail } }) =>
             <List
               itemLayout='horizontal'
               dataSource={[taskInfo]}
-              renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail}/>}
+              renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
             />
           </div>
         </Card>

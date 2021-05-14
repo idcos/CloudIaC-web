@@ -46,7 +46,7 @@ const jobInfoItems = {
   }
 };
 
-const Overview = ({ routesParams: { curOrg, detailInfo, ctId, changeTab, linkToRunningDetail } }) => {
+const Overview = ({ routesParams: { curOrg, detailInfo, ctRunnerList, ctId, changeTab, linkToRunningDetail } }) => {
   const { repoId, repoBranch } = detailInfo;
   const [ overviewInfo, setOverviewInfo ] = useState({});
   const [ codeStr, setCodeStr ] = useState('');
@@ -109,7 +109,7 @@ const Overview = ({ routesParams: { curOrg, detailInfo, ctId, changeTab, linkToR
               <List
                 itemLayout='horizontal'
                 dataSource={overviewInfo.task || []}
-                renderItem={item => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail}/>}
+                renderItem={item => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
               />
             </div>
           </Card>

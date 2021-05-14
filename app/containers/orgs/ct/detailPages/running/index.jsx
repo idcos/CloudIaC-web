@@ -4,7 +4,7 @@ import { Card, List, notification, Radio } from 'antd';
 import { ctAPI } from 'services/base';
 import RunningTaskItem from '../components/runningTaskItem';
 
-const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail } }) => {
+const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail, ctRunnerList } }) => {
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -70,7 +70,7 @@ const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail } }) => {
             loading={loading}
             itemLayout='horizontal'
             dataSource={resultMap.list}
-            renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail}/>}
+            renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
             pagination={{
               current: query.pageNo,
               pageSize: query.pageSize,

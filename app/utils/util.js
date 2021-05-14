@@ -1,3 +1,5 @@
+import find from "lodash/find";
+
 /**
  * 将对象字段按照key排序，并返回`${key}${value}`字符串
  * @param obj
@@ -50,3 +52,8 @@ export const statusTextCls = (status) => {
     color
   };
 };
+
+export const formatCTRunner = (ctRunnerList, cTRunnerId) => {
+  const {Tags} = find(ctRunnerList, ['ID', cTRunnerId]) || {};
+  return Tags && Tags.join();
+}
