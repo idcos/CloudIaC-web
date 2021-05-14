@@ -27,8 +27,8 @@ const Setting = (props) => {
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
-      const { ctServiceId, ...restValues } = values;
-      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId);
+      const { defaultRunnerServiceId, ...restValues } = values;
+      const ctInfo = ctRunnerList.find(it => it.ID == defaultRunnerServiceId);
       if (!ctInfo) {
         throw new Error('获取CT Runner失败');
       }
@@ -37,7 +37,7 @@ const Setting = (props) => {
         ...restValues,
         orgId: curOrg.id,
         id: ctId - 0,
-        defaultRunnerServiceId: ctServiceId,
+        defaultRunnerServiceId,
         defaultRunnerAddr: Address,
         defaultRunnerPort: Port
       });
@@ -153,7 +153,7 @@ const Setting = (props) => {
             </Form.Item>
           </Space>
         </Form.Item>
-        <Form.Item label='默认ct-runner' name='ctServiceId'
+        <Form.Item label='默认ct-runner' name='defaultRunnerServiceId'
           rules={[
             { required: true, message: '请选择' }
           ]}
