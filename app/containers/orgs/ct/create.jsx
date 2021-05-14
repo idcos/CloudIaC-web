@@ -19,7 +19,7 @@ const steps = {
 
 const CloudTmpCreate = ({ routesParams }) => {
   const [ step, setStep ] = useState(0),
-    [ vcsInfo, setVcsInfo ] = useState({}),
+    [ vcsId, setVcsId ] = useState(),
     [ selection, setSelection ] = useState({});
 
   const stepHelper = useCallback(() => {
@@ -47,8 +47,8 @@ const CloudTmpCreate = ({ routesParams }) => {
             stepHelper={stepHelper()}
             selection={selection}
             setSelection={setSelection}
-            vcsInfo={vcsInfo}
-            setVcsInfo={setVcsInfo}
+            vcsId={vcsId}
+            setVcsId={setVcsId}
             curOrg={routesParams.curOrg}
           />
         </div>
@@ -56,7 +56,7 @@ const CloudTmpCreate = ({ routesParams }) => {
           <Step2
             selection={selection}
             stepHelper={stepHelper()}
-            vcsInfo={vcsInfo}
+            vcsId={vcsId}
             curOrg={routesParams.curOrg}
           />
         </div>

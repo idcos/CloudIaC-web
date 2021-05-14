@@ -1,19 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Input, notification, Table, Card, Button, Select } from 'antd';
 import moment from 'moment';
-import find from 'lodash/find';
-import isEmpty from 'lodash/isEmpty';
 
 import { ctAPI, orgsAPI } from 'services/base';
 import MarkdownParser from 'components/coder/markdown-parser';
 
 const { Option } = Select;
 
-export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsInfo }) => {
+export default ({ stepHelper, selection, setSelection, curOrg, vcsId, setVcsId }) => {
   const [ loading, setLoading ] = useState(false),
     [ codeStr, setCodeStr ] = useState(''),
     [ vcsList, setVcsList ] = useState([]),
-    [ vcsId, setVcsId ] = useState(),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -28,21 +25,10 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsIn
   }, []);
 
   useEffect(() => {
-    const vcsItem = find(vcsList, [ 'id', vcsId ]);
-    if (vcsItem) {
-      setVcsInfo({
-        url: vcsItem.address,
-        token: vcsItem.vcsToken,
-        type: vcsItem.vcsType
-      });
-    }
-  }, [vcsId]);
-
-  useEffect(() => {
-    if (!isEmpty(vcsInfo)) {
+    if (vcsId) {
       fetchList();
     }
-  }, [vcsInfo]);
+  }, [vcsId]);
 
   const fetchVcsList = async () => {
     try {
@@ -52,7 +38,7 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsIn
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      const list = res.result.list;
+      const list = res.result;
       setVcsList(list);
       setVcsId(list[0] && list[0].id);
     } catch (e) {
@@ -69,7 +55,7 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsIn
       const res = await ctAPI.listRepo({
         orgId: curOrg.id,
         ...query,
-        ...vcsInfo
+        vcsId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -94,7 +80,7 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsInfo, setVcsIn
         repoId,
         orgId: curOrg.id,
         branch: 'master',
-        ...vcsInfo
+        vcsId
       });
       if (res.code !== 200) {
         throw new Error(res.message);

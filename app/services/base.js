@@ -186,21 +186,19 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  listRepo: ({ orgId, pageNo, pageSize, name, url, token, type }) => {
+  listRepo: ({ orgId, pageNo, pageSize, name, vcsId }) => {
     return getWithArgs('/api/v1/gitlab/listRepos', {
       q: name,
       currentPage: pageNo,
       pageSize,
-      url, 
-      token, 
-      type
+      vcsId
     }, {
       'IaC-Org-Id': orgId
     });
   },
-  listRepoBranch: ({ repoId, orgId, url, token, type }) => {
+  listRepoBranch: ({ repoId, orgId, vcsId }) => {
     return getWithArgs('/api/v1/gitlab/listBranches', {
-      repoId, url, token, type
+      repoId, vcsId
     }, {
       'IaC-Org-Id': orgId
     });
@@ -277,9 +275,9 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  repoReadme: ({ orgId, repoId, branch, url, token, type }) => {
+  repoReadme: ({ orgId, repoId, branch, vcsId }) => {
     return getWithArgs('/api/v1/gitlab/getReadme', {
-      repoId, branch, url, token, type 
+      repoId, branch, vcsId
     }, {
       'IaC-Org-Id': orgId
     });

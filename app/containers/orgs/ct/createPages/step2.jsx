@@ -10,7 +10,7 @@ const FL = {
 };
 const { Option } = Select;
 
-export default ({ stepHelper, selection, curOrg, vcsInfo }) => {
+export default ({ stepHelper, selection, curOrg, vcsId }) => {
   const { selectedRows } = selection;
   const [ repoBranches, setRepoBranches ] = useState([]),
     [ ctRunnerList, setCtRunnerList ] = useState([]),
@@ -43,7 +43,7 @@ export default ({ stepHelper, selection, curOrg, vcsInfo }) => {
       const res = await ctAPI.listRepoBranch({
         repoId: selectedRows[0].id,
         orgId: curOrg.id,
-        ...vcsInfo
+        vcsId
       });
       if (res.code != 200) {
         throw new Error(res.message);
