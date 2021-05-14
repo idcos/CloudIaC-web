@@ -130,7 +130,7 @@ const Overview = ({ routesParams: { curOrg, detailInfo, ctId, changeTab, linkToR
         <div className='gitInfo'>
           <p className='idcos-text-ellipsis' title={overviewInfo.repoAddr}><GitlabFilled style={{ color: '#FCA326' }}/>{overviewInfo.repoAddr}</p>
           <p><BranchesOutlined/> {overviewInfo.repoBranch}</p>
-          <p><UserOutlined/> {}</p>
+          <p><UserOutlined/> {overviewInfo.creatorName}</p>
         </div>
         <div className='jobInfo'>
           {Object.keys(jobInfoItems).map(i => <p className='item'>
