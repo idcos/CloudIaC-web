@@ -10,13 +10,15 @@ const pseudoID = 'a-new-id';
 
 const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
+  const [tfvarsForm] = Form.useForm();
   const [ tfvars, setTfvars ] = useState([]);
 
   useEffect(() => {
-    const { repoId, repoBranch } = detailInfo;
+    const { repoId, repoBranch, varfile } = detailInfo;
     if (repoId && repoBranch) {
       fetchTfvars();
     }
+    tfvarsForm.setFieldsValue({ varfile: varfile || null });
   }, [detailInfo]);
 
   const fetchTfvars = async () => {
@@ -127,7 +129,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
         add: (param) => [ ...detailInfo.vars || [], param ]
       };
 
-      const reqPayload = varfile ? { varfile } : { vars: method[doWhat](payload) };
+      const reqPayload = doWhat ? { vars: method[doWhat](payload) } : { varfile };
       const res = await ctAPI.edit({
         orgId: curOrg.id,
         id: detailInfo.id,
@@ -185,11 +187,9 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       style={{ marginTop: 16 }}
     >
       <Form
+        form={tfvarsForm}
         onFinish={(values) => {
-          api({ varfile: values.varfile });
-        }}
-        initialValues={{
-          varfile: detailInfo.varfile || null
+          api({ varfile: values.varfile || '' });
         }}
       >
         <Row gutter={8}>
@@ -198,14 +198,12 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               name='varfile'
               rules={[
                 {
-                  required: true,
+                  required: false,
                   message: '请选择'
                 }
               ]}
             >
-              <Select
-                placeholder='请选择tfvars路径'
-              >
+              <Select allowClear={true} placeholder='请选择tfvars路径'>
                 {tfvars.map(it => <Option value={it}>{it}</Option>)}
               </Select>
             </Form.Item>
