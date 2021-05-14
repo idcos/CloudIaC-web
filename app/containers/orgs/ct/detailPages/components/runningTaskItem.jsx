@@ -18,7 +18,7 @@ export default ({ item, linkToRunningDetail }) => {
             >
               <div className='idcos-text-ellipsis' title={item.name}>{item.name || '快速执行作业'}</div>
             </div>
-            <Tag>{CT.taskType[item.taskType]}</Tag>
+            { CT.taskType[item.taskType] ? <Tag>{CT.taskType[item.taskType]}</Tag> : null }
           </div>
         }
         description={
