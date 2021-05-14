@@ -80,7 +80,6 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
               name={[ name, "key" ]}
               fieldKey={[ fieldKey, "key" ]}
               rules={[{ required: true, message: "请输入" }]}
-              noStyle={true}
             >
               <Input placeholder='ACCESS_KEY_ID' />
             </Form.Item>
@@ -95,7 +94,6 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                     rules={[
                       { required: !(fieldValue.isSecret && fieldValue.id), message: "" } // 编辑状态密文可留空
                     ]}
-                    noStyle={true}
                   >
                     {fieldValue.isSecret ? (
                       <Input.Password
