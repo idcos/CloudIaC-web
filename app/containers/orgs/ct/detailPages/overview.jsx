@@ -26,7 +26,7 @@ const jobInfoItems = {
       const { taskPlanFailedCount, taskPlanCount, taskPlanFailedPercent } = overviewInfo;
       return <Space split={<Divider type='vertical' />}>
         <span>{taskPlanFailedCount}/{taskPlanCount}</span>
-        <span>{taskPlanFailedPercent}%</span>
+        <span>{taskPlanFailedPercent && taskPlanFailedPercent.toFixed(2)}%</span>
       </Space>;
     }
   },
