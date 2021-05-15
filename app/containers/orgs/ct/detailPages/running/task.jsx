@@ -262,7 +262,9 @@ export default (props) => {
               options={{
                 mode: 'ansi'
               }}
+              autoScrollToBottom={true}
               selfClassName='card-coder'
+              style={{ height: 350 }}
               value={taskLog} onChange={() => ''}
             />
           </Card>

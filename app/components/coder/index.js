@@ -9,6 +9,7 @@ import 'codemirror/mode/javascript/javascript';
 import './ansi';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
 import styled from 'styled-components';
+import get from 'lodash/get';
 
 const Container = styled.div`
   width: 100%;
@@ -25,7 +26,8 @@ const FormCoder = ({
   onChange,
   selfClassName,
   hight,
-  options
+  options,
+  autoScrollToBottom // 是否开启自动滚动至最后一行
 }) => {
   const _options = {
     lineNumbers: true, // show linenumbers
@@ -41,9 +43,17 @@ const FormCoder = ({
     },
     ...options
   };
+  const autoScrollToBottomFn = (editor) => {
+    if (!autoScrollToBottom) {
+      return; 
+    }
+    const vert = get(editor, 'display.scrollbars.vert', {});
+    vert.scrollTop = vert.scrollHeight;
+  };
   return (
     <Container style={style} hight={hight} className={selfClassName}>
       <ControlledEditor
+        onViewportChange={autoScrollToBottomFn}
         value={value}
         onBeforeChange={(editor, data, value) => onChange(value)}
         options={_options}
