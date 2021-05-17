@@ -62,10 +62,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
     try {
       setSubmitLoading(true);
       const { ctServiceId, ...restValues } = values;
-      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId);
-      if (!ctInfo) {
-        throw new Error('获取CT Runner失败');
-      }
+      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId) || {};
       const { Port, Address } = ctInfo;
       const res = await ctAPI.createCt({
         ...restValues,

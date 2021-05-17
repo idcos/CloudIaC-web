@@ -28,10 +28,7 @@ const Setting = (props) => {
     try {
       setSubmitLoading(true);
       const { defaultRunnerServiceId, ...restValues } = values;
-      const ctInfo = ctRunnerList.find(it => it.ID == defaultRunnerServiceId);
-      if (!ctInfo) {
-        throw new Error('获取CT Runner失败');
-      }
+      const ctInfo = ctRunnerList.find(it => it.ID == defaultRunnerServiceId) || {};
       const { Port, Address } = ctInfo;
       const res = await ctAPI.edit({
         ...restValues,

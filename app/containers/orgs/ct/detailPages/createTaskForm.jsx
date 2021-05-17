@@ -23,10 +23,7 @@ export default ({ closePopover, ctRunnerList, taskType, orgId, ctDetailInfo, lin
   const onFinish = async (values) => {
     try {
       const { ctServiceId, ...restValues } = values;
-      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId);
-      if (!ctInfo) {
-        throw new Error('获取CT Runner失败');
-      }
+      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId) || {};
       const { Port, Address } = ctInfo;
       const res = await ctAPI.createTask({
         taskType,
