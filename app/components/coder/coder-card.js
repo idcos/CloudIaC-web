@@ -11,16 +11,43 @@ import Coder from "components/coder";
 
 export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value, cardStyle }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
+  const [ lastKeyword, setLastKeyword ] = useState('');
   const coderRef = useRef();
+  const searchRef = useRef();
+
+  /**
+	 * 搜索扩展功能 如上一个，下一个
+	 * @param {'findPrev' | 'findNext'} command 
+	 */
+  const execSearchCommand = (command) => {
+    const { value } = searchRef.current.state;
+    if (!value) {
+      return; 
+    }
+    if (value !== lastKeyword) {
+      coderRef.current.search(value);
+      setLastKeyword(value);
+    } else {
+      coderRef.current.execCommand(command);
+    }
+  };
+
   return (
     <Card
       className={`card-body-no-paading ${fullScreen ? "full-card" : ""}`}
       cardStyle={cardStyle}
       title={
         <Input.Search
+          ref={searchRef}
           placeholder='请输入内容搜索'
           onSearch={(keyword) => {
-            coderRef.current.search(keyword);
+            if (keyword !== lastKeyword) {
+              coderRef.current.search(keyword);
+              setLastKeyword(keyword);
+            } else {
+              execSearchCommand('findNext');
+            }
+            searchRef.current.focus();
           }}
           style={{ width: 240 }}
         />

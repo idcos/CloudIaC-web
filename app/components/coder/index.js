@@ -94,7 +94,7 @@ const FormCoder = ({
       if (!codemirror) {
         throw new Error('编辑器还未装载完成');
       }
-      codemirror.execCommand('find'); //触发
+      codemirror.execCommand('find');
       try {
         let searchInp = document.querySelector('input.CodeMirror-search-field');
         searchInp.value = keyword;
@@ -102,6 +102,9 @@ const FormCoder = ({
       } catch (error) {
         throw new Error('编辑器搜索功能异常');
       }
+    },
+    execCommand: (type) => {
+      codemirror.execCommand(type);
     },
     scrollToTop,
     scrollToBottom
