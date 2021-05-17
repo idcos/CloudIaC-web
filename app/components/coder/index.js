@@ -70,12 +70,18 @@ const FormCoder = ({
   
   const scrollToTop = () => {
     const vert = get(codemirror, "display.scrollbars.vert", {});
-    vert.scrollTop = 0;
+    vert.scrollTo && vert.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   const scrollToBottom = () => {
     const vert = get(codemirror, "display.scrollbars.vert", {});
-    vert.scrollTop = vert.scrollHeight;
+    vert.scrollTo && vert.scrollTo({
+      top: vert.scrollHeight,
+      behavior: 'smooth'
+    });
   };
 
   const editorDidMount = (editor) => {
