@@ -18,7 +18,6 @@ import "codemirror/addon/dialog/dialog.js";
 import "codemirror/addon/dialog/dialog.css";
 import "codemirror/addon/search/searchcursor.js";
 import "codemirror/addon/search/search.js";
-import $ from 'jquery';
 
 import "./ansi";
 import { Controlled as ControlledEditor } from "react-codemirror2";
@@ -82,9 +81,9 @@ const FormCoder = ({
       }
       codemirror.execCommand('find'); //触发
       try {
-        let searchInp = $('input.CodeMirror-search-field');
-        searchInp.val(keyword).parent('.CodeMirror-dialog').hide();
-        searchInp[0].dispatchEvent(new KeyboardEvent('keydown', { keyCode: 13 }));
+        let searchInp = document.querySelector('input.CodeMirror-search-field');
+        searchInp.value = keyword;
+        searchInp.dispatchEvent(new KeyboardEvent('keydown', { keyCode: 13 }));
       } catch (error) {
         throw new Error('编辑器搜索功能异常');
       }
