@@ -5,7 +5,7 @@ import {
   Card,
   Space
 } from "antd";
-import { FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
+import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
 
 import Coder from "components/coder";
 
@@ -28,9 +28,11 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value, ca
       extra={
         <Space>
           <Button onClick={() => coderRef.current.scrollToTop()}>
+            <VerticalAlignTopOutlined />
             回顶部
           </Button>
           <Button onClick={() => coderRef.current.scrollToBottom()}>
+            <VerticalAlignBottomOutlined />
             回底部
           </Button>
           <Button onClick={() => setFullScreen(!fullScreen)}>
