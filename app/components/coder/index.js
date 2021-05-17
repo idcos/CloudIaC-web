@@ -53,7 +53,7 @@ const FormCoder = ({
   return (
     <Container style={style} hight={hight} className={selfClassName}>
       <ControlledEditor
-        onViewportChange={autoScrollToBottomFn}
+        onChange={autoScrollToBottomFn}
         value={value}
         onBeforeChange={(editor, data, value) => onChange(value)}
         options={_options}
