@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Divider, List, notification, Space, Button } from 'antd';
-import Coder from 'components/coder';
-import { CT } from 'constants/types';
+import { Card, List, notification } from 'antd';
+import CoderCard from 'components/coder/coder-card';
 import { ctAPI } from 'services/base';
 import RunningTaskItem from './components/runningTaskItem';
-import {
-  FullscreenExitOutlined, FullscreenOutlined
-} from '@ant-design/icons';
-import { statusTextCls } from 'utils/util';
-import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 
 const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunnerList } }) => {
   const [ stateFileStr, setStateFileStr ] = useState('');
   const [ taskInfo, setTaskInfo ] = useState({});
-  const [ fullScreen, setFullScreen ] = useState(false);
 
   useEffect(() => {
     if (!isEmpty(detailInfo)) {
@@ -70,24 +63,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
           </div>
         </Card>
       </div>
-      <Card
-        className={`card-body-no-paading ${fullScreen ? 'full-card' : ''}`}
-        style={{ marginTop: 16 }}
-        extra={
-          <Space>
-            <Button onClick={() => setFullScreen(!fullScreen)}>
-              {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-              全屏显示
-            </Button>
-          </Space>
-        }
-      >
-        <Coder
-          selfClassName='card-coder'
-          value={stateFileStr}
-          onChange={() => ""}
-        />
-      </Card>
+      <CoderCard mode='application/json' value={stateFileStr} cardStyle={{ marginTop: 16 }} />
     </div>
   );
 };
