@@ -65,7 +65,16 @@ const FormCoder = ({
     if (!autoScrollToBottom) {
       return;
     }
-    const vert = get(editor, "display.scrollbars.vert", {});
+    scrollToBottom();
+  };
+  
+  const scrollToTop = () => {
+    const vert = get(codemirror, "display.scrollbars.vert", {});
+    vert.scrollTop = 0;
+  };
+
+  const scrollToBottom = () => {
+    const vert = get(codemirror, "display.scrollbars.vert", {});
     vert.scrollTop = vert.scrollHeight;
   };
 
@@ -87,7 +96,9 @@ const FormCoder = ({
       } catch (error) {
         throw new Error('编辑器搜索功能异常');
       }
-    }
+    },
+    scrollToTop,
+    scrollToBottom
   }));
 
   return (

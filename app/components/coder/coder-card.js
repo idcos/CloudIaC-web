@@ -27,6 +27,12 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value, ca
       }
       extra={
         <Space>
+          <Button onClick={() => coderRef.current.scrollToTop()}>
+            回顶部
+          </Button>
+          <Button onClick={() => coderRef.current.scrollToBottom()}>
+            回底部
+          </Button>
           <Button onClick={() => setFullScreen(!fullScreen)}>
             {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
             全屏显示
