@@ -36,27 +36,58 @@
       align-items: start;
       .right {
         width: 320px;
-        .gitInfo {
-          padding: 16px 0;
-          p {
-            line-height: 2em;
-            font-size: 16px;
-            .anticon {
-              margin-right: 4px;
+        .ant-card-body {
+          padding: 24px;
+
+          .info-item {
+            .item-title {
+              height: 24px;
+              line-height: 24px;
+              color: @text-color-darker;
+              font-size: 16px;
+              text-align: left;
+              font-family: PingFangSC-Medium;
+              margin-bottom: 16px;
             }
-          }
-        }
-        .jobInfo {
-          border-top: 1px solid #ebebeb;
-          padding: 16px 0;
-          .item {
-            line-height: 2.5em;
-            .label {
-              font-weight: bold;
+            .item-content-list {
+              .item-content-flex {
+                height: 22px;
+                line-height: 22px;
+                margin-bottom: 12px;
+                display: flex;
+                .icon {
+                  width: 16px;
+                  margin-right: 8px;
+                }
+                .text {
+                  flex: 1;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                }
+              }
+              .item-content {
+                height: 22px;
+                line-height: 22px;
+                margin-bottom: 12px;
+                overflow: hidden;
+                .label {
+                  color: @heading-color;
+                }
+                .value {
+                  color: @text-color-darker;
+                  float: right;
+                  word-break: break-all;
+                  .sub-text {
+                    color: @text-color-secondary;
+                  }
+                }
+              }
             }
-            .value {
-              float: right;
-              word-break: break-all;
+            .item-content-wrapper {
+              height: 22px;
+              line-height: 22px;
+              color: rgba(87, 87, 87, 100);
             }
           }
         }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, List, Space, Divider, notification } from "antd";
+import { Card, List, Space, Divider, notification, Tooltip } from "antd";
 import {
   BranchesOutlined,
   UserOutlined,
@@ -33,7 +33,7 @@ const jobInfoItems = {
         overviewInfo;
       return (
         <Space split={<Divider type='vertical' />}>
-          <span>
+          <span className='sub-text'>
             {taskPlanFailedCount}/{taskPlanCount}
           </span>
           <span>
@@ -50,19 +50,13 @@ const jobInfoItems = {
         overviewInfo;
       return (
         <Space split={<Divider type='vertical' />}>
-          <span>
+          <span className='sub-text'>
             {taskApplyFailedCount}/{taskApplyCount}
           </span>
           <span>{taskApplyFailedPercent}%</span>
         </Space>
       );
     }
-  },
-  activeCreatorName: {
-    text: "活动成员",
-    getValue: (overviewInfo) => (
-      <span>{(overviewInfo.activeCreatorName || []).join("、")}</span>
-    )
   }
 };
 
@@ -151,29 +145,56 @@ const Overview = ({
       </div>
       <div className='right'>
         <Card>
-          <div className='gitInfo'>
-            <p className='idcos-text-ellipsis' title={overviewInfo.repoAddr}>
-              <GitlabFilled style={{ color: "#FCA326" }} />
-              {overviewInfo.repoAddr}
-            </p>
-            <p>
-              <BranchesOutlined /> {overviewInfo.repoBranch}
-            </p>
-            <p>
-              <UserOutlined /> {overviewInfo.creatorName}
-            </p>
+          <div className='info-item'>
+            <div className='item-title'>关于</div>
+            <div className='item-content-list'>
+              <div
+                className='item-content-flex idcos-text-ellipsis'
+                title={overviewInfo.repoAddr}
+              >
+                <div className='icon'>
+                  <GitlabFilled style={{ color: "#FCA326" }} />
+                </div>
+                <Tooltip title={overviewInfo.repoAddr}>
+                  <div className='text'>{overviewInfo.repoAddr}</div>
+                </Tooltip>
+              </div>
+              <div className='item-content-flex'>
+                <div className='icon'>
+                  <BranchesOutlined />
+                </div>
+                <div className='text'>{overviewInfo.repoBranch}</div>
+              </div>
+              <div className='item-content-flex'>
+                <div className='icon'>
+                  <UserOutlined />
+                </div>
+                <div className='text'>{overviewInfo.creatorName}</div>
+              </div>
+            </div>
           </div>
-          <div className='jobInfo'>
-            {Object.keys(jobInfoItems).map((i) => (
-              <p className='item'>
-                <span className='label'>{jobInfoItems[i].text}</span>
-                <span className='value'>
-                  {jobInfoItems[i].getValue
-                    ? jobInfoItems[i].getValue(overviewInfo)
-                    : overviewInfo[i]}
-                </span>
-              </p>
-            ))}
+          <Divider plain={true}></Divider>
+          <div className='info-item'>
+            <div className='item-title'>活动记录</div>
+            <div className='item-content-list'>
+              {Object.keys(jobInfoItems).map((i) => (
+                <div className='item-content'>
+                  <span className='label'>{jobInfoItems[i].text}</span>
+                  <span className='value'>
+                    {jobInfoItems[i].getValue
+                      ? jobInfoItems[i].getValue(overviewInfo)
+                      : overviewInfo[i]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <Divider plain={true}></Divider>
+          <div className='info-item'>
+            <div className='item-title'>活跃成员</div>
+            <div className='item-content-wrapper'>
+              {(overviewInfo.activeCreatorName || []).join("、")}
+            </div>
           </div>
         </Card>
       </div>
