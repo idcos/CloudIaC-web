@@ -9,7 +9,7 @@ import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOu
 
 import Coder from "components/coder";
 
-export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value, cardStyle }) => {
+export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const [ lastKeyword, setLastKeyword ] = useState('');
   const coderRef = useRef();
@@ -35,7 +35,6 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value, ca
   return (
     <Card
       className={`card-body-no-paading ${fullScreen ? "full-card" : ""}`}
-      cardStyle={cardStyle}
       title={
         <Input.Search
           ref={searchRef}

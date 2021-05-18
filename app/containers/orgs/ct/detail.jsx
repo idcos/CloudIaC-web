@@ -107,6 +107,7 @@ const CloudTmpDetail = (props) => {
 
   return (
     <Layout
+      contentStyle={{ paddingTop: 0 }}
       extraHeader={
         <PageHeader
           title={detailInfo.name || "-"}
@@ -183,7 +184,7 @@ const CloudTmpDetail = (props) => {
         />
       }
     >
-      <div className='container-inner-width'>
+      <div className='container-inner-width fn-padding-top-24'>
         {detailInfo.status == "disable" && (
           <Alert
             message={
@@ -205,6 +206,7 @@ const CloudTmpDetail = (props) => {
             banner={true}
           />
         )}
+        <div className='fn-h-24'></div>
         <div className={styles.ctDetail}>
           <RoutesList
             routes={routes}

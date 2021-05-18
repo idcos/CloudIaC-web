@@ -52,7 +52,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
 
   return (
     <div className='state'>
-      <div className='List'>
+      <div className='List fn-mb-24'>
         <Card>
           <div className='tableRender'>
             <List
@@ -63,7 +63,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
           </div>
         </Card>
       </div>
-      <CoderCard mode='application/json' value={stateFileStr} cardStyle={{ marginTop: 16 }} />
+      <CoderCard mode='application/json' value={stateFileStr} />
     </div>
   );
 };

@@ -172,7 +172,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     </Card>
     <Card
       title='环境变量'
-      style={{ marginTop: 16 }}
+      style={{ marginTop: 24 }}
     >
       <FormWithInTable
         disabled={detailInfo.status === "disable"}
@@ -185,7 +185,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     </Card>
     <Card
       title='tfvars路径'
-      style={{ marginTop: 16 }}
+      style={{ marginTop: 24 }}
     >
       <Form
         form={tfvarsForm}
