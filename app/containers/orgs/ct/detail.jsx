@@ -15,7 +15,7 @@ import { Eb_WP } from "components/error-boundary";
 import Layout from "components/common/layout";
 import RoutesList from "components/routes-list";
 import styles from "./styles.less";
-import CreateTaskForm from "./detailPages/createTaskForm";
+import CreateTaskForm from "./detailPages/components/createTaskForm/index";
 import { DownOutlined } from "@ant-design/icons";
 import { ctAPI, sysAPI } from "services/base";
 import { CT } from "constants/types";
