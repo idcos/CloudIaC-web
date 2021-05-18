@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import { orgsAPI } from 'services/base';
 import OpModal from './components/vcsModal';
 
@@ -103,8 +103,9 @@ export default ({ title, curOrg }) => {
   const disableConfirm = (record) => {
     const { name, id } = record;
     Modal.confirm({
+      width: 480,
       title: `你确定要禁用${name}吗？`,
-      icon: <ExclamationCircleOutlined />,
+      icon: <ExclamationCircleFilled />,
       content: `禁用将导致引用该VCS仓库的云模板不可用，确定要禁用吗`,
       okText: '确认',
     	cancelText: '取消',
@@ -117,8 +118,9 @@ export default ({ title, curOrg }) => {
   const delConfirm = (record) => {
     const { name, id } = record;
     Modal.confirm({
+      width: 480,
       title: `你确定要删除${name}吗？`,
-      icon: <ExclamationCircleOutlined />,
+      icon: <ExclamationCircleFilled />,
       content: `删除将导致引用该VCS仓库的云模板不可用，确定要删除吗`,
       okText: '确认',
     	cancelText: '取消',

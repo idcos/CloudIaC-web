@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Form, Input, Modal, Select } from "antd";
 
 const FL = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 }
+  labelCol: { span: 5 },
+  wrapperCol: { span: 19 }
 };
 const { Option } = Select;
 
@@ -32,7 +32,7 @@ export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
       loading: submitLoading
     }}
     onOk={onOk}
-    width={600}
+    width={408}
   >
     <Form
       {...FL}

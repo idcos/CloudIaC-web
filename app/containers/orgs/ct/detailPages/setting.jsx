@@ -120,8 +120,8 @@ const Setting = (props) => {
             </Radio>
             <Radio value={true}>
               保存
-              <Tooltip title='不保存状态在反复运行时的极大概率会出现资源名字/IP地址冲突'>
-                <span> <InfoIcon/> </span>
+              <Tooltip placement='right' title='不保存状态在反复运行时的极大概率会出现资源名字/IP地址冲突'>
+                <span>{' '}<InfoIcon/></span>
               </Tooltip>
             </Radio>
           </Radio.Group>
@@ -256,14 +256,16 @@ const Setting = (props) => {
       <Card
         title={subNavs[panel]}
       >
-        <Form
-          {...FL}
-          layout='vertical'
-          onFinish={onFinish}
-          form={form}
-        >
-          {renderByPanel()}
-        </Form>
+        <div className='form-wrapper'>
+          <Form
+            {...FL}
+            layout='vertical'
+            onFinish={onFinish}
+            form={form}
+          >
+            {renderByPanel()}
+          </Form>
+        </div>
       </Card>
     </div>
   </div>;

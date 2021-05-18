@@ -17,7 +17,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
 
   const onOk = async () => {
     const { params, ...restValues } = await form.validateFields();
-    const dealParams = params.map((param) => {
+    const dealParams = (params || []).map((param) => {
       param.id = param.id || uuid();
       return param;
     });

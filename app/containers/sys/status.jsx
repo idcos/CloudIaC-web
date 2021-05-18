@@ -105,7 +105,7 @@ const SysStatus = (props) => {
                                   }}
                                 />
                               </p>
-                              <AlertMsg message={item.output} type={item.status}/>
+                              {item.output ? <AlertMsg message={item.output} type={item.status}/> : null}
                             </>
                           }
                         />
