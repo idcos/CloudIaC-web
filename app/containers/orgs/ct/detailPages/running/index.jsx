@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, List, notification, Radio } from 'antd';
 
 import { ctAPI } from 'services/base';
-import RunningTaskItem from '../components/runningTaskItem';
+import RunningTaskItem from '../components/runningTaskItem/index';
 
 const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail, ctRunnerList } }) => {
   const [ loading, setLoading ] = useState(false),

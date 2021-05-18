@@ -1,12 +1,19 @@
 import React from "react";
-import { Tag, Divider, List, Space } from "antd";
+import { Tag, Divider, List, Space, Tooltip } from "antd";
 import moment from "moment";
 
 import { CT } from "constants/types";
 import { statusTextCls, formatCTRunner } from "utils/util";
 import { CommitIdIcon, BranchesIcon } from "components/common/localIcon";
 
-export default ({ item, linkToRunningDetail, ctRunnerList }) => {
+import styles from "./styles.less";
+
+export default ({
+  item,
+  linkToRunningDetail,
+  ctRunnerList,
+  showCtRunner = true
+}) => {
   const {
     id,
     name,
@@ -24,7 +31,7 @@ export default ({ item, linkToRunningDetail, ctRunnerList }) => {
   } = item;
   const ctRunner = formatCTRunner(ctRunnerList, ctServiceId);
   return (
-    <List.Item className='running-task-item'>
+    <List.Item className={styles.runningTaskItem}>
       <List.Item.Meta
         title={
           <div className='running-task-item-title-wrapper'>
@@ -38,31 +45,39 @@ export default ({ item, linkToRunningDetail, ctRunnerList }) => {
                 {name || "快速执行作业"}
               </div>
             </div>
-            {CT.taskType[taskType] ? (
-              <Tag>{CT.taskType[taskType]}</Tag>
-            ) : null}
+            {CT.taskType[taskType] ? <Tag>{CT.taskType[taskType]}</Tag> : null}
           </div>
         }
         description={
           <Space split={<Divider type='vertical' />}>
             {guid ? <span>{guid}</span> : null}
             {creatorName ? <span>{creatorName}</span> : null}
-            {ctRunner ? <span>{ctRunner}</span> : null}
+            {ctRunner && showCtRunner ? (
+              <Tooltip title={ctRunner}>
+                <div className='ct-runner'>
+                  {ctRunner}
+                </div>
+              </Tooltip>
+            ) : null}
             {repoBranch ? (
               <span>
-                <BranchesIcon /> {repoBranch}
+                <Tooltip title='分支'>
+                  <span><BranchesIcon />{' '}</span>
+                </Tooltip>
+                {repoBranch}
               </span>
             ) : null}
             {commitId ? (
               <span>
-                <CommitIdIcon /> {commitId.slice(0, 8)}{" "}
+                <Tooltip title='commitid'>
+                  <span><CommitIdIcon />{' '}</span>
+                </Tooltip>
+                {commitId.slice(0, 8)}
               </span>
             ) : null}
             <span>
               <span className='code-number code-number-add'>+{add}</span>
-              <span className='code-number code-number-change'>
-                ~{change}
-              </span>
+              <span className='code-number code-number-change'>~{change}</span>
               <span className='code-number code-number-destroy'>
                 -{destroy}
               </span>
@@ -74,7 +89,7 @@ export default ({ item, linkToRunningDetail, ctRunnerList }) => {
         <span className={`status-text ${statusTextCls(status).cls}`}>
           {CT.taskStatusIcon[status]} {CT.taskStatus[status]}
         </span>
-        <p>{moment(endAt).fromNow()}</p>
+        <p className='end-at-time'>{moment(endAt).fromNow()}</p>
       </div>
     </List.Item>
   );

@@ -1,0 +1,47 @@
+@import 'containers/App/styles/variable.less';
+
+.runningTaskItem :global {
+  .running-task-item-title-wrapper {
+    overflow: hidden;
+
+    .running-task-item-title {
+      float: left;
+      font-weight: bold;
+      max-width: 400px;
+      cursor: pointer;
+      margin-right: 8px;
+
+      &:hover {
+        color: @primary-color;
+      }
+    }
+  }
+
+	.ct-runner {
+		max-width: 280px;
+		cursor: pointer;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+  .code-number {
+    margin-right: 8px;
+
+    &-add {
+      color: @color-add;
+    }
+
+    &-change {
+      color: @color-change;
+    }
+
+    &-destroy {
+      color: @color-destroy;
+    }
+  }
+
+  .end-at-time {
+    font-size: 12px !important;
+  }
+}

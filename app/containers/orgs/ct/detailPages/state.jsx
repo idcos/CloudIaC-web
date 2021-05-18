@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, List, notification } from 'antd';
 import CoderCard from 'components/coder/coder-card';
 import { ctAPI } from 'services/base';
-import RunningTaskItem from './components/runningTaskItem';
+import RunningTaskItem from './components/runningTaskItem/index';
 import isEmpty from 'lodash/isEmpty';
 
 const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunnerList } }) => {
