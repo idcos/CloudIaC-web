@@ -10,12 +10,14 @@ import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOu
 
 import Coder from "components/coder";
 import styles from './styles.less';
+import SearchByKeyWord from './dom-event';
 
 import {
   default as AnsiUp
 } from 'ansi_up';
 
 const ansi_up = new AnsiUp();
+const searchService = new SearchByKeyWord({ lineWrapperSelect: '.ansi-line' });
 
 export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
@@ -78,6 +80,7 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
             //   execSearchCommand('findNext');
             // }
             searchRef.current.focus();
+            searchService(keyword);
           }}
           style={{ width: 240 }}
         />
