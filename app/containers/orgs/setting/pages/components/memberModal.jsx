@@ -52,7 +52,7 @@ export default ({ visible, toggleVisible, curOrg, operation, opt, curRecord }) =
         ]}
         extra='邮箱作为登录名，全局唯一'
       >
-        <Input placeholder='请输入邮箱'/>
+        <Input placeholder='请输入邮箱' disabled={opt === 'edit'} />
       </Form.Item>
       <Form.Item
         label='姓名'

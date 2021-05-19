@@ -66,7 +66,7 @@ export default ({ title, curOrg }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '成员'
+      title: '资源名称'
     },
     {
       dataIndex: 'status',

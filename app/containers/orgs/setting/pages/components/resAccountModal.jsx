@@ -123,7 +123,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
   };
 
   return <Modal
-    title={`${opt == 'add' ? '添加' : '编辑'}成员`}
+    title={`${opt == 'add' ? '创建' : '编辑'}资源账号`}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{

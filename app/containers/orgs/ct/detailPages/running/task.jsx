@@ -16,7 +16,6 @@ import { statusTextCls, formatCTRunner } from "utils/util";
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
 import moment from "moment";
-import AnsiRegex from "ansi-regex";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 
