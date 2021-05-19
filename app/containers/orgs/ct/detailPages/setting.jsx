@@ -170,7 +170,7 @@ const Setting = (props) => {
           >
             <Select placeholder='请选择ct-runner'>
               {ctRunnerList.map((it) => (
-                <Option value={it.ID}>{it.Tags.join()}</Option>
+                <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>
               ))}
             </Select>
           </Form.Item>

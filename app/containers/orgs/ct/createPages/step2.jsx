@@ -190,7 +190,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
             ]}
           >
             <Select placeholder='请选择ct-runner'>
-              {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join()}</Option>)}
+              {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>)}
             </Select>
           </Form.Item>
         </Col>
