@@ -103,8 +103,7 @@ export default (props) => {
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
-    [ taskLog1, setTaskLog1 ] = useState([]),
-    [ taskLog, setTaskLog ] = useState("");
+    [ taskLog, setTaskLog ] = useState([]);
 
   const [form] = Form.useForm();
   const [ evtSource, evtSourceInit ] = useEventSource();
@@ -126,13 +125,8 @@ export default (props) => {
     evtSourceInit(
       {
         onmessage: (data) => {
-          setTaskLog1((prevLog) =>
-            [ ...prevLog, data ]
-          );
-          
-          data = data.replace(AnsiRegex(), "\u001B");
           setTaskLog((prevLog) =>
-            prevLog ? `${prevLog}\n${data}` : data
+            [ ...prevLog, data ]
           );
         },
         onerror: () => {
@@ -290,13 +284,7 @@ export default (props) => {
             header={<h2>作业内容</h2>}
             key={"1"}
           >
-            <AnsiCoderCard value={taskLog1} />
-            {/* <CoderCard
-              mode='ansi'
-              value={taskLog}
-              autoScrollToBottom={true}
-              coderHeight={350}
-            /> */}
+            <AnsiCoderCard value={taskLog} />
           </Panel>
         </Collapse>
 
