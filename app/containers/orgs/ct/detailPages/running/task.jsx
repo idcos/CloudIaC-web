@@ -17,7 +17,6 @@ import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
 import moment from "moment";
 import AnsiRegex from "ansi-regex";
-import CoderCard from "components/coder/coder-card";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 
@@ -291,13 +290,13 @@ export default (props) => {
             header={<h2>作业内容</h2>}
             key={"1"}
           >
-            {/* <AnsiCoderCard value={taskLog1} /> */}
-            <CoderCard
+            <AnsiCoderCard value={taskLog1} />
+            {/* <CoderCard
               mode='ansi'
               value={taskLog}
               autoScrollToBottom={true}
               coderHeight={350}
-            />
+            /> */}
           </Panel>
         </Collapse>
 

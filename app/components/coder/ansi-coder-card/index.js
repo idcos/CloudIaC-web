@@ -3,12 +3,10 @@ import {
   Button,
   Input,
   Card,
-  Space,
-  Anchor
+  Space
 } from "antd";
 import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
 
-import Coder from "components/coder";
 import styles from './styles.less';
 import SearchByKeyWord from './dom-event';
 
@@ -17,11 +15,15 @@ import {
 } from 'ansi_up';
 
 const ansi_up = new AnsiUp();
-const searchService = new SearchByKeyWord({ lineWrapperSelect: '.ansi-line' });
+const searchService = new SearchByKeyWord({ 
+  searchWrapperSelect: '.ansi-coder-content',
+  excludeSearchClassNameList: [
+    'line-index'
+  ]
+});
 
 export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
-  const [ lastKeyword, setLastKeyword ] = useState('');
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
   const [ html, setHtml ] = useState('');
@@ -31,7 +33,7 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
       return `
         <div class='ansi-line'>
           <span class='line-index'> ${index + 1 }</span>
-          ${ansi_up.ansi_to_html(line)}
+          <span class='line-text'>${ansi_up.ansi_to_html(line)}</span>
         </div>
       `;
     }).join('');
@@ -73,14 +75,8 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
           ref={searchRef}
           placeholder='请输入内容搜索'
           onSearch={(keyword) => {
-            // if (keyword !== lastKeyword) {
-            //   coderRef.current.search(keyword);
-            //   setLastKeyword(keyword);
-            // } else {
-            //   execSearchCommand('findNext');
-            // }
+            searchService.search(keyword);
             searchRef.current.focus();
-            searchService(keyword);
           }}
           style={{ width: 240 }}
         />
