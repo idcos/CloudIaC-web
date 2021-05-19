@@ -61,11 +61,11 @@ const FormCoder = ({
     ...options
   };
 
-  const autoScrollToBottomFn = (editor) => {
+  const autoScrollToBottomFn = () => {
     if (!autoScrollToBottom) {
       return;
     }
-    scrollToBottom();
+    setTimeout(scrollToBottom); // 延迟效果为了dom加载出来再滚到底部
   };
   
   const scrollToTop = () => {

@@ -18,6 +18,8 @@ import { useEventSource } from "utils/hooks";
 import moment from "moment";
 import AnsiRegex from "ansi-regex";
 import CoderCard from "components/coder/coder-card";
+import AnsiCoderCard from "components/coder/ansi-coder-card/index";
+
 
 const { Panel } = Collapse;
 const { Item } = Descriptions;
@@ -102,6 +104,7 @@ export default (props) => {
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
+    [ taskLog1, setTaskLog1 ] = useState([]),
     [ taskLog, setTaskLog ] = useState("");
 
   const [form] = Form.useForm();
@@ -124,8 +127,12 @@ export default (props) => {
     evtSourceInit(
       {
         onmessage: (data) => {
+          setTaskLog1((prevLog) =>
+            [ ...prevLog, data ]
+          );
+          
           data = data.replace(AnsiRegex(), "\u001B");
-          return setTaskLog((prevLog) =>
+          setTaskLog((prevLog) =>
             prevLog ? `${prevLog}\n${data}` : data
           );
         },
@@ -284,6 +291,7 @@ export default (props) => {
             header={<h2>作业内容</h2>}
             key={"1"}
           >
+            {/* <AnsiCoderCard value={taskLog1} /> */}
             <CoderCard
               mode='ansi'
               value={taskLog}
