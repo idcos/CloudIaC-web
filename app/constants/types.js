@@ -30,6 +30,11 @@ export const CT = {
     running: '运行中',
     timeout: '超时'
   },
+  endTaskStatuList: [
+    'complete',
+    'failed',
+    'timeout'
+  ],
   taskStatusIcon: {
     all: <AppstoreFilled/>,
     complete: <CheckCircleFilled/>,

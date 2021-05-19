@@ -14,13 +14,13 @@ export const useEventSource = () => {
     };
 
     this.onmessage = function(e) {
-      onmessage(e.data);
+      onmessage && onmessage(e.data);
     };
 
     this.onerror = function(e) {
       console.log("EventSource failed.");
       this.close();
-      onerror();
+      onerror && onerror();
     };
   
   }

@@ -109,7 +109,7 @@ export default (props) => {
 
   useEffect(() => {
     if (curTask) {
-      fetchInfo(fetchSse);
+      fetchInfo({ cb: fetchSse });
       fetchComments();
     }
   }, [curTask]);
@@ -120,28 +120,25 @@ export default (props) => {
     };
   }, [evtSource]);
 
-  const fetchSse = (res) => {
+  const fetchSse = (result) => {
     evtSourceInit(
       {
         onmessage: (data) => {
           setTaskLog((prevLog) =>
             [ ...prevLog, data ]
           );
-        },
-        onerror: () => {
-          fetchInfo();
         }
       },
       {
-        url: `/api/v1/taskLog/sse?logPath=${res.result.backendInfo.log_file}`,
+        url: `/api/v1/taskLog/sse?logPath=${result.backendInfo.log_file}`,
         options: { withCredentials: true }
       }
     );
   };
 
-  const fetchInfo = async (cb) => {
+  const fetchInfo = async ({ cb, needLoading = true } = { needLoading: true }) => {
     try {
-      setLoading(true);
+      needLoading && setLoading(true);
       const res = await ctAPI.detailTask({
         orgId: curOrg.id,
         taskId: curTask
@@ -149,15 +146,26 @@ export default (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      cb && cb(res);
-      setTaskInfo(res.result || {});
-      setLoading(false);
+      const result = res.result || {};
+      cb && cb(result);
+      setTaskInfo(result);
+      needLoading && setLoading(false);
+      loopFetchTaskInfo(result);
     } catch (e) {
-      setLoading(false);
+      needLoading && setLoading(false);
       notification.error({
         message: "获取失败",
         description: e.message
       });
+    }
+  };
+
+  const loopFetchTaskInfo = (result) => {
+    const { status } = result;
+    if (CT.endTaskStatuList.indexOf(status) === -1) {
+      setTimeout(() => {
+        fetchInfo({ needLoading: false });
+      }, 1500);
     }
   };
 
