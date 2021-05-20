@@ -33,7 +33,7 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
       return `
         <div class='ansi-line'>
           <span class='line-index'> ${index + 1 }</span>
-          <span class='line-text'>${ansi_up.ansi_to_html(line)}</span>
+          <pre class='line-text'>${ansi_up.ansi_to_html(line)}</pre>
         </div>
       `;
     }).join('');
