@@ -12,7 +12,7 @@ import SearchByKeyWord from './dom-event';
 
 import {
   default as AnsiUp
-} from 'ansi_up';
+} from './ansi-up';
 
 const ansi_up = new AnsiUp();
 const searchService = new SearchByKeyWord({ 

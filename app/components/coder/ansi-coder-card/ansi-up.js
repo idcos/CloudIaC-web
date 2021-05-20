@@ -1,5 +1,5 @@
 
-export class AnsiUp {
+export default class AnsiUp {
 
     ansi_colors =
         [
@@ -161,7 +161,6 @@ export class AnsiUp {
       this._buffer = '';
 
       const raw_text_pkts = pkt.split(/\x1B\[/);
-
       if (raw_text_pkts.length === 1) {
         raw_text_pkts.push(''); 
       }
@@ -206,7 +205,7 @@ export class AnsiUp {
       if (first_txt.length > 0) {
         blocks.unshift(first_txt); 
       }
-
+      
       return blocks.join('');
     }
 
@@ -283,6 +282,8 @@ export class AnsiUp {
       if (styles.length) {
         style_string = ` style="${styles.join(';')}"`; 
       }
+
+      txt = txt.replace(/\s/g, '&nbsp;'); // 保留空格
 
       return `<span${class_string}${style_string}>${txt}</span>`;
     }
