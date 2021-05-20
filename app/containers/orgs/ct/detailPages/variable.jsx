@@ -12,14 +12,28 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
   const [tfvarsForm] = Form.useForm();
   const [ tfvars, setTfvars ] = useState([]);
+  const [ varsData, setVarsData ] = useState({
+    terraformVars: [],
+    envVars: []
+  });
 
   useEffect(() => {
-    const { repoId, repoBranch, varfile } = detailInfo;
-    if (repoId && repoBranch) {
+    tfvarsForm.setFieldsValue({ varfile: detailInfo.varfile || null });
+  }, [detailInfo.varfile]);
+
+  useEffect(() => {
+    const { repoId, repoBranch } = detailInfo;
+    if (repoId && repoBranch && tfvars.length === 0) {
       fetchTfvars();
     }
-    tfvarsForm.setFieldsValue({ varfile: varfile || null });
-  }, [detailInfo]);
+  }, [ detailInfo.repoId, detailInfo.repoBranch ]);
+
+  useEffect(() => {
+    setVarsData({
+      terraformVars: (detailInfo.vars || []).filter(it => it.type == 'terraform'),
+      envVars: (detailInfo.vars || []).filter(it => it.type == 'env')
+    });
+  }, [detailInfo.vars]);
 
   const fetchTfvars = async () => {
     try {
@@ -165,7 +179,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
         disabled={detailInfo.status === "disable"}
         genColumns={genColumns}
         addBtnTxt={'添加Terraform变量'}
-        dataSource={(detailInfo.vars || []).filter(it => it.type == 'terraform')}
+        dataSource={varsData.terraformVars}
         dataType='terraform'
         api={api}
       />
@@ -178,7 +192,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
         disabled={detailInfo.status === "disable"}
         genColumns={genColumns}
         addBtnTxt={'添加环境变量'}
-        dataSource={(detailInfo.vars || []).filter(it => it.type == 'env')}
+        dataSource={varsData.envVars}
         dataType='env'
         api={api}
       />
