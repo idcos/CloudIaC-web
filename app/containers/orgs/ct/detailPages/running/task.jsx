@@ -127,6 +127,9 @@ export default (props) => {
           setTaskLog((prevLog) =>
             [ ...prevLog, data ]
           );
+        },
+        onerror: () => {
+          fetchInfo();
         }
       },
       {
