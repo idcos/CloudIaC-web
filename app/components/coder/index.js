@@ -4,6 +4,7 @@
 import React, { useState, useImperativeHandle } from "react";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
+import "codemirror/theme/neo.css";
 import "codemirror/mode/markdown/markdown";
 import "codemirror/mode/javascript/javascript";
 
@@ -50,7 +51,7 @@ const FormCoder = ({
     lineNumbers: true, // show linenumbers
     lineWrapping: true, // auto wrap
     lint: true, // auto lint code
-    theme: "material", // now we only support one theme
+    theme: "neo", // now we only support one theme
     indentUnit: 2, // 2 space indent
     tabSize: 2, // one tab size equals to 2 whitespace
     mode: "application/json",

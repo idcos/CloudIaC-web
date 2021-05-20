@@ -34,7 +34,7 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
 
   return (
     <Card
-      className={`card-body-no-paading ${fullScreen ? "full-card" : ""}`}
+      className={`coder-card card-body-no-paading ${fullScreen ? "full-card" : ""}`}
       title={
         <Input.Search
           ref={searchRef}
