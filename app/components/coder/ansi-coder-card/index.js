@@ -12,7 +12,7 @@ import SearchByKeyWord from './dom-event';
 
 import {
   default as AnsiUp
-} from './ansi-up';
+} from 'ansi_up';
 
 const ansi_up = new AnsiUp();
 const searchService = new SearchByKeyWord({ 
@@ -63,7 +63,7 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
         behavior: 'smooth'
       });
     } catch (error) {
-      throw new Error('跳转失败');
+      console.log('滚动定位失败');
     }
   };
 
