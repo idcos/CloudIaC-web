@@ -182,11 +182,8 @@ export default class AnsiUp {
         // - incomplete ESC
         if (last_pkt.slice(-1) === '\x1B') {
           this._buffer = '\x1B';
-          console.log("raw", raw_text_pkts);
           raw_text_pkts.pop();
           raw_text_pkts.push(last_pkt.substr(0, last_pkt.length - 1));
-          console.log(raw_text_pkts);
-          console.log(last_pkt);
         }
         // - Incomplete ESC, only one packet
         if (raw_text_pkts.length === 2 && (raw_text_pkts[1] == '') && (raw_text_pkts[0].slice(-1) == "\x1B")) {
