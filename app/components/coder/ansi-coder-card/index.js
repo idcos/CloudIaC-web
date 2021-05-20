@@ -22,7 +22,7 @@ const searchService = new SearchByKeyWord({
   ]
 });
 
-export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) => {
+export default ({ value }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
