@@ -291,7 +291,7 @@ export default (props) => {
           <Panel
             className='panel-content-no-paading'
             style={{ padding: 0 }}
-            header={<h2>作业内容</h2>}
+            header={<h2 className='reset-styles'>作业内容</h2>}
             key={"1"}
           >
             <AnsiCoderCard value={taskLog} />
@@ -299,7 +299,7 @@ export default (props) => {
         </Collapse>
 
         <Collapse className='collapse-panel'>
-          <Panel header={<h2>评论</h2>}>
+          <Panel header={<h2 className='reset-styles'>评论</h2>}>
             <List
               loading={loading}
               itemLayout='horizontal'
@@ -308,14 +308,14 @@ export default (props) => {
                 <List.Item>
                   <List.Item.Meta
                     title={
-                      <h2 className='title'>
+                      <h2 className='title reset-styles'>
                         {item.creator}
                         <span className='subTitle'>
                           {timeUtils.format(item.createdAt)}
                         </span>
                       </h2>
                     }
-                    description={<p className='content'>{item.comment}</p>}
+                    description={<p className='content reset-styles'>{item.comment}</p>}
                   />
                 </List.Item>
               )}

@@ -22,8 +22,10 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0;
-  padding: 0;
+  &.reset-styles {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 h1,
@@ -32,19 +34,25 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: 100%;
-  font-weight: normal;
+  &.reset-styles {
+    font-size: 100%;
+    font-weight: normal;
+  }
 }
 
 ul {
-  list-style: none;
+  &.reset-styles {
+    list-style: none;
+  }
 }
 
 button,
 input,
 select,
 textarea {
-  margin: 0;
+  &.reset-styles {
+    margin: 0;
+  }
 }
 
 html {
@@ -72,12 +80,16 @@ iframe {
 }
 
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+  &.reset-styles {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
 }
 
 td,
 th {
-  padding: 0;
-  text-align: left;
+  &.reset-styles {
+    padding: 0;
+    text-align: left;
+  }
 }

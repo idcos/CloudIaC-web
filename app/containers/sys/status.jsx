@@ -91,14 +91,14 @@ const SysStatus = (props) => {
                       <List.Item>
                         <List.Item.Meta
                           title={
-                            <p className='list-title'>
+                            <p className='list-title reset-styles'>
                               <span>{item.ID}</span>
                               <span><GlobalOutlined/> {item.address}</span>
                             </p>
                           }
                           description={
                             <>
-                              <p className='tags'>
+                              <p className='tags reset-styles'>
                                 <Tags data={item.tags} canEdit={it.service === 'CT-Runner'} 
                                   update={(newTags) => {
                                     updateTag({ tags: newTags, serviceId: item.ID });
@@ -109,7 +109,7 @@ const SysStatus = (props) => {
                             </>
                           }
                         />
-                        <p className='tableRender'>
+                        <p className='tableRender reset-styles'>
                           <span className={`status-text ${statusTextCls(item.status).cls}`}>{statusIcons[item.status]} <span>{SYS.status[item.status]}</span></span>
                         </p>
                       </List.Item>

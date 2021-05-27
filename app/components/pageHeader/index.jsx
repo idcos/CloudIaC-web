@@ -20,13 +20,13 @@ const PageHeader = (props) => {
       />}
       <Row type='flex' align='middle' justify='space-around'>
         <Col span={14}>
-          <h2 className='title'>
+          <h2 className='title reset-styles'>
             {title}
             <span className='des'>{des}</span>
           </h2>
         </Col>
         <Col span={10}>
-          <p className='subDes'>{subDes}</p>
+          <p className='subDes reset-styles'>{subDes}</p>
         </Col>
       </Row>
       {Function.prototype.isPrototypeOf(renderFooter) && renderFooter()}

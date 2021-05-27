@@ -24,7 +24,7 @@ export const EditableCell = ({
     </Form.Item>
   };
   return (
-    <td {...restProps}>
+    <td className='reset-styles' {...restProps}>
       {editing ? (
         inputType == 'other' ? insetInputType.other : <Form.Item
           name={dataIndex}

@@ -89,7 +89,7 @@ export default ({
         <span className={`status-text ${statusTextCls(status).cls}`}>
           {CT.taskStatusIcon[status]} {CT.taskStatus[status]}
         </span>
-        <p className='end-at-time'>{moment(endAt).fromNow()}</p>
+        <p className='end-at-time reset-styles'>{moment(endAt).fromNow()}</p>
       </div>
     </List.Item>
   );

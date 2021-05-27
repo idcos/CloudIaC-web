@@ -100,8 +100,8 @@ const Orgs = ({ title, dispatch }) => {
       dataIndex: 'name',
       title: '组织名称',
       render: (_, record) => <div className='tableRender'>
-        <h2>{record.name}</h2>
-        <p>{record.guid}</p>
+        <h2 className='reset-styles'>{record.name}</h2>
+        <p className='reset-styles'>{record.guid}</p>
       </div>
     },
     {

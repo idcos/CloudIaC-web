@@ -33,7 +33,7 @@ export default ({ value }) => {
       return `
         <div class='ansi-line'>
           <span class='line-index'> ${index + 1 }</span>
-          <pre class='line-text'>${ansi_up.ansi_to_html(line)}</pre>
+          <pre class='line-text reset-styles'>${ansi_up.ansi_to_html(line)}</pre>
         </div>
       `;
     }).join('');

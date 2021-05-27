@@ -98,8 +98,8 @@ export default ({ title, curOrg }) => {
       dataIndex: 'name',
       title: '成员',
       render: (_, record) => <div className='tableRender'>
-        <h2>{record.name}</h2>
-        <p>{record.email}</p>
+        <h2 className='reset-styles'>{record.name}</h2>
+        <p className='reset-styles'>{record.email}</p>
       </div>
     },
     {

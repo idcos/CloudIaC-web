@@ -225,8 +225,8 @@ const Setting = (props) => {
           </Form.Item>
           <Form.Item label='其他信息' noStyle={true}>
             <div className='tipZone'>
-              <p>资源：</p>
-              <p>版本：</p>
+              <p className='reset-styles'>资源：</p>
+              <p className='reset-styles'>版本：</p>
             </div>
           </Form.Item>
           <Form.Item>
@@ -251,7 +251,7 @@ const Setting = (props) => {
               >
                 启用云模板
               </Button>
-              <p className='tipText'>
+              <p className='tipText reset-styles'>
                 启用云模板后所有功能都可正常操作(发起作业、变量修改、设置修改等
               </p>
             </>
@@ -264,14 +264,14 @@ const Setting = (props) => {
               >
                 禁用云模板
               </Button>
-              <p className='tipText'>
+              <p className='tipText reset-styles'>
                 禁用云模板后所有操作(发起作业、修改变量等)都将禁用，仅能够正常访问云模板数据
               </p>
             </>
           )}
           {/* <Divider/>
         <Button type='primary' danger={true} onClick={delCT}>删除云模板</Button>
-        <p className='tipText'>删除云模板将删除所有作业、状态、变量、设置等记录，请谨慎操作</p> */}
+        <p className='tipText reset-styles'>删除云模板将删除所有作业、状态、变量、设置等记录，请谨慎操作</p> */}
         </div>
       )
     };
