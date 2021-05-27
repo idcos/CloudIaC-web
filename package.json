@@ -61,7 +61,6 @@
     "ansi_up": "^5.0.1",
     "antd": "^4.0.2",
     "blueimp-md5": "^2.12.0",
-    "bootstrap-css": "^4.0.0-alpha.5",
     "chalk": "3.0.0",
     "codemirror": "5.61.0",
     "compression": "1.7.4",
