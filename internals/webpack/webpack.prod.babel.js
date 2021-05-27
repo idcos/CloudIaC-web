@@ -5,12 +5,15 @@ const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const htmlChunks = [ 'app', 'login', 'developerManual' ];
+const getExcludeHtmlChunks = (value) => htmlChunks.filter((htmlChunk) => value !== htmlChunk);
 
 module.exports = require('./webpack.base.babel')({
   mode: 'production',
   entry: {
     app: path.join(process.cwd(), 'app/app.js'),
-    login: path.join(process.cwd(), 'login/login.js')
+    login: path.join(process.cwd(), 'login/login.js'),
+    developerManual: path.join(process.cwd(), 'developerManual/developerManual.js')
   },
   output: {
     filename: 'js/[name].[chunkhash].js',
@@ -66,7 +69,7 @@ module.exports = require('./webpack.base.babel')({
         minifyURLs: true
       },
       inject: true,
-      excludeChunks: ['login']
+      excludeChunks: getExcludeHtmlChunks('app')
     }),
     new HtmlWebpackPlugin({
       template: 'login/login.html',
@@ -83,7 +86,25 @@ module.exports = require('./webpack.base.babel')({
         minifyCSS: true,
         minifyURLs: true
       },
-      excludeChunks: ['app'],
+      excludeChunks: getExcludeHtmlChunks('login'),
+      inject: true
+    }),
+    new HtmlWebpackPlugin({
+      template: 'developerManual/developerManual.html',
+      filename: 'developerManual.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      },
+      excludeChunks: getExcludeHtmlChunks('developerManual'),
       inject: true
     }),
     new HashedModuleIdsPlugin({
