@@ -1,13 +1,27 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Anchor } from "antd";
 const { Link } = Anchor;
 import { Remarkable } from "remarkable";
+import get from 'lodash/get';
+import set from 'lodash/set';
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import styles from "./styles.less";
 import testMd from "./test-md";
 
+const getParent = (data, grade) => {
+  if (!data || data.grade >= grade) {
+    return;
+  }
+  const { children } = data;
+  return getParent(children[children.length - 1], grade) || data;
+};
+
 export default () => {
+  const [ anchorList, setAnchorList ] = useState([]);
+  const [ anchorBaseData, setAnchorBaseData ] = useState({});
+  const [ innerHTML, setInnerHTML ] = useState();
+
   const ref = useRef(
     new Remarkable({
       highlight: function (str, lang) {
@@ -29,25 +43,77 @@ export default () => {
     })
   );
 
-  const getRawMarkup = () => {
-    return { __html: ref.current.render(testMd) };
+  const loop = (arr) => {
+    return arr.map((it) => (
+      <Link href={'#' + it.href} title={it.title}>
+        {loop(it.children)}
+      </Link>
+    ));
   };
+
+  useEffect(() => {
+    let arr = [];
+    const { list, highestGrade } = anchorBaseData;
+    (list || []).forEach((item) => {
+      const { title, grade, href } = item;
+      const parent = getParent(arr[arr.length - 1], grade);
+      if (parent) {
+        const diffGrade = grade - parent.grade;
+        let path = parent.path;
+        for (let i = 0; i < diffGrade; i++) {
+          const lastParent = get(arr, path);
+          path = `${path}.children[${lastParent.children.length}]`;
+          if (i === diffGrade - 1) {
+            set(arr, path, { isTpl: false, children: [], path, title, grade, href });
+          } else {
+            set(arr, path, { isTpl: true, children: [], path, grade: parent.grade + i + 1 });
+          }
+        }
+      } else {
+        const diffGrade = grade - highestGrade;
+        let path = `[${arr.length}]`;
+        for (let i = 0; i <= diffGrade; i++) {
+          if (i === diffGrade) {
+            set(arr, path, { isTpl: false, children: [], path, title, grade, href });
+          } else {
+            set(arr, path, { isTpl: true, children: [], path, grade: highestGrade + i + 1 });
+          }
+          path = `${path}.children[0]`;
+        }
+      }
+    });
+    setAnchorList(arr);
+  }, [anchorBaseData]);
+
+  useEffect(() => {
+    let html = ref.current.render(testMd);
+    let arr = [];
+    let highestGrade;
+    const reg = /<[Hh]([1-4])>([^<]*?)<\/[Hh]\1>/g;
+    html = html.replace(reg, (hTag, grade, title) => {
+      const len = arr.length;
+      const href = `anchor-${len}`;
+      const a = `<a name="${href}"></a>`;
+      grade = Number(grade);
+      arr.push({ title, grade, href });
+      highestGrade = (highestGrade && grade > highestGrade) ? highestGrade : grade;
+      return a + hTag;
+    });
+    setAnchorBaseData({
+      list: arr,
+      highestGrade
+    });
+    setInnerHTML(html);
+  }, [testMd]);
 
   return (
     <div className={styles.markdownDoc} style={{ paddingRight: 300 }}>
-      <Anchor className='doc-anchor' affix={false} getCurrentAnchor={() => '#c1'}>
-        <Link href='#c1' title='开发流程' />
-        <Link href='#c2' title='登录地址' />
-        <Link href='#c3' title='登录用户名、密码' />
-        <Link href='#c4' title='脚手架获取' />
-        <Link href='#c5' title='目录文件说明' />
-        <Link href='#c6' title='开发并提交代码' />
-        <Link href='#c7' title={"terraform & ansible 串连配置示例"} />
-        <Link href='#c8' title='创建、运行云模板' />
+      <Anchor className='doc-anchor' showInkInFixed={true} affix={false}>
+        {loop(anchorList)}
       </Anchor>
       <div className='doc-content'>
         <h1>开发者手册</h1>
-        <div className='' dangerouslySetInnerHTML={getRawMarkup()}></div>
+        <div className='doc-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
       </div>
     </div>
   );
