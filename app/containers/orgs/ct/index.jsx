@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification } from 'antd';
+import { Button, Table, Radio, Input, notification, Dropdown, Menu } from 'antd';
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -102,7 +102,19 @@ const CloudTmp = (props) => {
     extraHeader={<PageHeader
       title='云模板'
       breadcrumb={true}
-      subDes={<Button onClick={() => history.push(`/org/${params.orgId}/ct/createCT`)}>创建云模板</Button>}
+      subDes={
+        <Dropdown
+          placement='bottomRight'
+          overlay={
+            <Menu>
+              <Menu.Item onClick={() => history.push(`/org/${params.orgId}/ct/createCT`)}>创建自定义云模板</Menu.Item>
+              <Menu.Item onClick={() => history.push(`/org/${params.orgId}/ct/ctLib`)}>从云模板库中选择</Menu.Item>
+            </Menu>
+          }
+        >
+          <Button>创建云模板</Button>
+        </Dropdown>
+      }
     />}
   >
     <div className='container-inner-width'>

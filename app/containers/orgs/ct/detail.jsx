@@ -184,7 +184,7 @@ const CloudTmpDetail = (props) => {
         />
       }
     >
-      <div className='container-inner-width fn-padding-top-24'>
+      <div className='container-inner-width'>
         {detailInfo.status == "disable" && (
           <Alert
             message={

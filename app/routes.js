@@ -25,6 +25,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/ct/ctLib',
+          name: '创建云模板',
+          component: loadable(() => import('containers/orgs/ct/ctLib'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/ct/createCT',
           name: '创建云模板',
           component: loadable(() => import('containers/orgs/ct/create'), asyncLoadFallback),

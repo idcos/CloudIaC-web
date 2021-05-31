@@ -18,6 +18,7 @@ const breadcrumbNameMap = {
   ct: '云模板',
   setting: '设置',
   createCT: '创建云模板',
+  ctLib: '云模板库',
   overview: '概览',
   running: '运行',
   state: '状态',
@@ -27,14 +28,6 @@ const breadcrumbNameMap = {
 
 
 const BreadcrumbWrapper = ({ location, params, externalData }) => {
-  const externalDataGetter = (snippet) => {
-    const { curOrg } = externalData,
-      _map = {
-        orgId: (curOrg || {}).name
-      },
-      routeParamKey = isRouteParam(params, snippet);
-    return _map[routeParamKey];
-  };
   const pathSnippets = location.pathname.split('/')
     .filter(i => i)
     .filter(i => !!isRouteParam({ orgId: params.orgId, ctId: params.ctId }, i) || breadcrumbNameMap.hasOwnProperty(i));
@@ -42,7 +35,7 @@ const BreadcrumbWrapper = ({ location, params, externalData }) => {
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
     const isLastOne = index == pathSnippets.length - 1;
     const linkText = breadcrumbNameMap.hasOwnProperty(snippet) ?
-      breadcrumbNameMap[snippet] : externalDataGetter(snippet);
+      breadcrumbNameMap[snippet] : null;
     return linkText ? (
       <Breadcrumb.Item key={url}>
         <Link
