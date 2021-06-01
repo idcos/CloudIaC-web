@@ -4,6 +4,8 @@ import { Button, Space, Table } from "antd";
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 
+import CreatCTModal from './components/createCTModal';
+
 export default (props) => {
 
   const [ ctLibList, setCtLibList ] = useState([
@@ -15,6 +17,10 @@ export default (props) => {
       updateTime: '最后更新时间'
     }
   ]);
+  const [ createCTData, setCreateCTData ] = useState({
+    visible: false,
+    id: null
+  });
 
   const columns = [
     {
@@ -40,9 +46,10 @@ export default (props) => {
     {
       title: '操作',
       render: (item) => {
+        const { id } = item;
         return (
           <Space size='middle'>
-            <a>创建</a>
+            <a onClick={() => setCreateCTData({ visible: true, id })}>创建</a>
             <a>查看文档</a>
           </Space>
         );
@@ -67,6 +74,7 @@ export default (props) => {
         <div className='fn-h-20'></div>
         <Table dataSource={ctLibList} columns={columns} />
       </div>
+      <CreatCTModal visible={createCTData.visible} id={createCTData.id} onClose={() => setCreateCTData({ visible: false, id: null })} />
     </Layout>
   );
 };
