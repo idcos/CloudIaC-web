@@ -2,7 +2,7 @@
 
 export default `
 ## 开发流程
-![image.png](https://cdn.nlark.com/yuque/0/2021/png/2919182/1620964981562-17bb7ea3-269d-474d-88d4-3ddcc62f330f.png#clientId=u512093c9-90d5-4&from=paste&height=78&id=oSuMJ&margin=%5Bobject%20Object%5D&name=image.png&originHeight=121&originWidth=1129&originalType=binary&size=54539&status=done&style=none&taskId=uea362266-fc9f-4c03-b3b4-bed77c2ebc7&width=727.5)
+![image.png](/assets/image.png)
 ## 登录地址
 IaC平台登录地址：[http://10.0.3.124](http://10.0.3.124) (实际部署时使用域名 [http://iac.domain](http://iac.domain))
 代码仓库登录地址：[http://10.0.3.124:3000](http://10.0.3.124:3000) (实际部署时使用域名 [http://iac-git.domain](http://iac-git.domain))

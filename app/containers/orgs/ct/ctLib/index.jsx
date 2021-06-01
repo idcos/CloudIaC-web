@@ -5,6 +5,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 
 import CreatCTModal from './components/createCTModal';
+import ViewMdModal from './components/viewMdModal';
 
 export default (props) => {
 
@@ -20,6 +21,9 @@ export default (props) => {
   const [ createCTData, setCreateCTData ] = useState({
     visible: false,
     id: null
+  });
+  const [ viewMdData, setViewMdData ] = useState({
+    visible: false
   });
 
   const columns = [
@@ -50,7 +54,7 @@ export default (props) => {
         return (
           <Space size='middle'>
             <a onClick={() => setCreateCTData({ visible: true, id })}>创建</a>
-            <a>查看文档</a>
+            <a onClick={() => setViewMdData({ visible: true })}>查看文档</a>
           </Space>
         );
       }
@@ -74,7 +78,9 @@ export default (props) => {
         <div className='fn-h-20'></div>
         <Table dataSource={ctLibList} columns={columns} />
       </div>
+      
       <CreatCTModal visible={createCTData.visible} id={createCTData.id} onClose={() => setCreateCTData({ visible: false, id: null })} />
+      <ViewMdModal visible={viewMdData.visible} onClose={() => setViewMdData({ visible: false })} />
     </Layout>
   );
 };
