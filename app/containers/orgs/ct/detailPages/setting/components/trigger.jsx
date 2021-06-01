@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Card, Button, Space } from "antd";
+import { Card, notification, Space } from "antd";
 import { CopyOutlined, DeleteOutlined } from '@ant-design/icons';
+import copy from 'utils/copy';
 
 export default () => {
 
@@ -34,6 +35,7 @@ export default () => {
 
 const ActionCard = (props) => {
   const { title, actionUrl, op, cardStyle } = props;
+ 
   return (
     <Card
       type='inner'
@@ -44,12 +46,12 @@ const ActionCard = (props) => {
         actionUrl ? (
           <Space>
             <span>{actionUrl}</span>
-            <CopyOutlined style={{ color: '#13C2C2' }} />
-            <DeleteOutlined onClick={() => op('del')} style={{ color: '#F44336' }} />
+            <CopyOutlined className='fn-color-primary' onClick={() => copy(actionUrl)}/>
+            <DeleteOutlined className='fn-color-destroy' onClick={() => op('del')} />
           </Space>
         ) : (
           <div className='fn-TA-C'>
-            <span className='fn-descriptions-color'>暂无数据{' '}</span>
+            <span className='fn-color-gray-6'>暂无数据{' '}</span>
             <a onClick={() => op('create')}>现在创建</a>
           </div>
         )
