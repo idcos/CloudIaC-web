@@ -10,11 +10,15 @@ import { ctAPI } from "services/base";
 import BasicInfo from './components/basic-info';
 import RepoInfo from './components/repo-info';
 import OperationAuthority from './components/operation-authority';
+import Trigger from './components/trigger';
+import DestroyResources from './components/destroy-resources';
 
 const subNavs = {
   basic: "基本信息",
   repo: "仓库信息",
-  operationAuthority: "操作权限"
+  operationAuthority: "操作权限",
+  trigger: '触发器',
+  destroyResources: '销毁资源'
 };
 
 const Setting = (props) => {
@@ -23,7 +27,7 @@ const Setting = (props) => {
   const { initSettingPanel } = location.state || {};
   const [ panel, setPanel ] = useState(initSettingPanel || "basic");
   const [ submitLoading, setSubmitLoading ] = useState(false);
-
+  
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
@@ -65,7 +69,9 @@ const Setting = (props) => {
     const PAGES = {
       basic: <BasicInfo {...panelProps} />,
       repo: <RepoInfo {...panelProps}/>,
-      operationAuthority: <OperationAuthority {...panelProps}/>
+      operationAuthority: <OperationAuthority {...panelProps}/>,
+      trigger: <Trigger {...panelProps}/>,
+      destroyResources: <DestroyResources {...panelProps}/>
     };
     return PAGES[panel];
   }, [ panel, detailInfo, ctRunnerList, submitLoading ]);

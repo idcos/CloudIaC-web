@@ -194,7 +194,7 @@ const CloudTmpDetail = (props) => {
                   type='link'
                   size='small'
                   onClick={() => {
-                    changeTab("setting", { initSettingPanel: "del" });
+                    changeTab("setting", { initSettingPanel: "operationAuthority" });
                   }}
                 >
                   去修改状态
