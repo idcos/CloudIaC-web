@@ -14,7 +14,7 @@ export default (props) => {
   
   return (
     <Modal 
-      bodyStyle={{ maxHeight: 644, overflowY: 'scroll' }} 
+      bodyStyle={{ maxHeight: 557, overflowY: 'scroll' }} 
       title='查看Readme.md文档' 
       visible={visible} 
       onCancel={onCancel}

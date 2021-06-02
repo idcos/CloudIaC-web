@@ -5,13 +5,18 @@ import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Co
 import { ctAPI } from 'services/base';
 import uuid from 'utils/uuid.js';
 
+import ImportVarsModal from './components/import-vars-modal';
+
 const { Option } = Select;
 const pseudoID = 'a-new-id';
+
+const options = Array.from(new Array(100), (item, index) => ({ key: 'key' + index, value: 'value' + index, description: '描述信息' + index }))
 
 const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
   const [tfvarsForm] = Form.useForm();
   const [ tfvars, setTfvars ] = useState([]);
+  const [ importModalVisible, setImportModalVisible ] = useState(false);
   const [ varsData, setVarsData ] = useState({
     terraformVars: [],
     envVars: []
@@ -56,12 +61,6 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
   };
 
   const genColumns = ({ canSearchByKey, disabled, editingKey, cancel, edit, save, del, form }) => {
-    const options = [
-      { key: 'key1', value: 'value1', description: '描述信息1' },
-      { key: 'key2', value: 'value2', description: '描述信息2' },
-      { key: 'key3', value: 'value3', description: '描述信息3' },
-      { key: 'key4', value: 'value4', description: '' }
-    ];
     const handleChange = (val) => {
       const data = options.find((option) => option.key === val);
       form.setFieldsValue(data);
@@ -92,7 +91,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                       {menu}
                       <Divider style={{ margin: '4px 0' }} />
                       <div className='footer'>
-                        <span>
+                        <span onClick={() => setImportModalVisible(true)}>
                           查看更多变量内容
                         </span>
                       </div>
@@ -247,6 +246,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
         dataType='terraform'
         api={api}
       />
+      <ImportVarsModal dataSource={options} visible={importModalVisible} onClose={() => setImportModalVisible(false)}/>
     </Card>
     <Card
       title='环境变量'
