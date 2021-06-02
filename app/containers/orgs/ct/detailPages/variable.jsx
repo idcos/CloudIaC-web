@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { EditableCell, columnsOverride } from 'components/editable-table-ele';
 
-import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox, Select } from 'antd';
+import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox, Select, Tooltip } from 'antd';
 import { ctAPI } from 'services/base';
 import uuid from 'utils/uuid.js';
 
@@ -87,14 +87,35 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                 <Select 
                   style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' 
                   showArrow={false} showSearch={true} onChange={handleChange}
+                  dropdownRender={menu => (
+                    <div className='variable-list-dropdown'>
+                      {menu}
+                      <Divider style={{ margin: '4px 0' }} />
+                      <div className='footer'>
+                        <span>
+                          查看更多变量内容
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 >
                   {
                     options.map((option) => {
                       const { key, value, description } = option;
+                      const keyValueTpl = <span>{ key }: { value }</span>;
+                      const descriptionTpl = <span>描述内容：{ description || '无' }</span>;
                       return (
                         <Option value={key}>
-                          <div>{ key }: { value }</div>
-                          <div>描述内容：{ description || '无' }</div>
+                          <div className='key-value idcos-text-ellipsis'>
+                            <Tooltip title={keyValueTpl}>
+                              { keyValueTpl }
+                            </Tooltip>
+                          </div>
+                          <div className='description idcos-text-ellipsis'>
+                            <Tooltip title={descriptionTpl}>
+                              { descriptionTpl }
+                            </Tooltip>
+                          </div>
                         </Option>
                       );
                     })
