@@ -29,21 +29,18 @@ const subNavs = {
 };
 
 const CloudTmpDetail = (props) => {
-  const { match, routesParams, routes, location } = props,
+  const { match, routesParams, routes } = props,
     { ctId, orgId: orgGuid, ctDetailTabKey } = match.params,
-    { cacheDetailInfo } = location.state || {},
     baseUrl = `/org/${orgGuid}/ct/${ctId}`;
 
   const [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),
     [ ctRunnerList, setCtRunnerList ] = useState([]),
-    [ detailInfo, setDetailInfo ] = useState(cacheDetailInfo || {});
+    [ detailInfo, setDetailInfo ] = useState({});
 
   useEffect(() => {
-    // if (!cacheDetailInfo) {
     fetchDetailInfo();
     fetchCTRunner();
-    // }
   }, []);
 
   const changeTab = (key, cacheData) => {
@@ -60,9 +57,7 @@ const CloudTmpDetail = (props) => {
    * @param {Object} cacheData 需要缓存的数据
    */
   const linkTo = (url, cacheData = {}) => {
-    const baseCacheState = { cacheDetailInfo: detailInfo };
-    const cacheState = { ...baseCacheState, ...cacheData };
-    history.push(url, cacheState);
+    history.push(url, cacheData);
   };
 
   const fetchDetailInfo = async () => {
