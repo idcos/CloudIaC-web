@@ -281,6 +281,9 @@ const FormWithInTable = ({ genColumns, addBtnTxt, api, dataSource, dataType, dis
     [ resultList, setResultList ] = useState(dataSource);
 
   useEffect(() => {
+    if (editingKey) {
+      setEditingKey(null);
+    }
     setResultList(dataSource);
   }, [dataSource]);
 
