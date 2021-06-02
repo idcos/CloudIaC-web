@@ -4,7 +4,7 @@ import { Button } from "antd";
 
 export default (props) => {
 
-  const { detailInfo, onFinish } = props;
+  const { detailInfo, onFinish, submitLoading } = props;
 
   return (
     <div style={{ marginTop: 10 }}>
@@ -12,6 +12,7 @@ export default (props) => {
         <>
           <Button
             type='primary'
+            loading={submitLoading}
             onClick={() => onFinish({ status: "enable" })}
           >
             启用云模板
@@ -24,6 +25,7 @@ export default (props) => {
         <>
           <Button
             type='primary'
+            loading={submitLoading}
             danger={true}
             onClick={() => onFinish({ status: "disable" })}
           >
