@@ -84,7 +84,10 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                 ]}
                 style={{ margin: 0 }}
               >
-                <Select style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' showSearch={true}  onChange={handleChange}>
+                <Select 
+                  style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' 
+                  showArrow={false} showSearch={true} onChange={handleChange}
+                >
                   {
                     options.map((option) => {
                       const { key, value, description } = option;
@@ -93,7 +96,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                           <div>{ key }: { value }</div>
                           <div>描述内容：{ description || '无' }</div>
                         </Option>
-                      )
+                      );
                     })
                   }
                 </Select>
