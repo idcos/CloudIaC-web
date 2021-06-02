@@ -55,12 +55,52 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     }
   };
 
-  const genColumns = ({ disabled, editingKey, cancel, edit, save, del, form }) => {
+  const genColumns = ({ canSearchByKey, disabled, editingKey, cancel, edit, save, del, form }) => {
+    const options = [
+      { key: 'key1', value: 'value1', description: '描述信息1' },
+      { key: 'key2', value: 'value2', description: '描述信息2' },
+      { key: 'key3', value: 'value3', description: '描述信息3' },
+      { key: 'key4', value: 'value4', description: '' }
+    ];
+    const handleChange = (val) => {
+      const data = options.find((option) => option.key === val);
+      form.setFieldsValue(data);
+    };
     return [
       {
         title: 'key',
         dataIndex: 'key',
-        editable: true
+        editable: true,
+        ... canSearchByKey ? {
+          inputType: 'other',
+          inputRender: ({ getFieldValue, setFieldsValue }) => {
+            return (
+              <Form.Item name='key' 
+                rules={[
+                  {
+                    required: true,
+                    message: "请选择"
+                  }
+                ]}
+                style={{ margin: 0 }}
+              >
+                <Select style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' showSearch={true}  onChange={handleChange}>
+                  {
+                    options.map((option) => {
+                      const { key, value, description } = option;
+                      return (
+                        <Option value={key}>
+                          <div>{ key }: { value }</div>
+                          <div>描述内容：{ description || '无' }</div>
+                        </Option>
+                      )
+                    })
+                  }
+                </Select>
+              </Form.Item>
+            );
+          }
+        } : {}
       },
       {
         title: 'value',
@@ -177,7 +217,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       />
       <FormWithInTable
         disabled={detailInfo.status === "disable"}
-        genColumns={genColumns}
+        genColumns={(props) => genColumns({ ...props, canSearchByKey: true })}
         addBtnTxt={'添加Terraform变量'}
         dataSource={varsData.terraformVars}
         dataType='terraform'
