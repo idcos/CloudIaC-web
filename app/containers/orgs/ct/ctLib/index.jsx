@@ -3,21 +3,16 @@ import { Button, Space, Table } from "antd";
 
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import { ctAPI } from "services/base";
 
 import CreatCTModal from './components/createCTModal';
 import ViewMdModal from './components/viewMdModal';
 
 export default (props) => {
 
-  const [ ctLibList, setCtLibList ] = useState([
-    {
-      id: 1,
-      name: '云模板名称',
-      des: '云模板描述',
-      address: '仓库地址',
-      updateTime: '最后更新时间'
-    }
-  ]);
+  const { routesParams } = props;
+
+  const [ ctLibList, setCtLibList ] = useState([]);
   const [ createCTData, setCreateCTData ] = useState({
     visible: false,
     id: null
@@ -25,6 +20,20 @@ export default (props) => {
   const [ viewMdData, setViewMdData ] = useState({
     visible: false
   });
+
+  useEffect(() => {
+    getCTLibList();
+  }, []);
+
+  const getCTLibList = async () => {
+    const res = await ctAPI.ctLibSearch({
+      orgId: routesParams.curOrg.id
+    });
+    if (res.code !== 200) {
+      throw new Error(res.message);
+    }
+    setCtLibList(res.result || []);
+  };
 
   const columns = [
     {
@@ -34,18 +43,18 @@ export default (props) => {
     },
     {
       title: '云模板描述',
-      dataIndex: 'des',
-      key: 'des'
+      dataIndex: 'description',
+      key: 'description'
     },
     {
       title: '仓库地址',
-      dataIndex: 'address',
-      key: 'address'
+      dataIndex: 'repoAddr',
+      key: 'repoAddr'
     },
     {
       title: '最后更新时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime'
+      dataIndex: 'updatedAt',
+      key: 'updatedAt'
     },
     {
       title: '操作',

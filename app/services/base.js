@@ -299,6 +299,19 @@ export const ctAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  // 云模版库
+  ctLibSearch: ({ orgId }) => {
+    return get('/api/v1/template/library/search', {
+      'IaC-Org-Id': orgId
+    });
+  },
+  createCTByLib: ({ orgId, id }) => {
+    return post('/api/v1/template/library/create', {
+      id
+    }, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
