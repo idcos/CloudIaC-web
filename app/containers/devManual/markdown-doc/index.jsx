@@ -117,6 +117,8 @@ export default (props) => {
           onClick={e => e.preventDefault()}
           affix={false} 
           targetOffset={110}
+          bounds={50}
+          showInkInFixed={true}
           getContainer={() => document.querySelector(scrollDomSelecter)}
         >
           {loop(anchorList)}
