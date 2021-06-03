@@ -13,7 +13,7 @@ export default () => {
       contentStyle={{ paddingTop: 0 }}
       extraHeader={<PageHeader title='开发者手册' />}
     >
-      <div className={styles.markdownDocWrapper }>
+      <div className={styles.markdownDocWrapper}>
         <div className='markdown-doc-scroll'>
           <div className='container-inner-width'>
             <MarkdownDoc scrollDomSelecter='.markdown-doc-scroll' />

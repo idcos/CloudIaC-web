@@ -26,7 +26,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     return _options.filter((_option) => {
       const isAvailable = (varsData.terraformVars || []).findIndex((tfvar) => tfvar.key === _option.key) === -1;
       return isAvailable;
-    })
+    });
   }, [varsData.terraformVars]);
 
   useEffect(() => {
