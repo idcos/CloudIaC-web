@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Select, Menu, Dropdown } from 'antd';
 import { Link } from 'react-router-dom';
 import history from 'utils/history';
-import { SettingFilled, FundFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, SettingFilled, FundFilled } from '@ant-design/icons';
 import styles from './styles.less';
 import { connect } from "react-redux";
 import { logout } from 'services/logout';
@@ -59,6 +59,7 @@ const AppHeader = (props) => {
           </Menu>
         }
         <div className='user'>
+          <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
           {userInfo.isAdmin ? <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span> : null}
           <Dropdown
