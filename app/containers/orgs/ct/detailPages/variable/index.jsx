@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { EditableCell, columnsOverride } from 'components/editable-table-ele';
 
 import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox, Select, Tooltip } from 'antd';
@@ -10,7 +10,7 @@ import ImportVarsModal from './components/import-vars-modal';
 const { Option } = Select;
 const pseudoID = 'a-new-id';
 
-const options = Array.from(new Array(100), (item, index) => ({ key: 'key' + index, value: 'value' + index, description: '描述信息' + index }));
+const _options = Array.from(new Array(100), (item, index) => ({ key: 'key' + index, value: 'value' + index, description: '描述信息' + index }));
 
 const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
@@ -21,6 +21,13 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     terraformVars: [],
     envVars: []
   });
+
+  const options = useMemo(() => {
+    return _options.filter((_option) => {
+      const isAvailable = (varsData.terraformVars || []).findIndex((tfvar) => tfvar.key === _option.key) === -1;
+      return isAvailable;
+    })
+  }, [varsData.terraformVars]);
 
   useEffect(() => {
     tfvarsForm.setFieldsValue({ varfile: detailInfo.varfile || null });
@@ -60,71 +67,88 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     }
   };
 
-  const genColumns = ({ canSearchByKey, disabled, editingKey, cancel, edit, save, del, form }) => {
+  const genColumns = ({ dataSource, canSearchByKey, disabled, editingKey, cancel, edit, save, del, form }) => {
     const handleChange = (val) => {
       const data = options.find((option) => option.key === val);
       form.setFieldsValue(data);
     };
-    return [
-      {
-        title: 'key',
-        dataIndex: 'key',
-        editable: true,
-        ... canSearchByKey ? {
-          inputType: 'other',
-          inputRender: ({ getFieldValue, setFieldsValue }) => {
-            return (
-              <Form.Item name='key' 
-                rules={[
-                  {
-                    required: true,
-                    message: "请选择"
-                  }
-                ]}
-                style={{ margin: 0 }}
-              >
-                <Select 
-                  style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' 
-                  showArrow={false} showSearch={true} onChange={handleChange}
-                  dropdownRender={menu => (
-                    <div className='variable-list-dropdown'>
-                      {menu}
-                      <Divider style={{ margin: '4px 0' }} />
-                      <div className='footer'>
-                        <span onClick={() => setImportModalVisible(true)}>
-                          查看更多变量内容
-                        </span>
+    const selectKeyItem = {
+      title: 'key',
+      dataIndex: 'key',
+      editable: true,
+      inputType: 'other',
+      inputRender: () => {
+        return (
+          <Form.Item name='key' 
+            rules={[
+              {
+                required: true,
+                message: "请选择"
+              }
+            ]}
+            style={{ margin: 0 }}
+          >
+            <Select 
+              style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' 
+              showArrow={false} showSearch={true} onChange={handleChange}
+              dropdownRender={menu => (
+                <div className='variable-list-dropdown'>
+                  {menu}
+                  <Divider style={{ margin: '4px 0' }} />
+                  <div className='footer'>
+                    <span onClick={() => setImportModalVisible(true)}>
+                      查看更多变量内容
+                    </span>
+                  </div>
+                </div>
+              )}
+            >
+              {
+                options.map((option) => {
+                  const { key, value, description, disabled } = option;
+                  const keyValueTpl = <span>{ key }: { value }</span>;
+                  const descriptionTpl = <span>描述内容：{ description || '无' }</span>;
+                  return (
+                    <Option value={key} disabled={disabled}>
+                      <div className='key-value idcos-text-ellipsis'>
+                        <Tooltip title={keyValueTpl}>
+                          { keyValueTpl }
+                        </Tooltip>
                       </div>
-                    </div>
-                  )}
-                >
-                  {
-                    options.map((option) => {
-                      const { key, value, description } = option;
-                      const keyValueTpl = <span>{ key }: { value }</span>;
-                      const descriptionTpl = <span>描述内容：{ description || '无' }</span>;
-                      return (
-                        <Option value={key}>
-                          <div className='key-value idcos-text-ellipsis'>
-                            <Tooltip title={keyValueTpl}>
-                              { keyValueTpl }
-                            </Tooltip>
-                          </div>
-                          <div className='description idcos-text-ellipsis'>
-                            <Tooltip title={descriptionTpl}>
-                              { descriptionTpl }
-                            </Tooltip>
-                          </div>
-                        </Option>
-                      );
-                    })
-                  }
-                </Select>
-              </Form.Item>
-            );
-          }
-        } : {}
-      },
+                      <div className='description idcos-text-ellipsis'>
+                        <Tooltip title={descriptionTpl}>
+                          { descriptionTpl }
+                        </Tooltip>
+                      </div>
+                    </Option>
+                  );
+                })
+              }
+            </Select>
+          </Form.Item>
+        );
+      }
+    };
+    const inputKeyItem = {
+      title: 'key',
+      dataIndex: 'key',
+      editable: true,
+      fieldItemProps: {
+        rules: [
+          { required: true, message: '请输入' },
+          () => ({
+            validator(_, value) {
+              if (!value || (dataSource || []).findIndex(it => it.key === value) === -1) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('key值不允许重复!'));
+            }
+          })
+        ]
+      }
+    };
+    return [
+      canSearchByKey ? selectKeyItem : inputKeyItem,
       {
         title: 'value',
         dataIndex: 'value',
@@ -254,7 +278,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     >
       <FormWithInTable
         disabled={detailInfo.status === "disable"}
-        genColumns={genColumns}
+        genColumns={(props) => genColumns({ ...props, dataSource: varsData.envVars })}
         addBtnTxt={'添加环境变量'}
         dataSource={varsData.envVars}
         dataType='env'
