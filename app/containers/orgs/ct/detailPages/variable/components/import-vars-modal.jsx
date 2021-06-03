@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Modal, Table } from 'antd'
+import { Modal, Table } from 'antd';
 
 export default (props) => {
 
@@ -20,12 +20,12 @@ export default (props) => {
     {
       title: '描述信息',
       dataIndex: 'description'
-    }, 
+    } 
   ];
 
   const rowSelection = {
     selectedRowKeys,
-    onChange: (keys) => setSelectedRowKeys(keys),
+    onChange: (keys) => setSelectedRowKeys(keys)
   };
 
   const onCancel = () => {

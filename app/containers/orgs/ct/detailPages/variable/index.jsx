@@ -10,7 +10,7 @@ import ImportVarsModal from './components/import-vars-modal';
 const { Option } = Select;
 const pseudoID = 'a-new-id';
 
-const options = Array.from(new Array(100), (item, index) => ({ key: 'key' + index, value: 'value' + index, description: '描述信息' + index }))
+const options = Array.from(new Array(100), (item, index) => ({ key: 'key' + index, value: 'value' + index, description: '描述信息' + index }));
 
 const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
