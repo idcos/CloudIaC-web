@@ -25,13 +25,13 @@ export const orgsAPI = {
     });
   },
   changeStatus: ({ id, status }) => {
-    return put('/api/v1/org/changeStatus', {
+    return put('/api/v1/org/status/change', {
       id,
       status
     });
   },
   resAccountList: ({ orgId, q, status, pageNo, pageSize }) => {
-    return getWithArgs('/api/v1/resourceAccount/search', {
+    return getWithArgs('/api/v1/resource/account/search', {
       q,
       status,
       pageSize,
@@ -41,21 +41,21 @@ export const orgsAPI = {
     });
   },
   resAccountCreate: ({ orgId, name, description, params, ctServiceIds }) => {
-    return post('/api/v1/resourceAccount/create', {
+    return post('/api/v1/resource/account/create', {
       name, description, params, ctServiceIds
     }, {
       'IaC-Org-Id': orgId
     });
   },
   resAccountDel: ({ orgId, id }) => {
-    return del('/api/v1/resourceAccount/delete', {
+    return del('/api/v1/resource/account/delete', {
       id
     }, {
       'IaC-Org-Id': orgId
     });
   },
   resAccountUpdate: ({ orgId, id, name, description, params, ctServiceIds, status }) => {
-    return put('/api/v1/resourceAccount/update', {
+    return put('/api/v1/resource/account/update', {
       id, name, description, params, ctServiceIds, status
     }, {
       'IaC-Org-Id': orgId
@@ -107,14 +107,14 @@ export const orgsAPI = {
     });
   },
   resetUserPwd: ({ orgId, id }) => {
-    return put('/api/v1/user/userPassReset', {
+    return put('/api/v1/user/password/update', {
       id
     }, {
       'IaC-Org-Id': orgId
     });
   },
   removeUser: ({ orgId, id }) => {
-    return put('/api/v1/user/removeUserForOrg', {
+    return put('/api/v1/org/user/delete', {
       id
     }, {
       'IaC-Org-Id': orgId
@@ -154,7 +154,7 @@ export const orgsAPI = {
     });
   },
   searchEnableVcs: ({ orgId }) => {
-    return get('/api/v1/vcs/listEnableVcs', {
+    return get('/api/v1/vcs/search', {
       'IaC-Org-Id': orgId
     });
   }
@@ -187,7 +187,7 @@ export const ctAPI = {
     });
   },
   listRepo: ({ orgId, pageNo, pageSize, name, vcsId }) => {
-    return getWithArgs('/api/v1/gitlab/listRepos', {
+    return getWithArgs('/api/v1/vcs/repo/search', {
       q: name,
       currentPage: pageNo,
       pageSize,
@@ -197,7 +197,7 @@ export const ctAPI = {
     });
   },
   listRepoBranch: ({ repoId, orgId, vcsId }) => {
-    return getWithArgs('/api/v1/gitlab/listBranches', {
+    return getWithArgs('/api/v1/vcs/branch/search', {
       repoId, vcsId
     }, {
       'IaC-Org-Id': orgId
@@ -266,21 +266,21 @@ export const ctAPI = {
     });
   },
   taskComment: ({ orgId, taskId }) => {
-    return getWithArgs('/api/v1/taskComment/search', {
+    return getWithArgs('/api/v1/task/comment/search', {
       taskId
     }, {
       'IaC-Org-Id': orgId
     });
   },
   createTaskComment: ({ orgId, taskId, comment }) => {
-    return post('/api/v1/taskComment/create', {
+    return post('/api/v1/task/comment/create', {
       taskId, comment
     }, {
       'IaC-Org-Id': orgId
     });
   },
   repoReadme: ({ orgId, repoId, branch, vcsId }) => {
-    return getWithArgs('/api/v1/gitlab/getReadme', {
+    return getWithArgs('/api/v1/vcs/readme', {
       repoId, branch, vcsId
     }, {
       'IaC-Org-Id': orgId
@@ -294,7 +294,7 @@ export const ctAPI = {
     });
   },
   tfvars: ({ orgId, repoId, repoBranch, vcsId }) => {
-    return getWithArgs('/api/v1/templateTfvars/search', {
+    return getWithArgs('/api/v1/template/tfvars/search', {
       vcsId, repoId, repoBranch
     }, {
       'IaC-Org-Id': orgId
@@ -349,10 +349,10 @@ export const sysAPI = {
     });
   },
   sysStatus: () => {
-    return get('/api/v1/systemStatus/search');
+    return get('/api/v1/system/status/search');
   },
   updateTags: ({ tags, serviceId }) => {
-    return put('/api/v1/consulTags/update', {
+    return put('/api/v1/consul/tags/update', {
       tags, serviceId
     });
   }
