@@ -171,7 +171,7 @@ const CloudTmpDetail = (props) => {
                 <Tabs.TabPane
                   tab={subNavs[it]}
                   key={it}
-                  disabled={it == "state" && !detailInfo.saveState}
+                  disabled={it == "state" && detailInfo.saveState === false}
                 />
               ))}
             </Tabs>
