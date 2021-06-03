@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input } from "antd";
 
-import MDParser from 'components/coder/markdown-parser/index.jsx';
+import MarkdownParser from 'components/coder/markdown-parser';
 
 
 export default (props) => {
@@ -21,7 +21,7 @@ export default (props) => {
       width={1032}
       footer={null}
     >
-      <MDParser/>
+      <MarkdownParser value='无' />
     </Modal>
   );
 };

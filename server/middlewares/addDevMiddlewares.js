@@ -37,16 +37,6 @@ module.exports = function addDevMiddlewares(app, webpackConfig) {
     });
   });
 
-  app.get('/developerManual', (req, res) => {
-    fs.readFile(path.join(compiler.outputPath, 'developerManual.html'), (err, file) => {
-      if (err) {
-        res.sendStatus(404);
-      } else {
-        res.send(file.toString());
-      }
-    });
-  });
-
   app.get('*', (req, res) => {
     fs.readFile(path.join(compiler.outputPath, 'index.html'), (err, file) => {
       if (err) {

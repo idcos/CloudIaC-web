@@ -126,9 +126,9 @@ export default (props) => {
           {loop(anchorList)}
         </Anchor>
       </div>
-      <div className='doc-content'>
+      <div className='md-content'>
         {/* <h1>开发者手册</h1> */}
-        <div className='doc-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
+        <div className='md-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
       </div>
     </div>
   );

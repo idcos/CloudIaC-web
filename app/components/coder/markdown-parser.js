@@ -9,7 +9,7 @@ export default ({ value }) => {
   };
 
   return <div
-    className='content'
+    className='md-content'
     dangerouslySetInnerHTML={getRawMarkup()}
   >
   </div>;

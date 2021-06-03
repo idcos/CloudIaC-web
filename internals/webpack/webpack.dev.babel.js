@@ -4,15 +4,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const ErrorOverlayPlugin = require('error-overlay-webpack-plugin');
 
-const htmlChunks = [ 'app', 'login', 'developerManual' ];
+const htmlChunks = [ 'app', 'login' ];
 const getExcludeHtmlChunks = (value) => htmlChunks.filter((htmlChunk) => value !== htmlChunk);
 
 module.exports = require('./webpack.base.babel')({
   mode: 'development',
   entry: {
     app: [ require.resolve('react-app-polyfill/ie11'), 'webpack-hot-middleware/client?reload=true', path.join(process.cwd(), 'app/app.js') ],
-    login: [ require.resolve('react-app-polyfill/ie11'), 'webpack-hot-middleware/client?reload=true', path.join(process.cwd(), 'login/login.js') ],
-    developerManual: [ require.resolve('react-app-polyfill/ie11'), 'webpack-hot-middleware/client?reload=true', path.join(process.cwd(), 'developerManual/developerManual.js') ]
+    login: [ require.resolve('react-app-polyfill/ie11'), 'webpack-hot-middleware/client?reload=true', path.join(process.cwd(), 'login/login.js') ]
   },
   output: {
     filename: '[name].js',
@@ -37,12 +36,6 @@ module.exports = require('./webpack.base.babel')({
       filename: 'login.html',
       template: 'login/login.html',
       excludeChunks: getExcludeHtmlChunks('login')
-    }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      filename: 'developerManual.html',
-      template: 'developerManual/developerManual.html',
-      excludeChunks: getExcludeHtmlChunks('developerManual')
     }),
     new CircularDependencyPlugin({
       exclude: /a\.js|node_modules/,
