@@ -8,7 +8,7 @@ import styles from './styles.less';
 
 export default () => {
 
-  const [mdText, setMDText] = useState('');
+  const [ mdText, setMDText ] = useState('');
 
   useEffect(() => {
     getMDText();
@@ -20,7 +20,7 @@ export default () => {
       const text = await res.text();
       setMDText(typeof text === 'string' ? text : '');
     } catch (error) {
-      console.log(err);
+      console.log(error);
     }
   };
 

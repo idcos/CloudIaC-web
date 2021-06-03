@@ -4,8 +4,8 @@ const { Link } = Anchor;
 import { Remarkable } from "remarkable";
 import get from 'lodash/get';
 import set from 'lodash/set';
-import hljs from "highlight.js";
-import "highlight.js/styles/github.css";
+// import hljs from "highlight.js";
+// import "highlight.js/styles/github.css";
 import styles from "./styles.less";
 
 const getParent = (data, grade) => {
@@ -26,22 +26,22 @@ export default (props) => {
 
   const ref = useRef(
     new Remarkable({
-      highlight: function (str, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return hljs.highlight(lang, str).value;
-          } catch (err) {
-            console.log(err);
-          }
-        }
+      // highlight: function (str, lang) {
+      //   if (lang && hljs.getLanguage(lang)) {
+      //     try {
+      //       return hljs.highlight(lang, str).value;
+      //     } catch (err) {
+      //       console.log(err);
+      //     }
+      //   }
 
-        try {
-          return hljs.highlightAuto(str).value;
-        } catch (err) {
-          console.log(err);
-        }
-        return ""; // use external default escaping
-      }
+      //   try {
+      //     return hljs.highlightAuto(str).value;
+      //   } catch (err) {
+      //     console.log(err);
+      //   }
+      //   return ""; // use external default escaping
+      // }
     })
   );
 
