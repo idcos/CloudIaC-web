@@ -7,7 +7,6 @@ import set from 'lodash/set';
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import styles from "./styles.less";
-import testMd from "./test-md";
 
 const getParent = (data, grade) => {
   if (!data || data.grade >= grade) {
@@ -19,7 +18,7 @@ const getParent = (data, grade) => {
 
 export default (props) => {
 
-  const { scrollDomSelecter } = props;
+  const { mdText, scrollDomSelecter } = props;
 
   const [ anchorList, setAnchorList ] = useState([]);
   const [ anchorBaseData, setAnchorBaseData ] = useState({});
@@ -89,7 +88,10 @@ export default (props) => {
   }, [anchorBaseData]);
 
   useEffect(() => {
-    let html = ref.current.render(testMd);
+    if (!mdText) {
+      return;
+    }
+    let html = ref.current.render(mdText);
     let arr = [];
     let highestGrade;
     const reg = /<[Hh]([1-4])>([^<]*?)<\/[Hh]\1>/g;
@@ -107,7 +109,7 @@ export default (props) => {
       highestGrade
     });
     setInnerHTML(html);
-  }, [testMd]);
+  }, [mdText]);
 
   return (
     <div className={styles.markdownDoc} style={{ paddingRight: 300 }}>

@@ -2,7 +2,7 @@
 
 export default `
 ## 开发流程
-![image.png](/assets/image.png)
+![image.png]
 ## 登录地址
 IaC平台登录地址：[http://10.0.3.124](http://10.0.3.124) (实际部署时使用域名 [http://iac.domain](http://iac.domain))
 代码仓库登录地址：[http://10.0.3.124:3000](http://10.0.3.124:3000) (实际部署时使用域名 [http://iac-git.domain](http://iac-git.domain))
