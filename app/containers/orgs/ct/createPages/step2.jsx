@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Radio, Select, Form, Input, Button, InputNumber, notification, Row, Col } from "antd";
 
-import { ctAPI, sysAPI } from 'services/base';
+import { ctAPI, sysAPI, orgsAPI } from 'services/base';
 import history from 'utils/history';
 
 const FL = {
@@ -11,6 +11,9 @@ const FL = {
 const { Option } = Select;
 
 export default ({ stepHelper, selection, curOrg, vcsId }) => {
+
+  const [form] = Form.useForm();
+
   const { selectedRows } = selection;
   const [ repoBranches, setRepoBranches ] = useState([]),
     [ ctRunnerList, setCtRunnerList ] = useState([]),
@@ -20,8 +23,24 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
     if (selectedRows && selectedRows[0]) {
       fetchRepoBranch();
       fetchCTRunner();
+      fetchInfo();
     }
   }, [selectedRows]);
+
+  const fetchInfo = async () => {
+    const res = await orgsAPI.detail(curOrg.id);
+    if (res.code != 200) {
+      notification.error({
+        message: '获取失败',
+        description: res.message
+      });
+      return;
+    }
+    const { defaultRunnerServiceId } = res.result || {};
+    form.setFieldsValue({
+      ctServiceId: defaultRunnerServiceId
+    });
+  };
 
   const fetchCTRunner = async () => {
     try {
@@ -92,6 +111,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
 
   return <div className='step2'>
     <Form
+      form={form}
       {...FL}
       layout='vertical'
       onFinish={onFinish}
@@ -182,8 +202,14 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
           <Form.Item
             label='默认ct-runner'
             name='ctServiceId'
+            rules={[
+              {
+                required: true,
+                message: '请选择'
+              }
+            ]}
           >
-            <Select placeholder='留空时使用组织的默认ct-runner'>
+            <Select placeholder='请选择ct-runner'>
               {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>)}
             </Select>
           </Form.Item>
