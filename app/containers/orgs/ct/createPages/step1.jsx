@@ -28,7 +28,7 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsId, setVcsId }
     if (vcsId) {
       fetchList();
     }
-  }, [vcsId]);
+  }, [ vcsId, query ]);
 
   const fetchVcsList = async () => {
     try {
