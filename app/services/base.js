@@ -311,9 +311,9 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  createCTByLib: ({ orgId, id }) => {
+  createCTByLib: ({ orgId, id, name }) => {
     return post('/api/v1/template/library/create', {
-      id
+      id, name
     }, {
       'IaC-Org-Id': orgId
     });

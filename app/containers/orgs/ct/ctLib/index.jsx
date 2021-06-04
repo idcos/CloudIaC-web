@@ -131,7 +131,12 @@ export default (props) => {
         />
       </div>
       
-      <CreatCTModal visible={createCTData.visible} id={createCTData.id} onClose={() => setCreateCTData({ visible: false, id: null })} />
+      <CreatCTModal 
+        visible={createCTData.visible} 
+        orgId={routesParams.curOrg.id}
+        id={createCTData.id} 
+        onClose={() => setCreateCTData({ visible: false, id: null })} 
+      />
       <ViewMdModal visible={viewMdData.visible} onClose={() => setViewMdData({ visible: false })} />
     </Layout>
   );
