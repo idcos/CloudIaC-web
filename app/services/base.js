@@ -303,8 +303,11 @@ export const ctAPI = {
     });
   },
   // 云模版库
-  ctLibSearch: ({ orgId }) => {
-    return get('/api/v1/template/library/search', {
+  ctLibSearch: ({ orgId, pageSize, currentPage }) => {
+    return getWithArgs('/api/v1/template/library/search', {
+      pageSize,
+      currentPage
+    }, {
       'IaC-Org-Id': orgId
     });
   },

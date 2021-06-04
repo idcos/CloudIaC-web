@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Space, Table } from "antd";
+import moment from 'moment';
 
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -12,7 +13,12 @@ export default (props) => {
 
   const { routesParams } = props;
 
-  const [ ctLibList, setCtLibList ] = useState([]);
+  const [ query, setQuery ] = useState({
+    pageSize: 10,
+    currentPage: 1
+  });
+  const [ loading, setLoading ] = useState(false);
+  const [ ctLibData, setCtLibData ] = useState([]);
   const [ createCTData, setCreateCTData ] = useState({
     visible: false,
     id: null
@@ -23,23 +29,31 @@ export default (props) => {
 
   useEffect(() => {
     getCTLibList();
-  }, []);
+  }, [query]);
 
   const getCTLibList = async () => {
+    setLoading(true);
     const res = await ctAPI.ctLibSearch({
-      orgId: routesParams.curOrg.id
+      orgId: routesParams.curOrg.id,
+      ...query
     });
+    setLoading(false);
     if (res.code !== 200) {
       throw new Error(res.message);
     }
-    setCtLibList(res.result || []);
+    const { list, total } = res.result || {};
+    setCtLibData({
+      list: list || [],
+      total: total || 0
+    });
   };
 
   const columns = [
     {
       title: '云模板名称',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      width: 180
     },
     {
       title: '云模板描述',
@@ -49,15 +63,23 @@ export default (props) => {
     {
       title: '仓库地址',
       dataIndex: 'repoAddr',
-      key: 'repoAddr'
+      key: 'repoAddr',
+      ellipsis: true,
+      width: 350,
+      render: (text) => (
+        <a href={text}>{text}</a>
+      )
     },
     {
       title: '最后更新时间',
       dataIndex: 'updatedAt',
-      key: 'updatedAt'
+      key: 'updatedAt',
+      width: 180,
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
+      width: 150,
       render: (item) => {
         const { id } = item;
         return (
@@ -70,6 +92,15 @@ export default (props) => {
     }
   ];
 
+  const onChangeTable = (pagination) => {
+    const { pageSize, current } = pagination;
+    setQuery((preQuery) => ({
+      ...preQuery,
+      pageSize,
+      currentPage: current
+    }));
+  };
+
   return (
     <Layout
       contentStyle={{ paddingTop: 0 }}
@@ -78,14 +109,26 @@ export default (props) => {
           title='云模板库'
           breadcrumb={true}
           subDes={
-            <Button>刷新云模板库</Button>
+            <Button onClick={() => getCTLibList()}>刷新云模板库</Button>
           }
         />
       }
     >
       <div className='container-inner-width'>
         <div className='fn-h-20'></div>
-        <Table dataSource={ctLibList} columns={columns} />
+        <Table 
+          dataSource={ctLibData.list} 
+          columns={columns} 
+          loading={loading}
+          onChange={onChangeTable}
+          pagination={{
+            current: query.currentPage,
+            pageSize: query.pageSize,
+            total: ctLibData.total,
+            showSizeChanger: true,
+            showTotal: (total) => `共${total}条`
+          }} 
+        />
       </div>
       
       <CreatCTModal visible={createCTData.visible} id={createCTData.id} onClose={() => setCreateCTData({ visible: false, id: null })} />
