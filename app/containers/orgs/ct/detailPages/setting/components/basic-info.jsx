@@ -25,7 +25,8 @@ export default (props) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue({ saveState: false, ...detailInfo });
+    const { defaultRunnerServiceId, ...otherDetailInfo } = detailInfo;
+    form.setFieldsValue({ saveState: false, defaultRunnerServiceId: defaultRunnerServiceId || null, ...otherDetailInfo });
   }, [detailInfo]);
 
   return (
