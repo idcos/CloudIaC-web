@@ -28,8 +28,8 @@ export default (props) => {
         message: res.message
       });
     }
-    const { content = '' } = res.result || {};
-    setCodeStr(content);
+    const { content } = res.result || {};
+    setCodeStr(content || '');
   };
   
   const onCancel = () => {
