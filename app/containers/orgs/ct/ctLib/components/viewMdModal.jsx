@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input } from "antd";
+import { Modal, notification } from "antd";
 
+import { ctAPI } from "services/base";
 import MarkdownParser from 'components/coder/markdown-parser';
 
 
 export default (props) => {
 
-  const { visible, id, onClose } = props;
+  const { visible, repoBranch, repoId, orgId, onClose } = props;
+
+  const [ codeStr, setCodeStr ] = useState('');
+
+  useEffect(() => {
+    if (visible) {
+      getReadmeText();
+    }
+  }, [visible]);
+
+  const getReadmeText = async () => {
+    const res = await ctAPI.repoReadme({
+      branch: repoBranch, 
+      repoId, 
+      orgId
+    });
+    if (res.code !== 200) {
+      notification.error({
+        message: res.message
+      });
+    }
+    const { content = '' } = res.result || {};
+    setCodeStr(content);
+  };
   
   const onCancel = () => {
     onClose();
@@ -21,7 +45,7 @@ export default (props) => {
       width={1032}
       footer={null}
     >
-      <MarkdownParser value='无' />
+      <MarkdownParser value={codeStr} />
     </Modal>
   );
 };

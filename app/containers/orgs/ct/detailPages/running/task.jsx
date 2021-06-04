@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Form,
   Collapse,
@@ -97,15 +97,21 @@ const items = [
 export default (props) => {
   const { match, routesParams } = props;
   const curTask = Number(match.params.curTask);
-  const { curOrg, linkToRunningDetail, detailInfo, ctRunnerList } =
-    routesParams;
+  const { curOrg, linkToRunningDetail, detailInfo, ctRunnerList } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
     [ taskLog, setTaskLog ] = useState([]);
 
+  const endRef = useRef();
   const [form] = Form.useForm();
   const [ evtSource, evtSourceInit ] = useEventSource();
+
+  useEffect(() => {
+    return () => {
+      endRef.current = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (curTask) {
@@ -165,7 +171,7 @@ export default (props) => {
 
   const loopFetchTaskInfo = (result) => {
     const { status } = result;
-    if (CT.endTaskStatuList.indexOf(status) === -1) {
+    if (CT.endTaskStatuList.indexOf(status) === -1 && !endRef.current) {
       setTimeout(() => {
         fetchInfo({ needLoading: false });
       }, 1500);

@@ -23,7 +23,7 @@ const subNavs = {
 
 const Setting = (props) => {
   const { routesParams, location } = props;
-  const { curOrg, ctId, detailInfo, ctRunnerList, reload } = routesParams;
+  const { curOrg, ctId, detailInfo, ctRunnerList, reload, linkToRunningDetail } = routesParams;
   const { initSettingPanel } = location.state || {};
   const [ panel, setPanel ] = useState(initSettingPanel || "basic");
   const [ submitLoading, setSubmitLoading ] = useState(false);
@@ -66,6 +66,7 @@ const Setting = (props) => {
       submitLoading,
       ctRunnerList,
       detailInfo,
+      linkToRunningDetail,
       onFinish
     };
     const PAGES = {

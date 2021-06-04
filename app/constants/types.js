@@ -20,7 +20,8 @@ export const SYS = {
 export const CT = {
   taskType: {
     'plan': 'plan作业',
-    'apply': 'apply作业'
+    'apply': 'apply作业',
+    'destroy': 'destroy作业'
   },
   taskStatus: {
     all: '全部',
