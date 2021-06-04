@@ -26,28 +26,7 @@ const subNavs = {
 
 const OrgSetting = ({ routesParams, dispatch }) => {
   const { curOrg } = routesParams;
-  const [ info, setInfo ] = useState({}),
-    [ panel, setPanel ] = useState('basic');
-
-  useEffect(() => {
-    fetchInfo();
-  }, []);
-
-  const fetchInfo = async () => {
-    try {
-      const res = await orgsAPI.detail(curOrg.id);
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setInfo(res.result || {});
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
+  const [ panel, setPanel ] = useState('basic');
 
   const renderByPanel = useCallback(() => {
     const PAGES = {

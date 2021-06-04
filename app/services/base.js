@@ -14,9 +14,9 @@ export const orgsAPI = {
       id
     });
   },
-  edit: ({ id, name, description, vcsType, vcsVersion, vcsAuthInfo }) => {
+  edit: ({ id, name, description, vcsType, vcsVersion, vcsAuthInfo, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort }) => {
     return put('/api/v1/org/update', {
-      id, name, description, vcsType, vcsVersion, vcsAuthInfo
+      id, name, description, vcsType, vcsVersion, vcsAuthInfo, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
     });
   },
   create: ({ name, description, vcsType, vcsVersion, vcsAuthInfo }) => {
