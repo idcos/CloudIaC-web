@@ -154,7 +154,9 @@ export const orgsAPI = {
     });
   },
   searchEnableVcs: ({ orgId }) => {
-    return get('/api/v1/vcs/search', {
+    return getWithArgs('/api/v1/vcs/search', {
+      status: 'enable'
+    }, {
       'IaC-Org-Id': orgId
     });
   }

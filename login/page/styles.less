@@ -1,9 +1,82 @@
+@import 'containers/App/styles/variable.less';
+
 .login {
-  overflow-y: auto;
+  width: 100vw;
+  height: 100vh;
+  background-color: @gray-3;
   :global {
-    .loginForm {
-      width: 600px;
-      margin: 40vh auto 0;
+    .loginFormWrapper {
+      width: 402px;
+      height: 305px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      background-color: @gray-1;
+      border-radius: 4px;
+      padding: 24px;
+
+      .title {
+        line-height: 24px;
+        font-size: 20px;
+        color: @gray-9;
+        margin-top: 23px;
+        margin-bottom: 29px;
+      }
+
+      .loginForm {
+        .format-form-item {
+          border-bottom: 1px solid @gray-4;
+          height: 33px;
+
+          &.ant-form-item-with-help {
+            margin-bottom: 24px;
+          }
+
+          .ant-form-item-label {
+            label {
+              width: 100%;
+              color: @gray-8;
+              position: relative;
+
+              &::after {
+                display: none;
+              }
+              &::before {
+                content: '';
+                width: 1px;
+                height: 19px;
+                position: absolute;
+                top: 7px;
+                right: 0;
+                background: @gray-4;
+              }
+            }
+          }
+          .ant-form-item-control {
+            input, .ant-input-affix-wrapper {
+              box-shadow: none !important;
+              border: none;
+  
+              &::-webkit-input-placeholder { /* WebKit browsers */
+                color: @gray-6;
+              }
+              
+              &::-moz-placeholder { /* Mozilla Firefox 19+ */
+                color: @gray-6;
+              }
+              
+              &:-ms-input-placeholder { /* Internet Explorer 10+ */
+                color: @gray-6;
+              }   
+
+            }
+          }
+        }
+      }
+      
     }
   }
 }

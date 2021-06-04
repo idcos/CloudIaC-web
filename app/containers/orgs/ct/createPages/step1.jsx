@@ -38,7 +38,7 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsId, setVcsId }
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      const list = res.result;
+      const { list } = res.result || {};
       setVcsList(list);
       setVcsId(list[0] && list[0].id);
     } catch (e) {

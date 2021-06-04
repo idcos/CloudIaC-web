@@ -7,11 +7,11 @@ import { authAPI } from "../services/auth";
 
 
 const layout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 20 }
+  labelCol: { span: 3 },
+  wrapperCol: { span: 21 }
 };
 const tailLayout = {
-  wrapperCol: { offset: 4, span: 20 }
+  wrapperCol: { span: 24 }
 };
 
 export default () => {
@@ -42,34 +42,49 @@ export default () => {
 
   return (
     <div className={styles.login}>
-      <Form
-        {...layout}
-        name='basic'
-        className='loginForm'
-        onFinish={onFinish}
-      >
-        <Form.Item
-          label='邮箱'
-          name='email'
-          rules={[{ required: true, message: '请输入用户名' }]}
-        >
-          <Input />
-        </Form.Item>
 
-        <Form.Item
-          label='密码'
-          name='password'
-          rules={[{ required: true, message: '请输入密码!' }]}
+      <div className='loginFormWrapper'>
+        <div className='title'>IaC低代码云平台登录</div>
+        <Form
+          {...layout}
+          name='basic'
+          className='loginForm'
+          requiredMark='optional'
+          onFinish={onFinish}
         >
-          <Input.Password />
-        </Form.Item>
+          <div>
+            <Form.Item
+              className='format-form-item'
+              label={
+                <>
+                  <span>邮箱</span>
+                </>
+              }
+              name='email'
+              rules={[{ required: true, message: '请输入邮箱地址' }]}
+            >
+              <Input placeholder='请输入邮箱地址' />
+            </Form.Item>
+          </div>
+         
 
-        <Form.Item {...tailLayout}>
-          <Button type='primary' htmlType='submit'>
-            登录
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            className='format-form-item'
+            label='密码'
+            name='password'
+            rules={[{ required: true, message: '请输入登录密码!' }]}
+          >
+            <Input.Password placeholder='请输入登录密码' />
+          </Form.Item>
+
+          <Form.Item {...tailLayout} style={{ paddingTop: 8 }}>
+            <Button block={true} type='primary' htmlType='submit'>
+              登录
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+     
     </div>
   );
 };
