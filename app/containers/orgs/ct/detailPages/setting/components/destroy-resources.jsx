@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, Form, Input, notification } from "antd";
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
@@ -8,6 +8,8 @@ export default (props) => {
 
   const { detailInfo, orgId, linkToRunningDetail } = props;
   const [form] = Form.useForm();
+
+  const [ confirmLoading, setConfirmLoading ] = useState(false);
 
   const openConfirmModal = () => {
     const { 
@@ -49,6 +51,7 @@ export default (props) => {
       ),
       okText: '确认',
     	cancelText: '取消',
+      confirmLoading,
       onOk: async () => {
         const values = await form.validateFields();
         const params = {
@@ -61,18 +64,23 @@ export default (props) => {
           ctServiceIp: defaultRunnerAddr,
           ctServicePort: defaultRunnerPort
         };
+        setConfirmLoading(true);
         const res = await ctAPI.createTask(params);
         if (res.code != 200) {
           notification.error({
-            message: res.message
+            message: '操作失败',
+            description: res.message
           });
           return;
         }
+        setConfirmLoading(false);
         notification.success({
           message: '操作成功'
         });
+        form.resetFields();
         linkToRunningDetail(res.result && res.result.id);
-      }
+      },
+      onCancel: () => form.resetFields()
     });
   };
 

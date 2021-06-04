@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Card, notification, Space } from "antd";
+import { Card, notification, Space, Spin } from "antd";
 import { CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import copy from 'utils/copy';
@@ -10,6 +10,7 @@ export default (props) => {
   const { ctId, orgId } = props;
 
   const [ webhookList, setWebhookList ] = useState([]);
+  const [ spinning, setSpinning ] = useState(false);
 
   useEffect(() => {
     if (ctId) {
@@ -18,10 +19,19 @@ export default (props) => {
   }, [ctId]);
 
   const getWebhook = async () => {
+    setSpinning(true);
     const res = await ctAPI.webhookSearch({
       orgId, 
       tplGuid: ctId
     });
+    setSpinning(false);
+    if (res.code !== 200) {
+      notification.error({
+        message: '获取失败',
+        description: res.message
+      });
+      return;
+    }
     const { list } = res.result || {};
     setWebhookList(list || []);
   };
@@ -36,13 +46,14 @@ export default (props) => {
   }, [webhookList]);
 
   return (
-    <>
+    <Spin spinning={spinning}>
       <ActionCard 
         actionType='plan'
         webhook={webhooks.plan} 
         orgId={orgId} 
         ctId={ctId} 
         reload={getWebhook} 
+        setSpinning={setSpinning}
       />
       <ActionCard 
         actionType='apply'
@@ -51,30 +62,55 @@ export default (props) => {
         orgId={orgId} 
         ctId={ctId}
         reload={getWebhook}
+        setSpinning={setSpinning}
       />
-    </>
+    </Spin>
   );
 };
 
 const ActionCard = (props) => {
-  const { actionType, webhook, cardStyle, orgId, ctId, reload } = props;
+  const { actionType, webhook, cardStyle, orgId, ctId, reload, setSpinning } = props;
   const { accessToken, id } = webhook || {};
 
   const url = `${location.origin}/template/hook/send?accessToken=${accessToken}`;
 
   const creat = async () => {
+    setSpinning(true);
     const res = await ctAPI.webhookCreate({
       orgId, 
       tplGuid: ctId,
       action: actionType
     });
+    setSpinning(false);
+    if (res.code !== 200) {
+      notification.error({
+        message: '创建失败',
+        description: res.message
+      });
+      return;
+    }
+    notification.success({
+      message: '创建成功'
+    });
     reload();
   };
 
   const del = async () => {
+    setSpinning(true);
     const res = await ctAPI.webhookDelete({
       orgId, 
       id
+    });
+    setSpinning(false);
+    if (res.code !== 200) {
+      notification.error({
+        message: '删除失败',
+        description: res.message
+      });
+      return;
+    }
+    notification.success({
+      message: '删除成功'
     });
     reload();
   };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, notification } from "antd";
 
 import { ctAPI } from "services/base";
 
@@ -29,13 +29,23 @@ export default (props) => {
       orgId, id, name
     });
     setConfirmLoading(false);
-    console.log(res);
+    if (res.code !== 200) {
+      notification.error({
+        message: '创建失败',
+        description: res.message
+      });
+      return;
+    }
+    notification.success({
+      message: '创建成功'
+    });
     reset();
     onClose();
   };
 
   const reset = () => {
     form.resetFields();
+    setConfirmLoading(false);
   };
 
   return (

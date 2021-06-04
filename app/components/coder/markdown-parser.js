@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Remarkable } from 'remarkable';
+import { Empty } from 'antd';
 
 export default ({ value }) => {
   const ref = useRef(new Remarkable());
@@ -8,9 +9,9 @@ export default ({ value }) => {
     return { __html: ref.current.render(value) };
   };
 
-  return <div
+  return value ? <div
     className='md-content'
     dangerouslySetInnerHTML={getRawMarkup()}
   >
-  </div>;
+  </div> : <Empty />;
 };

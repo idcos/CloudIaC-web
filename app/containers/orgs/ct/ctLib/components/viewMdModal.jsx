@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, notification } from "antd";
+import { Modal, notification, Spin, Empty } from "antd";
 
 import { ctAPI } from "services/base";
 import MarkdownParser from 'components/coder/markdown-parser';
@@ -10,6 +10,7 @@ export default (props) => {
   const { visible, repoBranch, repoId, orgId, onClose } = props;
 
   const [ codeStr, setCodeStr ] = useState('');
+  const [ spinning, setSpinning ] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -18,11 +19,13 @@ export default (props) => {
   }, [visible]);
 
   const getReadmeText = async () => {
+    setSpinning(true);
     const res = await ctAPI.repoReadme({
       branch: repoBranch, 
       repoId, 
       orgId
     });
+    setSpinning(false);
     if (res.code !== 200) {
       notification.error({
         message: res.message
@@ -33,7 +36,12 @@ export default (props) => {
   };
   
   const onCancel = () => {
+    reset();
     onClose();
+  };
+
+  const reset = () => {
+    setCodeStr('');
   };
   
   return (
@@ -45,7 +53,9 @@ export default (props) => {
       width={1032}
       footer={null}
     >
-      <MarkdownParser value={codeStr} />
+      <Spin spinning={spinning}>
+        <MarkdownParser value={codeStr} />
+      </Spin>
     </Modal>
   );
 };

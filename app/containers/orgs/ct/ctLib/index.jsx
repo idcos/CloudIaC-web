@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Space, Table } from "antd";
+import { Button, Space, Table, notification } from "antd";
 import moment from 'moment';
 
 import PageHeader from 'components/pageHeader';
@@ -20,8 +20,7 @@ export default (props) => {
   const [ loading, setLoading ] = useState(false);
   const [ ctLibData, setCtLibData ] = useState([]);
   const [ createCTData, setCreateCTData ] = useState({
-    visible: false,
-    id: null
+    visible: false
   });
   const [ viewMdData, setViewMdData ] = useState({
     visible: false
@@ -39,12 +38,16 @@ export default (props) => {
     });
     setLoading(false);
     if (res.code !== 200) {
-      throw new Error(res.message);
+      notification.error({
+        message: '获取失败',
+        description: res.message
+      });
+      return;
     }
-    const { list, total } = res.result || {};
+    const { list = [], total = 0 } = res.result || {};
     setCtLibData({
-      list: list || [],
-      total: total || 0
+      list,
+      total
     });
   };
 
@@ -67,7 +70,7 @@ export default (props) => {
       ellipsis: true,
       width: 350,
       render: (text) => (
-        <a href={text}>{text}</a>
+        <a href={text} target='_blank'>{text}</a>
       )
     },
     {
@@ -135,7 +138,7 @@ export default (props) => {
         visible={createCTData.visible} 
         orgId={routesParams.curOrg.id}
         id={createCTData.id} 
-        onClose={() => setCreateCTData({ visible: false, id: null })} 
+        onClose={() => setCreateCTData({ visible: false })} 
       />
       <ViewMdModal 
         visible={viewMdData.visible} 
