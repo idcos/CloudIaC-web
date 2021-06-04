@@ -317,6 +317,41 @@ export const ctAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  webhookSearch: ({ orgId, tplGuid }) => {
+    return getWithArgs('/api/v1/webhook/search', {
+      tplGuid
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  webhookCreate: ({ orgId, tplGuid, action }) => {
+    return post('/api/v1/webhook/create', {
+      tplGuid, action
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  webhookUpdate: ({ orgId, tplGuid }) => {
+    return put('/api/v1/webhook/update', {
+      tplGuid
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  webhookDetail: ({ orgId, tplGuid }) => {
+    return getWithArgs('/api/v1/webhook/detail', {
+      tplGuid
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  webhookDelete: ({ orgId, id }) => {
+    return del('/api/v1/webhook/delete', {
+      id
+    }, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

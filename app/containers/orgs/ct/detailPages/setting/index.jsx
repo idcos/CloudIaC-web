@@ -10,14 +10,14 @@ import { ctAPI } from "services/base";
 import BasicInfo from './components/basic-info';
 import RepoInfo from './components/repo-info';
 import OperationAuthority from './components/operation-authority';
-import Trigger from './components/trigger';
+import Webhook from './components/webhook';
 import DestroyResources from './components/destroy-resources';
 
 const subNavs = {
   basic: "基本信息",
   repo: "仓库信息",
   operationAuthority: "操作权限",
-  trigger: '触发器',
+  webhook: '触发器',
   destroyResources: '销毁资源'
 };
 
@@ -61,6 +61,8 @@ const Setting = (props) => {
 
   const renderByPanel = useCallback(() => {
     const panelProps = {
+      orgId: curOrg.id,
+      ctId,
       submitLoading,
       ctRunnerList,
       detailInfo,
@@ -70,7 +72,7 @@ const Setting = (props) => {
       basic: <BasicInfo {...panelProps} />,
       repo: <RepoInfo {...panelProps}/>,
       operationAuthority: <OperationAuthority {...panelProps}/>,
-      trigger: <Trigger {...panelProps}/>,
+      webhook: <Webhook {...panelProps}/>,
       destroyResources: <DestroyResources {...panelProps}/>
     };
     return PAGES[panel];
