@@ -182,14 +182,8 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
           <Form.Item
             label='默认ct-runner'
             name='ctServiceId'
-            rules={[
-              {
-                required: true,
-                message: '请选择'
-              }
-            ]}
           >
-            <Select placeholder='请选择ct-runner'>
+            <Select placeholder='留空时使用组织的默认ct-runner'>
               {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>)}
             </Select>
           </Form.Item>
