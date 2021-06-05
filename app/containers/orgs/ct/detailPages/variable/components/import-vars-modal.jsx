@@ -1,11 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Modal, Table } from 'antd';
+import uuid from 'utils/uuid.js';
 
 export default (props) => {
 
-  const [ selectedRowKeys, setSelectedRowKeys ] = useState([]);
+  const [ selectedList, setSelectedList ] = useState({
+    keys: [],
+    rows: []
+  });
   
-  const { visible, dataSource, onClose } = props;
+  const { visible, dataSource, onClose, onFinish } = props;
   const columns = [
     {
       title: 'key',
@@ -24,17 +28,42 @@ export default (props) => {
   ];
 
   const rowSelection = {
-    selectedRowKeys,
-    onChange: (keys) => setSelectedRowKeys(keys)
+    selectedRowKeys: selectedList.keys,
+    onChange: (keys, rows) => {
+      setSelectedList({
+        keys,
+        rows
+      });
+    }
   };
 
   const onCancel = () => {
-    setSelectedRowKeys([]);
+    reset();
     onClose();
+  };
+
+  const onOk = () => {
+    const params = selectedList.rows.map((it) => ({
+      type: 'terraform',
+      id: uuid(),
+      isSecret: false,
+      ...it
+    }));
+    onFinish(params, () => {
+      reset();
+      onClose();
+    });
+  };
+
+  const reset = () => {
+    setSelectedList({
+      keys: [],
+      rows: []
+    });
   };
   
   return (
-    <Modal width={795} title='添加/编辑terraform变量' visible={visible} onCancel={onCancel}>
+    <Modal width={795} title='添加/编辑terraform变量' visible={visible} onCancel={onCancel} onOk={onOk}>
       <Table 
         columns={columns} 
         dataSource={dataSource}

@@ -217,11 +217,11 @@ export const ctAPI = {
     });
   },
   edit: ({ 
-    orgId, id, name, description, saveState, varfile, timeout, vars, extra, 
+    orgId, id, name, description, saveState, varfile, playbook, timeout, vars, extra, 
     status, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
   }) => {
     return put('/api/v1/template/update', {
-      id, name, description, saveState, varfile, timeout, vars, extra, 
+      id, name, description, saveState, varfile, playbook, timeout, vars, extra, 
       status, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
     }, {
       'IaC-Org-Id': orgId
@@ -335,6 +335,20 @@ export const ctAPI = {
   webhookDelete: ({ orgId, id }) => {
     return del('/api/v1/webhook/delete', {
       id
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  variableSearch: ({ orgId, repoId, repoBranch, vcsId }) => {
+    return getWithArgs('/api/v1/template/variable/search', {
+      repoId, repoBranch, vcsId
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  playbookSearch: ({ orgId, repoId, repoBranch, vcsId }) => {
+    return getWithArgs('/api/v1/template/playbook/search', {
+      repoId, repoBranch, vcsId
     }, {
       'IaC-Org-Id': orgId
     });

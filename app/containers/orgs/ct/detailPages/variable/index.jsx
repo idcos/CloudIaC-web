@@ -1,7 +1,8 @@
 import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { EditableCell, columnsOverride } from 'components/editable-table-ele';
-
 import { Alert, Card, Form, Table, Divider, Button, notification, Input, Row, Col, Checkbox, Select, Tooltip } from 'antd';
+import isEmpty from 'lodash/isEmpty';
+
+import { EditableCell, columnsOverride } from 'components/editable-table-ele';
 import { ctAPI } from 'services/base';
 import uuid from 'utils/uuid.js';
 
@@ -10,12 +11,12 @@ import ImportVarsModal from './components/import-vars-modal';
 const { Option } = Select;
 const pseudoID = 'a-new-id';
 
-const _options = Array.from(new Array(100), (item, index) => ({ key: 'key' + index, value: 'value' + index, description: '描述信息' + index }));
-
 const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
 
-  const [tfvarsForm] = Form.useForm();
+  const [otherVarsForm] = Form.useForm();
   const [ tfvars, setTfvars ] = useState([]);
+  const [ playbooks, setPlaybooks ] = useState([]);
+  const [ variableLib, setVariableLib ] = useState([]);
   const [ importModalVisible, setImportModalVisible ] = useState(false);
   const [ varsData, setVarsData ] = useState({
     terraformVars: [],
@@ -23,22 +24,24 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
   });
 
   const options = useMemo(() => {
-    return _options.filter((_option) => {
+    return variableLib.filter((_option) => {
       const isAvailable = (varsData.terraformVars || []).findIndex((tfvar) => tfvar.key === _option.key) === -1;
       return isAvailable;
     });
-  }, [varsData.terraformVars]);
+  }, [ varsData.terraformVars, variableLib ]);
 
   useEffect(() => {
-    tfvarsForm.setFieldsValue({ varfile: detailInfo.varfile || null });
-  }, [detailInfo.varfile]);
-
-  useEffect(() => {
-    const { repoId, repoBranch } = detailInfo;
-    if (repoId && repoBranch && tfvars.length === 0) {
-      fetchTfvars();
+    if (isEmpty(detailInfo)) {
+      return;
     }
-  }, [ detailInfo.repoId, detailInfo.repoBranch ]);
+    otherVarsForm.setFieldsValue({ 
+      varfile: detailInfo.varfile || null,
+      playbook: detailInfo.playbook || null
+    });
+    fetchVariableLib();
+    fetchTfvars();
+    fetchPlaybooks();
+  }, [detailInfo]);
 
   useEffect(() => {
     setVarsData({
@@ -47,24 +50,41 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     });
   }, [detailInfo.vars]);
 
-  const fetchTfvars = async () => {
-    try {
-      const { repoId, repoBranch, vcsId } = detailInfo;
-      const res = await ctAPI.tfvars({
-        orgId: curOrg.id,
-        repoId,
-        repoBranch,
-        vcsId
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setTfvars(res.result || []);
-    } catch (e) {
+  const fetchVariableLib = async () => {
+    const { orgId, repoId, repoBranch, vcsId } = detailInfo;
+    const res = await ctAPI.variableSearch({ orgId, repoId, repoBranch, vcsId });
+    if (res.code !== 200) {
       notification.error({
-        message: e.message
+        message: res.message
       });
+      return;
     }
+    const list = (res.result || []).map((it) => ({ key: it.name, value: it.default, description: it.description }));
+    setVariableLib(list);
+  };
+
+  const fetchTfvars = async () => {
+    const { orgId, repoId, repoBranch, vcsId } = detailInfo;
+    const res = await ctAPI.tfvars({ orgId, repoId, repoBranch, vcsId });
+    if (res.code !== 200) {
+      notification.error({
+        message: res.message
+      });
+      return;
+    }
+    setTfvars(res.result || []);
+  };
+
+  const fetchPlaybooks = async () => {
+    const { orgId, repoId, repoBranch, vcsId } = detailInfo;
+    const res = await ctAPI.playbookSearch({ orgId, repoId, repoBranch, vcsId });
+    if (res.code !== 200) {
+      notification.error({
+        message: res.message
+      });
+      return;
+    }
+    setPlaybooks(res.result || []);
   };
 
   const genColumns = ({ dataSource, canSearchByKey, disabled, editingKey, cancel, edit, save, del, form }) => {
@@ -223,15 +243,16 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     ];
   };
 
-  const api = async ({ doWhat, varfile, ...payload }, cb) => {
+  const api = async ({ doWhat, selfParams, ...payload }, cb) => {
     try {
       const method = {
         del: ({ id }) => (detailInfo.vars || []).filter(it => it.id !== id),
         edit: ({ id, ...payload }) => (detailInfo.vars || []).map(it => (it.id == id ? { id, ...payload } : it)),
-        add: (param) => [ ...detailInfo.vars || [], param ]
+        add: (param) => [ ...detailInfo.vars || [], param ],
+        batchAdd: ({ params }) => [ ...detailInfo.vars || [], ...params ]
       };
 
-      const reqPayload = doWhat ? { vars: method[doWhat](payload) } : { varfile };
+      const reqPayload = doWhat ? { vars: method[doWhat](payload) } : selfParams;
       const res = await ctAPI.edit({
         orgId: curOrg.id,
         id: detailInfo.id,
@@ -270,7 +291,12 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
         dataType='terraform'
         api={api}
       />
-      <ImportVarsModal dataSource={options} visible={importModalVisible} onClose={() => setImportModalVisible(false)}/>
+      <ImportVarsModal 
+        dataSource={options} 
+        visible={importModalVisible} 
+        onClose={() => setImportModalVisible(false)}
+        onFinish={(params, cb) => api({ doWhat: 'batchAdd', params }, cb)}
+      />
     </Card>
     <Card
       title='环境变量'
@@ -286,19 +312,25 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       />
     </Card>
     <Card
-      title='tfvars路径'
+      title='其它变量'
       style={{ marginTop: 24 }}
     >
       <Form
-        form={tfvarsForm}
+        form={otherVarsForm}
         onFinish={(values) => {
-          api({ varfile: values.varfile || '' });
+          api({ 
+            selfParams: { 
+              varfile: values.varfile || '',
+              playbook: values.playbook || ''
+            }
+          });
         }}
       >
         <Row gutter={8}>
-          <Col span={20}>
+          <Col span={11}>
             <Form.Item
               name='varfile'
+              label='tfvars文件'
               rules={[
                 {
                   required: false,
@@ -306,12 +338,28 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                 }
               ]}
             >
-              <Select allowClear={true} placeholder='请选择tfvars路径'>
+              <Select allowClear={true} placeholder='请选择tfvars文件'>
                 {tfvars.map(it => <Option value={it}>{it}</Option>)}
               </Select>
             </Form.Item>
           </Col>
-          <Col>
+          <Col span={11} offset={2}>
+            <Form.Item
+              name='playbook'
+              label='playbook文件'
+              rules={[
+                {
+                  required: false,
+                  message: '请选择'
+                }
+              ]}
+            >
+              <Select allowClear={true} placeholder='请选择playbook文件'>
+                {playbooks.map(it => <Option value={it}>{it}</Option>)}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={24} style={{ textAlign: 'right' }}>
             <Button disabled={detailInfo.status === "disable"} htmlType='submit'>保存</Button>
           </Col>
         </Row>
