@@ -7,6 +7,7 @@ import { ctAPI } from 'services/base';
 export default (props) => {
 
   const { detailInfo, orgId, linkToRunningDetail } = props;
+  const disabled = detailInfo.status === 'disable' || !detailInfo.saveState;
   const [form] = Form.useForm();
 
   const [ confirmLoading, setConfirmLoading ] = useState(false);
@@ -88,6 +89,7 @@ export default (props) => {
     <div style={{ marginTop: 10 }}>
       <Button
         type='primary'
+        disabled={disabled}
         danger={true}
         onClick={openConfirmModal}
       >

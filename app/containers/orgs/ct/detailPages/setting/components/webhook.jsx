@@ -7,7 +7,8 @@ import { ctAPI } from "services/base";
 
 export default (props) => {
 
-  const { ctId, orgId } = props;
+  const { ctId, orgId, detailInfo = {} } = props;
+  const disabled = detailInfo.status === 'disable';
 
   const [ webhookList, setWebhookList ] = useState([]);
   const [ spinning, setSpinning ] = useState(false);
@@ -54,6 +55,7 @@ export default (props) => {
         ctId={ctId} 
         reload={getWebhook} 
         setSpinning={setSpinning}
+        disabled={disabled}
       />
       <ActionCard 
         actionType='apply'
@@ -63,13 +65,14 @@ export default (props) => {
         ctId={ctId}
         reload={getWebhook}
         setSpinning={setSpinning}
+        disabled={disabled}
       />
     </Spin>
   );
 };
 
 const ActionCard = (props) => {
-  const { actionType, webhook, cardStyle, orgId, ctId, reload, setSpinning } = props;
+  const { actionType, webhook, cardStyle, orgId, ctId, reload, setSpinning, disabled } = props;
   const { accessToken, id } = webhook || {};
 
   const url = `${location.origin}/template/hook/send?accessToken=${accessToken}`;
@@ -126,12 +129,16 @@ const ActionCard = (props) => {
           <Space>
             <span>{url}</span>
             <CopyOutlined className='fn-color-primary' onClick={() => copy(url)}/>
-            <DeleteOutlined className='fn-color-destroy' onClick={() => del()} />
+            <a disabled={disabled}>
+              <DeleteOutlined className={`fn-color-destroy ${disabled ? 'fn-disabled-link' : ''}`} onClick={() => del()} />
+            </a>
           </Space>
         ) : (
           <div className='fn-TA-C'>
             <span className='fn-color-gray-6'>暂无数据{' '}</span>
-            <a onClick={() => creat()}>现在创建</a>
+            {
+              disabled ? null : <a onClick={() => creat()}>现在创建</a>
+            }
           </div>
         )
       }

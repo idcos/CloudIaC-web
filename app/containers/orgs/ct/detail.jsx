@@ -126,7 +126,9 @@ const CloudTmpDetail = (props) => {
                       }
                     >
                       {Object.keys(CT.taskType).map((it) => (
-                        <Menu.Item key={it}>新建{CT.taskType[it]}</Menu.Item>
+                        it === 'destroy' ? null : (
+                          <Menu.Item key={it}>新建{CT.taskType[it]}</Menu.Item>
+                        )
                       ))}
                     </Menu>
                   }
@@ -168,11 +170,12 @@ const CloudTmpDetail = (props) => {
               onChange={(k) => changeTab(k)}
             >
               {Object.keys(subNavs).map((it) => (
-                <Tabs.TabPane
-                  tab={subNavs[it]}
-                  key={it}
-                  disabled={it == "state" && detailInfo.saveState === false}
-                />
+                (it === 'state' && !detailInfo.saveState) ? null : (
+                  <Tabs.TabPane
+                    tab={subNavs[it]}
+                    key={it}
+                  />
+                )
               ))}
             </Tabs>
           )}
