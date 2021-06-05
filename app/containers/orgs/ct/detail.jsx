@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Button,
   notification,
@@ -9,16 +9,19 @@ import {
   Tag,
   Alert
 } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import isEmpty from 'lodash/isEmpty';
+
 import history from "utils/history";
 import PageHeader from "components/pageHeader";
 import { Eb_WP } from "components/error-boundary";
 import Layout from "components/common/layout";
 import RoutesList from "components/routes-list";
-import styles from "./styles.less";
-import CreateTaskForm from "./detailPages/components/createTaskForm/index";
-import { DownOutlined } from "@ant-design/icons";
 import { ctAPI, sysAPI } from "services/base";
 import { CT } from "constants/types";
+
+import styles from "./styles.less";
+import CreateTaskForm from "./detailPages/components/createTaskForm/index";
 
 const subNavs = {
   overview: "概览",
@@ -29,8 +32,9 @@ const subNavs = {
 };
 
 const CloudTmpDetail = (props) => {
-  const { match, routesParams, routes } = props,
+  const { match, routesParams, routes, location } = props,
     { ctId, orgId: orgGuid, ctDetailTabKey } = match.params,
+    { cacheDetailInfo } = location.state || {},
     baseUrl = `/org/${orgGuid}/ct/${ctId}`;
 
   const [ popOverVisible, setPopoverVisible ] = useState(false),
@@ -42,6 +46,11 @@ const CloudTmpDetail = (props) => {
     fetchDetailInfo();
     fetchCTRunner();
   }, []);
+
+  // cacheDetailInfo用于缓存数据 避免pageHeader闪烁
+  const pageHeaderInfo = useMemo(() => {
+    return isEmpty(detailInfo) ? cacheDetailInfo || {} : detailInfo;
+  }, [detailInfo]);
 
   const changeTab = (key, cacheData) => {
     linkTo(`${baseUrl}/${key}`, cacheData);
@@ -57,7 +66,9 @@ const CloudTmpDetail = (props) => {
    * @param {Object} cacheData 需要缓存的数据
    */
   const linkTo = (url, cacheData = {}) => {
-    history.push(url, cacheData);
+    const baseCacheState = { cacheDetailInfo: detailInfo };
+    const cacheState = { ...baseCacheState, ...cacheData };
+    history.push(url, cacheState);
   };
 
   const fetchDetailInfo = async () => {
@@ -105,12 +116,12 @@ const CloudTmpDetail = (props) => {
       contentStyle={{ paddingTop: 0 }}
       extraHeader={
         <PageHeader
-          title={detailInfo.name || "-"}
+          title={pageHeaderInfo.name || "-"}
           breadcrumb={true}
           des={
             <>
-              {detailInfo.status == "disable" && <Tag color='red'>已禁用</Tag>}{" "}
-              {detailInfo.description}{" "}
+              {pageHeaderInfo.status == "disable" && <Tag color='red'>已禁用</Tag>}{" "}
+              {pageHeaderInfo.description}{" "}
             </>
           }
           renderFooter={() => (
@@ -118,7 +129,7 @@ const CloudTmpDetail = (props) => {
               animated={false}
               tabBarExtraContent={
                 <Dropdown
-                  disabled={detailInfo.status === "disable"}
+                  disabled={pageHeaderInfo.status === "disable"}
                   overlay={
                     <Menu
                       onClick={({ key }) =>
@@ -143,7 +154,7 @@ const CloudTmpDetail = (props) => {
                           taskType={taskType}
                           orgId={routesParams.curOrg.id}
                           ctRunnerList={ctRunnerList}
-                          ctDetailInfo={detailInfo}
+                          ctDetailInfo={pageHeaderInfo}
                         />
                       )
                     }
@@ -153,7 +164,7 @@ const CloudTmpDetail = (props) => {
                     overlayStyle={{ width: 500 }}
                     onVisibleChange={closePopover}
                   >
-                    <Button disabled={detailInfo.status === "disable"} type='primary' icon={<DownOutlined />}>
+                    <Button disabled={pageHeaderInfo.status === "disable"} type='primary' icon={<DownOutlined />}>
                       新建作业
                     </Button>
                   </Popover>
@@ -170,7 +181,7 @@ const CloudTmpDetail = (props) => {
               onChange={(k) => changeTab(k)}
             >
               {Object.keys(subNavs).map((it) => (
-                (it === 'state' && !detailInfo.saveState) ? null : (
+                (it === 'state' && !pageHeaderInfo.saveState) ? null : (
                   <Tabs.TabPane
                     tab={subNavs[it]}
                     key={it}
