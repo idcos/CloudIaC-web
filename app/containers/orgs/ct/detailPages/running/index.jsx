@@ -70,7 +70,7 @@ const Running = ({ routesParams: { curOrg, ctId, linkToRunningDetail, ctRunnerLi
             loading={loading}
             itemLayout='horizontal'
             dataSource={resultMap.list}
-            renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
+            renderItem={(item, index) => <RunningTaskItem index={index} item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
             pagination={{
               current: query.pageNo,
               pageSize: query.pageSize,

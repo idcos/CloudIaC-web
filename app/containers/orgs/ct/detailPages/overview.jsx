@@ -124,8 +124,9 @@ const Overview = ({
                 <List
                   itemLayout='horizontal'
                   dataSource={overviewInfo.task || []}
-                  renderItem={(item) => (
+                  renderItem={(item, index) => (
                     <RunningTaskItem
+                      index={index}
                       item={item}
                       linkToRunningDetail={linkToRunningDetail}
                       ctRunnerList={ctRunnerList}

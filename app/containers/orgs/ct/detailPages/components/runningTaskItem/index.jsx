@@ -10,6 +10,7 @@ import styles from "./styles.less";
 
 export default ({
   item,
+  index,
   linkToRunningDetail,
   ctRunnerList,
   showCtRunner = true
@@ -41,8 +42,8 @@ export default ({
                 linkToRunningDetail(id);
               }}
             >
-              <div className='idcos-text-ellipsis' title={name}>
-                {name || "快速执行作业"}
+              <div className='fn-color-gray-9'>
+                { index === 0 ? '最新作业' : '历史作业' }
               </div>
             </div>
             {CT.taskType[taskType] ? <Tag>{CT.taskType[taskType]}</Tag> : null}

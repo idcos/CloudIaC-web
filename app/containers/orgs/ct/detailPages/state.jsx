@@ -58,7 +58,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
             <List
               itemLayout='horizontal'
               dataSource={[taskInfo]}
-              renderItem={(item) => <RunningTaskItem item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
+              renderItem={(item, index) => <RunningTaskItem index={index} item={item} linkToRunningDetail={linkToRunningDetail} ctRunnerList={ctRunnerList} />}
             />
           </div>
         </Card>
