@@ -6,10 +6,11 @@
 
     .running-task-item-title {
       float: left;
-      font-weight: bold;
       max-width: 400px;
       cursor: pointer;
       margin-right: 8px;
+      color: @gray-9;
+      font-size: 16px;
 
       &:hover {
         color: @primary-color;
@@ -19,7 +20,16 @@
 
   .ant-list-item-meta-description {
     color: @gray-7;
+    font-size: 12px;
   }
+
+  .list-content {
+    text-align: right;
+    .end-at-time {
+      font-size: 12px !important;
+      color: @gray-7;
+    }
+  } 
 
 	.ct-runner {
 		max-width: 280px;
@@ -45,11 +55,5 @@
     }
   }
 
-  .list-content {
-    text-align: right;
-    .end-at-time {
-      font-size: 12px !important;
-      color: @gray-7;
-    }
-  } 
+  
 }

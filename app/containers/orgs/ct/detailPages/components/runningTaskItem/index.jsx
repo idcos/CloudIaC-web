@@ -42,9 +42,7 @@ export default ({
                 linkToRunningDetail(id);
               }}
             >
-              <div className='fn-color-gray-9'>
-                { index === 0 ? '最新作业' : '历史作业' }
-              </div>
+              { index === 0 ? '最新作业' : '历史作业' }
             </div>
             {CT.taskType[taskType] ? <Tag>{CT.taskType[taskType]}</Tag> : null}
           </div>
