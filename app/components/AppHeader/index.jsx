@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-
-import { Select, Menu, Dropdown } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Select, Menu, Dropdown, Tooltip, Button, Badge } from 'antd';
 import { Link } from 'react-router-dom';
 import history from 'utils/history';
 import { QuestionCircleFilled, SettingFilled, FundFilled } from '@ant-design/icons';
@@ -13,6 +12,8 @@ const KEY = 'global';
 
 const AppHeader = (props) => {
   const { theme, navs, locationPathName, orgs, curOrg, dispatch, userInfo } = props;
+
+  const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
   const changeCurOrg = (orgId) => {
     dispatch({
@@ -59,7 +60,21 @@ const AppHeader = (props) => {
           </Menu>
         }
         <div className='user'>
-          <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
+          <Tooltip 
+            color='#13c2c2'
+            visible={devManualTooltipVisible}
+            overlayStyle={{ maxWidth: 'none' }}
+            title={
+              <div className='dev-manual-tooltip-content'>
+                IaC开发者文档，快速了解IaC玩法 
+                <Button type='primary' onClick={() => setDevManualTooltipVisible(false)}>知道了</Button> 
+              </div>
+            }
+          >
+            <Badge dot={devManualTooltipVisible}>
+              <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
+            </Badge>
+          </Tooltip>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
           {userInfo.isAdmin ? <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span> : null}
           <Dropdown

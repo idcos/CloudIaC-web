@@ -22,12 +22,33 @@ export default () => {
         throw new Error(res.message);
       }
       localStorage.accessToken = res.result.token;
+      const userInfoRes = await authAPI.info();
+      if (userInfoRes.code != 200) {
+        throw new Error(userInfoRes.message);
+      }
+      const userInfo = userInfoRes.result || {};
+      const { devManual = 0 } = userInfo.newbieGuide || {};
+      const updateUserInfoRes = await authAPI.update({ 
+        id: userInfo.id,
+        newbieGuide: {
+          devManual: devManual + 1
+        }
+      });
+      if (updateUserInfoRes.code != 200) {
+        throw new Error(updateUserInfoRes.message);
+      }
+      setUserConfig(updateUserInfoRes.result || {});
       redirectToIndex();
     } catch (e) {
       notification.error({
         message: e.message
       });
     }
+  };
+
+  const setUserConfig = (updateUserInfo) => {
+    const { devManual = 0 } = updateUserInfo.newbieGuide || {};
+    localStorage.newbieGuide_devManual = devManual <= 3;
   };
 
   useEffect(() => {
