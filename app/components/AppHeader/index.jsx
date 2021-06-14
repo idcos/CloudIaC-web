@@ -36,6 +36,11 @@ const AppHeader = (props) => {
     }
   }, [locationPathName]);
 
+  const onCloseDevManualTooltip = () => {
+    setDevManualTooltipVisible(false);
+    localStorage.newbieGuide_devManual = false;
+  };
+
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
@@ -67,7 +72,7 @@ const AppHeader = (props) => {
             title={
               <div className='dev-manual-tooltip-content'>
                 IaC开发者文档，快速了解IaC玩法 
-                <Button type='primary' onClick={() => setDevManualTooltipVisible(false)}>知道了</Button> 
+                <Button type='primary' onClick={() => onCloseDevManualTooltip()}>知道了</Button> 
               </div>
             }
           >
