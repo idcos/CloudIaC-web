@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Select, Menu, Dropdown, Tooltip, Button, Badge } from 'antd';
 import { Link } from 'react-router-dom';
 import history from 'utils/history';
-import { QuestionCircleFilled, SettingFilled, FundFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, DownOutlined, FundFilled } from '@ant-design/icons';
 import styles from './styles.less';
 import { connect } from "react-redux";
 import { logout } from 'services/logout';
@@ -81,7 +81,6 @@ const AppHeader = (props) => {
             </Badge>
           </Tooltip>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
-          {userInfo.isAdmin ? <span onClick={() => history.push('/sys/setting')}><SettingFilled/></span> : null}
           <Dropdown
             overlay={<Menu
               onClick={({ key }) => {
@@ -104,11 +103,16 @@ const AppHeader = (props) => {
               }}
             >
               <Menu.Item key='basic'>用户设置</Menu.Item>
+              {
+                userInfo.isAdmin ? (
+                  <Menu.Item key='sys' onClick={() => history.push('/sys/setting')}>系统设置</Menu.Item>
+                ) : null
+              }
               <Menu.Item key='pwd'>修改密码</Menu.Item>
               <Menu.Item danger={true} key='logout'>退出登录</Menu.Item>
             </Menu>}
           >
-            <span>{userInfo.name || ''}</span>
+            <span>{userInfo.name || ''} <DownOutlined style={{ verticalAlign: 'middle', fontSize: 14 }} /></span>
           </Dropdown>
         </div>
       </div>

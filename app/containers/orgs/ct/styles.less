@@ -155,6 +155,7 @@
     .task {
       .collapse-panel {
         margin-bottom: 16px;
+        
         .header {
           float: left;
           font-weight: bold;
@@ -173,6 +174,18 @@
         }
         .content {
           color: @gray-9;
+        }
+
+        &.auto-height .ant-collapse-header{
+          min-height: 46px;
+          .ant-collapse-arrow {
+            top: calc(50% - 6px) !important;
+          }
+
+          .header {
+            position: absolute;
+            top: calc(50% - 12px);
+          }
         }
       }
     }

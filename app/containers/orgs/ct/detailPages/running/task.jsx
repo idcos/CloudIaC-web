@@ -253,7 +253,7 @@ export default (props) => {
   return (
     <div className='task'>
       <div className={"tableRender"}>
-        <Collapse className='collapse-panel'>
+        <Collapse className='collapse-panel auto-height'>
           <Panel
             header={
               <div className='header'>
@@ -271,7 +271,6 @@ export default (props) => {
               taskInfo.taskType === "plan" ? (
                 <Button
                   onClick={applyTask}
-                  size='small'
                   disabled={
                     !taskInfo.allowApply || detailInfo.status === "disable"
                   }
