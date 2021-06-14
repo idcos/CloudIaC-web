@@ -13,5 +13,5 @@ export default ({ value }) => {
     className='md-content'
     dangerouslySetInnerHTML={getRawMarkup()}
   >
-  </div> : <Empty />;
+  </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
 };

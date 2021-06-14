@@ -56,19 +56,21 @@ export default (props) => {
       title: '云模板名称',
       dataIndex: 'name',
       key: 'name',
-      width: 180
+      width: 168
     },
     {
       title: '云模板描述',
       dataIndex: 'description',
+      width: 278,
+      ellipsis: true,
       key: 'description'
     },
     {
       title: '仓库地址',
       dataIndex: 'repoAddr',
+      width: 307,
       key: 'repoAddr',
       ellipsis: true,
-      width: 350,
       render: (text) => (
         <a href={text} target='_blank'>{text}</a>
       )
@@ -77,12 +79,12 @@ export default (props) => {
       title: '最后更新时间',
       dataIndex: 'updatedAt',
       key: 'updatedAt',
-      width: 180,
+      width: 132,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
-      width: 150,
+      width: 148,
       render: (item) => {
         const { id, repoBranch, repoId } = item;
         return (

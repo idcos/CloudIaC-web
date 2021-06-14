@@ -95,6 +95,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     const selectKeyItem = {
       title: 'key',
       dataIndex: 'key',
+      width: 280,
       editable: true,
       inputType: 'other',
       inputRender: () => {
@@ -114,12 +115,18 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               dropdownRender={menu => (
                 <div className='variable-list-dropdown'>
                   {menu}
-                  <Divider style={{ margin: '4px 0' }} />
-                  <div className='footer'>
-                    <span onClick={() => setImportModalVisible(true)}>
-                      查看更多变量内容
-                    </span>
-                  </div>
+                  {
+                    options.length > 0 ? (
+                      <>
+                        <Divider style={{ margin: '4px 0' }} />
+                        <div className='footer'>
+                          <span onClick={() => setImportModalVisible(true)}>
+                            查看更多变量内容
+                          </span>
+                        </div>
+                      </>
+                    ) : null
+                  }
                 </div>
               )}
             >
@@ -152,6 +159,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
     const inputKeyItem = {
       title: 'key',
       dataIndex: 'key',
+      width: 280,
       editable: true,
       fieldItemProps: {
         rules: [
@@ -172,6 +180,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       {
         title: 'value',
         dataIndex: 'value',
+        width: 280,
         editable: true,
         inputType: 'other',
         inputRender: ({ getFieldValue, setFieldsValue }) => {
@@ -217,6 +226,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       {
         title: '描述信息',
         dataIndex: 'description',
+        width: 341,
         editable: true,
         fieldItemProps: {
           rules: [{ message: '请输入' }]
@@ -224,7 +234,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       },
       {
         title: '操作',
-        width: 100,
+        width: 87,
         render: (_, record) => {
           const editable = editingKey == record.id;
           return editable ? (

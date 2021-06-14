@@ -99,34 +99,46 @@ const Orgs = ({ title, dispatch }) => {
     {
       dataIndex: 'name',
       title: '组织名称',
+      width: 170,
       render: (_, record) => <div className='tableRender'>
         <h2 className='reset-styles'>{record.name}</h2>
         <p className='reset-styles'>{record.guid}</p>
       </div>
     },
     {
+      dataIndex: 'description',
+      width: 160,
+      title: '描述'
+    },
+    {
+      // dataIndex: 'CT Runner',
+      title: 'CT Runner',
+      width: 220,
+      render: () => {
+        return '-';
+      }
+    },
+    {
       dataIndex: 'status',
+      width: 104,
       title: '状态',
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
       </div>
     },
     {
-      dataIndex: 'description',
-      title: '描述'
-    },
-    {
       title: '操作',
+      width: 107,
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
             record.status == 'disable' ? <Popconfirm
-              title='确定要启用该资源账号？'
+              title='确定要启用该组织？'
               onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'enable' } })}
             >
               <a>启用</a>
             </Popconfirm> : <Popconfirm
-              title='确定要禁用该资源账号？'
+              title='确定要禁用该组织？'
               onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'disable' } })}
             >
               <a className='danger-text'>禁用</a>

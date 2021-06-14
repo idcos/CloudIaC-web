@@ -19,9 +19,13 @@ export const orgsAPI = {
       id, name, description, vcsType, vcsVersion, vcsAuthInfo, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
     });
   },
-  create: ({ name, description, vcsType, vcsVersion, vcsAuthInfo }) => {
+  create: ({ 
+    name, description, vcsType, vcsVersion, vcsAuthInfo, 
+    defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort 
+  }) => {
     return post('/api/v1/org/create', {
-      name, description, vcsType, vcsVersion, vcsAuthInfo
+      name, description, vcsType, vcsVersion, vcsAuthInfo,
+      defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort 
     });
   },
   changeStatus: ({ id, status }) => {
