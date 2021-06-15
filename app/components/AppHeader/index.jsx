@@ -76,7 +76,7 @@ const AppHeader = (props) => {
               </div>
             }
           >
-            <Badge color={devManualTooltipVisible ? '#13c2c2' : null}>
+            <Badge color={devManualTooltipVisible ? '#13c2c2' : null} offset={[ -1, 3 ]}>
               <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
             </Badge>
           </Tooltip>

@@ -231,10 +231,16 @@
       line-height: 20px;
       color: @gray-6;
     }
-    .footer span{
-      padding-left: 12px;
-      color: @gray-6;
-      cursor: pointer;
+    .footer {
+      &:hover {
+        background: @gray-3;
+        color: @gray-6;
+        cursor: pointer;
+      }
+
+      span{
+        padding-left: 12px;
+      }
     }
   }
 }

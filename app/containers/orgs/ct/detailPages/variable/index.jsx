@@ -119,8 +119,8 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                     options.length > 0 ? (
                       <>
                         <Divider style={{ margin: '4px 0' }} />
-                        <div className='footer'>
-                          <span onClick={() => setImportModalVisible(true)}>
+                        <div className='footer' onClick={() => setImportModalVisible(true)}>
+                          <span>
                             查看更多变量内容
                           </span>
                         </div>

@@ -6,7 +6,7 @@ import { sysAPI } from 'services/base';
 const { Option } = Select;
 
 const FL = {
-  labelCol: { span: 6 },
+  labelCol: { span: 5 },
   wrapperCol: { span: 18 }
 };
 
@@ -55,7 +55,7 @@ export default ({ visible, toggleVisible, operation, opt }) => {
   };
 
   return <Modal
-    title={`${opt == 'add' ? '添加' : '编辑'}组织`}
+    title={`${opt == 'add' ? '创建' : '编辑'}组织`}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
