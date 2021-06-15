@@ -293,7 +293,7 @@ export const ctAPI = {
     });
   },
   stateFile: ({ orgId, filePath }) => {
-    return getWithArgs('/api/v1/consulKv/search', {
+    return getWithArgs('/api/v1/consul/kv/search', {
       key: filePath
     }, {
       'IaC-Org-Id': orgId

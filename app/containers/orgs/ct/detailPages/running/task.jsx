@@ -139,7 +139,7 @@ export default (props) => {
         }
       },
       {
-        url: `/api/v1/taskLog/sse?logPath=${result.backendInfo.log_file}`,
+        url: `/api/v1/task/log/sse?logPath=${result.backendInfo.log_file}`,
         options: { withCredentials: true }
       }
     );

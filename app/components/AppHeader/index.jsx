@@ -76,7 +76,7 @@ const AppHeader = (props) => {
               </div>
             }
           >
-            <Badge dot={devManualTooltipVisible}>
+            <Badge dot={devManualTooltipVisible} color='#13c2c2'>
               <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
             </Badge>
           </Tooltip>
