@@ -61,7 +61,6 @@ const Setting = (props) => {
   const renderByPanel = useCallback(() => {
     const panelProps = {
       orgId: curOrg.id,
-      ctId,
       submitLoading,
       ctRunnerList,
       detailInfo,

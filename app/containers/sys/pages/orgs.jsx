@@ -111,12 +111,9 @@ const Orgs = ({ title, dispatch }) => {
       title: '描述'
     },
     {
-      // dataIndex: 'CT Runner',
+      dataIndex: 'defaultRunnerServiceId',
       title: 'CT Runner',
-      width: 220,
-      render: () => {
-        return '-';
-      }
+      width: 220
     },
     {
       dataIndex: 'status',

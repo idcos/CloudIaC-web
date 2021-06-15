@@ -41,7 +41,7 @@ export default ({ visible, toggleVisible, operation, opt }) => {
 
   const fetchCTRunner = async () => {
     try {
-      const res = await sysAPI.listCTRunner({ orgId: '0' });
+      const res = await sysAPI.listCTRunner({});
       if (res.code !== 200) {
         throw new Error(res.message);
       }

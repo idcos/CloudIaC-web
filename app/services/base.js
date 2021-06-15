@@ -380,7 +380,7 @@ export const sysAPI = {
     });
   },
   listCTRunner: ({ orgId }) => {
-    return get('/api/v1/runnerList/search', {
+    return get('/api/v1/runner/search', {
       'IaC-Org-Id': orgId
     });
   },

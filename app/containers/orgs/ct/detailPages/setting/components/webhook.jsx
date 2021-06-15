@@ -7,23 +7,24 @@ import { ctAPI } from "services/base";
 
 export default (props) => {
 
-  const { ctId, orgId, detailInfo = {} } = props;
+  const { orgId, detailInfo = {} } = props;
+  const ctGuid = detailInfo.guid;
   const disabled = detailInfo.status === 'disable';
 
   const [ webhookList, setWebhookList ] = useState([]);
   const [ spinning, setSpinning ] = useState(false);
 
   useEffect(() => {
-    if (ctId) {
+    if (ctGuid) {
       getWebhook();
     }
-  }, [ctId]);
+  }, [ctGuid]);
 
   const getWebhook = async () => {
     setSpinning(true);
     const res = await ctAPI.webhookSearch({
       orgId, 
-      tplGuid: ctId
+      tplGuid: ctGuid
     });
     setSpinning(false);
     if (res.code !== 200) {
@@ -52,7 +53,7 @@ export default (props) => {
         actionType='plan'
         webhook={webhooks.plan} 
         orgId={orgId} 
-        ctId={ctId} 
+        ctGuid={ctGuid} 
         reload={getWebhook} 
         setSpinning={setSpinning}
         disabled={disabled}
@@ -62,7 +63,7 @@ export default (props) => {
         webhook={webhooks.apply} 
         cardStyle={{ marginTop: 24 }} 
         orgId={orgId} 
-        ctId={ctId}
+        ctGuid={ctGuid}
         reload={getWebhook}
         setSpinning={setSpinning}
         disabled={disabled}
@@ -72,7 +73,7 @@ export default (props) => {
 };
 
 const ActionCard = (props) => {
-  const { actionType, webhook, cardStyle, orgId, ctId, reload, setSpinning, disabled } = props;
+  const { actionType, webhook, cardStyle, orgId, ctGuid, reload, setSpinning, disabled } = props;
   const { accessToken, id } = webhook || {};
 
   const url = `${location.origin}/template/hook/send?accessToken=${accessToken}`;
@@ -81,7 +82,7 @@ const ActionCard = (props) => {
     setSpinning(true);
     const res = await ctAPI.webhookCreate({
       orgId, 
-      tplGuid: ctId,
+      tplGuid: ctGuid,
       action: actionType
     });
     setSpinning(false);
