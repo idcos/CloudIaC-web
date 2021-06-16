@@ -26,7 +26,9 @@ export default (props) => {
     const { name } = values;
     setConfirmLoading(true);
     const res = await ctAPI.createCTByLib({
-      orgId, id, name
+      orgId, 
+      name,
+      metaTemplateId: id
     });
     setConfirmLoading(false);
     if (res.code !== 200) {
