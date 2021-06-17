@@ -161,19 +161,21 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
       dataIndex: 'key',
       width: 280,
       editable: true,
-      fieldItemProps: {
+      getFieldItemProps: (record) => ({
         rules: [
           { required: true, message: '请输入' },
           () => ({
             validator(_, value) {
-              if (!value || (dataSource || []).findIndex(it => it.key === value) === -1) {
+              // 过滤掉编辑项再和其它项对比 看是否有重复key
+              const list = (dataSource || []).filter(it => it.id !== record.id);
+              if (!value || (list || []).findIndex(it => it.key === value) === -1) {
                 return Promise.resolve();
               }
               return Promise.reject(new Error('key值不允许重复!'));
             }
           })
         ]
-      }
+      })
     };
     return [
       canSearchByKey ? selectKeyItem : inputKeyItem,

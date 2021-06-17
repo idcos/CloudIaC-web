@@ -60,7 +60,7 @@ export const columnsOverride = (_columns = [], isEditing, inputFieldProps) => {
         inputType: col.inputType,
         inputRender: col.inputRender,
         inputFieldProps: col.inputFieldProps,
-        fieldItemProps: col.fieldItemProps,
+        fieldItemProps: col.fieldItemProps || (col.getFieldItemProps ? col.getFieldItemProps(record) : {}),
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record)
