@@ -51,6 +51,7 @@ export default (props) => {
       title='查看Readme.md文档' 
       visible={visible} 
       onCancel={onCancel}
+      centered={true}
       width={1032}
       footer={null}
     >
