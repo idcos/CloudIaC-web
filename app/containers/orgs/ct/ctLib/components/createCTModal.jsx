@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, notification } from "antd";
 
 import { ctAPI } from "services/base";
+import history from 'utils/history';
 
 const FL = {
   labelCol: { span: 24 },
@@ -10,7 +11,7 @@ const FL = {
 
 export default (props) => {
 
-  const { visible, id, orgId, onClose } = props;
+  const { visible, id, curOrg, onClose } = props;
 
   const [form] = Form.useForm();
 
@@ -26,7 +27,7 @@ export default (props) => {
     const { name } = values;
     setConfirmLoading(true);
     const res = await ctAPI.createCTByLib({
-      orgId, 
+      orgId: curOrg.id, 
       name,
       metaTemplateId: id
     });
@@ -43,6 +44,8 @@ export default (props) => {
     });
     reset();
     onClose();
+    const { id: ctId } = res.result || {};
+    history.push(`/org/${curOrg.guid}/ct/${ctId}/overview`);
   };
 
   const reset = () => {

@@ -138,7 +138,7 @@ export default (props) => {
       
       <CreatCTModal 
         visible={createCTData.visible} 
-        orgId={routesParams.curOrg.id}
+        curOrg={routesParams.curOrg}
         id={createCTData.id} 
         onClose={() => setCreateCTData({ visible: false })} 
       />
