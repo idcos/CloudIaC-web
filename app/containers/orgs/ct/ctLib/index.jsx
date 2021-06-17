@@ -86,11 +86,11 @@ export default (props) => {
       title: '操作',
       width: 148,
       render: (item) => {
-        const { id, repoBranch, repoId } = item;
+        const { id, repoBranch, repoId, vcsId } = item;
         return (
           <Space size='middle'>
             <a onClick={() => setCreateCTData({ visible: true, id })}>创建</a>
-            <a onClick={() => setViewMdData({ visible: true, repoBranch, repoId })}>查看文档</a>
+            <a onClick={() => setViewMdData({ visible: true, repoBranch, repoId, vcsId })}>查看文档</a>
           </Space>
         );
       }
@@ -143,9 +143,7 @@ export default (props) => {
         onClose={() => setCreateCTData({ visible: false })} 
       />
       <ViewMdModal 
-        visible={viewMdData.visible} 
-        repoBranch={viewMdData.repoBranch} 
-        repoId={viewMdData.repoId} 
+        {...viewMdData}
         orgId={routesParams.curOrg.id}
         onClose={() => setViewMdData({ visible: false })} 
       />

@@ -7,7 +7,7 @@ import MarkdownParser from 'components/coder/markdown-parser';
 
 export default (props) => {
 
-  const { visible, repoBranch, repoId, orgId, onClose } = props;
+  const { visible, repoBranch, repoId, orgId, vcsId, onClose } = props;
 
   const [ codeStr, setCodeStr ] = useState('');
   const [ spinning, setSpinning ] = useState(false);
@@ -23,7 +23,8 @@ export default (props) => {
     const res = await ctAPI.repoReadme({
       branch: repoBranch, 
       repoId, 
-      orgId
+      orgId,
+      vcsId
     });
     setSpinning(false);
     if (res.code !== 200) {
