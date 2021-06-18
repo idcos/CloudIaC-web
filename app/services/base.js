@@ -357,10 +357,8 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  stateSearch: ({ orgId, taskGuid }) => {
-    return getWithArgs('/api/v1/task/state/search', {
-      taskGuid
-    }, {
+  listState: ({ orgId, ...params }) => {
+    return getWithArgs('/api/v1/task/state/list', params, {
       'IaC-Org-Id': orgId
     });
   }

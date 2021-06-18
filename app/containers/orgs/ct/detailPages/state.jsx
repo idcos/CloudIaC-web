@@ -19,21 +19,21 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
   }, [detailInfo]);
 
   useEffect(() => {
-    if (taskInfo.guid && taskInfo.status === 'complete') {
-      fetchState();
+    if (taskInfo.guid) {
+      fetchStateList();
     }
   }, [taskInfo]);
 
-  const fetchState = async () => {
+  const fetchStateList = async () => {
     try {
-      const res = await ctAPI.stateSearch({
+      const res = await ctAPI.listState({
         orgId: curOrg.id,
-        taskGuid: taskInfo.guid
+        taskGuid: taskInfo.guid,
+        templateGuid: detailInfo.guid
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      console.log(res);
       setStateList(res.result || []);
     } catch (e) {
       notification.error({
