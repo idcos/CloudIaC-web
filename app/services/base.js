@@ -356,6 +356,13 @@ export const ctAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  stateSearch: ({ orgId, taskGuid }) => {
+    return getWithArgs('/api/v1/task/state/search', {
+      taskGuid
+    }, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
