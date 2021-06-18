@@ -19,7 +19,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
   }, [detailInfo]);
 
   useEffect(() => {
-    if (taskInfo.guid) {
+    if (taskInfo.guid && taskInfo.status === 'complete') {
       fetchState();
     }
   }, [taskInfo]);
