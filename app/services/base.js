@@ -358,7 +358,7 @@ export const ctAPI = {
     });
   },
   listState: ({ orgId, ...params }) => {
-    return getWithArgs('/api/v1/task/state/list', params, {
+    return getWithArgs('/api/v1/template/state_list', params, {
       'IaC-Org-Id': orgId
     });
   }
