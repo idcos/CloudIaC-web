@@ -28,6 +28,7 @@ import get from "lodash/get";
 const Container = styled.div`
   width: 100%;
   height: 700px;
+  margin-top: 1px;
   .CodeMirror,
   .Form_CodeMirror {
     height: 100% !important;
