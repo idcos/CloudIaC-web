@@ -222,7 +222,7 @@ export const ctAPI = {
   },
   edit: ({ 
     orgId, id, name, description, saveState, varfile, playbook, timeout, vars, extra, 
-    status, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
+    status, defaultRunnerServiceId = null, defaultRunnerAddr = null, defaultRunnerPort = null
   }) => {
     return put('/api/v1/template/update', {
       id, name, description, saveState, varfile, playbook, timeout, vars, extra, 

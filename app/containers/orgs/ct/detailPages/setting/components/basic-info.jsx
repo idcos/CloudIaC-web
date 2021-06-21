@@ -104,9 +104,8 @@ export default (props) => {
       <Form.Item
         label='默认ct-runner'
         name='defaultRunnerServiceId'
-        rules={[{ required: true, message: "请选择" }]}
       >
-        <Select placeholder='请选择ct-runner'>
+        <Select placeholder='请选择ct-runner' allowClear={true}>
           {ctRunnerList.map((it) => (
             <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>
           ))}
