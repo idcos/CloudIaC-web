@@ -106,7 +106,8 @@ const Params = ({ title }) => {
           ]}
           initialValue='1'
         >
-          <Select
+          <Select 
+            getPopupContainer={triggerNode => triggerNode.parentNode}
             style={{ width: 240 }}
             disabled={true}
           >

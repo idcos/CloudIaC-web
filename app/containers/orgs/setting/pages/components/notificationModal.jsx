@@ -110,7 +110,10 @@ export default ({ curOrg, operation, visible, toggleVisible }) => {
             }
           ]}
         >
-          <Select placeholder='请选择事件类型'>
+          <Select 
+            getPopupContainer={triggerNode => triggerNode.parentNode} 
+            placeholder='请选择事件类型'
+          >
             {Object.keys(ORG_USER.notificationType).map(it => <Option value={it}>{ORG_USER.notificationType[it]}</Option>)}
           </Select>
         </Form.Item>

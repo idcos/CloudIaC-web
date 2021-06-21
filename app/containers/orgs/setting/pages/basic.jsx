@@ -133,7 +133,10 @@ export default ({ title, curOrg, dispatch }) => {
             name='defaultRunnerServiceId'
             rules={[{ required: true, message: "请选择" }]}
           >
-            <Select placeholder='请选择ct-runner'>
+            <Select 
+              getPopupContainer={triggerNode => triggerNode.parentNode} 
+              placeholder='请选择ct-runner'
+            >
               {ctRunnerList.map((it) => (
                 <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>
               ))}

@@ -45,7 +45,8 @@ const AppHeader = (props) => {
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
       <div className='rParts'>
-        <Select
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode}
           className={styles.orgSwitcher}
           style={{ width: 164 }}
           placeholder='选择组织'

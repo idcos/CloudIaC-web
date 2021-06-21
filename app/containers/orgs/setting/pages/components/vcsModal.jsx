@@ -61,7 +61,10 @@ export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
           }
         ]}
       >
-        <Select placeholder='请选择VCS类型'>
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode} 
+          placeholder='请选择VCS类型'
+        >
           <Option value='gitlab'>gitlab</Option>
           <Option value='github'>github</Option>
           <Option value='gitea'>gitea</Option>

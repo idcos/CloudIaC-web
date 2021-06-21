@@ -159,7 +159,11 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
           }
         ]}
       >
-        <Select placeholder='请选择' mode='multiple'>
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode} 
+          placeholder='请选择' 
+          mode='multiple'
+        >
           {ctRunnerList.map(it => <Option value={it.ID}>{it.Service}</Option>)}
         </Select>
       </Form.Item>

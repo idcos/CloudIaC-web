@@ -117,7 +117,11 @@ export default (props) => {
         label='默认ct-runner'
         name='defaultRunnerServiceId'
       >
-        <Select placeholder='请选择ct-runner' allowClear={true}>
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode} 
+          placeholder='请选择ct-runner' 
+          allowClear={true}
+        >
           {ctRunnerList.map((it) => (
             <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>
           ))}

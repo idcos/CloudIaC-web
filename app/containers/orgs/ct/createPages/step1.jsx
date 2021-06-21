@@ -134,7 +134,13 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsId, setVcsId }
   return <div className='step1'>
     <div className={hasSelection() ? 'hidden' : ''}>
       <div>
-        <Select style={{ width: 160, marginRight: 8 }} placeholder='请选择' value={vcsId} onChange={setVcsId}>
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode} 
+          style={{ width: 160, marginRight: 8 }} 
+          placeholder='请选择' 
+          value={vcsId} 
+          onChange={setVcsId}
+        >
           {vcsList.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
         <Input.Search
