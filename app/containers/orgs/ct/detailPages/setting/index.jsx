@@ -31,16 +31,10 @@ const Setting = (props) => {
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
-      const { defaultRunnerServiceId, ...restValues } = values;
-      const ctInfo = ctRunnerList.find((it) => it.ID == defaultRunnerServiceId) || {};
-      const { Port, Address } = ctInfo;
       const res = await ctAPI.edit({
-        ...restValues,
+        ...values,
         orgId: curOrg.id,
-        id: ctId - 0,
-        defaultRunnerServiceId,
-        defaultRunnerAddr: Address,
-        defaultRunnerPort: Port
+        id: ctId - 0
       });
       if (res.code !== 200) {
         throw new Error(res.message);

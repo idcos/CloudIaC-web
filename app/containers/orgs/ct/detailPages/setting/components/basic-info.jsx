@@ -29,8 +29,20 @@ export default (props) => {
     form.setFieldsValue({ saveState: false, defaultRunnerServiceId: defaultRunnerServiceId || null, ...otherDetailInfo });
   }, [detailInfo]);
 
+  const onFinishForm = (values) => {
+    const { defaultRunnerServiceId = null, ...restValues } = values;
+    const ctInfo = ctRunnerList.find((it) => it.ID == defaultRunnerServiceId) || {};
+    const { Port = null, Address = null } = ctInfo;
+    onFinish({
+      ...restValues,
+      defaultRunnerServiceId,
+      defaultRunnerAddr: Address,
+      defaultRunnerPort: Port
+    });
+  };
+
   return (
-    <Form {...FL} layout='vertical' onFinish={onFinish} form={form}>
+    <Form {...FL} layout='vertical' onFinish={onFinishForm} form={form}>
       <Form.Item
         label='云模板ID'
         name='guid'
