@@ -1,75 +1,85 @@
 #### 开发流程
-![image.png](/assets/img/dev-step.png)
-#### 登录地址
-IaC平台登录地址：[http://10.0.3.124](http://10.0.3.124) (实际部署时使用域名 [http://iac.domain](http://iac.domain))
-代码仓库登录地址：[http://10.0.3.124:3000](http://10.0.3.124:3000) (实际部署时使用域名 [http://iac-git.domain](http://iac-git.domain))
+
+![image.png](/assets/img/iac-template-dev-steps.png)
+
+#### 平台地址
+下面使用 http://cloudiac.example.com/ 进行演示说明。
+
 #### 登录用户名、密码
 使用注册时填写的邮箱和密码直接登录，如果是组织管理员为您创建的用户，创建完成后登录信息将会邮件发送到您的邮箱
-#### 脚手架获取
-```shell
-# cd /opt
-# git clone http://10.0.3.124:3000/iac/example.git
-```
-#### 目录文件说明
-```shell
-ansible                 # ansible目录，存放playbook
-playbook.yaml           # 资源创建成功后调用ansible playbook部署应用，可存在多个yaml文件，运行时通过传参决定调用哪个
-main.tf                 # terraform主配置文件
-provider.tf             # 引用的providers
-variables.tf            # 变量定义，IaC平台添加云模板时会解析该文件提取变量名称、默认值以及描述
-README.md               # 该仓库的说明，覆盖的场景、架构图等
-xxx.tfvars              # 以tfvars为扩展名的文件是默认配置，优先级高于环境变量，可存在多份不同名称的.tfvars文件，运行时可以指定装载哪个
-create_repo             # 内置脚本，用于在远程创建新项目，并自动克隆新项目到本地，同时复制example相应文件至新项目目录
-metadata                # 元数据文件，json或yaml格式，该文件用于自动生成对应云模板，仓库提交后触发IaC创建相应模板
-```
-#### 开发并提交代码
 
-1. 创建远程仓库，默认使用初始部署的Gitea，如果使用其他git仓库，此步骤无需执行，直接在目标git仓库上创建相应仓库即可
+#### 获取演示模板
+cloudiac 部署后自带一个演示模板，可以基于该模板进行开发。
+
 ```shell
-[/opt/example]# ./create_repo ${project_name}
-git server: http://10.0.3.124:3000
-username: 登录邮箱
-password: 
-repo ${project_name} create successed
-git clone http://10.0.3.124:3000/iac/${project_name}.git
-chdir ${project_name}
-[/opt/${project_name}]# 
+# git clone http://cloudiac.example.com/repos/cloud-iac/cloudiac-example.git
 ```
 
-2. 代码开发并测试通过后，提交至代码仓库
+#### 目录结构规范
+```text
+.
+├── README.md       # 项目说明文档(必选)
+├── main.tf         # terraform 主配置文件(必选)
+├── versions.tf     # 指定依赖的 providers 及其版本(必选)
+├── variables.tf    # input 变量定义(必选)
+├── outputs.tf      # output 变量定义(必选) 
+├── ansible         # ansible 相关资源目录(可选)
+│   ├── playbook.yml    # ansible playbook
+│   └── index.html      # playbook 中使用的文件
+├── qa-env.tfvars    # QA 环境 tfvars(可选)
+├── prod-env.tfvars  # 生产环境 tfvars(可选)
+```
+
+- "必选" 只表示文件必须存在，但内容可以为空
+- 更详细的说明见 cloudiac-example 项目的 README
+
+#### 云模板开发
+创建新模板可以在 cloudiac-example 项目基础上修改，或者创建一个全新项目，但**必须符合以上目录结构规范**。
+
+下面以基于 cloudiac-example 开发为例演示模板开发过程：
+
+1. 基于 cloudiac-example 创建项目
+```shell
+# mv cloudiac-example tf-webapp
+# cd tf-webapp 
+# rm -rf .git && git init .
+```
+
+2. 进行云模板开发，并提交代码
 ```shell
 # git add .
-# git commit "feat: xxx"
+# git commit -m "Initial commit"
+```
+
+3. 创建远程仓库
+选择一个熟悉的 vcs 服务，在其上新建一个代码库。
+目前 IaC 支持的 vcs 类型有: gitlab、github、gitee、gitea。
+
+4. 将代码推送到远程仓库
+```shell
+# git remote add origin https://github.com/my/tf-webapp
 # git push origin master
 ```
-#### terraform & ansible 串连配置示例
-terraform创建资源后，如需调用ansible进行应用部署，可参考如下配置资源实例与ansible角色之间的关联
-```json
-resource "ansible_host" "web" {
-  count              = var.instance_number
-  inventory_hostname = alicloud_instance.instance[count.index].public_ip
-  groups             = ["web"]
-  vars               = merge(local.common_vars,
-    {
-      port = 80
-    }
-  )
-}
-```
-#### 创建、运行云模板
-未配置metadata情况下，需手动创建并配置云模板
-##### 创建云模板
 
-   1. 登录IaC平台，选择所在组织，在云模板页面选择『创建云模板』
-   1. 在『选择仓库』步骤选择相应的VCS（git仓库源，默认Gitea）
-   1. 选择提交的代码仓库
-   1. 输入云模板名称、描述、分支、是否保存状态、运行时默认的CT-Runner
-   1. 保存提交即可
+#### 运行云模板
+##### 添加 VCS
+IaC 平台通过 VCS 来访问云模板库，在执行云模板前需要先将使用的 VCS 添加到平台。
+
+1. 登录 IaC 平台，选择所在组织，在『设置』页面中选择『VCS』；
+2. 点击『添加 VCS』，在弹出的页面中填写必要信息，然后保存。
+
+##### 创建云模板
+1. 进入『云模板』板页面并选择『创建云模板』；
+2. 进入『选择仓库』步骤，左上角选择上一步添加的 vcs，然后在下方列表中选择 tf-webapp；
+3. 输入云模板名称、描述、分支、是否保存状态、运行时默认的 CT-Runner；
+4. 保存提交，即可在『云模板』列表中看到新创建的模板。
 
 注：一个仓库可能覆盖多种场景，创建的云模板对应的场景建议在描述中加以说明，方便用户使用
-##### 云模板参数配置及运行
 
-   1. 云模板创建成功后，IaC平台会自动从仓库的**variables.tf **文件中提取变量名称、默认值、描述
-   1. 进入『参数』配置页面，选择添加参数，在弹出的窗口中会列出所有提取的变量，勾选需要添加的变量并确认
-   1. 填写变量对应的值并保存后即可运行云模板
-   1. 在变量页面中可以选择是否加载tfvars文件，以及是否启用ansible进行应用部署，如启用的话可以选择运行哪个playbook文件
+##### 云模板参数配置及运行
+1. 云模板创建成功后，可以进入『变量』配置页面进行更详细的配置； 
+2. 添加需要的变量，并选择 tfvars 和 playbook 文件；
+3. 点击模板页面右上角的『新建作业』即可运行模板。
+
+注：『Terraform 变量部分』会自动解析出 **variables.tf** 文件中的变量名称、默认值、描述，在添加时可进行选择
+

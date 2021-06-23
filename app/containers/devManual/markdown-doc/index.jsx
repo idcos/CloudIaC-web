@@ -118,7 +118,7 @@ export default (props) => {
           className='doc-anchor' 
           onClick={e => e.preventDefault()}
           affix={false} 
-          targetOffset={110}
+          targetOffset={130}
           bounds={50}
           showInkInFixed={true}
           getContainer={() => document.querySelector(scrollDomSelecter)}
