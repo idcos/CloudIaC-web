@@ -90,7 +90,7 @@ export default ({ visible, toggleVisible, operation, opt }) => {
         ]}
       >
         <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode} placeholder='请选择CT Runner'
+          placeholder='请选择CT Runner'
         >
           {ctRunnerList.map(it => <Option value={it.ID}>{it.Service}</Option>)}
         </Select>

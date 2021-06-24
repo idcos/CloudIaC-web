@@ -49,7 +49,7 @@ const Content = styled.div`
   flex: 1;
   height: ${props => props.withFooter ? 'calc(100% - 100px)' : 'calc(100% - 50px)'};
   position: relative;
-  padding: 16px;
+  padding: 24px;
   overflow-y: auto;
   background-color: #f5f5f5;
   .ant-form-item-control-input-content {

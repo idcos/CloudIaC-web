@@ -135,7 +135,6 @@ export default ({ stepHelper, selection, setSelection, curOrg, vcsId, setVcsId }
     <div className={hasSelection() ? 'hidden' : ''}>
       <div>
         <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode} 
           style={{ width: 160, marginRight: 8 }} 
           placeholder='请选择' 
           value={vcsId} 

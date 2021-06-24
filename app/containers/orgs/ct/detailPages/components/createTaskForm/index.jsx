@@ -79,7 +79,6 @@ export default ({ closePopover, ctRunnerList, taskType, orgId, ctDetailInfo, lin
       ]}
     >
       <Select 
-        getPopupContainer={triggerNode => triggerNode.parentNode} 
         placeholder='请选择'
       >
         {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>)}

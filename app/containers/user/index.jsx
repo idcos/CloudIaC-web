@@ -49,7 +49,7 @@ const User = ({ userInfo, dispatch, location }) => {
       breadcrumb={false}
     />}
   >
-    <div className='container-inner-width withPadding'>
+    <div className='container-inner-width'>
       <div className={styles.user}>
         <Menu
           mode='inline'

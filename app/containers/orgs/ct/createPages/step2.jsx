@@ -138,7 +138,6 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
         ]}
       >
         <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode} 
           placeholder='请选择分支'
         >
           {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
@@ -191,7 +190,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
             name='ctServiceId'
           >
             <Select 
-              getPopupContainer={triggerNode => triggerNode.parentNode} placeholder='请选择ct-runner' allowClear={true}
+              placeholder='请选择ct-runner' allowClear={true}
             >
               {ctRunnerList.map(it => <Option value={it.ID}>{it.Tags.join() || it.ID}</Option>)}
             </Select>

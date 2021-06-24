@@ -160,7 +160,6 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
         ]}
       >
         <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode} 
           placeholder='请选择' 
           mode='multiple'
         >

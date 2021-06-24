@@ -37,7 +37,7 @@ const Sys = () => {
       breadcrumb={false}
     />}
   >
-    <div className='container-inner-width withPadding'>
+    <div className='container-inner-width'>
       <div className={styles.sys}>
         <Menu
           mode='inline'

@@ -81,3 +81,9 @@
     height: calc(100vh - 65px)!important;
   }
 }
+
+// 强制antd表格英文超出换行
+.ant-table .ant-table-thead > tr > th, .ant-table-tbody > tr > td,
+.ant-table .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+  word-break: break-all;
+}
