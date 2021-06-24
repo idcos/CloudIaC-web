@@ -65,7 +65,7 @@ export default () => {
     <div className={styles.login}>
 
       <div className='loginFormWrapper'>
-        <div className='title'>IaC低代码云平台登录</div>
+        <div className='title'>IaC基础设施及代码平台</div>
         <Form
           {...layout}
           name='basic'

@@ -56,6 +56,12 @@
             }
           }
           .ant-form-item-control {
+            input:-webkit-autofill {
+              //input 背景色     #0C2034根据自己需要替换
+              -webkit-box-shadow : 0 0 0px 1000px #ffffff inset !important;
+              //input字体颜色 颜色根据自己要求替换
+              -webkit-text-fill-color: #575757 !important;
+            }
             input, .ant-input-affix-wrapper {
               box-shadow: none !important;
               border: none;
