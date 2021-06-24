@@ -52,6 +52,7 @@ export default (props) => {
       <ActionCard 
         actionType='plan'
         webhook={webhooks.plan} 
+        cardStyle={{ marginTop: -6 }} 
         orgId={orgId} 
         ctGuid={ctGuid} 
         reload={getWebhook} 
@@ -61,7 +62,7 @@ export default (props) => {
       <ActionCard 
         actionType='apply'
         webhook={webhooks.apply} 
-        cardStyle={{ marginTop: 24 }} 
+        cardStyle={{ marginTop: 24, marginBottom: 24 }} 
         orgId={orgId} 
         ctGuid={ctGuid}
         reload={getWebhook}

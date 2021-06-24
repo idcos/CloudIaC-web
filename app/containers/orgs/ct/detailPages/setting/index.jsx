@@ -86,7 +86,7 @@ const Setting = (props) => {
         ))}
       </Menu>
       <div className='rightPanel'>
-        <Card title={subNavs[panel]}>
+        <Card title={subNavs[panel]} className='big-padding'>
           <div className='form-wrapper'>
             {renderByPanel()}
           </div>
