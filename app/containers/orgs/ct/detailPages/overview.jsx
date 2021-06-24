@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
+import moment from 'moment';
 import { Card, List, Space, Divider, notification, Tooltip } from "antd";
 import {
   BranchesOutlined,
   UserOutlined,
-  GitlabFilled
+  GitlabOutlined
 } from "@ant-design/icons";
 
 import { ctAPI } from "services/base";
+import { timeUtils } from 'utils/time';
+
 import MarkdownParser from "components/coder/markdown-parser";
 import RunningTaskItem from "./components/runningTaskItem/index";
 
@@ -15,46 +18,42 @@ const jobInfoItems = {
     text: "作业数量",
     getValue: (overviewInfo) => (
       <Space split={<Divider type='vertical' />}>
-        <span>plan作业 {overviewInfo.taskPlanCount}</span>
-        <span>apply作业 {overviewInfo.taskApplyCount}</span>
+        <span>plan&nbsp;{overviewInfo.taskPlanCount}</span>
+        <span>apply&nbsp;{overviewInfo.taskApplyCount}</span>
       </Space>
     )
   },
   taskAvgPlanTime: {
-    text: "平均plan作业时间"
-  },
-  taskAvgApplyTime: {
-    text: "平均apply作业时间"
+    text: "plan平均时间",
+    getValue: (overviewInfo) => {
+      const { taskAvgPlanTime } = overviewInfo;
+      return timeUtils.humanize(taskAvgPlanTime);
+    }
   },
   planFailedRate: {
-    text: "plan作业失败率",
+    text: "plan失败率",
     getValue: (overviewInfo) => {
-      const { taskPlanFailedCount, taskPlanCount, taskPlanFailedPercent } =
-        overviewInfo;
+      const { taskPlanFailedPercent } = overviewInfo;
       return (
-        <Space split={<Divider type='vertical' />}>
-          <span className='sub-text'>
-            {taskPlanFailedCount}/{taskPlanCount}
-          </span>
-          <span>
-            {taskPlanFailedPercent && taskPlanFailedPercent.toFixed(2)}%
-          </span>
-        </Space>
+        <span>
+          {taskPlanFailedPercent && taskPlanFailedPercent.toFixed(2)}%
+        </span>
       );
     }
   },
-  applyFailedRate: {
-    text: "apply作业失败率",
+  taskAvgApplyTime: {
+    text: "apply平均时间",
     getValue: (overviewInfo) => {
-      const { taskApplyFailedCount, taskApplyCount, taskApplyFailedPercent } =
-        overviewInfo;
+      const { taskAvgApplyTime } = overviewInfo;
+      return timeUtils.humanize(taskAvgApplyTime);
+    }
+  },
+  applyFailedRate: {
+    text: "apply失败率",
+    getValue: (overviewInfo) => {
+      const { taskApplyFailedPercent } = overviewInfo;
       return (
-        <Space split={<Divider type='vertical' />}>
-          <span className='sub-text'>
-            {taskApplyFailedCount}/{taskApplyCount}
-          </span>
-          <span>{taskApplyFailedPercent}%</span>
-        </Space>
+        <span>{taskApplyFailedPercent && taskApplyFailedPercent.toFixed(2)}%</span>
       );
     }
   }
@@ -154,11 +153,11 @@ const Overview = ({
                 title={overviewInfo.repoAddr}
               >
                 <div className='icon'>
-                  <GitlabFilled style={{ color: "#FCA326" }} />
+                  <GitlabOutlined />
                 </div>
-                <Tooltip title={overviewInfo.repoAddr}>
-                  <div className='text'>{overviewInfo.repoAddr}</div>
-                </Tooltip>
+                <div className='text'>
+                  <a href={overviewInfo.repoAddr} target='_blank'>{overviewInfo.repoAddr}</a> 
+                </div>
               </div>
               <div className='item-content-flex'>
                 <div className='icon'>
@@ -194,7 +193,11 @@ const Overview = ({
           <div className='info-item'>
             <div className='item-title'>活跃成员</div>
             <div className='item-content-wrapper'>
-              {(overviewInfo.activeCreatorName || []).join("、")}
+              {
+                (overviewInfo.activeCreatorName || []).length > 5 ? 
+                  (overviewInfo.activeCreatorName || []).slice(0, 5).join("、") + '等' :
+                  (overviewInfo.activeCreatorName || []).join("、")
+              }
             </div>
           </div>
         </Card>
