@@ -24,6 +24,20 @@ export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
     });
   };
 
+  const onChangeVcsType = (value) => {
+    switch (value) {
+      case 'github':
+        form.setFieldsValue({ address: 'https://api.github.com/' });
+        break;
+      case 'gitee':
+        form.setFieldsValue({ address: 'https://gitee.com/' });
+        break;
+      default:
+        form.setFieldsValue({ address: '' });
+        break;
+    }
+  };
+
   return <Modal
     title='添加VCS'
     visible={visible}
@@ -63,6 +77,7 @@ export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
       >
         <Select 
           placeholder='请选择VCS类型'
+          onChange={onChangeVcsType}
         >
           <Option value='gitlab'>gitlab</Option>
           <Option value='github'>github</Option>

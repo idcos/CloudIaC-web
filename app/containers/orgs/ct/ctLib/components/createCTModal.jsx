@@ -45,7 +45,7 @@ export default (props) => {
     reset();
     onClose();
     const { id: ctId } = res.result || {};
-    history.push(`/org/${curOrg.guid}/ct/${ctId}/overview`);
+    history.push(`/org/${curOrg.guid}/ct/${ctId}/variable`);
   };
 
   const reset = () => {
