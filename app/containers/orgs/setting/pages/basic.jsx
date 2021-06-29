@@ -134,6 +134,7 @@ export default ({ title, curOrg, dispatch }) => {
             rules={[{ required: true, message: "请选择" }]}
           >
             <Select 
+              getPopupContainer={triggerNode => triggerNode.parentNode}
               placeholder='请选择ct-runner'
             >
               {ctRunnerList.map((it) => (

@@ -118,6 +118,7 @@ export default (props) => {
         name='defaultRunnerServiceId'
       >
         <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择ct-runner' 
           allowClear={true}
         >

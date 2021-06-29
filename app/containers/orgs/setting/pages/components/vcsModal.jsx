@@ -76,6 +76,7 @@ export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
         ]}
       >
         <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择VCS类型'
           onChange={onChangeVcsType}
         >

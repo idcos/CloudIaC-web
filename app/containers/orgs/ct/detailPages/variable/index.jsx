@@ -110,6 +110,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
             style={{ margin: 0 }}
           >
             <Select 
+              getPopupContainer={triggerNode => triggerNode.parentNode}
               style={{ width: 287 }} optionLabelProp='value' placeholder='请选择' 
               showArrow={false} showSearch={true} onChange={handleChange}
               dropdownRender={menu => (
@@ -350,7 +351,8 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
                 }
               ]}
             >
-              <Select 
+              <Select
+                getPopupContainer={triggerNode => triggerNode.parentNode} 
                 allowClear={true} 
                 placeholder='请选择tfvars文件'
               >
@@ -370,6 +372,7 @@ const Variable = ({ routesParams: { detailInfo, curOrg, reload } }) => {
               ]}
             >
               <Select 
+                getPopupContainer={triggerNode => triggerNode.parentNode}
                 allowClear={true} 
                 placeholder='请选择playbook文件'
               >
