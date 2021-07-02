@@ -9,6 +9,7 @@ import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOu
 
 
 import { getNumLen } from 'utils/util';
+import { useThrottleHook } from 'utils/hooks';
 
 
 import styles from './styles.less';
@@ -32,10 +33,12 @@ export default ({ value }) => {
   const searchRef = useRef();
   const [ html, setHtml ] = useState('');
 
+  const throttleValue = useThrottleHook(value, 100);
+
   useEffect(() => {
-    const maxLineIndexLen = getNumLen(value.length);
+    const maxLineIndexLen = getNumLen(throttleValue.length);
     const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
-    const _html = value.map((line, index) => {
+    const _html = throttleValue.map((line, index) => {
       return `
         <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
           <span class='line-index' style='width: ${lineIndexWidth}px;'>${index + 1 }</span>
@@ -47,7 +50,7 @@ export default ({ value }) => {
     setTimeout(() => {
       go('bottom');
     });
-  }, [value]);
+  }, [throttleValue]);
 
   const go = (type) => {
     try {
