@@ -7,6 +7,10 @@ import {
 } from "antd";
 import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
 
+
+import { getNumLen } from 'utils/util';
+
+
 import styles from './styles.less';
 import SearchByKeyWord from './dom-event';
 
@@ -29,10 +33,12 @@ export default ({ value }) => {
   const [ html, setHtml ] = useState('');
 
   useEffect(() => {
+    const maxLineIndexLen = getNumLen(value.length);
+    const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
     const _html = value.map((line, index) => {
       return `
-        <div class='ansi-line'>
-          <span class='line-index'> ${index + 1 }</span>
+        <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
+          <span class='line-index' style='width: ${lineIndexWidth}px;'>${index + 1 }</span>
           <pre class='line-text reset-styles'>${ansi_up.ansi_to_html(line)}</pre>
         </div>
       `;

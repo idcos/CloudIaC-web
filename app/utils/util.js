@@ -57,3 +57,13 @@ export const formatCTRunner = (ctRunnerList, cTRunnerId) => {
   const { Tags } = find(ctRunnerList || [], [ 'ID', cTRunnerId ]) || {};
   return Tags && Tags.join() || cTRunnerId;
 };
+
+// 计算正整数的位数
+export const getNumLen = (num) => {
+  let len = 0;
+  while (num >= 1) {
+    num = num / 10;
+    len++;
+  }
+  return len;
+};

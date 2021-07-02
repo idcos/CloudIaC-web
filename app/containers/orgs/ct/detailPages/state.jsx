@@ -51,7 +51,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setStateFileStr(res.result || '');
+      setStateFileStr(res.result || ''); 
     } catch (e) {
       notification.error({
         message: e.message
