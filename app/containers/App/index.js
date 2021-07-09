@@ -40,6 +40,7 @@ function App(props) {
     const { token } = parseSearch(search);
     if (token) {
       localStorage.accessToken = token;
+      window.location.search = '';
     }
   };
 
