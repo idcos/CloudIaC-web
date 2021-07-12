@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { RightOutlined } from "@ant-design/icons";
 
 import RoutesList from 'components/routes-list';
+import history from "utils/history";
+
 import styles from './styles.less';
 
 const menus = [
@@ -52,10 +54,22 @@ const menus = [
   }
 ];
 
-const OrgWrapper = ({ routes, curOrg, ...restProps }) => {
+const OrgWrapper = ({ routes, curOrg, match = {}, ...restProps }) => {
+  const { orgGuid, mOrgKey, mProjectKey } = match.params || {};
 
-  console.log(1, restProps);
-
+  const linkTo = (subKey, menuItemKey) => {
+    switch (subKey) {
+      case 'org':
+        history.push(`/org/${orgGuid}/${menuItemKey}`);
+        break;
+      case 'project':
+        history.push(`/org/${orgGuid}/project/testProjectGuid/${menuItemKey}`);
+        break;
+      default:
+        break;
+    }
+  };
+ 
   return (
     <div className={styles.orgWrapper}>
       <div className='left-nav'>
@@ -70,11 +84,27 @@ const OrgWrapper = ({ routes, curOrg, ...restProps }) => {
                 <div className='menu-title'>{it.subName}</div>
                 <div className='menu-list'>
                   {
-                    it.menuList.map(menuItem => (
-                      <div className='menu-item'>
-                        <span>{menuItem.name}</span>
-                      </div>
-                    ))
+                    it.menuList.map(menuItem => {
+                      let menuKey;
+                      switch (it.subKey) {
+                        case 'org':
+                          menuKey = mOrgKey;
+                          break;
+                        case 'project':
+                          menuKey = mProjectKey;
+                          break;
+                        default:
+                          break;
+                      }
+                      return (
+                        <div 
+                          className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
+                          onClick={() => linkTo(it.subKey, menuItem.key)}
+                        >
+                          <span>{menuItem.name}</span>
+                        </div>
+                      );
+                    })
                   }
                 </div>
               </div>

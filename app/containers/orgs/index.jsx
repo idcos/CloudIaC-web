@@ -21,7 +21,7 @@ const Orgs = ({ orgs, dispatch }) => {
         orgId
       }
     });
-    history.push(`/org/${orgId}/ct`);
+    history.push(`/org/${orgId}/m-org-project`);
   };
 
   return <Layout

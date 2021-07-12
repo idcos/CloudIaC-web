@@ -14,95 +14,138 @@ export default function createRoutes() {
       exact: true
     },
     {
-      path: '/org/:orgId/:orgMenuKey/:projectId/:projectMenuKey',
-      name: '组织详情',
+      path: '/org/:orgGuid/:mOrgKey/:projectId?/:mProjectKey?',
+      name: '组织主页',
       component: loadable(() => import('containers/org'), asyncLoadFallback),
       routes: [
         {
-          path: '/org/:orgId/ct',
-          name: '云模板',
-          component: loadable(() => import('containers/orgs/ct'), asyncLoadFallback),
+          path: '/org/:orgGuid/m-org-project',
+          name: '组织设置：项目',
+          component: loadable(() => import('containers/org/m-org/project'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/ct/ctLib',
-          name: '创建云模板',
-          component: loadable(() => import('containers/orgs/ct/ctLib'), asyncLoadFallback),
+          path: '/org/:orgGuid/m-org-ct',
+          name: '组织设置：云模版',
+          component: loadable(() => import('containers/org/m-org/ct'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/ct/createCT',
-          name: '创建云模板',
-          component: loadable(() => import('containers/orgs/ct/create'), asyncLoadFallback),
+          path: '/org/:orgGuid/m-org-variable',
+          name: '组织设置：变量',
+          component: loadable(() => import('containers/org/m-org/variable'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/ct/:ctId/:ctDetailTabKey',
-          name: '云模板详情',
-          component: loadable(() => import('containers/orgs/ct/detail'), asyncLoadFallback),
-          routes: [
-            {
-              path: '/org/:orgId/ct/:ctId/overview',
-              name: '概览',
-              component: loadable(() => import('containers/orgs/ct/detailPages/overview'), asyncLoadFallback),
-              exact: true
-            },
-            {
-              path: '/org/:orgId/ct/:ctId/running',
-              name: '运行',
-              component: loadable(() => import('containers/orgs/ct/detailPages/running'), asyncLoadFallback),
-              exact: true
-            },
-            {
-              path: '/org/:orgId/ct/:ctId/running/runningDetail/:curTask',
-              name: '运行详情',
-              component: loadable(() => import('containers/orgs/ct/detailPages/running/task'), asyncLoadFallback),
-              exact: true
-            },
-            {
-              path: '/org/:orgId/ct/:ctId/state',
-              name: '状态',
-              component: loadable(() => import('containers/orgs/ct/detailPages/state'), asyncLoadFallback),
-              exact: true
-            },
-            {
-              path: '/org/:orgId/ct/:ctId/variable',
-              name: '变量',
-              component: loadable(() => import('containers/orgs/ct/detailPages/variable'), asyncLoadFallback),
-              exact: true
-            },
-            {
-              path: '/org/:orgId/ct/:ctId/setting',
-              name: '设置',
-              component: loadable(() => import('containers/orgs/ct/detailPages/setting'), asyncLoadFallback),
-              exact: true
-            }
-          ]
-        },
-        {
-          path: '/org/:orgId/setting',
-          name: '设置',
-          component: loadable(() => import('containers/orgs/setting'), asyncLoadFallback),
+          path: '/org/:orgGuid/m-org-setting',
+          name: '组织设置：设定',
+          component: loadable(() => import('containers/org/m-org/setting'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/project',
-          name: '项目',
-          component: loadable(() => import('containers/orgs/project'), asyncLoadFallback),
+          path: '/org/:orgGuid/project/:projectId/m-project-env',
+          name: '项目信息：环境',
+          component: loadable(() => import('containers/org/m-project/env'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/setting',
-          name: '设置',
-          component: loadable(() => import('containers/orgs/project/setting'), asyncLoadFallback),
+          path: '/org/:orgGuid/project/:projectId/m-project-ct',
+          name: '项目信息：云模版',
+          component: loadable(() => import('containers/org/m-project/ct'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/variable',
-          name: '变量',
-          component: loadable(() => import('containers/orgs/project/variable'), asyncLoadFallback),
+          path: '/org/:orgGuid/project/:projectId/m-project-variable',
+          name: '项目信息：变量',
+          component: loadable(() => import('containers/org/m-project/variable'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgGuid/project/:projectId/m-project-setting',
+          name: '项目信息：设置',
+          component: loadable(() => import('containers/org/m-project/setting'), asyncLoadFallback),
           exact: true
         }
+        // {
+        //   path: '/org/:orgId/ct',
+        //   name: '云模板',
+        //   component: loadable(() => import('containers/orgs/ct'), asyncLoadFallback),
+        //   exact: true
+        // },
+        // {
+        //   path: '/org/:orgId/ct/ctLib',
+        //   name: '创建云模板',
+        //   component: loadable(() => import('containers/orgs/ct/ctLib'), asyncLoadFallback),
+        //   exact: true
+        // },
+        // {
+        //   path: '/org/:orgId/ct/createCT',
+        //   name: '创建云模板',
+        //   component: loadable(() => import('containers/orgs/ct/create'), asyncLoadFallback),
+        //   exact: true
+        // },
+        // {
+        //   path: '/org/:orgId/ct/:ctId/:ctDetailTabKey',
+        //   name: '云模板详情',
+        //   component: loadable(() => import('containers/orgs/ct/detail'), asyncLoadFallback),
+        //   routes: [
+        //     {
+        //       path: '/org/:orgId/ct/:ctId/overview',
+        //       name: '概览',
+        //       component: loadable(() => import('containers/orgs/ct/detailPages/overview'), asyncLoadFallback),
+        //       exact: true
+        //     },
+        //     {
+        //       path: '/org/:orgId/ct/:ctId/running',
+        //       name: '运行',
+        //       component: loadable(() => import('containers/orgs/ct/detailPages/running'), asyncLoadFallback),
+        //       exact: true
+        //     },
+        //     {
+        //       path: '/org/:orgId/ct/:ctId/running/runningDetail/:curTask',
+        //       name: '运行详情',
+        //       component: loadable(() => import('containers/orgs/ct/detailPages/running/task'), asyncLoadFallback),
+        //       exact: true
+        //     },
+        //     {
+        //       path: '/org/:orgId/ct/:ctId/state',
+        //       name: '状态',
+        //       component: loadable(() => import('containers/orgs/ct/detailPages/state'), asyncLoadFallback),
+        //       exact: true
+        //     },
+        //     {
+        //       path: '/org/:orgId/ct/:ctId/variable',
+        //       name: '变量',
+        //       component: loadable(() => import('containers/orgs/ct/detailPages/variable'), asyncLoadFallback),
+        //       exact: true
+        //     },
+        //     {
+        //       path: '/org/:orgId/ct/:ctId/setting',
+        //       name: '设置',
+        //       component: loadable(() => import('containers/orgs/ct/detailPages/setting'), asyncLoadFallback),
+        //       exact: true
+        //     }
+        //   ]
+        // },
+        // {
+        //   path: '/org/:orgId/setting',
+        //   name: '设置',
+        //   component: loadable(() => import('containers/orgs/setting'), asyncLoadFallback),
+        //   exact: true
+        // },
+       
+        // {
+        //   path: '/org/:orgId/project/:projectId/setting',
+        //   name: '设置',
+        //   component: loadable(() => import('containers/orgs/project/setting'), asyncLoadFallback),
+        //   exact: true
+        // },
+        // {
+        //   path: '/org/:orgId/project/:projectId/variable',
+        //   name: '变量',
+        //   component: loadable(() => import('containers/orgs/project/variable'), asyncLoadFallback),
+        //   exact: true
+        // }
       ]
     },
     {
