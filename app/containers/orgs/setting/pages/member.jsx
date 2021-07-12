@@ -96,21 +96,29 @@ export default ({ title, curOrg }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '成员',
+      title: '姓名',
       render: (_, record) => <div className='tableRender'>
         <h2 className='reset-styles'>{record.name}</h2>
         <p className='reset-styles'>{record.email}</p>
       </div>
     },
     {
-      dataIndex: 'role',
-      title: '权限',
-      render: (text) => ORG_USER.role[text]
+      dataIndex: 'email',
+      title: '邮箱'
+    },
+    {
+      dataIndex: 'phone',
+      title: '手机'
     },
     {
       dataIndex: 'createdAt',
       title: '加入时间',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
+    {
+      dataIndex: 'role',
+      title: '权限',
+      render: (text) => ORG_USER.role[text]
     },
     {
       title: '操作',

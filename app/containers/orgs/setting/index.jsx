@@ -18,7 +18,7 @@ import Vcs from './pages/vcs';
 
 const subNavs = {
   basic: '基本信息',
-  member: '组织成员',
+  member: '用户角色',
   notification: '组织通知',
   resAccount: '资源账号',
   vcs: 'VCS'

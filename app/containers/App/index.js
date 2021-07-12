@@ -22,6 +22,11 @@ const AppNav = [
     key: 'setting',
     name: '设置',
     link: '/setting'
+  },
+  {
+    key: 'project',
+    name: '项目',
+    link: '/project'
   }
 ];
 

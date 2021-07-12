@@ -141,6 +141,11 @@ const Orgs = ({ title, dispatch }) => {
               <a className='danger-text'>禁用</a>
             </Popconfirm>
           }
+          <a onClick={() => {
+            setOpt('edit');
+            toggleVisible();
+          }}
+          >编辑</a>          
         </Space>;
       }
     }

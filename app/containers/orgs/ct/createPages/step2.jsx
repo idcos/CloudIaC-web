@@ -200,8 +200,8 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
         </Col>
       </Row>
       <Space>
+        <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
         <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
-        <Button type='primary' htmlType={'submit'} loading={submitLoading}>完成</Button>
       </Space>
     </Form>
   </div>;

@@ -84,6 +84,24 @@ export default function createRoutes() {
           name: '设置',
           component: loadable(() => import('containers/orgs/setting'), asyncLoadFallback),
           exact: true
+        },
+        {
+          path: '/org/:orgId/project',
+          name: '项目',
+          component: loadable(() => import('containers/orgs/project'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/setting',
+          name: '设置',
+          component: loadable(() => import('containers/orgs/project/setting'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/variable',
+          name: '变量',
+          component: loadable(() => import('containers/orgs/project/variable'), asyncLoadFallback),
+          exact: true
         }
       ]
     },

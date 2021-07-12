@@ -406,3 +406,45 @@ export const sysAPI = {
     });
   }
 };
+export const pjtAPI = {
+  projectList: ({ pageNo, pageSize }) => {
+    return getWithArgs('/api/v1/project', {
+      pageSize,
+      currentPage: pageNo
+    });
+  },
+  createToken: () => {
+    return post('/api/v1/token/create', {});
+  },
+  editToken: ({ id, description, status }) => {
+    return put('/api/v1/token/update', {
+      id, description, status
+    });
+  },
+  delToken: (id) => {
+    return del('/api/v1/token/delete', {
+      id
+    });
+  },
+  listCTRunner: ({ orgId }) => {
+    return get('/api/v1/runner/search', {
+      'IaC-Org-Id': orgId
+    });
+  },
+  getParams: () => {
+    return get('/api/v1/system/search');
+  },
+  edit: (param) => {
+    return put('/api/v1/system/update', {
+      ...param
+    });
+  },
+  sysStatus: () => {
+    return get('/api/v1/system/status/search');
+  },
+  updateTags: ({ tags, serviceId }) => {
+    return put('/api/v1/consul/tags/update', {
+      tags, serviceId
+    });
+  }
+};

@@ -5,8 +5,8 @@ import { ctAPI, sysAPI } from 'services/base';
 import history from 'utils/history';
 
 const FL = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 14 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 const { Option } = Select;
 
@@ -97,7 +97,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
     <Form
       form={form}
       {...FL}
-      // layout='vertical'
+      layout='vertical'
       onFinish={onFinish}
       initialValues={{
         timeout: 300,
@@ -105,24 +105,30 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
       }}
     >
       <Form.Item
-        label='vcs'
-        name='repoBranch'
+        label='模板名称'
+        name='name'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: '请输入'
           }
         ]}
       >
-        <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择vcs'
-        >
-          {[].map(it => <Option value={it.name}>{it.name}</Option>)}
-        </Select>
+        <Input placeholder='请输入云模板名称' />
       </Form.Item>
       <Form.Item
-        label='仓库名称'
+        label='模板描述'
+        name='description'
+        rules={[
+          {
+            message: '请输入'
+          }
+        ]}
+      >
+        <Input.TextArea placeholder='请输入描述' />
+      </Form.Item>
+      <Form.Item
+        label='关联项目'
         name='repoBranch'
         rules={[
           {
@@ -133,46 +139,16 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
       >
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择分支'
+          placeholder='请选择关联项目'
+          mode={'multiple'}
         >
           {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
         </Select>
       </Form.Item>
-      <Form.Item
-        label='分支/标签'
-        name='repoBranch'
-        rules={[
-          {
-            required: true,
-            message: '请选择'
-          }
-        ]}
-      >
-        <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择分支'
-        >
-          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
-        </Select>
-      </Form.Item>
-      <Form.Item
-        label='分支/标签'
-        name='repoBranch'
-        rules={[
-          {
-            required: true,
-            message: '请选择'
-          }
-        ]}
-      >
-        <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择分支'
-        >
-          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
-        </Select>
-      </Form.Item>
-      <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+      <Space>
+        <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
+        <Button type='primary' htmlType={'submit'} loading={submitLoading}>完成创建</Button>
+      </Space>
     </Form>
   </div>;
 };

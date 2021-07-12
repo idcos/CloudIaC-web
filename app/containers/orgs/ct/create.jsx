@@ -7,6 +7,7 @@ import Layout from 'components/common/layout';
 
 import Step1 from './createPages/step1';
 import Step2 from './createPages/step2';
+import Step3 from './createPages/step3';
 
 import styles from './styles.less';
 
@@ -14,7 +15,8 @@ const { Step } = Steps;
 
 const steps = {
   step1: '选择仓库',
-  step2: '其他信息'
+  step2: '变量设置',
+  step3: '关联项目'
 };
 
 const CloudTmpCreate = ({ routesParams }) => {
@@ -31,7 +33,7 @@ const CloudTmpCreate = ({ routesParams }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='创建云模板'
+      title='新建云模板'
       breadcrumb={true}
     />}
   >
@@ -54,6 +56,14 @@ const CloudTmpCreate = ({ routesParams }) => {
         </div>
         <div className={`${step != 1 ? 'hidden' : ''}`}>
           <Step2
+            selection={selection}
+            stepHelper={stepHelper()}
+            vcsId={vcsId}
+            curOrg={routesParams.curOrg}
+          />
+        </div>
+        <div className={`${step != 2 ? 'hidden' : ''}`}>
+          <Step3
             selection={selection}
             stepHelper={stepHelper()}
             vcsId={vcsId}
