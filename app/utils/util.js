@@ -66,30 +66,3 @@ export const getNumLen = (num) => {
   }
   return len;
 };
-
-export function parseSearch(search = location.search) {
-  let pairs = search.slice(1).split('&');
-
-  let result = {};
-  pairs.forEach(function(pair) {
-    if (pair && pair.indexOf('=') !== -1) {
-      pair = pair.split('=');
-      //兼容写法
-      result[pair[0]] = result[
-        pair[0].toLocaleLowerCase()
-      ] = decodeURIComponent(pair[1] || '');
-    }
-  });
-
-  return JSON.parse(JSON.stringify(result));
-}
-
-export function stringifySearch(obj = {}) {
-  let arr = [];
-  Object.keys(obj).map(it => {
-    if (obj[it] !== undefined) {
-      arr.push(`${it}=${obj[it]}`);
-    }
-  });
-  return arr.join('&');
-}

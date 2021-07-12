@@ -8,7 +8,8 @@ import { useInjectReducer, useInjectSaga } from "redux-injectors";
 import { withRouter } from 'react-router-dom';
 
 import AppHeader from 'components/AppHeader';
-import { parseSearch } from 'utils/util';
+
+import queryString from 'query-string';
 
 const KEY = 'global';
 
@@ -37,7 +38,7 @@ function App(props) {
 
   // 免登检查
   const freeLoginCheck = () => {
-    const { token } = parseSearch(search);
+    const { token } = queryString.parse(search);
     if (token) {
       localStorage.accessToken = token;
       window.location.search = '';
