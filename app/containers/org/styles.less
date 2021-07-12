@@ -11,31 +11,37 @@
       width: 200px;
       height: 100%;
       overflow: hidden;
-      padding: 10px 24px;
+      padding: 10px 0;
       display: flex;
       flex-direction: column;
 
-      .title {
+      .org-select-wrapper {
         height: 48px;
-        font-size: 14px;
-        line-height: 48px;
-        padding-right: 20px;
-        color: @gray-9;
-        font-weight: bold;
-        position: relative;
-
-        .icon {
+        padding: 0 18px;
+        cursor: pointer;
+       
+        .org-select {
+          padding: 0 26px 0 6px;
+          position: relative;
+          font-size: 14px;
+          line-height: 48px;
           color: @gray-9;
           font-weight: bold;
-          position: absolute;
-          right: 0;
-          top: 17px;
-        }
-        
+          border-bottom: 1px solid @gray-4;
+
+          .icon {
+            color: @gray-9;
+            font-weight: bold;
+            position: absolute;
+            right: 6px;
+            top: 17px;
+          }
+        } 
       }
 
       .menu-wrapper {
         flex: 1;
+        padding: 0 24px;
 
         .sub-menu {
           margin-bottom: 12px;

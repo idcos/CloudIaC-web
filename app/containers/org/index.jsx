@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { RightOutlined } from "@ant-design/icons";
+import { Select } from 'antd';
 
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
 
 import styles from './styles.less';
+
+
+const { Option } = Select;
+const KEY = 'global';
 
 const menus = [
   {
@@ -54,7 +58,7 @@ const menus = [
   }
 ];
 
-const OrgWrapper = ({ routes, curOrg, match = {}, ...restProps }) => {
+const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
   const { orgGuid, mOrgKey, mProjectKey } = match.params || {};
 
   const linkTo = (subKey, menuItemKey) => {
@@ -69,14 +73,30 @@ const OrgWrapper = ({ routes, curOrg, match = {}, ...restProps }) => {
         break;
     }
   };
+
+  const changeCurOrg = (orgId) => {
+    dispatch({
+      type: 'global/set-curOrg',
+      payload: {
+        orgId
+      }
+    });
+    history.push(`/org/${orgId}`);
+  };
  
   return (
     <div className={styles.orgWrapper}>
       <div className='left-nav'>
-        <div className='title'>
-          <span className='text'>组织名称</span>
-          <RightOutlined className='icon' />
-        </div>
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode}
+          // className={styles.orgSwitcher}
+          style={{ width: 200 }}
+          placeholder='选择组织'
+          onChange={changeCurOrg}
+          value={curOrg && curOrg.guid}
+        >
+          {(orgs.list || []).map(it => <Option value={it.guid}>{it.name}</Option>)}
+        </Select>
         <div className='menu-wrapper'>
           {
             menus.map(it => (
@@ -128,5 +148,8 @@ const OrgWrapper = ({ routes, curOrg, match = {}, ...restProps }) => {
 };
 
 export default connect(
-  (state) => ({ curOrg: state.global.get('curOrg') })
+  (state) => ({ 
+    orgs: state[KEY].get('orgs').toJS(),
+    curOrg: state.global.get('curOrg') 
+  })
 )(OrgWrapper);

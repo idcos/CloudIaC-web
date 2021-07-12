@@ -15,15 +15,15 @@ const AppHeader = (props) => {
 
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
-  const changeCurOrg = (orgId) => {
-    dispatch({
-      type: 'global/set-curOrg',
-      payload: {
-        orgId
-      }
-    });
-    history.push(`/org/${orgId}/ct`);
-  };
+  // const changeCurOrg = (orgId) => {
+  //   dispatch({
+  //     type: 'global/set-curOrg',
+  //     payload: {
+  //       orgId
+  //     }
+  //   });
+  //   history.push(`/org/${orgId}/ct`);
+  // };
 
   useEffect(() => {
     if (locationPathName.indexOf('org') == -1) {
@@ -45,7 +45,7 @@ const AppHeader = (props) => {
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
       <div className='rParts'>
-        <Select 
+        {/* <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
           className={styles.orgSwitcher}
           style={{ width: 164 }}
@@ -54,7 +54,7 @@ const AppHeader = (props) => {
           value={curOrg && curOrg.guid}
         >
           {(orgs.list || []).map(it => <Option value={it.guid}>{it.name}</Option>)}
-        </Select>
+        </Select> */}
         <div className='user'>
           <Tooltip 
             color='#13c2c2'
