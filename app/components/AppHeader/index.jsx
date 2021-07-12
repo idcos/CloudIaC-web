@@ -11,7 +11,7 @@ const { Option } = Select;
 const KEY = 'global';
 
 const AppHeader = (props) => {
-  const { theme, navs, locationPathName, orgs, curOrg, dispatch, userInfo } = props;
+  const { theme, locationPathName, orgs, curOrg, dispatch, userInfo } = props;
 
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
@@ -55,16 +55,6 @@ const AppHeader = (props) => {
         >
           {(orgs.list || []).map(it => <Option value={it.guid}>{it.name}</Option>)}
         </Select>
-        {
-          curOrg && <Menu
-            mode='horizontal'
-            theme={theme}
-            selectedKeys={[(navs.find(it => locationPathName.indexOf(it.link) >= 0) || {}).key]}
-            className={styles.navs}
-          >
-            {navs.map(it => <Menu.Item key={it.key}><Link to={`/org/${curOrg.guid}${it.link}`}>{it.name}</Link></Menu.Item>)}
-          </Menu>
-        }
         <div className='user'>
           <Tooltip 
             color='#13c2c2'

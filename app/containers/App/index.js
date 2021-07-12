@@ -12,24 +12,6 @@ import { parseSearch } from 'utils/util';
 
 const KEY = 'global';
 
-const AppNav = [
-  {
-    key: 'ct',
-    name: '云模板',
-    link: '/ct'
-  },
-  {
-    key: 'setting',
-    name: '设置',
-    link: '/setting'
-  },
-  {
-    key: 'project',
-    name: '项目',
-    link: '/project'
-  }
-];
-
 function App(props) {
   const { location } = props;
   const { pathname, search } = location;
@@ -53,7 +35,6 @@ function App(props) {
     <div className='idcos-app'>
       <AppHeader
         theme='dark'
-        navs={AppNav}
         locationPathName={pathname}
       />
       <RoutesList routes={routes()}/>
