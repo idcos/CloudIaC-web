@@ -14,9 +14,9 @@ export default function createRoutes() {
       exact: true
     },
     {
-      path: '/org/:orgId',
+      path: '/org/:orgId/:orgMenuKey/:projectId/:projectMenuKey',
       name: '组织详情',
-      component: loadable(() => import('containers/orgs/orgWrapper'), asyncLoadFallback),
+      component: loadable(() => import('containers/org'), asyncLoadFallback),
       routes: [
         {
           path: '/org/:orgId/ct',
@@ -37,7 +37,7 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/ct/:ctId/:ctDetailTabKey(overview|running|state|variable|setting)',
+          path: '/org/:orgId/ct/:ctId/:ctDetailTabKey',
           name: '云模板详情',
           component: loadable(() => import('containers/orgs/ct/detail'), asyncLoadFallback),
           routes: [
