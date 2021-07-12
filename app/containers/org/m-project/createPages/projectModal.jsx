@@ -3,7 +3,6 @@ import { Form, Input, Modal, Select, Space, Button, Checkbox, notification } fro
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import uuid from 'utils/uuid.js';
 import { sysAPI } from 'services/base';
-import TagsSelect from 'components/tags-select';
 
 const FL = {
   labelCol: { span: 5 },
@@ -57,6 +56,19 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
   const paramsFormListChildren = (fields, { add, remove }) => {
     return <>
       {fields.map(({ key, name, fieldKey, ...restField }) => {
+        const isSecret = (
+          <Form.Item
+            {...restField}
+            name={[ name, "isSecret" ]}
+            fieldKey={[ fieldKey, "isSecret" ]}
+            noStyle={true}
+            valuePropName='checked'
+          >
+            <Checkbox >
+              密文
+            </Checkbox>
+          </Form.Item>
+        );
         return (
           <Space
             key={key}
@@ -152,17 +164,6 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
         ]}
       >
         <Input.TextArea style={{ width: 400 }} placeholder='请输入项目描述'/>
-      </Form.Item>
-      <Form.Item
-        label='项目描述'
-        name='description'
-        rules={[
-          {
-            message: '请输入'
-          }
-        ]}
-      >
-        <TagsSelect />
       </Form.Item>
       <Form.Item
         label='授权用户'

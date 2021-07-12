@@ -47,6 +47,7 @@ export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
     }}
     onOk={onOk}
     width={408}
+    zIndex={1111111}
   >
     <Form
       {...FL}

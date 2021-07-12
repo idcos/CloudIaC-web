@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Radio, Select, Form, Input, Button, InputNumber, notification, Row, Col } from "antd";
+import { Space, Radio, Select, Form, Input, Button, Empty, notification, Row, Col } from "antd";
 
 import { ctAPI, sysAPI } from 'services/base';
 import history from 'utils/history';
+import OpModal from '../../setting/pages/components/vcsModal';
 
 const FL = {
   labelCol: { span: 5 },
@@ -17,6 +18,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
   const { selectedRows } = selection;
   const [ repoBranches, setRepoBranches ] = useState([]),
     [ ctRunnerList, setCtRunnerList ] = useState([]),
+    [ vcsVisible, setVcsVisible ] = useState(false),
     [ submitLoading, setSubmitLoading ] = useState(false);
   
   useEffect(() => {
@@ -93,6 +95,46 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
     }
   };
 
+  const opVcsModal = () => {
+    setVcsVisible(true);
+  };
+  const clVcsModal = () => {
+    setVcsVisible(false);
+  };
+  const notFoundRender = () => {
+    return <span>
+      暂无数据， <a onClick={opVcsModal}>创建VCS</a>
+    </span>;
+  };
+
+  const operation = async ({ doWhat, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => ctAPI.createVcs(param),
+        del: ({ orgId, id }) => ctAPI.deleteVcs({ orgId, id }),
+        edit: (param) => ctAPI.updateVcs(param)
+      };
+      const res = await method[doWhat]({
+        orgId: curOrg.id,
+        ...payload
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      fetchRepoBranch();
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
   return <div className='step2'>
     <Form
       form={form}
@@ -117,6 +159,16 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择vcs'
+          notFoundContent={<Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            imageStyle={{
+              height: 60
+            }}
+            description={
+              notFoundRender()
+            }
+          >
+          </Empty>}
         >
           {[].map(it => <Option value={it.name}>{it.name}</Option>)}
         </Select>
@@ -174,5 +226,16 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
       </Form.Item>
       <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
     </Form>
+    {
+      vcsVisible && <OpModal
+        visible={vcsVisible}
+        toggleVisible={clVcsModal}
+        opt={'add'}
+        curOrg={curOrg}
+        reload={fetchRepoBranch}
+        operation={operation}
+        curRecord={{}}
+      />
+    }
   </div>;
 };

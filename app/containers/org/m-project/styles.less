@@ -1,0 +1,230 @@
+@import 'containers/App/styles/variable.less';
+
+.ctDetail {
+  :global {
+    .List {
+      &.gap {
+        margin-top: 16px;
+      }
+    }
+    .overview {
+      display: flex;
+      align-items: start;
+      .right {
+        width: 320px;
+        .ant-card-body {
+          padding: 24px;
+
+          .info-item {
+            .item-title {
+              height: 24px;
+              line-height: 24px;
+              color: @gray-9;
+              font-size: 16px;
+              text-align: left;
+              font-family: PingFangSC-Medium;
+              margin-bottom: 16px;
+            }
+            .item-content-list {
+              .item-content-flex {
+                height: 22px;
+                line-height: 22px;
+                margin-bottom: 12px;
+                display: flex;
+                .icon {
+                  width: 16px;
+                  margin-right: 8px;
+                  color: @gray-10;
+                }
+                .text {
+                  flex: 1;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  color: @gray-7;
+                }
+              }
+              .item-content {
+                height: 22px;
+                line-height: 22px;
+                margin-bottom: 12px;
+                overflow: hidden;
+                .label {
+                  color: @gray-10;
+                }
+                .value {
+                  color: @gray-7;
+                  float: right;
+                  word-break: break-all;
+                  .sub-text {
+                    color: @gray-7;
+                  }
+                }
+              }
+            }
+            .item-content-wrapper {
+              height: 22px;
+              line-height: 22px;
+              color: @gray-7;
+            }
+          }
+        }
+      }
+      .left {
+        flex: 1 0;
+        margin-right: 24px;
+        max-width: ~'calc(100% - 320px)';
+        .card {
+          margin-bottom: 24px;
+        }
+      }
+    }
+    .running {}
+    .variable {
+      .tableWrapperForm {
+        .editable-table {
+          //避免formItem提示信息导致错位
+          tr[class*="ant-"] {
+            vertical-align: top;
+            td:last-child {
+              vertical-align: middle;
+            }
+          }
+        }
+        margin-top: 16px;
+        .inlineOp {
+          .danger {
+            color: #FF4D4F;
+          }
+        }
+        .blockAdd {
+          margin-top: 16px;
+        }
+      }
+    }
+    .setting {
+      display: flex;
+      align-items: start;
+      .subNav {
+        width: 240px;
+        margin-right: 24px;
+      }
+      .rightPanel {
+        flex: 1 0;
+        .form-wrapper {
+          padding-top: 6px;
+          min-height: 120px;
+        }
+        .tipZone {
+          background-color: #fafafa;
+          padding: 16px;
+          margin: 16px 0;
+          border: 1px solid #EBEBEB;
+          & > p {
+            line-height: 1.5em;
+          }
+        }
+        .tipText {
+          margin-top: 8px;
+          height: 22px;
+          line-height: 22px;
+          color: @gray-7;
+          font-size: 14px;
+        }
+      }
+    }
+    .task {
+      .collapse-panel {
+        margin-bottom: 16px;
+        
+        .header {
+          float: left;
+          font-weight: bold;
+          > span.title-text {
+            margin-right: 8px;
+          }
+        }
+        .title {
+          font-size: 16px;
+          .subTitle {
+            font-size: 12px;
+            margin-left: 16px;
+            color: @gray-6;
+            font-weight: normal;
+          }
+        }
+        .content {
+          color: @gray-9;
+        }
+
+        &.auto-height .ant-collapse-header{
+          min-height: 46px;
+          .ant-collapse-arrow {
+            top: calc(50% - 6px) !important;
+            padding: 0;
+          }
+
+          .header {
+            position: absolute;
+            top: calc(50% - 12px);
+          }
+        }
+      }
+    }
+  }
+}
+
+.ctCreate {
+  :global {
+    .stepWrapper {
+      width: 50%;
+      margin: 0 auto 32px;
+    }
+    .hidden {
+      display: none;
+    }
+    .step1 {
+      .cardContent {
+        & > span {
+          font-size: 16px;
+          font-weight: bold;
+          color: rgba(0, 0, 0, 0.86);
+        }
+        & > a {
+          float: right;
+        }
+      }
+    }
+    .step2 {
+      width: 50%;
+      margin: 0 auto;
+    }
+  }
+}
+
+
+:global {
+  .variable-list-dropdown {
+    .key-value {
+      line-height: 22px;
+      color: @gray-8;
+    }
+    .description {
+      line-height: 20px;
+      color: @gray-6;
+    }
+    .footer {
+      &:hover {
+        background: @gray-3;
+        color: @gray-6;
+        cursor: pointer;
+      }
+
+      span{
+        padding-left: 12px;
+      }
+    }
+  }
+}
+
+
