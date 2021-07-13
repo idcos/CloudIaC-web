@@ -18,7 +18,7 @@ const steps = {
 };
 
 const CTFormSteps = ({ orgId }) => {
-  const [ step, setStep ] = useState(0),
+  const [ step, setStep ] = useState(1),
     [ vcsId, setVcsId ] = useState(),
     [ selection, setSelection ] = useState({});
 
