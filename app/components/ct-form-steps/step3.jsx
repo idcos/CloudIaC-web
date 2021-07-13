@@ -96,7 +96,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
   const onChangeSave = (v) => {
     form.setFieldsValue({ projectIds: v });
   };
-  return <div className='step2'>
+  return <div className='form-wrapper'>
     <Form
       form={form}
       {...FL}
