@@ -39,6 +39,7 @@ const OrgSetting = ({ routesParams, dispatch }) => {
         breadcrumb={true}
         renderFooter={() => (
           <Tabs
+            tabBarStyle={{ backgroundColor: '#fff', paddingLeft: 16 }}
             animated={false}
             renderTabBar={(props, DefaultTabBar) => {
               return (
