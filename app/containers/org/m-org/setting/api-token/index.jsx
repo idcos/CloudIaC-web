@@ -5,10 +5,13 @@ import moment from 'moment';
 
 import { sysAPI } from 'services/base';
 
+import AddModal from './components/add-modal';
+
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
-const ApiToken = ({ title }) => {
+const ApiToken = ({ curOrg }) => {
   const [ loading, setLoading ] = useState(false),
+    [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -44,6 +47,8 @@ const ApiToken = ({ title }) => {
       });
     }
   };
+
+  const toggleVisible = () => setVisible(!visible);
 
   const changeQuery = (payload) => {
     setQuery({
@@ -83,18 +88,16 @@ const ApiToken = ({ title }) => {
     {
       dataIndex: 'token',
       title: 'Token',
-      width: 100
+      width: 180
     },
     {
-      dataIndex: 'status',
-      title: '状态',
-      render: (text) => <div className='tableRender'>
-        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
-      </div>
+      dataIndex: 'description',
+      title: '描述',
+      width: 180
     },
     {
       dataIndex: 'updatedAt',
-      title: '上次使用时间',
+      title: '最后更新时间',
       render: (text) => moment(text).format(dateFormat)
     },
     {
@@ -103,7 +106,16 @@ const ApiToken = ({ title }) => {
       render: (text) => moment(text).format(dateFormat)
     },
     {
+      dataIndex: 'status',
+      title: '状态',
+      width: 80,
+      render: (text) => <div className='tableRender'>
+        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
+      </div>
+    },
+    {
       title: '操作',
+      width: 120,
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
@@ -135,9 +147,7 @@ const ApiToken = ({ title }) => {
       <Button 
         type='primary'
         onClick={() => {
-          operation({
-            doWhat: 'add'
-          });
+          toggleVisible();
         }}
       >创建Token</Button>
     </div>
@@ -160,6 +170,15 @@ const ApiToken = ({ title }) => {
         }
       }}
     />
+    {
+      visible && <AddModal
+        curOrg={curOrg}
+        reload={fetchList}
+        operation={operation}
+        visible={visible}
+        toggleVisible={toggleVisible}
+      />
+    }
   </>;
 };
 

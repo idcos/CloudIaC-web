@@ -86,7 +86,7 @@ export const orgsAPI = {
     });
   },
   listUser: ({ orgId, status, name, pageSize, pageNo }) => {
-    return getWithArgs('/api/v1/user/search', {
+    return getWithArgs(`/api/v1/users`, {
       status,
       q: name,
       pageSize,
@@ -96,30 +96,26 @@ export const orgsAPI = {
     });
   },
   addUser: ({ orgId, name, email, phone }) => {
-    return post('/api/v1/user/create', {
+    return post('/api/v1/users', {
       name, email, phone
     }, {
       'IaC-Org-Id': orgId
     });
   },
   editUser: ({ orgId, id, name, email, phone }) => {
-    return put('/api/v1/user/update', {
-      id, name, email, phone
+    return put(`/api/v1/users/${id}`, {
+      name, email, phone
     }, {
       'IaC-Org-Id': orgId
     });
   },
   resetUserPwd: ({ orgId, id }) => {
-    return put('/api/v1/user/password/update', {
-      id
-    }, {
+    return post(`/api/v1/users/${id}/reset_password`, {}, {
       'IaC-Org-Id': orgId
     });
   },
   removeUser: ({ orgId, id }) => {
-    return put('/api/v1/org/user/delete', {
-      id
-    }, {
+    return del(`/api/v1/users/${id}`, {}, {
       'IaC-Org-Id': orgId
     });
   },
@@ -375,7 +371,7 @@ export const sysAPI = {
   },
   editToken: ({ id, description, status }) => {
     return put(`/api/v1/token/${id}`, {
-      description, status
+      id, description, status
     });
   },
   delToken: (id) => {
