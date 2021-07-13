@@ -51,7 +51,7 @@ const Content = styled.div`
   position: relative;
   padding: 24px;
   overflow-y: auto;
-  background-color: #f5f5f5;
+  background-color: #E6F0F0;
   .ant-form-item-control-input-content {
     word-break: break-all;
   }
