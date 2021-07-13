@@ -19,7 +19,7 @@ async function xFetch(url, options) {
   const jsonResponse = await parseJSON(fetchResponse);
   if (jsonResponse.httpCode == 401) {
     // Here for your logout logic.
-    logout();
+    // logout();
     return;
   } else {
     return jsonResponse.jsonResult;

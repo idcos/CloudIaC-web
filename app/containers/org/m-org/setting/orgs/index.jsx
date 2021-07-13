@@ -4,7 +4,6 @@ import OrgModal from 'components/org-modal';
 
 import { Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import { orgsAPI } from 'services/base';
-import styles from './styles.less';
 
 const Orgs = ({ title, dispatch }) => {
   const [ loading, setLoading ] = useState(false),
@@ -109,7 +108,7 @@ const Orgs = ({ title, dispatch }) => {
     {
       dataIndex: 'description',
       width: 160,
-      title: '描述'
+      title: '组织描述'
     },
     {
       dataIndex: 'defaultRunnerServiceId',
@@ -153,37 +152,35 @@ const Orgs = ({ title, dispatch }) => {
   ];
 
   return <>
-    <div className={styles.orgs}>
-      <div className='btns'>
-        <Button 
-          type='primary'
-          onClick={() => {
-            setOpt('add');
-            toggleVisible();
-          }}
-        >创建组织</Button>
-      </div>
-      
-      <Table
-        columns={columns}
-        dataSource={resultMap.list}
-        loading={loading}
-        pagination={{
-          current: query.pageNo,
-          pageSize: query.pageSize,
-          total: resultMap.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共${total}条`,
-          onChange: (page, pageSize) => {
-            changeQuery({
-              pageNo: page,
-              pageSize
-            });
-          }
+    <div style={{ marginBottom: 20 }}>
+      <Button 
+        type='primary'
+        onClick={() => {
+          setOpt('add');
+          toggleVisible();
         }}
-      />
+      >创建组织</Button>
     </div>
+    
+    <Table
+      columns={columns}
+      dataSource={resultMap.list}
+      loading={loading}
+      pagination={{
+        current: query.pageNo,
+        pageSize: query.pageSize,
+        total: resultMap.total,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共${total}条`,
+        onChange: (page, pageSize) => {
+          changeQuery({
+            pageNo: page,
+            pageSize
+          });
+        }
+      }}
+    />
     {
       visible && <OrgModal
         visible={visible}

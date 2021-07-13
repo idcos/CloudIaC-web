@@ -27,14 +27,13 @@ export default () => {
         throw new Error(userInfoRes.message);
       }
       const userInfo = userInfoRes.result || {};
-      // ---- 待删除
+      // 待删除 todo
       setUserConfig(userInfo);
       redirectToIndex();
       return;
-      // ---- 待删除
+      // 待删除 todo
       const { devManual = 0 } = userInfo.newbieGuide || {};
       const updateUserInfoRes = await authAPI.updateSelf({ 
-        // id: userInfo.id,
         newbieGuide: {
           devManual: devManual + 1
         }

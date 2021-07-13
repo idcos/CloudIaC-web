@@ -133,14 +133,12 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
         </div>
       </div>
       <div className='right-content'>
-        {
-          curOrg && <RoutesList
-            routes={routes}
-            routesParams={{
-              curOrg
-            }}
-          />
-        }
+        <RoutesList
+          routes={routes}
+          routesParams={{
+            curOrg: curOrg || {}
+          }}
+        />
       </div>
     </div>
   );

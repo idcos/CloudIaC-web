@@ -365,23 +365,21 @@ export const ctAPI = {
 
 export const sysAPI = {
   listToken: ({ pageNo, pageSize }) => {
-    return getWithArgs('/api/v1/token/search', {
+    return getWithArgs('/api/v1/token', {
       pageSize,
       currentPage: pageNo
     });
   },
-  createToken: () => {
-    return post('/api/v1/token/create', {});
+  createToken: (params) => {
+    return post('/api/v1/token', params);
   },
   editToken: ({ id, description, status }) => {
-    return put('/api/v1/token/update', {
-      id, description, status
+    return put(`/api/v1/token/${id}`, {
+      description, status
     });
   },
   delToken: (id) => {
-    return del('/api/v1/token/delete', {
-      id
-    });
+    return del(`/api/v1/token/${id}`, {});
   },
   listCTRunner: ({ orgId }) => {
     return get('/api/v1/runner/search', {

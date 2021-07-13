@@ -5,6 +5,10 @@ import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 
 import Orgs from './orgs';
+import ApiToken from './api-token';
+import UserRole from './user-role';
+import Vcs from './vcs';
+import Notification from './notification';
 
 const subNavs = {
   orgs: '组织',
@@ -14,21 +18,22 @@ const subNavs = {
   notification: '通知'
 };
 
-export default ({ dispatch }) => {
+export default ({ routesParams = {} }) => {
 
+  const { curOrg } = routesParams;
   const [ panel, setPanel ] = useState('orgs');
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
       orgs: (props) => <Orgs {...props} />,
-      apiToken: (props) => 'API Token',
-      userRole: (props) => 'userRole',
-      vcs: (props) => 'vcs',
-      notification: (props) => 'notification'
+      apiToken: (props) => <ApiToken {...props} />,
+      userRole: (props) => <UserRole {...props} />,
+      vcs: (props) => <Vcs {...props} />,
+      notification: (props) => <Notification {...props} />
     };
     return PAGES[panel]({
       title: subNavs[panel],
-      dispatch
+      curOrg
     });
   }, [panel]);
 
