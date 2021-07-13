@@ -51,7 +51,7 @@ function* getUserInfo(action) {
 
 function* updateUserInfo({ payload, cb }) {
   try {
-    const res = yield call(userAPI.update, payload);
+    const res = yield call(userAPI.updateSelf, payload);
     if (res.code !== 200) {
       throw new Error(res.message);
     }

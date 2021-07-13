@@ -24,8 +24,8 @@ export default ({ title, curOrg, dispatch }) => {
   }, []);
 
   useEffect(() => {
-    const { name, guid, description, defaultRunnerServiceId } = info || {};
-    form.setFieldsValue({ name, guid, description, defaultRunnerServiceId: defaultRunnerServiceId || null });
+    const { name, id, description, defaultRunnerServiceId } = info || {};
+    form.setFieldsValue({ name, id, description, defaultRunnerServiceId: defaultRunnerServiceId || null });
   }, [info]);
 
   const fetchInfo = async () => {
@@ -106,7 +106,7 @@ export default ({ title, curOrg, dispatch }) => {
         >
           <Form.Item
             label='组织ID'
-            name='guid'
+            name='id'
             rules={[
               {
                 required: true,

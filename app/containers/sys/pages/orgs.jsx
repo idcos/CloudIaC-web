@@ -102,7 +102,7 @@ const Orgs = ({ title, dispatch }) => {
       width: 170,
       render: (_, record) => <div className='tableRender'>
         <h2 className='reset-styles'>{record.name}</h2>
-        <p className='reset-styles'>{record.guid}</p>
+        <p className='reset-styles'>{record.id}</p>
       </div>
     },
     {

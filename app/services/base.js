@@ -2,7 +2,7 @@ import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 
 export const orgsAPI = {
   list: ({ status, q, pageNo, pageSize } = {}) => {
-    return getWithArgs('/api/v1/org/search', {
+    return getWithArgs('/api/v1/orgs', {
       status,
       q,
       pageSize,
@@ -10,12 +10,12 @@ export const orgsAPI = {
     });
   },
   detail: (id) => {
-    return getWithArgs('/api/v1/org/detail', {
+    return getWithArgs(`/api/v1/orgs/${id}`, {
       id
     });
   },
   edit: ({ id, name, description, vcsType, vcsVersion, vcsAuthInfo, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort }) => {
-    return put('/api/v1/org/update', {
+    return put('/api/v1/orgs', {
       id, name, description, vcsType, vcsVersion, vcsAuthInfo, defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort
     });
   },
@@ -23,14 +23,13 @@ export const orgsAPI = {
     name, description, vcsType, vcsVersion, vcsAuthInfo, 
     defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort 
   }) => {
-    return post('/api/v1/org/create', {
+    return post('/api/v1/orgs', {
       name, description, vcsType, vcsVersion, vcsAuthInfo,
       defaultRunnerServiceId, defaultRunnerAddr, defaultRunnerPort 
     });
   },
   changeStatus: ({ id, status }) => {
-    return put('/api/v1/org/status/change', {
-      id,
+    return put(`/api/v1/orgs/${id}/status`, {
       status
     });
   },

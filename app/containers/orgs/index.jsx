@@ -46,7 +46,7 @@ const Orgs = ({ orgs, dispatch }) => {
                 {index !== 0 ? <div className='divider'></div> : null}
                 <List.Item 
                   onClick={() => {
-                    changeCurOrg(item.guid);
+                    changeCurOrg(item.id);
                   }}
                 >
                   <List.Item.Meta

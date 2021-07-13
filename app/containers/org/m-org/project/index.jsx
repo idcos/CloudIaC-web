@@ -44,7 +44,7 @@ const Index = (props) => {
     {
       dataIndex: 'name',
       title: '项目名称',
-      render: (text, record) => <Link to={`/org/${params.orgGuid}/ct/${record.id}/overview`}>{text}</Link>
+      render: (text, record) => <Link to={`/org/${params.orgId}/ct/${record.id}/overview`}>{text}</Link>
     },
     {
       dataIndex: 'description',

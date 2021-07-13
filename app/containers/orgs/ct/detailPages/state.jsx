@@ -46,7 +46,7 @@ const State = ({ routesParams: { curOrg, detailInfo, linkToRunningDetail, ctRunn
     try {
       const res = await ctAPI.stateFile({
         orgId: curOrg.id,
-        filePath: `${curOrg.guid}/${detailInfo.guid}.tfstate`
+        filePath: `${curOrg.id}/${detailInfo.guid}.tfstate`
       });
       if (res.code !== 200) {
         throw new Error(res.message);

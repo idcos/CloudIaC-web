@@ -33,9 +33,9 @@ const subNavs = {
 
 const CloudTmpDetail = (props) => {
   const { match, routesParams, routes, location } = props,
-    { ctId, orgId: orgGuid, ctDetailTabKey } = match.params,
+    { ctId, orgId: orgId, ctDetailTabKey } = match.params,
     { cacheDetailInfo } = location.state || {},
-    baseUrl = `/org/${orgGuid}/ct/${ctId}`;
+    baseUrl = `/org/${orgId}/ct/${ctId}`;
 
   const [ popOverVisible, setPopoverVisible ] = useState(false),
     [ taskType, setTaskType ] = useState(null),

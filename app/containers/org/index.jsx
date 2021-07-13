@@ -59,15 +59,15 @@ const menus = [
 ];
 
 const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
-  const { orgGuid, mOrgKey, mProjectKey } = match.params || {};
+  const { orgId, mOrgKey, mProjectKey } = match.params || {};
 
   const linkTo = (subKey, menuItemKey) => {
     switch (subKey) {
       case 'org':
-        history.push(`/org/${orgGuid}/${menuItemKey}`);
+        history.push(`/org/${orgId}/${menuItemKey}`);
         break;
       case 'project':
-        history.push(`/org/${orgGuid}/project/testProjectGuid/${menuItemKey}`);
+        history.push(`/org/${orgId}/project/testProjectGuid/${menuItemKey}`);
         break;
       default:
         break;
@@ -93,9 +93,9 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
           style={{ width: 200 }}
           placeholder='选择组织'
           onChange={changeCurOrg}
-          value={curOrg && curOrg.guid}
+          value={curOrg && curOrg.id}
         >
-          {(orgs.list || []).map(it => <Option value={it.guid}>{it.name}</Option>)}
+          {(orgs.list || []).map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
         <div className='menu-wrapper'>
           {

@@ -81,7 +81,7 @@ export default ({ stepHelper, selection, curOrg, vcsId }) => {
         throw new Error(res.message);
       }
       setSubmitLoading(false);
-      history.push(`/org/${curOrg.guid}/ct`);
+      history.push(`/org/${curOrg.id}/ct`);
       notification.success({
         message: '创建成功'
       });

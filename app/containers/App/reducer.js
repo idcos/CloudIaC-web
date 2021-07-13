@@ -17,7 +17,7 @@ const reducer = handleActions({
       return state.set('curOrg', null);
     }
     const orgs = state.toJS().orgs.list;
-    return state.set('curOrg', orgs.find(it => it.guid == payload.orgId));
+    return state.set('curOrg', orgs.find(it => it.id == payload.orgId));
   },
   'global/set-userInfo': (state, { payload }) => {
     return state.set('userInfo', fromJS(payload));
