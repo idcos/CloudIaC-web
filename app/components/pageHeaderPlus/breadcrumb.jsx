@@ -22,7 +22,8 @@ const breadcrumbNameMap = {
   'm-project-env': '项目信息：环境',
   'm-project-ct': '项目信息：云模版',
   'm-project-variable': '项目信息：变量',
-  'm-project-setting': '项目信息：设置'
+  'm-project-setting': '项目信息：设置',
+  'createCT': '新建云模版'
 };
 
 

@@ -1,0 +1,28 @@
+
+.ctCreate {
+  :global {
+    .stepWrapper {
+      width: 50%;
+      margin: 0 auto 32px;
+    }
+    .hidden {
+      display: none;
+    }
+    .step1 {
+      .cardContent {
+        & > span {
+          font-size: 16px;
+          font-weight: bold;
+          color: rgba(0, 0, 0, 0.86);
+        }
+        & > a {
+          float: right;
+        }
+      }
+    }
+    .step2 {
+      width: 50%;
+      margin: 0 auto;
+    }
+  }
+}
