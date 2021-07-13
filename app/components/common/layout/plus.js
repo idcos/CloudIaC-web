@@ -49,7 +49,7 @@ const Content = styled.div`
    flex: 1;
    position: relative;
    overflow-y: auto;
-   background-color: #f5f5f5;
+   background-color: #E6F0F0;
    margin-top: 24px;
    .ant-form-item-control-input-content {
      word-break: break-all;
