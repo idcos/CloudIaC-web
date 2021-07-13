@@ -4,8 +4,10 @@ import { Menu, notification, Tabs } from 'antd';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 
+import Orgs from './orgs';
+
 const subNavs = {
-  orgSet: '组织',
+  orgs: '组织',
   apiToken: 'API Token',
   userRole: '用户角色',
   vcs: 'VCS',
@@ -14,11 +16,11 @@ const subNavs = {
 
 export default ({ dispatch }) => {
 
-  const [ panel, setPanel ] = useState('orgSet');
+  const [ panel, setPanel ] = useState('orgs');
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      orgSet: (props) => 'orgSet',
+      orgs: (props) => <Orgs {...props} />,
       apiToken: (props) => 'API Token',
       userRole: (props) => 'userRole',
       vcs: (props) => 'vcs',

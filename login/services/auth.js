@@ -8,11 +8,11 @@ export const authAPI = {
     });
   },
   info: () => {
-    return get('/api/v1/user/info/search');
+    return get('/api/v1/auth/me');
   },
-  update: ({ id, name, phone, oldPassword, newPassword, newbieGuide }) => {
-    return put('/api/v1/user/self/update', {
-      id, name, phone, oldPassword, newPassword, newbieGuide
+  updateSelf: ({ name, phone, oldPassword, newPassword, newbieGuide }) => {
+    return put('/api/v1/users/self', {
+      name, phone, oldPassword, newPassword, newbieGuide
     });
   }
 };

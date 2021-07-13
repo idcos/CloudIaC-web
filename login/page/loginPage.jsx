@@ -27,9 +27,14 @@ export default () => {
         throw new Error(userInfoRes.message);
       }
       const userInfo = userInfoRes.result || {};
+      // ---- 待删除
+      setUserConfig(userInfo);
+      redirectToIndex();
+      return;
+      // ---- 待删除
       const { devManual = 0 } = userInfo.newbieGuide || {};
-      const updateUserInfoRes = await authAPI.update({ 
-        id: userInfo.id,
+      const updateUserInfoRes = await authAPI.updateSelf({ 
+        // id: userInfo.id,
         newbieGuide: {
           devManual: devManual + 1
         }
