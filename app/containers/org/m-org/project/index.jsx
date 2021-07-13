@@ -19,16 +19,18 @@ const Index = (props) => {
     { params } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [{
-        "createdAt": "2006-01-02 15:04:05",
-        "creatorId": "string",
-        "description": "string",
-        "id": "x-c3ek0co6n88ldvq1n6ag",
-        "name": "string",
-        "orgId": "string",
-        "status": "string",
-        "updatedAt": "2006-01-02 15:04:05"
-      }],
+      list: [
+      //   {
+      //   "createdAt": "2006-01-02 15:04:05",
+      //   "creatorId": "string",
+      //   "description": "string",
+      //   "id": "x-c3ek0co6n88ldvq1n6ag",
+      //   "name": "string",
+      //   "orgId": "string",
+      //   "status": "string",
+      //   "updatedAt": "2006-01-02 15:04:05"
+      // }
+      ],
       total: 0
     }),
     [ query, setQuery ] = useState({
@@ -37,29 +39,23 @@ const Index = (props) => {
       status: 'all'
     }),
     [ visible, setVisible ] = useState(false),
-    [ opt, setOpt ] = useState(null);
+    [ opt, setOpt ] = useState(null),
+    [ record, setRecord ] = useState({});
+
   const tableFilterFieldName = 'taskStatus';
 
   const columns = [
     {
       dataIndex: 'name',
-      title: '项目名称',
-      render: (text, record) => <Link to={`/org/${params.orgId}/ct/${record.id}/overview`}>{text}</Link>
+      title: '项目名称'
     },
     {
       dataIndex: 'description',
       title: '项目描述'
     },
     {
-      dataIndex: tableFilterFieldName,
-      title: '最后运行状态',
-      filters: query.status == 'all' && Object.keys(CT.taskStatus)
-        .filter(it => it !== 'all')
-        .map(it => ({ text: CT.taskStatus[it], value: it })),
-      width: 150,
-      render: (text) => <div className='tableRender'>
-        <span className={`status-text ${statusTextCls(text).cls}`}>{CT.taskStatusIcon[text]} {CT.taskStatus[text]}</span>
-      </div>
+      dataIndex: 'creator',
+      title: '创建人'
     },
     {
       dataIndex: 'taskUpdatedAt',
@@ -67,19 +63,21 @@ const Index = (props) => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      dataIndex: 'creator',
-      title: '创建人'
+      dataIndex: 'status',
+      title: '状态'
     },
     {
       title: '操作',
-      // width: 90,
-      width: 180,
+      width: 90,
       render: (_, record) => {
         return (
           <span className='inlineOp'>
             <a type='link' onClick={() => edit(record)}>编辑</a>
             <Divider type='vertical' />
-            <a type='link' onClick={() => del(record)}>删除</a>
+            {record.status === 'enable' ? <a 
+              onClick={() => del(record)}
+            >归档</a> : <a onClick={() => del(record)}>恢复</a>
+            }
           </span>
         );
       }
@@ -90,8 +88,9 @@ const Index = (props) => {
     fetchList();
   }, [query]);
 
-  const edit = () => {
+  const edit = (record) => {
     setOpt('edit');
+    setRecord(record);
     toggleVisible();
   };
   
@@ -106,7 +105,7 @@ const Index = (props) => {
       const res = await pjtAPI.projectList({
         ...restQuery,
         [tableFilterFieldName]: combinedStatus || status,
-        orgId: routesParams.curOrg.id
+        orgId: params.orgId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -135,20 +134,21 @@ const Index = (props) => {
   const toggleVisible = () => {
     if (visible) {
       setOpt(null);
+      setRecord({});
     }
     setVisible(!visible);
   };
-  const operation = async ({ doWhat, payload }, cb) => {
+  const operation = async ({ action, payload }, cb) => {
     try {
       const method = {
-        add: (param) => orgsAPI.resAccountCreate(param),
-        del: ({ orgId, id }) => orgsAPI.resAccountDel({ orgId, id }),
-        edit: (param) => orgsAPI.resAccountUpdate(param)
+        add: (param) => pjtAPI.createProject(param),
+        edit: (param) => pjtAPI.editProject(param)
       };
-      const res = await method[doWhat]({
-        orgId: 3,
+      let params = {
         ...payload
-      });
+      };
+      action === 'create' && delete params.projectId;
+      const res = await method[action](params);
       if (res.code != 200) {
         throw new Error(res.message);
       }
@@ -172,48 +172,48 @@ const Index = (props) => {
     />}
   >
     <div className='idcos-card'>
-      <div className={styles.ct}>
-        <div className='btns'>
-          <Button onClick={() => {
-            setOpt('add');
-            toggleVisible();
-          }}
-          >创建项目</Button>
-        </div>
-        <Table
-          columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          onChange={(pagination, filters, sorter, { action }) => {
-            if (action == 'filter') {
-              const statusFilter = filters[tableFilterFieldName];
-              changeQuery({
-                status: 'all',
-                combinedStatus: statusFilter ? statusFilter.join(',') : undefined
-              });
-            }
-          }}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
-            onChange: (page, pageSize) => {
-              changeQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
-          }}
-        />
+      <div className='btns'>
+        <Button type='primary' onClick={() => {
+          setOpt('add');
+          toggleVisible();
+        }}
+        >创建项目</Button>
       </div>
+      <Table
+        columns={columns}
+        dataSource={resultMap.list}
+        loading={loading}
+        onChange={(pagination, filters, sorter, { action }) => {
+          if (action == 'filter') {
+            const statusFilter = filters[tableFilterFieldName];
+            changeQuery({
+              status: 'all',
+              combinedStatus: statusFilter ? statusFilter.join(',') : undefined
+            });
+          }
+        }}
+        pagination={{
+          current: query.pageNo,
+          pageSize: query.pageSize,
+          total: resultMap.total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total) => `共${total}条`,
+          onChange: (page, pageSize) => {
+            changeQuery({
+              pageNo: page,
+              pageSize
+            });
+          }
+        }}
+      />
     </div>
     {
       visible && <OpModal
         visible={visible}
+        orgId={params.orgId}
         opt={opt}
+        curRecord={record}
         toggleVisible={toggleVisible}
         reload={fetchList}
         operation={operation}

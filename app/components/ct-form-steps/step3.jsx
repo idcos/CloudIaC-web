@@ -3,6 +3,7 @@ import { Space, Radio, Select, Form, Input, Button, InputNumber, notification, R
 
 import { ctAPI, sysAPI } from 'services/base';
 import history from 'utils/history';
+import TagsSelect from 'components/tags-select';
 
 const FL = {
   labelCol: { span: 5 },
@@ -92,8 +93,10 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
       });
     }
   };
-
-  return <div className='form-wrapper'>
+  const onChangeSave = (v) => {
+    form.setFieldsValue({ projectIds: v });
+  };
+  return <div className='step2'>
     <Form
       form={form}
       {...FL}
@@ -119,7 +122,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
       </Form.Item>
       <Form.Item
         label='关联项目'
-        name='repoBranch'
+        name='projectIds'
         rules={[
           {
             required: true,
@@ -127,13 +130,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
           }
         ]}
       >
-        <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择关联项目'
-          mode={'multiple'}
-        >
-          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
-        </Select>
+        <TagsSelect orgId={orgId} onChangeSave={onChangeSave}/>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
         <Button onClick={() => stepHelper.prev()} disabled={submitLoading} style={{ marginRight: 24 }}>上一步</Button>

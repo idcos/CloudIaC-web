@@ -73,7 +73,6 @@ const Index = (props) => {
     }
   ];
   const handleSave = (row) => {
-    console.log(row, 'row');
     const newData = [...resultMap.list];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
@@ -143,44 +142,42 @@ const Index = (props) => {
   };
   
   return <div className='container-inner-width'>
-    <div className={styles.ct}>
-      <div className='searchPanel'>
-        <Input.Search
-          placeholder='请输入项目名称搜索'
-          style={{ width: 240 }}
-          onSearch={v => changeQuery({ name: v, pageNo: 1 })}
-        />
-      </div>
-      <Table
-        components={components}
-        columns={columnsIsEdit}
-        dataSource={resultMap.list}
-        loading={loading}
-        onChange={(pagination, filters, sorter, { action }) => {
-          if (action == 'filter') {
-            const statusFilter = filters[tableFilterFieldName];
-            changeQuery({
-              status: 'all',
-              combinedStatus: statusFilter ? statusFilter.join(',') : undefined
-            });
-          }
-        }}
-        pagination={{
-          current: query.pageNo,
-          pageSize: query.pageSize,
-          total: resultMap.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共${total}条`,
-          onChange: (page, pageSize) => {
-            changeQuery({
-              pageNo: page,
-              pageSize
-            });
-          }
-        }}
+    <div className='searchPanel'>
+      <Input.Search
+        placeholder='请输入项目名称搜索'
+        style={{ width: 240 }}
+        onSearch={v => changeQuery({ name: v, pageNo: 1 })}
       />
     </div>
+    <Table
+      components={components}
+      columns={columnsIsEdit}
+      dataSource={resultMap.list}
+      loading={loading}
+      onChange={(pagination, filters, sorter, { action }) => {
+        if (action == 'filter') {
+          const statusFilter = filters[tableFilterFieldName];
+          changeQuery({
+            status: 'all',
+            combinedStatus: statusFilter ? statusFilter.join(',') : undefined
+          });
+        }
+      }}
+      pagination={{
+        current: query.pageNo,
+        pageSize: query.pageSize,
+        total: resultMap.total,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共${total}条`,
+        onChange: (page, pageSize) => {
+          changeQuery({
+            pageNo: page,
+            pageSize
+          });
+        }
+      }}
+    />
   </div>;
 };
 

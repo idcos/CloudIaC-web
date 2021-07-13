@@ -57,6 +57,19 @@ export const formatCTRunner = (ctRunnerList, cTRunnerId) => {
   return Tags && Tags.join() || cTRunnerId;
 };
 
+
+/**
+ * 通过一个名字数组在另一个全量数组中找到指定的objName值并返回另一个数组
+ * @param {String} objName
+ */
+export const changeArrByObj = (valueArr, allObjArr, objName) => {
+  return valueArr.reduce((pro, currentValue) => {
+    let k = ((allObjArr.filter(d => d.name === currentValue) || [])[0])[objName];
+    let array = [k];
+    return array.concat(pro);
+  }, []);
+};
+
 // 计算正整数的位数
 export const getNumLen = (num) => {
   let len = 0;

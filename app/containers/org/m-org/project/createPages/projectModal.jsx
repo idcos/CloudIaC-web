@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal, Select, Space, Button, Checkbox, notification } from "antd";
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import uuid from 'utils/uuid.js';
-import { sysAPI } from 'services/base';
-import TagsSelect from 'components/tags-select';
+import { pjtAPI } from 'services/base';
+import { PROJECT_ROLE } from 'constants/types';
 
 const FL = {
   labelCol: { span: 5 },
@@ -11,23 +10,20 @@ const FL = {
 };
 const { Option } = Select;
 
-export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operation }) => {
+export default ({ visible, opt, toggleVisible, curRecord, orgId, reload, operation }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false),
-    [ ctRunnerList, setCtRunnerList ] = useState([]);
+    [ userList, setUserList ] = useState([]);
   const [form] = Form.useForm();
 
   const onOk = async () => {
     const { params, ...restValues } = await form.validateFields();
-    const dealParams = (params || []).map((param) => {
-      param.id = param.id || uuid();
-      return param;
-    });
     operation({
-      doWhat: opt,
+      action: opt,
       payload: {
-        id: curRecord && curRecord.id,
-        ...restValues,
-        params: dealParams
+        orgId,
+        projectId: curRecord.id,
+        ...restValues, 
+        userAuthorization: params 
       }
     }, (hasError) => {
       setSubmitLoading(false);
@@ -36,16 +32,32 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
   };
 
   useEffect(() => {
-    fetchCTRunner();
+    if (opt === 'edit') {
+      fetchPjtInfo();
+    }
+    fetchUser();
   }, []);
-
-  const fetchCTRunner = async () => {
+  const fetchPjtInfo = async() => {
     try {
-      const res = await sysAPI.listCTRunner({ orgId: 3 });
+      const res = await pjtAPI.detailProject({ projectId: curRecord.id, orgId });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setCtRunnerList(res.result || []);
+      setUserList(res.result.list || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+  const fetchUser = async () => {
+    try {
+      const res = await pjtAPI.userList({ orgId });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setUserList(res.result.list || []);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -65,8 +77,8 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
           >
             <Form.Item
               {...restField}
-              name={[ name, "key" ]}
-              fieldKey={[ fieldKey, "key" ]}
+              name={[ name, "userId" ]}
+              fieldKey={[ fieldKey, "userId" ]}
               rules={[{ required: true, message: "请输入" }]}
             >
               <Select 
@@ -74,7 +86,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                 getPopupContainer={triggerNode => triggerNode.parentNode}
                 placeholder='请选择'
               >
-                {ctRunnerList.map(it => <Option value={it.ID}>{it.Service}</Option>)}
+                {userList.map(it => <Option value={it.id}>{it.name}</Option>)}
               </Select>
             </Form.Item>
             <Form.Item noStyle={true} shouldUpdate={true}>
@@ -83,10 +95,10 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                 return (
                   <Form.Item
                     {...restField}
-                    name={[ name, "value" ]}
-                    fieldKey={[ fieldKey, "value" ]}
+                    name={[ name, "role" ]}
+                    fieldKey={[ fieldKey, "role" ]}
                     rules={[
-                      { required: !(fieldValue.isSecret && fieldValue.id), message: "" } // 编辑状态密文可留空
+                      { required: true, message: "" } // 编辑状态密文可留空
                     ]}
                   >
                     <Select 
@@ -94,7 +106,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
                       getPopupContainer={triggerNode => triggerNode.parentNode}
                       placeholder='请选择'
                     >
-                      {ctRunnerList.map(it => <Option value={it.ID}>{it.Service}</Option>)}
+                      {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
                     </Select>
                   </Form.Item>
                 );
@@ -107,10 +119,7 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
         );
       })}
       <Form.Item noStyle={true}>
-        {/* <Button type='dashed' onClick={() => add({ isSecret: false })} block={true}>
-          添加授权用户
-        </Button> */}
-        <Space onClick={() => add({ isSecret: false })} ><PlusOutlined style={{ color: '#13C2C2' }} /><a>添加授权用户</a></Space>
+        <Space onClick={() => add()} ><PlusOutlined style={{ color: '#13C2C2' }} /><a>添加授权用户</a></Space>
       </Form.Item>
     </>;
   };
@@ -152,17 +161,6 @@ export default ({ visible, opt, toggleVisible, curRecord, curOrg, reload, operat
         ]}
       >
         <Input.TextArea style={{ width: 400 }} placeholder='请输入项目描述'/>
-      </Form.Item>
-      <Form.Item
-        label='项目描述'
-        name='description'
-        rules={[
-          {
-            message: '请输入'
-          }
-        ]}
-      >
-        <TagsSelect />
       </Form.Item>
       <Form.Item
         label='授权用户'

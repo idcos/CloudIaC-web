@@ -400,44 +400,26 @@ export const sysAPI = {
   }
 };
 export const pjtAPI = {
-  projectList: ({ pageNo, pageSize }) => {
-    return getWithArgs('/api/v1/project', {
+  projectList: ({ pageNo, pageSize, orgId }) => {
+    return getWithArgs('/api/v1/projects', {
       pageSize,
       currentPage: pageNo
-    });
+    }, { 'IaC-Org-Id': orgId });
   },
-  createToken: () => {
-    return post('/api/v1/token/create', {});
+  userList: ({ orgId }) => {
+    return getWithArgs('/api/v1/users', {
+      pageSize: 99999,
+      currentPage: 1
+    }, { 'IaC-Org-Id': orgId });
   },
-  editToken: ({ id, description, status }) => {
-    return put('/api/v1/token/update', {
-      id, description, status
-    });
+  createProject: ({ orgId, ...restParams }) => {
+    return post('/api/v1/projects', { ...restParams }, { 'IaC-Org-Id': orgId });
   },
-  delToken: (id) => {
-    return del('/api/v1/token/delete', {
-      id
-    });
+  editProject: ({ orgId, projectId, ...restParams }) => {
+    return put(`/api/v1/projects/${projectId}`, { ...restParams }, { 'IaC-Org-Id': orgId });
   },
-  listCTRunner: ({ orgId }) => {
-    return get('/api/v1/runner/search', {
-      'IaC-Org-Id': orgId
-    });
-  },
-  getParams: () => {
-    return get('/api/v1/system/search');
-  },
-  edit: (param) => {
-    return put('/api/v1/system/update', {
-      ...param
-    });
-  },
-  sysStatus: () => {
-    return get('/api/v1/system/status/search');
-  },
-  updateTags: ({ tags, serviceId }) => {
-    return put('/api/v1/consul/tags/update', {
-      tags, serviceId
-    });
+  detailProject: ({ projectId, orgId }) => {
+    return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
   }
+
 };

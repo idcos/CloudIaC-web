@@ -16,7 +16,12 @@ export const SYS = {
     passing: '正常'
   }
 };
-
+export const PROJECT_ROLE = {
+  owner: '所有者',
+  manager: '审批者',
+  operator: '执行者',
+  guest: '访客'
+};
 export const CT = {
   taskType: {
     'plan': 'plan作业',
