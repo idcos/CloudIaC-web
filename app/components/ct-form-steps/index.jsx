@@ -1,9 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Steps } from 'antd';
 
-import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
-import Layout from 'components/common/layout';
 
 import Step1 from './step1';
 import Step2 from './step2';

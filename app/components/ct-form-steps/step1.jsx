@@ -3,7 +3,7 @@ import { Space, Radio, Select, Form, Input, Button, Empty, notification, Row, Co
 
 import { ctAPI, sysAPI } from 'services/base';
 import history from 'utils/history';
-// import OpModal from '../../setting/pages/components/vcsModal';
+import OpModal from 'components/vcs-modal';
 
 const FL = {
   labelCol: { span: 5 },
@@ -27,6 +27,32 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
       fetchCTRunner();
     }
   }, [selectedRows]);
+
+  const operation = async ({ doWhat, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => ctAPI.createVcs(param)
+      };
+      const res = await method[doWhat]({
+        orgId,
+        ...payload
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      fetchRepoBranch();
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
 
   const fetchCTRunner = async () => {
     try {
@@ -106,15 +132,11 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
     </span>;
   };
 
-  return <div className='step1'>
+  return <div className='form-wrapper'>
     <Form
       form={form}
       {...FL}
       onFinish={onFinish}
-      initialValues={{
-        timeout: 300,
-        saveState: false
-      }}
     >
       <Form.Item
         label='vcs'
@@ -178,14 +200,8 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
         </Select>
       </Form.Item>
       <Form.Item
-        label='分支/标签'
+        label='工作目录'
         name='repoBranch'
-        rules={[
-          {
-            required: true,
-            message: '请选择'
-          }
-        ]}
       >
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -194,18 +210,18 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
           {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
         </Select>
       </Form.Item>
-      <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+      <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
+        <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+      </Form.Item>
     </Form>
-    {/* {
+    {
       vcsVisible && <OpModal
         visible={vcsVisible}
         toggleVisible={clVcsModal}
         opt={'add'}
-        curOrg={curOrg}
         reload={fetchRepoBranch}
         operation={operation}
-        curRecord={{}}
       />
-    } */}
+    }
   </div>;
 };

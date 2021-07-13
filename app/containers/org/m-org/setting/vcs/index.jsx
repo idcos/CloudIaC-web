@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { orgsAPI } from 'services/base';
-import OpModal from './components/vcsModal';
+import OpModal from 'components/vcs-modal';
 
 export default ({ title, curOrg }) => {
   const [ loading, setLoading ] = useState(false),

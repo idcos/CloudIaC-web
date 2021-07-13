@@ -93,7 +93,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
     }
   };
 
-  return <div className='step2'>
+  return <div className='variable-wrapper'>
     <Form
       form={form}
       {...FL}
@@ -199,10 +199,10 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
           </Form.Item>
         </Col>
       </Row>
-      <Space>
-        <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+      <div className='btn-wrapper'>
         <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
-      </Space>
+        <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+      </div>
     </Form>
   </div>;
 };

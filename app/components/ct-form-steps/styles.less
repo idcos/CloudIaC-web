@@ -2,27 +2,30 @@
 .ctCreate {
   :global {
     .stepWrapper {
-      width: 50%;
+      width: 600px;
       margin: 0 auto 32px;
     }
     .hidden {
       display: none;
     }
-    .step1 {
-      .cardContent {
-        & > span {
-          font-size: 16px;
-          font-weight: bold;
-          color: rgba(0, 0, 0, 0.86);
-        }
-        & > a {
-          float: right;
+
+    .form-wrapper {
+      width: 600px;
+      margin: 0 auto;
+    }
+    
+    .variable-wrapper {
+      width: 100%;
+      margin: 0 auto;
+
+      .btn-wrapper {
+        text-align: center;
+        button {
+          margin: 0 12px;
         }
       }
     }
-    .step2 {
-      width: 50%;
-      margin: 0 auto;
-    }
+
+    
   }
 }

@@ -5,8 +5,8 @@ import { ctAPI, sysAPI } from 'services/base';
 import history from 'utils/history';
 
 const FL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  labelCol: { span: 5 },
+  wrapperCol: { span: 14 }
 };
 const { Option } = Select;
 
@@ -93,16 +93,11 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
     }
   };
 
-  return <div className='step2'>
+  return <div className='form-wrapper'>
     <Form
       form={form}
       {...FL}
-      layout='vertical'
       onFinish={onFinish}
-      initialValues={{
-        timeout: 300,
-        saveState: false
-      }}
     >
       <Form.Item
         label='模板名称'
@@ -114,18 +109,13 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
           }
         ]}
       >
-        <Input placeholder='请输入云模板名称' />
+        <Input placeholder='请输入模板名称' />
       </Form.Item>
       <Form.Item
         label='模板描述'
         name='description'
-        rules={[
-          {
-            message: '请输入'
-          }
-        ]}
       >
-        <Input.TextArea placeholder='请输入描述' />
+        <Input.TextArea placeholder='请输入模板描述' />
       </Form.Item>
       <Form.Item
         label='关联项目'
@@ -145,10 +135,10 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
           {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
         </Select>
       </Form.Item>
-      <Space>
-        <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
+      <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
+        <Button onClick={() => stepHelper.prev()} disabled={submitLoading} style={{ marginRight: 24 }}>上一步</Button>
         <Button type='primary' htmlType={'submit'} loading={submitLoading}>完成创建</Button>
-      </Space>
+      </Form.Item>
     </Form>
   </div>;
 };

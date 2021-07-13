@@ -7,7 +7,7 @@ const FL = {
 };
 const { Option } = Select;
 
-export default ({ visible, opt, toggleVisible, curRecord, operation }) => {
+export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
 
