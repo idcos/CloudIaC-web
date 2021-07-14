@@ -59,15 +59,14 @@ const menus = [
 ];
 
 const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
-  const { orgId, mOrgKey, mProjectKey } = match.params || {};
-
+  const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const linkTo = (subKey, menuItemKey) => {
     switch (subKey) {
       case 'org':
         history.push(`/org/${orgId}/${menuItemKey}`);
         break;
       case 'project':
-        history.push(`/org/${orgId}/project/testProjectGuid/${menuItemKey}`);
+        history.push(`/org/${orgId}/project/${projectId}/${menuItemKey}`);
         break;
       default:
         break;
@@ -77,6 +76,12 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
   const changeCurOrg = (orgId) => {
     dispatch({
       type: 'global/set-curOrg',
+      payload: {
+        orgId
+      }
+    });
+    dispatch({
+      type: 'global/getProjects',
       payload: {
         orgId
       }
@@ -136,7 +141,7 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
         <RoutesList
           routes={routes}
           routesParams={{
-            curOrg: curOrg || {}
+            curOrg
           }}
         />
       </div>
@@ -148,6 +153,6 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
 export default connect(
   (state) => ({ 
     orgs: state[KEY].get('orgs').toJS(),
-    curOrg: state.global.get('curOrg') 
+    curOrg: state[KEY].get('curOrg')
   })
 )(OrgWrapper);

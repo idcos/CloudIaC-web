@@ -9,6 +9,14 @@ export const orgsAPI = {
       currentPage: pageNo
     });
   },
+  allEnableOrgs: (params) => {
+    return getWithArgs('/api/v1/orgs', {
+      status: 'enable',
+      pageSize: 100000,
+      currentPage: 1,
+      ...params
+    });
+  },
   detail: (id) => {
     return getWithArgs(`/api/v1/orgs/${id}`, {
       id
@@ -401,6 +409,13 @@ export const pjtAPI = {
     return getWithArgs('/api/v1/projects', {
       pageSize,
       currentPage: pageNo
+    }, { 'IaC-Org-Id': orgId });
+  },
+  allEnableProjects: ({ orgId }) => {
+    return getWithArgs('/api/v1/projects', {
+      status: 'enable',
+      pageSize: 100000,
+      currentPage: 1
     }, { 'IaC-Org-Id': orgId });
   },
   userList: ({ orgId }) => {

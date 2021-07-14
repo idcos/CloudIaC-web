@@ -21,6 +21,12 @@ const Orgs = ({ orgs, dispatch }) => {
         orgId
       }
     });
+    dispatch({
+      type: 'global/getProjects',
+      payload: {
+        orgId
+      }
+    });
     history.push(`/org/${orgId}/m-org-project`);
   };
 

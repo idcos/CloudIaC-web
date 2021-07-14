@@ -11,19 +11,18 @@ const { Option } = Select;
 const KEY = 'global';
 
 const AppHeader = (props) => {
-  const { theme, locationPathName, orgs, curOrg, dispatch, userInfo } = props;
-
+  const { theme, locationPathName, curOrg, projects, curProject, dispatch, userInfo } = props;
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
-  // const changeCurOrg = (orgId) => {
-  //   dispatch({
-  //     type: 'global/set-curOrg',
-  //     payload: {
-  //       orgId
-  //     }
-  //   });
-  //   history.push(`/org/${orgId}/ct`);
-  // };
+  const changeProject = (projectId) => {
+    dispatch({
+      type: 'global/set-curProject',
+      payload: {
+        projectId
+      }
+    });
+    history.push(`/org/${curOrg.id}/project/${projectId}/m-project-env`);
+  };
 
   useEffect(() => {
     if (locationPathName.indexOf('org') == -1) {
@@ -31,6 +30,14 @@ const AppHeader = (props) => {
         type: 'global/set-curOrg',
         payload: {
           orgId: null
+        }
+      });
+    }
+    if (locationPathName.indexOf('/project/') == -1) {
+      dispatch({
+        type: 'global/set-curProject',
+        payload: {
+          projectId: null
         }
       });
     }
@@ -45,6 +52,20 @@ const AppHeader = (props) => {
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
       <div className='rParts'>
+        {
+          curOrg && curOrg.id ? (
+            <Select 
+              getPopupContainer={triggerNode => triggerNode.parentNode}
+              className={styles.projectSwitcher}
+              style={{ width: 164 }}
+              placeholder='选择项目'
+              onChange={changeProject}
+              value={curProject && curProject.id}
+            >
+              {(projects.list || []).map(it => <Option value={it.id}>{it.name}</Option>)}
+            </Select>
+          ) : null
+        }
         <div className='user'>
           <Tooltip 
             color='#13c2c2'
@@ -106,6 +127,8 @@ export default connect((state) => {
   return {
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
+    projects: state[KEY].get('projects').toJS(),
+    curProject: state[KEY].get('curProject'),
     userInfo: state[KEY].get('userInfo').toJS()
   };
 })(AppHeader);
