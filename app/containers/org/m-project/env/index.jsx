@@ -4,6 +4,7 @@ import { Menu, Button, Tabs } from "antd";
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 import EnvList from './componemts/envList';
+import history from 'utils/history';
 import styles from './styles.less';
 
 const envNavs = {
@@ -14,7 +15,9 @@ const envNavs = {
 };
 export default (props) => {
   const { match, status, routes } = props,
-    { params } = match; 
+    { params: { orgId, projectId } } = match; 
+  console.log(props, 'props');
+
   const [ panel, setPanel ] = useState('active');
   const renders = useMemo(() => {
     return <EnvList {...props} panel={panel} />;
@@ -46,7 +49,10 @@ export default (props) => {
               key={it}
             > 
               <div className='btnsTop'>
-                <Button type='primary'>部署新环境</Button>
+                <Button onClick={() => {
+                  history.push(`/org/${orgId}/project/p-c3n485rn6m89h5povhqg/m-project-env/deploy`); 
+                }} type='primary'
+                >部署新环境</Button>
               </div>
               {renders}
             </Tabs.TabPane>

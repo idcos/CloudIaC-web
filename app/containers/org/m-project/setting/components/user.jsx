@@ -73,7 +73,6 @@ const Index = (props) => {
     }
   ];
   const handleSave = (row) => {
-    console.log(row, 'row');
     const newData = [...resultMap.list];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];

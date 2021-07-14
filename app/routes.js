@@ -55,6 +55,17 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/project/:projectId/m-project-env/deploy',
+          name: '部署新环境：选择云模板',
+          component: loadable(() => import('containers/org/m-project/env/deploy'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-env/detail',
+          component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/project/:projectId/m-project-ct',
           name: '项目信息：云模版',
           component: loadable(() => import('containers/org/m-project/ct'), asyncLoadFallback),

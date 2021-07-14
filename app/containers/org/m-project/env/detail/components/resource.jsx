@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Space, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Card, Space, Table, Input, notification, Descriptions, Menu } from 'antd';
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -20,11 +20,12 @@ const Index = (props) => {
       pageNo: 1,
       pageSize: 10,
       status: panel
-    });
+    }),
+    [ search, setSearch ] = useState('');
 
   useEffect(() => {
     fetchList();
-  }, [query]);
+  }, []);
 
   const fetchList = async () => {
     try {
@@ -50,27 +51,50 @@ const Index = (props) => {
       });
     }
   };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
-  };
+  const columns = [
+    {
+      dataIndex: 'name',
+      title: '云平台'
+    },
+    {
+      dataIndex: 'email',
+      title: '类型'
+    },
+    {
+      dataIndex: 'phone',
+      title: '数量'
+    },
+    {
+      dataIndex: 'data',
+      title: '名称'
+    },
+    {
+      dataIndex: 'typeUser',
+      title: '模块',
+      editable: true,
+      width: 200,
+      render: (t, r) => {
+        return (<div>{t}</div>); 
+      }
+    }
+  ];
   return <div>
-    {resultMap.list.map(d => <Card style={{ marginTop: 20 }} type='inner' title={<a onClick={() => {
-      history.push(`/org/${orgId}/project/p-c3n485rn6m89h5povhqg/m-project-env/detail`); 
-    }}
-    >环境名称</a>}
-    >
-      <Space style={{ display: 'flex', justifyContent: 'space-around' }} split={<Divider type='vertical' />}>
-        <span style={{ width: '20%' }}>{props.panel}LinkLinkLinkLinkLink</span>
-        <span style={{ width: '20%' }}>LinkLinkLink</span>
-        <span style={{ width: '20%' }}>LinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLink</span>
-        <span style={{ width: '20%' }}>Link</span>
-        <span style={{ width: '20%' }}>LinkLinkLinkLinkLinkLink</span>
-      </Space>
-    </Card>)}
+    <Card headStyle={{ backgroundColor: '#E3EBEB' }} type={'inner'} title={'Output'}>
+    
+    </Card>
+    <Card headStyle={{ backgroundColor: '#E3EBEB' }} bodyStyle={{ padding: 0 }} type={'inner'} title={'资源列表'}>
+      <Input.Search
+        placeholder='请输入项目名称搜索'
+        style={{ width: 240, margin: 20 }}
+        onSearch={v => setSearch(v)}
+      />
+      <Table
+        columns={columns}
+        dataSource={resultMap.list}
+        loading={loading}
+        pagination={false}
+      />
+    </Card>
   </div>;
 };
 

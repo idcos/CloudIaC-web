@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Space, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Card, Space, Radio, Input, notification, Descriptions, Menu } from 'antd';
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -24,7 +24,7 @@ const Index = (props) => {
 
   useEffect(() => {
     fetchList();
-  }, [query]);
+  }, []);
 
   const fetchList = async () => {
     try {
@@ -50,28 +50,21 @@ const Index = (props) => {
       });
     }
   };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
-  };
-  return <div>
-    {resultMap.list.map(d => <Card style={{ marginTop: 20 }} type='inner' title={<a onClick={() => {
-      history.push(`/org/${orgId}/project/p-c3n485rn6m89h5povhqg/m-project-env/detail`); 
-    }}
-    >环境名称</a>}
+  return <Card headStyle={{ backgroundColor: '#E3EBEB' }} type={'inner'} title={'环境详情'}>
+    <Descriptions 
+      labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
     >
-      <Space style={{ display: 'flex', justifyContent: 'space-around' }} split={<Divider type='vertical' />}>
-        <span style={{ width: '20%' }}>{props.panel}LinkLinkLinkLinkLink</span>
-        <span style={{ width: '20%' }}>LinkLinkLink</span>
-        <span style={{ width: '20%' }}>LinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLink</span>
-        <span style={{ width: '20%' }}>Link</span>
-        <span style={{ width: '20%' }}>LinkLinkLinkLinkLinkLink</span>
-      </Space>
-    </Card>)}
-  </div>;
+      <Descriptions.Item label='状态'>Zhou Maomao</Descriptions.Item>
+      <Descriptions.Item label='云模版'>1810000000</Descriptions.Item>
+      <Descriptions.Item label='分支'>Hangzhou, Zhejiang</Descriptions.Item>
+      <Descriptions.Item label='Commit_ID'>empty</Descriptions.Item>
+      <Descriptions.Item label='资源数'>empty</Descriptions.Item>
+      <Descriptions.Item label='TTL'>empty</Descriptions.Item>
+      <Descriptions.Item label='密钥'>密钥</Descriptions.Item>
+      <Descriptions.Item label='更新时间'>更新时间</Descriptions.Item>
+      <Descriptions.Item label='执行人'>执行人</Descriptions.Item>
+    </Descriptions>
+  </Card>;
 };
 
 export default Eb_WP()(memo(Index));
