@@ -17,6 +17,7 @@ export default ({ visible, opt, toggleVisible, curRecord, orgId, reload, operati
 
   const onOk = async () => {
     const { params, ...restValues } = await form.validateFields();
+    setSubmitLoading(true);
     operation({
       action: opt,
       payload: {

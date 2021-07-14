@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
-import OrgModal from './components/orgModal';
+import OrgModal from 'components/org-modal';
 
 import { Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import { orgsAPI } from 'services/base';

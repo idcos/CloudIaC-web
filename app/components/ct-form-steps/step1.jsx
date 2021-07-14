@@ -140,7 +140,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
     >
       <Form.Item
         label='vcs'
-        name='repoBranch'
+        name='vcs'
         rules={[
           {
             required: true,
@@ -184,7 +184,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
       </Form.Item>
       <Form.Item
         label='分支/标签'
-        name='repoBranch'
+        name='gitbranch'
         rules={[
           {
             required: true,
@@ -201,7 +201,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
       </Form.Item>
       <Form.Item
         label='工作目录'
-        name='repoBranch'
+        name='work'
       >
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}

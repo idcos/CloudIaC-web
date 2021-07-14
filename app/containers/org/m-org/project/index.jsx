@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Button, Table, Radio, Input, notification, Divider, Popconfirm } from 'antd';
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -8,7 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 import styles from './styles.less';
-import OpModal from './createPages/projectModal';
+import OpModal from 'components/project-modal';
 
 import { pjtAPI, orgsAPI } from 'services/base';
 import { CT } from 'constants/types';
@@ -19,24 +19,13 @@ const Index = (props) => {
     { params } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [
-      //   {
-      //   "createdAt": "2006-01-02 15:04:05",
-      //   "creatorId": "string",
-      //   "description": "string",
-      //   "id": "x-c3ek0co6n88ldvq1n6ag",
-      //   "name": "string",
-      //   "orgId": "string",
-      //   "status": "string",
-      //   "updatedAt": "2006-01-02 15:04:05"
-      // }
-      ],
+      list: [],
       total: 0
     }),
     [ query, setQuery ] = useState({
       pageNo: 1,
-      pageSize: 10,
-      status: 'all'
+      pageSize: 10
+      // status: 'all'
     }),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
@@ -64,7 +53,10 @@ const Index = (props) => {
     },
     {
       dataIndex: 'status',
-      title: '状态'
+      title: '状态',
+      render: (text) => {
+        return <span>{text === 'enable' ? '正常' : '归档'}</span>; 
+      }
     },
     {
       title: '操作',
@@ -74,9 +66,19 @@ const Index = (props) => {
           <span className='inlineOp'>
             <a type='link' onClick={() => edit(record)}>编辑</a>
             <Divider type='vertical' />
-            {record.status === 'enable' ? <a 
-              onClick={() => del(record)}
-            >归档</a> : <a onClick={() => del(record)}>恢复</a>
+            {record.status === 'enable' ? 
+              <Popconfirm
+                title='确定要将项目归档？'
+                onConfirm={() => updateStatus(record, 'disable')}
+              >
+                <a>归档</a>
+              </Popconfirm> : 
+              <Popconfirm
+                title='确定要将项目恢复？'
+                onConfirm={() => updateStatus(record, 'enable')}
+              >
+                <a>恢复</a>
+              </Popconfirm>
             }
           </span>
         );
@@ -94,8 +96,23 @@ const Index = (props) => {
     toggleVisible();
   };
   
-  const del = () => {
-    return;
+  const updateStatus = async(record, status) => {
+    let payload = {
+      orgId: params.orgId,
+      projectId: record.id,
+      status
+    };
+    const res = await pjtAPI.editProject(payload);
+    if (res.code != 200) {
+      return notification.error({
+        message: res.message
+      });
+    } else {
+      notification.success({
+        message: '操作成功'
+      });
+    }
+    fetchList();
   };
 
   const fetchList = async () => {

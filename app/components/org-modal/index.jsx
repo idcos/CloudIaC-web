@@ -58,7 +58,7 @@ export default ({ visible, toggleVisible, operation, opt }) => {
     return (
       <Form.Item
         label='填写信息'
-        name='usermock'
+        name='info'
         rules={[
           {
             required: true,
@@ -71,7 +71,7 @@ export default ({ visible, toggleVisible, operation, opt }) => {
           align='center'
         >
           <Form.Item
-            name={'name'}
+            name={'userName'}
             rules={[{ required: true, message: "请输入" }]}
           >
             <Input placeholder={'请填写姓名'}/>

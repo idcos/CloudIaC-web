@@ -65,7 +65,7 @@ export default ({ canEdit = false, orgId, placeholder, onChangeSave }) => {
         dropdownRender={() => (
           <div className={styles.tagsBox}>
             <Space className={styles.buttonLine}><span>已选 {valueData.length} 个</span><span onClick={clearTags} className={styles.clear}>清空全部</span></Space>
-            <div style={{ display: "block" }}>
+            {projectNameList.length == 0 ? <div style={{ display: "block", maxHeight: 300 }}>
               {projectNameList.map((tag, index) => (
                 <Tag
                   style={{ marginTop: 8 }}
@@ -79,7 +79,9 @@ export default ({ canEdit = false, orgId, placeholder, onChangeSave }) => {
                   {tag}
                 </Tag>
               ))}
-            </div>
+            </div> : <div style={{ display: "block", maxHeight: 300 }}>
+              
+            </div>}
           </div>)}
       >
       </Select>
