@@ -6,7 +6,7 @@ import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
 import VarsContext from './context';
 
-const VariableForm = ({ varRef, defaultData = {}, showOtherVars = true }) => {
+const VariableForm = ({ varRef, defaultData = {}, showOtherVars = false }) => {
 
   const terraformVarRef = useRef();
   const envVarRef = useRef();
