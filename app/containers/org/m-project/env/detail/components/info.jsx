@@ -50,7 +50,7 @@ const Index = (props) => {
       });
     }
   };
-  return <Card headStyle={{ backgroundColor: '#E3EBEB' }} type={'inner'} title={'环境详情'}>
+  return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
     <Descriptions 
       labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
     >
