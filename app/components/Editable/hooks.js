@@ -12,6 +12,7 @@ export const useEditableState = ({
   defaultData,
   defaultValue = [],
   onChange,
+  onDeleteRow,
   max
 }) => {
   const keyIdRef = useRef(1);
@@ -49,6 +50,11 @@ export const useEditableState = ({
 
   const handleDelete = useCallback((key) => {
     const k = getEditableIdByIndex(key);
+    if (isFunction(onDeleteRow)) {
+      onDeleteRow(
+        stateRef.current.find((item) => item.editable_id === k)
+      );
+    }
     handleChange(
       stateRef.current.filter((item) => item.editable_id !== k)
     );

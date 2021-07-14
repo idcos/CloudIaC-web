@@ -49,7 +49,8 @@ const EditableTable = (props) => {
     optionSpaceProps,
     optionRender,
     multiple: mult = true,
-    sortMode = false
+    sortMode = false,
+    onDeleteRow, // eslint-disable-line
   } = props;
 
   const {
@@ -89,6 +90,7 @@ const EditableTable = (props) => {
     defaultValue,
     defaultData,
     onChange,
+    onDeleteRow,
     max
   });
   const showAddBtn = !hideAddBtn && (!max || max > state.length);

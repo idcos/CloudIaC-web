@@ -9,11 +9,7 @@ const playbooks = ['ansible/playbook.yml'];
 
 const OtherVarForm = () => {
 
-  const { otherVarData, otherVarForm } = useContext(VarsContext);
-
-  useEffect(() => {
-    otherVarForm.setFieldsValue(otherVarData);
-  }, [otherVarData]);
+  const { otherVarForm } = useContext(VarsContext);
 
   return (
     <Card

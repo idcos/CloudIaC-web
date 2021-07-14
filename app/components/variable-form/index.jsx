@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle } from 'react';
+import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form } from 'antd';
 
 import TerraformVarForm from './terraform-var-form';
@@ -6,14 +6,24 @@ import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
 import VarsContext from './context';
 
-const VariableForm = ({ varRef, defaultData = {}, showOtherVars = false }) => {
+const VariableForm = ({ varRef, defaultData = {}, defaultScope, showOtherVars = false }) => {
 
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
 
-  const [ terraformVarList, setTerraformVarList ] = useState(defaultData.terraformVarList || []);
-  const [ envVarList, setEnvVarList ] = useState(defaultData.envVarList || []);
+  const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
+  const [ terraformVarList, setTerraformVarList ] = useState([]);
+  const [ envVarList, setEnvVarList ] = useState([]);
+
+  useEffect(() => {
+    const { variables = [], ...otherVarData } = defaultData;
+    const defaultTerraformVarList = variables.filter(it => it.type === 'terraform');
+    const defaultEnvVarList = variables.filter(it => it.type === 'environment'); 
+    setTerraformVarList(defaultTerraformVarList);
+    setEnvVarList(defaultEnvVarList);
+    otherVarForm.setFieldsValue(otherVarData);
+  }, [defaultData]);
 
   useImperativeHandle(varRef, () => ({
     validateForm: () => {
@@ -28,11 +38,11 @@ const VariableForm = ({ varRef, defaultData = {}, showOtherVars = false }) => {
           );
         }
         Promise.all(formValidates).then(
-          ([ , , otherVarData = {} ]) => {
+          ([ , , otherVarFormValues = {} ]) => {
             const data = {
-              terraformVarList,
-              envVarList,
-              otherVarData
+              deleteVariablesId,
+              variables: [ ...terraformVarList, ...envVarList ],
+              ...otherVarFormValues
             };
             resolve(data);
           },
@@ -54,7 +64,8 @@ const VariableForm = ({ varRef, defaultData = {}, showOtherVars = false }) => {
         envVarList, 
         setEnvVarList,
         otherVarForm,
-        otherVarData: defaultData.otherVarData || {}
+        setDeleteVariablesId,
+        defaultScope
       }}
     >
       <div className='variable'>
