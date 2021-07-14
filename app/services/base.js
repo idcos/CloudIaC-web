@@ -120,7 +120,7 @@ export const orgsAPI = {
     });
   },
   createVcs: ({ orgId, name, vcsType, address, vcsToken, status }) => {
-    return post('/api/v1/vcs/create', {
+    return post('/api/v1/vcs', {
       status: status || 'enable',
       name, vcsType, address, vcsToken 
     }, {
@@ -128,23 +128,20 @@ export const orgsAPI = {
     });
   },
   deleteVcs: ({ orgId, id }) => {
-    return del('/api/v1/vcs/delete', {
-      id
-    }, {
+    return del(`/api/v1/vcs/${id}`, {}, {
       'IaC-Org-Id': orgId
     });
   },
-  updateVcs: (param) => {
-    const { orgId, id, name, vcsType, address, vcsToken, status } = param;
-    return put('/api/v1/vcs/update', {
+  updateVcs: ({ orgId, id, name, vcsType, address, vcsToken, status }) => {
+    return put(`/api/v1/vcs/${id}`, {
       status: status || 'enable',
-      id, name, vcsType, address, vcsToken 
+      name, vcsType, address, vcsToken 
     }, {
       'IaC-Org-Id': orgId
     });
   },
   searchVcs: ({ orgId, pageSize, currentPage }) => {
-    return getWithArgs('/api/v1/vcs/search', {
+    return getWithArgs('/api/v1/vcs', {
       status,
       pageSize,
       currentPage
@@ -153,7 +150,7 @@ export const orgsAPI = {
     });
   },
   searchEnableVcs: ({ orgId }) => {
-    return getWithArgs('/api/v1/vcs/search', {
+    return getWithArgs('/api/v1/vcs', {
       status: 'enable'
     }, {
       'IaC-Org-Id': orgId
