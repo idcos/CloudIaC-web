@@ -1,40 +1,71 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Alert, Card, Form, Table, Divider, Button, notification, Input, InputNumber, Col, Checkbox, Select, Tooltip } from 'antd';
-import isEmpty from 'lodash/isEmpty';
-// import { Editable } from 'am-editable';
+import React, { useState, useRef, useImperativeHandle } from 'react';
+import { Space, Form } from 'antd';
 
-import { ctAPI } from 'services/base';
-import uuid from 'utils/uuid.js';
+import TerraformVarForm from './terraform-var-form';
+import EnvVarForm from './env-var-form';
+import OtherVarForm from './other-var-form';
+import VarsContext from './context';
 
-const { Option } = Select;
+const VariableForm = ({ varRef, defaultData = {}, showOtherVars = true }) => {
 
-const fields = [
-  {
-    title: '姓名',
-    id: 'name',
-    width: '30%',
-    editable: true,
-    formItemProps: {
-      rules: [{ required: true, message: '请输入姓名' }]
+  const terraformVarRef = useRef();
+  const envVarRef = useRef();
+  const [otherVarForm] = Form.useForm();
+
+  const [ terraformVarList, setTerraformVarList ] = useState(defaultData.terraformVarList || []);
+  const [ envVarList, setEnvVarList ] = useState(defaultData.envVarList || []);
+
+  useImperativeHandle(varRef, () => ({
+    validateForm: () => {
+      return new Promise((resolve, reject) => {
+        let formValidates = [
+          terraformVarRef.current.handleValidate(),
+          envVarRef.current.handleValidate()
+        ];
+        if (showOtherVars) {
+          formValidates.push(
+            otherVarForm.validateFields()
+          );
+        }
+        Promise.all(formValidates).then(
+          ([ , , otherVarData = {} ]) => {
+            const data = {
+              terraformVarList,
+              envVarList,
+              otherVarData
+            };
+            resolve(data);
+          },
+          (err) => {
+            reject(err);
+          }
+        );
+      });
     }
-  }
-];
+  }));
 
-const VariableForm = () => {
-  
-  return <div className='variable'>
-    <Card
-      title='Terraform变量'
+  return (
+    <VarsContext.Provider
+      value={{
+        terraformVarRef,
+        terraformVarList, 
+        setTerraformVarList,
+        envVarRef,
+        envVarList, 
+        setEnvVarList,
+        otherVarForm,
+        otherVarData: defaultData.otherVarData || {}
+      }}
     >
-      {/* <Editable
-        defaultData={{ age: 90 }}
-        value={[]}
-        fields={fields}
-        onChange={val => {
-        }}
-      /> */}
-    </Card>
-  </div>;
+      <div className='variable'>
+        <Space style={{ width: '100%' }} direction='vertical' size={24}>
+          <TerraformVarForm />
+          <EnvVarForm />
+          {showOtherVars && <OtherVarForm />}
+        </Space>
+      </div>
+    </VarsContext.Provider>
+  );
 };
 
 export default VariableForm;

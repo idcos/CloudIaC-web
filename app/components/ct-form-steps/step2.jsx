@@ -1,28 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Space, Radio, Select, Form, Input, Button, InputNumber, notification, Row, Col } from "antd";
+import React, { useRef } from 'react';
+import { Button } from "antd";
 
-import { ctAPI, sysAPI } from 'services/base';
-import history from 'utils/history';
 import VariableForm from 'components/variable-form';
 
-export default ({ stepHelper, selection, orgId, vcsId }) => {
+export default ({ stepHelper }) => {
 
-  const [form] = Form.useForm();
+  const varRef = useRef();
 
-  const { selectedRows } = selection;
-  const [ repoBranches, setRepoBranches ] = useState([]),
-    [ ctRunnerList, setCtRunnerList ] = useState([]),
-    [ submitLoading, setSubmitLoading ] = useState(false);
-  
-  useEffect(() => {
-    // console.log(1);
-  }, []);
+  const onNext = async () => {
+    const varData = await varRef.current.validateForm();
+    stepHelper.next();
+  };
 
   return <div className='variable-wrapper'>
-    <VariableForm />
+    <VariableForm varRef={varRef} />
     <div className='btn-wrapper'>
-      <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
-      <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+      <Button onClick={() => stepHelper.prev()}>上一步</Button>
+      <Button type='primary' onClick={onNext}>下一步</Button>
     </div>
   </div>;
 };
