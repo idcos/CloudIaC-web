@@ -74,7 +74,7 @@ const Index = (props) => {
     }
   };
   return <div>
-    <Card headStyle={{ backgroundColor: '#E3EBEB' }} type={'inner'} title={'资源列表'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'资源列表'}>
       <Form
         colon={true}
         form={form}

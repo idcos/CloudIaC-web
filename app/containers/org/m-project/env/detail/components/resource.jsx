@@ -79,10 +79,10 @@ const Index = (props) => {
     }
   ];
   return <div>
-    <Card headStyle={{ backgroundColor: '#E3EBEB' }} type={'inner'} title={'Output'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
     
     </Card>
-    <Card headStyle={{ backgroundColor: '#E3EBEB' }} bodyStyle={{ padding: 0 }} type={'inner'} title={'资源列表'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 0 }} type={'inner'} title={'资源列表'}>
       <Input.Search
         placeholder='请输入项目名称搜索'
         style={{ width: 240, margin: 20 }}

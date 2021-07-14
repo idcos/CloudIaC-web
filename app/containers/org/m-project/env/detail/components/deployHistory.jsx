@@ -79,7 +79,7 @@ const Index = (props) => {
     }
   ];
   return <div>
-    <Card headStyle={{ backgroundColor: '#E3EBEB' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'资源列表'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'资源列表'}>
       <Table
         columns={columns}
         dataSource={resultMap.list}

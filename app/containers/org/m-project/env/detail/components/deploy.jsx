@@ -37,7 +37,7 @@ const Index = (props) => {
     console.log(res, 'res');
   };
   return <div>
-    <Card headStyle={{ backgroundColor: '#E3EBEB' }} type={'inner'} bodyStyle={{ padding: 0 }} title={'作业内容'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} bodyStyle={{ padding: 0 }} title={'作业内容'}>
       <AnsiCoderCard value={taskLog} />
     </Card>
   </div>;
