@@ -1,0 +1,43 @@
+import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
+
+const vcsAPI = {
+  createVcs: ({ orgId, name, vcsType, address, vcsToken, status }) => {
+    return post('/api/v1/vcs', {
+      status: status || 'enable',
+      name, vcsType, address, vcsToken 
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  deleteVcs: ({ orgId, id }) => {
+    return del(`/api/v1/vcs/${id}`, {}, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  updateVcs: ({ orgId, id, name, vcsType, address, vcsToken, status }) => {
+    return put(`/api/v1/vcs/${id}`, {
+      status: status || 'enable',
+      name, vcsType, address, vcsToken 
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  searchVcs: ({ orgId, pageSize, currentPage }) => {
+    return getWithArgs('/api/v1/vcs', {
+      status,
+      pageSize,
+      currentPage
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  searchEnableVcs: ({ orgId }) => {
+    return getWithArgs('/api/v1/vcs', {
+      status: 'enable'
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  }
+};
+
+export default vcsAPI;

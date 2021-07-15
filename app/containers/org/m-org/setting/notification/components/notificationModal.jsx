@@ -6,7 +6,7 @@ import { ORG_USER } from 'constants/types';
 
 const { Option } = Select;
 
-export default ({ curOrg, operation, visible, toggleVisible }) => {
+export default ({ orgId, operation, visible, toggleVisible }) => {
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
     [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -29,7 +29,7 @@ export default ({ curOrg, operation, visible, toggleVisible }) => {
       setLoading(true);
       const res = await orgsAPI.listUser({
         ...query,
-        orgId: curOrg.id
+        orgId
       });
       if (res.code !== 200) {
         throw new Error(res.message);

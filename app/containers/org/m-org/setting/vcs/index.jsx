@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import { orgsAPI } from 'services/base';
+import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
 
-export default ({ title, curOrg }) => {
+export default ({ title, orgId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
@@ -25,9 +25,9 @@ export default ({ title, curOrg }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await orgsAPI.searchVcs({
+      const res = await vcsAPI.searchVcs({
         ...query,
-        orgId: curOrg.id
+        orgId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -133,12 +133,12 @@ export default ({ title, curOrg }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => orgsAPI.createVcs(param),
-        del: ({ orgId, id }) => orgsAPI.deleteVcs({ orgId, id }),
-        edit: (param) => orgsAPI.updateVcs(param)
+        add: (param) => vcsAPI.createVcs(param),
+        del: ({ orgId, id }) => vcsAPI.deleteVcs({ orgId, id }),
+        edit: (param) => vcsAPI.updateVcs(param)
       };
       const res = await method[doWhat]({
-        orgId: curOrg.id,
+        orgId,
         ...payload
       });
       if (res.code != 200) {
@@ -192,8 +192,6 @@ export default ({ title, curOrg }) => {
         visible={visible}
         opt={opt}
         toggleVisible={toggleVisible}
-        curOrg={curOrg}
-        reload={fetchList}
         operation={operation}
         curRecord={curRecord}
       />

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, notification, Table } from 'antd';
-import { orgsAPI } from 'services/base';
+import notificationsAPI from 'services/notifications';
 
 import { ORG_USER } from 'constants/types';
 import moment from 'moment';
 
 import AddModal from './components/notificationModal';
 
-export default ({ curOrg, ...restProps }) => {
+export default ({ orgId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -27,9 +27,9 @@ export default ({ curOrg, ...restProps }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await orgsAPI.notificationList({
+      const res = await notificationsAPI.notificationList({
         ...query,
-        orgId: curOrg.id
+        orgId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -87,11 +87,11 @@ export default ({ curOrg, ...restProps }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => orgsAPI.createNotification(param),
-        del: ({ orgId, id }) => orgsAPI.delNotification({ orgId, id })
+        add: (param) => notificationsAPI.createNotification(param),
+        del: ({ orgId, id }) => notificationsAPI.delNotification({ orgId, id })
       };
       const res = await method[doWhat]({
-        orgId: curOrg.id,
+        orgId,
         notificationType: 'email',
         ...payload
       });
@@ -142,7 +142,7 @@ export default ({ curOrg, ...restProps }) => {
     />
     {
       visible && <AddModal
-        curOrg={curOrg}
+        orgId={orgId}
         reload={fetchList}
         operation={operation}
         visible={visible}

@@ -72,27 +72,6 @@ export const orgsAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  notificationList: ({ orgId, pageNo, pageSize }) => {
-    return getWithArgs('/api/v1/notification/search', {
-      pageNo, pageSize
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  createNotification: ({ orgId, notificationType, eventType, userIds, cfgInfo }) => {
-    return post('/api/v1/notification/create', {
-      notificationType, eventType, userIds, cfgInfo
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  delNotification: ({ orgId, id }) => {
-    return del('/api/v1/notification/delete', {
-      id
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
   listUser: ({ orgId, status, name, pageSize, pageNo }) => {
     return getWithArgs(`/api/v1/users`, {
       status,
@@ -124,43 +103,6 @@ export const orgsAPI = {
   },
   removeUser: ({ orgId, id }) => {
     return del(`/api/v1/users/${id}`, {}, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  createVcs: ({ orgId, name, vcsType, address, vcsToken, status }) => {
-    return post('/api/v1/vcs', {
-      status: status || 'enable',
-      name, vcsType, address, vcsToken 
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  deleteVcs: ({ orgId, id }) => {
-    return del(`/api/v1/vcs/${id}`, {}, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  updateVcs: ({ orgId, id, name, vcsType, address, vcsToken, status }) => {
-    return put(`/api/v1/vcs/${id}`, {
-      status: status || 'enable',
-      name, vcsType, address, vcsToken 
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  searchVcs: ({ orgId, pageSize, currentPage }) => {
-    return getWithArgs('/api/v1/vcs', {
-      status,
-      pageSize,
-      currentPage
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  searchEnableVcs: ({ orgId }) => {
-    return getWithArgs('/api/v1/vcs', {
-      status: 'enable'
-    }, {
       'IaC-Org-Id': orgId
     });
   }
@@ -365,23 +307,6 @@ export const ctAPI = {
 };
 
 export const sysAPI = {
-  // listToken: ({ pageNo, pageSize }) => {
-  //   return getWithArgs('/api/v1/token', {
-  //     pageSize,
-  //     currentPage: pageNo
-  //   });
-  // },
-  // createToken: (params) => {
-  //   return post('/api/v1/token', params);
-  // },
-  // editToken: ({ id, description, status }) => {
-  //   return put(`/api/v1/token/${id}`, {
-  //     id, description, status
-  //   });
-  // },
-  // delToken: (id) => {
-  //   return del(`/api/v1/token/${id}`, {});
-  // },
   listCTRunner: ({ orgId }) => {
     return get('/api/v1/runner/search', {
       'IaC-Org-Id': orgId
