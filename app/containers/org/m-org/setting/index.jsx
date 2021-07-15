@@ -4,28 +4,28 @@ import { Menu, notification, Tabs } from 'antd';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 
-import Orgs from './orgs';
+// import Orgs from './orgs';
 import ApiToken from './api-token';
 import UserRole from './user-role';
 import Vcs from './vcs';
 import Notification from './notification';
 
 const subNavs = {
-  orgs: '组织',
-  apiToken: 'API Token',
+  // orgs: '组织',
   userRole: '用户角色',
+  apiToken: 'API Token',
   vcs: 'VCS',
   notification: '通知'
 };
 
-export default ({ routesParams = {} }) => {
-
-  const { curOrg } = routesParams;
-  const [ panel, setPanel ] = useState('orgs');
+export default ({ match }) => {
+  
+  const { orgId } = match.params;
+  const [ panel, setPanel ] = useState('userRole');
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      orgs: (props) => <Orgs {...props} />,
+      // orgs: (props) => <Orgs {...props} />,
       apiToken: (props) => <ApiToken {...props} />,
       userRole: (props) => <UserRole {...props} />,
       vcs: (props) => <Vcs {...props} />,
@@ -33,7 +33,7 @@ export default ({ routesParams = {} }) => {
     };
     return PAGES[panel]({
       title: subNavs[panel],
-      curOrg
+      orgId
     });
   }, [panel]);
 

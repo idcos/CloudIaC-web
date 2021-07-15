@@ -6,7 +6,7 @@ const FL = {
   wrapperCol: { span: 19 }
 };
 
-export default ({ visible, toggleVisible, operation }) => {
+export default ({ orgId, visible, toggleVisible, operation }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
@@ -17,6 +17,8 @@ export default ({ visible, toggleVisible, operation }) => {
     operation({
       doWhat: 'add',
       payload: {
+        orgId,
+        type: 'api',
         ...values
       }
     }, (hasError) => {

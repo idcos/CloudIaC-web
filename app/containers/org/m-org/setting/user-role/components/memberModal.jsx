@@ -6,7 +6,7 @@ const FL = {
   wrapperCol: { span: 18 }
 };
 
-export default ({ visible, toggleVisible, curOrg, operation, opt, curRecord }) => {
+export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
 

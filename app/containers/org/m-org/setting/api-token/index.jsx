@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
 
-import { sysAPI } from 'services/base';
+import tokensAPI from 'services/tokens';
 
 import AddModal from './components/add-modal';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
-const ApiToken = ({ curOrg }) => {
+const ApiToken = ({ orgId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -28,8 +28,10 @@ const ApiToken = ({ curOrg }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await sysAPI.listToken({
-        ...query
+      const res = await tokensAPI.listToken({
+        currentPage: query.pageNo,
+        pageSize: query.pageSize,
+        orgId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -60,12 +62,13 @@ const ApiToken = ({ curOrg }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        edit: (param) => sysAPI.editToken(param),
-        add: (param) => sysAPI.createToken(param),
-        del: ({ id }) => sysAPI.delToken(id)
+        edit: (param) => tokensAPI.editToken(param),
+        add: (param) => tokensAPI.createToken(param),
+        del: ({ id, orgId }) => tokensAPI.delToken({ id, orgId })
       };
       const res = await method[doWhat]({
-        ...payload
+        ...payload, 
+        orgId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -86,7 +89,7 @@ const ApiToken = ({ curOrg }) => {
 
   const columns = [
     {
-      dataIndex: 'token',
+      dataIndex: 'key',
       title: 'Token',
       width: 180
     },
@@ -172,7 +175,7 @@ const ApiToken = ({ curOrg }) => {
     />
     {
       visible && <AddModal
-        curOrg={curOrg}
+        orgId={orgId}
         reload={fetchList}
         operation={operation}
         visible={visible}

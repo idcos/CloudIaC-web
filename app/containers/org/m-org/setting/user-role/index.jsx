@@ -7,7 +7,7 @@ import { ORG_USER } from 'constants/types';
 
 import OpModal from './components/memberModal';
 
-export default ({ title, curOrg = {} }) => {
+export default ({ title, orgId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
@@ -30,7 +30,7 @@ export default ({ title, curOrg = {} }) => {
       setLoading(true);
       const res = await orgsAPI.listUser({
         ...query,
-        orgId: curOrg.id
+        orgId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -65,7 +65,7 @@ export default ({ title, curOrg = {} }) => {
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
       };
       const res = await method[doWhat]({
-        orgId: curOrg.id,
+        orgId,
         ...payload
       });
       if (res.code != 200) {
@@ -180,7 +180,6 @@ export default ({ title, curOrg = {} }) => {
       visible && <OpModal
         visible={visible}
         toggleVisible={toggleVisible}
-        curOrg={curOrg}
         opt={opt}
         curRecord={curRecord}
         operation={operation}
