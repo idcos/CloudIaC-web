@@ -14,9 +14,8 @@ const envNavs = {
   filed: '已归档'
 };
 export default (props) => {
-  const { match, status, routes } = props,
+  const { match, routes } = props,
     { params: { orgId, projectId } } = match; 
-  console.log(props, 'props');
 
   const [ panel, setPanel ] = useState('active');
   const renders = useMemo(() => {
@@ -50,7 +49,7 @@ export default (props) => {
             > 
               <div className='btnsTop'>
                 <Button onClick={() => {
-                  history.push(`/org/${orgId}/project/p-c3n485rn6m89h5povhqg/m-project-env/deploy`); 
+                  history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy`); 
                 }} type='primary'
                 >部署新环境</Button>
               </div>

@@ -3,22 +3,23 @@ import { Card, Space, Radio, Input, notification, Divider, Menu } from 'antd';
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import styles from '../styles.less';
+import { ENV_STATUS } from 'constants/types';
 
 import { Eb_WP } from 'components/error-boundary';
 
-import { pjtAPI, orgsAPI } from 'services/base';
+import { envAPI, orgsAPI } from 'services/base';
 
 const Index = (props) => {
-  const { match, panel, routes } = props,
-    { params: { orgId } } = match;
+  const { match, panel, routesParams: { curProject } } = props,
+    { params: { orgId, projectId } } = match;
+
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [1],
       total: 0
     }),
     [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10,
       status: panel
     });
 
@@ -30,9 +31,10 @@ const Index = (props) => {
     try {
       setLoading(true);
       const { combinedStatus } = query;
-      const res = await pjtAPI.projectList({
-        statu: panel,
-        orgId: orgId
+      const res = await envAPI.envsList({
+        status: panel,
+        orgId,
+        projectId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -59,17 +61,17 @@ const Index = (props) => {
   };
   return <div>
     {resultMap.list.map(d => <Card style={{ marginTop: 20 }} type='inner' title={<a onClick={() => {
-      history.push(`/org/${orgId}/project/p-c3n485rn6m89h5povhqg/m-project-env/detail`); 
+      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${d.id}`); 
     }}
-    >环境名称</a>}
+    >{d.name || '-'}</a>}
     >
-      <Space style={{ display: 'flex', justifyContent: 'space-around' }} split={<Divider type='vertical' />}>
-        <span style={{ width: '20%' }}>{props.panel}LinkLinkLinkLinkLink</span>
-        <span style={{ width: '20%' }}>LinkLinkLink</span>
-        <span style={{ width: '20%' }}>LinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLinkLink</span>
-        <span style={{ width: '20%' }}>Link</span>
-        <span style={{ width: '20%' }}>LinkLinkLinkLinkLinkLink</span>
-      </Space>
+      <div className={styles.envlistBox} style={{ }}>
+        <div>TTL:{d.ttl || '-'}</div>
+        <div><Divider type='vertical' />云模版:{d.templateName || '-a aaaaaaaaaaaaaaaaaaaaalmfkenfksengksjgnskjgnskjegnskjengkesjngsekjgnseknjkensgkjsengksnkj'}</div>
+        <div><Divider type='vertical' />资源数:{d.resourceCount || '-'}</div>
+        <div><Divider type='vertical' />创建人: {d.creator || '-'}</div>
+        <div><Divider type='vertical' />状态:{ENV_STATUS[d.status] || '-'}</div>
+      </div>
     </Card>)}
   </div>;
 };

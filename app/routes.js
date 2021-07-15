@@ -61,8 +61,13 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail',
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId',
           component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/task/:taskId',
+          component: loadable(() => import('containers/org/m-project/env/detail/task-detail'), asyncLoadFallback),
           exact: true
         },
         {

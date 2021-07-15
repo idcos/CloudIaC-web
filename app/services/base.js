@@ -435,3 +435,77 @@ export const pjtAPI = {
   }
 
 };
+
+export const envAPI = {
+  envsList: ({ orgId, projectId }) => {
+    return getWithArgs('/api/v1/envs', {
+      pageSize: 99999,
+      currentPage: 1
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  
+  envsInfo: ({ envId, orgId, projectId }) => {
+    return getWithArgs(`/api/v1/envs/${envId}`, {
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 环境重新部署
+  envRedeploy: ({ envId, projectId, orgId }) => {
+    return post(`/envs/${envId}/deploy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  //销毁环境资源
+  envDestroy: ({ envId, projectId, orgId }) => {
+    return post(`/envs/${envId}/destroy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 获取环境资源列表
+  envsResourcesList: ({ envId, orgId, projectId, q }) => {
+    return getWithArgs(`/envs/${envId}/resources`, {
+      pageSize: 99999,
+      currentPage: 1,
+      q
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // terraform Output
+  envsOutput: ({ orgId, projectId, taskId }) => {
+    return getWithArgs(`/tasks/${taskId}/output`, {
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 查找当前任务实时日志
+  envsLastLog: ({ orgId, projectId, taskId }) => {
+    return getWithArgs(`/tasks/${taskId}/log/sse`, {
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+
+  // 获取环境资源列表
+  envsTaskList: ({ envId, orgId, projectId, q }) => {
+    return getWithArgs(`/envs/${envId}/tasks`, {
+      pageSize: 99999,
+      currentPage: 1,
+      q
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  
+  allEnableProjects: ({ orgId }) => {
+    return getWithArgs('/api/v1/projects', {
+      status: 'enable',
+      pageSize: 100000,
+      currentPage: 1
+    }, { 'IaC-Org-Id': orgId });
+  },
+  userList: ({ orgId }) => {
+    return getWithArgs('/api/v1/users', {
+      pageSize: 99999,
+      currentPage: 1
+    }, { 'IaC-Org-Id': orgId });
+  },
+  createProject: ({ orgId, ...restParams }) => {
+    return post('/api/v1/projects', { ...restParams }, { 'IaC-Org-Id': orgId });
+  },
+  editProject: ({ orgId, projectId, ...restParams }) => {
+    return put(`/api/v1/projects/${projectId}`, { ...restParams }, { 'IaC-Org-Id': orgId });
+  },
+  detailProject: ({ projectId, orgId }) => {
+    return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
+  }
+
+};
+

@@ -19,32 +19,26 @@ import styles from './styles.less';
 import { envAPI } from 'services/base';
 
 const subNavs = {
-  resource: '资源',
   deploy: '部署日志',
-  deployHistory: '部署历史',
-  variable: '变量',
-  setting: '设置'
+  resource: '资源'
 };
 
 const OrgSetting = (props) => {
-  const [ panel, setPanel ] = useState('resource');
-  const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
+  const [ panel, setPanel ] = useState('deploy');
+  const { dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
   const [ info, setInfo ] = useState({});
   
   
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} taskId={info.lastTaskId} />,
-      deploy: () => <Deploy {...props} taskId={info.lastTaskId} />,
-      deployHistory: () => <DeployHistory {...props}/>,
-      variable: () => <Variable {...props}/>,
-      setting: () => <Setting {...props}/>
+      resource: () => <Resource {...props} taskId={taskId} />,
+      deploy: () => <Deploy {...props} taskId={taskId} />
     };
     return PAGES[panel]({
       title: subNavs[panel],
       dispatch
     });
-  }, [ panel, info.lastTaskId ]);
+  }, [panel]);
   useEffect(() => {
     fetchInfo();
   }, []);

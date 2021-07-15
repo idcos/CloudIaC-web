@@ -7,20 +7,37 @@ export const chartOptions = {
         extraCssText: 'z-index: 2'
       },
       legend: {
-        bottom: 10,
+        left: 1,
+        top: 'center',
+        width: 300,
+        itemGap: 10,
+        textStyle: {
+          width: 60
+        },
         // data: (data.list || []).map(it => it.state),
-        data: data.legendData,
+        data: [ "活跃环境数量", "部署中环境数量", "失败环境数量", "不活跃环境数量", "待审批环境数量" ],
         icon: 'circle',
-        selected: data.selected
+        selected: [{ "活跃环境数量": true }, { "部署中环境数量": true }, { "不活跃环境数量": true }, { "失败环境数量": true }, { "待审批环境数量": true }]
       },
       series: [
         {
           name: '姓名',
           type: 'pie',
-          radius: '55%',
-          center: [ '50%', '50%' ],
-          data: data.seriesData,
-          label: false,
+          left: '50%',
+          radius: [ '40%', '70%' ],
+          // center: [ '50%', '50%' ],
+          data: [{ name: "活跃环境数量", value: 8710 }
+            , { name: "部署中环境数量", value: 58889 }
+            , { name: "不活跃环境数量", value: 3747 }
+            , { name: "失败环境数量", value: 26008 }
+            , { name: "待审批环境数量", value: 2220 }],
+          label: { 
+            show: true, 
+            formatter: ' {b}\n{d}%'
+          },
+          labelLine: {
+            smooth: true
+          },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,

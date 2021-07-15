@@ -1,47 +1,65 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Card, Space, Table, Input, notification, Descriptions, Menu } from 'antd';
-import history from 'utils/history';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
+import CoderCard from 'components/coder/coder-card';
+import Coder from "components/coder";
 
 import { Eb_WP } from 'components/error-boundary';
 
-import { pjtAPI, orgsAPI } from 'services/base';
+import { envAPI } from 'services/base';
 
 const Index = (props) => {
-  const { match, panel, routes } = props,
-    { params: { orgId } } = match;
+  const { match, taskId, routes } = props,
+    { params: { orgId, projectId, envId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [1],
+      list: [],
       total: 0
     }),
-    [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10,
-      status: panel
+    [ jsonData, setJsonData ] = useState({
+      "additionalProp1": {
+        "additionalProp1": {}
+      }
     }),
     [ search, setSearch ] = useState('');
 
   useEffect(() => {
     fetchList();
-  }, []);
+  }, [search]); 
+  useEffect(() => {
+
+    if (taskId) {
+      fetchOutput();
+    }
+  }, [taskId]);
 
   const fetchList = async () => {
     try {
       setLoading(true);
-      const { combinedStatus } = query;
-      const res = await pjtAPI.projectList({
-        statu: panel,
-        orgId: orgId
-      });
+      const res = await envAPI.envsResourcesList({ orgId, projectId, envId, q: search });
       if (res.code != 200) {
         throw new Error(res.message);
       }
       setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
+        list: res.result.list || []
       });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  const fetchOutput = async () => {
+    try {
+      setLoading(true);
+      const res = await envAPI.envsOutput({ orgId, projectId, taskId });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setJsonData(res.result.result.outputs || {});
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -80,11 +98,11 @@ const Index = (props) => {
   ];
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
-    
+      <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
     </Card>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 0 }} type={'inner'} title={'资源列表'}>
       <Input.Search
-        placeholder='请输入项目名称搜索'
+        placeholder='请输入关键字搜索'
         style={{ width: 240, margin: 20 }}
         onSearch={v => setSearch(v)}
       />

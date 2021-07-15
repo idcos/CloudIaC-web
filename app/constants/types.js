@@ -22,6 +22,11 @@ export const PROJECT_ROLE = {
   operator: '执行者',
   guest: '访客'
 };
+
+export const ENV_STATUS = {
+  'active': '活跃', 'failed': '归档', 'inactive': '不活跃'
+};
+
 export const CT = {
   taskType: {
     'plan': 'plan作业',

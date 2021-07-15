@@ -10,7 +10,8 @@ async function xFetch(url, options) {
   opts.headers = {
     ...opts.headers,
     'Authorization': token,
-    'IaC-Org-Id': opts['IaC-Org-Id'] || ''
+    'IaC-Org-Id': opts['IaC-Org-Id'] || '',
+    'IaC-Project-Id': opts['IaC-Project-Id'] || ''
   };
   if (opts.isEncode) {
     url = encodeURI(url);

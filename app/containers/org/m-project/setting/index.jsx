@@ -20,7 +20,7 @@ const subNavs = {
 };
 
 const OrgSetting = ({ routesParams, dispatch }) => {
-  const [ panel, setPanel ] = useState('user');
+  const [ panel, setPanel ] = useState('basic');
   const renderByPanel = useCallback(() => {
     const PAGES = {
       basic: (props) => <Basic {...props}/>,

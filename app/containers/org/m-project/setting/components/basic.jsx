@@ -30,8 +30,8 @@ const Index = (props) => {
     let selected = {};
     for (let i = 0; i < count; i++) {
       name = Math.random() > 0.65
-        ? makeWord(4, 1) + '·' + makeWord(3, 0)
-        : makeWord(2, 1);
+        ? makeWord(5, 6)
+        : makeWord(5, 6);
       legendData.push(name);
       seriesData.push({
         name: name,
@@ -107,10 +107,12 @@ const Index = (props) => {
       </Form>
     </Card>
     <Card title={'项目统计'} style={{ marginTop: 24 }}>
-      <Row gutter={16}>
-        {CHART.current.map(chart => <Col span={12}>
-          <div className='chartPanel'>
-            <h2>{chart.des}</h2>
+      <Row style={{ display: 'flex', justifyContent: 'center' }}>
+        {CHART.current.map(chart => <Col span={18}>
+          <div className='chartPanel' style={{ position: 'relative' }}>
+            <h2 style={{ position: 'relative', top: 120, left: 18 }}>云模板数量
+              <h1 style={{ display: 'flex' }}>{CHART.number || 5}</h1>
+            </h2>
             <div ref={chart.domRef} className='chartEle'></div>
           </div>
         </Col>)}
