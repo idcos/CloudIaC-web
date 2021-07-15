@@ -7,25 +7,22 @@ import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 
 
-import ApiToken from './pages/apiToken';
 import Orgs from './pages/orgs';
 import Params from './pages/params';
 
 import styles from './styles.less';
 
 const subNavs = {
-  apiToken: 'API Token',
-  params: '参数设置',
-  org: '组织设置'
+  org: '组织设置',
+  params: '参数设置'
 };
 
 const Sys = () => {
-  const [ panel, setPanel ] = useState('apiToken');
+  const [ panel, setPanel ] = useState('org');
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      apiToken: (props) => <ApiToken {...props}/>,
-      params: (props) => <Params {...props}/>,
-      org: (props) => <Orgs {...props}/>
+      org: (props) => <Orgs {...props}/>,
+      params: (props) => <Params {...props}/>
     };
     return PAGES[panel]({
       title: subNavs[panel]
