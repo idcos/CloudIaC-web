@@ -1,0 +1,154 @@
+import React, { useState, useEffect } from 'react';
+import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import vcsAPI from 'services/vcs';
+import OpModal from './components/op-modal';
+
+export default ({ orgId }) => {
+  const [ loading, setLoading ] = useState(false),
+    [ visible, setVisible ] = useState(false),
+    [ opt, setOpt ] = useState(null),
+    [ curRecord, setCurRecord ] = useState(null),
+    [ resultMap, setResultMap ] = useState({
+      list: [],
+      total: 0
+    }),
+    [ query, setQuery ] = useState({
+      currentPage: 1,
+      pageSize: 10
+    });
+
+  useEffect(() => {
+    fetchList();
+  }, [query]);
+
+  const fetchList = async () => {
+    try {
+      setLoading(true);
+      const res = await vcsAPI.searchVcs({
+        ...query,
+        orgId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  const changeQuery = (payload) => {
+    setQuery({
+      ...query,
+      ...payload
+    });
+  };
+
+  const toggleVisible = () => {
+    if (visible) {
+      setOpt(null);
+      setCurRecord(null);
+    }
+    setVisible(!visible);
+  };
+
+  const columns = [
+    {
+      dataIndex: 'name',
+      title: '密钥名称'
+    },
+    {
+      dataIndex: 'vcsToken',
+      title: '创建时间'
+    },
+    {
+      title: '操作',
+      render: (_, record) => {
+        return <Space split={<Divider type='vertical' />}>
+          <a className='danger-text' onClick={() => del(record)}>删除</a>
+        </Space>;
+      }
+    }
+  ];
+
+  const del = (record) => {
+    const { id } = record;
+    operation({ doWhat: 'del', payload: { id } });
+  };
+
+  const operation = async ({ doWhat, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => vcsAPI.createVcs(param),
+        del: ({ orgId, id }) => vcsAPI.deleteVcs({ orgId, id })
+      };
+      const res = await method[doWhat]({
+        orgId,
+        ...payload
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      fetchList();
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
+  return <div>
+    <div style={{ marginBottom: 20 }}>
+      <Button 
+        type='primary'
+        onClick={() => {
+          setOpt('add');
+          toggleVisible();
+        }}
+      >添加密钥</Button>
+    </div>
+    <Table
+      columns={columns}
+      dataSource={resultMap.list}
+      loading={loading}
+      pagination={{
+        current: query.currentPage,
+        pageSize: query.pageSize,
+        total: resultMap.total,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共${total}条`,
+        onChange: (page, pageSize) => {
+          changeQuery({
+            currentPage: page,
+            pageSize
+          });
+        }
+      }}
+    />
+    {
+      visible && <OpModal
+        visible={visible}
+        opt={opt}
+        toggleVisible={toggleVisible}
+        operation={operation}
+        curRecord={curRecord}
+      />
+    }
+  </div>;
+};

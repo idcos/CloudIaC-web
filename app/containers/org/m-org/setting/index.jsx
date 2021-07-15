@@ -8,6 +8,7 @@ import LayoutPlus from 'components/common/layout/plus';
 import ApiToken from './api-token';
 import UserRole from './user-role';
 import Vcs from './vcs';
+import Ssh from './ssh';
 import Notification from './notification';
 
 const subNavs = {
@@ -15,6 +16,7 @@ const subNavs = {
   userRole: '用户角色',
   apiToken: 'API Token',
   vcs: 'VCS',
+  ssh: 'ssh密钥',
   notification: '通知'
 };
 
@@ -26,9 +28,10 @@ export default ({ match }) => {
   const renderByPanel = useCallback(() => {
     const PAGES = {
       // orgs: (props) => <Orgs {...props} />,
-      apiToken: (props) => <ApiToken {...props} />,
       userRole: (props) => <UserRole {...props} />,
+      apiToken: (props) => <ApiToken {...props} />,
       vcs: (props) => <Vcs {...props} />,
+      ssh: (props) => <Ssh {...props} />,
       notification: (props) => <Notification {...props} />
     };
     return PAGES[panel]({
