@@ -36,7 +36,6 @@ const EnvVarForm = () => {
     {
       title: '来自',
       id: 'scope',
-      width: 150,
       column: {
         render: (text) => {
           return (
