@@ -15,13 +15,23 @@ const VariableForm = ({ varRef, defaultData = {}, defaultScope, showOtherVars = 
   const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
   const [ terraformVarList, setTerraformVarList ] = useState([]);
   const [ envVarList, setEnvVarList ] = useState([]);
+  const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
+  const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
 
   useEffect(() => {
     const { variables = [], ...otherVarData } = defaultData;
-    const defaultTerraformVarList = variables.filter(it => it.type === 'terraform');
-    const defaultEnvVarList = variables.filter(it => it.type === 'environment'); 
-    setTerraformVarList(defaultTerraformVarList);
-    setEnvVarList(defaultEnvVarList);
+    const defaultTerraformVars = variables.filter(it => it.type === 'terraform').map(it => {
+      it.isDiffScope = !!(it.isDiffScope || defaultScope !== it.scope);
+      return it;
+    });
+    const defaultEnvVars = variables.filter(it => it.type === 'environment').map(it => {
+      it.isDiffScope = !!(it.isDiffScope || defaultScope !== it.scope);
+      return it;
+    });
+    setDefalutTerraformVarList(defaultTerraformVars);
+    setDefalutEnvVarList(defaultEnvVars);
+    setTerraformVarList(defaultTerraformVars);
+    setEnvVarList(defaultEnvVars);
     otherVarForm.setFieldsValue(otherVarData);
   }, [defaultData]);
 
@@ -65,7 +75,9 @@ const VariableForm = ({ varRef, defaultData = {}, defaultScope, showOtherVars = 
         setEnvVarList,
         otherVarForm,
         setDeleteVariablesId,
-        defaultScope
+        defaultScope,
+        defalutTerraformVarList,
+        defalutEnvVarList
       }}
     >
       <div className='variable'>

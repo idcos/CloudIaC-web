@@ -13,20 +13,14 @@ const OptionDelete = (props) => {
 
   const { handleDelete, multiple, isSetting, settingId } = useContext(EditableContext);
 
-  return isSetting && settingId === id ? null : <Popconfirm
-    title='确认要删除当前行吗？'
-    okText='确定'
-    cancelText='取消'
-    onConfirm={() => {
-      handleDelete(id);
-    }}
-  >
+  return isSetting && settingId === id ? null : (
     <Button
       size='small'
-      {...buttonProps}
       disabled={!multiple && isSetting}
+      onClick={() => handleDelete(id)}
+      {...buttonProps}
     >{buttonText || '删除'}</Button>
-  </Popconfirm>;
+  );
 };
 
 export default OptionDelete;

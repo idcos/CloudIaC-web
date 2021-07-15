@@ -1,5 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { Card, Input, Checkbox, Tag } from 'antd';
+import pick from 'lodash/pick';
+import isEqual from 'lodash/isEqual';
+
 import EditableTable from 'components/Editable';
 
 import VarsContext from '../context';
@@ -8,7 +11,13 @@ import { SCOPE_ENUM } from '../enum';
 
 const TerraformVarForm = () => {
 
-  const { terraformVarRef, terraformVarList, setTerraformVarList, setDeleteVariablesId, defaultScope } = useContext(VarsContext);
+  const { terraformVarRef, terraformVarList, setTerraformVarList, setDeleteVariablesId, defaultScope, defalutTerraformVarList } = useContext(VarsContext);
+
+  const defalutTerraformVarListRef = useRef([]);
+
+  useEffect(() => {
+    defalutTerraformVarListRef.current = defalutTerraformVarList;
+  }, [defalutTerraformVarList]);
 
   const onDeleteRow = (row = {}) => {
     setDeleteVariablesId((preIds) => {
@@ -23,6 +32,13 @@ const TerraformVarForm = () => {
   const fields = [
     {
       id: 'id',
+      editable: true,
+      column: {
+        className: 'fn-hide'
+      }
+    },
+    {
+      id: 'isDiffScope',
       editable: true,
       column: {
         className: 'fn-hide'
@@ -44,8 +60,9 @@ const TerraformVarForm = () => {
       title: 'name',
       id: 'name',
       editable: true,
-      formFieldProps: {
-        placeholder: '请输入name'
+      renderFormInput: (record, { value, onChange }, form) => {
+        const { isDiffScope } = record;
+        return <Input placeholder='请输入name' disabled={isDiffScope} />;
       },
       formItemProps: {
         dependencies: ['id'],
@@ -110,7 +127,8 @@ const TerraformVarForm = () => {
       id: 'sensitive',
       editable: true,
       renderFormInput: (record, { value, onChange }, form) => {
-        return <Checkbox checked={!!value} onChange={e => {
+        const { isDiffScope } = record;
+        return <Checkbox checked={!!value} disabled={isDiffScope} onChange={e => {
           if (onChange) {
             onChange(e.target.checked);
           }
@@ -119,6 +137,37 @@ const TerraformVarForm = () => {
       }
     }
   ];
+
+  const optionRender = (record, optionNodes) => {
+    const { isDiffScope } = record;
+    const DeleteBtn = React.cloneElement(optionNodes.delete, { buttonProps: { disabled: isDiffScope } });
+    return (
+      DeleteBtn
+    );
+  };
+
+  const onChangeEditableTable = (list) => {
+    const pickKeys = [ 'value', 'description' ];
+    list = list.map(it => {
+      // 如来源不同 则对比数据
+      if (it.isDiffScope) {
+        const findIt = defalutTerraformVarListRef.current.find(v => v.name === it.name);
+        if (!findIt) {
+          return;
+        }
+        const pickFindIt = pick(findIt, pickKeys);
+        const pickIt = pick(it, pickKeys);
+        if (!isEqual(pickFindIt, pickIt)) {
+          it.scope = defaultScope;
+          delete it.id;
+        } else {
+          it = { ...it, ...findIt };
+        }
+      }
+      return it;
+    });
+    setTerraformVarList(list);
+  };
 
   return (
     <Card
@@ -132,7 +181,8 @@ const TerraformVarForm = () => {
         onDeleteRow={onDeleteRow}
         addBtnText='添加全局变量'
         multiple={true}
-        onChange={setTerraformVarList}
+        onChange={onChangeEditableTable}
+        optionRender={optionRender}
       />
     </Card>
   );
