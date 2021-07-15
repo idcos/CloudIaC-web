@@ -52,6 +52,7 @@ export default ({ match }) => {
         description: '保存成功'
       });
       setSpinning(false);
+      getVars();
     } catch (e) {
       setSpinning(false);
       notification.error({
