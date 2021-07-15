@@ -1,12 +1,12 @@
 import React, { useContext, useRef, useEffect } from 'react';
 import { Card, Input, Checkbox, Tag } from 'antd';
-import pick from 'lodash/pick';
 import isEqual from 'lodash/isEqual';
 
 import EditableTable from 'components/Editable';
 
 import VarsContext from '../context';
 import { SCOPE_ENUM } from '../enum';
+
 
 const EnvVarForm = () => {
 
@@ -18,16 +18,6 @@ const EnvVarForm = () => {
     defalutEnvVarListRef.current = defalutEnvVarList;
   }, [defalutEnvVarList]);
 
-  const onDeleteRow = (row = {}) => {
-    setDeleteVariablesId((preIds) => {
-      if (row.id && preIds.indexOf(row.id) === -1) {
-        return [ ...preIds, row.id ];
-      } else {
-        return preIds;
-      }
-    });
-  };
-
   const fields = [
     {
       id: 'id',
@@ -37,7 +27,7 @@ const EnvVarForm = () => {
       }
     },
     {
-      id: 'isDiffScope',
+      id: 'overwrites',
       editable: true,
       column: {
         className: 'fn-hide'
@@ -60,11 +50,10 @@ const EnvVarForm = () => {
       id: 'name',
       editable: true,
       renderFormInput: (record, { value, onChange }, form) => {
-        const { isDiffScope } = record;
-        return <Input placeholder='请输入name' disabled={isDiffScope} />;
+        const { scope, overwrites } = record;
+        return <Input placeholder='请输入name' disabled={scope !== defaultScope || overwrites} />;
       },
       formItemProps: {
-        dependencies: ['id'],
         rules: [
           { required: true, message: '请输入name' },
           (form) => ({
@@ -86,15 +75,19 @@ const EnvVarForm = () => {
       id: 'value',
       editable: true,
       formItemProps: {
-        dependencies: [ 'sensitive', 'id' ],
+        dependencies: [ 'sensitive', 'description' ],
         rules: [
           (form) => ({
             validator(_, value) {
-              const { sensitive, id } = form.getFieldsValue();
-              if (!(sensitive && id) && !value) {
-                return Promise.reject(new Error('请输入value'));
-              }
-              return Promise.resolve();
+              return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  const { sensitive, id } = form.getFieldsValue();
+                  if (!(sensitive && id) && !value) {
+                    reject(new Error('请输入value'));
+                  }
+                  resolve();
+                }, 300);
+              });
             }
           })
         ]
@@ -126,8 +119,7 @@ const EnvVarForm = () => {
       id: 'sensitive',
       editable: true,
       renderFormInput: (record, { value, onChange }, form) => {
-        const { isDiffScope } = record;
-        return <Checkbox checked={!!value} disabled={isDiffScope} onChange={e => {
+        return <Checkbox checked={!!value} onChange={e => {
           if (onChange) {
             onChange(e.target.checked);
           }
@@ -138,30 +130,68 @@ const EnvVarForm = () => {
   ];
 
   const optionRender = (record, optionNodes) => {
-    const { isDiffScope } = record;
-    const DeleteBtn = React.cloneElement(optionNodes.delete, { buttonProps: { disabled: isDiffScope } });
+    const { scope } = record;
+    const DeleteBtn = React.cloneElement(optionNodes.delete, { buttonProps: { disabled: scope !== defaultScope } });
     return (
       DeleteBtn
     );
   };
 
+  const onDeleteRow = ({ row, rows, k, handleChange }) => {
+    setDeleteVariablesId((preIds) => {
+      if (row.id && preIds.indexOf(row.id) === -1) {
+        return [ ...preIds, row.id ];
+      } else {
+        return preIds;
+      }
+    });
+    const { overwrites, editable_id, _key_id } = row;
+    if (overwrites) {
+      handleChange(
+        rows.map((item) => {
+          if (item.editable_id === k) {
+            return { ...overwrites, editable_id, _key_id };
+          }
+          return item;
+        })
+      );
+    } else {
+      handleChange(
+        rows.filter((item) => item.editable_id !== k)
+      );
+    }
+  };
+
   const onChangeEditableTable = (list) => {
-    const pickKeys = [ 'value', 'description' ];
     list = list.map(it => {
       // 如来源不同 则对比数据
-      if (it.isDiffScope) {
-        const findIt = defalutEnvVarListRef.current.find(v => v.name === it.name);
-        if (!findIt) {
-          return;
+      let findIt = defalutEnvVarListRef.current.find(v => v.name === it.name);
+      if (!findIt) {
+        return it;
+      }
+      const oldIt = findIt.scope !== defaultScope ? findIt : findIt.overwrites;
+      if (!oldIt) {
+        return it;
+      }
+      const pickFindIt = {
+        value: oldIt.value || '',
+        description: oldIt.description || '',
+        sensitive: !!oldIt.sensitive
+      };
+      const pickIt = {
+        value: it.value || '',
+        description: it.description || '',
+        sensitive: !!it.sensitive
+      };
+      // 数据不同 则来源置为默认来源 反之就恢复默认数据
+      if (!isEqual(pickFindIt, pickIt)) {
+        it.scope = defaultScope;
+        delete it.id;
+        if (!it.overwrites) {
+          it.overwrites = oldIt;
         }
-        const pickFindIt = pick(findIt, pickKeys);
-        const pickIt = pick(it, pickKeys);
-        if (!isEqual(pickFindIt, pickIt)) {
-          it.scope = defaultScope;
-          delete it.id;
-        } else {
-          it = { ...it, ...findIt };
-        }
+      } else {
+        it = { ...it, ...oldIt };
       }
       return it;
     });
@@ -177,8 +207,8 @@ const EnvVarForm = () => {
         defaultData={{ scope: defaultScope, sensitive: false, type: 'environment' }}
         value={envVarList}
         fields={fields}
-        addBtnText='添加全局变量'
         onDeleteRow={onDeleteRow}
+        addBtnText='添加全局变量'
         multiple={true}
         onChange={onChangeEditableTable}
         optionRender={optionRender}

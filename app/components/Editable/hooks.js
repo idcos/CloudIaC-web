@@ -51,9 +51,13 @@ export const useEditableState = ({
   const handleDelete = useCallback((key) => {
     const k = getEditableIdByIndex(key);
     if (isFunction(onDeleteRow)) {
-      onDeleteRow(
-        stateRef.current.find((item) => item.editable_id === k)
-      );
+      onDeleteRow({
+        row: stateRef.current.find((item) => item.editable_id === k),
+        rows: stateRef.current,
+        k,
+        handleChange
+      });
+      return;
     }
     handleChange(
       stateRef.current.filter((item) => item.editable_id !== k)
