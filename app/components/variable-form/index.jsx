@@ -6,7 +6,7 @@ import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
 import VarsContext from './context';
 
-const VariableForm = ({ varRef, defaultData = {}, defaultScope, showOtherVars = false }) => {
+const VariableForm = ({ varRef, defaultData, defaultScope, showOtherVars = false }) => {
 
   const terraformVarRef = useRef();
   const envVarRef = useRef();
@@ -19,6 +19,9 @@ const VariableForm = ({ varRef, defaultData = {}, defaultScope, showOtherVars = 
   const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
 
   useEffect(() => {
+    if (!defaultData) {
+      return;
+    }
     const { variables = [], ...otherVarData } = defaultData;
     const defaultTerraformVars = variables.filter(it => it.type === 'terraform').map(it => {
       it.isDiffScope = !!(it.isDiffScope || defaultScope !== it.scope);
@@ -32,7 +35,9 @@ const VariableForm = ({ varRef, defaultData = {}, defaultScope, showOtherVars = 
     setDefalutEnvVarList(defaultEnvVars);
     setTerraformVarList(defaultTerraformVars);
     setEnvVarList(defaultEnvVars);
-    otherVarForm.setFieldsValue(otherVarData);
+    if (showOtherVars) {
+      otherVarForm.setFieldsValue({ ...otherVarData });
+    }
   }, [defaultData]);
 
   useImperativeHandle(varRef, () => ({

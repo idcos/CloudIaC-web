@@ -194,7 +194,7 @@ export default ({ match = {} }) => {
               </Row>
             </Checkbox.Group>
           </Form.Item>
-          <VariableForm varRef={varRef} />
+          <VariableForm varRef={varRef} defaultScope='env'/>
           <Form.Item wrapperCol={{ offset: 12, span: 24 }}>
             <Button onClick={onFinish} style={{ marginTop: 20 }} type='primary' >执行部署</Button>
           </Form.Item>
