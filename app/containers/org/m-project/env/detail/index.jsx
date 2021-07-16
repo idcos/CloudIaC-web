@@ -31,7 +31,6 @@ const OrgSetting = (props) => {
   const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
   const [ info, setInfo ] = useState({});
   
-  
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} taskId={info.lastTaskId} />,
@@ -45,9 +44,11 @@ const OrgSetting = (props) => {
       dispatch
     });
   }, [ panel, info.lastTaskId ]);
+
   useEffect(() => {
     fetchInfo();
   }, []);
+  
   // 获取Info
   const fetchInfo = async () => {
     try {

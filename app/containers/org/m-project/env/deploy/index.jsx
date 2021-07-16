@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { notification, Tooltip, Select, Form, Input, Button, Checkbox, Space, DatePicker, Row, Col, Radio } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import PageHeaderPlus from "components/pageHeaderPlus";
+import history from 'utils/history';
 import copy from 'utils/copy';
 
 import VariableForm from 'components/variable-form';
@@ -165,6 +166,8 @@ const Index = ({ match = {} }) => {
       notification.success({
         description: '保存成功'
       });
+      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${(res.result || {}).id}`); 
+
       setSpinning(false);
       getVars();
     } catch (e) {

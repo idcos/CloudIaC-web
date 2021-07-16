@@ -59,19 +59,27 @@ const Index = (props) => {
       title: '状态'
     },
     {
-      dataIndex: 'phone',
-      title: '资源变更'
+      dataIndex: 'result',
+      title: '资源变更',
+      render: (t, r) => {
+        return (<div>{`+${(r.result || {}).resAdded}`}  {`~${(r.result || {}).resChanged}`}  {`-${(r.result || {}).resDestroyed}`}</div>); 
+      }
     },
     {
       dataIndex: 'createdAt',
       title: '开始执行时间'
     },
     {
-      dataIndex: 'data',
-      title: '执行时长'
+      dataIndex: 'startAt',
+      title: '执行时长',
+      render: (t, r) => {
+        let m1 = t && moment(t) || '',
+          m2 = moment(r.endAt);
+        return <span>{m2.diff(m1, 'minute')}</span>;
+      }
     },
     {
-      dataIndex: 'data',
+      dataIndex: 'creator',
       title: '执行人'
     },
     {
