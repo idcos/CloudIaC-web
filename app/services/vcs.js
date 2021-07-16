@@ -33,6 +33,21 @@ const vcsAPI = {
     }, {
       'IaC-Org-Id': orgId
     });
+  },
+  listRepo: ({ orgId, vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/repo`, restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  listRepoBranch: ({ orgId, vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/branch`, restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  listRepoTag: ({ orgId, vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/tag`, restParams, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

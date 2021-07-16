@@ -1,0 +1,38 @@
+import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
+
+const tplAPI = {
+  list: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs('/api/v1/templates', restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  create: ({ orgId, ...restParams }) => {
+    return post('/api/v1/templates', restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  detail: ({ orgId, tplId }) => {
+    return getWithArgs(`/api/v1/templates/${tplId}`, {}, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  del: ({ orgId, tplId }) => {
+    return del(`/api/v1/templates/${tplId}`, {}, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  update: ({ orgId, tplId, ...restParams }) => {
+    return put(`/api/v1/templates/${tplId}`, restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  listPlaybook: (params) => {
+    return getWithArgs('/api/v1/templates/playbook', params);
+  },
+  listTfvars: (params) => {
+    return getWithArgs('/api/v1/templates/tfvars', params);
+  }
+};
+
+export default tplAPI;

@@ -16,11 +16,14 @@ export default ({ stepHelper, orgId }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(1, values);
+    stepHelper.updateData({
+      type: 'basic', 
+      data: values
+    });
     stepHelper.next();
   };
 
-  return <div className='form-wrapper'>
+  return <div className='form-wrapper' style={{ width: 600 }}>
     <Form
       form={form}
       {...FL}
@@ -45,7 +48,9 @@ export default ({ stepHelper, orgId }) => {
         <Input.TextArea placeholder='请输入模板描述' />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
-        <Button type='primary' htmlType={'submit'}>下一步</Button>
+        <Space size={24}>
+          <Button type='primary' htmlType={'submit'}>下一步</Button>
+        </Space>
       </Form.Item>
     </Form>
   </div>;

@@ -11,20 +11,20 @@ const FL = {
   labelCol: { span: 5 },
   wrapperCol: { span: 14 }
 };
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 
-export default ({ stepHelper, orgId }) => {
+export default ({ stepHelper, orgId, type }) => {
 
   const [form] = Form.useForm();
 
-  const [ repoBranches, setRepoBranches ] = useState([]),
-    [ vcsList, setVcsList ] = useState([]),
-    [ vcsVisible, setVcsVisible ] = useState(false),
-    [ submitLoading, setSubmitLoading ] = useState(false);
+  const [ vcsVisible, setVcsVisible ] = useState(false);
+  const [ repoBranches, setRepoBranches ] = useState([]);
+  const [ repoTags, setRepoTags ] = useState([]);
+  const [ repos, setRepos ] = useState([]);
+  const [ vcsList, setVcsList ] = useState([]);
   
   useEffect(() => {
-    fetchRepoBranch();
-    // fetchVcsList();
+    fetchVcsList();
   }, []);
 
   const fetchVcsList = async () => {
@@ -42,6 +42,68 @@ export default ({ stepHelper, orgId }) => {
     } catch (e) {
       notification.error({
         message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  const fetchRepos = async ({ vcsId }) => {
+    try {
+      const res = await vcsAPI.listRepo({
+        orgId,
+        vcsId,
+        currentPage: 1,
+        pageSize: 100000
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setRepos(res.result.list || []);
+    } catch (e) {
+      notification.error({
+        message: '获取仓库失败',
+        description: e.message
+      });
+    }
+  };
+
+  const fetchRepoBranches = async ({ vcsId, repoId }) => {
+    try {
+      const res = await vcsAPI.listRepoBranch({
+        orgId,
+        vcsId,
+        repoId,
+        currentPage: 1,
+        pageSize: 100000
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setRepoBranches(res.result || []);
+    } catch (e) {
+      notification.error({
+        message: '获取仓库分支失败',
+        description: e.message
+      });
+    }
+  };
+
+  const fetchRepoTags = async ({ vcsId, repoId }) => {
+    try {
+      const res = await vcsAPI.listRepoTag({
+        orgId,
+        vcsId,
+        repoId,
+        currentPage: 1,
+        pageSize: 100000
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setRepoTags(res.result || []);
+    } catch (e) {
+      notification.error({
+        message: '获取仓库标签失败',
         description: e.message
       });
     }
@@ -72,27 +134,22 @@ export default ({ stepHelper, orgId }) => {
     }
   };
 
-  const fetchRepoBranch = async () => {
-    try {
-      const res = await ctAPI.listRepoBranch({
-        repoId: 1,
-        orgId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setRepoBranches(res.result || []);
-    } catch (e) {
-      console.log(e);
-      notification.error({
-        message: '获取仓库分支失败',
-        description: e.message
-      });
+  const onValuesChange = (changedValues, allValues) => {
+    if (changedValues.vcsId) {
+      fetchRepos(allValues);
+    }
+    if (changedValues.repoId) {
+      fetchRepoBranches(allValues);
+      fetchRepoTags(allValues);
     }
   };
 
-  const onFinish = async (values) => {
-    // 
+  const onFinish = (values) => {
+    stepHelper.updateData({
+      type, 
+      data: values
+    });
+    stepHelper.next();
   };
 
   const opVcsModal = () => {
@@ -107,11 +164,12 @@ export default ({ stepHelper, orgId }) => {
     </span>;
   };
 
-  return <div className='form-wrapper'>
+  return <div className='form-wrapper' style={{ width: 600 }}>
     <Form
       form={form}
       {...FL}
       onFinish={onFinish}
+      onValuesChange={onValuesChange}
     >
       <Form.Item
         label='vcs'
@@ -126,6 +184,8 @@ export default ({ stepHelper, orgId }) => {
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择vcs'
+          showSearch={true}
+          optionFilterProp='children'
           notFoundContent={<Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             imageStyle={{
@@ -142,7 +202,8 @@ export default ({ stepHelper, orgId }) => {
       </Form.Item>
       <Form.Item
         label='仓库名称'
-        name='repoBranch'
+        name='repoId'
+        // onChange={onChangeRepo}
         rules={[
           {
             required: true,
@@ -151,15 +212,17 @@ export default ({ stepHelper, orgId }) => {
         ]}
       >
         <Select 
+          showSearch={true}
+          optionFilterProp='children'
           getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择分支'
+          placeholder='请选择仓库'
         >
-          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
+          {repos.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
       </Form.Item>
       <Form.Item
         label='分支/标签'
-        name='gitbranch'
+        name='repoRevision'
         rules={[
           {
             required: true,
@@ -168,26 +231,30 @@ export default ({ stepHelper, orgId }) => {
         ]}
       >
         <Select 
+          showSearch={true}
+          optionFilterProp='children'
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择分支'
         >
-          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
+          <OptGroup label='分支'>
+            {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
+          </OptGroup>
+          <OptGroup label='标签'>
+            {repoTags.map(it => <Option value={it.name}>{it.name}</Option>)}
+          </OptGroup>
         </Select>
       </Form.Item>
       <Form.Item
         label='工作目录'
-        name='work'
+        name='workdir'
       >
-        <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择分支'
-        >
-          {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
-        </Select>
+        <Input placeholder='请输入工作目录' />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
-        <Button onClick={() => stepHelper.prev()} style={{ marginRight: 24 }}>上一步</Button>
-        <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
+        <Space size={24}>
+          <Button onClick={() => stepHelper.prev()}>上一步</Button>
+          <Button type='primary' htmlType={'submit'}>下一步</Button>
+        </Space>
       </Form.Item>
     </Form>
     {
@@ -195,7 +262,7 @@ export default ({ stepHelper, orgId }) => {
         visible={vcsVisible}
         toggleVisible={clVcsModal}
         opt={'add'}
-        reload={fetchRepoBranch}
+        reload={fetchVcsList}
         operation={vcsOperation}
       />
     }

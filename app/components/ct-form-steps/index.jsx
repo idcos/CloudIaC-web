@@ -1,34 +1,96 @@
-import React, { useState, useCallback } from 'react';
-import { Steps } from 'antd';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Steps, notification } from 'antd';
 
 import { Eb_WP } from 'components/error-boundary';
-
+import varsAPI from 'services/variables';
+import tplAPI from 'services/tpl';
+import history from "utils/history";
 
 import Basic from './step/basic';
 import Repo from './step/repo';
 import Variable from './step/variable';
 import Relation from './step/relation';
-
 import styles from './styles.less';
 
 const { Step } = Steps;
 
 const steps = [
-  { code: 'basic', title: '基础设置', Component: Basic },
-  { code: 'repo', title: '选择仓库', Component: Repo },
-  { code: 'variable', title: '变量设置', Component: Variable },
-  { code: 'relation', title: '关联项目', Component: Relation }
+  { type: 'basic', title: '基础设置', Component: Basic },
+  { type: 'repo', title: '选择仓库', Component: Repo },
+  { type: 'variable', title: '变量设置', Component: Variable },
+  { type: 'relation', title: '关联项目', Component: Relation }
 ];
 
-const CTFormSteps = ({ orgId }) => {
+const CTFormSteps = ({ orgId, tplId }) => {
   const [ stepIndex, setStepIndex ] = useState(0);
+  const [ ctData, setCtData ] = useState({});
 
   const stepHelper = useCallback(() => {
     return {
       next: () => setStepIndex(stepIndex + 1),
-      prev: () => setStepIndex(stepIndex != 0 ? stepIndex - 1 : 0)
+      prev: () => setStepIndex(stepIndex != 0 ? stepIndex - 1 : 0),
+      updateData: ({ type, data, isSubmit }) => {
+        setCtData((preCtData) => {
+          const newCtData = {
+            ...preCtData,
+            [type]: data
+          };
+          if (isSubmit) {
+            submit(newCtData);
+          }
+          return newCtData;
+        });
+      }
     };
   }, [stepIndex]);
+
+  const submit = async (data) => {
+    const { basic, repo, variable, relation } = data;
+    const params = {
+      ...basic, 
+      ...repo, 
+      ...variable, 
+      ...relation,
+      tplType: 'test',
+      orgId
+    };
+    try {
+      const res = await tplAPI.create(params);
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      history.push(`/org/${orgId}/m-org-ct`);
+    } catch (e) {
+      notification.error({
+        message: '保存失败',
+        description: e.message
+      });
+    }
+  };
+
+  useEffect(() => {
+    getVars();
+  }, []);
+
+  const getVars = async () => {
+    try {
+      const res = await varsAPI.search({ orgId, tplId, scope: 'template' });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setCtData(preCtData => ({
+        ...preCtData,
+        variable: {
+          variables: res.result || []
+        }
+      }));
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   return (
     <div className={styles.ctCreate}>
@@ -42,7 +104,9 @@ const CTFormSteps = ({ orgId }) => {
           stepIndex === index ? (
             <it.Component
               stepHelper={stepHelper()}
+              ctData={ctData}
               orgId={orgId}
+              type={it.type}
             />
           ) : null
         ))

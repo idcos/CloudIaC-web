@@ -329,6 +329,7 @@ export const sysAPI = {
     });
   }
 };
+
 export const pjtAPI = {
   projectList: ({ pageNo, pageSize, orgId }) => {
     return getWithArgs('/api/v1/projects', {
@@ -358,7 +359,6 @@ export const pjtAPI = {
   detailProject: ({ projectId, orgId }) => {
     return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
   }
-
 };
 
 export const envAPI = {

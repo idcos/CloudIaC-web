@@ -11,7 +11,7 @@ export default ({ match = {} }) => {
       extraHeader={<PageHeaderPlus title='新建云模版' breadcrumb={true} />}
     >
       <div className='idcos-card'>
-        <CTFormSteps orgId={orgId} />
+        <CTFormSteps orgId={orgId} opType='add' />
       </div>
     </LayoutPlus>
   );
