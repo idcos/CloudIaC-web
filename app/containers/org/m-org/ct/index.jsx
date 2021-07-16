@@ -9,8 +9,6 @@ import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 import tplAPI from 'services/tpl';
 
-import styles from './styles.less';
-
 const CTList = ({ match = {} }) => {
   const { orgId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
@@ -131,7 +129,7 @@ const CTList = ({ match = {} }) => {
     />}
   >
     <div className='idcos-card'>
-      <div className={styles.ct}>
+      <div>
         <div style={{ marginBottom: 20 }}>
           <Button 
             type='primary'

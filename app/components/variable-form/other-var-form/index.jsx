@@ -21,7 +21,7 @@ const OtherVarForm = () => {
         <Row gutter={8}>
           <Col span={11}>
             <Form.Item
-              name='varfile'
+              name='tfVarsFile'
               label='tfvars文件'
               rules={[
                 {

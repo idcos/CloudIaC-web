@@ -13,9 +13,8 @@ export default ({ stepHelper, orgId, type }) => {
 
   const [form] = Form.useForm();
 
-  const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ projectList, setProjectList ] = useState([]);
-  const [ indeterminate, setIndeterminate ] = useState(true);
+  const [ indeterminate, setIndeterminate ] = useState(false);
   const [ checkAll, setCheckAll ] = useState(false);
 
   useEffect(() => {
@@ -82,8 +81,8 @@ export default ({ stepHelper, orgId, type }) => {
       </Form.Item>
       <div className='btn-wrapper'>
         <Space size={24}>
-          <Button onClick={() => stepHelper.prev()} disabled={submitLoading}>上一步</Button>
-          <Button type='primary' htmlType={'submit'} loading={submitLoading}>完成</Button>
+          <Button onClick={() => stepHelper.prev()} >上一步</Button>
+          <Button type='primary' htmlType={'submit'} >完成</Button>
         </Space>
       </div>
     </Form>
