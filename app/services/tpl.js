@@ -36,6 +36,11 @@ const tplAPI = {
     return getWithArgs('/api/v1/templates/tfvars', restParams, {
       'IaC-Org-Id': orgId
     });
+  },
+  listImportVars: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/templates/variable', restParams, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

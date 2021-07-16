@@ -1,22 +1,57 @@
-import React, { useContext, useRef, useEffect } from 'react';
-import { Card, Input, Checkbox, Tag } from 'antd';
+import React, { useContext, useRef, useEffect, useState } from 'react';
+import { Card, Input, Checkbox, Tag, notification, Button } from 'antd';
 import isEqual from 'lodash/isEqual';
 
 import EditableTable from 'components/Editable';
+import tplAPI from 'services/tpl';
 
+import ImportVarsModal from '../components/import-vars-modal';
 import VarsContext from '../context';
 import { SCOPE_ENUM } from '../enum';
 
-
 const TerraformVarForm = () => {
 
-  const { terraformVarRef, terraformVarList, setTerraformVarList, setDeleteVariablesId, defaultScope, defalutTerraformVarList } = useContext(VarsContext);
+  const { 
+    terraformVarRef, 
+    terraformVarList, 
+    setTerraformVarList, 
+    setDeleteVariablesId, 
+    defaultScope, 
+    defalutTerraformVarList,
+    fetchParams,
+    canImportTerraformVar
+  } = useContext(VarsContext);
 
   const defalutTerraformVarListRef = useRef([]);
+  const [ importVars, setImportVars ] = useState([]);
+  const [ importModalVisible, setImportModalVisible ] = useState(false);
 
   useEffect(() => {
     defalutTerraformVarListRef.current = defalutTerraformVarList;
   }, [defalutTerraformVarList]);
+
+  useEffect(() => {
+    if (canImportTerraformVar && fetchParams) {
+      fetchImportVars();
+    }
+  }, [ fetchParams, canImportTerraformVar ]);
+
+  const fetchImportVars = async () => {
+    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
+    const params = { orgId, repoBranch: repoRevision, repoId, repoType, vcsId };
+    try {
+      const res = await tplAPI.listImportVars(params);
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setImportVars(res.result || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   const fields = [
     {
@@ -197,9 +232,15 @@ const TerraformVarForm = () => {
     setTerraformVarList(list);
   };
 
+  const onImportFinish = (params, cb) => {
+    setTerraformVarList((preList) => [ ...preList, ...params ]);
+    cb && cb();
+  };
+
   return (
     <Card
       title='Terraform变量'
+      extra={<Button type='primary' onClick={() => setImportModalVisible(true)}>导入</Button>}
     >
       <EditableTable
         getActionRef={ref => (terraformVarRef.current = ref.current)}
@@ -211,6 +252,14 @@ const TerraformVarForm = () => {
         multiple={true}
         onChange={onChangeEditableTable}
         optionRender={optionRender}
+      />
+      <ImportVarsModal 
+        importVars={importVars} 
+        visible={importModalVisible} 
+        terraformVarList={terraformVarList}
+        onClose={() => setImportModalVisible(false)}
+        defaultScope={defaultScope}
+        onFinish={onImportFinish}
       />
     </Card>
   );

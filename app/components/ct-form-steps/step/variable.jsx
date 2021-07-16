@@ -17,9 +17,11 @@ export default ({ stepHelper, type, ctData, orgId }) => {
   };
 
   const fetchParams = useMemo(() => {
-    const { vcsId, repoId, repoRevision } = ctData.repo || {};
+    if (!ctData.repo) {
+      return null;
+    }
     return {
-      orgId, vcsId, repoId, repoRevision
+      orgId, ...ctData.repo
     };
   }, [ ctData, orgId ]);
 

@@ -6,7 +6,14 @@ import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
 import VarsContext from './context';
 
-const VariableForm = ({ varRef, defaultData, fetchParams, canImportTerraformVar, defaultScope, showOtherVars = false }) => {
+const VariableForm = ({ 
+  varRef, 
+  defaultData, 
+  fetchParams, 
+  canImportTerraformVar = true, 
+  defaultScope, 
+  showOtherVars = false 
+}) => {
 
   const terraformVarRef = useRef();
   const envVarRef = useRef();
