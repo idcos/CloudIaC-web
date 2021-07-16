@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Radio, Select, Form, Input, Button, Empty, notification, Row, Col } from "antd";
 
-import { ctAPI, sysAPI } from 'services/base';
-import history from 'utils/history';
-import OpModal from 'components/vcs-modal';
-
 const FL = {
   labelCol: { span: 5 },
   wrapperCol: { span: 14 }
 };
-const { Option } = Select;
 
-export default ({ stepHelper, orgId }) => {
+export default ({ stepHelper, ctData, type }) => {
 
   const [form] = Form.useForm();
 
@@ -22,6 +17,12 @@ export default ({ stepHelper, orgId }) => {
     });
     stepHelper.next();
   };
+
+  useEffect(() => {
+    if (ctData[type]) {
+      form.setFieldsValue(ctData[type]);
+    }
+  }, [ ctData, type ]);
 
   return <div className='form-wrapper' style={{ width: 600 }}>
     <Form

@@ -13,7 +13,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-export default ({ stepHelper, orgId, type }) => {
+export default ({ stepHelper, orgId, ctData, type }) => {
 
   const [form] = Form.useForm();
 
@@ -26,6 +26,18 @@ export default ({ stepHelper, orgId, type }) => {
   useEffect(() => {
     fetchVcsList();
   }, []);
+
+  useEffect(() => {
+    const formData = ctData[type] || {};
+    form.setFieldsValue(formData);
+    if (formData.vcsId) {
+      fetchRepos(formData);
+    }
+    if (formData.repoId) {
+      fetchRepoBranches(formData);
+      fetchRepoTags(formData);
+    }
+  }, [ ctData, type ]);
 
   const fetchVcsList = async () => {
     try {
@@ -203,7 +215,6 @@ export default ({ stepHelper, orgId, type }) => {
       <Form.Item
         label='仓库名称'
         name='repoId'
-        // onChange={onChangeRepo}
         rules={[
           {
             required: true,

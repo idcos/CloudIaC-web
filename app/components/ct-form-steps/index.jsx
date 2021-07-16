@@ -21,7 +21,7 @@ const steps = [
   { type: 'relation', title: '关联项目', Component: Relation }
 ];
 
-const CTFormSteps = ({ orgId, tplId }) => {
+const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
 
@@ -52,25 +52,64 @@ const CTFormSteps = ({ orgId, tplId }) => {
       ...variable, 
       ...relation,
       tplType: 'test',
-      orgId
+      orgId,
+      tplId
     };
     try {
-      const res = await tplAPI.create(params);
+      const res = await tplAPI[opType === 'add' ? 'create' : 'update'](params);
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       history.push(`/org/${orgId}/m-org-ct`);
     } catch (e) {
       notification.error({
-        message: '保存失败',
-        description: e.message
+        message: e.message
       });
     }
   };
 
   useEffect(() => {
-    getVars();
-  }, []);
+    switch (opType) {
+      case 'add':
+        getVars();
+        break;
+      case 'edit':
+        fetchCTDetail();
+        break;
+
+      default:
+        break;
+    }
+  }, [opType]);
+
+  const fetchCTDetail = async () => {
+    try {
+      const res = await tplAPI.detail({
+        orgId, 
+        tplId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      const {
+        name, description,
+        vcsId, repoId, repoRevision, workdir,
+        variables, playVarsFile, playbook,
+        projectId
+      } = res.result || {};
+      setCtData({
+        basic: { name, description },
+        repo: { vcsId, repoId, repoRevision, workdir },
+        variable: { variables, playVarsFile, playbook },
+        relation: { projectId }
+      });
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   const getVars = async () => {
     try {
@@ -107,6 +146,7 @@ const CTFormSteps = ({ orgId, tplId }) => {
               ctData={ctData}
               orgId={orgId}
               type={it.type}
+              isShow={stepIndex === index}
             />
           ) : null
         ))

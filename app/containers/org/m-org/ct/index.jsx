@@ -7,24 +7,15 @@ import moment from 'moment';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
-import styles from './styles.less';
+import tplAPI from 'services/tpl';
 
-import { pjtAPI, orgsAPI } from 'services/base';
+import styles from './styles.less';
 
 const CTList = ({ match = {} }) => {
   const { orgId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [{
-        "createdAt": "2006-01-02 15:04:05",
-        "creatorId": "string",
-        "description": "string",
-        "id": "x-c3ek0co6n88ldvq1n6ag",
-        "name": "string",
-        "orgId": "string",
-        "status": "string",
-        "updatedAt": "2006-01-02 15:04:05"
-      }],
+      list: [],
       total: 0
     }),
     [ query, setQuery ] = useState({
@@ -46,31 +37,84 @@ const CTList = ({ match = {} }) => {
       title: '创建人'
     },
     {
-      dataIndex: 'taskUpdatedAt',
+      dataIndex: 'createdAt',
       title: '创建时间',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
       width: 180,
-      render: (_, record) => {
+      render: (record) => {
         return (
           <span className='inlineOp'>
-            <a type='link' >编辑</a>
+            <a type='link' onClick={() => updateCT(record.id)}>编辑</a>
             <Divider type='vertical' />
-            <a type='link' >删除</a>
+            <a type='link' onClick={() => onDel(record.id)}>删除</a>
           </span>
         );
       }
     }
   ];
 
+  const createCT = () => {
+    history.push(`/org/${orgId}/m-org-ct/createCT`);
+  };
+
+  const updateCT = (tplId) => {
+    history.push(`/org/${orgId}/m-org-ct/updateCT/${tplId}`);
+  };
+
+  const onDel = async (tplId) => {
+    try {
+      setLoading(true);
+      const res = await tplAPI.del({
+        tplId,
+        orgId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setLoading(false);
+      notification.success({
+        message: '删除成功'
+      });
+      fetchList();
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
   useEffect(() => {
     fetchList();
   }, [query]);
 
-  const fetchList = () => {
-    // console.log('fetchList');
+  const fetchList = async () => {
+    try {
+      setLoading(true);
+      const res = await tplAPI.list({
+        currentPage: query.pageNo,
+        pageSize: query.pageSize,
+        orgId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setLoading(false);
+      setResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
   };
 
   const changeQuery = (payload) => {
@@ -78,10 +122,6 @@ const CTList = ({ match = {} }) => {
       ...query,
       ...payload
     });
-  };
-
-  const createCT = () => {
-    history.push(`/org/${orgId}/m-org-ct/createCT`);
   };
 
   return <LayoutPlus
@@ -109,9 +149,9 @@ const CTList = ({ match = {} }) => {
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => `共${total}条`,
-            onChange: (page, pageSize) => {
+            onChange: (pageNo, pageSize) => {
               changeQuery({
-                pageNo: page,
+                pageNo,
                 pageSize
               });
             }

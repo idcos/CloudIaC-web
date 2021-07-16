@@ -37,6 +37,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/m-org-ct/updateCT/:tplId',
+          name: '编辑云模版',
+          component: loadable(() => import('containers/org/m-org/ct/update'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/m-org-variable',
           name: '组织设置：变量',
           component: loadable(() => import('containers/org/m-org/variable'), asyncLoadFallback),
