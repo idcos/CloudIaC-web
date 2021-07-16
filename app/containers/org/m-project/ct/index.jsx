@@ -30,6 +30,14 @@ const CTList = ({ match = {} }) => {
       title: '云模版描述'
     },
     {
+      dataIndex: 'activeEnvironment',
+      title: '活跃环境'
+    },
+    {
+      dataIndex: 'repoAddr',
+      title: '仓库'
+    },
+    {
       dataIndex: 'creator',
       title: '创建人'
     },
@@ -44,12 +52,19 @@ const CTList = ({ match = {} }) => {
       render: (record) => {
         return (
           <span className='inlineOp'>
-            <a type='link'>部署环境</a>
+            <a 
+              type='link' 
+              onClick={() => deployEnv(record.id)}
+            >部署</a>
           </span>
         );
       }
     }
   ];
+
+  const deployEnv = (ctId) => {
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${ctId}`);
+  };
 
   useEffect(() => {
     fetchList();

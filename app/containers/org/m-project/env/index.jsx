@@ -49,8 +49,7 @@ export default (props) => {
             > 
               <div className='btnsTop'>
                 <Button onClick={() => {
-                  history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${'tpl-c3okgvbn6m88icotqt20'}`); 
-                  // history.push(`/org/${orgId}/m-org-ct`);
+                  history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
                 }} type='primary'
                 >部署新环境</Button>
               </div>

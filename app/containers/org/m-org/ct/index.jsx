@@ -35,7 +35,7 @@ const CTList = ({ match = {} }) => {
       title: '活跃环境'
     },
     {
-      dataIndex: 'repoName',
+      dataIndex: 'repoAddr',
       title: '仓库'
     },
     {
