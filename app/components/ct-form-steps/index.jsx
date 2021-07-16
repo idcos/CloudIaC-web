@@ -3,65 +3,50 @@ import { Steps } from 'antd';
 
 import { Eb_WP } from 'components/error-boundary';
 
-import Step1 from './step1';
-import Step2 from './step2';
-import Step3 from './step3';
+
+import Basic from './step/basic';
+import Repo from './step/repo';
+import Variable from './step/variable';
+import Relation from './step/relation';
 
 import styles from './styles.less';
 
 const { Step } = Steps;
 
-const steps = {
-  step1: '选择仓库',
-  step2: '变量设置',
-  step3: '关联项目'
-};
+const steps = [
+  { code: 'basic', title: '基础设置', Component: Basic },
+  { code: 'repo', title: '选择仓库', Component: Repo },
+  { code: 'variable', title: '变量设置', Component: Variable },
+  { code: 'relation', title: '关联项目', Component: Relation }
+];
 
 const CTFormSteps = ({ orgId }) => {
-  const [ step, setStep ] = useState(0),
-    [ vcsId, setVcsId ] = useState(),
-    [ selection, setSelection ] = useState({});
+  const [ stepIndex, setStepIndex ] = useState(0);
 
   const stepHelper = useCallback(() => {
     return {
-      next: () => setStep(step + 1),
-      prev: () => setStep(step != 0 ? step - 1 : 0)
+      next: () => setStepIndex(stepIndex + 1),
+      prev: () => setStepIndex(stepIndex != 0 ? stepIndex - 1 : 0)
     };
-  }, [step]);
+  }, [stepIndex]);
 
   return (
     <div className={styles.ctCreate}>
       <div className='stepWrapper'>
-        <Steps current={step}>
-          {Object.keys(steps).map(it => <Step title={steps[it]} />)}
+        <Steps current={stepIndex}>
+          {steps.map(it => <Step title={it.title} />)}
         </Steps>
       </div>
-      <div className={`${step != 0 ? 'hidden' : ''}`}>
-        <Step1
-          stepHelper={stepHelper()}
-          selection={selection}
-          setSelection={setSelection}
-          vcsId={vcsId}
-          setVcsId={setVcsId}
-          orgId={orgId}
-        />
-      </div>
-      <div className={`${step != 1 ? 'hidden' : ''}`}>
-        <Step2
-          selection={selection}
-          stepHelper={stepHelper()}
-          vcsId={vcsId}
-          orgId={orgId}
-        />
-      </div>
-      <div className={`${step != 2 ? 'hidden' : ''}`}>
-        <Step3
-          selection={selection}
-          stepHelper={stepHelper()}
-          vcsId={vcsId}
-          orgId={orgId}
-        />
-      </div>
+      {
+        steps.map((it, index) => (
+          stepIndex === index ? (
+            <it.Component
+              stepHelper={stepHelper()}
+              orgId={orgId}
+            />
+          ) : null
+        ))
+      }
     </div>
   );
 };

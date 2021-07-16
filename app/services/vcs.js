@@ -22,12 +22,8 @@ const vcsAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  searchVcs: ({ orgId, pageSize, currentPage }) => {
-    return getWithArgs('/api/v1/vcs', {
-      status,
-      pageSize,
-      currentPage
-    }, {
+  searchVcs: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/vcs', restParams, {
       'IaC-Org-Id': orgId
     });
   },

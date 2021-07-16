@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Space, Radio, Select, Form, Input, Button, Empty, notification, Row, Col } from "antd";
 
-import { ctAPI, sysAPI } from 'services/base';
+import { ctAPI } from 'services/base';
+import vcsAPI from 'services/vcs';
+
 import history from 'utils/history';
 import OpModal from 'components/vcs-modal';
 
@@ -11,27 +13,44 @@ const FL = {
 };
 const { Option } = Select;
 
-export default ({ stepHelper, selection, orgId, vcsId }) => {
+export default ({ stepHelper, orgId }) => {
 
   const [form] = Form.useForm();
 
-  const { selectedRows } = selection;
   const [ repoBranches, setRepoBranches ] = useState([]),
-    [ ctRunnerList, setCtRunnerList ] = useState([]),
+    [ vcsList, setVcsList ] = useState([]),
     [ vcsVisible, setVcsVisible ] = useState(false),
     [ submitLoading, setSubmitLoading ] = useState(false);
   
   useEffect(() => {
-    if (selectedRows && selectedRows[0]) {
-      fetchRepoBranch();
-      fetchCTRunner();
-    }
-  }, [selectedRows]);
+    fetchRepoBranch();
+    // fetchVcsList();
+  }, []);
 
-  const operation = async ({ doWhat, payload }, cb) => {
+  const fetchVcsList = async () => {
+    try {
+      const res = await vcsAPI.searchVcs({
+        orgId,
+        status: 'enable',
+        currentPage: 1,
+        pageSize: 100000
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setVcsList(res.result.list || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  const vcsOperation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => ctAPI.createVcs(param)
+        add: (param) => vcsAPI.createVcs(param)
       };
       const res = await method[doWhat]({
         orgId,
@@ -43,7 +62,6 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
       notification.success({
         message: '操作成功'
       });
-      fetchRepoBranch();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -54,27 +72,11 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
     }
   };
 
-  const fetchCTRunner = async () => {
-    try {
-      const res = await sysAPI.listCTRunner({ orgId });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setCtRunnerList(res.result || []);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
   const fetchRepoBranch = async () => {
     try {
       const res = await ctAPI.listRepoBranch({
-        repoId: selectedRows[0].id,
-        orgId,
-        vcsId
+        repoId: 1,
+        orgId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -90,34 +92,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
   };
 
   const onFinish = async (values) => {
-    try {
-      setSubmitLoading(true);
-      const { ctServiceId, ...restValues } = values;
-      const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId) || {};
-      const { Port, Address } = ctInfo;
-      const res = await ctAPI.createCt({
-        ...restValues,
-        repoId: selectedRows[0].id,
-        repoAddr: selectedRows[0].http_url_to_repo,
-        orgId,
-        vcsId,
-        defaultRunnerServiceId: ctServiceId,
-        defaultRunnerAddr: Address,
-        defaultRunnerPort: Port
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setSubmitLoading(false);
-      notification.success({
-        message: '创建成功'
-      });
-    } catch (e) {
-      setSubmitLoading(false);
-      notification.error({
-        message: e.message
-      });
-    }
+    // 
   };
 
   const opVcsModal = () => {
@@ -140,7 +115,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
     >
       <Form.Item
         label='vcs'
-        name='vcs'
+        name='vcsId'
         rules={[
           {
             required: true,
@@ -162,7 +137,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
           >
           </Empty>}
         >
-          {[].map(it => <Option value={it.name}>{it.name}</Option>)}
+          {vcsList.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
       </Form.Item>
       <Form.Item
@@ -211,6 +186,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
+        <Button onClick={() => stepHelper.prev()} style={{ marginRight: 24 }}>上一步</Button>
         <Button type='primary' onClick={() => stepHelper.next()}>下一步</Button>
       </Form.Item>
     </Form>
@@ -220,7 +196,7 @@ export default ({ stepHelper, selection, orgId, vcsId }) => {
         toggleVisible={clVcsModal}
         opt={'add'}
         reload={fetchRepoBranch}
-        operation={operation}
+        operation={vcsOperation}
       />
     }
   </div>;
