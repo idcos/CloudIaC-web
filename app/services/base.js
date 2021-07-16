@@ -97,7 +97,7 @@ export const orgsAPI = {
     });
   },
   resetUserPwd: ({ orgId, id }) => {
-    return post(`/api/v1/users/${id}/reset_password`, {}, {
+    return post(`/api/v1/users/${id}/password/reset`, {}, {
       'IaC-Org-Id': orgId
     });
   },
