@@ -1,11 +1,12 @@
 import { useRef, useState, useEffect } from 'react';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 // sse hooks
 export const useEventSource = () => {
   let eventSourceRef = useRef();
 
   const init = (listeners, { url, options }) => {
-    eventSourceRef.current = new EventSource(url, options);
+    eventSourceRef.current = new EventSourcePolyfill(url, options);
     _listeners.call(eventSourceRef.current, listeners);
   };
 

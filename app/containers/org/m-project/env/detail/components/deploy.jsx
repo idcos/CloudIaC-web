@@ -149,6 +149,7 @@ const items = [
 export default (props) => {
   const { match, routesParams } = props;
   const curTask = Number(match.params.curTask);
+  const { params: { orgId, projectId, envId } } = match;
   const { curOrg, linkToRunningDetail, detailInfo, ctRunnerList } = routesParams;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
@@ -178,8 +179,8 @@ export default (props) => {
         // }
       },
       {
-        url: `/api/v1/task/log/sse?id=run-c3nvra6cie6gqeidk8qg`
-        // options: { withCredentials: true }
+        url: `/api/v1/task/log/sse?id=run-c3nvra6cie6gqeidk8qg`,
+        options: { withCredentials: true, headers: { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId } }
       }
     );
   };
