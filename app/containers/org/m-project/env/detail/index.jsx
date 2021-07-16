@@ -67,7 +67,7 @@ const OrgSetting = (props) => {
   };
   
   const redeploy = async() => {
-    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${'ct-c3oedlg6n88m9nqcljq0'}/${envId}`); 
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${'tpl-c3okgvbn6m88icotqt20'}/${envId}`); 
     
     // try {
     //   const res = await envAPI.envRedeploy({ orgId, projectId, envId });

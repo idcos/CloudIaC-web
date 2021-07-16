@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Tooltip, Select, Form, Input, Button, Checkbox, notification, Row, Col } from "antd";
+import { Card, DatePicker, Select, Form, Input, Button, Checkbox, notification, Row, Col } from "antd";
 import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -16,15 +16,20 @@ const PL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
+let awd = [{
+  name: '无限', value: 'infinite'
+}, {
+  name: '时间段', value: 'timequantum'
+}, {
+  name: '时间', value: 'time'
+}];
 let autoDestroy = [
-  { name: '不限', code: 0, time: 0 },
-  { name: '12小时', code: '12h', time: moment().add(12, "hours").format("YYYY-MM-DD HH:mm") },
-  { name: '一天', code: '1d', time: moment().add(1, "days").format("YYYY-MM-DD HH:mm") },
-  { name: '三天', code: '3d', time: moment().add(3, "days").format("YYYY-MM-DD HH:mm") },
-  { name: '一周', code: '1w', time: moment().add(1, "weeks").format("YYYY-MM-DD HH:mm") },
-  { name: '半个月', code: '15d', time: moment().add(15, "days").format("YYYY-MM-DD HH:mm") },
-  { name: '一个月', code: '28/29/30/31', time: moment().add(1, "months").format("YYYY-MM-DD HH:mm") }
-];
+  { name: '12小时', code: '12h' },
+  { name: '一天', code: '1d' },
+  { name: '三天', code: '3d' },
+  { name: '一周', code: '1w' },
+  { name: '半个月', code: '15d' },
+  { name: '一个月', code: '28/29/30/31' }];
 const { Option } = Select;
     
 const Index = (props) => {
@@ -46,6 +51,14 @@ const Index = (props) => {
         values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
+      if (!!values.destroyAt) {
+        values.destroyAt = moment(values.destroyAt).format('YYYY-MM-DD HH:mm');
+      }
+      if (values.type === 'infinite') {
+        values.ttl = '';
+      }
+      delete values.type;
+      delete values.xxx;
       const res = await envAPI.envsEdit({ orgId, projectId, ...values, taskType, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -63,6 +76,7 @@ const Index = (props) => {
   useEffect(() => {
     fetchInfo();
   }, []);
+
   const archive = async() => {
     try {
       const res = await envAPI.envsArchive({
@@ -79,6 +93,7 @@ const Index = (props) => {
     }
     
   };
+
   const fetchInfo = async () => {
     try {
       const res = await envAPI.envsInfo({
@@ -86,10 +101,15 @@ const Index = (props) => {
       });
       let data = res.result || {};
       if (data.autoApproval) {
-        data.triggers.push('autoApproval');
+        data.triggers = (data.triggers || []).concat(['autoApproval']);
       }
-      if (res.code != 200) {
-        throw new Error(res.message);
+      if (!!data.destroyAt) {
+        data.type = 'time';
+        form.setFieldsValue({ destroyAt: moment(data.destroyAt) });
+      } else if (data.ttl === '' || data.ttl === null || data.ttl == 0) {
+        data.type = 'infinite';
+      } else {
+        data.type = 'timequantum';
       }
       form.setFieldsValue(data);
       setInfo(data);
@@ -127,7 +147,7 @@ const Index = (props) => {
         </Form.Item>
         <Row>
           <Col span={8} style={{ marginLeft: '3%' }}>
-            <Form.Item
+            {/* <Form.Item
               label='生命周期'
               name='ttl'
             >
@@ -138,6 +158,56 @@ const Index = (props) => {
               >
                 {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
               </Select>
+            </Form.Item> */}
+            <Form.Item 
+              name='xxx'
+              label='生命周期'
+            >
+              <Row>
+                <Col span={8}>
+                  <Form.Item 
+                    name='type'
+                    initialValue={'infinite'}
+                  >
+                    <Select style={{ width: '90%' }}>
+                      {awd.map(d => <Option value={d.value}>{d.name}</Option>)}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item 
+                    noStyle={true}
+                    shouldUpdate={true}
+                  >
+                    {({ getFieldValue }) => {
+                      let type = getFieldValue('type'); 
+                      if (type === 'infinite') {
+                        return <></>;
+                      }
+                      if (type === 'timequantum') {
+                        return <Form.Item 
+                          name='ttl'
+                          noStyle={true}
+                          shouldUpdate={true}
+                        >
+                          <Select style={{ width: '100%' }}>
+                            {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
+                          </Select>
+                        </Form.Item>;
+                      }
+                      if (type === 'time') {
+                        return <Form.Item 
+                          name='destroyAt'
+                          noStyle={true}
+                          shouldUpdate={true}
+                        >
+                          <DatePicker showTime={true}/>
+                        </Form.Item>;
+                      }
+                    }}
+                  </Form.Item>
+                </Col>
+              </Row>
             </Form.Item>
           </Col>
         </Row>

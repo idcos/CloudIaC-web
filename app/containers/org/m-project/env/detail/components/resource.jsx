@@ -1,6 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Card, Space, Table, Input, notification, Descriptions, Menu } from 'antd';
-import CoderCard from 'components/coder/coder-card';
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
 

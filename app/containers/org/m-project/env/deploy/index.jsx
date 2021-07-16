@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { notification, Tooltip, Select, Form, Input, Button, Checkbox, DatePicker, Row, Col } from "antd";
+import { notification, Tooltip, Select, Form, Input, Button, Checkbox, Space, DatePicker, Row, Col, Radio } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import PageHeaderPlus from "components/pageHeaderPlus";
+import copy from 'utils/copy';
+
 import VariableForm from 'components/variable-form';
 import LayoutPlus from "components/common/layout/plus";
 import moment from 'moment';
@@ -17,18 +19,25 @@ const PL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
+let awd = [{
+  name: '无限', value: 'infinite'
+}, {
+  name: '时间段', value: 'timequantum'
+}, {
+  name: '时间', value: 'time'
+}];
 let autoDestroy = [
-  { name: '不限', code: 0, time: 0 },
-  { name: '12小时', code: '12h', time: moment().add(12, "hours").format("YYYY-MM-DD HH:mm") },
-  { name: '一天', code: '1d', time: moment().add(1, "days").format("YYYY-MM-DD HH:mm") },
-  { name: '三天', code: '3d', time: moment().add(3, "days").format("YYYY-MM-DD HH:mm") },
-  { name: '一周', code: '1w', time: moment().add(1, "weeks").format("YYYY-MM-DD HH:mm") },
-  { name: '半个月', code: '15d', time: moment().add(15, "days").format("YYYY-MM-DD HH:mm") },
-  { name: '一个月', code: '28/29/30/31', time: moment().add(1, "months").format("YYYY-MM-DD HH:mm") }
+  { name: '12小时', code: '12h' },
+  { name: '一天', code: '1d' },
+  { name: '三天', code: '3d' },
+  { name: '一周', code: '1w' },
+  { name: '半个月', code: '15d' },
+  { name: '一个月', code: '28/29/30/31' }
 ];
 const { Option, OptGroup } = Select;
+const {} = Radio;
   
-export default ({ match = {} }) => {
+const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, ctId } = match.params || {};
   const varRef = useRef();
   const [form] = Form.useForm();
@@ -42,18 +51,7 @@ export default ({ match = {} }) => {
   const [ info, setInfo ] = useState({});
   
   
-  useEffect(async() => {
-    if (envId) {
-      const infores = await envAPI.envsInfo({
-        orgId, projectId, envId
-      });
-      let data = infores.result || {};
-      if (data.autoApproval) {
-        data.triggers.push('autoApproval');
-      }
-      form.setFieldsValue(data);
-      setInfo(data);
-    }
+  useEffect(() => {
     fetchInfo();
     getVars();
   }, []);
@@ -77,6 +75,25 @@ export default ({ match = {} }) => {
   // 获取Info
   const fetchInfo = async () => {
     try {
+      if (envId) {
+        const infores = await envAPI.envsInfo({
+          orgId, projectId, envId
+        });
+        let data = infores.result || {};
+        if (data.autoApproval) {
+          data.triggers = (data.triggers || []).concat(['autoApproval']);
+        }
+        if (!!data.destroyAt) {
+          data.type = 'time';
+          form.setFieldsValue({ destroyAt: moment(data.destroyAt) });
+        } else if (data.ttl === '' || data.ttl === null || data.ttl == 0) {
+          data.type = 'infinite';
+        } else {
+          data.type = 'timequantum';
+        }
+        form.setFieldsValue(data);
+        setInfo(data);
+      }
       const res = await envAPI.templateDetail({
         orgId, templateId: ctId
       });
@@ -133,7 +150,15 @@ export default ({ match = {} }) => {
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
       setSpinning(true);
-      const res = await envAPI[envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId: ctId, taskType, envId: envId ? envId : undefined });
+      if (!!values.destroyAt) {
+        values.destroyAt = moment(values.destroyAt).format('YYYY-MM-DD HH:mm');
+      }
+      if (values.type === 'infinite') {
+        values.ttl = '';
+      }
+      delete values.type;
+      delete values.xxx;
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId: ctId, taskType, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -150,6 +175,11 @@ export default ({ match = {} }) => {
       });
     }
   };
+
+  const copyToUrl = () => {
+    copy('111');
+  };
+
   return (
     <LayoutPlus
       extraHeader={<PageHeaderPlus title='部署新环境' breadcrumb={true} />}
@@ -181,15 +211,9 @@ export default ({ match = {} }) => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item
+              {/* <Form.Item
                 label='生命周期:'
                 name='ttl'
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: '请选择'
-                //   }
-                // ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -198,7 +222,6 @@ export default ({ match = {} }) => {
                   dropdownRender={menu => (
                     <div>
                       {menu}
-                      {/* <Divider style={{ margin: '4px 0' }} /> */}
                       <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
                         <DatePicker placeholder={'自定义日期'}/>
                       </div>
@@ -207,6 +230,56 @@ export default ({ match = {} }) => {
                 >
                   {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
                 </Select>
+              </Form.Item> */}
+              <Form.Item 
+                name='xxx'
+                label='生命周期'
+              >
+                <Row>
+                  <Col span={8}>
+                    <Form.Item 
+                      name='type'
+                      initialValue={'infinite'}
+                    >
+                      <Select style={{ width: '90%' }}>
+                        {awd.map(d => <Option value={d.value}>{d.name}</Option>)}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item 
+                      noStyle={true}
+                      shouldUpdate={true}
+                    >
+                      {({ getFieldValue }) => {
+                        let type = getFieldValue('type'); 
+                        if (type === 'infinite') {
+                          return <></>;
+                        }
+                        if (type === 'timequantum') {
+                          return <Form.Item 
+                            name='ttl'
+                            noStyle={true}
+                            shouldUpdate={true}
+                          >
+                            <Select style={{ width: '100%' }}>
+                              {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
+                            </Select>
+                          </Form.Item>;
+                        }
+                        if (type === 'time') {
+                          return <Form.Item 
+                            name='destroyAt'
+                            noStyle={true}
+                            shouldUpdate={true}
+                          >
+                            <DatePicker showTime={true}/>
+                          </Form.Item>;
+                        }
+                      }}
+                    </Form.Item>
+                  </Col>
+                </Row>
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -223,12 +296,6 @@ export default ({ match = {} }) => {
               <Form.Item
                 label='分支/标签'
                 name='revision'
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: '请选择分支/标签'
-                //   }
-                // ]}
               >
                 <Select 
                   // getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -248,13 +315,6 @@ export default ({ match = {} }) => {
               <Form.Item
                 label='部署通道:'
                 name='runnerId'
-                initialValue={info.runnerId || undefined}
-                // rules={[
-                //   {
-                //     required: true,
-                //     message: '请选择部署通道'
-                //   }
-                // ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -280,24 +340,57 @@ export default ({ match = {} }) => {
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item
+          <Form.Item 
+            name='triggers'
+            {...PL}
+          >
+            <Form.Item 
+              noStyle={true}
+              shouldUpdate={true}
+            >
+              {({ getFieldValue }) => {
+                return <Form.Item
+                  name='triggers'
+                  {...PL}
+                >
+                  <Checkbox.Group style={{ width: '100%' }}>
+                    <Row>
+                      <Col span={8} style={{ paddingLeft: '3%' }}>
+                        <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
+                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  {(getFieldValue('triggers') || []).includes('commit') ? <a onClick={() => copyToUrl()}>复制URL</a> : <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>}
+                      </Col>
+                      <Col span={8} style={{ paddingLeft: '3%' }}>
+                        <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
+                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  {(getFieldValue('triggers') || []).includes('prmr') ? <a onClick={() => copyToUrl()}>复制URL</a> : <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>}
+                      </Col>
+                      <Col span={8} style={{ paddingLeft: '3%' }}>
+                        <Checkbox value='autoApproval'>自动通过审批</Checkbox>
+                      </Col>
+                    </Row>
+                  </Checkbox.Group>
+                </Form.Item>;
+              
+              }}
+            </Form.Item>
+          </Form.Item>
+          {/* <Form.Item
             name='triggers'
             {...PL}
           >
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='commit'>每次推送到该分支时自动重新部署</Checkbox>
+                  <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  {(form.getFieldValue('triggers') || []).includes('commit') && <a onClick={() => copyToUrl()}>复制URL</a>}
                 </Col>
                 <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划</Checkbox>
+                  <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  <a>复制URL</a>
                 </Col>
                 <Col span={8} style={{ paddingLeft: '3%' }}>
                   <Checkbox value='autoApproval'>自动通过审批</Checkbox>
                 </Col>
               </Row>
             </Checkbox.Group>
-          </Form.Item>
+          </Form.Item> */}
           <VariableForm varRef={varRef} defaultScope='env' defaultData={{ variables: vars }} showOtherVars={true}/>
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
@@ -308,3 +401,5 @@ export default ({ match = {} }) => {
     </LayoutPlus>
   );
 };
+
+export default Index;
