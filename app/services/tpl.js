@@ -27,11 +27,15 @@ const tplAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  listPlaybook: (params) => {
-    return getWithArgs('/api/v1/templates/playbook', params);
+  listPlaybook: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/templates/playbook', restParams, {
+      'IaC-Org-Id': orgId
+    });
   },
-  listTfvars: (params) => {
-    return getWithArgs('/api/v1/templates/tfvars', params);
+  listTfvars: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/templates/tfvars', restParams, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
