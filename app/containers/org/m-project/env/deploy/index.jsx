@@ -39,7 +39,7 @@ const { Option, OptGroup } = Select;
 const {} = Radio;
   
 const Index = ({ match = {} }) => {
-  const { orgId, projectId, envId, ctId } = match.params || {};
+  const { orgId, projectId, envId, tplId } = match.params || {};
   const varRef = useRef();
   const [form] = Form.useForm();
 
@@ -59,7 +59,7 @@ const Index = ({ match = {} }) => {
 
   const getVars = async () => {
     try {
-      const res = await varsAPI.search({ orgId, projectId, tplId: ctId, scope: 'env' });
+      const res = await varsAPI.search({ orgId, projectId, tplId, scope: 'env' });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -96,7 +96,7 @@ const Index = ({ match = {} }) => {
         setInfo(data);
       }
       const res = await envAPI.templateDetail({
-        orgId, templateId: ctId
+        orgId, templateId: tplId
       });
       const { vcsId, repoId } = res.result || {};
       // 获取分支数据
@@ -159,7 +159,7 @@ const Index = ({ match = {} }) => {
       }
       delete values.type;
       delete values.xxx;
-      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId: ctId, taskType, envId: envId ? envId : undefined });
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
       }

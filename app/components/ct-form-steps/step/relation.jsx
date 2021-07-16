@@ -9,7 +9,7 @@ const FL = {
   wrapperCol: { span: 14 }
 };
 
-export default ({ stepHelper, orgId, type }) => {
+export default ({ stepHelper, orgId, ctData, type }) => {
 
   const [form] = Form.useForm();
 
@@ -20,6 +20,22 @@ export default ({ stepHelper, orgId, type }) => {
   useEffect(() => {
     fetchProject();
   }, []);
+
+  useEffect(() => {
+    const defaultValues = ctData[type];
+    if (defaultValues) {
+      form.setFieldsValue(defaultValues);
+    }
+  }, [ ctData, type ]);
+
+  useEffect(() => {
+    const defaultValues = ctData[type];
+    if (defaultValues && projectList.length) {
+      const { projectId = [] } = defaultValues;
+      setIndeterminate(!!projectId.length && projectId.length < projectList.length);
+      setCheckAll(projectId.length === projectList.length);
+    }
+  }, [ ctData, type, projectList ]);
 
   const fetchProject = async() => {
     let res = await pjtAPI.projectList({ orgId, pageSize: 99999, pageNo: 1 });

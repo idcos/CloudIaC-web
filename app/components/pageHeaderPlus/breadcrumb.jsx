@@ -32,7 +32,7 @@ const breadcrumbNameMap = {
 const BreadcrumbWrapper = ({ location, params, externalData }) => {
   const pathSnippets = location.pathname.split('/')
     .filter(i => i)
-    .filter(i => !!isRouteParam({ orgId: params.orgId, ctId: params.ctId }, i) || breadcrumbNameMap.hasOwnProperty(i));
+    .filter(i => !!isRouteParam({ orgId: params.orgId, tplId: params.tplId }, i) || breadcrumbNameMap.hasOwnProperty(i));
   const extraBreadcrumbItems = pathSnippets.map((snippet, index) => {
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
     const isLastOne = index == pathSnippets.length - 1;

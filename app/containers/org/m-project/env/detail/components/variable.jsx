@@ -10,7 +10,7 @@ import { pjtAPI } from 'services/base';
 
 const Index = (props) => {
   const { match, panel, routes } = props,
-    { params: { orgId, projectId, ctId } } = match;
+    { params: { orgId, projectId, tplId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ loadingTf, setLoadingTf ] = useState(false),
     [ vars, setVars ] = useState([]),
@@ -30,7 +30,7 @@ const Index = (props) => {
 
   const getVars = async () => {
     try {
-      const res = await varsAPI.search({ orgId, projectId, tplId: ctId, scope: 'env' });
+      const res = await varsAPI.search({ orgId, projectId, tplId, scope: 'env' });
       if (res.code !== 200) {
         throw new Error(res.message);
       }

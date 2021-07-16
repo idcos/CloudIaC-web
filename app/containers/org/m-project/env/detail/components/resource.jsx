@@ -7,7 +7,7 @@ import { envAPI } from 'services/base';
 
 const Index = (props) => {
   const { match, taskId, routes } = props,
-    { params: { orgId, projectId, envId, ctId } } = match;
+    { params: { orgId, projectId, envId, tplId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],

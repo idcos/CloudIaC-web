@@ -53,6 +53,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       ...relation,
       tplType: 'test',
       orgId,
+      repoAddr: 'http://gitlab.idcos.com/iacsample/cloudiac-example.git',
       tplId
     };
     try {

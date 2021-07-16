@@ -62,8 +62,8 @@ const CTList = ({ match = {} }) => {
     }
   ];
 
-  const deployEnv = (ctId) => {
-    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${ctId}`);
+  const deployEnv = (tplId) => {
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${tplId}`);
   };
 
   useEffect(() => {
