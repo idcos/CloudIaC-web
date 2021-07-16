@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Space, Tooltip, Select, Form, Input, Button, Checkbox, DatePicker, Row, Col } from "antd";
+import { notification, Tooltip, Select, Form, Input, Button, Checkbox, DatePicker, Row, Col } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import PageHeaderPlus from "components/pageHeaderPlus";
 import VariableForm from 'components/variable-form';
 import LayoutPlus from "components/common/layout/plus";
 import CTFormSteps from 'components/ct-form-steps';
 import moment from 'moment';
+import { envAPI, ctAPI, sysAPI } from 'services/base';
+
+import varsAPI from 'services/variables';
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -24,19 +27,109 @@ let autoDestroy = [
   { name: '半个月', code: '15d', time: moment().add(15, "days").format("YYYY-MM-DD HH:mm") },
   { name: '一个月', code: '28/29/30/31', time: moment().add(1, "months").format("YYYY-MM-DD HH:mm") }
 ];
-const { Option } = Select;
+const { Option, OptGroup } = Select;
   
 export default ({ match = {} }) => {
-  const { orgId } = match.params || {};
+  const { orgId, projectId, envId, ctId } = match.params || {};
   const varRef = useRef();
   const [form] = Form.useForm();
-  const onFinish = async() => {
-    const values = form.getFieldsValue();
-    console.log(values);
-  };
+
+  const [ spinning, setSpinning ] = useState(false);
+  const [ vars, setVars ] = useState([]);
+  const [ branch, setBranch ] = useState([]);
+  const [ tag, setTag ] = useState([]);
+  const [ runnner, setRunnner ] = useState([]);
+  
   useEffect(() => {
-    console.log();
+    fetchInfo();
   }, []);
+  useEffect(() => {
+    getVars();
+  }, []);
+
+  const getVars = async () => {
+    try {
+    //   setSpinning(true);
+      const res = await varsAPI.search({ orgId, projectId, tplId: ctId, scope: 'env' });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setVars(res.result || []);
+      setSpinning(false);
+    } catch (e) {
+      setSpinning(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+  // 获取Info
+  const fetchInfo = async () => {
+    try {
+      const res = await envAPI.templateDetail({
+        orgId, templateId: ctId
+      });
+      const { vcsId, repoId } = res.result || {};
+      // 获取分支数据
+      const branchRes = await ctAPI.listRepoBranch({
+        orgId, vcsId, repoId 
+      });
+      if (branchRes.code === 200) {
+        setBranch(branchRes.result);
+      }
+      // 获取标签数据
+      const tagsRes = await ctAPI.listRepoTag({
+        orgId, vcsId, repoId 
+      });
+      
+      if (tagsRes.code === 200) {
+        setTag(tagsRes.result);
+      }
+      // 获取通道数据
+      const runnerRes = await sysAPI.listCTRunner({
+        orgId
+      });
+      
+      if (runnerRes.code === 200) {
+        setRunnner(runnerRes.result);
+      }
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+
+  const onFinish = async (taskType) => {
+    try {
+      const values = await form.validateFields();
+      const varData = await varRef.current.validateForm();
+      values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
+      values.triggers = values.triggers.filter(d => d !== 'autoApproval');
+      setSpinning(true);
+      const res = await envAPI.createEnv({ orgId, projectId, ...varData, ...values, tplId: ctId, taskType });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        description: '保存成功'
+      });
+      setSpinning(false);
+      getVars();
+    } catch (e) {
+      setSpinning(false);
+      notification.error({
+        message: '保存失败',
+        description: e.message
+      });
+    }
+  };
   return (
     <LayoutPlus
       extraHeader={<PageHeaderPlus title='部署新环境' breadcrumb={true} />}
@@ -61,19 +154,19 @@ export default ({ match = {} }) => {
                   }
                 ]}
               >
-                <Input style={{ width: '80%' }} />
+                <Input placeholder={'请输入环境名称'} style={{ width: '80%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
                 label='生命周期：'
                 name='autoDestroyAt'
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择'
-                  }
-                ]}
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: '请选择'
+                //   }
+                // ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -97,72 +190,65 @@ export default ({ match = {} }) => {
               <Form.Item
                 label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
                 name='target'
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入target'
-                  }
-                ]}
               >
-                <Input style={{ width: '80%' }} />
+                <Input placeholder={'请输入target'} style={{ width: '80%' }} />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={8}>
               <Form.Item
-                label='vcs'
-                name='vcs'
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择'
-                  }
-                ]}
+                label='分支/标签'
+                name='revision'
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: '请选择分支/标签'
+                //   }
+                // ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
-                  placeholder='请选择vcs'
+                  placeholder='请选择分支/标签'
                   style={{ width: '80%' }}
                 >
-                  {[ 1, 2, 3, 4, 5 ].map(it => <Option value={it}>{it}</Option>)}
+                  <OptGroup label='分支'>
+                    {branch.map(it => <Option value={it.name}>{it.name}</Option>)}
+                  </OptGroup>
+                  <OptGroup label='标签'>
+                    {tag.map(it => <Option value={it.name}>{it.name}</Option>)}
+                  </OptGroup>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label='vcs'
-                name='vcs'
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择'
-                  }
-                ]}
+                label='部署通道'
+                name='runnerId'
+                // rules={[
+                //   {
+                //     required: true,
+                //     message: '请选择部署通道'
+                //   }
+                // ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
-                  placeholder='请选择vcs'
+                  placeholder='请选择部署通道'
                   style={{ width: '80%' }}
                 >
-                  {[ 1, 2, 3, 4, 5 ].map(it => <Option value={it}>{it}</Option>)}
+                  {runnner.map(it => <Option value={it.ID}>{it.Service}</Option>)}
                 </Select>
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label='vcs'
-                name='vcs'
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择'
-                  }
-                ]}
+                label='密钥'
+                name='miyao'
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
-                  placeholder='请选择vcs'
+                  placeholder='请选择密钥'
                   style={{ width: '80%' }}
                 >
                   {[ 1, 2, 3, 4, 5 ].map(it => <Option value={it}>{it}</Option>)}
@@ -171,33 +257,28 @@ export default ({ match = {} }) => {
             </Col>
           </Row>
           <Form.Item
-            name='vcs'
-            rules={[
-              {
-                required: true,
-                message: '请选择'
-              }
-            ]}
+            name='triggers'
             {...PL}
           >
             <Checkbox.Group style={{ width: '100%' }}>
               <Row>
                 <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='A'>每次推送到该分支时自动重新部署</Checkbox>
+                  <Checkbox value='commit'>每次推送到该分支时自动重新部署</Checkbox>
                 </Col>
                 <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='B'>该分支提交PR/MR时自动执行plan计划</Checkbox>
+                  <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划</Checkbox>
                 </Col>
                 <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='C'>自动通过审批</Checkbox>
+                  <Checkbox value='autoApproval'>自动通过审批</Checkbox>
                 </Col>
               </Row>
             </Checkbox.Group>
           </Form.Item>
-          <VariableForm varRef={varRef} defaultScope='env'/>
-          <Form.Item wrapperCol={{ offset: 12, span: 24 }}>
-            <Button onClick={onFinish} style={{ marginTop: 20 }} type='primary' >执行部署</Button>
-          </Form.Item>
+          <VariableForm varRef={varRef} defaultScope='env' defaultData={{ variables: vars }} showOtherVars={true}/>
+          <Row style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
+            <Button onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
+          </Row>
         </Form>
       </div>
     </LayoutPlus>

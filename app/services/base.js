@@ -145,8 +145,15 @@ export const ctAPI = {
     });
   },
   listRepoBranch: ({ repoId, orgId, vcsId }) => {
-    return getWithArgs('/api/v1/vcs/branch/search', {
-      repoId, vcsId
+    return getWithArgs(`/api/v1/vcs/${vcsId}/branch`, {
+      repoId
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  listRepoTag: ({ repoId, orgId, vcsId }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/tag`, {
+      repoId
     }, {
       'IaC-Org-Id': orgId
     });
@@ -375,15 +382,15 @@ export const envAPI = {
   },
   // 环境重新部署
   envRedeploy: ({ envId, projectId, orgId }) => {
-    return post(`/envs/${envId}/deploy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/deploy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   //销毁环境资源
   envDestroy: ({ envId, projectId, orgId }) => {
-    return post(`/envs/${envId}/destroy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/destroy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源列表
   envsResourcesList: ({ envId, orgId, projectId, q }) => {
-    return getWithArgs(`/envs/${envId}/resources`, {
+    return getWithArgs(`/api/v1/envs/${envId}/resources`, {
       pageSize: 99999,
       currentPage: 1,
       q
@@ -391,46 +398,31 @@ export const envAPI = {
   },
   // terraform Output
   envsOutput: ({ orgId, projectId, taskId }) => {
-    return getWithArgs(`/tasks/${taskId}/output`, {
+    return getWithArgs(`/api/v1/tasks/${taskId}/output`, {
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 查找当前任务实时日志
   envsLastLog: ({ orgId, projectId, taskId }) => {
-    return getWithArgs(`/tasks/${taskId}/log/sse`, {
+    return getWithArgs(`/api/v1/tasks/${taskId}/log/sse`, {
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
 
   // 获取环境资源列表
   envsTaskList: ({ envId, orgId, projectId, q }) => {
-    return getWithArgs(`/envs/${envId}/tasks`, {
+    return getWithArgs(`/api/v1/envs/${envId}/tasks`, {
       pageSize: 99999,
       currentPage: 1,
       q
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
-  
-  allEnableProjects: ({ orgId }) => {
-    return getWithArgs('/api/v1/projects', {
-      status: 'enable',
-      pageSize: 100000,
-      currentPage: 1
+  // 获取云模板详情
+  templateDetail: ({ templateId, orgId, projectId, q }) => {
+    return getWithArgs(`/api/v1/templates/${templateId}`, {
     }, { 'IaC-Org-Id': orgId });
   },
-  userList: ({ orgId }) => {
-    return getWithArgs('/api/v1/users', {
-      pageSize: 99999,
-      currentPage: 1
-    }, { 'IaC-Org-Id': orgId });
-  },
-  createProject: ({ orgId, ...restParams }) => {
-    return post('/api/v1/projects', { ...restParams }, { 'IaC-Org-Id': orgId });
-  },
-  editProject: ({ orgId, projectId, ...restParams }) => {
-    return put(`/api/v1/projects/${projectId}`, { ...restParams }, { 'IaC-Org-Id': orgId });
-  },
-  detailProject: ({ projectId, orgId }) => {
-    return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
+  // 获取云模板详情
+  createEnv: ({ orgId, projectId, ...resetParams }) => {
+    return post(`/api/v1/envs`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
-
 };
 

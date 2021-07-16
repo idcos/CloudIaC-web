@@ -55,7 +55,7 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/deploy',
+          path: '/org/:orgId/project/:projectId/m-project-env/deploy/:ctId',
           name: '部署新环境：选择云模板',
           component: loadable(() => import('containers/org/m-project/env/deploy'), asyncLoadFallback),
           exact: true
