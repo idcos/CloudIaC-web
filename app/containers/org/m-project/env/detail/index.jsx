@@ -67,17 +67,19 @@ const OrgSetting = (props) => {
   };
   
   const redeploy = async() => {
-    try {
-      const res = await envAPI.envRedeploy({ orgId, projectId, envId });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-    } catch (e) {
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${'ct-c3oedlg6n88m9nqcljq0'}/${envId}`); 
+    
+    // try {
+    //   const res = await envAPI.envRedeploy({ orgId, projectId, envId });
+    //   if (res.code != 200) {
+    //     throw new Error(res.message);
+    //   }
+    // } catch (e) {
+    //   notification.error({
+    //     message: '操作失败',
+    //     description: e.message
+    //   });
+    // }
   };
 
   const destroy = async() => {

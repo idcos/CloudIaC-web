@@ -26,7 +26,12 @@ export const PROJECT_ROLE = {
 export const ENV_STATUS = {
   'active': '活跃', 'failed': '归档', 'inactive': '不活跃'
 };
-
+export const SCOPE_ENUM = {
+  org: '组织',
+  project: '项目',
+  template: '云模版',
+  env: '环境'
+};
 export const CT = {
   taskType: {
     'plan': 'plan作业',

@@ -4,10 +4,9 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import PageHeaderPlus from "components/pageHeaderPlus";
 import VariableForm from 'components/variable-form';
 import LayoutPlus from "components/common/layout/plus";
-import CTFormSteps from 'components/ct-form-steps';
 import moment from 'moment';
-import { envAPI, ctAPI, sysAPI } from 'services/base';
 
+import { envAPI, ctAPI, sysAPI } from 'services/base';
 import varsAPI from 'services/variables';
 
 const FL = {
@@ -19,7 +18,7 @@ const PL = {
   wrapperCol: { span: 24 }
 };
 let autoDestroy = [
-  { name: '不限', code: '0', time: '0' },
+  { name: '不限', code: 0, time: 0 },
   { name: '12小时', code: '12h', time: moment().add(12, "hours").format("YYYY-MM-DD HH:mm") },
   { name: '一天', code: '1d', time: moment().add(1, "days").format("YYYY-MM-DD HH:mm") },
   { name: '三天', code: '3d', time: moment().add(3, "days").format("YYYY-MM-DD HH:mm") },
@@ -39,17 +38,28 @@ export default ({ match = {} }) => {
   const [ branch, setBranch ] = useState([]);
   const [ tag, setTag ] = useState([]);
   const [ runnner, setRunnner ] = useState([]);
+  const [ keys, setKeys ] = useState([]);
+  const [ info, setInfo ] = useState({});
   
-  useEffect(() => {
+  
+  useEffect(async() => {
+    if (envId) {
+      const infores = await envAPI.envsInfo({
+        orgId, projectId, envId
+      });
+      let data = infores.result || {};
+      if (data.autoApproval) {
+        data.triggers.push('autoApproval');
+      }
+      form.setFieldsValue(data);
+      setInfo(data);
+    }
     fetchInfo();
-  }, []);
-  useEffect(() => {
     getVars();
   }, []);
 
   const getVars = async () => {
     try {
-    //   setSpinning(true);
       const res = await varsAPI.search({ orgId, projectId, tplId: ctId, scope: 'env' });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -76,15 +86,16 @@ export default ({ match = {} }) => {
         orgId, vcsId, repoId 
       });
       if (branchRes.code === 200) {
-        setBranch(branchRes.result);
+        setBranch(branchRes.result || []);
       }
+      
       // 获取标签数据
       const tagsRes = await ctAPI.listRepoTag({
         orgId, vcsId, repoId 
       });
       
       if (tagsRes.code === 200) {
-        setTag(tagsRes.result);
+        setTag(tagsRes.result || []);
       }
       // 获取通道数据
       const runnerRes = await sysAPI.listCTRunner({
@@ -92,7 +103,14 @@ export default ({ match = {} }) => {
       });
       
       if (runnerRes.code === 200) {
-        setRunnner(runnerRes.result);
+        setRunnner(runnerRes.result || []);
+      }
+      // 获取密钥数据
+      const keysRes = await envAPI.keysList({
+        orgId
+      });
+      if (keysRes.code === 200) {
+        setKeys(keysRes.result || []);
       }
       if (res.code != 200) {
         throw new Error(res.message);
@@ -110,10 +128,12 @@ export default ({ match = {} }) => {
     try {
       const values = await form.validateFields();
       const varData = await varRef.current.validateForm();
-      values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
-      values.triggers = values.triggers.filter(d => d !== 'autoApproval');
+      if (values.triggers) {
+        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
+        values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
+      }
       setSpinning(true);
-      const res = await envAPI.createEnv({ orgId, projectId, ...varData, ...values, tplId: ctId, taskType });
+      const res = await envAPI[envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId: ctId, taskType, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -141,11 +161,12 @@ export default ({ match = {} }) => {
           {...FL}
           onFinish={onFinish}
           layout={'vertical'}
+          initialValues={info}
         >
           <Row>
             <Col span={8}>
               <Form.Item
-                label='环境名称：'
+                label='环境名称:'
                 name='name'
                 rules={[
                   {
@@ -153,14 +174,16 @@ export default ({ match = {} }) => {
                     message: '请输入'
                   }
                 ]}
+                initialValue={info.name || undefined}
+                // initialValue={'false'}
               >
-                <Input placeholder={'请输入环境名称'} style={{ width: '80%' }} />
+                <Input value={info.name} placeholder={'请输入环境名称'} style={{ width: '80%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>
               <Form.Item
-                label='生命周期：'
-                name='autoDestroyAt'
+                label='生命周期:'
+                name='ttl'
                 // rules={[
                 //   {
                 //     required: true,
@@ -188,7 +211,7 @@ export default ({ match = {} }) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
+                label={<span>target:<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
                 name='target'
               >
                 <Input placeholder={'请输入target'} style={{ width: '80%' }} />
@@ -208,7 +231,7 @@ export default ({ match = {} }) => {
                 // ]}
               >
                 <Select 
-                  getPopupContainer={triggerNode => triggerNode.parentNode}
+                  // getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择分支/标签'
                   style={{ width: '80%' }}
                 >
@@ -223,8 +246,9 @@ export default ({ match = {} }) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label='部署通道'
+                label='部署通道:'
                 name='runnerId'
+                initialValue={info.runnerId || undefined}
                 // rules={[
                 //   {
                 //     required: true,
@@ -243,15 +267,15 @@ export default ({ match = {} }) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label='密钥'
-                name='miyao'
+                label='密钥:'
+                name='keys'
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择密钥'
                   style={{ width: '80%' }}
                 >
-                  {[ 1, 2, 3, 4, 5 ].map(it => <Option value={it}>{it}</Option>)}
+                  {keys.map(it => <Option value={it.id}>{it.name}</Option>)}
                 </Select>
               </Form.Item>
             </Col>

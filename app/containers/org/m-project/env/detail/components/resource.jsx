@@ -2,14 +2,13 @@ import React, { useState, useEffect, memo } from 'react';
 import { Card, Space, Table, Input, notification, Descriptions, Menu } from 'antd';
 import CoderCard from 'components/coder/coder-card';
 import Coder from "components/coder";
-
 import { Eb_WP } from 'components/error-boundary';
 
 import { envAPI } from 'services/base';
 
 const Index = (props) => {
   const { match, taskId, routes } = props,
-    { params: { orgId, projectId, envId } } = match;
+    { params: { orgId, projectId, envId, ctId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -25,8 +24,8 @@ const Index = (props) => {
   useEffect(() => {
     fetchList();
   }, [search]); 
-  useEffect(() => {
 
+  useEffect(() => {
     if (taskId) {
       fetchOutput();
     }
@@ -59,7 +58,7 @@ const Index = (props) => {
       if (res.code != 200) {
         throw new Error(res.message);
       }
-      setJsonData(res.result.result.outputs || {});
+      setJsonData(res.result || {});
       setLoading(false);
     } catch (e) {
       setLoading(false);
