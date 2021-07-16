@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
-import vcsAPI from 'services/vcs';
+import keysAPI from 'services/keys';
 import OpModal from './components/op-modal';
 
 export default ({ orgId }) => {
@@ -25,7 +25,7 @@ export default ({ orgId }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await vcsAPI.searchVcs({
+      const res = await keysAPI.list({
         ...query,
         orgId
       });
@@ -88,8 +88,8 @@ export default ({ orgId }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => vcsAPI.createVcs(param),
-        del: ({ orgId, id }) => vcsAPI.deleteVcs({ orgId, id })
+        add: (param) => keysAPI.create(param),
+        del: ({ orgId, id }) => keysAPI.del({ orgId, id })
       };
       const res = await method[doWhat]({
         orgId,

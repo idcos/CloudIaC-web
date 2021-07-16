@@ -94,13 +94,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       const {
         name, description,
         vcsId, repoId, repoRevision, workdir,
-        variables, playVarsFile, playbook,
+        variables, tfVarsFile, playbook,
         projectId
       } = res.result || {};
       setCtData({
         basic: { name, description },
         repo: { vcsId, repoId, repoRevision, workdir },
-        variable: { variables, playVarsFile, playbook },
+        variable: { variables, tfVarsFile, playbook },
         relation: { projectId }
       });
     } catch (e) {

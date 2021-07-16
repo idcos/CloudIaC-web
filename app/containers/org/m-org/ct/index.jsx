@@ -31,6 +31,14 @@ const CTList = ({ match = {} }) => {
       title: '云模版描述'
     },
     {
+      dataIndex: 'activeEnvironment',
+      title: '活跃环境'
+    },
+    {
+      dataIndex: 'repoName',
+      title: '仓库'
+    },
+    {
       dataIndex: 'creator',
       title: '创建人'
     },

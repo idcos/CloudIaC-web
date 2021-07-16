@@ -6,7 +6,7 @@ const FL = {
   wrapperCol: { span: 19 }
 };
 
-export default ({ orgId, visible, toggleVisible, operation }) => {
+export default ({ visible, toggleVisible, operation }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
@@ -17,8 +17,6 @@ export default ({ orgId, visible, toggleVisible, operation }) => {
     operation({
       doWhat: 'add',
       payload: {
-        orgId,
-        type: 'api',
         ...values
       }
     }, (hasError) => {
@@ -55,7 +53,7 @@ export default ({ orgId, visible, toggleVisible, operation }) => {
         </Form.Item>
         <Form.Item
           label='私钥'
-          name='sshKey'
+          name='key'
           rules={[
             {
               required: true,
