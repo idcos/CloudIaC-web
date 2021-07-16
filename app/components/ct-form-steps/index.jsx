@@ -22,7 +22,7 @@ const steps = [
 ];
 
 const CTFormSteps = ({ orgId, tplId, opType }) => {
-  const [ stepIndex, setStepIndex ] = useState(2);
+  const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
 
   const stepHelper = useCallback(() => {

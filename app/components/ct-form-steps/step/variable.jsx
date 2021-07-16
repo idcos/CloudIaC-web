@@ -29,6 +29,7 @@ export default ({ stepHelper, type, ctData, orgId }) => {
     <VariableForm 
       varRef={varRef} 
       showOtherVars={true} 
+      canImportTerraformVar={true}
       defaultScope='template' 
       defaultData={ctData[type]} 
       fetchParams={fetchParams}

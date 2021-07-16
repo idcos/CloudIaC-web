@@ -18,7 +18,7 @@ export default (props) => {
     }, 
     {
       title: 'value',
-      dataIndex: 'default',
+      dataIndex: 'value',
       width: 200
     }, 
     {

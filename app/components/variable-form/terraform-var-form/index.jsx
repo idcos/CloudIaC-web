@@ -38,7 +38,7 @@ const TerraformVarForm = () => {
 
   const fetchImportVars = async () => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoBranch: repoRevision, repoId, repoType, vcsId };
+    const params = { orgId, repoRevision, repoId, repoType, vcsId };
     try {
       const res = await tplAPI.listImportVars(params);
       if (res.code !== 200) {
@@ -240,7 +240,11 @@ const TerraformVarForm = () => {
   return (
     <Card
       title='Terraform变量'
-      extra={<Button type='primary' onClick={() => setImportModalVisible(true)}>导入</Button>}
+      extra={
+        canImportTerraformVar ? (
+          <Button type='primary' onClick={() => setImportModalVisible(true)}>导入</Button>
+        ) : null
+      }
     >
       <EditableTable
         getActionRef={ref => (terraformVarRef.current = ref.current)}

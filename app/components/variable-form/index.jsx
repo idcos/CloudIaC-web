@@ -10,7 +10,7 @@ const VariableForm = ({
   varRef, 
   defaultData, 
   fetchParams, 
-  canImportTerraformVar = true, 
+  canImportTerraformVar = false, 
   defaultScope, 
   showOtherVars = false 
 }) => {
