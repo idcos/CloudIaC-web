@@ -145,7 +145,7 @@ const Index = ({ match = {} }) => {
         orgId
       });
       if (keysRes.code === 200) {
-        setKeys(keysRes.result || []);
+        setKeys(keysRes.result.list || []);
       }
       if (res.code != 200) {
         throw new Error(res.message);
