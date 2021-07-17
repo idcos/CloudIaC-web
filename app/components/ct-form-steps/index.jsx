@@ -51,7 +51,6 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       ...repo, 
       ...variable, 
       ...relation,
-      tplType: 'test',
       orgId,
       tplId
     };
