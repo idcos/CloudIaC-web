@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 
 import PageHeaderPlus from "components/pageHeaderPlus";
 import LayoutPlus from "components/common/layout/plus";
-import CTFormSteps from 'components/ct-form-steps';
+
+import CTFormSteps from '../components/ct-form-steps';
 
 export default ({ match = {} }) => {
   const { orgId, tplId } = match.params || {};
