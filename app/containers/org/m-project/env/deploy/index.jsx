@@ -44,14 +44,30 @@ const Index = ({ match = {} }) => {
     getVars();
   }, []);
 
-  const fetchParams = useMemo(() => {
+  const varFetchParams = useMemo(() => {
     if (isEmpty(tplInfo)) {
       return null;
     }
     return {
       orgId, ...tplInfo
     };
-  }, [ tplInfo, orgId ]);
+  }, [tplInfo]);
+
+  const varDefaultData = useMemo(() => {
+    if (envId) { // 编辑时
+      return { 
+        variables: vars,
+        tfVarsFile: info.tfVarsFile, 
+        playbook: info.playbook
+      };
+    } else { // 新增时
+      return { 
+        variables: vars,
+        tfVarsFile: tplInfo.tfVarsFile, 
+        playbook: tplInfo.playbook
+      };
+    }
+  }, [ tplInfo, info, vars ]);
 
   const getVars = async () => {
     try {
@@ -398,12 +414,8 @@ const Index = ({ match = {} }) => {
           <VariableForm 
             varRef={varRef} 
             defaultScope='env' 
-            defaultData={{ 
-              variables: vars,
-              tfVarsFile: info.tfVarsFile, 
-              playbook: info.playbook
-            }} 
-            fetchParams={fetchParams}
+            defaultData={varDefaultData} 
+            fetchParams={varFetchParams}
             canImportTerraformVar={true}
             showOtherVars={true}
           />

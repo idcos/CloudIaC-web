@@ -35,6 +35,14 @@ const AppHeader = (props) => {
         }
       });
     }
+    if (projectList.length === 0) {
+      dispatch({
+        type: 'global/set-curProject',
+        payload: {
+          projectId: null
+        }
+      });
+    }
   }, [ projects, curProject ]);
 
   useEffect(() => {

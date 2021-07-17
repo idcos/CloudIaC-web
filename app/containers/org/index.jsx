@@ -67,7 +67,7 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
         history.push(`/org/${orgId}/${menuItemKey}`);
         break;
       case 'project':
-        history.push(`/org/${orgId}/project/${projectId || curProject.id}/${menuItemKey}`);
+        history.push(`/org/${orgId}/project/${projectId || (curProject || {}).id}/${menuItemKey}`);
         break;
       default:
         break;
