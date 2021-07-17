@@ -22,15 +22,37 @@ export const PROJECT_ROLE = {
   operator: '执行者',
   guest: '访客'
 };
+export const AUTO_DESTROY = [
+  { name: '12小时', code: '12h' },
+  { name: '一天', code: '1d' },
+  { name: '三天', code: '3d' },
+  { name: '一周', code: '1w' },
+  { name: '半个月', code: '15d' },
+  { name: '一个月', code: '1m' }
+];
 
+export const destoryType = [{
+  name: '无限', value: 'infinite'
+}, {
+  name: '时间段', value: 'timequantum'
+}, {
+  name: '时间', value: 'time'
+}];
 export const ENV_STATUS = {
-  'active': '活跃', 'failed': '归档', 'inactive': '不活跃'
+  'active': '活跃', 'failed': '失败', 'inactive': '不活跃'
 };
 export const SCOPE_ENUM = {
   org: '组织',
   project: '项目',
   template: '云模版',
   env: '环境'
+};
+export const TASK_STATUS = {
+  "pending": '排队',
+  "running": '运行中',
+  "approving": '审批中',
+  "failed": '失败',
+  "complete": '成功'
 };
 export const CT = {
   taskType: {

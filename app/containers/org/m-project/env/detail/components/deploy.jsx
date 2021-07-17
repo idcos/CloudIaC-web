@@ -4,7 +4,8 @@ import {
   notification,
   List,
   Button,
-  Input
+  Input,
+  Card
 } from "antd";
 import { ctAPI } from "services/base";
 import { timeUtils } from "utils/time";
@@ -12,8 +13,7 @@ import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 export default (props) => {
-  const { match, routesParams } = props;
-  const taskId = match.params.taskId;
+  const { match, routesParams, taskId } = props;
   const { curOrg, linkToRunningDetail, detailInfo, ctRunnerList } = routesParams;
   const { params: { orgId, projectId, envId } } = match;
 
@@ -33,10 +33,11 @@ export default (props) => {
   }, []);
 
   useEffect(() => {
-    fetchSse();
-    fetchComments();
-  }, []);
-
+    if (taskId) {
+      fetchSse();
+      fetchComments();
+    }
+  }, [taskId]);
   useEffect(() => {
     return () => {
       evtSource && evtSource.close();
@@ -53,7 +54,7 @@ export default (props) => {
         }
       },
       {
-        url: `/api/v1/task/log/sse?id=run-c3nvra6cie6gqeidk8qg`,
+        url: `/api/v1/task/log/sse?id=${taskId}`,
         options: { withCredentials: true, headers: { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId } }
       }
     );
@@ -62,8 +63,7 @@ export default (props) => {
   const fetchComments = async () => {
     try {
       const res = await ctAPI.taskComment({
-        orgId: curOrg.id,
-        taskId: taskId
+        orgId, taskId, projectId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -79,9 +79,8 @@ export default (props) => {
 
   const onFinish = async (values) => {
     try {
-      const res = await ctAPI.createTaskComment({
-        orgId: curOrg.id,
-        taskId: taskId,
+      const res = await ctAPI.createTaskComment({     
+        orgId, taskId, projectId,
         ...values
       });
       if (res.code !== 200) {
@@ -102,54 +101,57 @@ export default (props) => {
   return (
     <div className='task'>
       <div className={"tableRender"}>
-        <AnsiCoderCard value={taskLog} />
-
-        <List
-          loading={loading}
-          itemLayout='horizontal'
-          dataSource={comments}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                title={
-                  <h2 className='title reset-styles'>
-                    {item.creator}
-                    <span className='subTitle'>
-                      {timeUtils.format(item.createdAt)}
-                    </span>
-                  </h2>
-                }
-                description={<p className='content reset-styles'>{item.comment}</p>}
-              />
-            </List.Item>
-          )}
-        />
-        <Form layout='vertical' onFinish={onFinish} form={form}>
-          <Form.Item
-            label='描述'
-            name='comment'
-            rules={[
-              {
-                message: "请输入"
-              }
-            ]}
-          >
-            <Input.TextArea placeholder='请输入评论内容' />
-          </Form.Item>
-          <Form.Item shouldUpdate={true}>
-            {({ getFieldValue }) => (
-              <Button
-                type='primary'
-                htmlType='submit'
-                disabled={
-                  !getFieldValue("comment") 
-                }
-              >
-                发表评论
-              </Button>
+        <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
+          <AnsiCoderCard value={taskLog} />
+        </Card>
+        <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'评论'}>
+          <List
+            loading={loading}
+            itemLayout='horizontal'
+            dataSource={comments}
+            renderItem={(item) => (
+              <List.Item>
+                <List.Item.Meta
+                  title={
+                    <h2 className='title reset-styles'>
+                      {item.creator}
+                      <span className='subTitle'>
+                        {timeUtils.format(item.createdAt)}
+                      </span>
+                    </h2>
+                  }
+                  description={<p className='content reset-styles'>{item.comment}</p>}
+                />
+              </List.Item>
             )}
-          </Form.Item>
-        </Form>
+          />
+          <Form layout='vertical' onFinish={onFinish} form={form}>
+            <Form.Item
+              label='描述'
+              name='comment'
+              rules={[
+                {
+                  message: "请输入"
+                }
+              ]}
+            >
+              <Input.TextArea placeholder='请输入评论内容' />
+            </Form.Item>
+            <Form.Item shouldUpdate={true}>
+              {({ getFieldValue }) => (
+                <Button
+                  type='primary'
+                  htmlType='submit'
+                  disabled={
+                    !getFieldValue("comment") 
+                  }
+                >
+                  发表评论
+                </Button>
+              )}
+            </Form.Item>
+          </Form>
+        </Card>
       </div>
     </div>
   );

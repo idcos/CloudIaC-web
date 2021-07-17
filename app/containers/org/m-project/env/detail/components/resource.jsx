@@ -20,6 +20,25 @@ const Index = (props) => {
     }),
     [ search, setSearch ] = useState('');
 
+  const resetList = (list) => {
+    if (list.length) {
+      let typeList = [...new Set(list.map(d => d.provider))];
+      let ll = [];
+      typeList.forEach(d => {
+        let obj = {};
+        let children = list.filter(t => t.provider === d).map(it => {
+          it.count = 1;
+          return it;
+        });
+        obj.provider = d;
+        obj.count = children.length;
+        obj.children = children;
+        ll.push(obj);
+      });
+      return ll;
+    }
+  };
+
   useEffect(() => {
     fetchList();
   }, [search]); 
@@ -29,7 +48,6 @@ const Index = (props) => {
       fetchOutput();
     }
   }, [taskId]);
-
   const fetchList = async () => {
     try {
       setLoading(true);
@@ -38,7 +56,7 @@ const Index = (props) => {
         throw new Error(res.message);
       }
       setResultMap({
-        list: res.result.list || []
+        list: resetList(res.result.list)
       });
       setLoading(false);
     } catch (e) {
@@ -69,19 +87,19 @@ const Index = (props) => {
   };
   const columns = [
     {
-      dataIndex: 'name',
+      dataIndex: 'provider',
       title: '云平台'
     },
     {
-      dataIndex: 'email',
+      dataIndex: 'type',
       title: '类型'
     },
     {
-      dataIndex: 'phone',
+      dataIndex: 'count',
       title: '数量'
     },
     {
-      dataIndex: 'data',
+      dataIndex: 'name',
       title: '名称'
     },
     {
@@ -94,6 +112,7 @@ const Index = (props) => {
       }
     }
   ];
+  console.log(resultMap.list);
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
       <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />

@@ -47,13 +47,13 @@ const OrgSetting = (props) => {
 
   useEffect(() => {
     fetchInfo();
-  }, []);
+  }, [panel]);
   
   // 获取Info
   const fetchInfo = async () => {
     try {
       const res = await envAPI.envsInfo({
-        orgId, projectId, envId
+        orgId, projectId, envId, status: panel
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -69,18 +69,6 @@ const OrgSetting = (props) => {
   
   const redeploy = async() => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${'tpl-c3okgvbn6m88icotqt20'}/${envId}`); 
-    
-    // try {
-    //   const res = await envAPI.envRedeploy({ orgId, projectId, envId });
-    //   if (res.code != 200) {
-    //     throw new Error(res.message);
-    //   }
-    // } catch (e) {
-    //   notification.error({
-    //     message: '操作失败',
-    //     description: e.message
-    //   });
-    // }
   };
 
   const destroy = async() => {
@@ -100,7 +88,7 @@ const OrgSetting = (props) => {
   return <LayoutPlus
     extraHeader={
       <PageHeaderPlus
-        title={'环境名称'}
+        title={info.name || ''}
         subDes={<div><Button onClick={redeploy}>重新部署</Button><Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button></div>}
         breadcrumb={true}
       />

@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { Eb_WP } from 'components/error-boundary';
+import { AUTO_DESTROY, destoryType } from 'constants/types';
+
 
 import { pjtAPI, envAPI } from 'services/base';
 
@@ -16,20 +18,6 @@ const PL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
-let awd = [{
-  name: '无限', value: 'infinite'
-}, {
-  name: '时间段', value: 'timequantum'
-}, {
-  name: '时间', value: 'time'
-}];
-let autoDestroy = [
-  { name: '12小时', code: '12h' },
-  { name: '一天', code: '1d' },
-  { name: '三天', code: '3d' },
-  { name: '一周', code: '1w' },
-  { name: '半个月', code: '15d' },
-  { name: '一个月', code: '28/29/30/31' }];
 const { Option } = Select;
     
 const Index = (props) => {
@@ -52,14 +40,14 @@ const Index = (props) => {
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
       if (!!values.destroyAt) {
-        values.destroyAt = moment(values.destroyAt).format('YYYY-MM-DD HH:mm');
+        values.destroyAt = moment(values.autoDestroyAt).format('YYYY-MM-DD HH:mm');
       }
       if (values.type === 'infinite') {
         values.ttl = '';
       }
       delete values.type;
       delete values.xxx;
-      const res = await envAPI.envsEdit({ orgId, projectId, ...values, taskType, envId: envId ? envId : undefined });
+      const res = await envAPI.envsEdit({ orgId, projectId, ...values, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -85,6 +73,7 @@ const Index = (props) => {
       if (res.code != 200) {
         throw new Error(res.message);
       }
+      fetchInfo();
     } catch (e) {
       notification.error({
         message: '操作失败',
@@ -103,14 +92,15 @@ const Index = (props) => {
       if (data.autoApproval) {
         data.triggers = (data.triggers || []).concat(['autoApproval']);
       }
-      if (!!data.destroyAt) {
+      if (!!data.autoDestroyAt) {
         data.type = 'time';
-        form.setFieldsValue({ destroyAt: moment(data.destroyAt) });
-      } else if (data.ttl === '' || data.ttl === null || data.ttl == 0) {
+        form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
+      } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
         data.type = 'infinite';
-      } else {
+      } else if (!data.autoDestroyAt) {
         data.type = 'timequantum';
       }
+      console.log(data.destroyAt, '&&');
       form.setFieldsValue(data);
       setInfo(data);
     } catch (e) {
@@ -120,8 +110,11 @@ const Index = (props) => {
       });
     }
   };
+  const resetValue = () => {
+    form.setFieldsValue({ ttl: '' });
+  };
   return <div>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'资源列表'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
       <Form
         form={form}
         {...FL}
@@ -147,21 +140,10 @@ const Index = (props) => {
         </Form.Item>
         <Row>
           <Col span={8} style={{ marginLeft: '3%' }}>
-            {/* <Form.Item
-              label='生命周期'
-              name='ttl'
-            >
-              <Select 
-                getPopupContainer={triggerNode => triggerNode.parentNode}
-                placeholder='请选择生命周期'
-                style={{ width: '80%' }}
-              >
-                {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
-              </Select>
-            </Form.Item> */}
             <Form.Item 
               name='xxx'
               label='生命周期'
+              {...PL}
             >
               <Row>
                 <Col span={8}>
@@ -169,12 +151,12 @@ const Index = (props) => {
                     name='type'
                     initialValue={'infinite'}
                   >
-                    <Select style={{ width: '90%' }}>
-                      {awd.map(d => <Option value={d.value}>{d.name}</Option>)}
+                    <Select onChange={resetValue()} style={{ width: '90%' }}>
+                      {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item 
                     noStyle={true}
                     shouldUpdate={true}
@@ -191,7 +173,7 @@ const Index = (props) => {
                           shouldUpdate={true}
                         >
                           <Select style={{ width: '100%' }}>
-                            {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
+                            {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                           </Select>
                         </Form.Item>;
                       }
@@ -213,7 +195,7 @@ const Index = (props) => {
         </Row>
         <Row style={{ display: 'flex', justifyContent: 'center' }}>
           <Button onClick={archive} >归档</Button>
-          <Button type='primary' onClick={onFinish} style={{ marginLeft: 20 }} >保存</Button>
+          <Button type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
         </Row>
       </Form>
     </Card>

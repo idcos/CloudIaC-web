@@ -8,6 +8,7 @@ import copy from 'utils/copy';
 import VariableForm from 'components/variable-form';
 import LayoutPlus from "components/common/layout/plus";
 import moment from 'moment';
+import { AUTO_DESTROY, destoryType } from 'constants/types';
 
 import { envAPI, ctAPI, sysAPI } from 'services/base';
 import varsAPI from 'services/variables';
@@ -20,21 +21,6 @@ const PL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
-let awd = [{
-  name: '无限', value: 'infinite'
-}, {
-  name: '时间段', value: 'timequantum'
-}, {
-  name: '时间', value: 'time'
-}];
-let autoDestroy = [
-  { name: '12小时', code: '12h' },
-  { name: '一天', code: '1d' },
-  { name: '三天', code: '3d' },
-  { name: '一周', code: '1w' },
-  { name: '半个月', code: '15d' },
-  { name: '一个月', code: '28/29/30/31' }
-];
 const { Option, OptGroup } = Select;
 const {} = Radio;
   
@@ -84,12 +70,15 @@ const Index = ({ match = {} }) => {
         if (data.autoApproval) {
           data.triggers = (data.triggers || []).concat(['autoApproval']);
         }
-        if (!!data.destroyAt) {
+        if (data.autoApproval) {
+          data.triggers = (data.triggers || []).concat(['autoApproval']);
+        }
+        if (!!data.autoDestroyAt) {
           data.type = 'time';
-          form.setFieldsValue({ destroyAt: moment(data.destroyAt) });
-        } else if (data.ttl === '' || data.ttl === null || data.ttl == 0) {
+          form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
+        } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
           data.type = 'infinite';
-        } else {
+        } else if (!data.autoDestroyAt) {
           data.type = 'timequantum';
         }
         form.setFieldsValue(data);
@@ -231,7 +220,7 @@ const Index = ({ match = {} }) => {
                     </div>
                   )}
                 >
-                  {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
+                  {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                 </Select>
               </Form.Item> */}
               <Form.Item 
@@ -245,7 +234,7 @@ const Index = ({ match = {} }) => {
                       initialValue={'infinite'}
                     >
                       <Select style={{ width: '90%' }}>
-                        {awd.map(d => <Option value={d.value}>{d.name}</Option>)}
+                        {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                       </Select>
                     </Form.Item>
                   </Col>
@@ -266,7 +255,7 @@ const Index = ({ match = {} }) => {
                             shouldUpdate={true}
                           >
                             <Select style={{ width: '100%' }}>
-                              {autoDestroy.map(it => <Option value={it.code}>{it.name}</Option>)}
+                              {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                             </Select>
                           </Form.Item>;
                         }

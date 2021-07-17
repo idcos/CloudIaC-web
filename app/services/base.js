@@ -220,18 +220,17 @@ export const ctAPI = {
       template_uuid, task_id, container_id, offset
     });
   },
-  taskComment: ({ orgId, taskId }) => {
-    return getWithArgs('/api/v1/task/comment/search', {
-      taskId
+  taskComment: ({ orgId, taskId, projectId }) => {
+    return getWithArgs(`/api/v1/task/${taskId}/comment`, {
     }, {
-      'IaC-Org-Id': orgId
+      'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId
     });
   },
-  createTaskComment: ({ orgId, taskId, comment }) => {
-    return post('/api/v1/task/comment/create', {
-      taskId, comment
+  createTaskComment: ({ orgId, taskId, comment, projectId }) => {
+    return post(`/api/v1/task/${taskId}/comment`, {
+      comment
     }, {
-      'IaC-Org-Id': orgId
+      'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId
     });
   },
   repoReadme: ({ orgId, repoId, branch, vcsId }) => {
@@ -315,7 +314,7 @@ export const ctAPI = {
 
 export const sysAPI = {
   listCTRunner: ({ orgId }) => {
-    return get('/api/v1/runner/search', {
+    return get('/api/v1/runners', {
       'IaC-Org-Id': orgId
     });
   },
@@ -369,10 +368,11 @@ export const pjtAPI = {
 };
 
 export const envAPI = {
-  envsList: ({ orgId, projectId }) => {
+  envsList: ({ orgId, projectId, status }) => {
     return getWithArgs('/api/v1/envs', {
       pageSize: 99999,
       currentPage: 1
+      // status
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境详情
