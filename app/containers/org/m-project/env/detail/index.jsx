@@ -76,6 +76,9 @@ const EnvDetail = (props) => {
       if (res.code != 200) {
         throw new Error(res.message);
       }
+      notification.success({
+        message: '操作成功'
+      });
     } catch (e) {
       notification.error({
         message: '操作失败',

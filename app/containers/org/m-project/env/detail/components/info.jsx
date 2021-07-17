@@ -8,7 +8,6 @@ import { AUTO_DESTROY } from 'constants/types';
 import { pjtAPI, envAPI } from 'services/base';
 const Index = (props) => {
   const { info = {} } = props;
-  console.log(info.ttl != 0, '222');
 
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
     <Descriptions 

@@ -396,7 +396,8 @@ export const envAPI = {
   },
   //销毁环境资源
   envDestroy: ({ envId, projectId, orgId }) => {
-    return post(`/api/v1/envs/${envId}/destroy`, {}, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/destroy`, { "taskType": "destroy"
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源列表
   envsResourcesList: ({ envId, orgId, projectId, q }) => {
