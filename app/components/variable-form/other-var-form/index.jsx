@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Row, Col, Card, Form, Select, notification } from 'antd';
 
-import tplAPI from 'services/tpl';
+import vcsAPI from 'services/vcs';
 
 import VarsContext from '../context';
 
 const { Option } = Select;
-const tfvars = [ 'prod-env.tfvars', 'qa-env.tfvars' ];
-const playbooks = ['ansible/playbook.yml'];
 
 const OtherVarForm = () => {
 
@@ -26,7 +24,7 @@ const OtherVarForm = () => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId };
     try {
-      const res = await tplAPI.listTfvars(params);
+      const res = await vcsAPI.listTfvars(params);
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -43,7 +41,7 @@ const OtherVarForm = () => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId };
     try {
-      const res = await tplAPI.listPlaybook(params);
+      const res = await vcsAPI.listPlaybook(params);
       if (res.code !== 200) {
         throw new Error(res.message);
       }

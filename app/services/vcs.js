@@ -48,6 +48,16 @@ const vcsAPI = {
     return getWithArgs(`/api/v1/vcs/${vcsId}/tag`, restParams, {
       'IaC-Org-Id': orgId
     });
+  },
+  listPlaybook: ({ orgId, vcsId, repoId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/repos/${repoId}/playbook`, restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  listTfvars: ({ orgId, vcsId, repoId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/repos/${repoId}/tfvars`, restParams, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
