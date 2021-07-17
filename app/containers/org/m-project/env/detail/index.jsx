@@ -26,11 +26,10 @@ const subNavs = {
   setting: '设置'
 };
 
-const OrgSetting = (props) => {
+const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState('resource');
   const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
   const [ info, setInfo ] = useState({});
-  
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} taskId={info.lastTaskId} />,
@@ -68,7 +67,7 @@ const OrgSetting = (props) => {
   };
   
   const redeploy = async() => {
-    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${'tpl-c3okgvbn6m88icotqt20'}/${envId}`); 
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${info.tplId}/${envId}`); 
   };
 
   const destroy = async() => {
@@ -127,5 +126,5 @@ const OrgSetting = (props) => {
 };
 
 export default connect()(
-  Eb_WP()(OrgSetting)
+  Eb_WP()(EnvDetail)
 );

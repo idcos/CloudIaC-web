@@ -33,14 +33,6 @@ const AppHeader = (props) => {
         }
       });
     }
-    if (locationPathName.indexOf('/project/') == -1) {
-      dispatch({
-        type: 'global/set-curProject',
-        payload: {
-          projectId: null
-        }
-      });
-    }
   }, [locationPathName]);
 
   const onCloseDevManualTooltip = () => {
