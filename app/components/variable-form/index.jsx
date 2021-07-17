@@ -29,7 +29,7 @@ const VariableForm = ({
     if (!defaultData) {
       return;
     }
-    const { variables = [], ...otherVarData } = defaultData;
+    const { variables = [], tfVarsFile, playbook } = defaultData;
     const defaultTerraformVars = variables.filter(it => it.type === 'terraform').map(it => {
       it.isDiffScope = !!(it.isDiffScope || defaultScope !== it.scope);
       return it;
@@ -43,7 +43,7 @@ const VariableForm = ({
     setTerraformVarList(defaultTerraformVars);
     setEnvVarList(defaultEnvVars);
     if (showOtherVars) {
-      otherVarForm.setFieldsValue({ ...otherVarData });
+      otherVarForm.setFieldsValue({ tfVarsFile: tfVarsFile || undefined, playbook: playbook || undefined });
     }
   }, [defaultData]);
 

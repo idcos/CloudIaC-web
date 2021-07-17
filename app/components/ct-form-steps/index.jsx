@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Steps, notification } from 'antd';
+import set from 'lodash/set';
 
 import { Eb_WP } from 'components/error-boundary';
 import varsAPI from 'services/variables';
@@ -93,15 +94,16 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       const {
         name, description,
         vcsId, repoId, repoRevision, workdir,
-        variables, tfVarsFile, playbook,
+        tfVarsFile, playbook,
         projectId
       } = res.result || {};
       setCtData({
         basic: { name, description },
         repo: { vcsId, repoId, repoRevision, workdir },
-        variable: { variables, tfVarsFile, playbook },
+        variable: { tfVarsFile, playbook },
         relation: { projectId }
       });
+      getVars(); // 变量单独查询
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -116,12 +118,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setCtData(preCtData => ({
-        ...preCtData,
-        variable: {
-          variables: res.result || []
-        }
-      }));
+      setCtData(preCtData => set(preCtData, 'variable.variables', res.result || []));
     } catch (e) {
       notification.error({
         message: '获取失败',
