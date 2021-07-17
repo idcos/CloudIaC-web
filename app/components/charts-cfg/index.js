@@ -14,23 +14,21 @@ export const chartOptions = {
         textStyle: {
           width: 60
         },
-        // data: (data.list || []).map(it => it.state),
-        data: [ "活跃环境数量", "部署中环境数量", "失败环境数量", "不活跃环境数量", "待审批环境数量" ],
+        data: [ "活跃环境数量", "失败环境数量", "不活跃环境数量" ],
         icon: 'circle',
-        selected: [{ "活跃环境数量": true }, { "部署中环境数量": true }, { "不活跃环境数量": true }, { "失败环境数量": true }, { "待审批环境数量": true }]
+        selected: [{ "活跃环境数量": true }, { "不活跃环境数量": true }, { "失败环境数量": true }]
       },
       series: [
         {
-          name: '姓名',
+          name: '环境占比',
           type: 'pie',
           left: '50%',
           radius: [ '40%', '70%' ],
-          // center: [ '50%', '50%' ],
-          data: [{ name: "活跃环境数量", value: 8710 }
-            , { name: "部署中环境数量", value: 58889 }
-            , { name: "不活跃环境数量", value: 3747 }
-            , { name: "失败环境数量", value: 26008 }
-            , { name: "待审批环境数量", value: 2220 }],
+          data: [
+            { name: "活跃环境数量", value: 0 },
+            { name: "不活跃环境数量", value: 0 },
+            { name: "失败环境数量", value: 0 }
+          ],
           label: { 
             show: true, 
             formatter: ' {b}\n{d}%'
@@ -46,22 +44,6 @@ export const chartOptions = {
             }
           }
         }
-        // {
-        //   name: '请求项状态分布',
-        //   type: 'pie',
-        //   radius: [ '40%', '50%' ],
-        //   avoidLabelOverlap: false,
-        //   label: {
-        //     formatter: '{b}：{d}%'
-        //   },
-        //   labelLine: {
-        //     smooth: true,
-        //     length: 10,
-        //     length2: 20
-        //   },
-        //   // data: (data.list || []).map(it => ({ value: it.num, name: it.state }))
-        //   data: data.seriesData
-        // }
       ]
     };
   }

@@ -32,7 +32,7 @@ const User = ({ orgId, projectId }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await userAPI.list({
+      const res = await projectAPI.listAuthUser({
         currentPage: query.pageNo,
         pageSize: query.pageSize,
         orgId,
@@ -64,7 +64,7 @@ const User = ({ orgId, projectId }) => {
     });
   };
 
-  const onChangeProjectRole = (payload) => {
+  const onChangeRole = (payload) => {
     operation({ 
       doWhat: 'changeRole', 
       payload
@@ -121,13 +121,13 @@ const User = ({ orgId, projectId }) => {
       title: '项目角色',
       width: 150,
       render: (record) => {
-        const { projectRole, id } = record;
+        const { role, id } = record;
         return (
           <Select 
             style={{ width: '100%' }}
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            value={projectRole}
-            onChange={(role) => onChangeProjectRole({ role, userId: id })}
+            value={role}
+            onChange={(role) => onChangeRole({ role, userId: id })}
           >
             {Object.keys(USER_ROLE_ENUM).map(it => <Option value={it}>{USER_ROLE_ENUM[it]}</Option>)}
           </Select>

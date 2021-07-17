@@ -29,7 +29,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setUserOptions(res.result.list || []);
+      setUserOptions(res.result || []);
     } catch (e) {
       notification.error({
         message: '获取失败',

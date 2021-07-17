@@ -10,6 +10,12 @@ const projectAPI = {
       'IaC-Project-Id': projectId
     });
   },
+  listAuthUser: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs('/api/v1/projects/authorization/users', restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
   createUser: ({ orgId, projectId, ...restParams }) => {
     return post('/api/v1/projects/users', restParams, {
       'IaC-Org-Id': orgId,

@@ -94,7 +94,6 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
       <div className='left-nav'>
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
-          // className={styles.orgSwitcher}
           style={{ width: 200 }}
           placeholder='选择组织'
           onChange={changeCurOrg}
