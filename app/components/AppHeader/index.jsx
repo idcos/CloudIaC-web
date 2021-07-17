@@ -25,6 +25,19 @@ const AppHeader = (props) => {
   };
 
   useEffect(() => {
+    const projectId = (curProject || {}).id;
+    const projectList = (projects || {}).list || [];
+    if (projectList.length > 0 && !projectList.find(it => it.id === projectId)) {
+      dispatch({
+        type: 'global/set-curProject',
+        payload: {
+          projectId: projectList[0].id
+        }
+      });
+    }
+  }, [ projects, curProject ]);
+
+  useEffect(() => {
     if (locationPathName.indexOf('org') == -1) {
       dispatch({
         type: 'global/set-curOrg',
@@ -45,16 +58,16 @@ const AppHeader = (props) => {
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
       <div className='rParts'>
         {
-          curOrg && curOrg.id ? (
+          (curOrg || {}).id ? (
             <Select 
               getPopupContainer={triggerNode => triggerNode.parentNode}
               className={styles.projectSwitcher}
               style={{ width: 164 }}
               placeholder='选择项目'
               onChange={changeProject}
-              value={curProject && curProject.id}
+              value={(curProject || {}).id}
             >
-              {(projects.list || []).map(it => <Option value={it.id}>{it.name}</Option>)}
+              {((projects || {}).list || []).map(it => <Option value={it.id}>{it.name}</Option>)}
             </Select>
           ) : null
         }
