@@ -7,20 +7,19 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 
-import { orgsAPI } from 'services/base';
-
-import styles from './styles.less';
-
-import Basic from './components/basic';
-import User from './components/user';
+import Basic from './basic';
+import User from './user';
 
 const subNavs = {
   basic: '基本信息',
   user: '用户'
 };
 
-const OrgSetting = ({ routesParams, dispatch }) => {
-  const [ panel, setPanel ] = useState('basic');
+const ProjectSetting = ({ match, dispatch }) => {
+
+  const { orgId, projectId } = match.params;
+
+  const [ panel, setPanel ] = useState('user');
   const renderByPanel = useCallback(() => {
     const PAGES = {
       basic: (props) => <Basic {...props}/>,
@@ -28,6 +27,8 @@ const OrgSetting = ({ routesParams, dispatch }) => {
     };
     return PAGES[panel]({
       title: subNavs[panel],
+      orgId, 
+      projectId,
       dispatch
     });
   }, [panel]);
@@ -69,5 +70,5 @@ const OrgSetting = ({ routesParams, dispatch }) => {
 };
 
 export default connect()(
-  Eb_WP()(OrgSetting)
+  Eb_WP()(ProjectSetting)
 );
