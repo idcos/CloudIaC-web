@@ -58,15 +58,16 @@ const menus = [
   }
 ];
 
-const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
+const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) => {
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
+  
   const linkTo = (subKey, menuItemKey) => {
     switch (subKey) {
       case 'org':
         history.push(`/org/${orgId}/${menuItemKey}`);
         break;
       case 'project':
-        history.push(`/org/${orgId}/project/${projectId}/${menuItemKey}`);
+        history.push(`/org/${orgId}/project/${projectId || curProject.id}/${menuItemKey}`);
         break;
       default:
         break;
@@ -152,6 +153,7 @@ const OrgWrapper = ({ routes, curOrg, match = {}, orgs, dispatch }) => {
 export default connect(
   (state) => ({ 
     orgs: state[KEY].get('orgs').toJS(),
-    curOrg: state[KEY].get('curOrg')
+    curOrg: state[KEY].get('curOrg'),
+    curProject: state[KEY].get('curProject')
   })
 )(OrgWrapper);

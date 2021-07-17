@@ -10,12 +10,11 @@ import LayoutPlus from 'components/common/layout/plus';
 import styles from './styles.less';
 import OpModal from './components/project-modal';
 
-import { pjtAPI, orgsAPI } from 'services/base';
-import { CT } from 'constants/types';
-import { statusTextCls } from 'utils/util';
+import { pjtAPI } from 'services/base';
+import { connect } from "react-redux";
 
 const Index = (props) => {
-  const { match, routesParams, routes } = props,
+  const { match, dispatch } = props,
     { params } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -95,6 +94,16 @@ const Index = (props) => {
     setRecord(record);
     toggleVisible();
   };
+
+  // 重新刷新全局的projects
+  const reloadGlobalProjects = () => {
+    dispatch({
+      type: 'global/getProjects',
+      payload: {
+        orgId: params.orgId
+      }
+    });
+  };
   
   const updateStatus = async(record, status) => {
     let payload = {
@@ -111,6 +120,7 @@ const Index = (props) => {
       notification.success({
         message: '操作成功'
       });
+      reloadGlobalProjects();
     }
     fetchList();
   };
@@ -173,6 +183,7 @@ const Index = (props) => {
         message: '操作成功'
       });
       fetchList();
+      reloadGlobalProjects();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -240,4 +251,6 @@ const Index = (props) => {
   </LayoutPlus>;
 };
 
-export default Eb_WP()(Index);
+export default connect()(
+  Eb_WP()(Index)
+);
