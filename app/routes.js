@@ -10,7 +10,7 @@ export default function createRoutes() {
     {
       path: '/',
       name: '组织',
-      component: loadable(() => import('containers/orgs'), asyncLoadFallback),
+      component: loadable(() => import('containers/org-select-page'), asyncLoadFallback),
       exact: true
     },
     {

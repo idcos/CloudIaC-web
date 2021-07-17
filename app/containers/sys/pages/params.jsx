@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Card, Form, Button, InputNumber, Select, Space, notification } from 'antd';
 
-import { sysAPI } from 'services/base';
+import sysAPI from 'services/sys';
 
 const layout = {
   labelCol: {
@@ -27,7 +27,7 @@ const Params = ({ title }) => {
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
-      const res = await sysAPI.edit({
+      const res = await sysAPI.paramsUpdate({
         value: values.num + ''
       });
       if (res.code !== 200) {
@@ -47,7 +47,7 @@ const Params = ({ title }) => {
 
   const fetchInfo = async () => {
     try {
-      const res = await sysAPI.getParams();
+      const res = await sysAPI.paramsSearch();
       if (res.code !== 200) {
         throw new Error(res.message);
       }
