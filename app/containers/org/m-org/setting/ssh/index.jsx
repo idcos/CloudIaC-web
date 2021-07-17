@@ -67,12 +67,12 @@ export default ({ orgId }) => {
       title: '密钥名称'
     },
     {
-      dataIndex: 'vcsToken',
+      dataIndex: 'createdAt',
       title: '创建时间'
     },
     {
       title: '操作',
-      render: (_, record) => {
+      render: (record) => {
         return <Space split={<Divider type='vertical' />}>
           <a className='danger-text' onClick={() => del(record)}>删除</a>
         </Space>;
@@ -89,7 +89,7 @@ export default ({ orgId }) => {
     try {
       const method = {
         add: (param) => keysAPI.create(param),
-        del: ({ orgId, id }) => keysAPI.del({ orgId, id })
+        del: ({ orgId, id }) => keysAPI.del({ orgId, keyId: id })
       };
       const res = await method[doWhat]({
         orgId,

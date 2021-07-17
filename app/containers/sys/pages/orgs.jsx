@@ -9,6 +9,7 @@ const Orgs = ({ title, dispatch }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
+    [ curRecord, setCurRecord ] = useState({}),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -65,7 +66,11 @@ const Orgs = ({ title, dispatch }) => {
     try {
       const method = {
         changeStatus: (param) => orgsAPI.changeStatus(param),
-        add: (param) => orgsAPI.create(param)
+        add: (param) => orgsAPI.create(param),
+        edit: (param) => orgsAPI.update({
+          ...param,
+          orgId: curRecord.id
+        })
       };
       const res = await method[doWhat]({
         ...payload
@@ -111,11 +116,6 @@ const Orgs = ({ title, dispatch }) => {
       title: '描述'
     },
     {
-      dataIndex: 'defaultRunnerServiceId',
-      title: 'CT Runner',
-      width: 220
-    },
-    {
       dataIndex: 'status',
       width: 104,
       title: '状态',
@@ -143,6 +143,7 @@ const Orgs = ({ title, dispatch }) => {
           }
           <a onClick={() => {
             setOpt('edit');
+            setCurRecord(record);
             toggleVisible();
           }}
           >编辑</a>          
@@ -185,6 +186,7 @@ const Orgs = ({ title, dispatch }) => {
         visible={visible}
         toggleVisible={toggleVisible}
         opt={opt}
+        curRecord={curRecord}
         operation={operation}
       />
     }

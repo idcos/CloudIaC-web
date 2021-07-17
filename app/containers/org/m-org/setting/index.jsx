@@ -4,7 +4,6 @@ import { Menu, notification, Tabs } from 'antd';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 
-// import Orgs from './orgs';
 import ApiToken from './api-token';
 import UserRole from './user-role';
 import Vcs from './vcs';
@@ -12,7 +11,6 @@ import Ssh from './ssh';
 import Notification from './notification';
 
 const subNavs = {
-  // orgs: '组织',
   userRole: '用户角色',
   apiToken: 'API Token',
   vcs: 'VCS',

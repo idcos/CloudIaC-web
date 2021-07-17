@@ -10,10 +10,16 @@ const FL = {
   wrapperCol: { span: 18 }
 };
 
-export default ({ visible, toggleVisible, operation, opt }) => {
+export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ ctRunnerList, setCtRunnerList ] = useState([]);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (opt === 'edit') {
+      form.setFieldsValue(curRecord);
+    }
+  }, []);
 
   const onOk = async () => {
     const values = await form.validateFields();
