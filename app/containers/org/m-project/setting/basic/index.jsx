@@ -18,21 +18,23 @@ const Basic = ({ orgId, projectId }) => {
   const [ projectInfo, setProjectInfo ] = useState({});
   const [form] = Form.useForm();
   let CHART = useRef([
-    { key: 'statistic_pie', domRef: useRef(), des: '环境状态占比', ins: null }
+    { key: 'project_statistics', domRef: useRef(), des: '环境状态占比', ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
 
   useEffect(() => {
     fetchProjectInfo();
-    CHART.current.forEach(chart => {
-      chartUtils.update(chart, genData(6));
-    });
     resizeHelper.attach();
     return resizeHelper.remove();
   }, []);
 
   useEffect(() => {
     form.setFieldsValue(projectInfo);
+    CHART.current.forEach(chart => {
+      if (chart.key === 'project_statistics') {
+        chartUtils.update(chart, projectInfo);
+      }
+    });
   }, [projectInfo]);
 
   const fetchProjectInfo = async () => {
@@ -77,41 +79,6 @@ const Basic = ({ orgId, projectId }) => {
       notification.error({
         message: e.message
       });
-    }
-  };
-
-  const genData = (count) => {
-    let nameList = [
-      '赵', '钱', '孙', '李', '周', '吴', '郑', '王', '冯', '陈', '褚', '卫', '蒋', '沈', '韩', '杨', '朱', '秦', '尤', '许', '何', '吕', '施', '张', '孔', '曹', '严', '华', '金', '魏', '陶', '姜', '戚', '谢', '邹', '喻', '柏', '水', '窦', '章', '云', '苏', '潘', '葛', '奚', '范', '彭', '郎', '鲁', '韦', '昌', '马', '苗', '凤', '花', '方', '俞', '任', '袁', '柳', '酆', '鲍', '史', '唐', '费', '廉', '岑', '薛', '雷', '贺', '倪', '汤', '滕', '殷', '罗', '毕', '郝', '邬', '安', '常', '乐', '于', '时', '傅', '皮', '卞', '齐', '康', '伍', '余', '元', '卜', '顾', '孟', '平', '黄', '和', '穆', '萧', '尹', '姚', '邵', '湛', '汪', '祁', '毛', '禹', '狄', '米', '贝', '明', '臧', '计', '伏', '成', '戴', '谈', '宋', '茅', '庞', '熊', '纪', '舒', '屈', '项', '祝', '董', '梁', '杜', '阮', '蓝', '闵', '席', '季', '麻', '强', '贾', '路', '娄', '危'
-    ];
-    let legendData = [];
-    let seriesData = [];
-    let selected = {};
-    for (let i = 0; i < count; i++) {
-      name = Math.random() > 0.65
-        ? makeWord(5, 6)
-        : makeWord(5, 6);
-      legendData.push(name);
-      seriesData.push({
-        name: name,
-        value: Math.round(Math.random() * 100000)
-      });
-      selected[name] = i < 6;
-    }
-    
-    return {
-      legendData: legendData,
-      seriesData: seriesData,
-      selected: selected
-    };
-    
-    function makeWord(max, min) {
-      let nameLen = Math.ceil(Math.random() * max + min);
-      let name = [];
-      for (let i = 0; i < nameLen; i++) {
-        name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
-      }
-      return name.join('');
     }
   };
   

@@ -8,7 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
 import styles from './styles.less';
-import OpModal from 'components/project-modal';
+import OpModal from './components/project-modal';
 
 import { pjtAPI, orgsAPI } from 'services/base';
 import { CT } from 'constants/types';

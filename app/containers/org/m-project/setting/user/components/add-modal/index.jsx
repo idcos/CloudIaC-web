@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 
 import projectAPI from 'services/project';
-
-import { USER_ROLE_ENUM } from '../../enum';
+import { PROJECT_ROLE } from 'constants/types';
 
 const { Option } = Select;
 const FL = {
@@ -99,7 +98,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='请选择角色'
           >
-            {Object.keys(USER_ROLE_ENUM).map(it => <Option value={it}>{USER_ROLE_ENUM[it]}</Option>)}
+            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
           </Select>
         </Form.Item>
       </Form>

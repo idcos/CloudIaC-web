@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, Select, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
 
-import userAPI from 'services/user';
 import projectAPI from 'services/project';
+import { PROJECT_ROLE } from 'constants/types';
 
 import AddModal from './components/add-modal';
-import { USER_ROLE_ENUM } from './enum';
 
 const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -15,9 +14,7 @@ const User = ({ orgId, projectId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [
-
-      ],
+      list: [],
       total: 0
     }),
     [ query, setQuery ] = useState({
@@ -129,7 +126,7 @@ const User = ({ orgId, projectId }) => {
             value={role}
             onChange={(role) => onChangeRole({ role, userId: id })}
           >
-            {Object.keys(USER_ROLE_ENUM).map(it => <Option value={it}>{USER_ROLE_ENUM[it]}</Option>)}
+            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
           </Select>
         );
       }

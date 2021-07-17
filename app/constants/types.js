@@ -17,10 +17,10 @@ export const SYS = {
   }
 };
 export const PROJECT_ROLE = {
-  owner: '所有者',
-  manager: '审批者',
-  operator: '执行者',
-  guest: '访客'
+  manager: 'manager',
+  approver: 'approver',
+  operator: 'operator',
+  guest: 'guest'
 };
 export const AUTO_DESTROY = [
   { name: '12小时', code: '12h' },

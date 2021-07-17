@@ -1,5 +1,5 @@
 export const chartOptions = {
-  statistic_pie: (data) => {
+  project_statistics: ({ envActive, envFailed, envInactive }) => {
     return {
       tooltip: {
         trigger: 'item',
@@ -25,9 +25,9 @@ export const chartOptions = {
           left: '50%',
           radius: [ '40%', '70%' ],
           data: [
-            { name: "活跃环境数量", value: 0 },
-            { name: "不活跃环境数量", value: 0 },
-            { name: "失败环境数量", value: 0 }
+            { name: "活跃环境数量", value: envActive || 0 },
+            { name: "不活跃环境数量", value: envFailed || 0 },
+            { name: "失败环境数量", value: envInactive || 0 }
           ],
           label: { 
             show: true, 
