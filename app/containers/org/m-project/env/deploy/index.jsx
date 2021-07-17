@@ -398,7 +398,11 @@ const Index = ({ match = {} }) => {
           <VariableForm 
             varRef={varRef} 
             defaultScope='env' 
-            defaultData={{ variables: vars }} 
+            defaultData={{ 
+              variables: vars,
+              tfVarsFile: info.tfVarsFile, 
+              playbook: info.playbook
+            }} 
             fetchParams={fetchParams}
             canImportTerraformVar={true}
             showOtherVars={true}
