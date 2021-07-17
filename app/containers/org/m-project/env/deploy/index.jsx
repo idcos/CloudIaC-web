@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { notification, Tooltip, Select, Form, Input, Button, Checkbox, Space, DatePicker, Row, Col, Radio } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import PageHeaderPlus from "components/pageHeaderPlus";
@@ -12,6 +12,7 @@ import { AUTO_DESTROY, destoryType } from 'constants/types';
 
 import { envAPI, ctAPI, sysAPI } from 'services/base';
 import varsAPI from 'services/variables';
+import isEmpty from "lodash/isEmpty";
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -36,16 +37,25 @@ const Index = ({ match = {} }) => {
   const [ runnner, setRunnner ] = useState([]);
   const [ keys, setKeys ] = useState([]);
   const [ info, setInfo ] = useState({});
-  
+  const [ tplInfo, setTplInfo ] = useState({});
   
   useEffect(() => {
     fetchInfo();
     getVars();
   }, []);
 
+  const fetchParams = useMemo(() => {
+    if (isEmpty(tplInfo)) {
+      return null;
+    }
+    return {
+      orgId, ...tplInfo
+    };
+  }, [ tplInfo, orgId ]);
+
   const getVars = async () => {
     try {
-      const res = await varsAPI.search({ orgId, projectId, tplId, scope: 'env' });
+      const res = await varsAPI.search({ orgId, projectId, tplId, envId, scope: 'env' });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -87,7 +97,9 @@ const Index = ({ match = {} }) => {
       const res = await envAPI.templateDetail({
         orgId, templateId: tplId
       });
-      const { vcsId, repoId } = res.result || {};
+      const tplInfoRes = res.result || {};
+      setTplInfo(tplInfoRes);
+      const { vcsId, repoId } = tplInfoRes;
       // 获取分支数据
       const branchRes = await ctAPI.listRepoBranch({
         orgId, vcsId, repoId 
@@ -383,7 +395,14 @@ const Index = ({ match = {} }) => {
               </Row>
             </Checkbox.Group>
           </Form.Item> */}
-          <VariableForm varRef={varRef} defaultScope='env' defaultData={{ variables: vars }} showOtherVars={true}/>
+          <VariableForm 
+            varRef={varRef} 
+            defaultScope='env' 
+            defaultData={{ variables: vars }} 
+            fetchParams={fetchParams}
+            canImportTerraformVar={true}
+            showOtherVars={true}
+          />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
             <Button onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
