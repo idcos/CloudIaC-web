@@ -6,18 +6,15 @@ import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
 
 const Index = (props) => {
-  const { match, taskId, routes } = props,
-    { params: { orgId, projectId, envId, tplId } } = match;
+  const { match, lastTaskId, routes } = props,
+    { params: { orgId, projectId, envId, tplId, taskId } } = match;
+  let taskIds = taskId || lastTaskId;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
-    [ jsonData, setJsonData ] = useState({
-      "additionalProp1": {
-        "additionalProp1": {}
-      }
-    }),
+    [ jsonData, setJsonData ] = useState({}),
     [ search, setSearch ] = useState('');
 
   const resetList = (list) => {
@@ -44,10 +41,10 @@ const Index = (props) => {
   }, [search]); 
 
   useEffect(() => {
-    if (taskId) {
+    if (taskIds) {
       fetchOutput();
     }
-  }, [taskId]);
+  }, [taskIds]);
   const fetchList = async () => {
     try {
       setLoading(true);
@@ -71,7 +68,7 @@ const Index = (props) => {
   const fetchOutput = async () => {
     try {
       setLoading(true);
-      const res = await envAPI.envsOutput({ orgId, projectId, taskId });
+      const res = await envAPI.envsOutput({ orgId, projectId, taskId: taskIds });
       if (res.code != 200) {
         throw new Error(res.message);
       }

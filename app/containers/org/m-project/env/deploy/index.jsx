@@ -3,7 +3,6 @@ import { notification, Tooltip, Select, Form, Input, Button, Checkbox, Space, Da
 import { InfoCircleOutlined } from '@ant-design/icons';
 import PageHeaderPlus from "components/pageHeaderPlus";
 import history from 'utils/history';
-import copy from 'utils/copy';
 
 import VariableForm from 'components/variable-form';
 import LayoutPlus from "components/common/layout/plus";
@@ -115,7 +114,8 @@ const Index = ({ match = {} }) => {
       });
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
-      const { vcsId, repoId } = tplInfoRes;
+      const { vcsId, repoId, repoRevision } = tplInfoRes;
+      !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
       // 获取分支数据
       const branchRes = await ctAPI.listRepoBranch({
         orgId, vcsId, repoId 
@@ -136,9 +136,10 @@ const Index = ({ match = {} }) => {
       const runnerRes = await sysAPI.listCTRunner({
         orgId
       });
-      
+      let runnerList = runnerRes.result || [];
       if (runnerRes.code === 200) {
-        setRunnner(runnerRes.result || []);
+        setRunnner(runnerList);
+        !envId && runnerList.length && form.setFieldsValue({ runnerId: runnerList[0].ID });
       }
       // 获取密钥数据
       const keysRes = await envAPI.keysList({
@@ -194,10 +195,6 @@ const Index = ({ match = {} }) => {
         description: e.message
       });
     }
-  };
-
-  const copyToUrl = () => {
-    copy('111');
   };
 
   return (
@@ -377,11 +374,11 @@ const Index = ({ match = {} }) => {
                     <Row>
                       <Col span={8} style={{ paddingLeft: '3%' }}>
                         <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
-                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  {(getFieldValue('triggers') || []).includes('commit') ? <a onClick={() => copyToUrl()}>复制URL</a> : <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>}
+                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  
                       </Col>
                       <Col span={8} style={{ paddingLeft: '3%' }}>
                         <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
-                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  {(getFieldValue('triggers') || []).includes('prmr') ? <a onClick={() => copyToUrl()}>复制URL</a> : <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>}
+                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
                       </Col>
                       <Col span={8} style={{ paddingLeft: '3%' }}>
                         <Checkbox value='autoApproval'>自动通过审批</Checkbox>

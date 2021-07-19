@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, DatePicker, Select, Form, Input, Button, Checkbox, notification, Row, Col } from "antd";
-import history from 'utils/history';
-import { Link } from 'react-router-dom';
+import { Card, DatePicker, Select, Form, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
+import { InfoCircleOutlined } from '@ant-design/icons';
+import copy from 'utils/copy';
 import moment from 'moment';
 
 import { Eb_WP } from 'components/error-boundary';
@@ -112,6 +112,10 @@ const Index = (props) => {
   const resetValue = () => {
     form.setFieldsValue({ ttl: '' });
   };
+
+  const copyToUrl = () => {
+    copy('111');
+  };
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
       <Form
@@ -119,23 +123,38 @@ const Index = (props) => {
         {...FL}
         onFinish={onFinish}
       >
-        <Form.Item
+        <Form.Item 
           name='triggers'
           {...PL}
         >
-          <Checkbox.Group style={{ width: '100%' }}>
-            <Row>
-              <Col span={8} style={{ paddingLeft: '3%' }}>
-                <Checkbox value='commit'>每次推送到该分支时自动重新部署</Checkbox>
-              </Col>
-              <Col span={8} style={{ paddingLeft: '3%' }}>
-                <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划</Checkbox>
-              </Col>
-              <Col span={8} style={{ paddingLeft: '3%' }}>
-                <Checkbox value='autoApproval'>自动通过审批</Checkbox>
-              </Col>
-            </Row>
-          </Checkbox.Group>
+          <Form.Item 
+            noStyle={true}
+            shouldUpdate={true}
+          >
+            {({ getFieldValue }) => {
+              return <Form.Item
+                name='triggers'
+                {...PL}
+              >
+                <Checkbox.Group style={{ width: '100%' }}>
+                  <Row>
+                    <Col span={8} style={{ paddingLeft: '3%' }}>
+                      <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
+                      <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  {(getFieldValue('triggers') || []).includes('commit') ? <a onClick={() => copyToUrl()}>复制URL</a> : <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>}
+                    </Col>
+                    <Col span={8} style={{ paddingLeft: '3%' }}>
+                      <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
+                      <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  {(getFieldValue('triggers') || []).includes('prmr') ? <a onClick={() => copyToUrl()}>复制URL</a> : <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>}
+                    </Col>
+                    <Col span={8} style={{ paddingLeft: '3%' }}>
+                      <Checkbox value='autoApproval'>自动通过审批</Checkbox>
+                    </Col>
+                  </Row>
+                </Checkbox.Group>
+              </Form.Item>;
+              
+            }}
+          </Form.Item>
         </Form.Item>
         <Row>
           <Col span={8} style={{ marginLeft: '3%' }}>
