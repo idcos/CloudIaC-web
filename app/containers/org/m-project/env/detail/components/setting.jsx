@@ -100,7 +100,6 @@ const Index = (props) => {
       } else if (!data.autoDestroyAt) {
         data.type = 'timequantum';
       }
-      console.log(data.destroyAt, '&&');
       form.setFieldsValue(data);
       setInfo(data);
     } catch (e) {
@@ -183,7 +182,7 @@ const Index = (props) => {
                           noStyle={true}
                           shouldUpdate={true}
                         >
-                          <DatePicker showTime={true}/>
+                          <DatePicker format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                         </Form.Item>;
                       }
                     }}

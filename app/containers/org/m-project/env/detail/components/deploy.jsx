@@ -5,18 +5,18 @@ import {
   List,
   Button,
   Input,
-  Card
+  Card,
+  Row
 } from "antd";
-import { ctAPI } from "services/base";
+import { ctAPI, envAPI } from "services/base";
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 export default (props) => {
-  const { match, routesParams, taskId } = props;
-  const { curOrg, linkToRunningDetail, detailInfo, ctRunnerList } = routesParams;
-  const { params: { orgId, projectId, envId } } = match;
-
+  const { match, routesParams, lastTaskId } = props;
+  const { params: { orgId, projectId, envId, taskId } } = match;
+  let taskIds = taskId || lastTaskId;
   const [ taskInfo, setTaskInfo ] = useState({}),
     [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
@@ -33,11 +33,11 @@ export default (props) => {
   }, []);
 
   useEffect(() => {
-    if (taskId) {
+    if (taskIds) {
       fetchSse();
       fetchComments();
     }
-  }, [taskId]);
+  }, [taskIds]);
   useEffect(() => {
     return () => {
       evtSource && evtSource.close();
@@ -54,16 +54,32 @@ export default (props) => {
         }
       },
       {
-        url: `/api/v1/task/log/sse?id=${taskId}`,
+        url: `/api/v1/task/log/sse?id=${taskIds}`,
         options: { withCredentials: true, headers: { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId } }
       }
     );
   };
 
+  const passOrRejecy = async(action) => {
+    try {
+      const res = await envAPI.approve({
+        orgId, taskId: taskIds, projectId, action
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+    } catch (e) {
+      notification.error({
+        message: "操作失败",
+        description: e.message
+      });
+    }
+  };
+
   const fetchComments = async () => {
     try {
       const res = await ctAPI.taskComment({
-        orgId, taskId, projectId
+        orgId, taskId: taskIds, projectId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -80,7 +96,7 @@ export default (props) => {
   const onFinish = async (values) => {
     try {
       const res = await ctAPI.createTaskComment({     
-        orgId, taskId, projectId,
+        orgId, taskId: taskIds, projectId,
         ...values
       });
       if (res.code !== 200) {
@@ -97,7 +113,6 @@ export default (props) => {
       });
     }
   };
-
   return (
     <div className='task'>
       <div className={"tableRender"}>
@@ -151,6 +166,10 @@ export default (props) => {
               )}
             </Form.Item>
           </Form>
+          {!taskId && <Row style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button onClick={() => passOrRejecy('rejected')} style={{ marginTop: 20 }} >驳回</Button>
+            <Button onClick={() => passOrRejecy('approved')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >通过</Button>
+          </Row>}
         </Card>
       </div>
     </div>

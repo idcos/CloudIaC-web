@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import history from 'utils/history';
 import { connect } from 'react-redux';
-import { Menu, notification, Tabs, Button } from "antd";
+import { Modal, notification, Tabs, Button, Form, Input } from "antd";
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
@@ -29,11 +30,12 @@ const subNavs = {
 const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState('resource');
   const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
+  const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} taskId={info.lastTaskId} />,
-      deploy: () => <Deploy {...props} taskId={info.lastTaskId} />,
+      resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
+      deploy: () => <Deploy {...props} lastTaskId={info.lastTaskId} />,
       deployHistory: () => <DeployHistory {...props}/>,
       variable: () => <Variable {...props}/>,
       setting: () => <Setting {...props}/>
@@ -70,23 +72,71 @@ const EnvDetail = (props) => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${info.tplId}/${envId}`); 
   };
 
-  const destroy = async() => {
-    try {
-      const res = await envAPI.envDestroy({ orgId, projectId, envId });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      notification.success({
-        message: '操作成功'
-      });
-    } catch (e) {
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
+  // const destroy = async() => {
+  //   try {
+  //     const res = await envAPI.envDestroy({ orgId, projectId, envId });
+  //     if (res.code != 200) {
+  //       throw new Error(res.message);
+  //     }
+  //     notification.success({
+  //       message: '操作成功'
+  //     });
+  //   } catch (e) {
+  //     notification.error({
+  //       message: '操作失败',
+  //       description: e.message
+  //     });
+  //   }
+  // };
+  const destroy = () => {
+    Modal.confirm({
+      width: 480,
+      title: `你确定要销毁环境“${info.name}”吗？`,
+      icon: <ExclamationCircleFilled />,
+      content: (
+        <>
+          <div style={{ marginBottom: 29 }}>销毁资源将删除环境所有资源</div>
+          <Form layout='vertical' requiredMark='optional' form={form}>
+            <Form.Item 
+              name='name' 
+              label='输入环境名称以确认' 
+              rules={[
+                { required: true, message: '请输入环境名称' },
+                () => ({
+                  validator(_, value) {
+                    if (!value || info.name === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('环境名称不一致!'));
+                  }
+                })
+              ]}
+            >
+              <Input placeholder='请输入环境名称' />
+            </Form.Item>
+          </Form>
+        </>
+      ),
+      okText: '确认',
+    	cancelText: '取消',
+      onOk: async () => {
+        const values = await form.validateFields();
+        const res = await envAPI.envDestroy({ orgId, projectId, envId });
+        if (res.code != 200) {
+          notification.error({
+            message: '操作失败',
+            description: res.message
+          });
+          return;
+        }
+        notification.success({
+          message: '操作成功'
+        });
+        form.resetFields();
+      },
+      onCancel: () => form.resetFields()
+    });
   };
-
   return <LayoutPlus
     extraHeader={
       <PageHeaderPlus

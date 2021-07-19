@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Card, Space, Radio, Input, notification, Descriptions, Menu } from 'antd';
-
+import moment from 'moment';
 import { ENV_STATUS } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY } from 'constants/types';
@@ -8,7 +8,17 @@ import { AUTO_DESTROY } from 'constants/types';
 import { pjtAPI, envAPI } from 'services/base';
 const Index = (props) => {
   const { info = {} } = props;
-
+  const getTTL = () => {
+    let str = '-';
+    if (!!info.autoDestroyAt) {
+      str = moment(info.autoDestroyAt).format('YYYY-MM-DD HH:mm');
+    } else if ((info.ttl === '' || info.ttl === null || info.ttl == 0) && !info.autoDestroyAt) {
+      str = ((AUTO_DESTROY.filter(d => d.code === info.ttl)[0] || {}).name);
+    } else if (!info.autoDestroyAt) {
+      str = '无限';
+    }
+    return str;
+  };
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
     <Descriptions 
       labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
@@ -18,7 +28,7 @@ const Index = (props) => {
       <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
       {/* <Descriptions.Item label='Commit_ID'>empty</Descriptions.Item> */}
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
-      <Descriptions.Item label='TTL'>{(((AUTO_DESTROY.filter(d => d.code === info.ttl)[0] || {}).name)) || (info.ttl == 0 ? '无限' : '-')}</Descriptions.Item>
+      <Descriptions.Item label='TTL'>{getTTL()}</Descriptions.Item>
       <Descriptions.Item label='密钥'>密钥</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{info.updatedAt || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>

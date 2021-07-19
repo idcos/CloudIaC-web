@@ -91,7 +91,7 @@ const OrgSetting = (props) => {
   return <LayoutPlus
     extraHeader={
       <PageHeaderPlus
-        title={'环境名称'}
+        title={info.name || ''}
         subDes={<div><Button onClick={redeploy}>重新部署</Button><Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button></div>}
         breadcrumb={true}
       />

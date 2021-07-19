@@ -34,9 +34,9 @@ export const AUTO_DESTROY = [
 export const destoryType = [{
   name: '无限', value: 'infinite'
 }, {
-  name: '时间段', value: 'timequantum'
+  name: '小时/天', value: 'timequantum'
 }, {
-  name: '时间', value: 'time'
+  name: '具体时间', value: 'time'
 }];
 export const ENV_STATUS = {
   'active': '活跃', 'failed': '失败', 'inactive': '不活跃'

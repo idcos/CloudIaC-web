@@ -1,7 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Space, Table, Input, notification, Descriptions, Menu } from 'antd';
+import { Card, Table, notification } from 'antd';
 import history from 'utils/history';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { TASK_STATUS, CT } from 'constants/types';
 
@@ -16,13 +15,7 @@ const Index = (props) => {
     [ resultMap, setResultMap ] = useState({
       list: [{ name: 1, id: 0 }],
       total: 0
-    }),
-    [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10,
-      status: panel
-    }),
-    [ search, setSearch ] = useState('');
+    });
 
   useEffect(() => {
     fetchList();

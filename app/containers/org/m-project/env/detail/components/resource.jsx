@@ -112,7 +112,6 @@ const Index = (props) => {
       }
     }
   ];
-  console.log(resultMap.list);
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
       <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />

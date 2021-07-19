@@ -4,7 +4,7 @@ import history from 'utils/history';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import styles from '../styles.less';
-import { ENV_STATUS } from 'constants/types';
+import { ENV_STATUS, AUTO_DESTROY } from 'constants/types';
 
 import { Eb_WP } from 'components/error-boundary';
 
@@ -16,7 +16,7 @@ const Index = (props) => {
 
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
-      list: [1],
+      list: [],
       total: 0
     }),
     [ query, setQuery ] = useState({
@@ -66,7 +66,7 @@ const Index = (props) => {
     >{d.name || '-'}</a>}
     >
       <div className={styles.envlistBox} style={{ }}>
-        <div>TTL:{d.ttl || '-'}</div>
+        <div>TTL:{(((AUTO_DESTROY.filter(d => d.code === d.ttl)[0] || {}).name)) || (d.ttl == 0 ? '无限' : '-')}</div>
         <div><Divider type='vertical' />云模版:{d.templateName || '-a aaaaaaaaaaaaaaaaaaaaalmfkenfksengksjgnskjgnskjegnskjengkesjngsekjgnseknjkensgkjsengksnkj'}</div>
         <div><Divider type='vertical' />资源数:{d.resourceCount || '-'}</div>
         <div><Divider type='vertical' />创建人: {d.creator || '-'}</div>

@@ -88,7 +88,7 @@ const Index = (props) => {
       title: <span>是否敏感: <Tooltip title='敏感是隐藏的，并且会被加密以采取安全措施。'><InfoCircleOutlined /></Tooltip></span>,
       editable: true,
       render: (t, r) => {
-        return (<div>{t ? '敏感' : '-'}</div>); 
+        return (<div>{t ? '是' : '否'}</div>); 
       }
     }
   ];

@@ -202,7 +202,7 @@ const Index = ({ match = {} }) => {
 
   return (
     <LayoutPlus
-      extraHeader={<PageHeaderPlus title='部署新环境' breadcrumb={true} />}
+      extraHeader={<PageHeaderPlus title={!!envId ? '重新部署' : '部署新环境'} breadcrumb={true} />}
     >
       <div className='idcos-card'>
         <Form
@@ -266,7 +266,7 @@ const Index = ({ match = {} }) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={8}>
+                  <Col span={12}>
                     <Form.Item 
                       noStyle={true}
                       shouldUpdate={true}
@@ -293,7 +293,7 @@ const Index = ({ match = {} }) => {
                             noStyle={true}
                             shouldUpdate={true}
                           >
-                            <DatePicker showTime={true}/>
+                            <DatePicker format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                           </Form.Item>;
                         }
                       }}
@@ -348,7 +348,7 @@ const Index = ({ match = {} }) => {
             <Col span={8}>
               <Form.Item
                 label='密钥:'
-                name='keys'
+                name='keyId'
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}

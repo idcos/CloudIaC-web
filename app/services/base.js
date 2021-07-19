@@ -441,6 +441,12 @@ export const envAPI = {
       pageSize: 99999,
       currentPage: 1
     }, { 'IaC-Org-Id': orgId });
+  },
+  // 审批执行计划
+  approve: ({ taskId, projectId, orgId, action }) => {
+    return post(`/api/v1/tasks/${taskId}/approve`, { 
+      action
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
 };
 
