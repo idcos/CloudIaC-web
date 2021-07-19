@@ -53,9 +53,18 @@ export default (props) => {
 
   return (
     <div className={styles.menuSelect} style={style}>
-      <Dropdown overlay={menu} trigger={['click']} visible={optionVisible} onVisibleChange={setOptionVisible}>
+      <Dropdown 
+        overlay={menu} 
+        trigger={['click']} 
+        visible={optionVisible} 
+        overlayStyle={{ width: '100%' }}
+        onVisibleChange={setOptionVisible}
+        getPopupContainer={triggerNode => triggerNode.parentNode}
+      >
         <div className='selection' style={selectionStyle}>
-          <div className={`label ${optionVisible ? 'selecting' : ''}`}>{label}</div>
+          <div className={`label fn-ellipsis ${optionVisible ? 'selecting' : ''}`}>
+            {label}
+          </div>
           <div className='icon'>
             { optionVisible ? <DownOutlined /> : <RightOutlined /> }
           </div>
