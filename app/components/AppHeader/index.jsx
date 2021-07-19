@@ -63,7 +63,7 @@ const AppHeader = (props) => {
 
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'>
-      <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/logo.svg' alt='IaC'/></div>
+      <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
       <div className='rParts'>
         {
           (curOrg || {}).id ? (
