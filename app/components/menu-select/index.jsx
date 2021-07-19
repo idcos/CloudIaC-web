@@ -1,11 +1,9 @@
 import React, { useState, useMemo } from 'react';
-
 import { Menu, Dropdown } from 'antd';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import noop from 'lodash/noop';
 
 import styles from './styles.less';
-
-const emptyFn = () => { /** emptyFn */ };
 
 export default (props) => {
 
@@ -17,7 +15,7 @@ export default (props) => {
     valuePropName = 'value',
     value = undefined,
     menuSelectfooter,
-    onChange = emptyFn
+    onChange = noop
   } = props || {};
 
   const [ optionVisible, setOptionVisible ] = useState(false);

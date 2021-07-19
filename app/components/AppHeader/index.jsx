@@ -1,32 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import { Select, Menu, Dropdown, Tooltip, Button, Badge } from 'antd';
-import { Link } from 'react-router-dom';
-import history from 'utils/history';
-import { QuestionCircleFilled, DownOutlined, FundFilled } from '@ant-design/icons';
-import styles from './styles.less';
+import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
+
+import history from 'utils/history';
 import { logout } from 'services/logout';
+import SeniorSelect from 'components/senior-select';
+
+import styles from './styles.less';
 
 const { Option } = Select;
 const KEY = 'global';
 
 const AppHeader = (props) => {
+
   const { theme, locationPathName, curOrg, projects, curProject, dispatch, userInfo } = props;
+  const projectList = (projects || {}).list || [];
+  const projectId = (curProject || {}).id;
+  const orgId = (curOrg || {}).id;
+
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
-  const changeProject = (projectId) => {
+  const changeProject = (pjtId) => {
     dispatch({
       type: 'global/set-curProject',
       payload: {
-        projectId
+        projectId: pjtId
       }
     });
-    history.push(`/org/${curOrg.id}/project/${projectId}/m-project-env`);
+    history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
   };
 
   useEffect(() => {
-    const projectId = (curProject || {}).id;
-    const projectList = (projects || {}).list || [];
     if (projectList.length > 0 && !projectList.find(it => it.id === projectId)) {
       dispatch({
         type: 'global/set-curProject',
@@ -43,7 +48,7 @@ const AppHeader = (props) => {
         }
       });
     }
-  }, [ projects, curProject ]);
+  }, [ projectList, projectId ]);
 
   useEffect(() => {
     if (locationPathName.indexOf('org') == -1) {
@@ -61,22 +66,38 @@ const AppHeader = (props) => {
     localStorage.newbieGuide_devManual = false;
   };
 
+  const goMoreProject = () => {
+    history.push(`/org/${orgId}/m-org-project`);
+  };
+
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
       <div className='rParts'>
         {
-          (curOrg || {}).id ? (
-            <Select 
-              getPopupContainer={triggerNode => triggerNode.parentNode}
-              className={styles.projectSwitcher}
-              style={{ width: 164 }}
-              placeholder='选择项目'
+          orgId ? (
+            <SeniorSelect 
+              placeholder='项目：'
+              style={{ width: 250, marginLeft: 24 }}
+              options={projectList}
               onChange={changeProject}
-              value={(curProject || {}).id}
-            >
-              {((projects || {}).list || []).map(it => <Option value={it.id}>{it.name}</Option>)}
-            </Select>
+              value={projectId}
+              valuePropName='id'
+              formatOptionLabel={(name) => `项目：${name}`}
+              seniorSelectfooter={(
+                <div className={styles.seniorSelectfooter}>
+                  <div className='more' onClick={goMoreProject}>查看更多项目</div>
+                  {/* <div className='create'>
+                    <div className='btn'>
+                      <span className='icon'>
+                        <PlusSquareOutlined/>
+                      </span>
+                      <span>创建新的项目</span>
+                    </div>
+                  </div> */}
+                </div>
+              )}
+            />
           ) : null
         }
         <div className='user'>

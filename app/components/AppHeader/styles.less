@@ -1,5 +1,34 @@
-.projectSwitcher {
-  margin: 0 16px;
+@import 'containers/App/styles/variable.less';
+
+.seniorSelectfooter {
+  background-color: #fff;
+
+  :global {
+    .more {
+      cursor: pointer;
+      color: @gray-6;
+      padding: 5px 12px;
+      margin-top: 4px;
+
+      &:hover {
+        background: @gray-3;
+      }
+    }
+
+    .create {
+      padding: 16px 12px 12px;
+      border-top: 1px solid @gray-6;
+
+      .btn {
+        line-height: 22px;
+
+        .icon {
+          color: @gray-8;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
 }
 .navs {
   height: 100%;
