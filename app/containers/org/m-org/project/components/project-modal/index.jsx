@@ -7,9 +7,10 @@ const FL = {
   wrapperCol: { span: 19 }
 };
 
-export default ({ visible, opt, toggleVisible, curRecord, orgId, reload, operation }) => {
-  const [ submitLoading, setSubmitLoading ] = useState(false),
-    [ userList, setUserList ] = useState([]);
+export default ({ visible, opt, toggleVisible, curRecord, orgId, operation }) => {
+
+  const [ submitLoading, setSubmitLoading ] = useState(false);
+
   const [form] = Form.useForm();
 
   const onOk = async () => {
@@ -33,8 +34,8 @@ export default ({ visible, opt, toggleVisible, curRecord, orgId, reload, operati
     if (opt === 'edit') {
       fetchPjtInfo();
     }
-    fetchUser();
   }, []);
+
   const fetchPjtInfo = async() => {
     try {
       const res = await pjtAPI.detailProject({ projectId: curRecord.id, orgId });
@@ -48,21 +49,7 @@ export default ({ visible, opt, toggleVisible, curRecord, orgId, reload, operati
       });
     }
   };
-  const fetchUser = async () => {
-    try {
-      const res = await pjtAPI.userList({ orgId });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setUserList(res.result.list || []);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
+ 
   return <Modal
     title={`${opt == 'add' ? '创建' : '编辑'}项目`}
     visible={visible}

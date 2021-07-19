@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
-import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined } from '@ant-design/icons';
+import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
 
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
@@ -16,6 +16,13 @@ const menus = [
   {
     subName: '项目信息',
     subKey: 'project',
+    emptyMenuList: [
+      {
+        name: '创建项目',
+        key: 'm-project-create',
+        icon: <PlusSquareOutlined />
+      }
+    ],
     menuList: [
       {
         name: '环境',
@@ -42,6 +49,7 @@ const menus = [
   {
     subName: '组织设置',
     subKey: 'org',
+    emptyMenuList: [],
     menuList: [
       {
         name: '项目',
@@ -69,14 +77,17 @@ const menus = [
 
 const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) => {
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
+
+  const pjtId = projectId || (curProject || {}).id;
   
-  const linkTo = (subKey, menuItemKey) => {
-    switch (subKey) {
+  // 跳转 scope作用域
+  const linkTo = (scope, menuItemKey) => {
+    switch (scope) {
       case 'org':
         history.push(`/org/${orgId}/${menuItemKey}`);
         break;
       case 'project':
-        history.push(`/org/${orgId}/project/${projectId || (curProject || {}).id}/${menuItemKey}`);
+        history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
         break;
       default:
         break;
@@ -98,6 +109,37 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
     });
     history.push(`/org/${orgId}`);
   };
+
+  const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
+    let scope = subKey, menuKey, isEmptyData = false;
+    switch (subKey) {
+      case 'org':
+        menuKey = mOrgKey;
+        break;
+      case 'project':
+        menuKey = mProjectKey;
+        // 没有项目id情况下 作用域指向组织
+        if (!pjtId) {
+          isEmptyData = true;
+          scope = 'org';
+          menuKey = mOrgKey;
+        }
+        break;
+      default:
+        break;
+    }
+    return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
+      return (
+        <div 
+          className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
+          onClick={() => linkTo(scope, menuItem.key)}
+        >
+          <span className='icon'>{menuItem.icon}</span>
+          <span>{menuItem.name}</span>
+        </div>
+      );
+    });
+  }, [pjtId]);
  
   return (
     <div className={styles.orgWrapper}>
@@ -117,7 +159,8 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
               <div className='sub-menu'>
                 <div className='menu-title'>{it.subName}</div>
                 <div className='menu-list'>
-                  {
+                  { renderMenus(it) }
+                  {/* {
                     it.menuList.map(menuItem => {
                       let menuKey;
                       switch (it.subKey) {
@@ -130,6 +173,7 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
                         default:
                           break;
                       }
+                     
                       return (
                         <div 
                           className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
@@ -140,7 +184,7 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
                         </div>
                       );
                     })
-                  }
+                  } */}
                 </div>
               </div>
             ))

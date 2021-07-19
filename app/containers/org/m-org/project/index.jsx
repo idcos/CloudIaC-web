@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Popconfirm } from 'antd';
-import history from 'utils/history';
-import { Link } from 'react-router-dom';
+import { Button, Table, notification, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
 
 import { Eb_WP } from 'components/error-boundary';
@@ -200,54 +198,56 @@ const Index = (props) => {
     />}
   >
     <div className='idcos-card'>
-      <div className='btns'>
-        <Button type='primary' onClick={() => {
-          setOpt('add');
-          toggleVisible();
-        }}
-        >创建项目</Button>
+      <div className={styles.projectList}>
+        <div className='btns'>
+          <Button type='primary' onClick={() => {
+            setOpt('add');
+            toggleVisible();
+          }}
+          >创建项目</Button>
+        </div>
+        <Table
+          columns={columns}
+          dataSource={resultMap.list}
+          loading={loading}
+          onChange={(pagination, filters, sorter, { action }) => {
+            if (action == 'filter') {
+              const statusFilter = filters[tableFilterFieldName];
+              changeQuery({
+                status: 'all',
+                combinedStatus: statusFilter ? statusFilter.join(',') : undefined
+              });
+            }
+          }}
+          pagination={{
+            current: query.pageNo,
+            pageSize: query.pageSize,
+            total: resultMap.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => `共${total}条`,
+            onChange: (page, pageSize) => {
+              changeQuery({
+                pageNo: page,
+                pageSize
+              });
+            }
+          }}
+        />
+        {
+          visible && <OpModal
+            visible={visible}
+            orgId={params.orgId}
+            opt={opt}
+            curRecord={record}
+            toggleVisible={toggleVisible}
+            reload={fetchList}
+            operation={operation}
+          />
+        }
       </div>
-      <Table
-        columns={columns}
-        dataSource={resultMap.list}
-        loading={loading}
-        onChange={(pagination, filters, sorter, { action }) => {
-          if (action == 'filter') {
-            const statusFilter = filters[tableFilterFieldName];
-            changeQuery({
-              status: 'all',
-              combinedStatus: statusFilter ? statusFilter.join(',') : undefined
-            });
-          }
-        }}
-        pagination={{
-          current: query.pageNo,
-          pageSize: query.pageSize,
-          total: resultMap.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共${total}条`,
-          onChange: (page, pageSize) => {
-            changeQuery({
-              pageNo: page,
-              pageSize
-            });
-          }
-        }}
-      />
     </div>
-    {
-      visible && <OpModal
-        visible={visible}
-        orgId={params.orgId}
-        opt={opt}
-        curRecord={record}
-        toggleVisible={toggleVisible}
-        reload={fetchList}
-        operation={operation}
-      />
-    }
-    <div className='fn-h-24'></div>
+    
   </LayoutPlus>;
 };
 

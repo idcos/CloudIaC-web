@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Modal, notification, Select, Radio, Space } from 'antd';
-
-import { sysAPI } from 'services/base';
-
-const { Option } = Select;
+import { Form, Input, Modal } from 'antd';
 
 const FL = {
   labelCol: { span: 5 },
@@ -12,7 +8,6 @@ const FL = {
 
 export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ ctRunnerList, setCtRunnerList ] = useState([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -23,18 +18,10 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
-    const { ctServiceId, ...restValues } = values;
-    const ctInfo = ctRunnerList.find(it => it.ID == ctServiceId) || {};
-    const { Port, Address } = ctInfo;
     setSubmitLoading(true);
     operation({
       doWhat: opt,
-      payload: {
-        ...restValues,
-        defaultRunnerServiceId: ctServiceId,
-        defaultRunnerAddr: Address,
-        defaultRunnerPort: Port
-      }
+      payload: values
     }, (hasError) => {
       setSubmitLoading(false);
       !hasError && toggleVisible();
@@ -53,9 +40,6 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
     <Form
       {...FL}
       form={form}
-      initialValues={{
-        usermock: 'type1'
-      }}
     >
       <Form.Item
         label='组织名称'
@@ -72,12 +56,6 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       <Form.Item
         label='组织描述'
         name='description'
-        rules={[
-          {
-            required: true,
-            message: '请输入'
-          }
-        ]}
       >
         <Input.TextArea placeholder='请输入组织描述'/>
       </Form.Item>

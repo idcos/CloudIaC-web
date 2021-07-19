@@ -55,6 +55,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/m-project-create',
+          name: '项目信息：创建项目',
+          component: loadable(() => import('containers/org/m-project/create'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/project/:projectId/m-project-env',
           name: '项目信息：环境',
           component: loadable(() => import('containers/org/m-project/env'), asyncLoadFallback),

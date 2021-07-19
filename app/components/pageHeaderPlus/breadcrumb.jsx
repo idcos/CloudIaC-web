@@ -19,6 +19,7 @@ const breadcrumbNameMap = {
   'm-org-ct': '组织设置：云模版',
   'm-org-variable': '组织设置：变量',
   'm-org-setting': '组织设置：设定',
+  'm-project-create': '项目信息：创建项目',
   'm-project-env': '项目信息：环境',
   'm-project-ct': '项目信息：云模版',
   'm-project-variable': '项目信息：变量',
