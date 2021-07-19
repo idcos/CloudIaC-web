@@ -16,7 +16,6 @@ export default function createRoutes() {
     {
       path: '/org/:orgId/project/:projectId/:mProjectKey',
       name: '组织主页',
-      exact: true,
       component: loadable(() => import('containers/org'), asyncLoadFallback),
       routes: [
         {
@@ -65,7 +64,6 @@ export default function createRoutes() {
     {
       path: '/org/:orgId/:mOrgKey',
       name: '组织主页',
-      exact: true,
       component: loadable(() => import('containers/org'), asyncLoadFallback),
       routes: [
         {
