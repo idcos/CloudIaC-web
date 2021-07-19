@@ -70,7 +70,7 @@ export default (props) => {
   };
   
   return (
-    <Modal width={795} title='添加/编辑terraform变量' visible={visible} onCancel={onCancel} onOk={onOk}>
+    <Modal width={795} title='导入' visible={visible} onCancel={onCancel} onOk={onOk}>
       <Table 
         columns={columns} 
         dataSource={importVars}
