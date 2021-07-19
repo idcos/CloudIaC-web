@@ -29,7 +29,7 @@ const Index = (props) => {
       {/* <Descriptions.Item label='Commit_ID'>empty</Descriptions.Item> */}
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
       <Descriptions.Item label='TTL'>{getTTL()}</Descriptions.Item>
-      <Descriptions.Item label='密钥'>密钥</Descriptions.Item>
+      <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{info.updatedAt || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>
     </Descriptions>

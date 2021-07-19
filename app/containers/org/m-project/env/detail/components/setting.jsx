@@ -73,6 +73,9 @@ const Index = (props) => {
       if (res.code != 200) {
         throw new Error(res.message);
       }
+      notification.success({
+        message: '操作成功'
+      });
       fetchInfo();
     } catch (e) {
       notification.error({
