@@ -102,14 +102,16 @@ const Index = (props) => {
       }
     }
   ];
-  return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
-    <Table
-      columns={columns}
-      dataSource={resultMap.list}
-      loading={loading}
-      pagination={false}
-    />
-  </Card>
+  return <div>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
+      <Table
+        columns={columns}
+        dataSource={resultMap.list}
+        loading={loading}
+        pagination={false}
+      />
+    </Card>
+  </div>
   ;
 };
 

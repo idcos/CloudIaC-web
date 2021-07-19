@@ -73,7 +73,8 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId',
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey',
+          //(resource,deploy,deployHistory,variable,setting)
           component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
           exact: true
         },

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import history from 'utils/history';
 import { connect } from 'react-redux';
-import { Menu, notification, Tabs, Button } from "antd";
+import { Modal, notification, Tabs, Button, Form, Input } from "antd";
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
@@ -21,32 +22,34 @@ import { envAPI } from 'services/base';
 const subNavs = {
   deploy: '部署日志',
   resource: '资源'
+
 };
 
-const OrgSetting = (props) => {
-  const [ panel, setPanel ] = useState('deploy');
-  const { dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
+const EnvDetail = (props) => {
+  const { dispatch, match: { params: { orgId, projectId, envId, tabKey } } } = props;
+  const [ panel, setPanel ] = useState(tabKey || 'deploy');
+  const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
-  
-  
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} taskId={taskId} />,
-      deploy: () => <Deploy {...props} taskId={taskId} />
+      resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
+      deploy: () => <Deploy {...props} lastTaskId={info.lastTaskId} />
     };
     return PAGES[panel]({
       title: subNavs[panel],
       dispatch
     });
-  }, [panel]);
+  }, [ panel, info.lastTaskId ]);
+
   useEffect(() => {
     fetchInfo();
-  }, []);
+  }, [panel]);
+  
   // 获取Info
   const fetchInfo = async () => {
     try {
       const res = await envAPI.envsInfo({
-        orgId, projectId, envId
+        orgId, projectId, envId, status: panel
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -60,39 +63,10 @@ const OrgSetting = (props) => {
     }
   };
   
-  const redeploy = async() => {
-    try {
-      const res = await envAPI.envRedeploy({ orgId, projectId, envId });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-    } catch (e) {
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
-  };
-
-  const destroy = async() => {
-    try {
-      const res = await envAPI.envDestroy({ orgId, projectId, envId });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-    } catch (e) {
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
-  };
-
   return <LayoutPlus
     extraHeader={
       <PageHeaderPlus
         title={info.name || ''}
-        subDes={<div><Button onClick={redeploy}>重新部署</Button><Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button></div>}
         breadcrumb={true}
       />
     }
@@ -114,7 +88,11 @@ const OrgSetting = (props) => {
             );
           }}
           activeKey={panel}
-          onChange={(k) => setPanel(k)}
+          onChange={(k) => {
+            let stateObj = { tabKey: k };
+            setPanel(k); 
+            window.history.replaceState(null, null, `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
+          }}
         >
           {Object.keys(subNavs).map((it) => (
             <Tabs.TabPane
@@ -130,5 +108,5 @@ const OrgSetting = (props) => {
 };
 
 export default connect()(
-  Eb_WP()(OrgSetting)
+  Eb_WP()(EnvDetail)
 );

@@ -28,8 +28,8 @@ const subNavs = {
 };
 
 const EnvDetail = (props) => {
-  const [ panel, setPanel ] = useState('resource');
-  const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
+  const { dispatch, match: { params: { orgId, projectId, envId, tabKey } } } = props;
+  const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
   const renderByPanel = useCallback(() => {
@@ -71,23 +71,6 @@ const EnvDetail = (props) => {
   const redeploy = async() => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${info.tplId}/${envId}`); 
   };
-
-  // const destroy = async() => {
-  //   try {
-  //     const res = await envAPI.envDestroy({ orgId, projectId, envId });
-  //     if (res.code != 200) {
-  //       throw new Error(res.message);
-  //     }
-  //     notification.success({
-  //       message: '操作成功'
-  //     });
-  //   } catch (e) {
-  //     notification.error({
-  //       message: '操作失败',
-  //       description: e.message
-  //     });
-  //   }
-  // };
   const destroy = () => {
     Modal.confirm({
       width: 480,
@@ -163,7 +146,11 @@ const EnvDetail = (props) => {
             );
           }}
           activeKey={panel}
-          onChange={(k) => setPanel(k)}
+          onChange={(k) => {
+            let stateObj = { tabKey: k };
+            setPanel(k); 
+            window.history.replaceState(null, null, `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
+          }}
         >
           {Object.keys(subNavs).map((it) => (
             <Tabs.TabPane

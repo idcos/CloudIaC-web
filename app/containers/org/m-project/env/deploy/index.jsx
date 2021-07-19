@@ -184,7 +184,7 @@ const Index = ({ match = {} }) => {
       notification.success({
         description: '保存成功'
       });
-      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${(res.result || {}).id}`); 
+      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${(res.result || {}).id}/deploy`); 
 
       setSpinning(false);
       getVars();
@@ -418,7 +418,7 @@ const Index = ({ match = {} }) => {
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
-            <Button onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
+            <Button loading={spinning} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
           </Row>
         </Form>
       </div>

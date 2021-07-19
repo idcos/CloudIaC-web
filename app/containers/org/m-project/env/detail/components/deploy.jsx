@@ -38,6 +38,7 @@ export default (props) => {
       fetchComments();
     }
   }, [taskIds]);
+  
   useEffect(() => {
     return () => {
       evtSource && evtSource.close();
