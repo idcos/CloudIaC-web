@@ -44,7 +44,7 @@ export default ({ match }) => {
     try {
       const varData = await varRef.current.validateForm();
       setSpinning(true);
-      const res = await varsAPI.update({ orgId, ...varData });
+      const res = await varsAPI.update({ orgId, projectId, ...varData });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
