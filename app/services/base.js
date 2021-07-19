@@ -447,6 +447,12 @@ export const envAPI = {
     return post(`/api/v1/tasks/${taskId}/approve`, { 
       action
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 获取全量密钥
+  getTriggerUrl: ({ orgId, envId, projectId, action }) => {
+    return getWithArgs(`/api/v1/tokens/trigger`, {
+      envId, action
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
 };
 
