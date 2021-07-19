@@ -45,7 +45,7 @@ const Pwd = ({ title, userInfo, updateUserInfo }) => {
             }
           ]}
         >
-          <Input.Password />
+          <Input.Password autoComplete='new-password'/>
         </Form.Item>
         <Form.Item
           label='新密码'
@@ -57,7 +57,7 @@ const Pwd = ({ title, userInfo, updateUserInfo }) => {
             }
           ]}
         >
-          <Input.Password />
+          <Input.Password autoComplete='new-password'/>
         </Form.Item>
         <Form.Item
           label='确认新密码'
@@ -79,7 +79,7 @@ const Pwd = ({ title, userInfo, updateUserInfo }) => {
             })
           ]}
         >
-          <Input.Password />
+          <Input.Password autoComplete='new-password'/>
         </Form.Item>
         <Form.Item>
           <Button type='primary' htmlType='submit' loading={submitLoading}>

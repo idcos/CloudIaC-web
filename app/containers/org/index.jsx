@@ -97,7 +97,6 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
   };
 
   const changeCurOrg = (value) => {
-    console.log(1, value);
     dispatch({
       type: 'global/set-curOrg',
       payload: {

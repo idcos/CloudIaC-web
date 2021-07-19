@@ -130,6 +130,7 @@ const TerraformVarForm = () => {
         const { id, sensitive } = record;
         return sensitive ? (
           <Input.Password
+            autoComplete='new-password'
             placeholder={id ? '空值保存时不会修改原有值' : '请输入value'} // 编辑状态密文可留空
             visibilityToggle={false}
           />
