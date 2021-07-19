@@ -1,0 +1,19 @@
+@import 'containers/App/styles/variable.less';
+
+.menuSelect {
+  :global {
+    .selection {
+      padding: 5px 12px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      color: @gray-9;
+      
+      .label {
+        &.selecting {
+          color: @primary-color;
+        }
+      }
+    }
+  }
+}

@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { Select } from 'antd';
+import { Select, Divider } from 'antd';
 import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
 
+import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
 
@@ -76,8 +77,9 @@ const menus = [
 ];
 
 const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) => {
-  const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
 
+  const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
+  const orgList = (orgs || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
   
   // 跳转 scope作用域
@@ -94,20 +96,21 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
     }
   };
 
-  const changeCurOrg = (orgId) => {
+  const changeCurOrg = (value) => {
+    console.log(1, value);
     dispatch({
       type: 'global/set-curOrg',
       payload: {
-        orgId
+        orgId: value
       }
     });
     dispatch({
       type: 'global/getProjects',
       payload: {
-        orgId
+        orgId: value
       }
     });
-    history.push(`/org/${orgId}`);
+    history.push(`/org/${value}`);
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
@@ -144,15 +147,17 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
   return (
     <div className={styles.orgWrapper}>
       <div className='left-nav'>
-        <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
-          style={{ width: 200 }}
-          placeholder='选择组织'
+        <MenuSelect
+          options={orgList}
           onChange={changeCurOrg}
+          selectionStyle={{ padding: '13px 20px 13px 24px' }}
+          lablePropName='name'
+          valuePropName='id'            
           value={curOrg && curOrg.id}
-        >
-          {(orgs.list || []).map(it => <Option value={it.id}>{it.name}</Option>)}
-        </Select>
+        />
+        <div style={{ padding: '0 19px' }}>
+          <Divider style={{ margin: '0' }} />
+        </div>
         <div className='menu-wrapper'>
           {
             menus.map(it => (
@@ -160,31 +165,6 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
                 <div className='menu-title'>{it.subName}</div>
                 <div className='menu-list'>
                   { renderMenus(it) }
-                  {/* {
-                    it.menuList.map(menuItem => {
-                      let menuKey;
-                      switch (it.subKey) {
-                        case 'org':
-                          menuKey = mOrgKey;
-                          break;
-                        case 'project':
-                          menuKey = mProjectKey;
-                          break;
-                        default:
-                          break;
-                      }
-                     
-                      return (
-                        <div 
-                          className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
-                          onClick={() => linkTo(it.subKey, menuItem.key)}
-                        >
-                          <span className='icon'>{menuItem.icon}</span>
-                          <span>{menuItem.name}</span>
-                        </div>
-                      );
-                    })
-                  } */}
                 </div>
               </div>
             ))
