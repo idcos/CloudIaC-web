@@ -324,7 +324,7 @@ export const sysAPI = {
     });
   },
   sysStatus: () => {
-    return get('/api/v1/system/status/search');
+    return get('/api/v1/systems/status');
   },
   updateTags: ({ tags, serviceId }) => {
     return put('/api/v1/consul/tags/update', {
