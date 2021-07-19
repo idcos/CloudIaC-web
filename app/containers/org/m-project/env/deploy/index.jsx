@@ -250,7 +250,7 @@ const Index = ({ match = {} }) => {
               </Form.Item> */}
               <Form.Item 
                 name='xxx'
-                label='生命周期'
+                label='存活时间'
               >
                 <Row>
                   <Col span={8}>

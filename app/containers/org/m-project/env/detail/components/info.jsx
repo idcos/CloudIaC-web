@@ -12,7 +12,7 @@ const Index = (props) => {
     let str = '-';
     if (!!info.autoDestroyAt) {
       str = moment(info.autoDestroyAt).format('YYYY-MM-DD HH:mm');
-    } else if ((info.ttl === '' || info.ttl === null || info.ttl == 0) && !info.autoDestroyAt) {
+    } else if ((info.ttl === '' || info.ttl === null) && !info.autoDestroyAt) {
       str = ((AUTO_DESTROY.filter(d => d.code === info.ttl)[0] || {}).name);
     } else if (!info.autoDestroyAt) {
       str = '无限';
