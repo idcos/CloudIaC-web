@@ -45,6 +45,7 @@ export default ({ stepHelper, orgId, ctData, type }) => {
         orgId,
         status: 'enable',
         currentPage: 1,
+        isShowDefaultVcs: true,
         pageSize: 100000
       });
       if (res.code !== 200) {

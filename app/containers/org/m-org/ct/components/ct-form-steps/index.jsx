@@ -127,11 +127,19 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     }
   };
 
+  const changeStep = (index) => {
+    // if (opType === 'edit') {
+    //   setStepIndex(index);
+    // }
+  };
+
   return (
     <div className={styles.ctCreate}>
       <div className='stepWrapper'>
         <Steps current={stepIndex}>
-          {steps.map(it => <Step title={it.title} />)}
+          {steps.map((it, index) => (
+            <Step title={it.title} onClick={() => changeStep(index)}/>
+          ))}
         </Steps>
       </div>
       {
