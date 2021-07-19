@@ -110,7 +110,7 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
         orgId: value
       }
     });
-    history.push(`/org/${value}`);
+    history.push(`/org/${value}/m-org-project`);
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
@@ -154,6 +154,14 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
           lablePropName='name'
           valuePropName='id'            
           value={curOrg && curOrg.id}
+          menuSelectfooter={(
+            <div 
+              className={styles.menuSelectfooterContent} 
+              onClick={() => history.push('/')}
+            >
+              查看更多组织
+            </div>
+          )}
         />
         <div style={{ padding: '0 19px' }}>
           <Divider style={{ margin: '0' }} />

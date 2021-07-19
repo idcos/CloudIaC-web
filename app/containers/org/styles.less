@@ -15,30 +15,6 @@
       display: flex;
       flex-direction: column;
 
-      .org-select-wrapper {
-        height: 48px;
-        padding: 0 18px;
-        cursor: pointer;
-       
-        .org-select {
-          padding: 0 26px 0 6px;
-          position: relative;
-          font-size: 14px;
-          line-height: 48px;
-          color: @gray-9;
-          font-weight: bold;
-          border-bottom: 1px solid @gray-4;
-
-          .icon {
-            color: @gray-9;
-            font-weight: bold;
-            position: absolute;
-            right: 6px;
-            top: 17px;
-          }
-        } 
-      }
-
       .menu-wrapper {
         flex: 1;
         padding: 0 24px;
@@ -80,4 +56,18 @@
       background-color: @backGroundIac;
     }
   }
+}
+
+
+.menuSelectfooterContent {
+  
+  line-height: 22px;
+  padding: 5px 12px;
+  color: @gray-6;
+  cursor: pointer;
+
+  &:hover {
+    background-color: @backGroundIac !important;
+  }
+
 }

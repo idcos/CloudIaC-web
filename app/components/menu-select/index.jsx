@@ -16,6 +16,7 @@ export default (props) => {
     lablePropName = 'lable',
     valuePropName = 'value',
     value = undefined,
+    menuSelectfooter,
     onChange = emptyFn
   } = props || {};
 
@@ -23,12 +24,27 @@ export default (props) => {
 
   const menu = useMemo(() => {
     return (
-      <Menu selectedKeys={[value]} onClick={({ key }) => onChange(key)}>
+      <div className={styles.menuSelectList}>
+        <div className='menu-select-body'>
+          <Menu 
+            selectedKeys={[value]} 
+            onClick={({ key }) => onChange(key)}
+          >
+            {
+              options.map((it) => <Menu.Item key={it[valuePropName]}>{it[lablePropName]}</Menu.Item>)
+            }
+          </Menu>
+        </div>
         {
-          options.map((it) => <Menu.Item key={it[valuePropName]}>{it[lablePropName]}</Menu.Item>)
+          menuSelectfooter ? (
+            <div className='menu-select-footer'>
+              {menuSelectfooter}
+            </div>
+          ) : null
         }
        
-      </Menu>
+      </div>
+     
     );
   }, [ options, value, valuePropName, lablePropName ]);
 
