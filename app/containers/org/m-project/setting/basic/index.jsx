@@ -12,7 +12,7 @@ const FL = {
   wrapperCol: { span: 10 }
 };
 
-const Basic = ({ orgId, projectId }) => {
+const Basic = ({ orgId, projectId, dispatch }) => {
 
   const [ spinning, setSpinning ] = useState(false);
   const [ projectInfo, setProjectInfo ] = useState({});
@@ -57,6 +57,16 @@ const Basic = ({ orgId, projectId }) => {
     }
   };
 
+  // 重新刷新全局的projects
+  const reloadGlobalProjects = () => {
+    dispatch({
+      type: 'global/getProjects',
+      payload: {
+        orgId
+      }
+    });
+  };
+
   const onFinish = async (values) => {
     try {
       setSpinning(true);
@@ -74,6 +84,7 @@ const Basic = ({ orgId, projectId }) => {
         message: '修改信息成功'
       });
       fetchProjectInfo();
+      reloadGlobalProjects();
     } catch (e) {
       setSpinning(false);
       notification.error({
