@@ -14,8 +14,58 @@ export default function createRoutes() {
       exact: true
     },
     {
-      path: '/org/:orgId/:mOrgKey?/:projectId?/:mProjectKey?',
+      path: '/org/:orgId/project/:projectId/:mProjectKey',
       name: '组织主页',
+      exact: true,
+      component: loadable(() => import('containers/org'), asyncLoadFallback),
+      routes: [
+        {
+          path: '/org/:orgId/project/:projectId/m-project-env',
+          name: '项目信息：环境',
+          component: loadable(() => import('containers/org/m-project/env'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-env/deploy/:tplId/:envId?',
+          name: '部署新环境：选择云模板',
+          component: loadable(() => import('containers/org/m-project/env/deploy'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey',
+          //(resource,deploy,deployHistory,variable,setting)
+          component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/task/:taskId',
+          component: loadable(() => import('containers/org/m-project/env/detail/task-detail'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-ct',
+          name: '项目信息：云模版',
+          component: loadable(() => import('containers/org/m-project/ct'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-variable',
+          name: '项目信息：变量',
+          component: loadable(() => import('containers/org/m-project/variable'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-setting',
+          name: '项目信息：设置',
+          component: loadable(() => import('containers/org/m-project/setting'), asyncLoadFallback),
+          exact: true
+        }
+      ]
+    },
+    {
+      path: '/org/:orgId/:mOrgKey',
+      name: '组织主页',
+      exact: true,
       component: loadable(() => import('containers/org'), asyncLoadFallback),
       routes: [
         {
@@ -58,47 +108,6 @@ export default function createRoutes() {
           path: '/org/:orgId/m-project-create',
           name: '项目信息：创建项目',
           component: loadable(() => import('containers/org/m-project/create'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-env',
-          name: '项目信息：环境',
-          component: loadable(() => import('containers/org/m-project/env'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-env/deploy/:tplId/:envId?',
-          name: '部署新环境：选择云模板',
-          component: loadable(() => import('containers/org/m-project/env/deploy'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey',
-          //(resource,deploy,deployHistory,variable,setting)
-          component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/task/:taskId',
-          component: loadable(() => import('containers/org/m-project/env/detail/task-detail'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-ct',
-          name: '项目信息：云模版',
-          component: loadable(() => import('containers/org/m-project/ct'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-variable',
-          name: '项目信息：变量',
-          component: loadable(() => import('containers/org/m-project/variable'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/org/:orgId/project/:projectId/m-project-setting',
-          name: '项目信息：设置',
-          component: loadable(() => import('containers/org/m-project/setting'), asyncLoadFallback),
           exact: true
         }
       ]
