@@ -5,8 +5,8 @@ import { pjtAPI } from 'services/base';
 import history from 'utils/history';
 
 const FL = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 14 }
+  labelCol: { span: 0 },
+  wrapperCol: { span: 24 }
 };
 
 export default ({ stepHelper, orgId, ctData, type }) => {
