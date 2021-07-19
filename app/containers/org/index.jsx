@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'antd';
+import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined } from '@ant-design/icons';
 
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
@@ -18,19 +19,23 @@ const menus = [
     menuList: [
       {
         name: '环境',
-        key: 'm-project-env'
+        key: 'm-project-env',
+        icon: <CodeOutlined />
       },
       {
         name: '云模板',
-        key: 'm-project-ct'
+        key: 'm-project-ct',
+        icon: <LayoutOutlined />
       },
       {
         name: '变量',
-        key: 'm-project-variable'
+        key: 'm-project-variable',
+        icon: <InteractionOutlined />
       },
       {
         name: '设置',
-        key: 'm-project-setting'
+        key: 'm-project-setting',
+        icon: <SettingOutlined />
       }
     ]
   },
@@ -40,19 +45,23 @@ const menus = [
     menuList: [
       {
         name: '项目',
-        key: 'm-org-project'
+        key: 'm-org-project',
+        icon: <ProjectOutlined />
       },
       {
         name: '云模板',
-        key: 'm-org-ct'
+        key: 'm-org-ct',
+        icon: <LayoutOutlined />
       },
       {
         name: '变量',
-        key: 'm-org-variable'
+        key: 'm-org-variable',
+        icon: <InteractionOutlined />
       },
       {
         name: '设定',
-        key: 'm-org-setting'
+        key: 'm-org-setting',
+        icon: <FormOutlined />
       }
     ]
   }
@@ -126,6 +135,7 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
                           className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
                           onClick={() => linkTo(it.subKey, menuItem.key)}
                         >
+                          <span className='icon'>{menuItem.icon}</span>
                           <span>{menuItem.name}</span>
                         </div>
                       );
