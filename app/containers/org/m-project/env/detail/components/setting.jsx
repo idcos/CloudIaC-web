@@ -39,9 +39,6 @@ const Index = (props) => {
         values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
-      if (!!values.destroyAt) {
-        values.destroyAt = moment(values.autoDestroyAt).format('YYYY-MM-DD HH:mm');
-      }
       if (values.type === 'infinite') {
         values.ttl = '';
       }
@@ -100,8 +97,10 @@ const Index = (props) => {
         form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
       } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
         data.type = 'infinite';
+        form.setFieldsValue({ ttl: '' });
       } else if (!data.autoDestroyAt) {
         data.type = 'timequantum';
+        form.setFieldsValue({ ttl: data.ttl });
       }
       form.setFieldsValue(data);
       setInfo(data);
@@ -111,9 +110,6 @@ const Index = (props) => {
         description: e.message
       });
     }
-  };
-  const resetValue = () => {
-    form.setFieldsValue({ ttl: '' });
   };
 
   const copyToUrl = async(action) => {
@@ -138,6 +134,7 @@ const Index = (props) => {
         form={form}
         {...FL}
         onFinish={onFinish}
+        initialValues={info}
       >
         <Form.Item 
           name='triggers'
@@ -185,7 +182,7 @@ const Index = (props) => {
                     name='type'
                     initialValue={'infinite'}
                   >
-                    <Select onChange={resetValue()} style={{ width: '90%' }}>
+                    <Select style={{ width: '90%' }}>
                       {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                     </Select>
                   </Form.Item>

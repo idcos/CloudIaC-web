@@ -13,9 +13,9 @@ const Index = (props) => {
     if (!!info.autoDestroyAt) {
       str = moment(info.autoDestroyAt).format('YYYY-MM-DD HH:mm');
     } else if ((info.ttl === '' || info.ttl === null) && !info.autoDestroyAt) {
-      str = ((AUTO_DESTROY.filter(d => d.code === info.ttl)[0] || {}).name);
-    } else if (!info.autoDestroyAt) {
       str = '无限';
+    } else if (!info.autoDestroyAt) {
+      str = ((AUTO_DESTROY.filter(d => d.code === info.ttl)[0] || {}).name) || '无限';
     }
     return str;
   };
