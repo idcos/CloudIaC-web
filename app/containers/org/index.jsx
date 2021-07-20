@@ -109,7 +109,7 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
         orgId: value
       }
     });
-    history.push(`/org/${value}/m-org-project`);
+    history.push(`/org/${value}/m-org-ct`);
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
