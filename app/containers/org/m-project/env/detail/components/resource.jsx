@@ -15,6 +15,7 @@ const Index = (props) => {
       total: 0
     }),
     [ jsonData, setJsonData ] = useState({}),
+    [ selectKeys, setSelectKeys ] = useState([]),
     [ search, setSearch ] = useState('');
 
   const resetList = (list) => {
@@ -85,7 +86,7 @@ const Index = (props) => {
   const columns = [
     {
       dataIndex: 'provider',
-      title: '云平台'
+      title: 'Provider'
     },
     {
       dataIndex: 'type',
@@ -109,6 +110,13 @@ const Index = (props) => {
       }
     }
   ];
+  const onExpand = (expanded, record) => {
+    if (expanded) {
+      setSelectKeys([record.provider]);
+    } else {
+      setSelectKeys([]);
+    }
+  };
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
       <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
@@ -122,8 +130,11 @@ const Index = (props) => {
       <Table
         columns={columns}
         dataSource={resultMap.list}
+        rowKey={record => record.provider}
         loading={loading}
         pagination={false}
+        expandedRowKeys={selectKeys}
+        onExpand={(a, b) => onExpand(a, b)}
       />
     </Card>
   </div>;
