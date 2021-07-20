@@ -164,19 +164,23 @@ const EnvVarForm = () => {
 
   const onChangeEditableTable = (list) => {
     list = list.map(it => {
+
       // 如来源不同 则对比数据
-      let findIt = defalutEnvVarListRef.current.find(v => v.name === it.name);
-      if (!findIt) {
+      let sameNameData = defalutEnvVarListRef.current.find(v => v.name === it.name);
+      if (!sameNameData) { // 全新数据,不处理
         return it;
       }
-      const oldIt = findIt.scope !== defaultScope ? findIt : findIt.overwrites;
-      if (!oldIt) {
+      if (sameNameData.scope === defaultScope && it.scope === defaultScope && it.id) { // 旧的同域数据,不处理
+        return it;
+      }
+      const parentSameNameData = sameNameData.scope !== defaultScope ? sameNameData : sameNameData.overwrites;
+      if (!parentSameNameData) { // 没有同名的继承数据，不处理
         return it;
       }
       const pickFindIt = {
-        value: oldIt.value || '',
-        description: oldIt.description || '',
-        sensitive: !!oldIt.sensitive
+        value: parentSameNameData.value || '',
+        description: parentSameNameData.description || '',
+        sensitive: !!parentSameNameData.sensitive
       };
       const pickIt = {
         value: it.value || '',
@@ -188,10 +192,10 @@ const EnvVarForm = () => {
         it.scope = defaultScope;
         delete it.id;
         if (!it.overwrites) {
-          it.overwrites = oldIt;
+          it.overwrites = parentSameNameData;
         }
       } else {
-        it = { ...it, ...oldIt };
+        it = { ...it, ...parentSameNameData };
       }
       return it;
     });
