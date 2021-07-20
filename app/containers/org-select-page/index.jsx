@@ -2,9 +2,9 @@ import React, { useEffect } from 'react';
 import { List } from 'antd';
 import { RightOutlined } from "@ant-design/icons";
 
-import PageHeader from 'components/pageHeader';
+import PageHeaderPlus from 'components/pageHeaderPlus';
 import { Eb_WP } from 'components/error-boundary';
-import Layout from 'components/common/layout';
+import LayoutPlus from 'components/common/layout/plus';
 import { connect } from "react-redux";
 import { compose } from 'redux';
 
@@ -30,12 +30,7 @@ const Orgs = ({ orgs, dispatch }) => {
     history.push(`/org/${orgId}/m-org-ct`);
   };
 
-  return <Layout
-    extraHeader={<PageHeader
-      title='组织'
-      breadcrumb={false}
-    />}
-  >
+  return <LayoutPlus >
     <div className='container-inner-width'>
       <div className={styles.orgsList}>
         <div className='header'>
@@ -69,7 +64,7 @@ const Orgs = ({ orgs, dispatch }) => {
         </div>
       </div>
     </div>
-  </Layout>;
+  </LayoutPlus>;
 };
 
 

@@ -9,8 +9,6 @@
  */
 import React from 'react';
 import styled from 'styled-components';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import history from 'utils/history';
  
 const Container = styled.div`
    height: 100%;
@@ -24,27 +22,6 @@ const Container = styled.div`
 const Header = styled.div`
    min-height: 60px;
  `;
- 
-const HeaderLeft = styled.div`
-   display: flex;
-   align-items: center;
- `;
- 
-const BackIcon = styled(ArrowLeftOutlined)`
-   color: #242424;;
-   font-weight: 500;
-   font-size: 18px;
-   margin-right: 10px;
- `;
- 
-const Title = styled.div`
-   color: #242424;
-   font-size: 18px;
-   margin-right: 10px;
-   font-weight: 500;
- `;
- 
-const ExtraTitle = styled.div``;
  
 const Content = styled.div`
    flex: 1;
@@ -75,28 +52,15 @@ const Footer = styled.div`
   * @param {ReactNode} footer footer bar's content
   */
 const CommonLayoutPlus = ({
-  title,
-  extraTitle,
   extraHeader,
   children,
-  onBack,
   contentStyle = {},
   footer
 }) => {
-  // handle back
-  const handleBack = () => {
-    if (typeof onBack === 'function') {
-      onBack();
-    } else {
-      history.goBack();
-    }
-  };
  
   return (
     <Container>
-      <Header>
-        {extraHeader && <>{extraHeader}</>}
-      </Header>
+      {extraHeader ? (<Header>{extraHeader}</Header>) : null}
       <Content style={contentStyle} withFooter={footer}>{children}</Content>
       {footer ? <Footer>{footer}</Footer> : null}
     </Container>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { List, notification, Collapse, Spin, Alert } from 'antd';
 
-import PageHeader from 'components/pageHeader';
+import PageHeaderPlus from 'components/pageHeaderPlus';
 import { Eb_WP } from 'components/error-boundary';
-import Layout from 'components/common/layout';
+import LayoutPlus from 'components/common/layout/plus';
 import { sysAPI } from 'services/base';
 
 import Tags from 'components/tags';
@@ -71,8 +71,9 @@ const SysStatus = (props) => {
     }
   };
 
-  return <Layout
-    extraHeader={<PageHeader
+  return <LayoutPlus
+    extraHeader={<PageHeaderPlus
+      className='container-inner-width'
       title='系统状态'
       breadcrumb={false}
     />}
@@ -122,7 +123,7 @@ const SysStatus = (props) => {
         </div>
       }
     </div>
-  </Layout>;
+  </LayoutPlus>;
 };
 
 const AlertMsg = ({ type, message }) => {
