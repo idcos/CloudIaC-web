@@ -250,7 +250,6 @@ const EditableTable = (props) => {
     >
       <div>
         <Table
-          bordered={true}
           {...tableProps}
           pagination={false}
           rowKey='_key_id'
