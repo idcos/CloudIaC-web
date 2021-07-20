@@ -37,7 +37,7 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/task/:taskId',
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey/task/:taskId',
           component: loadable(() => import('containers/org/m-project/env/detail/task-detail'), asyncLoadFallback),
           exact: true
         },

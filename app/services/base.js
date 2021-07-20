@@ -93,9 +93,9 @@ export const orgsAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  editUser: ({ orgId, id, name, email, phone }) => {
+  editUser: ({ orgId, id, name, email, phone, role }) => {
     return put(`/api/v1/users/${id}`, {
-      name, email, phone
+      name, email, phone, role
     }, {
       'IaC-Org-Id': orgId
     });

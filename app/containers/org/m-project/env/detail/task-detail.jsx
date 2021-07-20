@@ -22,13 +22,11 @@ import { envAPI } from 'services/base';
 const subNavs = {
   deploy: '部署日志',
   resource: '资源'
-
 };
 
-const EnvDetail = (props) => {
-  const { dispatch, match: { params: { orgId, projectId, envId, tabKey } } } = props;
-  const [ panel, setPanel ] = useState(tabKey || 'deploy');
-  const [form] = Form.useForm();
+const TaskDetail = (props) => {
+  const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
+  const [ panel, setPanel ] = useState('deploy');
   const [ info, setInfo ] = useState({});
   const renderByPanel = useCallback(() => {
     const PAGES = {
@@ -108,5 +106,5 @@ const EnvDetail = (props) => {
 };
 
 export default connect()(
-  Eb_WP()(EnvDetail)
+  Eb_WP()(TaskDetail)
 );

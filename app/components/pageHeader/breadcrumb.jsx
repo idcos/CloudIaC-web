@@ -14,42 +14,52 @@ const isRouteParam = (routeParams, pathSnippet) =>
   Object.keys(routeParams).find(it => routeParams[it] === pathSnippet);
 
 const breadcrumbNameMap = {
-  'org': '组织',
-  'm-org-project': '组织设置：项目',
-  'm-org-ct': '组织设置：云模版',
-  'm-org-variable': '组织设置：变量',
-  'm-org-setting': '组织设置：设定',
-  'm-project-create': '项目信息：创建项目',
-  'm-project-env': '项目信息：环境',
-  'm-project-ct': '项目信息：云模版',
-  'm-project-variable': '项目信息：变量',
-  'm-project-setting': '项目信息：设置',
-  'createCT': '新建云模版',
-  'updateCT': '编辑云模版',
-  'deploy': '部署新环境'
+  'org': { text: '组织' },
+  'project': { text: '项目', disabled: true },
+  'm-org-project': { text: '组织设置：项目' },
+  'm-org-ct': { text: '组织设置：云模版' },
+  'm-org-variable': { text: '组织设置：变量' },
+  'm-org-setting': { text: '组织设置：设定' },
+  'm-project-create': { text: '项目信息：创建项目' },
+  'm-project-env': { text: '项目信息：环境' },
+  'm-project-ct': { text: '项目信息：云模版' },
+  'm-project-variable': { text: '项目信息：变量' },
+  'm-project-setting': { text: '项目信息：设置' },
+  'createCT': { text: '新建云模版' },
+  'updateCT': { text: '编辑云模版' },
+  'deploy': { text: '部署新环境' },
+  'task': { text: '部署历史' },
+  'detail': { text: '环境详情', indexDiff: 2 }
 };
 
 
-const BreadcrumbWrapper = ({ location, params, externalData }) => {
+const BreadcrumbWrapper = ({ location, params }) => {
+
   const pathSnippets = location.pathname.split('/')
     .filter(i => i)
-    .filter(i => !!isRouteParam({ orgId: params.orgId, tplId: params.tplId }, i) || breadcrumbNameMap.hasOwnProperty(i));
+    .filter(i => !!isRouteParam({ ...params }, i) || breadcrumbNameMap.hasOwnProperty(i));
+
   const extraBreadcrumbItems = pathSnippets.map((snippet, index) => {
-    const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+    const link = breadcrumbNameMap.hasOwnProperty(snippet) ? breadcrumbNameMap[snippet] : null;
+    if (!link) {
+      return null;
+    }
+    const url = `/${pathSnippets.slice(0, index + 1 + (link.indexDiff || 0)).join('/')}`;
     const isLastOne = index == pathSnippets.length - 1;
-    const linkText = breadcrumbNameMap.hasOwnProperty(snippet) ?
-      breadcrumbNameMap[snippet] : null;
-    return linkText ? (
+    return (
       <Breadcrumb.Item key={url}>
         <Link
           to={index == 0 ? '/' : url}
-          disabled={isLastOne || index == 1}
+          disabled={isLastOne || link.disabled}
         >
-          {linkText}
+          {link.text}
         </Link>
       </Breadcrumb.Item>
-    ) : null;
+    );
   });
+
+  console.log(pathSnippets, extraBreadcrumbItems);
+
   return <div className='breadcrumbWrapper'>
     <Breadcrumb>{extraBreadcrumbItems}</Breadcrumb>
   </div>;
