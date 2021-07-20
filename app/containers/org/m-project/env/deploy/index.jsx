@@ -170,7 +170,7 @@ const Index = ({ match = {} }) => {
       }
       setSpinning(true);
       if (!!values.destroyAt) {
-        values.destroyAt = moment(values.destroyAt).format('YYYY-MM-DD HH:mm');
+        values.destroyAt = moment(values.destroyAt);
       }
       if (values.type === 'infinite') {
         values.ttl = '';

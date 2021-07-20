@@ -43,7 +43,6 @@ const Index = (props) => {
         values.ttl = '';
       }
       delete values.type;
-      delete values.xxx;
       const res = await envAPI.envsEdit({ orgId, projectId, ...values, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -180,7 +179,6 @@ const Index = (props) => {
         <Row>
           <Col span={8} style={{ marginLeft: '2%' }}>
             <Form.Item 
-              name='xxx'
               label='存活时间'
               {...PL}
             >
