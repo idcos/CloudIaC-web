@@ -103,10 +103,6 @@ export default ({ title, orgId }) => {
       </div>
     },
     {
-      dataIndex: 'email',
-      title: '邮箱'
-    },
-    {
       dataIndex: 'phone',
       title: '手机'
     },
