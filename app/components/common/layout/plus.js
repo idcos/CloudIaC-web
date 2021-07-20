@@ -18,6 +18,7 @@ const Container = styled.div`
    flex-direction: column;
    padding: 24px;
    overflow: hidden;
+   background-color: #E6F0F0;
  `;
  
 const Header = styled.div`

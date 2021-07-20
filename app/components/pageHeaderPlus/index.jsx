@@ -8,8 +8,8 @@ import { Row, Col } from 'antd';
 import BreadcrumbWrapper from './breadcrumb';
 
 const PageHeader = (props) => {
-  const { breadcrumb, title, des, subDes, renderFooter, location, match, curOrg } = props;
-  return <div className={styles.pageHeader}>
+  const { breadcrumb, title, des, subDes, renderFooter, location, match, curOrg, className } = props;
+  return <div className={`${styles.pageHeader} ${className}`}>
     <div>
       { breadcrumb && <BreadcrumbWrapper
         location={location}

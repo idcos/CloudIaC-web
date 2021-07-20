@@ -1,17 +1,15 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Menu } from 'antd';
+import { Menu, Tabs } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import PageHeader from 'components/pageHeader';
+import PageHeaderPlus from 'components/pageHeaderPlus';
 import { Eb_WP } from 'components/error-boundary';
-import Layout from 'components/common/layout';
+import LayoutPlus from 'components/common/layout/plus';
 
 
 import Basic from './pages/basic';
 import Pwd from './pages/pwd';
-
-import styles from './styles.less';
 
 const subNavs = {
   basic: '基本信息',
@@ -32,6 +30,7 @@ const User = ({ userInfo, dispatch }) => {
       cb
     });
   };
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
       basic: (props) => userInfo.name && <Basic {...props}/>,
@@ -43,30 +42,40 @@ const User = ({ userInfo, dispatch }) => {
       updateUserInfo
     });
   }, [ panel, userInfo ]);
-  return <Layout
-    extraHeader={<PageHeader
+
+  return <LayoutPlus
+    extraHeader={<PageHeaderPlus
+      className='container-inner-width'
       title='用户设置'
       breadcrumb={false}
+      renderFooter={() => (
+        <Tabs
+          tabBarStyle={{ backgroundColor: '#fff', paddingLeft: 16 }}
+          animated={false}
+          renderTabBar={(props, DefaultTabBar) => {
+            return (
+              <div style={{ marginBottom: -16 }}>
+                <DefaultTabBar {...props} />
+              </div>
+            );
+          }}
+          activeKey={panel}
+          onChange={(k) => setPanel(k)}
+        >
+          {Object.keys(subNavs).map((it) => (
+            <Tabs.TabPane
+              tab={subNavs[it]}
+              key={it}
+            />
+          ))}
+        </Tabs>
+      )}
     />}
   >
-    <div className='container-inner-width'>
-      <div className={styles.user}>
-        <Menu
-          mode='inline'
-          className='subNav'
-          defaultSelectedKeys={[panel]}
-          onClick={({ item, key }) => {
-            setPanel(key);
-          }}
-        >
-          {Object.keys(subNavs).map(it => <Menu.Item key={it}>{subNavs[it]}</Menu.Item>)}
-        </Menu>
-        <div className='rightPanel'>
-          {renderByPanel()}
-        </div>
-      </div>
+    <div className='idcos-card container-inner-width'>
+      {renderByPanel()}
     </div>
-  </Layout>;
+  </LayoutPlus>;
 };
 
 const mapStateToProps = (state) => {

@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Input } from 'antd';
-
-import { sysAPI } from 'services/base';
+import { Form, Button, Input } from 'antd';
 
 const layout = {
   labelCol: {
-    span: 8
+    span: 6
   },
   wrapperCol: {
-    span: 10
+    span: 16
   }
 };
 
@@ -26,62 +24,57 @@ const Basic = ({ title, userInfo, updateUserInfo }) => {
     });
   };
 
-  return <>
-    <Card
-      title={title}
+  return <div style={{ width: 600, margin: '40px auto' }}>
+    <Form
+      {...layout}
+      onFinish={onFinish}
+      initialValues={{
+        ...userInfo
+      }}
     >
-      <Form
-        {...layout}
-        layout='vertical'
-        onFinish={onFinish}
-        initialValues={{
-          ...userInfo
-        }}
+      <Form.Item
+        name='name'
+        label='姓名'
+        rules={[
+          {
+            required: true,
+            message: '请输入'
+          }
+        ]}
       >
-        <Form.Item
-          name='name'
-          label='姓名'
-          rules={[
-            {
-              required: true,
-              message: '请输入'
-            }
-          ]}
-        >
-          <Input placeholder='请输入姓名'/>
-        </Form.Item>
-        <Form.Item
-          label='邮箱'
-          name='email'
-          rules={[
-            {
-              required: true,
-              message: '请选择'
-            }
-          ]}
-          extra={'邮箱全局唯一，作为登录用户名'}
-        >
-          <Input placeholder='请输入邮箱' disabled={true}/>
-        </Form.Item>
-        <Form.Item
-          label='手机号'
-          name='phone'
-          rules={[
-            {
-              message: '请选择'
-            }
-          ]}
-        >
-          <Input placeholder='请输入手机号'/>
-        </Form.Item>
-        <Form.Item>
-          <Button type='primary' htmlType='submit' loading={submitLoading}>
-            更改信息
-          </Button>
-        </Form.Item>
-      </Form>
-    </Card>
-  </>;
+        <Input placeholder='请输入姓名'/>
+      </Form.Item>
+      <Form.Item
+        label='邮箱'
+        name='email'
+        rules={[
+          {
+            required: true,
+            message: '请选择'
+          }
+        ]}
+        extra={'邮箱全局唯一，作为登录用户名'}
+      >
+        <Input placeholder='请输入邮箱' disabled={true}/>
+      </Form.Item>
+      <Form.Item
+        label='手机号'
+        name='phone'
+        rules={[
+          {
+            message: '请选择'
+          }
+        ]}
+      >
+        <Input placeholder='请输入手机号'/>
+      </Form.Item>
+      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+        <Button type='primary' htmlType='submit' loading={submitLoading}>
+          更改信息
+        </Button>
+      </Form.Item>
+    </Form>
+  </div>;
 };
 
 export default Basic;
