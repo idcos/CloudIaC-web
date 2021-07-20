@@ -27,14 +27,14 @@ const breadcrumbNameMap = {
   'm-project-setting': { text: '项目信息：设置' },
   'createCT': { text: '新建云模版' },
   'updateCT': { text: '编辑云模版' },
-  'deploy': { text: '部署新环境' },
+  'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
   'task': { text: '部署历史' },
   'detail': { text: '环境详情', indexDiff: 2 }
 };
 
 
 const BreadcrumbWrapper = ({ location, params }) => {
-
+  
   const pathSnippets = location.pathname.split('/')
     .filter(i => i)
     .filter(i => !!isRouteParam({ ...params }, i) || breadcrumbNameMap.hasOwnProperty(i));
@@ -44,21 +44,20 @@ const BreadcrumbWrapper = ({ location, params }) => {
     if (!link) {
       return null;
     }
-    const url = `/${pathSnippets.slice(0, index + 1 + (link.indexDiff || 0)).join('/')}`;
+    const { indexDiff, getText, text, disabled } = link;
+    const url = `/${pathSnippets.slice(0, index + 1 + (indexDiff || 0)).join('/')}`;
     const isLastOne = index == pathSnippets.length - 1;
     return (
       <Breadcrumb.Item key={url}>
         <Link
           to={index == 0 ? '/' : url}
-          disabled={isLastOne || link.disabled}
+          disabled={isLastOne || disabled}
         >
-          {link.text}
+          {getText ? getText(params) : text}
         </Link>
       </Breadcrumb.Item>
     );
   });
-
-  console.log(pathSnippets, extraBreadcrumbItems);
 
   return <div className='breadcrumbWrapper'>
     <Breadcrumb>{extraBreadcrumbItems}</Breadcrumb>
