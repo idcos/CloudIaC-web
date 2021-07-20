@@ -183,7 +183,7 @@ const Index = ({ match = {} }) => {
       notification.success({
         description: '保存成功'
       });
-      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${(res.result || {}).id}/deploy`); 
+      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${(res.result || {}).id}/deployJournal`); 
 
       setSpinning(false);
       getVars();

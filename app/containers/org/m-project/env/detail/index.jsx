@@ -10,7 +10,7 @@ import Layout from 'components/common/layout';
 
 import Info from './components/info';
 import Resource from './components/resource';
-import DeployJournal from './components/deploy-journal';
+import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
@@ -32,6 +32,7 @@ const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
+  
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,

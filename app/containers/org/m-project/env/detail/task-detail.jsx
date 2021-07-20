@@ -10,7 +10,7 @@ import Layout from 'components/common/layout';
 
 import Info from './components/info';
 import Resource from './components/resource';
-import DeployJournal from './components/deploy-journal';
+import DeployJournal from './components/deployJournal';
 
 import styles from './styles.less';
 
