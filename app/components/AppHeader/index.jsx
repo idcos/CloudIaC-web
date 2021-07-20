@@ -159,35 +159,34 @@ const AppHeader = (props) => {
           </Tooltip>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
           <Dropdown
-            overlay={<Menu
-              onClick={({ key }) => {
-                switch (key) {
-                  case 'basic':
-                  case 'pwd':
-                    history.push({
-                      pathname: `/user/setting`,
-                      state: {
-                        panel: key
-                      }
-                    });
-                    break;
-                  case 'logout':
-                    logout();
-                    break;
-                  default:
-                    return;
-                }
-              }}
-            >
-              <Menu.Item key='basic'>用户设置</Menu.Item>
-              {
-                userInfo.isAdmin ? (
-                  <Menu.Item key='sys' onClick={() => history.push('/sys/setting')}>系统设置</Menu.Item>
-                ) : null
-              }
-              <Menu.Item key='pwd'>修改密码</Menu.Item>
-              <Menu.Item danger={true} key='logout'>退出登录</Menu.Item>
-            </Menu>}
+            overlay={(
+              <div className={styles.userDropContent}>
+                <div className='header'>
+                  <div className='name'>{userInfo.name}</div>
+                  <div className='email'>{userInfo.email}</div>
+                </div>
+                <div className='body'>
+                  <div className='link-item' onClick={() => history.push('/user/setting')}>
+                    <span className='icon'></span>
+                    <span className='text'>用户设置</span>
+                  </div>
+                  {
+                    userInfo.isAdmin ? (
+                      <div className='link-item' onClick={() => history.push('/sys/setting')}>
+                        <span className='icon'></span>
+                        <span className='text'>系统设置</span>
+                      </div>
+                    ) : null
+                  }
+                </div>
+                <div className='footer'>
+                  <div className='link-item' onClick={() => logout()}>
+                    <span className='icon'></span>
+                    <span className='text'>退出</span>
+                  </div>
+                </div>
+              </div>
+            )}
           >
             <span>{userInfo.name || ''} <DownOutlined style={{ verticalAlign: 'middle', fontSize: 14 }} /></span>
           </Dropdown>

@@ -18,9 +18,9 @@ const subNavs = {
   pwd: '修改密码'
 };
 
-const User = ({ userInfo, dispatch, location }) => {
-  const { state } = location;
-  const [ panel, setPanel ] = useState(state.panel || 'basic');
+const User = ({ userInfo, dispatch }) => {
+
+  const [ panel, setPanel ] = useState('basic');
 
   const updateUserInfo = ({ payload, cb }) => {
     dispatch({
