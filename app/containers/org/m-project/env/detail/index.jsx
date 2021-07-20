@@ -10,7 +10,7 @@ import Layout from 'components/common/layout';
 
 import Info from './components/info';
 import Resource from './components/resource';
-import Deploy from './components/deploy';
+import DeployJournal from './components/deploy-journal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
@@ -21,7 +21,7 @@ import { envAPI } from 'services/base';
 
 const subNavs = {
   resource: '资源',
-  deploy: '部署日志',
+  deployJournal: '部署日志',
   deployHistory: '部署历史',
   variable: '变量',
   setting: '设置'
@@ -35,7 +35,7 @@ const EnvDetail = (props) => {
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
-      deploy: () => <Deploy {...props} lastTaskId={info.lastTaskId} />,
+      deployJournal: () => <DeployJournal {...props} lastTaskId={info.lastTaskId} />,
       deployHistory: () => <DeployHistory {...props}/>,
       variable: () => <Variable {...props}/>,
       setting: () => <Setting {...props}/>

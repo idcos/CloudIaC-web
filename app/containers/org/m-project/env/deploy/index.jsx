@@ -176,7 +176,6 @@ const Index = ({ match = {} }) => {
         values.ttl = '';
       }
       delete values.type;
-      delete values.xxx;
       const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -249,7 +248,6 @@ const Index = ({ match = {} }) => {
                 </Select>
               </Form.Item> */}
               <Form.Item 
-                name='xxx'
                 label='存活时间'
               >
                 <Row>

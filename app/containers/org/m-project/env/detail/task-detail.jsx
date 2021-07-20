@@ -10,28 +10,25 @@ import Layout from 'components/common/layout';
 
 import Info from './components/info';
 import Resource from './components/resource';
-import Deploy from './components/deploy';
-import DeployHistory from './components/deployHistory';
-import Variable from './components/variable';
-import Setting from './components/setting';
+import DeployJournal from './components/deploy-journal';
 
 import styles from './styles.less';
 
 import { envAPI } from 'services/base';
 
 const subNavs = {
-  deploy: '部署日志',
+  deployJournal: '部署日志',
   resource: '资源'
 };
 
 const TaskDetail = (props) => {
   const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
-  const [ panel, setPanel ] = useState('deploy');
+  const [ panel, setPanel ] = useState('deployJournal');
   const [ info, setInfo ] = useState({});
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
-      deploy: () => <Deploy {...props} lastTaskId={info.lastTaskId} />
+      deployJournal: () => <DeployJournal {...props} lastTaskId={info.lastTaskId} />
     };
     return PAGES[panel]({
       title: subNavs[panel],
