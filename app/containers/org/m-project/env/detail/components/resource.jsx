@@ -121,7 +121,13 @@ const Index = (props) => {
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
       <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
     </Card>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 0 }} type={'inner'} title={'资源列表'}>
+    <Card 
+      style={{ marginTop: 24 }}
+      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
+      bodyStyle={{ padding: 0 }} 
+      type={'inner'} 
+      title={'资源列表'}
+    >
       <Input.Search
         placeholder='请输入关键字搜索'
         style={{ width: 240, margin: 20 }}

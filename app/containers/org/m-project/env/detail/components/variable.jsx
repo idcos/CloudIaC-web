@@ -103,7 +103,12 @@ const Index = (props) => {
         pagination={false}
       />
     </Card>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境变量'}>
+    <Card 
+      style={{ marginTop: 24 }}
+      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
+      type={'inner'} 
+      title={'环境变量'}
+    >
       <Table
         columns={columns}
         dataSource={defaultEnvVars}

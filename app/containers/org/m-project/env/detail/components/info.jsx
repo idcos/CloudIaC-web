@@ -19,7 +19,7 @@ const Index = (props) => {
     }
     return str;
   };
-  return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
+  return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
     <Descriptions 
       labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
     >
