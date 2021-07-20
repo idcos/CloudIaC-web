@@ -86,6 +86,13 @@ export const orgsAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  inviteUser: ({ orgId, name, email, phone, role }) => {
+    return post(`/api/v1/orgs/${orgId}/users/invite`, {
+      name, email, phone, role
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
   editUser: ({ orgId, id, name, email, phone }) => {
     return put(`/api/v1/users/${id}`, {
       name, email, phone

@@ -60,7 +60,7 @@ export default ({ title, orgId }) => {
     try {
       const method = {
         edit: (param) => orgsAPI.editUser(param),
-        add: (param) => orgsAPI.addUser(param),
+        add: (param) => orgsAPI.inviteUser(param),
         resetUserPwd: ({ orgId, id }) => orgsAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
       };
@@ -155,7 +155,7 @@ export default ({ title, orgId }) => {
           setOpt('add');
           toggleVisible();
         }}
-      >添加成员</Button>
+      >邀请成员</Button>
     </div>
     <Table
       columns={columns}

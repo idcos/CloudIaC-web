@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { Form, Input, Modal } from 'antd';
+import { Form, Input, Modal, Select } from 'antd';
 
+import { ORG_USER } from 'constants/types';
+
+const { Option } = Select;
 const FL = {
   labelCol: { span: 6 },
   wrapperCol: { span: 18 }
@@ -26,7 +29,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
   };
 
   return <Modal
-    title={`${opt == 'add' ? '添加' : '编辑'}成员`}
+    title={`${opt == 'add' ? '邀请' : '编辑'}成员`}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
@@ -45,9 +48,9 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
         rules={[
           {
             required: true,
-            message: '请输入',
-            pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
-          }
+            message: '请输入'
+          },
+          { type: 'email' }
         ]}
         extra='邮箱作为登录名，全局唯一'
       >
@@ -76,6 +79,23 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
         ]}
       >
         <Input placeholder='请输入手机号'/>
+      </Form.Item>
+      <Form.Item
+        label='角色'
+        name='role'
+        rules={[
+          {
+            required: true,
+            message: '请选择'
+          }
+        ]}
+      >
+        <Select 
+          getPopupContainer={triggerNode => triggerNode.parentNode}
+          placeholder='请选择角色'
+        >
+          {Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)}
+        </Select>
       </Form.Item>
     </Form>
   </Modal>;

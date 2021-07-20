@@ -51,7 +51,8 @@ const Basic = ({ title, userInfo, updateUserInfo }) => {
           {
             required: true,
             message: '请选择'
-          }
+          },
+          { type: 'email' }
         ]}
         extra={'邮箱全局唯一，作为登录用户名'}
       >

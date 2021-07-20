@@ -81,7 +81,10 @@ export default () => {
                 </>
               }
               name='email'
-              rules={[{ required: true, message: '请输入邮箱地址' }]}
+              rules={[
+                { required: true, message: '请输入邮箱地址' }, 
+                { type: 'email' }
+              ]}
             >
               <Input placeholder='请输入邮箱地址' />
             </Form.Item>
