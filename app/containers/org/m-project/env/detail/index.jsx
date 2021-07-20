@@ -32,20 +32,17 @@ const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
-  
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
       deployJournal: () => <DeployJournal {...props} lastTaskId={info.lastTaskId} />,
       deployHistory: () => <DeployHistory {...props}/>,
-      variable: () => <Variable {...props}/>,
+      variable: () => <Variable {...props} info={info}/>,
       setting: () => <Setting {...props}/>
     };
-    return PAGES[panel]({
-      title: subNavs[panel],
-      dispatch
-    });
-  }, [ panel, info.lastTaskId ]);
+    return PAGES[panel]();
+  }, [ panel, info ]);
 
   useEffect(() => {
     fetchInfo();
