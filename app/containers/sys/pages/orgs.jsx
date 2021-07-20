@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import OrgModal from './components/orgModal';
 
-import { Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
+import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import { orgsAPI } from 'services/base';
 
 const Orgs = ({ title, dispatch }) => {
@@ -153,34 +153,34 @@ const Orgs = ({ title, dispatch }) => {
   ];
 
   return <>
-    <Card
-      title={title}
-      extra={<Button onClick={() => {
-        setOpt('add');
-        toggleVisible();
-      }}
-      >创建组织</Button>}
-    >
-      <Table
-        columns={columns}
-        dataSource={resultMap.list}
-        loading={loading}
-        pagination={{
-          current: query.pageNo,
-          pageSize: query.pageSize,
-          total: resultMap.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共${total}条`,
-          onChange: (page, pageSize) => {
-            changeQuery({
-              pageNo: page,
-              pageSize
-            });
-          }
+    <div style={{ marginBottom: 20 }}>
+      <Button 
+        type='primary'
+        onClick={() => {
+          setOpt('add');
+          toggleVisible();
         }}
-      />
-    </Card>
+      >创建组织</Button>
+    </div>
+    <Table
+      columns={columns}
+      dataSource={resultMap.list}
+      loading={loading}
+      pagination={{
+        current: query.pageNo,
+        pageSize: query.pageSize,
+        total: resultMap.total,
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => `共${total}条`,
+        onChange: (page, pageSize) => {
+          changeQuery({
+            pageNo: page,
+            pageSize
+          });
+        }
+      }}
+    />
     {
       visible && <OrgModal
         visible={visible}

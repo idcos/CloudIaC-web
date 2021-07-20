@@ -1,16 +1,13 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Menu } from 'antd';
-import history from 'utils/history';
+import { Menu, Tabs } from 'antd';
 
-import PageHeader from 'components/pageHeader';
+import PageHeaderPlus from 'components/pageHeaderPlus';
 import { Eb_WP } from 'components/error-boundary';
-import Layout from 'components/common/layout';
+import LayoutPlus from 'components/common/layout/plus';
 
 
 import Orgs from './pages/orgs';
 import Params from './pages/params';
-
-import styles from './styles.less';
 
 const subNavs = {
   org: '组织设置',
@@ -18,7 +15,9 @@ const subNavs = {
 };
 
 const Sys = () => {
+
   const [ panel, setPanel ] = useState('org');
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
       org: (props) => <Orgs {...props}/>,
@@ -28,30 +27,40 @@ const Sys = () => {
       title: subNavs[panel]
     });
   }, [panel]);
-  return <Layout
-    extraHeader={<PageHeader
+
+  return <LayoutPlus
+    extraHeader={<PageHeaderPlus
+      className='container-inner-width'
       title='系统设置'
       breadcrumb={false}
+      renderFooter={() => (
+        <Tabs
+          tabBarStyle={{ backgroundColor: '#fff', paddingLeft: 16 }}
+          animated={false}
+          renderTabBar={(props, DefaultTabBar) => {
+            return (
+              <div style={{ marginBottom: -16 }}>
+                <DefaultTabBar {...props} />
+              </div>
+            );
+          }}
+          activeKey={panel}
+          onChange={(k) => setPanel(k)}
+        >
+          {Object.keys(subNavs).map((it) => (
+            <Tabs.TabPane
+              tab={subNavs[it]}
+              key={it}
+            />
+          ))}
+        </Tabs>
+      )}
     />}
   >
-    <div className='container-inner-width'>
-      <div className={styles.sys}>
-        <Menu
-          mode='inline'
-          className='subNav'
-          defaultSelectedKeys={[panel]}
-          onClick={({ item, key }) => {
-            setPanel(key);
-          }}
-        >
-          {Object.keys(subNavs).map(it => <Menu.Item key={it}>{subNavs[it]}</Menu.Item>)}
-        </Menu>
-        <div className='rightPanel'>
-          {renderByPanel()}
-        </div>
-      </div>
+    <div className='idcos-card container-inner-width'>
+      {renderByPanel()}
     </div>
-  </Layout>;
+  </LayoutPlus>;
 };
 
 export default Eb_WP()(Sys);
