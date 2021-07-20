@@ -5,8 +5,8 @@ import { Modal, notification, Tabs, Button, Form, Input } from "antd";
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
 import { Eb_WP } from 'components/error-boundary';
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -63,9 +63,9 @@ const EnvDetail = (props) => {
     }
   };
   
-  return <LayoutPlus
+  return <Layout
     extraHeader={
-      <PageHeaderPlus
+      <PageHeader
         title={info.name || ''}
         breadcrumb={true}
       />
@@ -104,7 +104,7 @@ const EnvDetail = (props) => {
         {renderByPanel()}
       </div>
     </div>
-  </LayoutPlus>;
+  </Layout>;
 };
 
 export default connect()(

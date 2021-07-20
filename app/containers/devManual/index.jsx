@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 import MarkdownDoc from './markdown-doc';
 
 import styles from './styles.less';
@@ -25,9 +25,9 @@ export default () => {
   };
 
   return (
-    <LayoutPlus
+    <Layout
       contentStyle={{ paddingTop: 0 }}
-      extraHeader={<PageHeaderPlus className='container-inner-width' title='开发者手册' />}
+      extraHeader={<PageHeader className='container-inner-width' title='开发者手册' />}
     >
       <div className={styles.markdownDocWrapper}>
         <div className='markdown-doc-scroll'>
@@ -36,6 +36,6 @@ export default () => {
           </div>
         </div>
       </div>
-    </LayoutPlus>
+    </Layout>
   );
 };

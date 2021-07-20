@@ -3,9 +3,9 @@ import { Menu, Tabs } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import PageHeaderPlus from 'components/pageHeaderPlus';
+import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
-import LayoutPlus from 'components/common/layout/plus';
+import Layout from 'components/common/layout';
 
 
 import Basic from './pages/basic';
@@ -43,8 +43,8 @@ const User = ({ userInfo, dispatch }) => {
     });
   }, [ panel, userInfo ]);
 
-  return <LayoutPlus
-    extraHeader={<PageHeaderPlus
+  return <Layout
+    extraHeader={<PageHeader
       className='container-inner-width'
       title='用户设置'
       breadcrumb={false}
@@ -75,7 +75,7 @@ const User = ({ userInfo, dispatch }) => {
     <div className='idcos-card container-inner-width'>
       {renderByPanel()}
     </div>
-  </LayoutPlus>;
+  </Layout>;
 };
 
 const mapStateToProps = (state) => {

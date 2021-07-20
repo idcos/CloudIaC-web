@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { Menu, notification, Tabs } from "antd";
 
 import { Eb_WP } from 'components/error-boundary';
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 
 import Basic from './basic';
 import User from './user';
@@ -33,9 +33,9 @@ const ProjectSetting = ({ match, dispatch }) => {
     });
   }, [panel]);
 
-  return <LayoutPlus
+  return <Layout
     extraHeader={
-      <PageHeaderPlus
+      <PageHeader
         title={'设置'}
         breadcrumb={true}
         renderFooter={() => (
@@ -66,7 +66,7 @@ const ProjectSetting = ({ match, dispatch }) => {
     <div className='idcos-card'>
       {renderByPanel()}
     </div>
-  </LayoutPlus>;
+  </Layout>;
 };
 
 export default connect()(

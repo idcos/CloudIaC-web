@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { notification, Tooltip, Select, Form, Input, Button, Checkbox, Space, DatePicker, Row, Col, Radio } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
-import PageHeaderPlus from "components/pageHeaderPlus";
+import PageHeader from "components/pageHeader";
 import history from 'utils/history';
 
 import VariableForm from 'components/variable-form';
-import LayoutPlus from "components/common/layout/plus";
+import Layout from "components/common/layout";
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
@@ -198,8 +198,8 @@ const Index = ({ match = {} }) => {
   };
 
   return (
-    <LayoutPlus
-      extraHeader={<PageHeaderPlus title={!!envId ? '重新部署' : '部署新环境'} breadcrumb={true} />}
+    <Layout
+      extraHeader={<PageHeader title={!!envId ? '重新部署' : '部署新环境'} breadcrumb={true} />}
     >
       <div className='idcos-card'>
         <Form
@@ -422,7 +422,7 @@ const Index = ({ match = {} }) => {
           </Row>
         </Form>
       </div>
-    </LayoutPlus>
+    </Layout>
   );
 };
 

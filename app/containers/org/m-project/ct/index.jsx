@@ -4,8 +4,8 @@ import history from 'utils/history';
 import moment from 'moment';
 
 import { Eb_WP } from 'components/error-boundary';
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 import tplAPI from 'services/tpl';
 
 const CTList = ({ match = {} }) => {
@@ -103,8 +103,8 @@ const CTList = ({ match = {} }) => {
     });
   };
 
-  return <LayoutPlus
-    extraHeader={<PageHeaderPlus
+  return <Layout
+    extraHeader={<PageHeader
       title='云模版'
       breadcrumb={true}
     />}
@@ -132,7 +132,7 @@ const CTList = ({ match = {} }) => {
         />
       </div>
     </div>
-  </LayoutPlus>;
+  </Layout>;
 };
 
 export default Eb_WP()(CTList);

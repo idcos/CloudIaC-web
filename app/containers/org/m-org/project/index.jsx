@@ -4,8 +4,8 @@ import moment from 'moment';
 import { connect } from "react-redux";
 
 import { Eb_WP } from 'components/error-boundary';
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 import OpModal from 'components/project-modal';
 import { pjtAPI } from 'services/base';
 
@@ -190,8 +190,8 @@ const Index = (props) => {
       });
     }
   };
-  return <LayoutPlus
-    extraHeader={<PageHeaderPlus
+  return <Layout
+    extraHeader={<PageHeader
       title='项目'
       breadcrumb={true}
     />}
@@ -247,7 +247,7 @@ const Index = (props) => {
       </div>
     </div>
     
-  </LayoutPlus>;
+  </Layout>;
 };
 
 export default connect()(

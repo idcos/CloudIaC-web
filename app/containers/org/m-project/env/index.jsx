@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Menu, Button, Tabs } from "antd";
  
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 import EnvList from './componemts/envList';
 import history from 'utils/history';
 import styles from './styles.less';
@@ -22,8 +22,8 @@ export default (props) => {
     return <EnvList {...props} panel={panel} />;
   }, [panel]);
   return (
-    <LayoutPlus
-      extraHeader={<PageHeaderPlus
+    <Layout
+      extraHeader={<PageHeader
         title='环境'
         breadcrumb={true}
       />}
@@ -58,6 +58,6 @@ export default (props) => {
           ))}
         </Tabs>
       </div>
-    </LayoutPlus>
+    </Layout>
   );
 };

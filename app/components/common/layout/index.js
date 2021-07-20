@@ -51,7 +51,7 @@ const Footer = styled.div`
   * @param {CSSObject} contentStyle maybe customize content container's style
   * @param {ReactNode} footer footer bar's content
   */
-const CommonLayoutPlus = ({
+const CommonLayout = ({
   extraHeader,
   children,
   contentStyle = {},
@@ -67,5 +67,5 @@ const CommonLayoutPlus = ({
   );
 };
  
-export default CommonLayoutPlus;
+export default CommonLayout;
  

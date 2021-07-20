@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Menu, notification, Tabs } from 'antd';
 
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 
 import ApiToken from './api-token';
 import UserRole from './user-role';
@@ -39,8 +39,8 @@ export default ({ match }) => {
   }, [panel]);
 
   return (
-    <LayoutPlus
-      extraHeader={<PageHeaderPlus
+    <Layout
+      extraHeader={<PageHeader
         title='设定'
         breadcrumb={true}
         renderFooter={() => (
@@ -70,6 +70,6 @@ export default ({ match }) => {
       <div className='idcos-card'>
         {renderByPanel()}
       </div>
-    </LayoutPlus>
+    </Layout>
   );
 };

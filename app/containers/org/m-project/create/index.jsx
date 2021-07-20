@@ -4,8 +4,8 @@ import { Form, Input, Button, notification } from "antd";
 import { connect } from "react-redux";
 
 import { pjtAPI } from 'services/base';
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 import history from 'utils/history';
 
 const FL = {
@@ -57,8 +57,8 @@ const CreateProjectPage = (props) => {
     });
   };
 
-  return <LayoutPlus
-    extraHeader={<PageHeaderPlus
+  return <Layout
+    extraHeader={<PageHeader
       title='创建项目'
       breadcrumb={true}
     />}
@@ -97,7 +97,7 @@ const CreateProjectPage = (props) => {
         </Form.Item>
       </Form>
     </div>
-  </LayoutPlus>;
+  </Layout>;
 };
 
 

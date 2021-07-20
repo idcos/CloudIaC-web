@@ -2,8 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Button, Spin, notification } from 'antd';
 
 import VariableForm from 'components/variable-form';
-import PageHeaderPlus from 'components/pageHeaderPlus';
-import LayoutPlus from 'components/common/layout/plus';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
 
 import varsAPI from 'services/variables';
 
@@ -63,8 +63,8 @@ export default ({ match }) => {
   };
 
   return (
-    <LayoutPlus
-      extraHeader={<PageHeaderPlus
+    <Layout
+      extraHeader={<PageHeader
         title='变量'
         breadcrumb={true}
       />}
@@ -79,6 +79,6 @@ export default ({ match }) => {
           </div>
         </div>
       </Spin>
-    </LayoutPlus>
+    </Layout>
   );
 };

@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Menu, Tabs } from 'antd';
 
-import PageHeaderPlus from 'components/pageHeaderPlus';
+import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
-import LayoutPlus from 'components/common/layout/plus';
+import Layout from 'components/common/layout';
 
 
 import Orgs from './pages/orgs';
@@ -28,8 +28,8 @@ const Sys = () => {
     });
   }, [panel]);
 
-  return <LayoutPlus
-    extraHeader={<PageHeaderPlus
+  return <Layout
+    extraHeader={<PageHeader
       className='container-inner-width'
       title='系统设置'
       breadcrumb={false}
@@ -60,7 +60,7 @@ const Sys = () => {
     <div className='idcos-card container-inner-width'>
       {renderByPanel()}
     </div>
-  </LayoutPlus>;
+  </Layout>;
 };
 
 export default Eb_WP()(Sys);
