@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Select, Menu, Dropdown, Tooltip, Button, Badge } from 'antd';
+import { Select, Menu, Dropdown, Tooltip, Button, Badge, notification } from 'antd';
 import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 
 import history from 'utils/history';
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
+import { pjtAPI } from 'services/base';
+import OpModal from 'components/project-modal';
 
 import styles from './styles.less';
 
@@ -19,6 +21,7 @@ const AppHeader = (props) => {
   const projectId = (curProject || {}).id;
   const orgId = (curOrg || {}).id;
 
+  const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
   const changeProject = (pjtId) => {
@@ -70,34 +73,72 @@ const AppHeader = (props) => {
     history.push(`/org/${orgId}/m-org-project`);
   };
 
+  const togglePjtModalVsible = () => setPjtModalVsible(!pjtModalVsible);
+
+  const pjtOperation = async ({ action, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => pjtAPI.createProject(param)
+      };
+      let params = {
+        ...payload
+      };
+      const res = await method[action](params);
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'>
       <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
       <div className='rParts'>
         {
           orgId ? (
-            <SeniorSelect 
-              placeholder='项目：'
-              style={{ width: 250, marginLeft: 24 }}
-              options={projectList}
-              onChange={changeProject}
-              value={projectId}
-              valuePropName='id'
-              formatOptionLabel={(name) => `项目：${name}`}
-              seniorSelectfooter={(
-                <div className={styles.seniorSelectfooter}>
-                  <div className='more' onClick={goMoreProject}>查看更多项目</div>
-                  {/* <div className='create'>
-                    <div className='btn'>
-                      <span className='icon'>
-                        <PlusSquareOutlined/>
-                      </span>
-                      <span>创建新的项目</span>
+            <>
+              <SeniorSelect 
+                placeholder='项目：'
+                style={{ width: 250, marginLeft: 24 }}
+                options={projectList}
+                onChange={changeProject}
+                value={projectId}
+                valuePropName='id'
+                formatOptionLabel={(name) => `项目：${name}`}
+                seniorSelectfooter={(
+                  <div className={styles.seniorSelectfooter}>
+                    <div className='more' onClick={goMoreProject}>查看更多项目</div>
+                    <div className='create'>
+                      <div className='btn' onClick={togglePjtModalVsible}>
+                        <span className='icon'>
+                          <PlusSquareOutlined/>
+                        </span>
+                        <span>创建新的项目</span>
+                      </div>
                     </div>
-                  </div> */}
-                </div>
-              )}
-            />
+                  </div>
+                )}
+              />
+              {
+                pjtModalVsible && <OpModal
+                  visible={pjtModalVsible}
+                  orgId={orgId}
+                  opt='add'
+                  toggleVisible={togglePjtModalVsible}
+                  operation={pjtOperation}
+                />
+              }
+            </>
           ) : null
         }
         <div className='user'>

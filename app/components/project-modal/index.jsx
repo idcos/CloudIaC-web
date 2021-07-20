@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal, notification } from "antd";
+import { connect } from "react-redux";
+
 import { pjtAPI } from 'services/base';
 
 const FL = {
@@ -7,26 +9,38 @@ const FL = {
   wrapperCol: { span: 19 }
 };
 
-export default ({ visible, opt, toggleVisible, curRecord, orgId, operation }) => {
+const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, orgId, operation }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
 
   const [form] = Form.useForm();
 
   const onOk = async () => {
-    const { params, ...restValues } = await form.validateFields();
+    const values = await form.validateFields();
     setSubmitLoading(true);
     operation({
       action: opt,
       payload: {
         orgId,
         projectId: curRecord.id,
-        ...restValues, 
-        userAuthorization: params 
+        ...values 
       }
     }, (hasError) => {
       setSubmitLoading(false);
-      !hasError && toggleVisible();
+      if (!hasError) {
+        toggleVisible();
+        reloadGlobalProjects();
+      }
+    });
+  };
+
+  // 重新刷新全局的projects
+  const reloadGlobalProjects = () => {
+    dispatch({
+      type: 'global/getProjects',
+      payload: {
+        orgId
+      }
     });
   };
 
@@ -91,3 +105,5 @@ export default ({ visible, opt, toggleVisible, curRecord, orgId, operation }) =>
     </Form>
   </Modal>;
 };
+
+export default connect()(ProjectModal);

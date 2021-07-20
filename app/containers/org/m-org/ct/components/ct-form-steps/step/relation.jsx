@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Space, Checkbox, Form, Button, Row, Divider, notification } from "antd";
+import { Space, Checkbox, Form, Button, Row, Divider, notification, Empty } from "antd";
 
 import { pjtAPI } from 'services/base';
-import history from 'utils/history';
+import OpModal from 'components/project-modal';
 
 const FL = {
   labelCol: { span: 0 },
@@ -16,6 +16,7 @@ export default ({ stepHelper, orgId, ctData, type }) => {
   const [ projectList, setProjectList ] = useState([]);
   const [ indeterminate, setIndeterminate ] = useState(false);
   const [ checkAll, setCheckAll ] = useState(false);
+  const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
 
   useEffect(() => {
     fetchProject();
@@ -38,9 +39,14 @@ export default ({ stepHelper, orgId, ctData, type }) => {
   }, [ ctData, type, projectList ]);
 
   const fetchProject = async() => {
-    let res = await pjtAPI.projectList({ orgId, pageSize: 99999, pageNo: 1 });
+    let res = await pjtAPI.allEnableProjects({ orgId });
     if (res.code === 200) {
       setProjectList(res.result.list || []);
+    } else {
+      notification.error({
+        message: '获取失败',
+        description: res.message
+      });
     }
   };
 
@@ -64,6 +70,55 @@ export default ({ stepHelper, orgId, ctData, type }) => {
     setIndeterminate(false);
     setCheckAll(e.target.checked);
   };
+
+  const togglePjtModalVsible = () => setPjtModalVsible(!pjtModalVsible);
+
+  const pjtOperation = async ({ action, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => pjtAPI.createProject(param)
+      };
+      let params = {
+        ...payload
+      };
+      const res = await method[action](params);
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      fetchProject();
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
+  // 无项目时返回
+  if (projectList.length === 0) {
+    return (
+      <div style={{ margin: '120px auto' }}>
+        <Empty 
+          image={Empty.PRESENTED_IMAGE_SIMPLE} 
+          description={<>暂无项目，<a onClick={togglePjtModalVsible}>创建项目</a></>} 
+        />
+        {
+          pjtModalVsible && <OpModal
+            visible={pjtModalVsible}
+            orgId={orgId}
+            opt='add'
+            toggleVisible={togglePjtModalVsible}
+            operation={pjtOperation}
+          />
+        }
+      </div>
+    );
+  }
 
   return <div className='form-wrapper' style={{ width: 720 }}>
     <Form

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, notification, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
+import { connect } from "react-redux";
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeaderPlus from 'components/pageHeaderPlus';
 import LayoutPlus from 'components/common/layout/plus';
-import styles from './styles.less';
-import OpModal from './components/project-modal';
-
+import OpModal from 'components/project-modal';
 import { pjtAPI } from 'services/base';
-import { connect } from "react-redux";
+
+import styles from './styles.less';
+
 
 const Index = (props) => {
   const { match, dispatch } = props,
@@ -172,7 +173,6 @@ const Index = (props) => {
       let params = {
         ...payload
       };
-      action === 'create' && delete params.projectId;
       const res = await method[action](params);
       if (res.code != 200) {
         throw new Error(res.message);
@@ -181,7 +181,6 @@ const Index = (props) => {
         message: '操作成功'
       });
       fetchList();
-      reloadGlobalProjects();
       cb && cb();
     } catch (e) {
       cb && cb(e);
