@@ -118,8 +118,16 @@ const Index = (props) => {
         orgId, envId, action, projectId
       });
       let data = res.result || {};
+      let copyData = `${window.location.origin}/api/v1/trigger/send?token=${data.key}`;
       if (res.code === 200) {
-        copy(`${window.location.origin}/api/v1/trigger/send?token=${data.key}`);
+        if (res.result === null || res.result === '' || res.result === undefined) {
+          console.log('...');
+          const resCreat = await envAPI.createTokens({
+            orgId, envId, action, projectId
+          });
+          copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;
+        }
+        copy(copyData);
       }
     } catch (e) {
       notification.error({

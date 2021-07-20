@@ -460,6 +460,12 @@ export const envAPI = {
     return getWithArgs(`/api/v1/tokens/trigger`, {
       envId, action
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 获取全量密钥
+  createTokens: ({ orgId, envId, projectId, action }) => {
+    return post(`/api/v1/tokens`, {
+      envId, action
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
 };
 
