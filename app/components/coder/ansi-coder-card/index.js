@@ -38,6 +38,7 @@ export default ({ value }) => {
   useEffect(() => {
     const maxLineIndexLen = getNumLen(throttleValue.length);
     const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
+    console.log(1, throttleValue, maxLineIndexLen, lineIndexWidth);
     const _html = throttleValue.map((line, index) => {
       return `
         <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
