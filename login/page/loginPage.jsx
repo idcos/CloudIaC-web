@@ -83,7 +83,7 @@ export default () => {
               name='email'
               rules={[
                 { required: true, message: '请输入邮箱地址' }, 
-                { type: 'email' }
+                { type: 'email', message: '邮箱格式有误' }
               ]}
             >
               <Input placeholder='请输入邮箱地址' />

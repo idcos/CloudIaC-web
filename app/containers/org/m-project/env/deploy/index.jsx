@@ -163,6 +163,12 @@ const Index = ({ match = {} }) => {
     try {
       const values = await form.validateFields();
       const varData = await varRef.current.validateForm();
+      if (varData.playbook && !values.keyId) {
+        return notification.error({
+          message: '保存失败',
+          description: 'playbook存在时管理密钥必填'
+        });
+      }
       if (values.triggers) {
         values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
@@ -201,10 +207,10 @@ const Index = ({ match = {} }) => {
     >
       <div className='idcos-card'>
         <Form
+          scrollToFirstError={true}
           colon={true}
           form={form}
           {...FL}
-          onFinish={onFinish}
           layout={'vertical'}
           initialValues={info}
         >
@@ -291,6 +297,7 @@ const Index = ({ match = {} }) => {
                 name='revision'
               >
                 <Select 
+                  allowClear={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择分支/标签'
                   style={{ width: '80%' }}
@@ -310,6 +317,7 @@ const Index = ({ match = {} }) => {
                 name='runnerId'
               >
                 <Select 
+                  allowClear={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择部署通道'
                   style={{ width: '80%' }}
@@ -324,6 +332,7 @@ const Index = ({ match = {} }) => {
                 name='keyId'
               >
                 <Select 
+                  allowClear={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择密钥'
                   style={{ width: '80%' }}
@@ -334,7 +343,6 @@ const Index = ({ match = {} }) => {
             </Col>
           </Row>
           <Form.Item 
-            name='triggers：'
             {...PL}
           >
             <Form.Item 
@@ -375,8 +383,8 @@ const Index = ({ match = {} }) => {
             showOtherVars={true}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
-            <Button loading={spinning} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
+            <Button htmlType='submit' onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
+            <Button htmlType='submit' loading={spinning} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
           </Row>
         </Form>
       </div>

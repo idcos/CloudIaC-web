@@ -52,7 +52,7 @@ const Basic = ({ title, userInfo, updateUserInfo }) => {
             required: true,
             message: '请选择'
           },
-          { type: 'email' }
+          { type: 'email', message: '邮箱格式有误' }
         ]}
         extra={'邮箱全局唯一，作为登录用户名'}
       >

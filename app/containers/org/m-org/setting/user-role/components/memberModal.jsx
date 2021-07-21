@@ -50,7 +50,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
             required: true,
             message: '请输入'
           },
-          { type: 'email' }
+          { type: 'email', message: '邮箱格式有误' }
         ]}
         extra='邮箱作为登录名，全局唯一'
       >
