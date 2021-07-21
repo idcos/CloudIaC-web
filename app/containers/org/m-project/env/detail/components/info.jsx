@@ -67,7 +67,7 @@ const Index = (props) => {
       <Descriptions.Item label='云模版'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
-      <Descriptions.Item label='TTL'>{timeUtils.diff(info.autoDestroyAt, now)}</Descriptions.Item>
+      <Descriptions.Item label='存活时间'>{timeUtils.diff(info.autoDestroyAt, now)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>
