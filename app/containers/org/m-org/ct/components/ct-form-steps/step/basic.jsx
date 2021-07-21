@@ -6,7 +6,7 @@ const FL = {
   wrapperCol: { span: 14 }
 };
 
-export default ({ opType, childRef, stepHelper, ctData, type }) => {
+export default ({ goCTlist, opType, childRef, stepHelper, ctData, type }) => {
 
   const [form] = Form.useForm();
 
@@ -66,7 +66,10 @@ export default ({ opType, childRef, stepHelper, ctData, type }) => {
             opType === 'add' ? (
               <Button type='primary' htmlType={'submit'}>下一步</Button>
             ) : (
-              <Button type='primary' htmlType={'submit'}>提交</Button>
+              <>
+                <Button onClick={goCTlist}>取消</Button>
+                <Button type='primary' htmlType={'submit'}>提交</Button>
+              </>
             )
           }
         </Space>

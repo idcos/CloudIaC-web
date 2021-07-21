@@ -159,7 +159,6 @@ const Index = ({ match = {} }) => {
     }
   };
 
-
   const onFinish = async (taskType) => {
     try {
       const values = await form.validateFields();
@@ -212,7 +211,7 @@ const Index = ({ match = {} }) => {
           <Row>
             <Col span={8}>
               <Form.Item
-                label='环境名称:'
+                label='环境名称：'
                 name='name'
                 rules={[
                   {
@@ -221,34 +220,13 @@ const Index = ({ match = {} }) => {
                   }
                 ]}
                 initialValue={info.name || undefined}
-                // initialValue={'false'}
               >
                 <Input value={info.name} placeholder={'请输入环境名称'} style={{ width: '80%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>
-              {/* <Form.Item
-                label='生命周期:'
-                name='ttl'
-              >
-                <Select 
-                  getPopupContainer={triggerNode => triggerNode.parentNode}
-                  placeholder='请选择生命周期'
-                  style={{ width: '80%' }}
-                  dropdownRender={menu => (
-                    <div>
-                      {menu}
-                      <div style={{ display: 'flex', flexWrap: 'nowrap', padding: 8 }}>
-                        <DatePicker placeholder={'自定义日期'}/>
-                      </div>
-                    </div>
-                  )}
-                >
-                  {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
-                </Select>
-              </Form.Item> */}
               <Form.Item 
-                label='存活时间'
+                label='存活时间：'
               >
                 <Row>
                   <Col span={8}>
@@ -299,8 +277,8 @@ const Index = ({ match = {} }) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label={<span>target:<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
-                name='target'
+                label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
+                name='target：'
               >
                 <Input placeholder={'请输入target'} style={{ width: '80%' }} />
               </Form.Item>
@@ -309,11 +287,11 @@ const Index = ({ match = {} }) => {
           <Row>
             <Col span={8}>
               <Form.Item
-                label='分支/标签'
+                label='分支/标签：'
                 name='revision'
               >
                 <Select 
-                  // getPopupContainer={triggerNode => triggerNode.parentNode}
+                  getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择分支/标签'
                   style={{ width: '80%' }}
                 >
@@ -328,7 +306,7 @@ const Index = ({ match = {} }) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label='部署通道:'
+                label='部署通道：'
                 name='runnerId'
               >
                 <Select 
@@ -342,7 +320,7 @@ const Index = ({ match = {} }) => {
             </Col>
             <Col span={8}>
               <Form.Item
-                label='密钥:'
+                label='管理密钥：'
                 name='keyId'
               >
                 <Select 
@@ -356,7 +334,7 @@ const Index = ({ match = {} }) => {
             </Col>
           </Row>
           <Form.Item 
-            name='triggers'
+            name='triggers：'
             {...PL}
           >
             <Form.Item 
@@ -376,7 +354,7 @@ const Index = ({ match = {} }) => {
                       </Col>
                       <Col span={8} style={{ paddingLeft: '3%' }}>
                         <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
-                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
+                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
                       </Col>
                       <Col span={8} style={{ paddingLeft: '3%' }}>
                         <Checkbox value='autoApproval'>自动通过审批</Checkbox>
@@ -388,24 +366,6 @@ const Index = ({ match = {} }) => {
               }}
             </Form.Item>
           </Form.Item>
-          {/* <Form.Item
-            name='triggers'
-            {...PL}
-          >
-            <Checkbox.Group style={{ width: '100%' }}>
-              <Row>
-                <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  {(form.getFieldValue('triggers') || []).includes('commit') && <a onClick={() => copyToUrl()}>复制URL</a>}
-                </Col>
-                <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  <a>复制URL</a>
-                </Col>
-                <Col span={8} style={{ paddingLeft: '3%' }}>
-                  <Checkbox value='autoApproval'>自动通过审批</Checkbox>
-                </Col>
-              </Row>
-            </Checkbox.Group>
-          </Form.Item> */}
           <VariableForm 
             varRef={varRef} 
             defaultScope='env' 

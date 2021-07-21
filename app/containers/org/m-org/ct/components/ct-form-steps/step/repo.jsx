@@ -10,7 +10,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
+export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) => {
 
   const [form] = Form.useForm();
 
@@ -147,10 +147,19 @@ export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
   const onValuesChange = (changedValues, allValues) => {
     if (changedValues.vcsId) {
       fetchRepos(allValues);
+      form.setFieldsValue({
+        repoId: undefined,
+        repoRevision: undefined,
+        workdir: undefined
+      });
     }
     if (changedValues.repoId) {
       fetchRepoBranches(allValues);
       fetchRepoTags(allValues);
+      form.setFieldsValue({
+        repoRevision: undefined,
+        workdir: undefined
+      });
     }
   };
 
@@ -238,7 +247,7 @@ export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择仓库'
         >
-          {repos.map(it => <Option value={it.id}>{it.name}</Option>)}
+          {repos.map(it => <Option value={it.id}>{it.fullName}</Option>)}
         </Select>
       </Form.Item>
       <Form.Item
@@ -272,16 +281,21 @@ export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
         <Input placeholder='请输入工作目录' />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
-        {
-          opType === 'add' ? (
-            <Space size={24}>
-              <Button onClick={() => stepHelper.prev()}>上一步</Button>
-              <Button type='primary' htmlType={'submit'}>下一步</Button>
-            </Space>
-          ) : (
-            <Button type='primary' htmlType={'submit'}>提交</Button>
-          )
-        }
+        <Space size={24}>
+          {
+            opType === 'add' ? (
+              <>
+                <Button onClick={() => stepHelper.prev()}>上一步</Button>
+                <Button type='primary' htmlType={'submit'}>下一步</Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={goCTlist}>取消</Button>
+                <Button type='primary' htmlType={'submit'}>提交</Button>
+              </>
+            )
+          }
+        </Space>
       </Form.Item>
     </Form>
     {

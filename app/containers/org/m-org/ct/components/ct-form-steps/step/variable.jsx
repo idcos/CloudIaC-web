@@ -3,7 +3,7 @@ import { Button, Space } from "antd";
 
 import VariableForm from 'components/variable-form';
 
-export default ({ childRef, stepHelper, type, opType, ctData, orgId }) => {
+export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId }) => {
 
   const varRef = useRef();
 
@@ -47,16 +47,21 @@ export default ({ childRef, stepHelper, type, opType, ctData, orgId }) => {
       fetchParams={fetchParams}
     />
     <div className='btn-wrapper'>
-      {
-        opType === 'add' ? (
-          <Space size={24}>
-            <Button onClick={() => stepHelper.prev()}>上一步</Button>
-            <Button type='primary' onClick={onFinish}>下一步</Button>
-          </Space>
-        ) : (
-          <Button type='primary' onClick={onFinish}>提交</Button>
-        )
-      }
+      <Space size={24}>
+        {
+          opType === 'add' ? (
+            <>
+              <Button onClick={() => stepHelper.prev()}>上一步</Button>
+              <Button type='primary' onClick={onFinish}>下一步</Button>
+            </>
+          ) : (
+            <>
+              <Button onClick={goCTlist}>取消</Button>
+              <Button type='primary' onClick={onFinish}>提交</Button>
+            </>
+          )
+        }
+      </Space>
     </div>
   </div>;
 };

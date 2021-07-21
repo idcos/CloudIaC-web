@@ -9,7 +9,7 @@ const FL = {
   wrapperCol: { span: 24 }
 };
 
-export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
+export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) => {
 
   const [form] = Form.useForm();
 
@@ -162,16 +162,21 @@ export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
         </Checkbox.Group>
       </Form.Item>
       <div className='btn-wrapper'>
-        {
-          opType === 'add' ? (
-            <Space size={24}>
-              <Button onClick={() => stepHelper.prev()} >上一步</Button>
-              <Button type='primary' htmlType={'submit'} >完成</Button>
-            </Space>
-          ) : (
-            <Button type='primary' htmlType={'submit'}>提交</Button>
-          )
-        }
+        <Space size={24}>
+          {
+            opType === 'add' ? (
+              <>
+                <Button onClick={() => stepHelper.prev()} >上一步</Button>
+                <Button type='primary' htmlType={'submit'} >完成</Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={goCTlist}>取消</Button>
+                <Button type='primary' htmlType={'submit'}>提交</Button>
+              </>
+            )
+          }
+        </Space>
       </div>
     </Form>
   </div>;

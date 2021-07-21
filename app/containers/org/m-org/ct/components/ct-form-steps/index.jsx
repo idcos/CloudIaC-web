@@ -48,6 +48,10 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     };
   }, [stepIndex]);
 
+  const goCTlist = () => {
+    history.push(`/org/${orgId}/m-org-ct`);
+  };
+
   const submit = async (data) => {
     const { basic, repo, variable, relation } = data;
     const params = {
@@ -63,7 +67,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      history.push(`/org/${orgId}/m-org-ct`);
+      goCTlist();
     } catch (e) {
       notification.error({
         message: e.message
@@ -159,6 +163,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               orgId={orgId}
               type={it.type}
               opType={opType}
+              goCTlist={goCTlist}
               isShow={stepIndex === index}
             />
           ) : null
