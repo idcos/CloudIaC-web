@@ -42,6 +42,7 @@ const Index = (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      fetchInfo();
       notification.success({
         description: '保存成功'
       });
@@ -225,7 +226,7 @@ const Index = (props) => {
           </Col>
         </Row>
         <Row style={{ display: 'flex', justifyContent: 'center' }}>
-          <Button onClick={archive} >归档</Button>
+          <Button onClick={archive} disabled={info.status !== 'inactive'} >归档</Button>
           <Button type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
         </Row>
       </Form>
