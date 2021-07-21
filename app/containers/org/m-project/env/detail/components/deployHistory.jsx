@@ -70,6 +70,9 @@ const Index = (props) => {
       dataIndex: 'startAt',
       title: '执行时长',
       render: (t, r) => {
+        if (!t || !r.endAt) {
+          return '';
+        }
         let timeDiff = moment(r.endAt).diff(moment(t), 'second');
         let time = moment.duration(timeDiff, 'seconds'); //得到一个对象，里面有对应的时分秒等时间对象值
         let hours = time.hours(); 

@@ -20,6 +20,22 @@ const Index = (props) => {
     }
     return str;
   };
+  // const getTTL = () => {
+  //   const prefixInteger = (num, n) => {
+  //     return (Array(n).join(0) + num).slice(-n);
+  //   }
+  //   const du = moment.duration(moment(info.autoDestroyAt).diff(moment()), 'ms');
+  //   const h = du.get('hours');
+  //   const m = du.get('minutes');
+  //   const s = du.get('seconds');
+  //   const diff = moment.preciseDiff(moment(info.autoDestroyAt), moment(), true)
+  //   console.log(diff);
+  //   if (h<=0 && m<=0 && s<=0) {
+  //     return '00:00:00';
+  //   } else {
+  //     return prefixInteger(h, 2) + ':' + prefixInteger(m, 2) + ':' + prefixInteger(s, 2)
+  //   }
+  // };
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
     <Descriptions 
       labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
