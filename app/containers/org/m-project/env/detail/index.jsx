@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import history from 'utils/history';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input } from "antd";
@@ -7,6 +7,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import { TASK } from "constants/types";
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -32,6 +33,7 @@ const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
+  const endRef = useRef();
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
@@ -43,6 +45,12 @@ const EnvDetail = (props) => {
     };
     return PAGES[panel]();
   }, [ panel, info ]);
+
+  useEffect(() => {
+    return () => {
+      endRef.current = true;
+    };
+  }, []);
 
   useEffect(() => {
     fetchInfo();
@@ -57,7 +65,14 @@ const EnvDetail = (props) => {
       if (res.code != 200) {
         throw new Error(res.message);
       }
-      setInfo(res.result || {});
+      const data = res.result || {};
+      setInfo(data);
+      // 循环刷新详情数据
+      if (TASK.endTaskStatuList.indexOf(data.status) === -1 && !endRef.current) {
+        setTimeout(() => {
+          fetchInfo();
+        }, 1500);
+      }
     } catch (e) {
       notification.error({
         message: '获取失败',
