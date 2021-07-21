@@ -14,7 +14,7 @@ import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 export default (props) => {
-  const { match, routesParams, lastTaskId } = props;
+  const { match, routesParams, lastTaskId, info } = props;
   const { params: { orgId, projectId, envId, taskId } } = match;
   let taskIds = taskId || lastTaskId;
   const [ taskInfo, setTaskInfo ] = useState({}),
@@ -119,7 +119,7 @@ export default (props) => {
       <div className={"tableRender"}>
         <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
           <AnsiCoderCard value={taskLog} />
-          {!taskId && <Row style={{ display: 'flex', justifyContent: 'center' }}>
+          {!taskId && info.status === 'approving' && <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button onClick={() => passOrRejecy('rejected')} style={{ marginTop: 20 }} >驳回</Button>
             <Button onClick={() => passOrRejecy('approved')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >通过</Button>
           </Row>}
