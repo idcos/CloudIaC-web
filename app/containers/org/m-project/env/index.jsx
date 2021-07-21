@@ -11,6 +11,7 @@ const envNavs = {
   active: '活跃',
   approving: '待审批',
   inactive: '已销毁',
+  // running: '部署中',
   // filed: '已归档',
   failed: '失败'
 };

@@ -42,7 +42,8 @@ export const ENV_STATUS = {
   'active': '活跃', 
   'failed': '失败', 
   'inactive': '不活跃',
-  'approving': '审批中'
+  'running': '部署中',
+  'approving': '待审批'
 };
 export const SCOPE_ENUM = {
   org: '组织',
@@ -53,7 +54,7 @@ export const SCOPE_ENUM = {
 export const TASK_STATUS = {
   "pending": '排队',
   "running": '运行中',
-  "approving": '审批中',
+  "approving": '待审批',
   "failed": '失败',
   "complete": '成功'
 };
