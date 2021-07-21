@@ -188,8 +188,12 @@ const Index = ({ match = {} }) => {
       notification.success({
         description: '保存成功'
       });
-      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${(res.result || {}).id}/deployJournal`); 
-
+      const envInfo = res.result || {};
+      if (envId) { // 重新部署环境，跳部署历史详情
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployHistory/task/${envInfo.taskId}`); 
+      } else { // 创建部署环境，跳环境详情
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployJournal`); 
+      }
       setSpinning(false);
       getVars();
     } catch (e) {
