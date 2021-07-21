@@ -6,18 +6,25 @@ import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
 import { END_ENV_STATUS_LIST } from "constants/types";
 import { envAPI } from 'services/base';
+import moment from 'moment';
 
 const Index = (props) => {
 
   const { match: { params: { orgId, projectId, envId } } } = props;
 
   const [ info, setInfo ] = useState({});
+  const [ now, setNow ] = useState(moment());
+
   const endRef = useRef();
 
   useEffect(() => {
     fetchInfo();
+    const t = setInterval(() => {
+      setNow(moment());
+    }, 1000);
     return () => {
       endRef.current = true;
+      clearInterval(t);
     };
   }, []);
 
@@ -60,7 +67,7 @@ const Index = (props) => {
       <Descriptions.Item label='云模版'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
-      <Descriptions.Item label='TTL'>{timeUtils.diff(info.autoDestroyAt)}</Descriptions.Item>
+      <Descriptions.Item label='TTL'>{timeUtils.diff(info.autoDestroyAt, now)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>

@@ -14,7 +14,9 @@ const Index = (props) => {
   const { match, panel, routesParams: { curProject } } = props,
     { params: { orgId, projectId } } = match;
 
+
   const [ loading, setLoading ] = useState(false),
+    [ now, setNow ] = useState(moment()),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -22,6 +24,15 @@ const Index = (props) => {
     [ query, setQuery ] = useState({
       status: panel
     });
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setNow(moment());
+    }, 1000);
+    return () => {
+      clearInterval(t);
+    };
+  }, []);
 
   useEffect(() => {
     fetchList();
@@ -60,7 +71,7 @@ const Index = (props) => {
     >{d.name || '-'}</a>}
     >
       <div className={styles.envlistBox}>
-        <div>TTL:{timeUtils.diff(d)}</div>
+        <div>TTL:{timeUtils.diff(d.autoDestroyAt, now)}</div>
         <div><Divider type='vertical' />云模版:{d.templateName || '-'}</div>
         <div><Divider type='vertical' />资源数:{d.resourceCount || '-'}</div>
         <div><Divider type='vertical' />创建人: {d.creator || '-'}</div>
