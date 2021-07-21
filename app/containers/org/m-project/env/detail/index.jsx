@@ -145,9 +145,8 @@ const EnvDetail = (props) => {
           }}
           activeKey={panel}
           onChange={(k) => {
-            let stateObj = { tabKey: k };
             setPanel(k); 
-            window.history.replaceState(null, null, `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
+            history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
           }}
         >
           {Object.keys(subNavs).map((it) => (

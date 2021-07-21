@@ -8,6 +8,7 @@ import {
   Card,
   Row
 } from "antd";
+
 import { ctAPI, envAPI } from "services/base";
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
@@ -17,8 +18,7 @@ export default (props) => {
   const { match, routesParams, lastTaskId, info } = props;
   const { params: { orgId, projectId, envId, taskId } } = match;
   let taskIds = taskId || lastTaskId;
-  const [ taskInfo, setTaskInfo ] = useState({}),
-    [ comments, setComments ] = useState([]),
+  const [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
     [ taskLog, setTaskLog ] = useState([]);
 
@@ -45,13 +45,11 @@ export default (props) => {
     };
   }, [evtSource]);
 
-  const fetchSse = (result) => {
+  const fetchSse = () => {
     evtSourceInit(
       {
         onmessage: (data) => {
-          setTaskLog((prevLog) =>
-            [ ...prevLog, data ]
-          );
+          setTaskLog((prevLog) => [ ...prevLog, data ]);
         }
       },
       {
@@ -79,14 +77,17 @@ export default (props) => {
 
   const fetchComments = async () => {
     try {
+      setLoading(true);
       const res = await ctAPI.taskComment({
         orgId, taskId: taskIds, projectId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      setLoading(false);
       setComments((res.result || []).list);
     } catch (e) {
+      setLoading(false);
       notification.error({
         message: "获取失败",
         description: e.message

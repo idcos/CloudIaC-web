@@ -1,16 +1,18 @@
 import React, { memo } from 'react';
 import { Card, Descriptions } from 'antd';
 import moment from 'moment';
+
 import { ENV_STATUS } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY } from 'constants/types';
+import { timeUtils } from "utils/time";
 
 const Index = (props) => {
   const { info = {} } = props;
   const getTTL = () => {
     let str = '-';
     if (!!info.autoDestroyAt) {
-      str = moment(info.autoDestroyAt).format('YYYY-MM-DD HH:mm');
+      str = timeUtils.format(info.autoDestroyAt) || '-';
     } else if ((info.ttl === '' || info.ttl === null) && !info.autoDestroyAt) {
       str = '无限';
     } else if (!info.autoDestroyAt) {
@@ -29,7 +31,7 @@ const Index = (props) => {
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
       <Descriptions.Item label='TTL'>{getTTL()}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
-      <Descriptions.Item label='更新时间'>{info.updatedAt || '-'}</Descriptions.Item>
+      <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>
     </Descriptions>
   </Card>;
