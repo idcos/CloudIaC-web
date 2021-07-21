@@ -1,11 +1,10 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Card, Space, Radio, Input, notification, Descriptions, Menu } from 'antd';
+import React, { memo } from 'react';
+import { Card, Descriptions } from 'antd';
 import moment from 'moment';
 import { ENV_STATUS } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY } from 'constants/types';
 
-import { pjtAPI, envAPI } from 'services/base';
 const Index = (props) => {
   const { info = {} } = props;
   const getTTL = () => {

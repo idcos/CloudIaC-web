@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Menu, Button, Tabs } from "antd";
+import React, { useState, useMemo } from 'react';
+import { Button, Tabs } from "antd";
  
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EnvList from './componemts/envList';
 import history from 'utils/history';
-import styles from './styles.less';
 
 const envNavs = {
   active: '活跃',
@@ -15,7 +14,7 @@ const envNavs = {
   failed: '失败'
 };
 export default (props) => {
-  const { match, routes } = props,
+  const { match } = props,
     { params: { orgId, projectId } } = match; 
 
   const [ panel, setPanel ] = useState('active');

@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import history from 'utils/history';
 import { connect } from 'react-redux';
-import { Modal, notification, Tabs, Button, Form, Input } from "antd";
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { notification, Tabs } from "antd";
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';

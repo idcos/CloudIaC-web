@@ -6,7 +6,7 @@ import { TASK_STATUS, CT } from 'constants/types';
 
 import { Eb_WP } from 'components/error-boundary';
 
-import { envAPI, orgsAPI } from 'services/base';
+import { envAPI } from 'services/base';
 
 const Index = (props) => {
   const { match, panel, routes } = props,

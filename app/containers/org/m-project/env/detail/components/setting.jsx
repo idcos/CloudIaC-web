@@ -8,7 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
 
-import { pjtAPI, envAPI } from 'services/base';
+import { envAPI } from 'services/base';
 
 const FL = {
   labelCol: { span: 5 },
@@ -21,14 +21,9 @@ const PL = {
 const { Option } = Select;
     
 const Index = (props) => {
-  const { match, panel, routes } = props,
+  const { match } = props,
     { params: { orgId, projectId, envId } } = match;
-  const [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [1],
-      total: 0
-    }),
-    [ info, setInfo ] = useState({});
+  const [ info, setInfo ] = useState({});
   const [form] = Form.useForm();
 
   
@@ -120,7 +115,6 @@ const Index = (props) => {
       let copyData = `${window.location.origin}/api/v1/trigger/send?token=${data.key}`;
       if (res.code === 200) {
         if (res.result === null || res.result === '' || res.result === undefined) {
-          console.log('...');
           const resCreat = await envAPI.createTokens({
             orgId, envId, action, projectId
           });
