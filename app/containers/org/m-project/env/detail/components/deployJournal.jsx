@@ -15,7 +15,7 @@ import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 export default (props) => {
-  const { match, routesParams, lastTaskId, info } = props;
+  const { match, reload, lastTaskId, info } = props;
   const { params: { orgId, projectId, envId, taskId } } = match;
   let taskIds = taskId || lastTaskId;
   const [ comments, setComments ] = useState([]),
@@ -67,6 +67,7 @@ export default (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      reload && reload();
     } catch (e) {
       notification.error({
         message: "操作失败",

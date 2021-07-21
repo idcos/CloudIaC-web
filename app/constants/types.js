@@ -39,7 +39,10 @@ export const destoryType = [{
   name: '具体时间', value: 'time'
 }];
 export const ENV_STATUS = {
-  'active': '活跃', 'failed': '失败', 'inactive': '不活跃'
+  'active': '活跃', 
+  'failed': '失败', 
+  'inactive': '不活跃',
+  'approving': '审批中'
 };
 export const SCOPE_ENUM = {
   org: '组织',
@@ -71,7 +74,8 @@ export const TASK = {
   endTaskStatuList: [
     'complete',
     'failed',
-    'timeout'
+    'timeout',
+    'approving'
   ],
   taskStatusIcon: {
     all: <AppstoreFilled/>,
