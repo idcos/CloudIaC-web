@@ -129,6 +129,7 @@ const EnvDetail = (props) => {
           message: '操作成功'
         });
         form.resetFields();
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env`);
       },
       onCancel: () => form.resetFields()
     });
@@ -137,7 +138,12 @@ const EnvDetail = (props) => {
     extraHeader={
       <PageHeader
         title={info.name || ''}
-        subDes={<div><Button onClick={redeploy}>重新部署</Button><Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button></div>}
+        subDes={(
+          <div>
+            <Button onClick={redeploy}>重新部署</Button>
+            <Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button>
+          </div>
+        )}
         breadcrumb={true}
       />
     }
