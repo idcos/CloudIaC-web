@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { Breadcrumb } from 'antd';
 
@@ -35,32 +35,33 @@ const breadcrumbNameMap = {
 
 const BreadcrumbWrapper = ({ location, params }) => {
   
-  const pathSnippets = location.pathname.split('/')
-    .filter(i => i)
-    .filter(i => !!isRouteParam({ ...params }, i) || breadcrumbNameMap.hasOwnProperty(i));
+  const pathSnippets = location.pathname.split('/').filter(it => it);
 
-  const extraBreadcrumbItems = pathSnippets.map((snippet, index) => {
-    const link = breadcrumbNameMap.hasOwnProperty(snippet) ? breadcrumbNameMap[snippet] : null;
-    if (!link) {
-      return null;
-    }
-    const { indexDiff, getText, text, disabled } = link;
-    const url = `/${pathSnippets.slice(0, index + 1 + (indexDiff || 0)).join('/')}`;
-    const isLastOne = index == pathSnippets.length - 1;
-    return (
-      <Breadcrumb.Item key={url}>
-        <Link
-          to={index == 0 ? '/' : url}
-          disabled={isLastOne || disabled}
-        >
-          {getText ? getText(params) : text}
-        </Link>
-      </Breadcrumb.Item>
-    );
-  });
+  const breadcrumbContent = useMemo(() => {
+    const lastOne = pathSnippets.filter(it => breadcrumbNameMap.hasOwnProperty(it) && breadcrumbNameMap[it]).pop();
+    return pathSnippets.map((snippet, index) => {
+      const link = breadcrumbNameMap.hasOwnProperty(snippet) ? breadcrumbNameMap[snippet] : null;
+      if (!link) {
+        return null;
+      }
+      const { indexDiff, getText, text, disabled } = link;
+      const url = `/${pathSnippets.slice(0, index + 1 + (indexDiff || 0)).join('/')}`;
+      const isLastOne = snippet === lastOne;
+      return (
+        <Breadcrumb.Item key={url}>
+          <Link
+            to={index == 0 ? '/' : url}
+            disabled={isLastOne || disabled}
+          >
+            {getText ? getText(params) : text}
+          </Link>
+        </Breadcrumb.Item>
+      );
+    }).filter(it => it);
+  }, [pathSnippets]);
 
   return <div className='breadcrumbWrapper'>
-    <Breadcrumb>{extraBreadcrumbItems}</Breadcrumb>
+    <Breadcrumb>{breadcrumbContent}</Breadcrumb>
   </div>;
 };
 
