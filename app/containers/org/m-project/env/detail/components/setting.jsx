@@ -35,7 +35,7 @@ const Index = (props) => {
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
       if (values.type === 'infinite') {
-        values.ttl = '';
+        values.ttl = '0';
       }
       delete values.type;
       const res = await envAPI.envsEdit({ orgId, projectId, ...values, envId: envId ? envId : undefined });
@@ -91,7 +91,7 @@ const Index = (props) => {
         form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
       } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
         data.type = 'infinite';
-        form.setFieldsValue({ ttl: '' });
+        form.setFieldsValue({ ttl: '0' });
       } else if (!data.autoDestroyAt) {
         data.type = 'timequantum';
         form.setFieldsValue({ ttl: data.ttl });

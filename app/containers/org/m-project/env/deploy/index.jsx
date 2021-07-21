@@ -178,7 +178,7 @@ const Index = ({ match = {} }) => {
         values.destroyAt = moment(values.destroyAt);
       }
       if (values.type === 'infinite') {
-        values.ttl = '';
+        values.ttl = '0';
       }
       delete values.type;
       const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined });
