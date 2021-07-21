@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Steps, notification } from 'antd';
 import set from 'lodash/set';
 
@@ -12,6 +12,7 @@ import Repo from './step/repo';
 import Variable from './step/variable';
 import Relation from './step/relation';
 import styles from './styles.less';
+import isFunction from 'lodash/isFunction';
 
 const { Step } = Steps;
 
@@ -25,9 +26,11 @@ const steps = [
 const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
+  const stepRef = useRef();
 
   const stepHelper = useCallback(() => {
     return {
+      go: (index) => setStepIndex(index),
       next: () => setStepIndex(stepIndex + 1),
       prev: () => setStepIndex(stepIndex != 0 ? stepIndex - 1 : 0),
       updateData: ({ type, data, isSubmit }) => {
@@ -128,9 +131,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   };
 
   const changeStep = (index) => {
-    // if (opType === 'edit') {
-    //   setStepIndex(index);
-    // }
+    if (opType === 'add' || !stepRef.current) {
+      return;
+    }
+    // 编辑时校验保存表单
+    if (isFunction(stepRef.current.onFinish)) {
+      stepRef.current.onFinish(index);
+    }
   };
 
   return (
@@ -146,10 +153,12 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         steps.map((it, index) => (
           stepIndex === index ? (
             <it.Component
+              childRef={stepRef}
               stepHelper={stepHelper()}
               ctData={ctData}
               orgId={orgId}
               type={it.type}
+              opType={opType}
               isShow={stepIndex === index}
             />
           ) : null

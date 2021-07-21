@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Space, Radio, Select, Form, Input, Button, Empty, notification, Row, Col } from "antd";
+import React, { useState, useEffect, useImperativeHandle } from 'react';
+import { Space, Select, Form, Input, Button, Empty, notification } from "antd";
 
-import { ctAPI } from 'services/base';
 import vcsAPI from 'services/vcs';
-
-import history from 'utils/history';
 import OpModal from 'components/vcs-modal';
 
 const FL = {
@@ -13,7 +10,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-export default ({ stepHelper, orgId, ctData, type }) => {
+export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
 
   const [form] = Form.useForm();
 
@@ -157,12 +154,24 @@ export default ({ stepHelper, orgId, ctData, type }) => {
     }
   };
 
+  useImperativeHandle(childRef, () => ({
+    onFinish: async (index) => {
+      const values = await form.validateFields();
+      stepHelper.updateData({
+        type, 
+        data: values
+      });
+      stepHelper.go(index);
+    }
+  }));
+
   const onFinish = (values) => {
     stepHelper.updateData({
       type, 
-      data: values
+      data: values,
+      isSubmit: opType === 'edit'
     });
-    stepHelper.next();
+    opType === 'add' && stepHelper.next();
   };
 
   const opVcsModal = () => {
@@ -263,10 +272,16 @@ export default ({ stepHelper, orgId, ctData, type }) => {
         <Input placeholder='请输入工作目录' />
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
-        <Space size={24}>
-          <Button onClick={() => stepHelper.prev()}>上一步</Button>
-          <Button type='primary' htmlType={'submit'}>下一步</Button>
-        </Space>
+        {
+          opType === 'add' ? (
+            <Space size={24}>
+              <Button onClick={() => stepHelper.prev()}>上一步</Button>
+              <Button type='primary' htmlType={'submit'}>下一步</Button>
+            </Space>
+          ) : (
+            <Button type='primary' htmlType={'submit'}>提交</Button>
+          )
+        }
       </Form.Item>
     </Form>
     {

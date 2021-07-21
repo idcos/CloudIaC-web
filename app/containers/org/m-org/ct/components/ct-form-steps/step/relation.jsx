@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { Space, Checkbox, Form, Button, Row, Divider, notification, Empty } from "antd";
 
 import { pjtAPI } from 'services/base';
@@ -9,7 +9,7 @@ const FL = {
   wrapperCol: { span: 24 }
 };
 
-export default ({ stepHelper, orgId, ctData, type }) => {
+export default ({ childRef, stepHelper, orgId, ctData, type, opType }) => {
 
   const [form] = Form.useForm();
 
@@ -49,6 +49,17 @@ export default ({ stepHelper, orgId, ctData, type }) => {
       });
     }
   };
+
+  useImperativeHandle(childRef, () => ({
+    onFinish: async (index) => {
+      const values = await form.validateFields();
+      stepHelper.updateData({
+        type, 
+        data: values
+      });
+      stepHelper.go(index);
+    }
+  }));
 
   const onFinish = (values) => {
     stepHelper.updateData({
@@ -151,10 +162,16 @@ export default ({ stepHelper, orgId, ctData, type }) => {
         </Checkbox.Group>
       </Form.Item>
       <div className='btn-wrapper'>
-        <Space size={24}>
-          <Button onClick={() => stepHelper.prev()} >上一步</Button>
-          <Button type='primary' htmlType={'submit'} >完成</Button>
-        </Space>
+        {
+          opType === 'add' ? (
+            <Space size={24}>
+              <Button onClick={() => stepHelper.prev()} >上一步</Button>
+              <Button type='primary' htmlType={'submit'} >完成</Button>
+            </Space>
+          ) : (
+            <Button type='primary' htmlType={'submit'}>提交</Button>
+          )
+        }
       </div>
     </Form>
   </div>;

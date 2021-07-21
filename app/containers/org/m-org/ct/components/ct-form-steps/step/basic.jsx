@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Space, Radio, Select, Form, Input, Button, Empty, notification, Row, Col } from "antd";
+import React, { useImperativeHandle, useEffect } from 'react';
+import { Space, Form, Input, Button } from "antd";
 
 const FL = {
   labelCol: { span: 5 },
   wrapperCol: { span: 14 }
 };
 
-export default ({ stepHelper, ctData, type }) => {
+export default ({ opType, childRef, stepHelper, ctData, type }) => {
 
   const [form] = Form.useForm();
 
+  useImperativeHandle(childRef, () => ({
+    onFinish: async (index) => {
+      const values = await form.validateFields();
+      stepHelper.updateData({
+        type, 
+        data: values
+      });
+      stepHelper.go(index);
+    }
+  }));
+
   const onFinish = (values) => {
     stepHelper.updateData({
-      type: 'basic', 
-      data: values
+      type, 
+      data: values,
+      isSubmit: opType === 'edit'
     });
-    stepHelper.next();
+    opType === 'add' && stepHelper.next();
   };
 
   useEffect(() => {
@@ -50,7 +62,13 @@ export default ({ stepHelper, ctData, type }) => {
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
         <Space size={24}>
-          <Button type='primary' htmlType={'submit'}>下一步</Button>
+          {
+            opType === 'add' ? (
+              <Button type='primary' htmlType={'submit'}>下一步</Button>
+            ) : (
+              <Button type='primary' htmlType={'submit'}>提交</Button>
+            )
+          }
         </Space>
       </Form.Item>
     </Form>
