@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
-import OrgModal from './components/orgModal';
-
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
+
 import { orgsAPI } from 'services/base';
+import history from 'utils/history';
+
+import OrgModal from './components/orgModal';
 
 const Orgs = ({ title, dispatch }) => {
   const [ loading, setLoading ] = useState(false),
@@ -100,6 +102,22 @@ const Orgs = ({ title, dispatch }) => {
     setVisible(!visible);
   };
 
+  const enterCurOrg = (orgId) => {
+    dispatch({
+      type: 'global/set-curOrg',
+      payload: {
+        orgId
+      }
+    });
+    dispatch({
+      type: 'global/getProjects',
+      payload: {
+        orgId
+      }
+    });
+    history.push(`/org/${orgId}/m-org-ct`);
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -146,7 +164,8 @@ const Orgs = ({ title, dispatch }) => {
             setCurRecord(record);
             toggleVisible();
           }}
-          >编辑</a>          
+          >编辑</a>   
+          <a onClick={() => enterCurOrg(record.id)}>进入</a>       
         </Space>;
       }
     }
