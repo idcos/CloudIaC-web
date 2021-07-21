@@ -149,7 +149,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       <div className='stepWrapper'>
         <Steps current={stepIndex}>
           {steps.map((it, index) => (
-            <Step title={it.title} onClick={() => changeStep(index)}/>
+            <Step style={{ cursor: opType === 'add' ? 'default' : 'pointer' }} title={it.title} onClick={() => changeStep(index)}/>
           ))}
         </Steps>
       </div>

@@ -7,7 +7,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import { TASK } from "constants/types";
+import { END_ENV_STATUS_LIST } from "constants/types";
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -68,7 +68,7 @@ const EnvDetail = (props) => {
       const data = res.result || {};
       setInfo(data);
       // 循环刷新详情数据
-      if (TASK.endTaskStatuList.indexOf(data.status) === -1 && !endRef.current) {
+      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !endRef.current) {
         setTimeout(() => {
           fetchInfo();
         }, 1500);

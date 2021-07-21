@@ -57,32 +57,13 @@ export const TASK_STATUS = {
   "failed": '失败',
   "complete": '成功'
 };
-export const TASK = {
-  taskType: {
-    'plan': 'plan作业',
-    'apply': 'apply作业',
-    'destroy': 'destroy作业'
-  },
-  taskStatus: {
-    all: '全部',
-    complete: '成功',
-    failed: '失败',
-    pending: '排队',
-    running: '运行中',
-    timeout: '超时'
-  },
-  endTaskStatuList: [
-    'complete',
-    'failed',
-    'timeout',
-    'approving'
-  ],
-  taskStatusIcon: {
-    all: <AppstoreFilled/>,
-    complete: <CheckCircleFilled/>,
-    failed: <CloseCircleFilled/>,
-    pending: <ExclamationCircleFilled/>,
-    running: <ClockCircleFilled/>,
-    timeout: <AlertFilled/>
-  }
+export const TASK_TYPE = {
+  'plan': 'plan作业',
+  'apply': 'apply作业',
+  'destroy': 'destroy作业'
 };
+export const END_ENV_STATUS_LIST = [
+  'active',
+  'inactive',
+  'failed'
+];

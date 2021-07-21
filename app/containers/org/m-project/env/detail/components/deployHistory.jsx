@@ -4,7 +4,7 @@ import { Card, Table, notification } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { timeUtils } from "utils/time";
-import { TASK_STATUS, TASK } from 'constants/types';
+import { TASK_STATUS, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
 
@@ -47,7 +47,7 @@ const Index = (props) => {
     {
       dataIndex: 'type',
       title: '作业类型',
-      render: (t, r) => <span>{TASK['taskType'][t] || '-'}</span>
+      render: (t, r) => <span>{TASK_TYPE[t] || '-'}</span>
     },
     {
       dataIndex: 'status',
