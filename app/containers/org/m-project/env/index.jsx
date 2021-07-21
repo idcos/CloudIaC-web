@@ -7,17 +7,18 @@ import EnvList from './componemts/envList';
 import history from 'utils/history';
 
 const envNavs = {
+  '': '全部',
   active: '活跃',
   approving: '待审批',
   inactive: '已销毁',
-  filed: '已归档',
+  // filed: '已归档',
   failed: '失败'
 };
 export default (props) => {
   const { match } = props,
     { params: { orgId, projectId } } = match; 
 
-  const [ panel, setPanel ] = useState('active');
+  const [ panel, setPanel ] = useState('');
   const renders = useMemo(() => {
     return <EnvList {...props} panel={panel} />;
   }, [panel]);
