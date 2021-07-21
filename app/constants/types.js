@@ -65,6 +65,5 @@ export const TASK_TYPE = {
 };
 export const END_ENV_STATUS_LIST = [
   'active',
-  'inactive',
   'failed'
 ];

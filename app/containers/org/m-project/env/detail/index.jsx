@@ -8,6 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_ENV_STATUS_LIST } from "constants/types";
+import { envAPI } from 'services/base';
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -18,7 +19,6 @@ import Setting from './components/setting';
 
 import styles from './styles.less';
 
-import { envAPI } from 'services/base';
 
 const subNavs = {
   resource: '资源',
@@ -33,7 +33,6 @@ const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
-  const endRef = useRef();
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
@@ -45,13 +44,7 @@ const EnvDetail = (props) => {
     };
     return PAGES[panel]();
   }, [ panel, info ]);
-
-  useEffect(() => {
-    return () => {
-      endRef.current = true;
-    };
-  }, []);
-
+ 
   useEffect(() => {
     fetchInfo();
   }, [panel]);
@@ -60,19 +53,13 @@ const EnvDetail = (props) => {
   const fetchInfo = async () => {
     try {
       const res = await envAPI.envsInfo({
-        orgId, projectId, envId, status: panel
+        orgId, projectId, envId
       });
       if (res.code != 200) {
         throw new Error(res.message);
       }
       const data = res.result || {};
       setInfo(data);
-      // 循环刷新详情数据
-      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !endRef.current) {
-        setTimeout(() => {
-          fetchInfo();
-        }, 1500);
-      }
     } catch (e) {
       notification.error({
         message: '获取失败',
