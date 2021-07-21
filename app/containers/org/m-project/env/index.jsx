@@ -11,7 +11,8 @@ const envNavs = {
   active: '活跃',
   approving: '待审批',
   inactive: '已销毁',
-  filed: '已归档' // ddd
+  filed: '已归档',
+  failed: '失败'
 };
 export default (props) => {
   const { match, routes } = props,

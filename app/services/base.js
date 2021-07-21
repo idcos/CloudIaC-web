@@ -372,11 +372,18 @@ export const pjtAPI = {
 };
 
 export const envAPI = {
+  // 环境列表
   envsList: ({ orgId, projectId, status }) => {
-    return getWithArgs('/api/v1/envs', {
+    let values = { 
       pageSize: 99999,
-      currentPage: 1
-      // status
+      currentPage: 1 };
+    if (status == 'filed') {
+      values.archived = true;
+    } else {
+      values.status = status;
+    }
+    return getWithArgs('/api/v1/envs', {
+      ...values
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境详情
