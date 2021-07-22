@@ -11,20 +11,25 @@ import { SCOPE_ENUM } from '../enum';
 
 const TerraformVarForm = () => {
 
-  const { 
-    terraformVarRef, 
-    terraformVarList, 
-    setTerraformVarList, 
-    setDeleteVariablesId, 
-    defaultScope, 
+  const {
+    terraformVarRef,
+    terraformVarList,
+    setTerraformVarList,
+    setDeleteVariablesId,
+    defaultScope,
     defalutTerraformVarList,
     fetchParams,
     canImportTerraformVar
   } = useContext(VarsContext);
 
   const defalutTerraformVarListRef = useRef([]);
+  const terraformVarDataRef = useRef(terraformVarList);
   const [ importVars, setImportVars ] = useState([]);
   const [ importModalVisible, setImportModalVisible ] = useState(false);
+
+  useEffect(() => {
+    terraformVarDataRef.current = terraformVarList;
+  }, [terraformVarList]);
 
   useEffect(() => {
     defalutTerraformVarListRef.current = defalutTerraformVarList;
@@ -92,12 +97,15 @@ const TerraformVarForm = () => {
           { required: true, message: '请输入name' },
           {
             validator(_, value) {
-              const sameList = terraformVarList.filter(it => it.name === value);
-              if (!value || sameList.length === 0) {
-                return Promise.resolve();
-              } else {
-                return Promise.reject(new Error('name值不允许重复!'));
-              }
+              return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  const sameList = (terraformVarDataRef.current || []).filter(it => it.name === value);
+                  if (value && sameList.length > 1) {
+                    reject(new Error('name值不允许重复!'));
+                  }
+                  resolve();
+                }, 300);
+              });
             }
           }
         ]
@@ -261,9 +269,9 @@ const TerraformVarForm = () => {
         onChange={onChangeEditableTable}
         optionRender={optionRender}
       />
-      <ImportVarsModal 
-        importVars={importVars} 
-        visible={importModalVisible} 
+      <ImportVarsModal
+        importVars={importVars}
+        visible={importModalVisible}
         terraformVarList={terraformVarList}
         onClose={() => setImportModalVisible(false)}
         defaultScope={defaultScope}

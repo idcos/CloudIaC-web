@@ -7,12 +7,16 @@ import EditableTable from 'components/Editable';
 import VarsContext from '../context';
 import { SCOPE_ENUM } from '../enum';
 
-
 const EnvVarForm = () => {
 
   const { envVarRef, envVarList, setEnvVarList, setDeleteVariablesId, defaultScope, defalutEnvVarList } = useContext(VarsContext);
 
   const defalutEnvVarListRef = useRef([]);
+  const envVarDataRef = useRef(envVarList);
+
+  useEffect(() => {
+    envVarDataRef.current = envVarList;
+  }, [envVarList]);
 
   useEffect(() => {
     defalutEnvVarListRef.current = defalutEnvVarList;
@@ -57,12 +61,15 @@ const EnvVarForm = () => {
           { required: true, message: '请输入name' },
           {
             validator(_, value) {
-              const sameList = envVarList.filter(it => it.name === value);
-              if (!value || sameList.length === 0) {
-                return Promise.resolve();
-              } else {
-                return Promise.reject(new Error('name值不允许重复!'));
-              }
+              return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                  const sameList = (envVarDataRef.current || []).filter(it => it.name === value);
+                  if (value && sameList.length > 1) {
+                    reject(new Error('name值不允许重复!'));
+                  }
+                  resolve();
+                }, 300);
+              });
             }
           }
         ]
