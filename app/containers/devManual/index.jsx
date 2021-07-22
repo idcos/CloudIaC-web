@@ -30,8 +30,11 @@ export default () => {
       extraHeader={<PageHeader headerStyle={{ height: 90 }} showIcon={'user'} className='container-inner-width' title='开发者手册' />}
     >
       <div className={styles.markdownDocWrapper}>
-        <div className='markdown-doc-scroll'>
-          <div className='container-inner-width'>
+        <div className='container-inner-width help-docs-wrapper'>
+          <div className='help-docs-menus'>
+
+          </div>
+          <div className='help-docs-content'>
             <MarkdownDoc mdText={mdText} scrollDomSelecter='.markdown-doc-scroll' />
           </div>
         </div>

@@ -112,23 +112,24 @@ export default (props) => {
   }, [mdText]);
 
   return (
-    <div className={styles.markdownDoc} style={{ paddingRight: 300 }}>
+    <div className={styles.markdownDoc}>
+      <div className='md-content'>
+        {/* <h1>开发者手册</h1> */}
+        <div className='md-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
+      </div>
       <div className='doc-anchor-wrapper'>
+        <div>本篇目录</div>
         <Anchor 
           className='doc-anchor' 
           onClick={e => e.preventDefault()}
           affix={false} 
-          targetOffset={160}
+          targetOffset={220}
           bounds={50}
           showInkInFixed={true}
-          getContainer={() => document.querySelector(scrollDomSelecter)}
+          getContainer={() => document.querySelector('.md-content')}
         >
           {loop(anchorList)}
         </Anchor>
-      </div>
-      <div className='md-content'>
-        {/* <h1>开发者手册</h1> */}
-        <div className='md-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
       </div>
     </div>
   );
