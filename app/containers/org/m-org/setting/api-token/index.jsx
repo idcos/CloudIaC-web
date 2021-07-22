@@ -99,8 +99,8 @@ const ApiToken = ({ orgId }) => {
       width: 180
     },
     {
-      dataIndex: 'updatedAt',
-      title: '最后更新时间',
+      dataIndex: 'expiredAt',
+      title: '过期时间',
       render: (text) => moment(text).format(dateFormat)
     },
     {
