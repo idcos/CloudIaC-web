@@ -1,86 +1,48 @@
-import React, { useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { Select, Divider } from 'antd';
-import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { Divider, notification } from 'antd';
+import isEmpty from 'lodash/isEmpty';
 
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
+import { userAPI } from 'services/auth';
+import { useDeepCompareEffect } from 'utils/hooks';
 
+import menus from './menus';
 import styles from './styles.less';
 
-
-const { Option } = Select;
 const KEY = 'global';
 
-const menus = [
-  {
-    subName: '项目信息',
-    subKey: 'project',
-    emptyMenuList: [
-      {
-        name: '创建项目',
-        key: 'm-project-create',
-        icon: <PlusSquareOutlined />
-      }
-    ],
-    menuList: [
-      {
-        name: '环境',
-        key: 'm-project-env',
-        icon: <CodeOutlined />
-      },
-      {
-        name: '云模板',
-        key: 'm-project-ct',
-        icon: <LayoutOutlined />
-      },
-      {
-        name: '变量',
-        key: 'm-project-variable',
-        icon: <InteractionOutlined />
-      },
-      {
-        name: '设置',
-        key: 'm-project-setting',
-        icon: <SettingOutlined />
-      }
-    ]
-  },
-  {
-    subName: '组织设置',
-    subKey: 'org',
-    emptyMenuList: [],
-    menuList: [
-      {
-        name: '项目',
-        key: 'm-org-project',
-        icon: <ProjectOutlined />
-      },
-      {
-        name: '云模板',
-        key: 'm-org-ct',
-        icon: <LayoutOutlined />
-      },
-      {
-        name: '变量',
-        key: 'm-org-variable',
-        icon: <InteractionOutlined />
-      },
-      {
-        name: '设定',
-        key: 'm-org-setting',
-        icon: <FormOutlined />
-      }
-    ]
-  }
-];
-
-const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) => {
-
+const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, dispatch }) => {
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const orgList = (orgs || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
+
+  const [ showOrgMenu, setShowOrgMenu ] = useState(false);
+
+  useDeepCompareEffect(() => {
+    if (isEmpty(userInfo)) {
+      return;
+    }
+    if (userInfo.isAdmin) {
+      setShowOrgMenu(true);
+    } else {
+      fetchOrgUserInfo();
+    }
+  }, [userInfo]);
+
+  const fetchOrgUserInfo = async () => {
+    const res = await userAPI.info(orgId);
+    if (res.code !== 200) {
+      return notification.error({
+        message: '获取失败',
+        description: res.message
+      });
+    }
+    const { role, isAdmin } = res.result || {};
+    setShowOrgMenu(isAdmin || role === 'admin');
+  };
   
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
@@ -167,14 +129,20 @@ const OrgWrapper = ({ routes, curOrg, curProject, match = {}, orgs, dispatch }) 
         </div>
         <div className='menu-wrapper'>
           {
-            menus.map(it => (
-              <div className='sub-menu'>
-                <div className='menu-title'>{it.subName}</div>
-                <div className='menu-list'>
-                  { renderMenus(it) }
+            menus.map(it => {
+              // 没有组织设置的权限则不展示组织设置菜单
+              if (it.subKey === 'org' && !showOrgMenu) {
+                return null;
+              }
+              return (
+                <div className='sub-menu'>
+                  <div className='menu-title'>{it.subName}</div>
+                  <div className='menu-list'>
+                    { renderMenus(it) }
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           }
         </div>
       </div>
@@ -195,6 +163,7 @@ export default connect(
   (state) => ({ 
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
-    curProject: state[KEY].get('curProject')
+    curProject: state[KEY].get('curProject'),
+    userInfo: state[KEY].get('userInfo').toJS()
   })
 )(OrgWrapper);

@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { EventSourcePolyfill } from 'event-source-polyfill';
+import isEqual from 'lodash/isEqual';
 
 // sse hooks
 export const useEventSource = () => {
@@ -56,4 +57,14 @@ export const useThrottleHook = (value, duration) => {
     return () => clearTimeout(timer);
   }, [ value, duration, Local ]);
   return throttleValue;
+};
+
+export const useDeepCompareEffect = (fn, deps) => {
+  const renderRef = useRef(0);
+  const depsRef = useRef(deps);
+  if (!isEqual(deps, depsRef.current)) {
+    renderRef.current++;
+  }
+  depsRef.current = deps;
+  return useEffect(fn, [renderRef.current]);
 };
