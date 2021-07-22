@@ -51,6 +51,18 @@ export const SCOPE_ENUM = {
   template: '云模版',
   env: '环境'
 };
+export const DOCS = {
+  variable: '变量',
+  summarize: '概述',
+  env: '环境',
+  developer: '开发者文档',
+  quickstart: '快速入门',
+  project: '项目',
+  organization: '组织',
+  tpl: '云模板',
+  role: '用户和角色'
+
+};
 export const TASK_STATUS = {
   "pending": '排队',
   "running": '运行中',

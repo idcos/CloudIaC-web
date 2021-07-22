@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { DOCS } from 'constants/types';
 
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -9,12 +10,14 @@ import styles from './styles.less';
 export default () => {
 
   const [ mdText, setMDText ] = useState('');
-
   useEffect(() => {
     getMDText();
   }, []);
 
   const getMDText = async () => {
+    const res = await Promise.all(Object.keys(DOCS).map(d => fetch(`/assets/md/${d}.md`))).then((res) => {
+      console.log(res.map(a => a.text()), 'res');
+    });
     try {
       const res = await fetch('/assets/md/dev-doc.md');
       const text = await res.text();
@@ -32,7 +35,6 @@ export default () => {
       <div className={styles.markdownDocWrapper}>
         <div className='container-inner-width help-docs-wrapper'>
           <div className='help-docs-menus'>
-
           </div>
           <div className='help-docs-content'>
             <MarkdownDoc mdText={mdText} scrollDomSelecter='.markdown-doc-scroll' />
