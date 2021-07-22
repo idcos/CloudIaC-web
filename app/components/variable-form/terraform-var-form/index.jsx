@@ -202,6 +202,7 @@ const TerraformVarForm = () => {
         rows.filter((item) => item.editable_id !== k)
       );
     }
+    terraformVarRef.current.handleValidate();
   };
 
   const onChangeEditableTable = (list) => {

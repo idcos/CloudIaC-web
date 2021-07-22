@@ -55,7 +55,7 @@ const EnvDetail = (props) => {
   }, []);
 
   // 获取Info
-  const fetchInfo = async () => {
+  const fetchInfo = async (opType = '') => {
     try {
       const res = await envAPI.envsInfo({
         orgId, projectId, envId
@@ -64,12 +64,18 @@ const EnvDetail = (props) => {
         throw new Error(res.message);
       }
       const data = res.result || {};
-      setInfo(preInfo => {
-        return data.status !== preInfo.status ? data : preInfo;
-      });
+      if (opType === 'loop') {
+        setInfo(preInfo => {
+          return data.status !== preInfo.status ? data : preInfo;
+        });
+      } else {
+        setInfo(data);
+      }
       // 循环刷新详情数据
       if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !loopRef.current) {
-        loopRef.current = setInterval(fetchInfo, 1500);
+        loopRef.current = setInterval(() => {
+          fetchInfo('loop');
+        }, 1500);
       }
     } catch (e) {
       notification.error({

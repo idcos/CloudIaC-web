@@ -1,8 +1,9 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Card, DatePicker, Select, Form, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
-import copy from 'utils/copy';
+import moment from 'moment';
 
+import copy from 'utils/copy';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
@@ -25,7 +26,20 @@ const Index = (props) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue(info || {});
+    if (info.autoApproval) {
+      info.triggers = (info.triggers || []).concat(['autoApproval']);
+    }
+    if (!!info.autoDestroyAt) {
+      info.type = 'time';
+      form.setFieldsValue({ destroyAt: moment(info.autoDestroyAt) });
+    } else if (info.ttl === '' || info.ttl === null || info.ttl == 0) {
+      info.type = 'infinite';
+      form.setFieldsValue({ ttl: '0' });
+    } else {
+      info.type = 'timequantum';
+      form.setFieldsValue({ ttl: info.ttl });
+    }
+    form.setFieldsValue(info);
   }, [info]);
 
   const onFinish = async (taskType) => {
@@ -73,7 +87,6 @@ const Index = (props) => {
         description: e.message
       });
     }
-    
   };
 
   const copyToUrl = async(action) => {
