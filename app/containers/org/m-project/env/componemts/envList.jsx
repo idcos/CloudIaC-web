@@ -3,7 +3,7 @@ import { Card, notification, Divider } from 'antd';
 import moment from 'moment';
 
 import history from 'utils/history';
-import { ENV_STATUS } from 'constants/types';
+import { ENV_STATUS, AUTO_DESTROY } from 'constants/types';
 import { timeUtils } from "utils/time";
 import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
@@ -65,10 +65,21 @@ const Index = (props) => {
   };
 
   const formatTTL = ({ autoDestroyAt, ttl }) => {
-    if (ttl == '0') {
-      return '不限';
+    if (autoDestroyAt) {
+      return timeUtils.diff(autoDestroyAt, now);
     }
-    return timeUtils.diff(autoDestroyAt, now);
+    switch (ttl) {
+      case '':
+      case null:
+      case undefined:
+        return '-';
+      case 0:
+      case '0':
+        return '无限';
+      default:
+        const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
+        return it.name;
+    }
   };
 
   return <div>

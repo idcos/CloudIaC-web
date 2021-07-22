@@ -1,11 +1,9 @@
-import React, { memo, useState, useEffect, useRef } from 'react';
-import { Card, Descriptions, notification } from 'antd';
+import React, { memo, useState, useEffect } from 'react';
+import { Card, Descriptions } from 'antd';
 
-import { ENV_STATUS } from 'constants/types';
+import { ENV_STATUS, AUTO_DESTROY } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
-import { END_ENV_STATUS_LIST } from "constants/types";
-import { envAPI } from 'services/base';
 import moment from 'moment';
 
 const Index = (props) => {
@@ -24,10 +22,21 @@ const Index = (props) => {
   }, []);
 
   const formatTTL = ({ autoDestroyAt, ttl }) => {
-    if (ttl == '0') {
-      return '不限';
+    if (autoDestroyAt) {
+      return timeUtils.diff(autoDestroyAt, now);
     }
-    return timeUtils.diff(autoDestroyAt, now);
+    switch (ttl) {
+      case '':
+      case null:
+      case undefined:
+        return '-';
+      case 0:
+      case '0':
+        return '无限';
+      default:
+        const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
+        return it.name;
+    }
   };
   
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
