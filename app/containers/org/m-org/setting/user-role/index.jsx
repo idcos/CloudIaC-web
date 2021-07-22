@@ -118,6 +118,7 @@ export default ({ title, orgId }) => {
     },
     {
       title: '操作',
+      width: 180,
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           <a onClick={() => {

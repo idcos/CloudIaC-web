@@ -280,7 +280,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
       >
         <Input placeholder='请输入工作目录' />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
+      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (

@@ -47,6 +47,7 @@ const User = ({ userInfo, dispatch }) => {
     extraHeader={<PageHeader
       className='container-inner-width'
       title='用户设置'
+      showIcon={'user'}
       breadcrumb={false}
       renderFooter={() => (
         <Tabs

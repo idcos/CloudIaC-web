@@ -27,7 +27,7 @@ export default () => {
   return (
     <Layout
       contentStyle={{ paddingTop: 0 }}
-      extraHeader={<PageHeader className='container-inner-width' title='开发者手册' />}
+      extraHeader={<PageHeader headerStyle={{ height: 90 }} showIcon={'user'} className='container-inner-width' title='开发者手册' />}
     >
       <div className={styles.markdownDocWrapper}>
         <div className='markdown-doc-scroll'>

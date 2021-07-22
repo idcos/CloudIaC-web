@@ -4,6 +4,7 @@ import { Menu, Tabs } from 'antd';
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
+import { SettingOutlined } from '@ant-design/icons';
 
 
 import Orgs from './pages/orgs';
@@ -31,7 +32,9 @@ const Sys = () => {
   return <Layout
     extraHeader={<PageHeader
       className='container-inner-width'
-      title='系统设置'
+      title='系统设置1'
+      showIcon={'setting'}
+      icons={<SettingOutlined />}
       breadcrumb={false}
       renderFooter={() => (
         <Tabs

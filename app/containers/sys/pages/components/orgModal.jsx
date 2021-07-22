@@ -57,7 +57,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
         label='组织描述'
         name='description'
       >
-        <Input.TextArea placeholder='请输入组织描述'/>
+        <Input.TextArea rows={8} placeholder='请输入组织描述'/>
       </Form.Item>
     </Form>
   </Modal>;

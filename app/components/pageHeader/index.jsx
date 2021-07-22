@@ -8,8 +8,8 @@ import { Row, Col } from 'antd';
 import BreadcrumbWrapper from './breadcrumb';
 
 const PageHeader = (props) => {
-  const { breadcrumb, title, des, subDes, renderFooter, location, match, curOrg, className } = props;
-  return <div className={`${styles.pageHeader} ${className}`}>
+  const { breadcrumb, title, des, subDes, renderFooter, location, match, curOrg, className, showIcon, headerStyle } = props;
+  return <div style={{ background: !!showIcon && `#fff url(/assets/backgroundIcon/${showIcon}.svg) no-repeat 10px -36px` }} className={`${styles.pageHeader} ${className}`}>
     <div>
       { breadcrumb && <BreadcrumbWrapper
         location={location}
@@ -18,7 +18,7 @@ const PageHeader = (props) => {
           curOrg
         }}
       />}
-      <Row className='header-wrapper' type='flex' align='middle' justify='space-around'>
+      <Row className='header-wrapper' style={{ background: !showIcon && `#fff`, ...headerStyle }} type='flex' align='middle' justify='space-around'>
         <Col span={14}>
           <h2 className='title reset-styles'>
             {title}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Select, Menu, Dropdown, Tooltip, Button, Badge, notification } from 'antd';
+import { Select, Menu, Dropdown, Tooltip, Button, Badge, notification, Divider } from 'antd';
 import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 
@@ -118,6 +118,9 @@ const AppHeader = (props) => {
                 seniorSelectfooter={(
                   <div className={styles.seniorSelectfooter}>
                     <div className='more' onClick={goMoreProject}>查看更多项目</div>
+                    <div style={{ padding: '10px 19px 0px 19px' }}>
+                      <Divider style={{ margin: '0' }} />
+                    </div>
                     <div className='create'>
                       <div className='btn' onClick={togglePjtModalVsible}>
                         <span className='icon'>

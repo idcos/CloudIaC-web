@@ -60,7 +60,7 @@ export default ({ goCTlist, opType, childRef, stepHelper, ctData, type }) => {
       >
         <Input.TextArea placeholder='请输入模板描述' />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 5, span: 14 }}>
+      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (

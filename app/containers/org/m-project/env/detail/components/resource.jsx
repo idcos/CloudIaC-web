@@ -33,7 +33,9 @@ const Index = (props) => {
         obj.children = children;
         ll.push(obj);
       });
-      return ll;
+      return ll || [];
+    } else {
+      return [];
     }
   };
 
@@ -46,6 +48,7 @@ const Index = (props) => {
       fetchOutput();
     }
   }, [taskIds]);
+
   const fetchList = async () => {
     try {
       setLoading(true);
@@ -56,6 +59,7 @@ const Index = (props) => {
       setResultMap({
         list: resetList(res.result.list)
       });
+      !!resetList(res.result.list)[0] && setSelectKeys([resetList(res.result.list)[0].provider]);
       setLoading(false);
     } catch (e) {
       setLoading(false);
@@ -112,9 +116,9 @@ const Index = (props) => {
   ];
   const onExpand = (expanded, record) => {
     if (expanded) {
-      setSelectKeys([record.provider]);
+      setSelectKeys([ ...selectKeys, record.provider ]);
     } else {
-      setSelectKeys([]);
+      setSelectKeys((selectKeys.filter(d => d !== record.provider) || []));
     }
   };
   return <div>
