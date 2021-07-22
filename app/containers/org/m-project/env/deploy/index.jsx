@@ -95,9 +95,6 @@ const Index = ({ match = {} }) => {
         if (data.autoApproval) {
           data.triggers = (data.triggers || []).concat(['autoApproval']);
         }
-        if (data.autoApproval) {
-          data.triggers = (data.triggers || []).concat(['autoApproval']);
-        }
         if (!!data.autoDestroyAt) {
           data.type = 'time';
           form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
