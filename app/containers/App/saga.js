@@ -66,9 +66,9 @@ function* getProjects(action) {
   }
 }
 
-function* getUserInfo(action) {
+function* getUserInfo({ payload } = {}) {
   try {
-    const res = yield call(userAPI.info);
+    const res = yield call(userAPI.info, payload);
     if (res.code !== 200) {
       throw new Error(res.message);
     }

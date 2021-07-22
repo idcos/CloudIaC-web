@@ -33,7 +33,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   }, [userInfo]);
 
   const fetchOrgUserInfo = async () => {
-    const res = await userAPI.info(orgId);
+    const res = await userAPI.info({ orgId });
     if (res.code !== 200) {
       return notification.error({
         message: '获取失败',

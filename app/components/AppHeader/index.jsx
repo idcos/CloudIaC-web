@@ -24,6 +24,16 @@ const AppHeader = (props) => {
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'global/getUserInfo',
+  //     payload: {
+  //       orgId,
+  //       projectId
+  //     }
+  //   });
+  // }, [orgId, projectId]);
+
   const changeProject = (pjtId) => {
     dispatch({
       type: 'global/set-curProject',

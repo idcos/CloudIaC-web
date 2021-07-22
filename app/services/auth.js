@@ -1,9 +1,10 @@
 import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 
 export const userAPI = {
-  info: (orgId = '') => {
+  info: ({ orgId, projectId } = {}) => {
     return get('/api/v1/auth/me', { 
-      'IaC-Org-Id': orgId
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
     });
   },
   updateSelf: ({ name, phone, oldPassword, newPassword, newbieGuide }) => {
