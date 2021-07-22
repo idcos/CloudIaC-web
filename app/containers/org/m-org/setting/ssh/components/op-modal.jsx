@@ -61,7 +61,7 @@ export default ({ visible, toggleVisible, operation }) => {
             }
           ]}
         >
-          <Input.TextArea placeholder='请输入私钥内容'/>
+          <Input.TextArea placeholder='请输入私钥内容' autoSize={{ minRows: 7 }} />
         </Form.Item>
       </Form>
     </Modal>
