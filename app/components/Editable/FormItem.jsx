@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import { InternalFieldProps } from 'rc-field-form/lib/Field';
 
 import { Popover } from 'antd';
 import { Field } from 'rc-field-form';
