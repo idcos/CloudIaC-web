@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
+import { Form, Col, Modal, DatePicker, Row, Select, Table, Input } from "antd";
 
 const FL = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 19 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 
 export default ({ orgId, visible, toggleVisible, operation }) => {
@@ -31,6 +31,7 @@ export default ({ orgId, visible, toggleVisible, operation }) => {
     <Modal
       title='添加token'
       visible={visible}
+      width={427}
       onCancel={toggleVisible}
       okButtonProps={{
         loading: submitLoading
@@ -52,6 +53,18 @@ export default ({ orgId, visible, toggleVisible, operation }) => {
           ]}
         >
           <Input placeholder='请输入描述'/>
+        </Form.Item>
+        <Form.Item
+          label='过期时间'
+          name='expiredAt'
+          rules={[
+            {
+              required: true,
+              message: '请选择'
+            }
+          ]}
+        >
+          <DatePicker style={{ width: '100%' }} placeholder='请选择过期时间' format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
         </Form.Item>
       </Form>
     </Modal>
