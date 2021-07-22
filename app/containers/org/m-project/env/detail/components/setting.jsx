@@ -2,7 +2,6 @@ import React, { useState, useEffect, memo } from 'react';
 import { Card, DatePicker, Select, Form, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import copy from 'utils/copy';
-import moment from 'moment';
 
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
@@ -21,12 +20,14 @@ const PL = {
 const { Option } = Select;
     
 const Index = (props) => {
-  const { match } = props,
+  const { match, info, reload } = props,
     { params: { orgId, projectId, envId } } = match;
-  const [ info, setInfo ] = useState({});
   const [form] = Form.useForm();
 
-  
+  useEffect(() => {
+    form.setFieldsValue(info || {});
+  }, [info]);
+
   const onFinish = async (taskType) => {
     try {
       const values = await form.validateFields();
@@ -42,7 +43,7 @@ const Index = (props) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      fetchInfo();
+      reload();
       notification.success({
         description: '保存成功'
       });
@@ -53,9 +54,6 @@ const Index = (props) => {
       });
     }
   };
-  useEffect(() => {
-    fetchInfo();
-  }, []);
 
   const archive = async() => {
     try {
@@ -68,7 +66,7 @@ const Index = (props) => {
       notification.success({
         message: '操作成功'
       });
-      fetchInfo();
+      reload();
     } catch (e) {
       notification.error({
         message: '操作失败',
@@ -76,35 +74,6 @@ const Index = (props) => {
       });
     }
     
-  };
-
-  const fetchInfo = async () => {
-    try {
-      const res = await envAPI.envsInfo({
-        orgId, projectId, envId
-      });
-      let data = res.result || {};
-      if (data.autoApproval) {
-        data.triggers = (data.triggers || []).concat(['autoApproval']);
-      }
-      if (!!data.autoDestroyAt) {
-        data.type = 'time';
-        form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-      } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
-        data.type = 'infinite';
-        form.setFieldsValue({ ttl: '0' });
-      } else if (!data.autoDestroyAt) {
-        data.type = 'timequantum';
-        form.setFieldsValue({ ttl: data.ttl });
-      }
-      form.setFieldsValue(data);
-      setInfo(data);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
   };
 
   const copyToUrl = async(action) => {
@@ -136,7 +105,6 @@ const Index = (props) => {
         form={form}
         {...FL}
         onFinish={onFinish}
-        initialValues={info}
       >
         <Form.Item 
           name='triggers'

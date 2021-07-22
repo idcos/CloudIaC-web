@@ -15,9 +15,9 @@ import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 export default (props) => {
-  const { match, reload, lastTaskId, info } = props;
+  const { match, reload, info } = props;
   const { params: { orgId, projectId, envId, taskId } } = match;
-  let taskIds = taskId || lastTaskId;
+  const taskID = taskId || info.lastTaskId;
   const [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
     [ taskLog, setTaskLog ] = useState([]);
@@ -33,11 +33,11 @@ export default (props) => {
   }, []);
 
   useEffect(() => {
-    if (taskIds) {
+    if (taskID) {
       fetchSse();
       fetchComments();
     }
-  }, [taskIds]);
+  }, [taskID]);
   
   useEffect(() => {
     return () => {
@@ -53,7 +53,7 @@ export default (props) => {
         }
       },
       {
-        url: `/api/v1/task/log/sse?id=${taskIds}`,
+        url: `/api/v1/task/log/sse?id=${taskID}`,
         options: { withCredentials: true, headers: { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId } }
       }
     );
@@ -62,11 +62,14 @@ export default (props) => {
   const passOrRejecy = async(action) => {
     try {
       const res = await envAPI.approve({
-        orgId, taskId: taskIds, projectId, action
+        orgId, taskId: taskID, projectId, action
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      notification.success({
+        message: "操作成功"
+      });
       reload && reload();
     } catch (e) {
       notification.error({
@@ -80,7 +83,7 @@ export default (props) => {
     try {
       setLoading(true);
       const res = await ctAPI.taskComment({
-        orgId, taskId: taskIds, projectId
+        orgId, taskId: taskID, projectId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -99,7 +102,7 @@ export default (props) => {
   const onFinish = async (values) => {
     try {
       const res = await ctAPI.createTaskComment({     
-        orgId, taskId: taskIds, projectId,
+        orgId, taskId: taskID, projectId,
         ...values
       });
       if (res.code !== 200) {
@@ -121,7 +124,7 @@ export default (props) => {
       <div className={"tableRender"}>
         <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
           <AnsiCoderCard value={taskLog} />
-          {!taskId && info.status === 'approving' && <Row style={{ display: 'flex', justifyContent: 'center' }}>
+          {info.status === 'approving' && <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button onClick={() => passOrRejecy('rejected')} style={{ marginTop: 20 }} >驳回</Button>
             <Button onClick={() => passOrRejecy('approved')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >通过</Button>
           </Row>}

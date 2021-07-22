@@ -34,21 +34,26 @@ const EnvDetail = (props) => {
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
 
+  const loopRef = useRef();
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
-      deployJournal: () => <DeployJournal {...props} info={info} reload={fetchInfo} lastTaskId={info.lastTaskId} />,
+      resource: () => <Resource {...props} info={info} />,
+      deployJournal: () => <DeployJournal {...props} info={info} reload={fetchInfo} />,
       deployHistory: () => <DeployHistory {...props}/>,
       variable: () => <Variable {...props} info={info}/>,
-      setting: () => <Setting {...props}/>
+      setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
     };
     return PAGES[panel]();
   }, [ panel, info ]);
  
   useEffect(() => {
     fetchInfo();
-  }, [panel]);
-  
+    return () => {
+      clearInterval(loopRef.current);
+    };
+  }, []);
+
   // 获取Info
   const fetchInfo = async () => {
     try {
@@ -59,7 +64,13 @@ const EnvDetail = (props) => {
         throw new Error(res.message);
       }
       const data = res.result || {};
-      setInfo(data);
+      setInfo(preInfo => {
+        return data.status !== preInfo.status ? data : preInfo;
+      });
+      // 循环刷新详情数据
+      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !loopRef.current) {
+        loopRef.current = setInterval(fetchInfo, 1500);
+      }
     } catch (e) {
       notification.error({
         message: '获取失败',

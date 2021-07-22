@@ -10,54 +10,18 @@ import moment from 'moment';
 
 const Index = (props) => {
 
-  const { match: { params: { orgId, projectId, envId } } } = props;
+  const { info } = props;
 
-  const [ info, setInfo ] = useState({});
   const [ now, setNow ] = useState(moment());
 
-  const endRef = useRef();
-
   useEffect(() => {
-    fetchInfo();
     const t = setInterval(() => {
       setNow(moment());
     }, 1000);
     return () => {
-      endRef.current = true;
       clearInterval(t);
     };
   }, []);
-
-  // 获取Info
-  const fetchInfo = async ({ isLoop } = {}) => {
-    try {
-      const res = await envAPI.envsInfo({
-        orgId, projectId, envId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      const data = res.result || {};
-      if (!isLoop) {
-        setInfo(data);
-      } else {
-        setInfo(preInfo => {
-          return data.status !== preInfo.status ? data : preInfo;
-        });
-      }
-      // 循环刷新详情数据
-      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !endRef.current) {
-        setTimeout(() => {
-          fetchInfo({ isLoop: true });
-        }, 1500);
-      }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
 
   const formatTTL = ({ autoDestroyAt, ttl }) => {
     if (ttl == '0') {

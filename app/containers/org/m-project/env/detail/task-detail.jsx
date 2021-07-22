@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { connect } from 'react-redux';
 import { notification, Tabs } from "antd";
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import { END_ENV_STATUS_LIST } from "constants/types";
+import { envAPI } from 'services/base';
 
 import Info from './components/info';
 import Resource from './components/resource';
 import DeployJournal from './components/deployJournal';
-
 import styles from './styles.less';
-
-import { envAPI } from 'services/base';
 
 const subNavs = {
   deployJournal: '部署日志',
@@ -20,34 +19,49 @@ const subNavs = {
 };
 
 const TaskDetail = (props) => {
+
   const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
+
   const [ panel, setPanel ] = useState('deployJournal');
   const [ info, setInfo ] = useState({});
+
+  const loopRef = useRef();
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} lastTaskId={info.lastTaskId} />,
-      deployJournal: () => <DeployJournal {...props} lastTaskId={info.lastTaskId} />
+      resource: () => <Resource {...props} info={info} />,
+      deployJournal: () => <DeployJournal {...props} info={info} reload={fetchInfo}/>
     };
     return PAGES[panel]({
       title: subNavs[panel],
       dispatch
     });
-  }, [ panel, info.lastTaskId ]);
+  }, [ panel, info ]);
 
   useEffect(() => {
     fetchInfo();
-  }, [panel]);
+    return () => {
+      clearInterval(loopRef.current);
+    };
+  }, []);
   
   // 获取Info
   const fetchInfo = async () => {
     try {
       const res = await envAPI.envsInfo({
-        orgId, projectId, envId, status: panel
+        orgId, projectId, envId
       });
       if (res.code != 200) {
         throw new Error(res.message);
       }
-      setInfo(res.result || {});
+      const data = res.result || {};
+      setInfo(preInfo => {
+        return data.status !== preInfo.status ? data : preInfo;
+      });
+      // 循环刷新详情数据
+      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !loopRef.current) {
+        loopRef.current = setInterval(fetchInfo, 1500);
+      }
     } catch (e) {
       notification.error({
         message: '获取失败',

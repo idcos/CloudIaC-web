@@ -6,9 +6,9 @@ import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
 
 const Index = (props) => {
-  const { match, lastTaskId, routes } = props,
+  const { match, info, routes } = props,
     { params: { orgId, projectId, envId, tplId, taskId } } = match;
-  let taskIds = taskId || lastTaskId;
+  let taskIds = taskId || info.lastTaskId;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
