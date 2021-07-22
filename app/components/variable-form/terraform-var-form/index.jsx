@@ -90,17 +90,16 @@ const TerraformVarForm = () => {
       formItemProps: {
         rules: [
           { required: true, message: '请输入name' },
-          (form) => ({
+          {
             validator(_, value) {
-              const { id } = form.getFieldsValue();
-              const list = terraformVarList.filter(it => it.id !== id);
-              if (!value || list.findIndex(it => it.name === value) === -1) {
+              const sameList = terraformVarList.filter(it => it.name === value);
+              if (!value || sameList.length === 0) {
                 return Promise.resolve();
               } else {
                 return Promise.reject(new Error('name值不允许重复!'));
               }
             }
-          })
+          }
         ]
       }
     },
@@ -199,12 +198,11 @@ const TerraformVarForm = () => {
 
   const onChangeEditableTable = (list) => {
     list = list.map(it => {
-
-      // 如来源不同 则对比数据
-      let sameNameData = defalutTerraformVarListRef.current.find(v => v.name === it.name);
-      if (!sameNameData) { // 全新数据,不处理
+      if (it.isNew) { // 全新数据,不处理
         return it;
       }
+      // 如来源不同 则对比数据
+      const sameNameData = defalutTerraformVarListRef.current.find(v => v.name === it.name) || {};
       if (sameNameData.scope === defaultScope && it.scope === defaultScope && it.id) { // 旧的同域数据,不处理
         return it;
       }
@@ -254,7 +252,7 @@ const TerraformVarForm = () => {
     >
       <EditableTable
         getActionRef={ref => (terraformVarRef.current = ref.current)}
-        defaultData={{ scope: defaultScope, sensitive: false, type: 'terraform' }}
+        defaultData={{ scope: defaultScope, sensitive: false, type: 'terraform', isNew: true }}
         value={terraformVarList}
         fields={fields}
         onDeleteRow={onDeleteRow}
