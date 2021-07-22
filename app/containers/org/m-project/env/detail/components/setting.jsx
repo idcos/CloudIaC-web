@@ -31,7 +31,7 @@ const Index = (props) => {
     try {
       const values = await form.validateFields();
       if (values.triggers) {
-        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
+        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : false;
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
       if (values.type === 'infinite') {

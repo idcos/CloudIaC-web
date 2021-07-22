@@ -170,7 +170,7 @@ const Index = ({ match = {} }) => {
         });
       }
       if (values.triggers) {
-        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : undefined;
+        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : false;
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
       setSpinning(true);
