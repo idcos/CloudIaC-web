@@ -24,6 +24,7 @@ import "./ansi";
 import { Controlled as ControlledEditor } from "react-codemirror2";
 import styled from "styled-components";
 import get from "lodash/get";
+import noop from 'lodash/noop';
 
 const Container = styled.div`
   width: 100%;
@@ -40,7 +41,7 @@ const FormCoder = ({
   language, // maybe used in the future
   value,
   style,
-  onChange,
+  onChange = noop,
   selfClassName,
   hight,
   options,
