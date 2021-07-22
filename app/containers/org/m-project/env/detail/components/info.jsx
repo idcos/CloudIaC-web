@@ -58,6 +58,13 @@ const Index = (props) => {
       });
     }
   };
+
+  const formatTTL = ({ autoDestroyAt, ttl }) => {
+    if (ttl == '0') {
+      return '不限';
+    }
+    return timeUtils.diff(autoDestroyAt, now);
+  };
   
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
     <Descriptions 
@@ -67,7 +74,7 @@ const Index = (props) => {
       <Descriptions.Item label='云模版'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
-      <Descriptions.Item label='存活时间'>{timeUtils.diff(info.autoDestroyAt, now)}</Descriptions.Item>
+      <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>
