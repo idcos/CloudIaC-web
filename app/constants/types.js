@@ -28,7 +28,7 @@ export const AUTO_DESTROY = [
   { name: '三天', code: '3d' },
   { name: '一周', code: '1w' },
   { name: '半个月', code: '15d' },
-  { name: '一个月', code: '1m' }
+  { name: '一个月', code: '30d' }
 ];
 
 export const destoryType = [{
