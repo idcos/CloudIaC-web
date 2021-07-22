@@ -1,5 +1,3 @@
-VCS
-
 ## 什么是VCS
 
 VCS是版本控制系统的简称（version control system）

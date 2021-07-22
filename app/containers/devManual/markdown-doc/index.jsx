@@ -18,7 +18,7 @@ const getParent = (data, grade) => {
 
 export default (props) => {
 
-  const { mdText, scrollDomSelecter } = props;
+  const { mdText, title } = props;
 
   const [ anchorList, setAnchorList ] = useState([]);
   const [ anchorBaseData, setAnchorBaseData ] = useState({});
@@ -114,11 +114,10 @@ export default (props) => {
   return (
     <div className={styles.markdownDoc}>
       <div className='md-content'>
-        {/* <h1>开发者手册</h1> */}
         <div className='md-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
       </div>
       <div className='doc-anchor-wrapper'>
-        <div>本篇目录</div>
+        <div className='title'>本篇目录</div>
         <Anchor 
           className='doc-anchor' 
           onClick={e => e.preventDefault()}

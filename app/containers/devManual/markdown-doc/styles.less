@@ -8,9 +8,18 @@
 
   :global {
     .doc-anchor-wrapper {
-      width: 260px;
+      flex: 0 0 260px;
       height: 100%;
       margin-left: 8px;
+      padding-top: 31px;
+
+      .title {
+        color: @gray-9;
+        line-height: 26px;
+        font-size: 18px;
+        margin-bottom: 22px;
+        font-weight: bold;
+      }
 
       .doc-anchor, .ant-anchor {
         height: 100%;
@@ -20,7 +29,7 @@
     .md-content {
       height: 100%;
       overflow-y: auto;
-      padding: 16px 16px 350px;
+      padding: 54px 20px 350px 32px;
       flex: 1;
     }
   }
