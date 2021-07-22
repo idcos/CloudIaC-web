@@ -169,10 +169,8 @@ const Index = ({ match = {} }) => {
           description: 'playbook存在时管理密钥必填'
         });
       }
-      if (values.triggers) {
-        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : false;
-        values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
-      }
+      values.triggers = (values.triggers || []).filter(d => d !== 'autoApproval'); 
+      values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
       setSpinning(true);
       if (!!values.destroyAt) {
         values.destroyAt = moment(values.destroyAt);
