@@ -205,6 +205,7 @@ const EnvVarForm = () => {
   return (
     <Card
       title='环境变量'
+      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}
     >
       <EditableTable
         getActionRef={ref => (envVarRef.current = ref.current)}

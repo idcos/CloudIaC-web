@@ -55,11 +55,12 @@ const CommonLayout = ({
   extraHeader,
   children,
   contentStyle = {},
-  footer
+  footer,
+  style
 }) => {
  
   return (
-    <Container>
+    <Container style={style}>
       {extraHeader ? (<Header>{extraHeader}</Header>) : null}
       <Content style={contentStyle} withFooter={footer}>{children}</Content>
       {footer ? <Footer>{footer}</Footer> : null}

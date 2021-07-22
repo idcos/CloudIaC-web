@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Divider, notification, Space, Table } from 'antd';
 import keysAPI from 'services/keys';
 import OpModal from './components/op-modal';
 

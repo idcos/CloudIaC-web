@@ -33,8 +33,8 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
     const defaultValues = ctData[type];
     if (defaultValues && projectList.length) {
       const { projectId = [] } = defaultValues;
-      setIndeterminate(!!projectId.length && projectId.length < projectList.length);
-      setCheckAll(projectId.length === projectList.length);
+      setIndeterminate(!!projectId && !!projectId.length && projectId.length < projectList.length);
+      !!projectId && !!projectId.length && setCheckAll(projectId.length === projectList.length);
     }
   }, [ ctData, type, projectList ]);
 
@@ -110,57 +110,50 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
     }
   };
 
-  // 无项目时返回
-  if (projectList.length === 0) {
-    return (
-      <div style={{ margin: '120px auto' }}>
-        <Empty 
-          image={Empty.PRESENTED_IMAGE_SIMPLE} 
-          description={<>暂无项目，<a onClick={togglePjtModalVsible}>创建项目</a></>} 
-        />
-        {
-          pjtModalVsible && <OpModal
-            visible={pjtModalVsible}
-            orgId={orgId}
-            opt='add'
-            toggleVisible={togglePjtModalVsible}
-            operation={pjtOperation}
-          />
-        }
-      </div>
-    );
-  }
-
   return <div className='form-wrapper' style={{ width: 720 }}>
     <Form
       form={form}
       {...FL}
       onFinish={onFinish}
     >
-      <Row>
-        <Checkbox
-          indeterminate={indeterminate}
-          onChange={onCheckAllChange}
-          checked={checkAll}
-        >
-          选择全部项目
-        </Checkbox>
-      </Row>
-      <Divider style={{ margin: '8px 0' }} />
-      <Form.Item 
-        name='projectId'
-        rules={
-          [
-            { required: true, message: '请选择项目' }
-          ]
-        }
-      >
-        <Checkbox.Group onChange={onChange}>
-          <Space direction='vertical' size={6}>
-            {projectList.map(it => <Checkbox value={it.id}>{it.name}</Checkbox>)}
-          </Space>
-        </Checkbox.Group>
-      </Form.Item>
+      <div>{
+        projectList.length === 0 ? <div>
+          <Empty 
+            image={Empty.PRESENTED_IMAGE_SIMPLE} 
+            description={<>暂无项目，<a onClick={togglePjtModalVsible}>创建项目</a></>}
+          />
+          {
+            pjtModalVsible && <OpModal
+              visible={pjtModalVsible}
+              orgId={orgId}
+              opt='add'
+              toggleVisible={togglePjtModalVsible}
+              operation={pjtOperation}
+            />
+          }
+        </div> : <div>
+          <Row>
+            <Checkbox
+              indeterminate={indeterminate}
+              onChange={onCheckAllChange}
+              checked={checkAll}
+            >
+              选择全部项目
+            </Checkbox>
+          </Row>
+          <Divider style={{ margin: '8px 0' }} />
+          <Form.Item 
+            name='projectId'
+          >
+            <Checkbox.Group onChange={onChange}>
+              <Space direction='vertical' size={6}>
+                {projectList.map(it => <Checkbox value={it.id}>{it.name}</Checkbox>)}
+              </Space>
+            </Checkbox.Group>
+          </Form.Item>
+        </div>
+      }</div>
+      
       <div className='btn-wrapper'>
         <Space size={24}>
           {

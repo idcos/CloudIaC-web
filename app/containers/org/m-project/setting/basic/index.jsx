@@ -96,7 +96,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
   return (
     <Spin spinning={spinning}>
       <div className={styles.basic}>
-        <Card title={'基础信息'}>
+        <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'基础信息'}>
           <Form
             form={form}
             {...FL}
@@ -126,15 +126,15 @@ const Basic = ({ orgId, projectId, dispatch }) => {
               <Input.TextArea placeholder='请输入描述' />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-              <Button type='primary' htmlType={'submit'} >完成</Button>
+              <Button type='primary' htmlType={'submit'} >保存</Button>
             </Form.Item>
           </Form>
         </Card>
-        <Card title={'项目统计'} style={{ marginTop: 24 }}>
-          <Row style={{ display: 'flex', justifyContent: 'center' }}>
+        <Card title={'项目统计'} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} style={{ marginTop: 24 }}>
+          <Row style={{ display: 'flex', justifyContent: 'center', padding: '0px 72px' }}>
             {CHART.current.map(chart => <Col span={18}>
               <div className='chartPanel' style={{ position: 'relative' }}>
-                <h2 style={{ position: 'relative', top: 120, left: 18 }}>云模板数量
+                <h2 style={{ position: 'absolute', top: 65, left: 18 }}>云模板数量
                   <h1 style={{ display: 'flex' }}>{projectInfo.tplCount || 0}</h1>
                 </h2>
                 <div ref={chart.domRef} className='chartEle'></div>

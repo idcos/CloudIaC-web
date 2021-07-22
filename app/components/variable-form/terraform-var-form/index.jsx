@@ -245,6 +245,7 @@ const TerraformVarForm = () => {
   return (
     <Card
       title='Terraform变量'
+      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}
       extra={
         canImportTerraformVar ? (
           <Button type='primary' onClick={() => setImportModalVisible(true)}>导入</Button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, notification, Table } from 'antd';
+import { Button, notification, Table } from 'antd';
 import notificationsAPI from 'services/notifications';
 
 import { ORG_USER } from 'constants/types';

@@ -30,38 +30,36 @@ const Orgs = ({ orgs, dispatch }) => {
     history.push(`/org/${orgId}/m-org-ct`);
   };
 
-  return <Layout >
-    <div className='container-inner-width'>
-      <div className={styles.orgsList}>
-        <div className='header'>
-          <div className='title'>选择您的组织</div>
-          <div className='des'>您可以选择以下任意一个组织</div>
-        </div>
-        <div className='list'>
-          <List
-            itemLayout='horizontal'
-            dataSource={orgs.list}
-            split={false}
-            renderItem={(item, index) => (
-              <>
-                {index !== 0 ? <div className='divider'></div> : null}
-                <List.Item 
-                  onClick={() => {
-                    changeCurOrg(item.id);
-                  }}
-                >
-                  <List.Item.Meta
-                    title={item.name}
-                    description={item.description || '-'}
-                  />
-                  <div>
-                    <RightOutlined />
-                  </div>
-                </List.Item>
-              </>
-            )}
-          />
-        </div>
+  return <Layout style={{ backgroundColor: '#F5F8F8', paddingRight: 0 }} contentStyle={{ backgroundColor: '#F5F8F8' }}>
+    <div className={styles.orgsList}>
+      <div className='header'>
+        <div className='title'>选择您的组织</div>
+        <div className='des'>您可以选择以下任意一个组织</div>
+      </div>
+      <div className='list'>
+        <List
+          itemLayout='horizontal'
+          dataSource={orgs.list}
+          split={false}
+          renderItem={(item, index) => (
+            <>
+              {index !== 0 ? <div className='divider'></div> : null}
+              <List.Item 
+                onClick={() => {
+                  changeCurOrg(item.id);
+                }}
+              >
+                <List.Item.Meta
+                  title={item.name}
+                  description={item.description || '-'}
+                />
+                <div>
+                  <RightOutlined />
+                </div>
+              </List.Item>
+            </>
+          )}
+        />
       </div>
     </div>
   </Layout>;

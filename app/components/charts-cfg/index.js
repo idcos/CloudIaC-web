@@ -31,7 +31,8 @@ export const chartOptions = {
           ],
           label: { 
             show: true, 
-            formatter: ' {b}\n{d}%'
+            formatter: ' {b}\n{d}%',
+            overflow: 'break'
           },
           labelLine: {
             smooth: true

@@ -57,6 +57,7 @@ const OtherVarForm = () => {
   return (
     <Card
       title='其它变量'
+      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}
     >
       <Form
         form={otherVarForm}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Card, Form, Button, Input } from 'antd';
+import { Form, Button, Input } from 'antd';
 
 const layout = {
   labelCol: {

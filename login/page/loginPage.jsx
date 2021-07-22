@@ -101,7 +101,7 @@ export default () => {
           </Form.Item>
 
           <Form.Item {...tailLayout} style={{ paddingTop: 8 }}>
-            <Button block={true} type='primary' htmlType='submit'>
+            <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
               登录
             </Button>
           </Form.Item>

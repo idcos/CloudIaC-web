@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Alert, Button, Card, Divider, notification, Popconfirm, Space, Table } from 'antd';
+import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
 
 import tokensAPI from 'services/tokens';
