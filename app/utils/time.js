@@ -2,7 +2,7 @@ import moment from 'moment';
 
 export const timeUtils = {
   format: (timeStr, format = 'YYYY-MM-DD HH:mm:ss') => timeStr && moment(timeStr).format(format),
-  diff: (timeStr, diffValue, defaultValue = '已到期') => {
+  diff: (timeStr, diffValue, defaultValue = '') => {
     if (!timeStr) {
       return defaultValue; 
     }

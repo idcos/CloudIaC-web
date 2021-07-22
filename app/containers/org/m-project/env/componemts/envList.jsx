@@ -66,7 +66,7 @@ const Index = (props) => {
 
   const formatTTL = ({ autoDestroyAt, ttl }) => {
     if (autoDestroyAt) {
-      return timeUtils.diff(autoDestroyAt, now);
+      return timeUtils.diff(autoDestroyAt, now, '-');
     }
     switch (ttl) {
       case '':
