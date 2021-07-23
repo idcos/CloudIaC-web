@@ -130,7 +130,7 @@ export default function createRoutes() {
     },
     {
       path: '/devManual',
-      name: '开发者手册',
+      name: '帮助文档',
       component: loadable(() => import('containers/devManual'), asyncLoadFallback),
       exact: true
     },

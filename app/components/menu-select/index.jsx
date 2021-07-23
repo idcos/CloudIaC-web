@@ -15,7 +15,8 @@ export default (props) => {
     valuePropName = 'value',
     value = undefined,
     menuSelectfooter,
-    onChange = noop
+    onChange = noop,
+    setDividerVisible = noop
   } = props || {};
 
   const [ optionVisible, setOptionVisible ] = useState(false);
@@ -58,7 +59,10 @@ export default (props) => {
         trigger={['click']} 
         visible={optionVisible} 
         overlayStyle={{ width: '100%' }}
-        onVisibleChange={setOptionVisible}
+        onVisibleChange={(e) => {
+          setOptionVisible(e); 
+          setDividerVisible(e); 
+        }}
         getPopupContainer={triggerNode => triggerNode.parentNode}
       >
         <div className='selection' style={selectionStyle}>

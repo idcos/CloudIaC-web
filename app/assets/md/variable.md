@@ -10,7 +10,7 @@ CloudIaC中的变量可以组织、云模板、项目、环境四个层级中进
 
 在整个继承链条上同名的变量低层级的值覆盖高层级的值；
 
-<img src="/assets/img/iac-variable.png" width="654" id="udd64e202" class="ne-image">
+![image.png](/assets/img/iac-variable.png)
 
 当进行环境部署操作时，各层级继承的变量会全部列出，您可以对变量进行重新赋值。
 

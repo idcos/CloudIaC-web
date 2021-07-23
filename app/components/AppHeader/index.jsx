@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Select, Menu, Dropdown, Tooltip, Button, Badge, notification, Divider } from 'antd';
-import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined } from '@ant-design/icons';
+import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined, SettingFilled, ToolFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 
 import history from 'utils/history';
+import { QuitIcon } from 'components/iconfont';
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
 import { pjtAPI } from 'services/base';
@@ -143,14 +144,14 @@ const AppHeader = (props) => {
                     <div style={{ padding: '10px 19px 0px 19px' }}>
                       <Divider style={{ margin: '0' }} />
                     </div>
-                    <div className='create'>
+                    {/* <div className='create'>
                       <div className='btn' onClick={togglePjtModalVsible}>
                         <span className='icon'>
                           <PlusSquareOutlined/>
                         </span>
                         <span>创建新的项目</span>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 )}
               />
@@ -173,7 +174,7 @@ const AppHeader = (props) => {
             overlayStyle={{ maxWidth: 'none' }}
             title={
               <div className='dev-manual-tooltip-content'>
-                IaC开发者文档，快速了解IaC玩法 
+                IaC帮助文档，快速了解IaC玩法 
                 <Button type='primary' onClick={() => onCloseDevManualTooltip()}>知道了</Button> 
               </div>
             }
@@ -192,13 +193,13 @@ const AppHeader = (props) => {
                 </div>
                 <div className='body'>
                   <div className='link-item' onClick={() => history.push('/user/setting')}>
-                    <span className='icon'></span>
+                    <span className='icon'><SettingFilled /></span>
                     <span className='text'>用户设置</span>
                   </div>
                   {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
-                        <span className='icon'></span>
+                        <span className='icon'><ToolFilled /></span>
                         <span className='text'>系统设置</span>
                       </div>
                     ) : null
@@ -206,7 +207,7 @@ const AppHeader = (props) => {
                 </div>
                 <div className='footer'>
                   <div className='link-item' onClick={() => logout()}>
-                    <span className='icon'></span>
+                    <span className='icon'><QuitIcon/></span>
                     <span className='text'>退出</span>
                   </div>
                 </div>

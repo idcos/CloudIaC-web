@@ -16,6 +16,8 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const orgList = (orgs || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
+  const [ dividerVisible, setDividerVisible ] = useState(false);
+  
 
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
@@ -87,6 +89,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
         <MenuSelect
           options={orgList}
           onChange={changeCurOrg}
+          setDividerVisible={setDividerVisible}
           selectionStyle={{ padding: '13px 20px 13px 24px' }}
           lablePropName='name'
           valuePropName='id'            
@@ -100,9 +103,9 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
             </div>
           )}
         />
-        <div style={{ padding: '0 19px' }}>
+        {!dividerVisible && <div style={{ padding: '0 19px' }}>
           <Divider style={{ margin: '0' }} />
-        </div>
+        </div>}
         <div className='menu-wrapper'>
           {
             getMenus(userInfo || {}).map(subMenu => {

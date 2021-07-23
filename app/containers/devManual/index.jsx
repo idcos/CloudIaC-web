@@ -36,7 +36,7 @@ export default () => {
   return (
     <Layout
       contentStyle={{ paddingTop: 0 }}
-      extraHeader={<PageHeader headerStyle={{ height: 90 }} showIcon={'user'} className='container-inner-width' title='开发者手册' />}
+      extraHeader={<PageHeader headerStyle={{ height: 90 }} showIcon={'user'} className='container-inner-width' title='帮助文档' />}
     >
       <div className={styles.markdownDocWrapper}>
         <div className='container-inner-width help-docs-wrapper'>
