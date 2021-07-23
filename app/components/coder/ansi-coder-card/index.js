@@ -76,8 +76,9 @@ export default ({ value }) => {
     }
   };
   const setFullScreenClose = (e) => {
-    console.log(e, 'eeeeeee');
-    setFullScreen(!fullScreen);
+    if (e.keyCode === 27) {
+      setFullScreen(false);
+    }
   };
   return (
     <Card
@@ -103,7 +104,8 @@ export default ({ value }) => {
             <VerticalAlignBottomOutlined />
             回底部
           </Button>
-          <Button onClick={(e) => setFullScreenClose(e)}>
+          <Button onClick={() => setFullScreen(!fullScreen)}onKeyDown={(e) => setFullScreenClose(e)}>
+            
             {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
             全屏显示
           </Button>
