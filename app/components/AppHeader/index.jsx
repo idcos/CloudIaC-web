@@ -7,7 +7,7 @@ import history from 'utils/history';
 import { QuitIcon } from 'components/iconfont';
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
-import { pjtAPI } from 'services/base';
+import { pjtAPI, envAPI } from 'services/base';
 import OpModal from 'components/project-modal';
 
 import styles from './styles.less';
@@ -16,14 +16,16 @@ const { Option } = Select;
 const KEY = 'global';
 
 const AppHeader = (props) => {
-
   const { theme, locationPathName, curOrg, projects, curProject, dispatch, userInfo } = props;
+  const { pathname } = window.location;
   const projectList = (projects || {}).list || [];
   const projectId = (curProject || {}).id;
+  const envIdbyPath = pathname.split('/').filter(i => i)[6];
   const orgId = (curOrg || {}).id;
 
   const preStateRef = useRef({});
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
+  const [ curEnv, setCurEnv ] = useState({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
   useEffect(() => {
@@ -35,6 +37,12 @@ const AppHeader = (props) => {
     if (orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId) {
       return; 
     }
+    if (!envIdbyPath) {
+      return; 
+    }
+    if (envIdbyPath) {
+      getEnv();
+    }
     preStateRef.current = {
       orgId, projectId
     };
@@ -45,7 +53,21 @@ const AppHeader = (props) => {
         projectId
       }
     });
-  }, [ orgId, projectId ]);
+  }, [ orgId, projectId, envIdbyPath ]);
+
+  const getEnv = async() => {
+    const res = await envAPI.envsInfo({
+      orgId, projectId, envId: envIdbyPath
+    });
+    if (res.code === 200) {
+      dispatch({
+        type: 'global/set-curEnv',
+        payload: {
+          state: res.result || {}
+        }
+      });
+    }
+  };
 
   const changeProject = (pjtId) => {
     dispatch({
@@ -193,20 +215,24 @@ const AppHeader = (props) => {
                 </div>
                 <div className='body'>
                   <div className='link-item' onClick={() => history.push('/user/setting')}>
-                    <span className='icon'><SettingFilled /></span>
-                    <span className='text'>用户设置</span>
+                    <div className='line-border-top'>
+                      <span className='icon'><SettingFilled /></span>
+                      <span className='text'>用户设置</span>
+                    </div>
                   </div>
                   {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
-                        <span className='icon'><ToolFilled /></span>
-                        <span className='text'>系统设置</span>
+                        <div className='line-border-bottom'>
+                          <span className='icon'><ToolFilled /></span>
+                          <span className='text'>系统设置</span>
+                        </div>
                       </div>
                     ) : null
                   }
                 </div>
                 <div className='footer'>
-                  <div className='link-item' style={{ padding: '5px 20px' }} onClick={() => logout()}>
+                  <div className='link-item' style={{ padding: '9px 20px' }} onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>退出</span>
                   </div>

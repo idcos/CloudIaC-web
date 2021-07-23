@@ -16,28 +16,28 @@ const KEY = 'global';
 const isRouteParam = (routeParams, pathSnippet) =>
   Object.keys(routeParams).find(it => routeParams[it] === pathSnippet);
 
-const breadcrumbNameMap = {
-  'org': { text: '组织' },
-  'project': { text: '项目', disabled: true },
-  'm-org-project': { text: '组织设置：项目' },
-  'm-org-ct': { text: '组织设置：云模板' },
-  'm-org-variable': { text: '组织设置：变量' },
-  'm-org-setting': { text: '组织设置：设定' },
-  'm-project-create': { text: '项目信息：创建项目' },
-  'm-project-env': { text: '项目信息：环境' },
-  'm-project-ct': { text: '项目信息：云模板' },
-  'm-project-variable': { text: '项目信息：变量' },
-  'm-project-setting': { text: '项目信息：设置' },
-  'createCT': { text: '新建云模板' },
-  'updateCT': { text: '编辑云模板' },
-  'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
-  'task': { text: '部署历史' },
-  'detail': { text: '环境详情', indexDiff: 2 }
-};
 
 
-const BreadcrumbWrapper = ({ location, params }) => {
-  
+
+const BreadcrumbWrapper = ({ location, params, curEnv, curOrg, curProject }) => {
+  const breadcrumbNameMap = {
+    'org': { text: '组织', name: (curOrg || {}).name || '' },
+    'project': { text: '项目', disabled: true, name: (curProject || {}).name || '' },
+    'm-org-project': { text: '组织设置：项目' },
+    'm-org-ct': { text: '组织设置：云模板' },
+    'm-org-variable': { text: '组织设置：变量' },
+    'm-org-setting': { text: '组织设置：设定' },
+    'm-project-create': { text: '项目信息：创建项目' },
+    'm-project-env': { text: '项目信息：环境' },
+    'm-project-ct': { text: '项目信息：云模板' },
+    'm-project-variable': { text: '项目信息：变量' },
+    'm-project-setting': { text: '项目信息：设置' },
+    'createCT': { text: '新建云模板' },
+    'updateCT': { text: '编辑云模板' },
+    'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
+    'task': { text: '部署历史' },
+    'detail': { text: '环境详情', indexDiff: 2, name: (curEnv || {}).name || '' }
+  };
   const pathSnippets = location.pathname.split('/').filter(it => it);
 
   const breadcrumbContent = useMemo(() => {
@@ -56,7 +56,7 @@ const BreadcrumbWrapper = ({ location, params }) => {
             to={index == 0 ? '/' : url}
             disabled={isLastOne || disabled}
           >
-            {getText ? getText(params) : text}
+            <span style={{ fontSize: 16, fontWeight: 900 }}>{link.name || ''} </span> {getText ? getText(params) : text} 
           </Link>
         </Breadcrumb.Item>
       );
@@ -74,6 +74,7 @@ export default connect(
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
     curProject: state[KEY].get('curProject'),
-    userInfo: state[KEY].get('userInfo').toJS()
+    userInfo: state[KEY].get('userInfo').toJS(),
+    curEnv: state[KEY].get('curEnv')
   })
 )(BreadcrumbWrapper);

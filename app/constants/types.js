@@ -32,7 +32,7 @@ export const AUTO_DESTROY = [
 ];
 
 export const destoryType = [{
-  name: '无限', value: 'infinite'
+  name: '不限制', value: 'infinite'
 }, {
   name: '小时/天', value: 'timequantum'
 }, {
@@ -44,6 +44,13 @@ export const ENV_STATUS = {
   'inactive': '不活跃',
   'running': '部署中',
   'approving': '待审批'
+};
+export const ENV_STATUS_COLOR = {
+  'active': 'success', 
+  'failed': 'error', 
+  'inactive': 'gold',
+  'running': 'cyan',
+  'approving': 'processing'
 };
 export const SCOPE_ENUM = {
   org: '组织',

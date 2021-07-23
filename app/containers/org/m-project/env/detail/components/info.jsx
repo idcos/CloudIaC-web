@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Card, Descriptions } from 'antd';
+import { Card, Descriptions, Tag } from 'antd';
 
-import { ENV_STATUS, AUTO_DESTROY } from 'constants/types';
+import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
 import moment from 'moment';
@@ -32,7 +32,7 @@ const Index = (props) => {
         return '-';
       case 0:
       case '0':
-        return '无限';
+        return '不限制';
       default:
         const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
         return it.name;
@@ -43,7 +43,7 @@ const Index = (props) => {
     <Descriptions 
       labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
     >
-      <Descriptions.Item label='状态'>{ENV_STATUS[info.status] || '-'}</Descriptions.Item>
+      <Descriptions.Item label='状态'>{ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}</Descriptions.Item>
       <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>

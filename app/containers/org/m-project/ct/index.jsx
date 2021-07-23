@@ -39,7 +39,8 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'repoAddr',
-      title: '仓库'
+      title: '仓库',
+      render: (text) => <a href={text} target='_blank'>{text}</a>
     },
     {
       dataIndex: 'creator',
@@ -52,7 +53,7 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       title: '操作',
-      width: 180,
+      width: 60,
       render: (record) => {
         return PROJECT_OPERATOR ? (
           <span className='inlineOp'>

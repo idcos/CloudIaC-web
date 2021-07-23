@@ -54,26 +54,36 @@
     }
 
     .body {
-      margin: 5px 20px;
-      border-top: 1px solid @gray-4;
-      border-bottom: 1px solid @gray-4;
+      // margin: 5px 20px;
+      // border-top: 1px solid @gray-4;
+      // border-bottom: 1px solid @gray-4;
     }
 
     .footer {
-      padding: 5px 0;
+      // padding: 5px 0;
     }
 
     .link-item {
       line-height: 22px;
       cursor: pointer;
-      padding: 5px 0px;
-
+      // padding: 5px 0px;
+          .line-border-top {
+            border-top: 1px solid @gray-4;
+            border-bottom: 1px solid @gray-4;
+            padding: 5px 0px;
+            margin: 0px 18px;
+          }
+          .line-border-bottom {
+            border-bottom: 1px solid @gray-4;
+            padding: 5px 0px;
+            margin: 0px 18px;
+          }
       &:hover {
         background-color: @backGroundIac;
       }
 
       .icon {
-        // color: @gray-10;
+        color: #000;
       }
       .text {
         color: @gray-8;

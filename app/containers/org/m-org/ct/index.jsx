@@ -36,7 +36,8 @@ const CTList = ({ match = {} }) => {
     },
     {
       dataIndex: 'repoAddr',
-      title: '仓库'
+      title: '仓库',
+      render: (text) => <a href={text} target='_blank'>{text}</a>
     },
     {
       dataIndex: 'creator',

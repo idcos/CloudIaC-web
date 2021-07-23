@@ -1,9 +1,9 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, notification, Divider } from 'antd';
+import { Card, notification, Divider, Tag } from 'antd';
 import moment from 'moment';
 
 import history from 'utils/history';
-import { ENV_STATUS, AUTO_DESTROY } from 'constants/types';
+import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { timeUtils } from "utils/time";
 import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
@@ -37,7 +37,6 @@ const Index = (props) => {
   useEffect(() => {
     fetchList();
   }, [query]);
-
   const fetchList = async () => {
     try {
       setLoading(true);
@@ -75,7 +74,7 @@ const Index = (props) => {
         return '-';
       case 0:
       case '0':
-        return '无限';
+        return '不限制';
       default:
         const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
         return it.name;
@@ -100,7 +99,7 @@ const Index = (props) => {
             <div><Divider type='vertical' />云模板：{d.templateName || '-'}</div>
             <div><Divider type='vertical' />资源数：{d.resourceCount || '-'}</div>
             <div><Divider type='vertical' />创建人：{d.creator || '-'}</div>
-            <div><Divider type='vertical' />状态：{ENV_STATUS[d.status] || '-'}</div>
+            <div style={{ display: 'flex' }}><Divider type='vertical' />状态：{ENV_STATUS[d.status] && <Tag color={ENV_STATUS_COLOR[d.status] || 'default'}>{ENV_STATUS[d.status]}</Tag> || '-'}</div>
           </div>
         </Card>
       )

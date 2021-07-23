@@ -75,7 +75,10 @@ export default ({ value }) => {
       console.log('滚动定位失败');
     }
   };
-
+  const setFullScreenClose = (e) => {
+    console.log(e, 'eeeeeee');
+    setFullScreen(!fullScreen);
+  };
   return (
     <Card
       className={`card-body-no-paading ${fullScreen ? "full-card" : ""} ${styles.ansiCodeCard}`}
@@ -100,7 +103,7 @@ export default ({ value }) => {
             <VerticalAlignBottomOutlined />
             回底部
           </Button>
-          <Button onClick={() => setFullScreen(!fullScreen)}>
+          <Button onClick={(e) => setFullScreenClose(e)}>
             {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
             全屏显示
           </Button>
