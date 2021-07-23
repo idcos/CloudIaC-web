@@ -5,68 +5,70 @@ import { notification, Tabs } from "antd";
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import { END_ENV_STATUS_LIST } from "constants/types";
-import { envAPI } from 'services/base';
+import { END_TASK_STATUS_LIST } from "constants/types";
+import taskAPI from 'services/task';
 
-import Info from './components/info';
 import Resource from './components/resource';
 import DeployJournal from './components/deployJournal';
+import Variable from './components/variable';
+import TaskInfo from './components/taskInfo';
 import styles from './styles.less';
 
 const subNavs = {
   deployJournal: '部署日志',
-  resource: '资源'
+  resource: '资源',
+  variable: '变量'
 };
 
 const TaskDetail = (props) => {
 
-  const { dispatch, match: { params: { orgId, projectId, envId } } } = props;
+  const { dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
 
   const [ panel, setPanel ] = useState('deployJournal');
-  const [ info, setInfo ] = useState({});
+  const [ taskInfo, setTaskInfo ] = useState({});
 
   const loopRef = useRef();
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} info={info} />,
-      deployJournal: () => <DeployJournal {...props} info={info} reload={fetchInfo}/>
+      resource: () => <Resource {...props} taskId={taskId} taskInfo={taskInfo} />,
+      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchTaskInfo}/>,
+      variable: () => <Variable taskInfo={taskInfo}/>
     };
     return PAGES[panel]({
       title: subNavs[panel],
       dispatch
     });
-  }, [ panel, info ]);
+  }, [ panel, taskInfo ]);
 
   useEffect(() => {
-    fetchInfo();
     return () => {
       clearInterval(loopRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (taskId && !loopRef.current) {
+      fetchTaskInfo();
+      loopRef.current = setInterval(() => {
+        fetchTaskInfo();
+      }, 1500);
+    }
+  }, [taskId]);
   
   // 获取Info
-  const fetchInfo = async (opType = '') => {
+  const fetchTaskInfo = async () => {
     try {
-      const res = await envAPI.envsInfo({
-        orgId, projectId, envId
+      const res = await taskAPI.detail({
+        orgId, projectId, taskId
       });
       if (res.code != 200) {
         throw new Error(res.message);
       }
       const data = res.result || {};
-      if (opType === 'loop') {
-        setInfo(preInfo => {
-          return data.status !== preInfo.status ? data : preInfo;
-        });
-      } else {
-        setInfo(data);
-      }
-      // 循环刷新详情数据
-      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !loopRef.current) {
-        loopRef.current = setInterval(() => {
-          fetchInfo('loop');
-        }, 1500);
+      setTaskInfo(data);
+      if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+        clearInterval(loopRef.current);
       }
     } catch (e) {
       notification.error({
@@ -79,13 +81,13 @@ const TaskDetail = (props) => {
   return <Layout
     extraHeader={
       <PageHeader
-        title={info.name || ''}
+        // title={info.name || ''}
         breadcrumb={true}
       />
     }
   >
     <div className='idcos-card'>
-      <Info {...props} info={info} />
+      <TaskInfo taskInfo={taskInfo} />
     </div>
     <div style={{ marginTop: 20 }} className='idcos-card'>
       <div className={styles.depolyDetail}>
@@ -102,7 +104,6 @@ const TaskDetail = (props) => {
           }}
           activeKey={panel}
           onChange={(k) => {
-            let stateObj = { tabKey: k };
             setPanel(k); 
             window.history.replaceState(null, null, `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
           }}

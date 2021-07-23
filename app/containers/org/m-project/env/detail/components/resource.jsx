@@ -6,9 +6,8 @@ import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
 
 const Index = (props) => {
-  const { match, info, routes } = props,
-    { params: { orgId, projectId, envId, tplId, taskId } } = match;
-  let taskIds = taskId || info.lastTaskId;
+  const { match, taskId } = props,
+    { params: { orgId, projectId, envId, tplId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -44,10 +43,10 @@ const Index = (props) => {
   }, [search]); 
 
   useEffect(() => {
-    if (taskIds) {
+    if (taskId) {
       fetchOutput();
     }
-  }, [taskIds]);
+  }, [taskId]);
 
   const fetchList = async () => {
     try {
@@ -73,7 +72,7 @@ const Index = (props) => {
   const fetchOutput = async () => {
     try {
       setLoading(true);
-      const res = await envAPI.envsOutput({ orgId, projectId, taskId: taskIds });
+      const res = await envAPI.envsOutput({ orgId, projectId, taskId });
       if (res.code != 200) {
         throw new Error(res.message);
       }

@@ -7,8 +7,9 @@ import { ExclamationCircleFilled } from '@ant-design/icons';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import { END_ENV_STATUS_LIST } from "constants/types";
+import { END_TASK_STATUS_LIST } from "constants/types";
 import { envAPI } from 'services/base';
+import taskAPI from 'services/task';
 import getPermission from "utils/permission";
 
 import Info from './components/info';
@@ -37,19 +38,21 @@ const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
+  const [ taskId, setTaskId ] = useState();
+  const [ taskInfo, setTaskInfo ] = useState({});
 
   const loopRef = useRef();
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} info={info} />,
-      deployJournal: () => <DeployJournal {...props} info={info} reload={fetchInfo} />,
+      resource: () => <Resource {...props} taskId={taskId} taskInfo={taskInfo} />,
+      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
       deployHistory: () => <DeployHistory {...props}/>,
-      variable: () => <Variable {...props} info={info}/>,
+      variable: () => <Variable taskInfo={taskInfo}/>,
       setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
     };
     return PAGES[panel]();
-  }, [ panel, info ]);
+  }, [ panel, info, taskInfo ]);
  
   useEffect(() => {
     fetchInfo();
@@ -57,6 +60,36 @@ const EnvDetail = (props) => {
       clearInterval(loopRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (taskId && !loopRef.current) {
+      fetchTaskInfo();
+      loopRef.current = setInterval(() => {
+        fetchTaskInfo();
+      }, 1500);
+    }
+  }, [taskId]);
+
+  const fetchTaskInfo = async () => {
+    try {
+      const res = await taskAPI.detail({
+        orgId, projectId, taskId
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      const data = res.result || {};
+      setTaskInfo(data);
+      if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+        clearInterval(loopRef.current);
+      }
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   // 获取Info
   const fetchInfo = async (opType = '') => {
@@ -68,19 +101,10 @@ const EnvDetail = (props) => {
         throw new Error(res.message);
       }
       const data = res.result || {};
-      if (opType === 'loop') {
-        setInfo(preInfo => {
-          return data.status !== preInfo.status ? data : preInfo;
-        });
-      } else {
-        setInfo(data);
+      if (!taskId) {
+        setTaskId(data.lastTaskId);
       }
-      // 循环刷新详情数据
-      if (END_ENV_STATUS_LIST.indexOf(data.status) === -1 && !loopRef.current) {
-        loopRef.current = setInterval(() => {
-          fetchInfo('loop');
-        }, 1500);
-      }
+      setInfo(data);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -159,7 +183,7 @@ const EnvDetail = (props) => {
     }
   >
     <div className='idcos-card'>
-      <Info {...props} info={info} />
+      <Info info={info} />
     </div>
     <div style={{ marginTop: 20 }} className='idcos-card'>
       <div className={styles.depolyDetail}>

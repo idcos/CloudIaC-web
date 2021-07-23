@@ -45,7 +45,7 @@ const Index = (props) => {
     >
       <Descriptions.Item label='状态'>{ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}</Descriptions.Item>
       <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
-      <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
+      <Descriptions.Item label='分支/标签'>{info.revision || '-'}</Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>

@@ -17,9 +17,8 @@ import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
 const deployJournal = (props) => {
-  const { match, reload, info, userInfo } = props;
-  const { params: { orgId, projectId, envId, taskId } } = match;
-  const taskID = taskId || info.lastTaskId;
+  const { match, reload, taskInfo, taskId, userInfo } = props;
+  const { params: { orgId, projectId } } = match;
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
 
   const [ comments, setComments ] = useState([]),
@@ -37,11 +36,11 @@ const deployJournal = (props) => {
   }, []);
 
   useEffect(() => {
-    if (taskID) {
+    if (taskId) {
       fetchSse();
       fetchComments();
     }
-  }, [taskID]);
+  }, [taskId]);
   
   useEffect(() => {
     return () => {
@@ -57,7 +56,7 @@ const deployJournal = (props) => {
         }
       },
       {
-        url: `/api/v1/task/log/sse?id=${taskID}`,
+        url: `/api/v1/task/log/sse?id=${taskId}`,
         options: { withCredentials: true, headers: { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId } }
       }
     );
@@ -66,7 +65,7 @@ const deployJournal = (props) => {
   const passOrRejecy = async(action) => {
     try {
       const res = await envAPI.approve({
-        orgId, taskId: taskID, projectId, action
+        orgId, taskId, projectId, action
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -87,7 +86,7 @@ const deployJournal = (props) => {
     try {
       setLoading(true);
       const res = await ctAPI.taskComment({
-        orgId, taskId: taskID, projectId
+        orgId, taskId, projectId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -106,7 +105,7 @@ const deployJournal = (props) => {
   const onFinish = async (values) => {
     try {
       const res = await ctAPI.createTaskComment({     
-        orgId, taskId: taskID, projectId,
+        orgId, taskId, projectId,
         ...values
       });
       if (res.code !== 200) {
@@ -129,7 +128,7 @@ const deployJournal = (props) => {
         <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
           <AnsiCoderCard value={taskLog} />
           {
-            (info.status === 'approving' && PROJECT_OPERATOR) ? (
+            (taskInfo.status === 'approving' && PROJECT_OPERATOR) ? (
               <Row style={{ display: 'flex', justifyContent: 'center' }}>
                 <Button 
                   disabled={!PROJECT_APPROVER}

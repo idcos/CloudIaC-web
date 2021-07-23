@@ -82,6 +82,10 @@ export const TASK_TYPE = {
   'apply': 'apply作业',
   'destroy': 'destroy作业'
 };
+export const END_TASK_STATUS_LIST = [
+  'failed',
+  'complete'
+];
 export const END_ENV_STATUS_LIST = [
   'active',
   'failed'

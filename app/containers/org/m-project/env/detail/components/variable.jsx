@@ -1,40 +1,14 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Card, Table, Tooltip, Input, notification, Descriptions, Menu } from 'antd';
+import React, { memo } from 'react';
+import { Card, Table, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
 import { SCOPE_ENUM } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 
-import varsAPI from 'services/variables';
-import { pjtAPI } from 'services/base';
-
 const Index = (props) => {
-  const { match, info } = props,
-    { params: { orgId, projectId, tplId } } = match;
-  const [ loading, setLoading ] = useState(false),
-    [ vars, setVars ] = useState([]);
-    
-  // useEffect(() => {
-  //   getVars();
-  // }, []);
 
-  // const getVars = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const res = await varsAPI.search({ orgId, projectId, tplId, scope: 'env' });
-  //     if (res.code !== 200) {
-  //       throw new Error(res.message);
-  //     }
-  //     setLoading(false);
-  //     setVars(res.result || []);
-  //   } catch (e) {
-  //     setLoading(false);
-  //     notification.error({
-  //       message: '获取失败',
-  //       description: e.message
-  //     });
-  //   }
-  // };
+  const { taskInfo } = props;
+    
   const columns = [
     {
       dataIndex: 'scope',
@@ -62,14 +36,13 @@ const Index = (props) => {
       }
     }
   ];
-  const defaultTerraformVars = (info.variables || []).filter(it => it.type === 'terraform');
-  const defaultEnvVars = (info.variables || []).filter(it => it.type === 'environment');
+  const defaultTerraformVars = (taskInfo.variables || []).filter(it => it.type === 'terraform');
+  const defaultEnvVars = (taskInfo.variables || []).filter(it => it.type === 'environment');
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Terraform变量'}>
       <Table
         columns={columns}
         dataSource={defaultTerraformVars}
-        loading={loading}
         pagination={false}
       />
     </Card>
@@ -82,7 +55,6 @@ const Index = (props) => {
       <Table
         columns={columns}
         dataSource={defaultEnvVars}
-        loading={loading}
         pagination={false}
       />
     </Card>
