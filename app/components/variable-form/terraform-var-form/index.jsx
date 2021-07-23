@@ -88,9 +88,9 @@ const TerraformVarForm = () => {
       title: 'name',
       id: 'name',
       editable: true,
-      renderFormInput: (record, { value, onChange }, form) => {
-        const { scope, overwrites } = record;
-        return <Input placeholder='请输入name' disabled={scope !== defaultScope || overwrites} />;
+      renderFormInput: (record) => {
+        const { overwrites } = record;
+        return <Input placeholder='请输入name' disabled={overwrites} />;
       },
       formItemProps: {
         rules: [
@@ -192,7 +192,7 @@ const TerraformVarForm = () => {
       handleChange(
         rows.map((item) => {
           if (item.editable_id === k) {
-            return { ...overwrites, editable_id, _key_id };
+            return { ...overwrites, editable_id, _key_id, overwrites };
           }
           return item;
         })
@@ -211,7 +211,10 @@ const TerraformVarForm = () => {
         return it;
       }
       // 如来源不同 则对比数据
-      const sameNameData = defalutTerraformVarListRef.current.find(v => v.name === it.name) || {};
+      const sameNameData = defalutTerraformVarListRef.current.find(v => v.name === it.name);
+      if (!sameNameData) { // 修改名称的数据
+        return it;
+      }
       if (sameNameData.scope === defaultScope && it.scope === defaultScope && it.id) { // 旧的同域数据,不处理
         return it;
       }
@@ -233,9 +236,6 @@ const TerraformVarForm = () => {
       if (!isEqual(pickFindIt, pickIt)) {
         it.scope = defaultScope;
         delete it.id;
-        if (!it.overwrites) {
-          it.overwrites = parentSameNameData;
-        }
       } else {
         it = { ...it, ...parentSameNameData };
       }

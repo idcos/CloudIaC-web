@@ -31,11 +31,15 @@ const VariableForm = ({
     }
     const { variables = [], tfVarsFile, playbook } = defaultData;
     const defaultTerraformVars = variables.filter(it => it.type === 'terraform').map(it => {
-      it.isDiffScope = !!(it.isDiffScope || defaultScope !== it.scope);
+      if (defaultScope !== it.scope) {
+        it.overwrites = { ...it };
+      }
       return it;
     });
     const defaultEnvVars = variables.filter(it => it.type === 'environment').map(it => {
-      it.isDiffScope = !!(it.isDiffScope || defaultScope !== it.scope);
+      if (defaultScope !== it.scope) {
+        it.overwrites = { ...it };
+      }
       return it;
     });
     setDefalutTerraformVarList(defaultTerraformVars);
