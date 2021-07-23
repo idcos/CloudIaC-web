@@ -3,6 +3,9 @@ import React, { useMemo } from 'react';
 import { Breadcrumb } from 'antd';
 
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+const KEY = 'global';
 
 /**
  * 分拣出location.pathname中的路由参数
@@ -66,4 +69,11 @@ const BreadcrumbWrapper = ({ location, params }) => {
 };
 
 
-export default BreadcrumbWrapper;
+export default connect(
+  (state) => ({ 
+    orgs: state[KEY].get('orgs').toJS(),
+    curOrg: state[KEY].get('curOrg'),
+    curProject: state[KEY].get('curProject'),
+    userInfo: state[KEY].get('userInfo').toJS()
+  })
+)(BreadcrumbWrapper);
