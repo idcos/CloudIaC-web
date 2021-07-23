@@ -1,7 +1,8 @@
 import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import getPermission from "utils/permission";
 
 const getMenus = (userInfo) => {
-  const { isAdmin, role: orgRole, projectRole } = userInfo;
+  const { ORG_SET, PROJECT_SET } = getPermission(userInfo);
   return [
     {
       subName: '项目信息',
@@ -31,7 +32,7 @@ const getMenus = (userInfo) => {
         },
         {
           name: '设置',
-          isHide: !isAdmin && orgRole !== 'admin' && projectRole !== 'manager',
+          isHide: !PROJECT_SET,
           key: 'm-project-setting',
           icon: <SettingOutlined />
         }
@@ -41,7 +42,7 @@ const getMenus = (userInfo) => {
       subName: '组织设置',
       subKey: 'org',
       emptyMenuList: [],
-      isHide: !isAdmin && orgRole !== 'admin',
+      isHide: !ORG_SET,
       menuList: [
         {
           name: '项目',

@@ -2,12 +2,12 @@ import React, { useState, useEffect, memo } from 'react';
 import { Card, DatePicker, Select, Form, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { connect } from "react-redux";
 
+import getPermission from "utils/permission";
 import copy from 'utils/copy';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
-
-
 import { envAPI } from 'services/base';
 
 const FL = {
@@ -21,8 +21,10 @@ const PL = {
 const { Option } = Select;
     
 const Index = (props) => {
-  const { match, info, reload } = props,
-    { params: { orgId, projectId, envId } } = match;
+  const { match, info, reload, userInfo } = props;
+  const { params: { orgId, projectId, envId } } = match;
+  const { PROJECT_OPERATOR } = getPermission(userInfo);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -220,13 +222,23 @@ const Index = (props) => {
             </Form.Item>
           </Col>
         </Row>
-        <Row style={{ display: 'flex', justifyContent: 'center' }}>
-          <Button onClick={archive} disabled={info.status !== 'inactive'} >归档</Button>
-          <Button type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
-        </Row>
+        {
+          PROJECT_OPERATOR ? (
+            <Row style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button onClick={archive} disabled={info.status !== 'inactive'} >归档</Button>
+              <Button type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
+            </Row>
+          ) : null
+        }
       </Form>
     </Card>
   </div>;
 };
 
-export default Eb_WP()(memo(Index));
+export default connect((state) => {
+  return {
+    userInfo: state.global.get('userInfo').toJS()
+  };
+})(
+  Eb_WP()(memo(Index))
+);

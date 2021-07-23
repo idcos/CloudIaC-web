@@ -9,6 +9,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_ENV_STATUS_LIST } from "constants/types";
 import { envAPI } from 'services/base';
+import getPermission from "utils/permission";
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -29,7 +30,10 @@ const subNavs = {
 };
 
 const EnvDetail = (props) => {
-  const { dispatch, match: { params: { orgId, projectId, envId, tabKey } } } = props;
+
+  const { userInfo, match: { params: { orgId, projectId, envId, tabKey } } } = props;
+  const { PROJECT_OPERATOR } = getPermission(userInfo);
+
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
@@ -142,12 +146,14 @@ const EnvDetail = (props) => {
     extraHeader={
       <PageHeader
         title={info.name || ''}
-        subDes={(
-          <div>
-            <Button onClick={redeploy}>重新部署</Button>
-            <Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button>
-          </div>
-        )}
+        subDes={
+          PROJECT_OPERATOR ? (
+            <div>
+              <Button onClick={redeploy}>重新部署</Button>
+              <Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button>
+            </div>
+          ) : null
+        }
         breadcrumb={true}
       />
     }
@@ -187,6 +193,10 @@ const EnvDetail = (props) => {
   </Layout>;
 };
 
-export default connect()(
+export default connect((state) => {
+  return {
+    userInfo: state.global.get('userInfo').toJS()
+  };
+})(
   Eb_WP()(EnvDetail)
 );

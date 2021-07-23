@@ -1,22 +1,24 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button, Spin, notification } from 'antd';
+import { connect } from "react-redux";
 
 import VariableForm from 'components/variable-form';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-
 import varsAPI from 'services/variables';
+import getPermission from "utils/permission";
 
 import styles from './styles.less';
 
 const defaultScope = 'project';
 
-export default ({ match }) => {
+const ProjectVariable = ({ match = {}, userInfo }) => {
 
   const { orgId, projectId } = match.params || {};
   const varRef = useRef();
   const [ spinning, setSpinning ] = useState(false);
   const [ vars, setVars ] = useState([]);
+  const { PROJECT_OPERATOR } = getPermission(userInfo);
 
   useEffect(() => {
     getVars();
@@ -73,12 +75,22 @@ export default ({ match }) => {
         <div className={styles.variable}>
           <div className='idcos-card'>
             <VariableForm varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
-            <div className='btn-wrapper'>
-              <Button type='primary' onClick={save}>保存</Button>
-            </div>
+            {
+              PROJECT_OPERATOR ? (
+                <div className='btn-wrapper'>
+                  <Button type='primary' onClick={save}>保存</Button>
+                </div>
+              ) : null
+            }
           </div>
         </div>
       </Spin>
     </Layout>
   );
 };
+
+export default connect((state) => {
+  return {
+    userInfo: state.global.get('userInfo').toJS()
+  };
+})(ProjectVariable);

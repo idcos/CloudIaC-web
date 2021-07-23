@@ -2,13 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
+import { connect } from "react-redux";
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import tplAPI from 'services/tpl';
+import getPermission from "utils/permission";
 
-const CTList = ({ match = {} }) => {
+const CTList = ({ userInfo, match = {} }) => {
+
+  const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { orgId, projectId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -50,14 +54,14 @@ const CTList = ({ match = {} }) => {
       title: '操作',
       width: 180,
       render: (record) => {
-        return (
+        return PROJECT_OPERATOR ? (
           <span className='inlineOp'>
             <a 
               type='link' 
               onClick={() => deployEnv(record.id)}
             >部署</a>
           </span>
-        );
+        ) : null;
       }
     }
   ];
@@ -135,4 +139,8 @@ const CTList = ({ match = {} }) => {
   </Layout>;
 };
 
-export default Eb_WP()(CTList);
+export default connect((state) => {
+  return {
+    userInfo: state.global.get('userInfo').toJS()
+  };
+})(Eb_WP()(CTList));

@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { Button, Tabs } from "antd";
+import { connect } from "react-redux";
  
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EnvList from './componemts/envList';
 import history from 'utils/history';
+import getPermission from "utils/permission";
 
 const envNavs = {
   '': '全部',
@@ -15,9 +17,11 @@ const envNavs = {
   // filed: '已归档',
   failed: '失败'
 };
-export default (props) => {
-  const { match } = props,
-    { params: { orgId, projectId } } = match; 
+const Envs = (props) => {
+
+  const { match, userInfo } = props;
+  const { PROJECT_OPERATOR } = getPermission(userInfo);
+  const { params: { orgId, projectId } } = match; 
 
   const [ panel, setPanel ] = useState('');
   const renders = useMemo(() => {
@@ -49,12 +53,18 @@ export default (props) => {
               tab={envNavs[it]}
               key={it}
             > 
-              <div className='btnsTop'>
-                <Button onClick={() => {
-                  history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
-                }} type='primary'
-                >部署新环境</Button>
-              </div>
+              {
+                PROJECT_OPERATOR ? (
+                  <div className='btnsTop'>
+                    <Button 
+                      onClick={() => {
+                        history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
+                      }} 
+                      type='primary'
+                    >部署新环境</Button>
+                  </div>
+                ) : null
+              }
               {renders}
             </Tabs.TabPane>
           ))}
@@ -63,3 +73,9 @@ export default (props) => {
     </Layout>
   );
 };
+
+export default connect((state) => {
+  return {
+    userInfo: state.global.get('userInfo').toJS()
+  };
+})(Envs);

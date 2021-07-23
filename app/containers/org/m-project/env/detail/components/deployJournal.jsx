@@ -8,16 +8,20 @@ import {
   Card,
   Row
 } from "antd";
+import { connect } from "react-redux";
 
+import getPermission from "utils/permission";
 import { ctAPI, envAPI } from "services/base";
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
-export default (props) => {
-  const { match, reload, info } = props;
+const deployJournal = (props) => {
+  const { match, reload, info, userInfo } = props;
   const { params: { orgId, projectId, envId, taskId } } = match;
   const taskID = taskId || info.lastTaskId;
+  const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
+
   const [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
     [ taskLog, setTaskLog ] = useState([]);
@@ -124,10 +128,27 @@ export default (props) => {
       <div className={"tableRender"}>
         <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
           <AnsiCoderCard value={taskLog} />
-          {info.status === 'approving' && <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button onClick={() => passOrRejecy('rejected')} style={{ marginTop: 20 }} >驳回</Button>
-            <Button onClick={() => passOrRejecy('approved')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >通过</Button>
-          </Row>}
+          {
+            (info.status === 'approving' && PROJECT_OPERATOR) ? (
+              <Row style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button 
+                  disabled={!PROJECT_APPROVER}
+                  onClick={() => passOrRejecy('rejected')} 
+                  style={{ marginTop: 20 }} 
+                >
+                  驳回
+                </Button>
+                <Button 
+                  disabled={!PROJECT_APPROVER}
+                  onClick={() => passOrRejecy('approved')} 
+                  style={{ marginTop: 20, marginLeft: 20 }} 
+                  type='primary'
+                >
+                  通过
+                </Button>
+              </Row>
+            ) : null
+          }
         </Card>
         <Card 
           style={{ marginTop: 24 }}
@@ -155,34 +176,44 @@ export default (props) => {
               </List.Item>
             )}
           />
-          <Form layout='vertical' onFinish={onFinish} form={form}>
-            <Form.Item
-              label='描述'
-              name='comment'
-              rules={[
-                {
-                  message: "请输入"
-                }
-              ]}
-            >
-              <Input.TextArea placeholder='请输入评论内容' />
-            </Form.Item>
-            <Form.Item shouldUpdate={true}>
-              {({ getFieldValue }) => (
-                <Button
-                  type='primary'
-                  htmlType='submit'
-                  disabled={
-                    !getFieldValue("comment") 
-                  }
+          {
+            PROJECT_OPERATOR ? (
+              <Form layout='vertical' onFinish={onFinish} form={form}>
+                <Form.Item
+                  label='描述'
+                  name='comment'
+                  rules={[
+                    {
+                      message: "请输入"
+                    }
+                  ]}
                 >
-                  发表评论
-                </Button>
-              )}
-            </Form.Item>
-          </Form>
+                  <Input.TextArea placeholder='请输入评论内容' />
+                </Form.Item>
+                <Form.Item shouldUpdate={true}>
+                  {({ getFieldValue }) => (
+                    <Button
+                      type='primary'
+                      htmlType='submit'
+                      disabled={
+                        !getFieldValue("comment") 
+                      }
+                    >
+                      发表评论
+                    </Button>
+                  )}
+                </Form.Item>
+              </Form>
+            ) : null
+          }
         </Card>
       </div>
     </div>
   );
 };
+
+export default connect((state) => {
+  return {
+    userInfo: state.global.get('userInfo').toJS()
+  };
+})(deployJournal);
