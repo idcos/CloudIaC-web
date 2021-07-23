@@ -71,6 +71,7 @@ export default ({ orgId }) => {
     },
     {
       title: '操作',
+      width: 60,
       render: (record) => {
         return <Space split={<Divider type='vertical' />}>
           <a className='danger-text' onClick={() => del(record)}>删除</a>

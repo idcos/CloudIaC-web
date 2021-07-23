@@ -73,6 +73,7 @@ export default ({ orgId }) => {
     },
     {
       title: '操作',
+      width: 60,
       render: (_, record) => <a
         className='danger-text'
         onClick={() => {

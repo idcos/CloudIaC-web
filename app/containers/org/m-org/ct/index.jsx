@@ -49,7 +49,7 @@ const CTList = ({ match = {} }) => {
     },
     {
       title: '操作',
-      width: 180,
+      width: 90,
       render: (record) => {
         return (
           <span className='inlineOp'>

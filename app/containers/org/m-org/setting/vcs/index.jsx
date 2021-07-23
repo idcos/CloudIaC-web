@@ -87,6 +87,7 @@ export default ({ title, orgId }) => {
     },
     {
       title: '操作',
+      width: 100,
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {

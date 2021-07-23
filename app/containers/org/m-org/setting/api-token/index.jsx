@@ -90,13 +90,11 @@ const ApiToken = ({ orgId }) => {
   const columns = [
     {
       dataIndex: 'key',
-      title: 'Token',
-      width: 180
+      title: 'Token'
     },
     {
       dataIndex: 'description',
-      title: '描述',
-      width: 180
+      title: '描述'
     },
     {
       dataIndex: 'expiredAt',
@@ -111,14 +109,13 @@ const ApiToken = ({ orgId }) => {
     {
       dataIndex: 'status',
       title: '状态',
-      width: 80,
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
       </div>
     },
     {
       title: '操作',
-      width: 120,
+      width: 100,
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
