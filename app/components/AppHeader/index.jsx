@@ -20,39 +20,33 @@ const AppHeader = (props) => {
   const { pathname } = window.location;
   const projectList = (projects || {}).list || [];
   const projectId = (curProject || {}).id;
-  const envIdbyPath = pathname.split('/').filter(i => i)[6];
+  const url_projectId = pathname.indexOf('/project/') !== -1 ? pathname.split('/').filter(i => i)[3] : null;
+  const envIdbyPath = pathname.indexOf('/detail/') !== -1 ? pathname.split('/').filter(i => i)[6] : null;
   const orgId = (curOrg || {}).id;
 
   const preStateRef = useRef({});
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
-  const [ curEnv, setCurEnv ] = useState({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
-
+  
   useEffect(() => {
-    // 没有组织不更新
-    if (!orgId) { 
-      return; 
+   
+    if (orgId && !(orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId)) {
+      dispatch({
+        type: 'global/getUserInfo',
+        payload: {
+          orgId,
+          projectId
+        }
+      });
     }
-    // 组织更改后 项目还没联动更改时也不更新
-    if (orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId) {
-      return; 
-    }
-    if (!envIdbyPath) {
-      return; 
-    }
-    if (envIdbyPath) {
+    
+    if (orgId && projectId && envIdbyPath) {
       getEnv();
     }
     preStateRef.current = {
       orgId, projectId
     };
-    dispatch({
-      type: 'global/getUserInfo',
-      payload: {
-        orgId,
-        projectId
-      }
-    });
+    
   }, [ orgId, projectId, envIdbyPath ]);
 
   const getEnv = async() => {
@@ -84,7 +78,7 @@ const AppHeader = (props) => {
       dispatch({
         type: 'global/set-curProject',
         payload: {
-          projectId: projectList[0].id
+          projectId: url_projectId || projectList[0].id
         }
       });
     }

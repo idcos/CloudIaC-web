@@ -22,7 +22,7 @@ const subNavs = {
 
 const TaskDetail = (props) => {
 
-  const { dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
+  const { curEnv, dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
 
   const [ panel, setPanel ] = useState('deployJournal');
   const [ taskInfo, setTaskInfo ] = useState({});
@@ -81,7 +81,7 @@ const TaskDetail = (props) => {
   return <Layout
     extraHeader={
       <PageHeader
-        // title={info.name || ''}
+        title={(curEnv || {}).name || ''}
         breadcrumb={true}
       />
     }
@@ -121,6 +121,12 @@ const TaskDetail = (props) => {
   </Layout>;
 };
 
-export default connect()(
+export default connect(
+  (state) => {
+    return {
+      curEnv: state['global'].get('curEnv')
+    };
+  }
+)(
   Eb_WP()(TaskDetail)
 );

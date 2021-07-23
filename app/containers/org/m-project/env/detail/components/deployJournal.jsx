@@ -16,6 +16,8 @@ import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 
+import styles from '../styles.less';
+
 const deployJournal = (props) => {
   const { match, reload, taskInfo, taskId, userInfo } = props;
   const { params: { orgId, projectId } } = match;
@@ -123,7 +125,7 @@ const deployJournal = (props) => {
     }
   };
   return (
-    <div className='task'>
+    <div className={styles.deployJournal}>
       <div className={"tableRender"}>
         <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
           <AnsiCoderCard value={taskLog} />
