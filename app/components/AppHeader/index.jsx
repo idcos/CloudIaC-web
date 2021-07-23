@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Select, Menu, Dropdown, Tooltip, Button, Badge, notification, Divider } from 'antd';
 import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
@@ -21,18 +21,30 @@ const AppHeader = (props) => {
   const projectId = (curProject || {}).id;
   const orgId = (curOrg || {}).id;
 
+  const preStateRef = useRef({});
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: 'global/getUserInfo',
-  //     payload: {
-  //       orgId,
-  //       projectId
-  //     }
-  //   });
-  // }, [orgId, projectId]);
+  useEffect(() => {
+    // 没有组织不更新
+    if (!orgId) { 
+      return; 
+    }
+    // 组织更改后 项目还没联动更改时也不更新
+    if (orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId) {
+      return; 
+    }
+    preStateRef.current = {
+      orgId, projectId
+    };
+    dispatch({
+      type: 'global/getUserInfo',
+      payload: {
+        orgId,
+        projectId
+      }
+    });
+  }, [ orgId, projectId ]);
 
   const changeProject = (pjtId) => {
     dispatch({

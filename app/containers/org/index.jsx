@@ -6,10 +6,8 @@ import isEmpty from 'lodash/isEmpty';
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
-import { userAPI } from 'services/auth';
-import { useDeepCompareEffect } from 'utils/hooks';
 
-import menus from './menus';
+import getMenus from './menus';
 import styles from './styles.less';
 
 const KEY = 'global';
@@ -19,31 +17,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   const orgList = (orgs || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
 
-  const [ showOrgMenu, setShowOrgMenu ] = useState(false);
-
-  useDeepCompareEffect(() => {
-    if (isEmpty(userInfo)) {
-      return;
-    }
-    if (userInfo.isAdmin) {
-      setShowOrgMenu(true);
-    } else {
-      fetchOrgUserInfo();
-    }
-  }, [userInfo]);
-
-  const fetchOrgUserInfo = async () => {
-    const res = await userAPI.info({ orgId });
-    if (res.code !== 200) {
-      return notification.error({
-        message: '获取失败',
-        description: res.message
-      });
-    }
-    const { role, isAdmin } = res.result || {};
-    setShowOrgMenu(isAdmin || role === 'admin');
-  };
-  
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
@@ -93,6 +66,9 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
         break;
     }
     return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
+      if (menuItem.isHide) {
+        return null;
+      }
       return (
         <div 
           className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
@@ -129,16 +105,15 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
         </div>
         <div className='menu-wrapper'>
           {
-            menus.map(it => {
-              // 没有组织设置的权限则不展示组织设置菜单
-              if (it.subKey === 'org' && !showOrgMenu) {
+            getMenus(userInfo || {}).map(subMenu => {
+              if (subMenu.isHide) {
                 return null;
               }
               return (
                 <div className='sub-menu'>
-                  <div className='menu-title'>{it.subName}</div>
+                  <div className='menu-title'>{subMenu.subName}</div>
                   <div className='menu-list'>
-                    { renderMenus(it) }
+                    { renderMenus(subMenu) }
                   </div>
                 </div>
               );

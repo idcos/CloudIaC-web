@@ -106,7 +106,7 @@ export const orgsAPI = {
     });
   },
   removeUser: ({ orgId, id }) => {
-    return del(`/api/v1/users/${id}`, {}, {
+    return del(`/api/v1/orgs/${orgId}/users/${id}`, {}, {
       'IaC-Org-Id': orgId
     });
   }
