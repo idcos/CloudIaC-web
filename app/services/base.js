@@ -258,7 +258,7 @@ export const ctAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  // 云模版库
+  // 云模板库
   ctLibSearch: ({ orgId, pageSize, currentPage }) => {
     return getWithArgs('/api/v1/template/library/search', {
       pageSize,

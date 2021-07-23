@@ -43,7 +43,7 @@ export default function createRoutes() {
         },
         {
           path: '/org/:orgId/project/:projectId/m-project-ct',
-          name: '项目信息：云模版',
+          name: '项目信息：云模板',
           component: loadable(() => import('containers/org/m-project/ct'), asyncLoadFallback),
           exact: true
         },
@@ -74,19 +74,19 @@ export default function createRoutes() {
         },
         {
           path: '/org/:orgId/m-org-ct',
-          name: '组织设置：云模版',
+          name: '组织设置：云模板',
           component: loadable(() => import('containers/org/m-org/ct'), asyncLoadFallback),
           exact: true
         },
         {
           path: '/org/:orgId/m-org-ct/createCT',
-          name: '新建云模版',
+          name: '新建云模板',
           component: loadable(() => import('containers/org/m-org/ct/create'), asyncLoadFallback),
           exact: true
         },
         {
           path: '/org/:orgId/m-org-ct/updateCT/:tplId',
-          name: '编辑云模版',
+          name: '编辑云模板',
           component: loadable(() => import('containers/org/m-org/ct/update'), asyncLoadFallback),
           exact: true
         },

@@ -9,7 +9,7 @@ export default ({ match = {} }) => {
   const { orgId, tplId } = match.params || {};
   return (
     <Layout
-      extraHeader={<PageHeader title='编辑云模版' breadcrumb={true} />}
+      extraHeader={<PageHeader title='编辑云模板' breadcrumb={true} />}
     >
       <div className='idcos-card'>
         <CTFormSteps orgId={orgId} tplId={tplId} opType='edit' />

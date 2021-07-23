@@ -23,11 +23,11 @@ const CTList = ({ match = {} }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模版名称'
+      title: '云模板名称'
     },
     {
       dataIndex: 'description',
-      title: '云模版描述'
+      title: '云模板描述'
     },
     {
       dataIndex: 'activeEnvironment',
@@ -105,7 +105,7 @@ const CTList = ({ match = {} }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='云模版'
+      title='云模板'
       breadcrumb={true}
     />}
   >

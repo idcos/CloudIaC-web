@@ -97,7 +97,7 @@ const Index = (props) => {
         >
           <div className={styles.envlistBox}>
             <div>存活时间：{formatTTL(d)}</div>
-            <div><Divider type='vertical' />云模版：{d.templateName || '-'}</div>
+            <div><Divider type='vertical' />云模板：{d.templateName || '-'}</div>
             <div><Divider type='vertical' />资源数：{d.resourceCount || '-'}</div>
             <div><Divider type='vertical' />创建人：{d.creator || '-'}</div>
             <div><Divider type='vertical' />状态：{ENV_STATUS[d.status] || '-'}</div>
