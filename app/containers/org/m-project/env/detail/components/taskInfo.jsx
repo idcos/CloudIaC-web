@@ -37,6 +37,7 @@ const TaskInfo = (props) => {
       <Descriptions.Item label='执行时长'>{timeUtils.diff(taskInfo.endAt, taskInfo.startAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{taskInfo.creator || '-'}</Descriptions.Item>
       <Descriptions.Item label='资源变更'><ChangeInfo {...taskInfo.result} /></Descriptions.Item>
+      <Descriptions.Item label='target'>{taskInfo.targets}</Descriptions.Item>
     </Descriptions>
   </Card>;
 };

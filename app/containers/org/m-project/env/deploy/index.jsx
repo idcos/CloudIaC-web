@@ -283,7 +283,7 @@ const Index = ({ match = {} }) => {
             <Col span={8}>
               <Form.Item
                 label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
-                name='target：'
+                name='targets'
               >
                 <Input placeholder={'请输入target'} style={{ width: '80%' }} />
               </Form.Item>
