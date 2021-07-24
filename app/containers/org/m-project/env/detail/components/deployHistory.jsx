@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { Card, Table, notification } from 'antd';
 
 import history from 'utils/history';
-import moment from 'moment';
+import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
 import { TASK_STATUS, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
@@ -58,7 +58,7 @@ const Index = (props) => {
       dataIndex: 'result',
       title: '资源变更',
       render: (t, r) => {
-        return (<div>{`+${(r.result || {}).resAdded}`}  {`~${(r.result || {}).resChanged}`}  {`-${(r.result || {}).resDestroyed}`}</div>); 
+        return <ChangeInfo {...r.result} />;
       }
     },
     {
@@ -69,24 +69,7 @@ const Index = (props) => {
     {
       dataIndex: 'startAt',
       title: '执行时长',
-      render: (t, r) => {
-        if (!t || !r.endAt) {
-          return '';
-        }
-        let timeDiff = moment(r.endAt).diff(moment(t), 'second');
-        let time = moment.duration(timeDiff, 'seconds'); //得到一个对象，里面有对应的时分秒等时间对象值
-        let hours = time.hours(); 
-        let minutes = time.minutes();
-        let seconds = time.seconds();
-        let formats = 'HH:mm:ss';
-        if (hours === 0 && minutes === 0) {
-          formats = 's';
-        } else if (hours === 0) {
-          formats = 'mm:ss';
-        }
-        let times = moment({ h: hours, m: minutes, s: seconds }).format(formats);
-        return <span>{(`${times}${times.length <= 2 ? '秒' : ''}` || '')}</span>;
-      }
+      render: (t, r) => timeUtils.diff(r.endAt, t)
     },
     {
       dataIndex: 'creator',

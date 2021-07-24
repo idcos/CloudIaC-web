@@ -77,6 +77,13 @@ export const TASK_STATUS = {
   "failed": '失败',
   "complete": '成功'
 };
+export const TASK_STATUS_COLOR = {
+  "pending": 'gold',
+  "running": 'cyan',
+  "approving": 'processing',
+  "failed": 'error',
+  "complete": 'success'
+};
 export const TASK_TYPE = {
   'plan': 'plan作业',
   'apply': 'apply作业',
