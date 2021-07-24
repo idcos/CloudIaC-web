@@ -47,7 +47,7 @@ const EnvDetail = (props) => {
     const PAGES = {
       resource: () => <Resource {...props} taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
-      deployHistory: () => <DeployHistory {...props}/>,
+      deployHistory: () => <DeployHistory {...props} info={info}/>,
       variable: () => <Variable taskInfo={taskInfo}/>,
       setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
     };
@@ -82,6 +82,7 @@ const EnvDetail = (props) => {
       setTaskInfo(data);
       if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
         clearInterval(loopRef.current);
+        fetchInfo();
       }
     } catch (e) {
       notification.error({
@@ -92,7 +93,7 @@ const EnvDetail = (props) => {
   };
 
   // 获取Info
-  const fetchInfo = async (opType = '') => {
+  const fetchInfo = async () => {
     try {
       const res = await envAPI.envsInfo({
         orgId, projectId, envId
@@ -183,7 +184,7 @@ const EnvDetail = (props) => {
     }
   >
     <div className='idcos-card'>
-      <Info info={info} />
+      <Info info={info} taskInfo={taskInfo} />
     </div>
     <div style={{ marginTop: 20 }} className='idcos-card'>
       <div className={styles.depolyDetail}>

@@ -7,9 +7,10 @@ import { timeUtils } from "utils/time";
 import { TASK_STATUS, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
+import isEmpty from 'lodash/isEmpty';
 
 const Index = (props) => {
-  const { match, panel, routes } = props,
+  const { match, info } = props,
     { params: { orgId, projectId, envId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -18,8 +19,10 @@ const Index = (props) => {
     });
 
   useEffect(() => {
-    fetchList();
-  }, []);
+    if (!isEmpty(info)) {
+      fetchList();
+    }
+  }, [info]);
 
   const fetchList = async () => {
     try {

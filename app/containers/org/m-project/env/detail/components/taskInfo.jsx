@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Card, Descriptions, Tag } from 'antd';
+import { Card, Descriptions, Tag, Tooltip } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
@@ -19,6 +20,13 @@ const TaskInfo = (props) => {
           TASK_STATUS[taskInfo.status] ? (
             <Tag color={TASK_STATUS_COLOR[taskInfo.status] || 'default'}>{TASK_STATUS[taskInfo.status]}</Tag>
           ) : '-'
+        }
+        {
+          taskInfo.status === 'failed' && taskInfo.message ? (
+            <Tooltip title={taskInfo.message}>
+              <InfoCircleFilled style={{ color: '#ff4d4f' }} />
+            </Tooltip>
+          ) : null
         }
       </Descriptions.Item>
       <Descriptions.Item label='类型'>{TASK_TYPE[taskInfo.type] || '-'}</Descriptions.Item>

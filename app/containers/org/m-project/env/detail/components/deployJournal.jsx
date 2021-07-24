@@ -12,6 +12,7 @@ import { connect } from "react-redux";
 
 import getPermission from "utils/permission";
 import { ctAPI, envAPI } from "services/base";
+import history from 'utils/history';
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
 import AnsiCoderCard from "components/coder/ansi-coder-card/index";
@@ -20,7 +21,7 @@ import styles from '../styles.less';
 
 const deployJournal = (props) => {
   const { match, reload, taskInfo, taskId, userInfo } = props;
-  const { params: { orgId, projectId } } = match;
+  const { params: { orgId, projectId, envId } } = match;
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
 
   const [ comments, setComments ] = useState([]),
@@ -84,6 +85,27 @@ const deployJournal = (props) => {
     }
   };
 
+  const applyTask = async () => {
+    try {
+      setLoading(true);
+      const res = await envAPI.envRedeploy({
+        orgId, projectId, envId, taskType: 'apply'
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setLoading(false);
+      const { taskId: taskID } = res.result || {};
+      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${taskID}`); 
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: "操作失败",
+        description: e.message
+      });
+    }
+  };
+
   const fetchComments = async () => {
     try {
       setLoading(true);
@@ -127,7 +149,16 @@ const deployJournal = (props) => {
   return (
     <div className={styles.deployJournal}>
       <div className={"tableRender"}>
-        <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业内容'}>
+        <Card 
+          headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
+          type={'inner'} 
+          title={'作业内容'}
+          extra={
+            PROJECT_OPERATOR && taskInfo.type === 'plan' && taskInfo.status === 'complete' ? (
+              <Button onClick={applyTask}>apply</Button>
+            ) : null
+          }
+        >
           <AnsiCoderCard value={taskLog} />
           {
             (taskInfo.status === 'approving' && PROJECT_OPERATOR) ? (

@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Card, Descriptions, Tag } from 'antd';
+import { Card, Descriptions, Tag, Tooltip } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
@@ -8,7 +9,7 @@ import moment from 'moment';
 
 const Index = (props) => {
 
-  const { info } = props;
+  const { info, taskInfo } = props;
 
   const [ now, setNow ] = useState(moment());
 
@@ -43,10 +44,19 @@ const Index = (props) => {
     <Descriptions 
       labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
     >
-      <Descriptions.Item label='状态'>{ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}</Descriptions.Item>
+      <Descriptions.Item label='状态'>
+        {ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}
+        {
+          info.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
+            <Tooltip title={taskInfo.message}>
+              <InfoCircleFilled style={{ color: '#ff4d4f' }} />
+            </Tooltip>
+          ) : null
+        }
+      </Descriptions.Item>
       <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支/标签'>{info.revision || '-'}</Descriptions.Item>
-      <Descriptions.Item label='资源数'>{info.resourceCount || '-'}</Descriptions.Item>
+      <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
