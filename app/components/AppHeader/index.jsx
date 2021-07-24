@@ -160,14 +160,14 @@ const AppHeader = (props) => {
                     <div style={{ padding: '10px 19px 0px 19px' }}>
                       <Divider style={{ margin: '0' }} />
                     </div>
-                    {/* <div className='create'>
+                    <div className='create'>
                       <div className='btn' onClick={togglePjtModalVsible}>
                         <span className='icon'>
                           <PlusSquareOutlined/>
                         </span>
                         <span>创建新的项目</span>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 )}
               />
