@@ -84,6 +84,9 @@ const deployJournal = (props) => {
         message: "操作成功"
       });
       reload && reload();
+      setTimeout(() => {
+        setBtnsSpinning(false);
+      }, 1000);
     } catch (e) {
       setBtnsSpinning(false);
       notification.error({
