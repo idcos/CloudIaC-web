@@ -6,11 +6,15 @@ import {
   Button,
   Input,
   Card,
-  Row
+  Row,
+  Tag,
+  Tooltip
 } from "antd";
+import { InfoCircleFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 
 import getPermission from "utils/permission";
+import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { ctAPI, envAPI } from "services/base";
 import history from 'utils/history';
 import { timeUtils } from "utils/time";
@@ -159,7 +163,25 @@ const deployJournal = (props) => {
             ) : null
           }
         >
-          <AnsiCoderCard value={taskLog} />
+          <AnsiCoderCard 
+            value={taskLog} 
+            cardTitleAfter={(
+              <>
+                {
+                  TASK_STATUS[taskInfo.status] ? (
+                    <Tag color={TASK_STATUS_COLOR[taskInfo.status] || 'default'}>{TASK_STATUS[taskInfo.status]}</Tag>
+                  ) : '-'
+                }
+                {
+                  taskInfo.status === 'failed' && taskInfo.message ? (
+                    <Tooltip title={taskInfo.message}>
+                      <InfoCircleFilled style={{ color: '#ff4d4f' }} />
+                    </Tooltip>
+                  ) : null
+                }
+              </>
+            )} 
+          />
           {
             (taskInfo.status === 'approving' && PROJECT_OPERATOR) ? (
               <Row style={{ display: 'flex', justifyContent: 'center' }}>

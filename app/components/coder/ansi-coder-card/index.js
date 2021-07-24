@@ -27,7 +27,7 @@ const searchService = new SearchByKeyWord({
   ]
 });
 
-export default ({ value }) => {
+export default ({ value, cardTitleAfter }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
@@ -84,15 +84,20 @@ export default ({ value }) => {
     <Card
       className={`card-body-no-paading ${fullScreen ? "full-card" : ""} ${styles.ansiCodeCard}`}
       title={
-        <Input.Search
-          ref={searchRef}
-          placeholder='请输入内容搜索'
-          onSearch={(keyword) => {
-            searchService.search(keyword);
-            searchRef.current.focus();
-          }}
-          style={{ width: 240 }}
-        />
+        <>
+          <Input.Search
+            ref={searchRef}
+            placeholder='请输入内容搜索'
+            onSearch={(keyword) => {
+              searchService.search(keyword);
+              searchRef.current.focus();
+            }}
+            style={{ width: 240 }}
+          />
+          <div className='title-after'>
+            {cardTitleAfter}
+          </div>
+        </>
       }
       extra={
         <Space>
