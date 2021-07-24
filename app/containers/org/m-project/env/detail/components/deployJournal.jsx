@@ -8,6 +8,7 @@ import {
   Card,
   Row,
   Tag,
+  Spin,
   Tooltip
 } from "antd";
 import { InfoCircleFilled } from '@ant-design/icons';
@@ -30,6 +31,7 @@ const deployJournal = (props) => {
 
   const [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
+    [ btnsSpinning, setBtnsSpinning ] = useState(false),
     [ taskLog, setTaskLog ] = useState([]);
 
   const endRef = useRef();
@@ -71,6 +73,7 @@ const deployJournal = (props) => {
 
   const passOrRejecy = async(action) => {
     try {
+      setBtnsSpinning(true);
       const res = await envAPI.approve({
         orgId, taskId, projectId, action
       });
@@ -82,6 +85,7 @@ const deployJournal = (props) => {
       });
       reload && reload();
     } catch (e) {
+      setBtnsSpinning(false);
       notification.error({
         message: "操作失败",
         description: e.message
@@ -184,23 +188,25 @@ const deployJournal = (props) => {
           />
           {
             (taskInfo.status === 'approving' && PROJECT_OPERATOR) ? (
-              <Row style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button 
-                  disabled={!PROJECT_APPROVER}
-                  onClick={() => passOrRejecy('rejected')} 
-                  style={{ marginTop: 20 }} 
-                >
-                  驳回
-                </Button>
-                <Button 
-                  disabled={!PROJECT_APPROVER}
-                  onClick={() => passOrRejecy('approved')} 
-                  style={{ marginTop: 20, marginLeft: 20 }} 
-                  type='primary'
-                >
-                  通过
-                </Button>
-              </Row>
+              <Spin spinning={btnsSpinning}>
+                <Row style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Button 
+                    disabled={!PROJECT_APPROVER}
+                    onClick={() => passOrRejecy('rejected')} 
+                    style={{ marginTop: 20 }} 
+                  >
+                    驳回
+                  </Button>
+                  <Button 
+                    disabled={!PROJECT_APPROVER}
+                    onClick={() => passOrRejecy('approved')} 
+                    style={{ marginTop: 20, marginLeft: 20 }} 
+                    type='primary'
+                  >
+                    通过
+                  </Button>
+                </Row>
+              </Spin>
             ) : null
           }
         </Card>
