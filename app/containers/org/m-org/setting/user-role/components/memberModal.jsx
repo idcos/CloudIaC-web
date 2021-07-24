@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, Modal, Select, Tooltip, Space } from 'antd';
 
 import { ORG_USER } from 'constants/types';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const FL = {
   labelCol: { span: 6 },
-  wrapperCol: { span: 18 }
+  wrapperCol: { span: 16 }
 };
 
 export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
@@ -52,9 +53,8 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           },
           { type: 'email', message: '邮箱格式有误' }
         ]}
-        extra='邮箱作为登录名，全局唯一'
       >
-        <Input placeholder='请输入邮箱' disabled={opt === 'edit'} />
+        <Space><Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} /><Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip></Space>
       </Form.Item>
       <Form.Item
         label='姓名'

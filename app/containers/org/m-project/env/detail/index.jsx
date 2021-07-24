@@ -161,7 +161,7 @@ const EnvDetail = (props) => {
           message: '操作成功'
         });
         form.resetFields();
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${res.result.lastTaskId}`);
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${res.result.taskId}`);
       },
       onCancel: () => form.resetFields()
     });

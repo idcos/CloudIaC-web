@@ -391,7 +391,7 @@ export const envAPI = {
     return getWithArgs(`/api/v1/envs/${envId}`, {
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
-  // 环境详情
+  // 环境修改
   envsEdit: ({ envId, orgId, projectId, ...resetParams }) => {
     return put(`/api/v1/envs/${envId}`, {
       ...resetParams
@@ -445,7 +445,7 @@ export const envAPI = {
     return getWithArgs(`/api/v1/templates/${templateId}`, {
     }, { 'IaC-Org-Id': orgId });
   },
-  // 获取云模板详情
+  // 创建环境
   createEnv: ({ orgId, projectId, ...resetParams }) => {
     return post(`/api/v1/envs`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
