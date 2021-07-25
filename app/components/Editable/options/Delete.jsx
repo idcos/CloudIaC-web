@@ -11,6 +11,7 @@ const OptionDelete = (props) => {
     buttonText
   } = props;
 
+  console.log(1, buttonProps);
   const { handleDelete, multiple, isSetting, settingId } = useContext(EditableContext);
 
   return isSetting && settingId === id ? null : (

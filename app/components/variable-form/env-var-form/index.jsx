@@ -137,7 +137,9 @@ const EnvVarForm = () => {
 
   const optionRender = (record, optionNodes) => {
     const { scope } = record;
-    const DeleteBtn = React.cloneElement(optionNodes.delete, { buttonProps: { disabled: scope !== defaultScope } });
+    const DeleteBtn = React.cloneElement(optionNodes.delete, { 
+      buttonProps: { disabled: scope !== defaultScope, type: 'link' } 
+    });
     return (
       DeleteBtn
     );

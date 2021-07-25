@@ -173,7 +173,9 @@ const TerraformVarForm = () => {
 
   const optionRender = (record, optionNodes) => {
     const { scope } = record;
-    const DeleteBtn = React.cloneElement(optionNodes.delete, { buttonProps: { disabled: scope !== defaultScope } });
+    const DeleteBtn = React.cloneElement(optionNodes.delete, { 
+      buttonProps: { disabled: scope !== defaultScope, type: 'link' } 
+    });
     return (
       DeleteBtn
     );
@@ -265,6 +267,7 @@ const TerraformVarForm = () => {
         value={terraformVarList}
         fields={fields}
         onDeleteRow={onDeleteRow}
+        deleteBtnProps={{ type: 'link' }}
         addBtnText='添加全局变量'
         multiple={true}
         onChange={onChangeEditableTable}
