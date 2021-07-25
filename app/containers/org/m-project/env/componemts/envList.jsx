@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, notification, Divider, Tag } from 'antd';
+import { Card, notification, Divider, Tag, Space } from 'antd';
 import moment from 'moment';
 
 import history from 'utils/history';
@@ -88,19 +88,22 @@ const Index = (props) => {
           style={{ marginTop: 20 }} 
           type='inner' 
           title={(
-            <a onClick={() => {
-              history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${d.id}/resource`); 
-            }}
-            >{d.name || '-'}</a>
+            <Space>
+              <a onClick={() => {
+                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${d.id}/resource`); 
+              }}
+              >{d.name || '-'}</a>
+              <span style={{ color: '#ccc' }}>{d.id}</span>
+            </Space>
           )}
         >
-          <div className={styles.envlistBox}>
+          <Space split={<Divider type='vertical' />}className={styles.envlistBox}>
             <div>存活时间：{formatTTL(d)}</div>
-            <div><Divider type='vertical' />云模板：{d.templateName || '-'}</div>
-            <div><Divider type='vertical' />资源数：{d.resourceCount}</div>
-            <div><Divider type='vertical' />创建人：{d.creator || '-'}</div>
-            <div style={{ display: 'flex' }}><Divider type='vertical' />状态：{ENV_STATUS[d.status] && <Tag color={ENV_STATUS_COLOR[d.status] || 'default'}>{ENV_STATUS[d.status]}</Tag> || '-'}</div>
-          </div>
+            <div>云模板：{d.templateName || '-'}</div>
+            <div>资源数：{d.resourceCount || '-'}</div>
+            <div>创建人：{d.creator || '-'}</div>
+            <div style={{ display: 'flex' }}>状态：{ENV_STATUS[d.status] && <Tag color={ENV_STATUS_COLOR[d.status] || 'default'}>{ENV_STATUS[d.status]}</Tag> || '-'}</div>
+          </Space>
         </Card>
       )
     }
