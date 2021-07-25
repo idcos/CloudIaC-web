@@ -54,7 +54,10 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           { type: 'email', message: '邮箱格式有误' }
         ]}
       >
-        <Space><Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} /><Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip></Space>
+        <Space>
+          <Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+          <Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip>
+        </Space>
       </Form.Item>
       <Form.Item
         label='姓名'
@@ -66,7 +69,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           }
         ]}
       >
-        <Input placeholder='请输入姓名'/>
+        <Input placeholder='请输入姓名' disabled={opt === 'edit'} />
       </Form.Item>
       <Form.Item
         label='手机号'
@@ -78,7 +81,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           }
         ]}
       >
-        <Input placeholder='请输入手机号'/>
+        <Input placeholder='请输入手机号' disabled={opt === 'edit'} />
       </Form.Item>
       <Form.Item
         label='角色'

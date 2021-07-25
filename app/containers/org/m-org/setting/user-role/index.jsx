@@ -59,7 +59,7 @@ export default ({ title, orgId }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        edit: (param) => orgsAPI.editUser(param),
+        edit: (param) => orgsAPI.changeOrgUserRole(param),
         add: (param) => orgsAPI.inviteUser(param),
         resetUserPwd: ({ orgId, id }) => orgsAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
