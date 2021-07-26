@@ -56,7 +56,6 @@ const deployJournal = (props) => {
       evtSource && evtSource.close();
     };
   }, [evtSource]);
-
   const fetchSse = () => {
     evtSourceInit(
       {
@@ -66,7 +65,14 @@ const deployJournal = (props) => {
       },
       {
         url: `/api/v1/task/log/sse?id=${taskId}`,
-        options: { withCredentials: true, headers: { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId } }
+        options: 
+        { withCredentials: true,
+          headers: {
+            'IaC-Org-Id': orgId,
+            'IaC-Project-Id': projectId,
+            'Cookie': window.localStorage.getItem('accessToken')
+          }
+        }
       }
     );
   };
