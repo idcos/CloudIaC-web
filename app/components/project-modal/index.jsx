@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal, notification } from "antd";
 import { connect } from "react-redux";
 
-import { pjtAPI } from 'services/base';
+import projectAPI from 'services/project';
 
 const FL = {
   labelCol: { span: 5 },
@@ -52,7 +52,7 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
 
   const fetchPjtInfo = async() => {
     try {
-      const res = await pjtAPI.detailProject({ projectId: curRecord.id, orgId });
+      const res = await projectAPI.detailProject({ projectId: curRecord.id, orgId });
       if (res.code !== 200) {
         throw new Error(res.message);
       }

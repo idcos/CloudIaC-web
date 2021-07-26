@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, notification } from "antd";
 import { connect } from "react-redux";
 
-import { pjtAPI } from 'services/base';
+import projectAPI from 'services/project';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import history from 'utils/history';
@@ -24,7 +24,7 @@ const CreateProjectPage = (props) => {
   const onFinish = async (values) => {
     try {
       setSubmitLoading(true);
-      const res = await pjtAPI.createProject({
+      const res = await projectAPI.createProject({
         ...values,
         orgId
       });

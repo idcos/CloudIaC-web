@@ -1,6 +1,28 @@
 import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 
 const projectAPI = {
+  createProject: ({ orgId, ...restParams }) => {
+    return post('/api/v1/projects', { ...restParams }, { 'IaC-Org-Id': orgId });
+  },
+  editProject: ({ orgId, projectId, ...restParams }) => {
+    return put(`/api/v1/projects/${projectId}`, { ...restParams }, { 'IaC-Org-Id': orgId });
+  },
+  detailProject: ({ projectId, orgId }) => {
+    return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
+  },
+  projectList: ({ pageNo, pageSize, orgId }) => {
+    return getWithArgs('/api/v1/projects', {
+      pageSize,
+      currentPage: pageNo
+    }, { 'IaC-Org-Id': orgId });
+  },
+  allEnableProjects: ({ orgId }) => {
+    return getWithArgs('/api/v1/projects', {
+      status: 'enable',
+      pageSize: 100000,
+      currentPage: 1
+    }, { 'IaC-Org-Id': orgId });
+  },
   getUserOptions: ({ orgId, projectId }) => {
     return getWithArgs('/api/v1/projects/users', { 
       currentPage: 1,

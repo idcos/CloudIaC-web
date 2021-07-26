@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { Space, Checkbox, Form, Button, Row, Divider, notification, Empty } from "antd";
 
-import { pjtAPI } from 'services/base';
+import projectAPI from 'services/project';
 import OpModal from 'components/project-modal';
 
 const FL = {
@@ -39,7 +39,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
   }, [ ctData, type, projectList ]);
 
   const fetchProject = async() => {
-    let res = await pjtAPI.allEnableProjects({ orgId });
+    let res = await projectAPI.allEnableProjects({ orgId });
     if (res.code === 200) {
       setProjectList(res.result.list || []);
     } else {
@@ -87,7 +87,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
   const pjtOperation = async ({ action, payload }, cb) => {
     try {
       const method = {
-        add: (param) => pjtAPI.createProject(param)
+        add: (param) => projectAPI.createProject(param)
       };
       let params = {
         ...payload

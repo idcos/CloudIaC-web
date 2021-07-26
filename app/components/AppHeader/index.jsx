@@ -7,7 +7,7 @@ import history from 'utils/history';
 import { QuitIcon } from 'components/iconfont';
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
-import { pjtAPI } from 'services/base';
+import projectAPI from 'services/project';
 import envAPI from 'services/env';
 import OpModal from 'components/project-modal';
 
@@ -118,7 +118,7 @@ const AppHeader = (props) => {
   const pjtOperation = async ({ action, payload }, cb) => {
     try {
       const method = {
-        add: (param) => pjtAPI.createProject(param)
+        add: (param) => projectAPI.createProject(param)
       };
       let params = {
         ...payload

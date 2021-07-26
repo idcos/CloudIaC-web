@@ -7,7 +7,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import OpModal from 'components/project-modal';
-import { pjtAPI } from 'services/base';
+import projectAPI from 'services/project';
 
 import styles from './styles.less';
 
@@ -110,7 +110,7 @@ const Index = (props) => {
       projectId: record.id,
       status
     };
-    const res = await pjtAPI.editProject(payload);
+    const res = await projectAPI.editProject(payload);
     if (res.code != 200) {
       return notification.error({
         message: res.message
@@ -128,7 +128,7 @@ const Index = (props) => {
     try {
       setLoading(true);
       const { combinedStatus, status, ...restQuery } = query;
-      const res = await pjtAPI.projectList({
+      const res = await projectAPI.projectList({
         ...restQuery,
         [tableFilterFieldName]: combinedStatus || status,
         orgId: params.orgId
@@ -167,8 +167,8 @@ const Index = (props) => {
   const operation = async ({ action, payload }, cb) => {
     try {
       const method = {
-        add: (param) => pjtAPI.createProject(param),
-        edit: (param) => pjtAPI.editProject(param)
+        add: (param) => projectAPI.createProject(param),
+        edit: (param) => projectAPI.editProject(param)
       };
       let params = {
         ...payload
