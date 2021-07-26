@@ -93,7 +93,7 @@ const Index = (props) => {
                 history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${d.id}/resource`); 
               }}
               >{d.name || '-'}</a>
-              <span style={{ color: '#ccc' }}>{d.id}</span>
+              <span style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 12 }}>ID：{d.id}</span>
             </Space>
           )}
         >
