@@ -1,10 +1,11 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Table, notification } from 'antd';
+import { Card, Table, notification, Tag, Tooltip } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 import history from 'utils/history';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
-import { TASK_STATUS, TASK_TYPE } from 'constants/types';
+import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { envAPI } from 'services/base';
 import isEmpty from 'lodash/isEmpty';
@@ -55,7 +56,22 @@ const Index = (props) => {
     {
       dataIndex: 'status',
       title: '状态',
-      render: (t, r) => <span>{TASK_STATUS[t] || '-'}</span>
+      render: (t, r) => (
+        <>
+          {
+            TASK_STATUS[t] ? (
+              <Tag color={TASK_STATUS_COLOR[t] || 'default'}>{TASK_STATUS[t]}</Tag>
+            ) : '-'
+          }
+          {
+            t === 'failed' && r.message ? (
+              <Tooltip title={r.message}>
+                <InfoCircleFilled style={{ color: '#ff4d4f' }} />
+              </Tooltip>
+            ) : null
+          }
+        </>
+      )
     },
     {
       dataIndex: 'result',
