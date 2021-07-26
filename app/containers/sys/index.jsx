@@ -32,7 +32,7 @@ const Sys = () => {
   return <Layout
     extraHeader={<PageHeader
       className='container-inner-width'
-      title='系统设置1'
+      title='系统设置'
       showIcon={'setting'}
       icons={<SettingOutlined />}
       breadcrumb={false}
