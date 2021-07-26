@@ -119,30 +119,6 @@ export const orgsAPI = {
   }
 };
 
-export const sysAPI = {
-  listCTRunner: ({ orgId }) => {
-    return get('/api/v1/runners', {
-      'IaC-Org-Id': orgId
-    });
-  },
-  getParams: () => {
-    return get('/api/v1/system/search');
-  },
-  edit: (param) => {
-    return put('/api/v1/system/update', {
-      ...param
-    });
-  },
-  sysStatus: () => {
-    return get('/api/v1/systems/status');
-  },
-  updateTags: ({ tags, serviceId }) => {
-    return put('/api/v1/consul/tags/update', {
-      tags, serviceId
-    });
-  }
-};
-
 export const pjtAPI = {
   projectList: ({ pageNo, pageSize, orgId }) => {
     return getWithArgs('/api/v1/projects', {

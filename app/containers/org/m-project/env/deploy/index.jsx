@@ -9,7 +9,7 @@ import Layout from "components/common/layout";
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
-import { sysAPI } from 'services/base';
+import sysAPI from 'services/sys';
 import envAPI from 'services/env';
 import tplAPI from 'services/tpl';
 import keysAPI from 'services/keys';

@@ -1,32 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { List, notification, Collapse, Spin, Alert } from 'antd';
+import { CheckCircleFilled, GlobalOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
-import { sysAPI } from 'services/base';
-
+import sysAPI from 'services/sys';
 import Tags from 'components/tags';
-
-import styles from './styles.less';
-
 import { SYS } from 'constants/types';
 import { statusTextCls } from 'utils/util';
 
-import { CheckCircleFilled, GlobalOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
+import styles from './styles.less';
 
 const { Panel } = Collapse;
-
-
 const statusIcons = {
   passing: <CheckCircleFilled/>
 };
-
 const MsgEnums = {
   passing: 'success'
 };
 
-const SysStatus = (props) => {
+const SysStatus = () => {
   const [ loading, setLoading ] = useState(false),
     [ resultList, setResultList ] = useState([]);
 
