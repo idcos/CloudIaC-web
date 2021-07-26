@@ -72,7 +72,7 @@ export const DOCS = {
 };
 export const TASK_STATUS = {
   "pending": '排队',
-  "running": '运行中',
+  "running": '执行中',
   "approving": '待审批',
   "failed": '失败',
   "complete": '成功'
