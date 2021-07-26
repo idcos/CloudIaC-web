@@ -6,6 +6,7 @@ import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
 import moment from 'moment';
+import styles from '../styles.less';
 
 const Index = (props) => {
 
@@ -56,7 +57,10 @@ const Index = (props) => {
       </Descriptions.Item>
       <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支/标签'>{info.revision || '-'}</Descriptions.Item>
-      <Descriptions.Item label='Commit_ID'>empty</Descriptions.Item>
+      <Descriptions.Item label='Commit_ID'><span onClick={() => {
+        window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
+      }} className={styles.linkToCommit}
+      >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>

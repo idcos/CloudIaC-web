@@ -6,6 +6,7 @@ import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
+import styles from '../styles.less';
 
 const TaskInfo = (props) => {
 
@@ -31,6 +32,10 @@ const TaskInfo = (props) => {
       </Descriptions.Item>
       <Descriptions.Item label='类型'>{TASK_TYPE[taskInfo.type] || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支/标签'>{taskInfo.revision || '-'}</Descriptions.Item>
+      <Descriptions.Item label='Commit_ID'><span onClick={() => {
+        window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
+      }} className={styles.linkToCommit}
+      >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(taskInfo.updatedAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='创建时间'>{timeUtils.format(taskInfo.createdAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='开始时间'>{timeUtils.format(taskInfo.startAt) || '-'}</Descriptions.Item>
