@@ -15,7 +15,7 @@ import { ConfigProvider, notification } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-import 'idcos-antd-theme/default/override.less';
+import 'inner-modules/idcos-antd-theme/default/override.less';
 import 'containers/App/styles/index.less';
 moment.locale('zh-cn');
 

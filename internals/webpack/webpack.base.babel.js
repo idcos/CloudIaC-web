@@ -39,7 +39,10 @@ module.exports = options => ({
               lessOptions: {
                 javascriptEnabled: true,
                 modifyVars: {
-                  'hack': `true; @import "~idcos-antd-theme/default/default.less";`
+                  'hack': `true; @import "${path.join(
+                    __dirname,
+                    '../../app/inner-modules/idcos-antd-theme/default/default.less'
+                  )}";`
                 }
               }
             }

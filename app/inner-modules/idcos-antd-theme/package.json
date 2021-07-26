@@ -1,0 +1,44 @@
+{
+  "_args": [
+    [
+      "idcos-antd-theme@0.0.1",
+      "/Users/zhuminghao/Desktop/工作/iac/cloudiac-web"
+    ]
+  ],
+  "_development": true,
+  "_from": "idcos-antd-theme@0.0.1",
+  "_id": "idcos-antd-theme@0.0.1",
+  "_inBundle": false,
+  "_integrity": "sha512-A59jk7RcONdNSFX97jOKrMA657QjA0kcPr8N4yb2zSN45ATKFVm2j1WmYFzOXNdJC/TKpwLBXXCQZiFxcQtK0g==",
+  "_location": "/idcos-antd-theme",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "idcos-antd-theme@0.0.1",
+    "name": "idcos-antd-theme",
+    "escapedName": "idcos-antd-theme",
+    "rawSpec": "0.0.1",
+    "saveSpec": null,
+    "fetchSpec": "0.0.1"
+  },
+  "_requiredBy": [
+    "#DEV:/"
+  ],
+  "_resolved": "http://maven.idcos.net:8081/repository/npm-idcos/idcos-antd-theme/-/idcos-antd-theme-0.0.1.tgz",
+  "_spec": "0.0.1",
+  "_where": "/Users/zhuminghao/Desktop/工作/iac/cloudiac-web",
+  "author": {
+    "name": "IDCOS FE TEAM"
+  },
+  "description": "antd定制主题",
+  "license": "ISC",
+  "name": "idcos-antd-theme",
+  "publishConfig": {
+    "registry": "http://maven.idcos.net:8081/repository/npm-idcos-internal/"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.1"
+}
