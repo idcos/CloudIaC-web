@@ -226,7 +226,7 @@ const AppHeader = (props) => {
                   }
                 </div>
                 <div className='footer'>
-                  <div className='link-item' style={{ padding: '9px 20px' }} onClick={() => logout()}>
+                  <div className='link-item' style={{ padding: '9px 18px' }} onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>退出</span>
                   </div>
