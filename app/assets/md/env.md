@@ -26,23 +26,23 @@ CloudIaC通过Terraform的状态文件还维护整个环境的状态，用户可
     
 - *不活跃*：资源已销毁
     
-- *部署中*：正在部署过程中
+- *执行中*：正在部署或者销毁过程中
     
 - *失败*：在部署过程中发生错误
     
 - *待审批*：operator发起部署作业后等待Manager或Approver审批
     
-![image.png](/assets/img/iac-flow.jpg)
+![image.png](/assets/img/iac-env-status.jpg)
 
 ## 环境资源
 
 当您的环境处于*活跃*状态时，您只需单击环境即可查看其中包含的资源。
 
-![image.png](/assets/img/iac-env.png)
+![image.png](/assets/img/iac-env-resources.png.png)
 
 ## 存活时间
 
-*存活时间*是CloudIaC从设置完存活时间的时间点到自动销毁环境下资源的时间长度；
+*存活时间*是 CloudIaC 从设置完存活时间的时间点到自动销毁环境下资源的时间长度(若是初始创建的环境则会在资源第一次创建成功后开始计算自动销毁时间)；
 
 可以在创建或重新部署环境时设置存活时间，预选值有：*不限*、*12小时*、*1天*、 *3天*、*1周*、*半个月*、*1个月*和*指定时间*，选择『指定时间』时可以直接设置一个具体截止时间；
 
