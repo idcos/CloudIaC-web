@@ -56,6 +56,7 @@ const Index = (props) => {
       </Descriptions.Item>
       <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
       <Descriptions.Item label='分支/标签'>{info.revision || '-'}</Descriptions.Item>
+      <Descriptions.Item label='Commit_ID'>empty</Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>

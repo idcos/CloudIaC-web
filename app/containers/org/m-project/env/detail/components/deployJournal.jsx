@@ -64,14 +64,14 @@ const deployJournal = (props) => {
         }
       },
       {
-        url: `/api/v1/task/log/sse?id=${taskId}`,
+        url: `/api/v1/tasks/${taskId}/log/sse`,
         options: 
-        { withCredentials: true,
+        { 
+          withCredentials: true,
           headers: {
             'IaC-Org-Id': orgId,
             'IaC-Project-Id': projectId,
-            // 'Cookie': window.localStorage.getItem('accessToken')
-            Authorization: 'token'
+            'Authorization': window.localStorage.getItem('accessToken')
           }
         }
       }

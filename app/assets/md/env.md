@@ -32,7 +32,6 @@ CloudIaC通过Terraform的状态文件还维护整个环境的状态，用户可
     
 - *待审批*：operator发起部署作业后等待Manager或Approver审批
     
-
 ![image.png](/assets/img/iac-flow.jpg)
 
 ## 环境资源
