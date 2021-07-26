@@ -7,7 +7,7 @@ import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
-import { envAPI } from 'services/base';
+import taskAPI from 'services/task';
 import isEmpty from 'lodash/isEmpty';
 
 const Index = (props) => {
@@ -28,7 +28,7 @@ const Index = (props) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await envAPI.envsTaskList({
+      const res = await taskAPI.envsTaskList({
         orgId, projectId, envId
       });
       if (res.code != 200) {

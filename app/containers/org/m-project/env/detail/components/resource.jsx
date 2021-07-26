@@ -3,7 +3,7 @@ import { Card, Table, Input, notification } from 'antd';
 
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
-import { envAPI } from 'services/base';
+import envAPI from 'services/env';
 import taskAPI from 'services/task';
 
 const Index = (props) => {
@@ -78,7 +78,7 @@ const Index = (props) => {
   const fetchOutput = async () => {
     try {
       setLoading(true);
-      const res = await envAPI.envsOutput({ orgId, projectId, taskId });
+      const res = await taskAPI.envsOutput({ orgId, projectId, taskId });
       if (res.code != 200) {
         throw new Error(res.message);
       }

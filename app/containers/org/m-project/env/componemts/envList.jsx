@@ -6,7 +6,7 @@ import history from 'utils/history';
 import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { timeUtils } from "utils/time";
 import { Eb_WP } from 'components/error-boundary';
-import { envAPI } from 'services/base';
+import envAPI from 'services/env';
 
 import styles from '../styles.less';
 

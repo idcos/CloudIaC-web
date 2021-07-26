@@ -8,7 +8,8 @@ import getPermission from "utils/permission";
 import copy from 'utils/copy';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
-import { envAPI } from 'services/base';
+import envAPI from 'services/env';
+import tokensAPI from 'services/tokens';
 
 const FL = {
   labelCol: { span: 5 },
@@ -93,14 +94,14 @@ const Index = (props) => {
 
   const copyToUrl = async(action) => {
     try {
-      const res = await envAPI.getTriggerUrl({
+      const res = await tokensAPI.getTriggerUrl({
         orgId, envId, action, projectId
       });
       let data = res.result || {};
       let copyData = `${window.location.origin}/api/v1/trigger/send?token=${data.key}`;
       if (res.code === 200) {
         if (res.result === null || res.result === '' || res.result === undefined) {
-          const resCreat = await envAPI.createTokens({
+          const resCreat = await tokensAPI.createToken({
             orgId, envId, action, projectId
           });
           copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;

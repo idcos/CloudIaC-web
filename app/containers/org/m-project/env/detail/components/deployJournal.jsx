@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 
 import getPermission from "utils/permission";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
-import { envAPI } from "services/base";
+import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import history from 'utils/history';
 import { timeUtils } from "utils/time";
@@ -82,7 +82,7 @@ const deployJournal = (props) => {
   const passOrRejecy = async(action) => {
     try {
       setBtnsSpinning(true);
-      const res = await envAPI.approve({
+      const res = await taskAPI.approve({
         orgId, taskId, projectId, action
       });
       if (res.code !== 200) {
