@@ -105,18 +105,15 @@ const deployJournal = (props) => {
 
   const applyTask = async () => {
     try {
-      setLoading(true);
       const res = await envAPI.envRedeploy({
         orgId, projectId, envId, taskType: 'apply'
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setLoading(false);
       const { taskId: taskID } = res.result || {};
       history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${taskID}`); 
     } catch (e) {
-      setLoading(false);
       notification.error({
         message: "操作失败",
         description: e.message
@@ -171,11 +168,6 @@ const deployJournal = (props) => {
           headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
           type={'inner'} 
           title={'作业内容'}
-          extra={
-            PROJECT_OPERATOR && taskInfo.type === 'plan' && taskInfo.status === 'complete' ? (
-              <Button onClick={applyTask}>apply</Button>
-            ) : null
-          }
         >
           <AnsiCoderCard 
             value={taskLog} 
@@ -197,24 +189,41 @@ const deployJournal = (props) => {
             )} 
           />
           {
-            (taskInfo.status === 'approving' && PROJECT_OPERATOR) ? (
+            (PROJECT_OPERATOR) ? (
               <Spin spinning={btnsSpinning}>
                 <Row style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Button 
-                    disabled={!PROJECT_APPROVER}
-                    onClick={() => passOrRejecy('rejected')} 
-                    style={{ marginTop: 20 }} 
-                  >
-                    驳回
-                  </Button>
-                  <Button 
-                    disabled={!PROJECT_APPROVER}
-                    onClick={() => passOrRejecy('approved')} 
-                    style={{ marginTop: 20, marginLeft: 20 }} 
-                    type='primary'
-                  >
-                    通过
-                  </Button>
+                  {
+                    taskInfo.status === 'approving' ? (
+                      <>
+                        <Button 
+                          disabled={!PROJECT_APPROVER}
+                          onClick={() => passOrRejecy('rejected')} 
+                          style={{ marginTop: 20 }} 
+                        >
+                          驳回
+                        </Button>
+                        <Button 
+                          disabled={!PROJECT_APPROVER}
+                          onClick={() => passOrRejecy('approved')} 
+                          style={{ marginTop: 20, marginLeft: 20 }} 
+                          type='primary'
+                        >
+                          通过
+                        </Button>
+                      </>
+                    ) : null
+                  }
+                  {
+                    taskInfo.type === 'plan' && taskInfo.status === 'complete' ? (
+                      <Button 
+                        type='primary'
+                        style={{ marginTop: 20 }} 
+                        onClick={applyTask}
+                      >
+                        执行部署
+                      </Button>
+                    ) : null
+                  }
                 </Row>
               </Spin>
             ) : null

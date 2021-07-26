@@ -6,6 +6,16 @@ const taskAPI = {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
+  },
+  getResources: ({ orgId, projectId, taskId, ...restParams }) => {
+    return getWithArgs(`/api/v1/tasks/${taskId}/resources`, {
+      pageSize: 99999,
+      currentPage: 1,
+      ...restParams
+    }, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
   }
 };
 

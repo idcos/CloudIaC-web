@@ -45,7 +45,7 @@ const EnvDetail = (props) => {
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} taskId={taskId} taskInfo={taskInfo} />,
+      resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
       deployHistory: () => <DeployHistory {...props} info={info}/>,
       variable: () => <Variable taskInfo={taskInfo}/>,

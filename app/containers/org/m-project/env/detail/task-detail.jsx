@@ -31,7 +31,7 @@ const TaskDetail = (props) => {
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} taskId={taskId} taskInfo={taskInfo} />,
+      resource: () => <Resource {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchTaskInfo}/>,
       variable: () => <Variable taskInfo={taskInfo}/>
     };

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Card, Table, Input, notification } from 'antd';
+
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
-
 import { envAPI } from 'services/base';
+import taskAPI from 'services/task';
 
 const Index = (props) => {
-  const { match, taskId } = props,
-    { params: { orgId, projectId, envId, tplId } } = match;
+  const { match, taskId, type } = props,
+    { params: { orgId, projectId, envId } } = match;
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -48,10 +49,15 @@ const Index = (props) => {
     }
   }, [taskId]);
 
+
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await envAPI.envsResourcesList({ orgId, projectId, envId, q: search });
+      const resourcesApis = {
+        env: envAPI.envsResourcesList.bind(null, { orgId, projectId, envId, q: search }),
+        task: taskAPI.getResources.bind(null, { orgId, projectId, taskId, q: search })
+      };
+      const res = await resourcesApis[type]();
       if (res.code != 200) {
         throw new Error(res.message);
       }
