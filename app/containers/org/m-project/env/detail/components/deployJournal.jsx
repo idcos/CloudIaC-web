@@ -70,7 +70,8 @@ const deployJournal = (props) => {
           headers: {
             'IaC-Org-Id': orgId,
             'IaC-Project-Id': projectId,
-            'Cookie': window.localStorage.getItem('accessToken')
+            // 'Cookie': window.localStorage.getItem('accessToken')
+            Authorization: 'token'
           }
         }
       }
