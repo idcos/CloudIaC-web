@@ -9,7 +9,8 @@ import Layout from "components/common/layout";
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
-import { envAPI, ctAPI, sysAPI } from 'services/base';
+import { envAPI, sysAPI } from 'services/base';
+import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
 
@@ -114,16 +115,24 @@ const Index = ({ match = {} }) => {
       const { vcsId, repoId, repoRevision } = tplInfoRes;
       !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
       // 获取分支数据
-      const branchRes = await ctAPI.listRepoBranch({
-        orgId, vcsId, repoId 
+      const branchRes = await vcsAPI.listRepoBranch({
+        orgId, 
+        vcsId, 
+        repoId,
+        currentPage: 1,
+        pageSize: 100000
       });
       if (branchRes.code === 200) {
         setBranch(branchRes.result || []);
       }
       
       // 获取标签数据
-      const tagsRes = await ctAPI.listRepoTag({
-        orgId, vcsId, repoId 
+      const tagsRes = await vcsAPI.listRepoTag({
+        orgId, 
+        vcsId, 
+        repoId,
+        currentPage: 1,
+        pageSize: 100000
       });
       
       if (tagsRes.code === 200) {
