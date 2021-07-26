@@ -2,7 +2,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { notification } from 'antd';
 
 import { orgsAPI, pjtAPI } from 'services/base';
-import { userAPI } from 'services/auth';
+import userAPI from 'services/user';
 
 function* getOrgs(action) {
   try {

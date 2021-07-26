@@ -2,7 +2,7 @@ import { notification } from 'antd';
 
 import history from "utils/history";
 import getPermission from "utils/permission";
-import { userAPI } from 'services/auth';
+import userAPI from 'services/user';
 import { pjtAPI } from 'services/base';
 
 const changeOrg = async ({ orgId, dispatch }) => {
