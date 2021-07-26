@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { Divider, notification } from 'antd';
-import isEmpty from 'lodash/isEmpty';
+import { Divider } from 'antd';
 
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
+import changeOrg from "utils/changeOrg";
 
 import getMenus from './menus';
 import styles from './styles.less';
@@ -18,7 +18,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   const pjtId = projectId || (curProject || {}).id;
   const [ dividerVisible, setDividerVisible ] = useState(false);
   
-
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
@@ -34,19 +33,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   };
 
   const changeCurOrg = (value) => {
-    dispatch({
-      type: 'global/set-curOrg',
-      payload: {
-        orgId: value
-      }
-    });
-    dispatch({
-      type: 'global/getProjects',
-      payload: {
-        orgId: value
-      }
-    });
-    history.push(`/org/${value}/m-org-ct`);
+    changeOrg({ orgId: value, dispatch });
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {

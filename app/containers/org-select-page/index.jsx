@@ -7,28 +7,11 @@ import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 import { connect } from "react-redux";
 import { compose } from 'redux';
-
-import history from 'utils/history';
+import changeOrg from "utils/changeOrg";
 
 import styles from './styles.less';
 
 const Orgs = ({ orgs, dispatch }) => {
-
-  const changeCurOrg = (orgId) => {
-    dispatch({
-      type: 'global/set-curOrg',
-      payload: {
-        orgId
-      }
-    });
-    dispatch({
-      type: 'global/getProjects',
-      payload: {
-        orgId
-      }
-    });
-    history.push(`/org/${orgId}/m-org-ct`);
-  };
 
   return <Layout style={{ backgroundColor: '#F5F8F8', paddingRight: 0 }} contentStyle={{ backgroundColor: '#F5F8F8' }}>
     <div className={styles.orgsList}>
@@ -46,7 +29,7 @@ const Orgs = ({ orgs, dispatch }) => {
               {index !== 0 ? <div className='divider'></div> : null}
               <List.Item 
                 onClick={() => {
-                  changeCurOrg(item.id);
+                  changeOrg({ orgId: item.id, dispatch });
                 }}
               >
                 <List.Item.Meta

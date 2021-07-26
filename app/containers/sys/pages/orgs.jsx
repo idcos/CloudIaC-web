@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 
 import { orgsAPI } from 'services/base';
-import history from 'utils/history';
+import changeOrg from "utils/changeOrg";
 
 import OrgModal from './components/orgModal';
 
@@ -102,22 +102,6 @@ const Orgs = ({ title, dispatch }) => {
     setVisible(!visible);
   };
 
-  const enterCurOrg = (orgId) => {
-    dispatch({
-      type: 'global/set-curOrg',
-      payload: {
-        orgId
-      }
-    });
-    dispatch({
-      type: 'global/getProjects',
-      payload: {
-        orgId
-      }
-    });
-    history.push(`/org/${orgId}/m-org-ct`);
-  };
-
   const columns = [
     {
       dataIndex: 'name',
@@ -165,7 +149,7 @@ const Orgs = ({ title, dispatch }) => {
             toggleVisible();
           }}
           >编辑</a>   
-          <a onClick={() => enterCurOrg(record.id)}>进入</a>       
+          <a onClick={() => changeOrg({ orgId: record.id, dispatch })}>进入</a>       
         </Space>;
       }
     }
