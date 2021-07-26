@@ -17,6 +17,11 @@ const userAPI = {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
+  },
+  resetUserPwd: ({ orgId, id }) => {
+    return post(`/api/v1/users/${id}/password/reset`, {}, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

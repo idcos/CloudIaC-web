@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { notification } from 'antd';
 
-import { orgsAPI } from 'services/base';
+import orgsAPI from 'services/orgs';
 import projectAPI from 'services/project';
 import userAPI from 'services/user';
 
