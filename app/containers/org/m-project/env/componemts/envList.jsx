@@ -98,8 +98,8 @@ const Index = (props) => {
           )}
         >
           <Space split={<Divider type='vertical' />}className={styles.envlistBox}>
-            <div>存活时间：{formatTTL(d)}</div>
-            <div>云模板：{d.templateName || '-'}</div>
+            <div className={styles.excelps}>存活时间：{formatTTL(d)}</div>
+            <div className={styles.excelps}>云模板：{d.templateName || '-'}</div>
             <div>资源数：{d.resourceCount || '-'}</div>
             <div>创建人：{d.creator || '-'}</div>
             <div style={{ display: 'flex' }}>状态：{ENV_STATUS[d.status] && <Tag color={ENV_STATUS_COLOR[d.status] || 'default'}>{ENV_STATUS[d.status]}</Tag> || '-'}</div>
