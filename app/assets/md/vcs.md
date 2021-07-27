@@ -12,4 +12,3 @@ CloudIaC目前支持以下四种VCS集成：
 - GitLab
 - Gitee
 - Gitea
-

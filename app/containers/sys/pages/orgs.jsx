@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 
-import { orgsAPI } from 'services/base';
+import orgsAPI from 'services/orgs';
 import changeOrg from "utils/changeOrg";
 
 import OrgModal from './components/orgModal';

@@ -3,7 +3,7 @@ import { Card, Spin, Radio, Input, notification, Row, Col, Button, Form } from '
 
 import { Eb_WP } from 'components/error-boundary';
 import { chartUtils } from 'components/charts-cfg';
-import { pjtAPI } from 'services/base';
+import projectAPI from 'services/project';
 
 import styles from './styles.less';
 
@@ -40,7 +40,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
   const fetchProjectInfo = async () => {
     try {
       setSpinning(true);
-      const res = await pjtAPI.detailProject({
+      const res = await projectAPI.detailProject({
         projectId, orgId
       });
       if (res.code !== 200) {
@@ -70,7 +70,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
   const onFinish = async (values) => {
     try {
       setSpinning(true);
-      const res = await pjtAPI.editProject({
+      const res = await projectAPI.editProject({
         ...values,
         projectId, 
         orgId

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
-import { orgsAPI } from 'services/base';
+import userAPI from 'services/user';
 
 import { ORG_USER } from 'constants/types';
 
@@ -27,8 +27,10 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
   const fetchUserList = async () => {
     try {
       setLoading(true);
-      const res = await orgsAPI.listUser({
-        ...query,
+      const res = await userAPI.list({
+        q: query.name,
+        pageSize: query.pageSize,
+        currentPage: query.pageNo,
         orgId
       });
       if (res.code !== 200) {

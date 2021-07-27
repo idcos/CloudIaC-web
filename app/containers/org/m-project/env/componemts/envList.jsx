@@ -6,7 +6,7 @@ import history from 'utils/history';
 import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { timeUtils } from "utils/time";
 import { Eb_WP } from 'components/error-boundary';
-import { envAPI } from 'services/base';
+import envAPI from 'services/env';
 
 import styles from '../styles.less';
 
@@ -93,7 +93,7 @@ const Index = (props) => {
                 history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${d.id}/resource`); 
               }}
               >{d.name || '-'}</a>
-              <span style={{ color: '#ccc' }}>{d.id}</span>
+              <span style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 12 }}>ID：{d.id}</span>
             </Space>
           )}
         >

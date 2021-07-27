@@ -9,7 +9,11 @@ import Layout from "components/common/layout";
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
-import { envAPI, ctAPI, sysAPI } from 'services/base';
+import sysAPI from 'services/sys';
+import envAPI from 'services/env';
+import tplAPI from 'services/tpl';
+import keysAPI from 'services/keys';
+import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
 
@@ -106,24 +110,32 @@ const Index = ({ match = {} }) => {
         form.setFieldsValue(data);
         setInfo(data);
       }
-      const res = await envAPI.templateDetail({
-        orgId, templateId: tplId
+      const res = await tplAPI.detail({
+        orgId, tplId
       });
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
       const { vcsId, repoId, repoRevision } = tplInfoRes;
       !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
       // 获取分支数据
-      const branchRes = await ctAPI.listRepoBranch({
-        orgId, vcsId, repoId 
+      const branchRes = await vcsAPI.listRepoBranch({
+        orgId, 
+        vcsId, 
+        repoId,
+        currentPage: 1,
+        pageSize: 100000
       });
       if (branchRes.code === 200) {
         setBranch(branchRes.result || []);
       }
       
       // 获取标签数据
-      const tagsRes = await ctAPI.listRepoTag({
-        orgId, vcsId, repoId 
+      const tagsRes = await vcsAPI.listRepoTag({
+        orgId, 
+        vcsId, 
+        repoId,
+        currentPage: 1,
+        pageSize: 100000
       });
       
       if (tagsRes.code === 200) {
@@ -139,8 +151,10 @@ const Index = ({ match = {} }) => {
         !envId && runnerList.length && form.setFieldsValue({ runnerId: runnerList[0].ID });
       }
       // 获取密钥数据
-      const keysRes = await envAPI.keysList({
-        orgId
+      const keysRes = await keysAPI.list({
+        orgId,
+        pageSize: 99999,
+        currentPage: 1
       });
       if (keysRes.code === 200) {
         setKeys(keysRes.result.list || []);

@@ -16,7 +16,8 @@ import { connect } from "react-redux";
 
 import getPermission from "utils/permission";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
-import { ctAPI, envAPI } from "services/base";
+import envAPI from 'services/env';
+import taskAPI from 'services/task';
 import history from 'utils/history';
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
@@ -64,14 +65,14 @@ const deployJournal = (props) => {
         }
       },
       {
-        url: `/api/v1/task/log/sse?id=${taskId}`,
+        url: `/api/v1/tasks/${taskId}/log/sse`,
         options: 
-        { withCredentials: true,
+        { 
+          withCredentials: true,
           headers: {
             'IaC-Org-Id': orgId,
             'IaC-Project-Id': projectId,
-            // 'Cookie': window.localStorage.getItem('accessToken')
-            Authorization: 'token'
+            'Authorization': window.localStorage.getItem('accessToken')
           }
         }
       }
@@ -81,7 +82,7 @@ const deployJournal = (props) => {
   const passOrRejecy = async(action) => {
     try {
       setBtnsSpinning(true);
-      const res = await envAPI.approve({
+      const res = await taskAPI.approve({
         orgId, taskId, projectId, action
       });
       if (res.code !== 200) {
@@ -124,7 +125,7 @@ const deployJournal = (props) => {
   const fetchComments = async () => {
     try {
       setLoading(true);
-      const res = await ctAPI.taskComment({
+      const res = await taskAPI.taskComment({
         orgId, taskId, projectId
       });
       if (res.code !== 200) {
@@ -143,7 +144,7 @@ const deployJournal = (props) => {
 
   const onFinish = async (values) => {
     try {
-      const res = await ctAPI.createTaskComment({     
+      const res = await taskAPI.createTaskComment({     
         orgId, taskId, projectId,
         ...values
       });

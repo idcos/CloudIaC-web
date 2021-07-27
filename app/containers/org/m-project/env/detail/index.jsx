@@ -8,7 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_TASK_STATUS_LIST } from "constants/types";
-import { envAPI } from 'services/base';
+import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import getPermission from "utils/permission";
 

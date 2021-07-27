@@ -16,6 +16,7 @@ const { Option } = Select;
 
 const Params = () => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
+  const [ sysInfo, setSysInfo ] = useState({});
 
   useEffect(() => {
     fetchInfo();
@@ -27,7 +28,8 @@ const Params = () => {
     try {
       setSubmitLoading(true);
       const res = await sysAPI.paramsUpdate({
-        value: values.num + ''
+        value: values.num + '',
+        sysId: sysInfo.id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -36,6 +38,7 @@ const Params = () => {
       notification.success({
         message: '操作成功'
       });
+      fetchInfo();
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
@@ -50,6 +53,7 @@ const Params = () => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      setSysInfo(res.result || {});
       form.setFieldsValue({
         num: res.result.value
       });

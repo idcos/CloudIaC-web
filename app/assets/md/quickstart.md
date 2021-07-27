@@ -2,9 +2,9 @@
 
 # 快速入门
 
-在您第一次登录CloudIaC后，您可以通过以下几个步骤，快速基于您的低代码仓库部署您的环境。![image.png](/assets/img/iac-quickstart.png)
+在您第一次登录CloudIaC后，您可以通过以下几个步骤，快速基于您的低代码仓库部署您的环境。
 
-
+![image.png](/assets/img/iac-quickstart.png)
 ## 创建组织
 
 组织是CloudIaC中最高层级的逻辑实体，组织间数据隔离；

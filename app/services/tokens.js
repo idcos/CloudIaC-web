@@ -6,9 +6,10 @@ const tokensAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  createToken: ({ orgId, ...restParams }) => {
+  createToken: ({ orgId, projectId, ...restParams }) => {
     return post('/api/v1/tokens', restParams, { 
-      'IaC-Org-Id': orgId
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
     });
   },
   editToken: ({ orgId, id, ...restParams }) => {
@@ -19,6 +20,15 @@ const tokensAPI = {
   delToken: ({ orgId, id }) => {
     return del(`/api/v1/tokens/${id}`, {}, { 
       'IaC-Org-Id': orgId
+    });
+  },
+  // 获取全量密钥
+  getTriggerUrl: ({ orgId, envId, projectId, action }) => {
+    return getWithArgs(`/api/v1/tokens/trigger`, {
+      envId, action
+    }, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
     });
   }
 };

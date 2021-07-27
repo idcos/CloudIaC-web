@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, notification, Space, Divider, Popconfirm } from 'antd';
-import { orgsAPI } from 'services/base';
-import moment from 'moment';
 
+import orgsAPI from 'services/orgs';
+import userAPI from 'services/user';
+import moment from 'moment';
 import { ORG_USER } from 'constants/types';
 
 import OpModal from './components/memberModal';
@@ -28,8 +29,9 @@ export default ({ title, orgId }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await orgsAPI.listUser({
-        ...query,
+      const res = await userAPI.list({
+        pageSize: query.pageSize,
+        currentPage: query.pageNo,
         orgId
       });
       if (res.code !== 200) {
@@ -61,7 +63,7 @@ export default ({ title, orgId }) => {
       const method = {
         edit: (param) => orgsAPI.changeOrgUserRole(param),
         add: (param) => orgsAPI.inviteUser(param),
-        resetUserPwd: ({ orgId, id }) => orgsAPI.resetUserPwd({ orgId, id }),
+        resetUserPwd: ({ orgId, id }) => userAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
       };
       const res = await method[doWhat]({

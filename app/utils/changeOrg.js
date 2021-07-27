@@ -2,8 +2,8 @@ import { notification } from 'antd';
 
 import history from "utils/history";
 import getPermission from "utils/permission";
-import { userAPI } from 'services/auth';
-import { pjtAPI } from 'services/base';
+import userAPI from 'services/user';
+import projectAPI from 'services/project';
 
 const changeOrg = async ({ orgId, dispatch }) => {
   const userInfoRes = await userAPI.info({
@@ -13,7 +13,7 @@ const changeOrg = async ({ orgId, dispatch }) => {
     return notification.error({ message: '未能获取用户信息' });
   }
   const { ORG_SET } = getPermission(userInfoRes.result || {});
-  const projectsRes = await pjtAPI.allEnableProjects({ orgId });
+  const projectsRes = await projectAPI.allEnableProjects({ orgId });
   const projects = projectsRes.result || {};
   if (!ORG_SET && !(projects.list || []).length) {
     return notification.error({ message: '您在该组织下暂无可访问的项目，请尝试切换其它组织' });

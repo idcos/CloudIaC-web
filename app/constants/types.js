@@ -42,7 +42,7 @@ export const ENV_STATUS = {
   'active': '活跃', 
   'failed': '失败', 
   'inactive': '不活跃',
-  'running': '部署中',
+  'running': '执行中',
   'approving': '待审批'
 };
 export const ENV_STATUS_COLOR = {
@@ -72,7 +72,7 @@ export const DOCS = {
 };
 export const TASK_STATUS = {
   "pending": '排队',
-  "running": '运行中',
+  "running": '执行中',
   "approving": '待审批',
   "failed": '失败',
   "complete": '成功'

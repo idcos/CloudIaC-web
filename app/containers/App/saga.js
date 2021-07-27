@@ -1,8 +1,9 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { notification } from 'antd';
 
-import { orgsAPI, pjtAPI } from 'services/base';
-import { userAPI } from 'services/auth';
+import orgsAPI from 'services/orgs';
+import projectAPI from 'services/project';
+import userAPI from 'services/user';
 
 function* getOrgs(action) {
   try {
@@ -40,7 +41,7 @@ function* getOrgs(action) {
 
 function* getProjects(action) {
   try {
-    const res = yield call(pjtAPI.allEnableProjects, action.payload);
+    const res = yield call(projectAPI.allEnableProjects, action.payload);
     if (res.code !== 200) {
       throw new Error(res.message);
     }

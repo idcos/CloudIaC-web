@@ -3,7 +3,7 @@ import { Tag, Space, Select } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import styles from './styles.less';
 import cloneDeep from 'lodash/cloneDeep';
-import { pjtAPI } from "services/base";
+import projectAPI from 'services/project';
 import { changeArrByObj } from 'utils/util';
 
 const { Option } = Select;
@@ -21,7 +21,7 @@ export default ({ canEdit = false, orgId, placeholder, onChangeSave }) => {
   }, []);
 
   const fetchProject = async() => {
-    let res = await pjtAPI.projectList({ orgId, pageSize: 99999, pageNo: 1 });
+    let res = await projectAPI.projectList({ orgId, pageSize: 99999, pageNo: 1 });
     if (res.code === 200) {
       let arr = res.result.list || [];
       setProjectNameList(arr.map(d => d.name));
