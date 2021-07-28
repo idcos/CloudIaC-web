@@ -157,7 +157,11 @@ const AppHeader = (props) => {
                 formatOptionLabel={(name) => `项目：${name}`}
                 seniorSelectfooter={(
                   <div className={styles.seniorSelectfooter}>
-                    <div className='more' onClick={goMoreProject}>查看更多项目</div>
+                    {
+                      projectList.length ? (
+                        <div className='more' onClick={goMoreProject}>查看更多项目</div>
+                      ) : null
+                    }
                     <div style={{ padding: '10px 19px 0px 19px' }}>
                       <Divider style={{ margin: '0' }} />
                     </div>

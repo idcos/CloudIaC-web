@@ -38,7 +38,7 @@ CloudIaC通过Terraform的状态文件还维护整个环境的状态，用户可
 
 当您的环境处于*活跃*状态时，您只需单击环境即可查看其中包含的资源。
 
-![image.png](/assets/img/iac-env-resources.png.png)
+![image.png](/assets/img/iac-env-resources.png)
 
 ## 存活时间
 

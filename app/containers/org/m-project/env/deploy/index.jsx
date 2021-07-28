@@ -180,8 +180,8 @@ const Index = ({ match = {} }) => {
           description: 'playbook存在时管理密钥必填'
         });
       }
-      values.triggers = (values.triggers || []).filter(d => d !== 'autoApproval'); 
       values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
+      values.triggers = (values.triggers || []).filter(d => d !== 'autoApproval'); 
       setSpinning(true);
       if (!!values.destroyAt) {
         values.destroyAt = moment(values.destroyAt);
