@@ -1,10 +1,13 @@
 import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
-import { Space, Form } from 'antd';
+import { Space, Form, Anchor } from 'antd';
 
 import TerraformVarForm from './terraform-var-form';
 import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
 import VarsContext from './context';
+import styles from './styles.less';
+
+const { Link } = Anchor;
 
 const VariableForm = ({ 
   varRef, 
@@ -12,7 +15,8 @@ const VariableForm = ({
   fetchParams, 
   canImportTerraformVar = false, 
   defaultScope, 
-  showOtherVars = false 
+  showOtherVars = false,
+  hasAnchor = true
 }) => {
 
   const terraformVarRef = useRef();
@@ -98,12 +102,41 @@ const VariableForm = ({
         canImportTerraformVar
       }}
     >
-      <div className='variable'>
-        <Space style={{ width: '100%' }} direction='vertical' size={24}>
-          <TerraformVarForm />
-          <EnvVarForm />
-          {showOtherVars && <OtherVarForm />}
-        </Space>
+      <div className={styles.variableWrapper}>
+        <div className={`variable-content ${hasAnchor ? 'hasAnchor' : ''}`}>
+          <Space style={{ width: '100%' }} direction='vertical' size={24}>
+            <a id='terraform-var'>
+              <TerraformVarForm />
+            </a>
+            <a id='env-var'>
+              <EnvVarForm />
+            </a>
+            { 
+              showOtherVars ? (
+                <a id='other-var'>
+                  <OtherVarForm />
+                </a>
+              ) : null 
+            }
+          </Space>
+        </div>
+        {
+          hasAnchor ? (
+            <div className='variable-anchor'>
+              <Anchor
+                onClick={e => e.preventDefault()}
+                affix={false}
+                bounds={50}
+                showInkInFixed={true}
+                getContainer={() => document.querySelector('.variable-content')}
+              >
+                <Link href='#terraform-var' title='Terraform变量' />
+                <Link href='#env-var' title='环境变量' />
+                { showOtherVars ? <Link href='#other-var' title='其它变量' /> : null }
+              </Anchor>
+            </div>
+          ) : null
+        }
       </div>
     </VarsContext.Provider>
   );

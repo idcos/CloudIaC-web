@@ -114,7 +114,7 @@ export default (props) => {
   return (
     <div className={styles.markdownDoc}>
       <div className='md-content'>
-        <div className='md-content-scroll' dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
+        <div dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
       </div>
       <div className='doc-anchor-wrapper'>
         <div className='title'>本篇目录</div>

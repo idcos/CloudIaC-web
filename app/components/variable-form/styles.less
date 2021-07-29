@@ -1,0 +1,22 @@
+.variableWrapper {
+
+  display: flex;
+
+  :global {
+
+    .variable-content {
+      flex: 1;
+      overflow-y: auto;
+      
+      &.hasAnchor {
+        max-height: 650px;
+      }
+    }
+
+    .variable-anchor {
+      flex: 0 0 130px;
+      margin-left: 18px;
+    }
+  }
+
+}
