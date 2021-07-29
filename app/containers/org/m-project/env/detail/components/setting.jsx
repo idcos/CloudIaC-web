@@ -22,9 +22,14 @@ const PL = {
 const { Option } = Select;
     
 const Index = (props) => {
+  
   const { match, info, reload, userInfo } = props;
   const { params: { orgId, projectId, envId } } = match;
   const { PROJECT_OPERATOR } = getPermission(userInfo);
+
+
+  const [ fileLoading, setFileLoading ] = useState(false);
+  const [ submitLoading, setSubmitLoading ] = useState(false);
 
   const [form] = Form.useForm();
 
@@ -56,7 +61,9 @@ const Index = (props) => {
         values.ttl = '0';
       }
       delete values.type;
+      setSubmitLoading(true);
       const res = await envAPI.envsEdit({ orgId, projectId, ...values, envId: envId ? envId : undefined });
+      setSubmitLoading(false);
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -65,6 +72,7 @@ const Index = (props) => {
         description: '保存成功'
       });
     } catch (e) {
+      setSubmitLoading(false);
       notification.error({
         message: '保存失败',
         description: e.message
@@ -74,9 +82,11 @@ const Index = (props) => {
 
   const archive = async() => {
     try {
+      setFileLoading(true);
       const res = await envAPI.envsArchive({
         orgId, projectId, envId
       });
+      setFileLoading(false);
       if (res.code != 200) {
         throw new Error(res.message);
       }
@@ -85,6 +95,7 @@ const Index = (props) => {
       });
       reload();
     } catch (e) {
+      setFileLoading(false);
       notification.error({
         message: '操作失败',
         description: e.message
@@ -100,7 +111,7 @@ const Index = (props) => {
       let data = res.result || {};
       let copyData = `${window.location.origin}/api/v1/trigger/send?token=${data.key}`;
       if (res.code === 200) {
-        if (res.result === null || res.result === '' || res.result === undefined) {
+        if (!res.result) {
           const resCreat = await tokensAPI.createToken({
             orgId, envId, action, projectId
           });
@@ -226,8 +237,8 @@ const Index = (props) => {
         {
           PROJECT_OPERATOR ? (
             <Row style={{ display: 'flex', justifyContent: 'center' }}>
-              <Button onClick={archive} disabled={info.status !== 'inactive'} >归档</Button>
-              <Button type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
+              <Button loading={fileLoading} onClick={archive} disabled={info.status !== 'inactive'} >归档</Button>
+              <Button loading={submitLoading} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
             </Row>
           ) : null
         }
