@@ -146,6 +146,10 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
 
   const onValuesChange = (changedValues, allValues) => {
     if (changedValues.vcsId) {
+      // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
+      setRepos([]);
+      setRepoBranches([]);
+      setRepoTags([]);
       fetchRepos(allValues);
       form.setFieldsValue({
         repoId: undefined,
@@ -154,6 +158,9 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
       });
     }
     if (changedValues.repoId) {
+      // 切换仓库需要将关联的数据源【分支、标签】清空 ，再重新查询数据源
+      setRepoBranches([]);
+      setRepoTags([]);
       fetchRepoBranches(allValues);
       fetchRepoTags(allValues);
       form.setFieldsValue({
