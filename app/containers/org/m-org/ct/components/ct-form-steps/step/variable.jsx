@@ -35,7 +35,7 @@ export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId })
     return {
       orgId, ...ctData.repo
     };
-  }, [ ctData, orgId ]);
+  }, [ ctData.repo, orgId ]);
 
   return <div className='form-wrapper'>
     <VariableForm 
