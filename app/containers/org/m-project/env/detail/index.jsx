@@ -117,7 +117,7 @@ const EnvDetail = (props) => {
   };
 
   const fetchTaskInfo = () => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       try {
         const res = await taskAPI.detail({
           orgId, projectId, taskId
@@ -137,8 +137,8 @@ const EnvDetail = (props) => {
     });
   };
 
-  const { data: taskInfo, run: runLoop, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
-    manual: true,
+  const { data: taskInfo, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
+    ready: !!taskId,
     initialData: {},
     pollingInterval: 3000,
     pollingWhenHidden: false
@@ -147,12 +147,6 @@ const EnvDetail = (props) => {
   useEffect(() => {
     fetchInfo();
   }, []);
-
-  useEffect(() => {
-    if (taskId) {
-      runLoop();
-    }
-  }, [taskId]);
 
   useEffect(() => {
     if (END_TASK_STATUS_LIST.indexOf(taskInfo.status) !== -1) {
