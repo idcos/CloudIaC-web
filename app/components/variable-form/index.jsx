@@ -68,11 +68,12 @@ const VariableForm = ({
           );
         }
         Promise.all(formValidates).then(
-          ([ , , otherVarFormValues = {} ]) => {
+          ([ , , { tfVarsFile, playbook } = {} ]) => {
             const data = {
               deleteVariablesId,
               variables: [ ...terraformVarList, ...envVarList ],
-              ...otherVarFormValues
+              tfVarsFile: tfVarsFile || '',
+              playbook: playbook || ''
             };
             resolve(data);
           },
