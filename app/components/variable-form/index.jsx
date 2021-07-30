@@ -1,5 +1,5 @@
 import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
-import { Space, Form, Anchor } from 'antd';
+import { Space, Form, Anchor, Affix } from 'antd';
 
 import TerraformVarForm from './terraform-var-form';
 import EnvVarForm from './env-var-form';
@@ -123,19 +123,21 @@ const VariableForm = ({
         </div>
         {
           hasAnchor ? (
-            <div className='variable-anchor'>
-              <Anchor
-                onClick={e => e.preventDefault()}
-                affix={false}
-                bounds={50}
-                showInkInFixed={true}
-                getContainer={() => document.querySelector('.variable-content')}
-              >
-                <Link href='#terraform-var' title='Terraform变量' />
-                <Link href='#env-var' title='环境变量' />
-                { showOtherVars ? <Link href='#other-var' title='其它变量' /> : null }
-              </Anchor>
-            </div>
+            <Affix target={() => document.getElementById('idcos-layout-content')}>
+              <div className='variable-anchor'>
+                <Anchor
+                  onClick={e => e.preventDefault()}
+                  affix={false}
+                  bounds={50}
+                  showInkInFixed={true}
+                  getContainer={() => document.getElementById('idcos-layout-content')}
+                >
+                  <Link href='#terraform-var' title='Terraform变量' />
+                  <Link href='#env-var' title='环境变量' />
+                  { showOtherVars ? <Link href='#other-var' title='其它变量' /> : null }
+                </Anchor>
+              </div>
+            </Affix>
           ) : null
         }
       </div>
