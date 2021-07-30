@@ -123,10 +123,11 @@ const VariableForm = ({
         </div>
         {
           hasAnchor ? (
-            <Affix target={() => document.getElementById('idcos-layout-content')}>
+            <Affix offsetTop={20} target={() => document.getElementById('idcos-layout-content')}>
               <div className='variable-anchor'>
                 <Anchor
                   onClick={e => e.preventDefault()}
+                  offsetTop={20}
                   affix={false}
                   bounds={50}
                   showInkInFixed={true}
