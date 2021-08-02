@@ -117,7 +117,7 @@ const EnvDetail = (props) => {
   };
 
   const fetchTaskInfo = () => {
-    return new Promise(async (resolve) => {
+    return new Promise(async (resolve, reject) => {
       try {
         const res = await taskAPI.detail({
           orgId, projectId, taskId
@@ -128,22 +128,24 @@ const EnvDetail = (props) => {
         const data = res.result || {};
         resolve(data);
       } catch (e) {
-        cancelLoop();
-        notification.error({
-          message: '获取失败',
-          description: e.message
-        });
+        reject(e);
       }
     });
   };
 
-  const { data: taskInfo, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
+  const { data: taskInfo = {}, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
     ready: !!taskId,
-    initialData: {},
     pollingInterval: 3000,
-    pollingWhenHidden: false
+    pollingWhenHidden: false,
+    onError: (err) => {
+      cancelLoop();
+      notification.error({
+        message: '获取失败',
+        description: err.message
+      });
+    }
   });
- 
+
   useEffect(() => {
     fetchInfo();
   }, []);
