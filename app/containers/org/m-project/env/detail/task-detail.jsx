@@ -31,7 +31,7 @@ const TaskDetail = (props) => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await taskAPI.detail({
-          orgId, projectId, taskId: 1
+          orgId, projectId, taskId
         });
         if (res.code != 200) {
           throw new Error(res.message);
