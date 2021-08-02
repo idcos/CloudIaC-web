@@ -5,12 +5,12 @@
  
   :global .help-docs-wrapper {
    
-    height: 100%;
+    min-height: calc(100% - 24px);
+    max-height: 100%;
     display: flex;
 
     .help-docs-menus {
       flex: 0 0 200px;
-      height: 100%;
       background: #FAFAFA;
       padding: 40px 0 0;
       display: flex;
@@ -34,6 +34,7 @@
         font-size: 16px;
         border-radius: 50%;
         border: 1px solid #DEE0E3;
+        background-color: #fff;
         text-align: center;
         z-index: 999999999999;
         cursor: pointer;
@@ -65,7 +66,6 @@
 
     .help-docs-content {
       flex: 1;
-      height: 100%;
       overflow: hidden;
     }
   }

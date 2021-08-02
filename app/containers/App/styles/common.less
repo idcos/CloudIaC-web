@@ -14,6 +14,12 @@
   padding: 20px;
 }
 
+.idcos-no-scrollbar {
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0 !important }
+}
+
 .container-inner-width {
   width: @ctw;
   margin: 0 auto;

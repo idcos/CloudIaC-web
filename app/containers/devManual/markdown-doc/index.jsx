@@ -113,16 +113,16 @@ export default (props) => {
 
   return (
     <div className={styles.markdownDoc}>
-      <div className='md-content'>
+      <div className='md-content idcos-no-scrollbar'>
         <div dangerouslySetInnerHTML={{ __html: innerHTML }}></div>
       </div>
       <div className='doc-anchor-wrapper'>
         <div className='title'>本篇目录</div>
         <Anchor 
-          className='doc-anchor' 
+          className='doc-anchor idcos-text-ellipsis' 
           onClick={e => e.preventDefault()}
           affix={false} 
-          targetOffset={220}
+          targetOffset={100}
           bounds={50}
           showInkInFixed={true}
           getContainer={() => document.querySelector('.md-content')}
