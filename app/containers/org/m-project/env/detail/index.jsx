@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import history from 'utils/history';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input } from "antd";
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -18,9 +19,7 @@ import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
-
 import styles from './styles.less';
-
 
 const subNavs = {
   resource: '资源',
@@ -39,58 +38,6 @@ const EnvDetail = (props) => {
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
   const [ taskId, setTaskId ] = useState();
-  const [ taskInfo, setTaskInfo ] = useState({});
-
-  const loopRef = useRef();
-
-  const renderByPanel = useCallback(() => {
-    const PAGES = {
-      resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
-      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
-      deployHistory: () => <DeployHistory {...props} info={info}/>,
-      variable: () => <Variable taskInfo={taskInfo}/>,
-      setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
-    };
-    return PAGES[panel]();
-  }, [ panel, info, taskInfo ]);
- 
-  useEffect(() => {
-    fetchInfo();
-    return () => {
-      clearInterval(loopRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (taskId && !loopRef.current) {
-      fetchTaskInfo();
-      loopRef.current = setInterval(() => {
-        fetchTaskInfo();
-      }, 1500);
-    }
-  }, [taskId]);
-
-  const fetchTaskInfo = async () => {
-    try {
-      const res = await taskAPI.detail({
-        orgId, projectId, taskId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      const data = res.result || {};
-      setTaskInfo(data);
-      if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
-        clearInterval(loopRef.current);
-        fetchInfo();
-      }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
 
   // 获取Info
   const fetchInfo = async () => {
@@ -117,6 +64,7 @@ const EnvDetail = (props) => {
   const redeploy = async() => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${info.tplId}/${envId}`); 
   };
+
   const destroy = () => {
     Modal.confirm({
       width: 480,
@@ -167,6 +115,57 @@ const EnvDetail = (props) => {
       onCancel: () => form.resetFields()
     });
   };
+
+  const fetchTaskInfo = () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await taskAPI.detail({
+          orgId, projectId, taskId
+        });
+        if (res.code != 200) {
+          throw new Error(res.message);
+        }
+        const data = res.result || {};
+        resolve(data);
+      } catch (e) {
+        cancelLoop();
+        notification.error({
+          message: '获取失败',
+          description: e.message
+        });
+      }
+    });
+  };
+
+  const { data: taskInfo, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
+    ready: !!taskId,
+    initialData: {},
+    pollingInterval: 3000,
+    pollingWhenHidden: false
+  });
+ 
+  useEffect(() => {
+    fetchInfo();
+  }, []);
+
+  useEffect(() => {
+    if (END_TASK_STATUS_LIST.indexOf(taskInfo.status) !== -1) {
+      cancelLoop();
+      fetchInfo();
+    }
+  }, [taskInfo]);
+
+  const renderByPanel = useCallback(() => {
+    const PAGES = {
+      resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
+      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
+      deployHistory: () => <DeployHistory {...props} info={info}/>,
+      variable: () => <Variable taskInfo={taskInfo}/>,
+      setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
+    };
+    return PAGES[panel]();
+  }, [ panel, info, taskInfo ]);
+  
   return <Layout
     extraHeader={
       <PageHeader

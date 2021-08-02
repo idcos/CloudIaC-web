@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@hot-loader/react-dom": "16.11.0",
+    "ahooks": "^2.10.9",
     "ansi-regex": "^6.0.0",
     "ansi_up": "^5.0.1",
     "antd": "4.11.2",

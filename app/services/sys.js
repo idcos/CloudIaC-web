@@ -17,8 +17,8 @@ const sysAPI = {
   paramsSearch: () => {
     return get('/api/v1/systems');
   },
-  paramsUpdate: ({ sysId, ...restParams }) => {
-    return put(`/api/v1/systems/${sysId}`, { ...restParams });
+  paramsUpdate: (params) => {
+    return put(`/api/v1/systems`, params);
   }
 };
 

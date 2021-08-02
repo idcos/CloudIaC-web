@@ -33,7 +33,8 @@ const Index = ({ match = {} }) => {
   const varRef = useRef();
   const [form] = Form.useForm();
 
-  const [ spinning, setSpinning ] = useState(false);
+  const [ applyLoading, setApplyLoading ] = useState(false);
+  const [ planLoading, setPlanLoading ] = useState(false);
   const [ vars, setVars ] = useState([]);
   const [ branch, setBranch ] = useState([]);
   const [ tag, setTag ] = useState([]);
@@ -79,9 +80,7 @@ const Index = ({ match = {} }) => {
         throw new Error(res.message);
       }
       setVars(res.result || []);
-      setSpinning(false);
     } catch (e) {
-      setSpinning(false);
       notification.error({
         message: '获取失败',
         description: e.message
@@ -182,7 +181,8 @@ const Index = ({ match = {} }) => {
       }
       values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
       values.triggers = (values.triggers || []).filter(d => d !== 'autoApproval'); 
-      setSpinning(true);
+      taskType === 'plan' && setPlanLoading(true);
+      taskType === 'apply' && setApplyLoading(true);
       if (!!values.destroyAt) {
         values.destroyAt = moment(values.destroyAt);
       }
@@ -203,10 +203,11 @@ const Index = ({ match = {} }) => {
       } else { // 创建部署环境，跳环境详情
         history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployJournal`); 
       }
-      setSpinning(false);
-      getVars();
+      taskType === 'plan' && setPlanLoading(false);
+      taskType === 'apply' && setApplyLoading(false);
     } catch (e) {
-      setSpinning(false);
+      taskType === 'plan' && setPlanLoading(false);
+      taskType === 'apply' && setApplyLoading(false);
       notification.error({
         message: '保存失败',
         description: e.message
@@ -396,8 +397,8 @@ const Index = ({ match = {} }) => {
             showOtherVars={true}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button htmlType='submit' onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
-            <Button htmlType='submit' loading={spinning} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
+            <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
+            <Button htmlType='submit' disabled={planLoading} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
           </Row>
         </Form>
       </div>

@@ -33,6 +33,8 @@ const deployJournal = (props) => {
   const [ comments, setComments ] = useState([]),
     [ loading, setLoading ] = useState(false),
     [ btnsSpinning, setBtnsSpinning ] = useState(false),
+    [ isApprover, setIsApprover ] = useState(false),
+    [ taskLoading, setTaskLoading ] = useState(false),
     [ taskLog, setTaskLog ] = useState([]);
 
   const endRef = useRef();
@@ -92,10 +94,12 @@ const deployJournal = (props) => {
         message: "操作成功"
       });
       reload && reload();
+      setIsApprover(true);
       setTimeout(() => {
         setBtnsSpinning(false);
       }, 1000);
     } catch (e) {
+      setIsApprover(false);
       setBtnsSpinning(false);
       notification.error({
         message: "操作失败",
@@ -106,15 +110,18 @@ const deployJournal = (props) => {
 
   const applyTask = async () => {
     try {
+      setTaskLoading(true);
       const res = await envAPI.envRedeploy({
         orgId, projectId, envId, taskType: 'apply'
       });
+      setTaskLoading(false);
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       const { taskId: taskID } = res.result || {};
       history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${taskID}`); 
     } catch (e) {
+      setTaskLoading(false);
       notification.error({
         message: "操作失败",
         description: e.message
@@ -194,7 +201,7 @@ const deployJournal = (props) => {
               <Spin spinning={btnsSpinning}>
                 <Row style={{ display: 'flex', justifyContent: 'center' }}>
                   {
-                    taskInfo.status === 'approving' ? (
+                    taskInfo.status === 'approving' && !isApprover ? (
                       <>
                         <Button 
                           disabled={!PROJECT_APPROVER}
@@ -215,11 +222,12 @@ const deployJournal = (props) => {
                     ) : null
                   }
                   {
-                    taskInfo.type === 'plan' && taskInfo.status === 'complete' ? (
+                    taskInfo.type === 'plan' && taskInfo.status === 'complete' && !isApprover ? (
                       <Button 
                         type='primary'
                         style={{ marginTop: 20 }} 
                         onClick={applyTask}
+                        loading={taskLoading}
                       >
                         执行部署
                       </Button>

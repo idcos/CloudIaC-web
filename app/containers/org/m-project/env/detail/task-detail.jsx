@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { notification, Tabs } from "antd";
+import { useRequest } from 'ahooks';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -25,9 +26,40 @@ const TaskDetail = (props) => {
   const { curEnv, dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
 
   const [ panel, setPanel ] = useState('deployJournal');
-  const [ taskInfo, setTaskInfo ] = useState({});
 
-  const loopRef = useRef();
+  const fetchTaskInfo = () => {
+    return new Promise(async (resolve) => {
+      try {
+        const res = await taskAPI.detail({
+          orgId, projectId, taskId
+        });
+        if (res.code != 200) {
+          throw new Error(res.message);
+        }
+        const data = res.result || {};
+        resolve(data);
+      } catch (e) {
+        cancelLoop();
+        notification.error({
+          message: '获取失败',
+          description: e.message
+        });
+      }
+    });
+  };
+
+  const { data: taskInfo, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
+    ready: !!taskId,
+    initialData: {},
+    pollingInterval: 3000,
+    pollingWhenHidden: false
+  });
+
+  useEffect(() => {
+    if (END_TASK_STATUS_LIST.indexOf(taskInfo.status) !== -1) {
+      cancelLoop();
+    }
+  }, [taskInfo]);
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
@@ -40,43 +72,6 @@ const TaskDetail = (props) => {
       dispatch
     });
   }, [ panel, taskInfo ]);
-
-  useEffect(() => {
-    return () => {
-      clearInterval(loopRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (taskId && !loopRef.current) {
-      fetchTaskInfo();
-      loopRef.current = setInterval(() => {
-        fetchTaskInfo();
-      }, 1500);
-    }
-  }, [taskId]);
-  
-  // 获取Info
-  const fetchTaskInfo = async () => {
-    try {
-      const res = await taskAPI.detail({
-        orgId, projectId, taskId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      const data = res.result || {};
-      setTaskInfo(data);
-      if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
-        clearInterval(loopRef.current);
-      }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
   
   return <Layout
     extraHeader={

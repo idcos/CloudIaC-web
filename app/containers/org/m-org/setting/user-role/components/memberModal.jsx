@@ -45,17 +45,21 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
     >
       <Form.Item
         label='邮箱'
-        name='email'
-        rules={[
-          {
-            required: true,
-            message: '请输入'
-          },
-          { type: 'email', message: '邮箱格式有误' }
-        ]}
       >
         <Space>
-          <Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+          <Form.Item
+            name='email'
+            rules={[
+              {
+                required: true,
+                message: '请输入'
+              },
+              { type: 'email', message: '邮箱格式有误' }
+            ]}
+            noStyle={true}
+          >
+            <Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+          </Form.Item>
           <Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip>
         </Space>
       </Form.Item>

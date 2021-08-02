@@ -24,13 +24,14 @@ const Params = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = async (values) => {
+  const onFinish = async ({ MAX_JOBS_PER_RUNNER, ...restFormData }) => {
+    const systemCfg = formatToParams({
+      MAX_JOBS_PER_RUNNER: MAX_JOBS_PER_RUNNER + '',
+      ...restFormData
+    });
     try {
       setSubmitLoading(true);
-      const res = await sysAPI.paramsUpdate({
-        value: values.num + '',
-        sysId: sysInfo.id
-      });
+      const res = await sysAPI.paramsUpdate({ systemCfg });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -53,10 +54,9 @@ const Params = () => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setSysInfo(res.result || {});
-      form.setFieldsValue({
-        num: res.result.value
-      });
+      const formData = formatToFormData(res.result);
+      setSysInfo(formData);
+      form.setFieldsValue(formData);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -73,7 +73,7 @@ const Params = () => {
       <Form.Item label='并发作业数' required={true}>
         <Space>
           <Form.Item
-            name='num'
+            name='MAX_JOBS_PER_RUNNER'
             rules={[
               {
                 required: true,
@@ -83,7 +83,7 @@ const Params = () => {
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            <InputNumber min={0} precision={0}/>
+            <InputNumber min={0} precision={0} placeholder='请输入' />
           </Form.Item>
           <Form.Item
             style={{ display: 'inline-block' }}
@@ -95,21 +95,21 @@ const Params = () => {
       </Form.Item>
       <Form.Item
         label='日志保存周期'
-        name='duration'
+        name='PERIOD_OF_LOG_SAVE'
         rules={[
           {
             required: true,
             message: '请选择'
           }
         ]}
-        initialValue='1'
+        initialValue='Permanent'
       >
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
           style={{ width: 240 }}
           disabled={true}
         >
-          <Option value='1'>永久保存</Option>
+          <Option value='Permanent'>永久保存</Option>
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
@@ -119,6 +119,24 @@ const Params = () => {
       </Form.Item>
     </Form>
   </div>;
+};
+
+const formatToFormData = (list) => {
+  let formData = {};
+  (list || []).forEach(({ name, value } = {}) => {
+    formData[name] = value;
+  });
+  return formData;
+};
+
+const formatToParams = (formData) => {
+  const params = Object.keys(formData).map(name => {
+    return {
+      name,
+      value: formData[name]
+    };
+  });
+  return params;
 };
 
 export default Params;
