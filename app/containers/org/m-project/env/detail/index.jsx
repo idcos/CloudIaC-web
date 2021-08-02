@@ -12,6 +12,7 @@ import { END_TASK_STATUS_LIST } from "constants/types";
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import getPermission from "utils/permission";
+import { requestWrapper } from 'utils/request';
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -116,35 +117,25 @@ const EnvDetail = (props) => {
     });
   };
 
-  const fetchTaskInfo = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const res = await taskAPI.detail({
-          orgId, projectId, taskId
+  const { data: taskInfo = {}, cancel: cancelLoop } = useRequest(
+    requestWrapper(
+      taskAPI.detail.bind(null, {
+        orgId, projectId, taskId
+      })
+    ), 
+    {
+      ready: !!taskId,
+      pollingInterval: 3000,
+      pollingWhenHidden: false,
+      onError: (err) => {
+        cancelLoop();
+        notification.error({
+          message: '获取失败',
+          description: err.message
         });
-        if (res.code != 200) {
-          throw new Error(res.message);
-        }
-        const data = res.result || {};
-        resolve(data);
-      } catch (e) {
-        reject(e);
       }
-    });
-  };
-
-  const { data: taskInfo = {}, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
-    ready: !!taskId,
-    pollingInterval: 3000,
-    pollingWhenHidden: false,
-    onError: (err) => {
-      cancelLoop();
-      notification.error({
-        message: '获取失败',
-        description: err.message
-      });
     }
-  });
+  );
 
   useEffect(() => {
     fetchInfo();
