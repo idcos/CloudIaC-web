@@ -127,6 +127,12 @@ const EnvDetail = (props) => {
       ready: !!taskId,
       pollingInterval: 3000,
       pollingWhenHidden: false,
+      onSuccess: (data) => {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+          cancelLoop();
+          fetchInfo();
+        }
+      },
       onError: (err) => {
         cancelLoop();
         notification.error({
@@ -140,13 +146,6 @@ const EnvDetail = (props) => {
   useEffect(() => {
     fetchInfo();
   }, []);
-
-  useEffect(() => {
-    if (END_TASK_STATUS_LIST.indexOf(taskInfo.status) !== -1) {
-      cancelLoop();
-      fetchInfo();
-    }
-  }, [taskInfo]);
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
