@@ -1,5 +1,5 @@
 
-export const requestWrapper = (apiFn) => () => {
+export const requestWrapper = (apiFn) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await apiFn();

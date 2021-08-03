@@ -118,7 +118,7 @@ const EnvDetail = (props) => {
   };
 
   const { data: taskInfo = {}, cancel: cancelLoop } = useRequest(
-    requestWrapper(
+    () => requestWrapper(
       taskAPI.detail.bind(null, {
         orgId, projectId, taskId
       })

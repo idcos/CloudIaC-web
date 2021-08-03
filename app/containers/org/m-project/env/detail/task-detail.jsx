@@ -29,7 +29,7 @@ const TaskDetail = (props) => {
   const [ panel, setPanel ] = useState('deployJournal');
 
   const { data: taskInfo = {}, refresh, cancel: cancelLoop } = useRequest(
-    requestWrapper(
+    () => requestWrapper(
       taskAPI.detail.bind(null, {
         orgId, projectId, taskId
       })
