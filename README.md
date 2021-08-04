@@ -41,10 +41,8 @@
 ## 开发向导
 
 1.  确保机器已安装 Node>=8.15.1, npm>5。
-2.  克隆模板工程到本地 `git clone git@gitlab.idcos.com:Common/idcos-web-boilerplate.git`。
-3.  进入工程文件夹: `cd idcos-web-boilerplate`。
-4.  执行 `npm i` 安装所需依赖。
-5.  执行 `npm start` 来启动项目.
+2.  执行 `npm i` 安装所需依赖。
+3.  执行 `npm start` 来启动项目.
 
 ## 相关文档
 
@@ -55,23 +53,9 @@
 - [**Less**](http://lesscss.org/): It's CSS, with just a little more.
 - [**Qiankun**](https://qiankun.umijs.org/): Probably the most complete micro-frontends solution you ever met 🧐.
 
-## 贡献者
-
-> [http://gitlab.idcos.com/Common/idcos-web-boilerplate/-/project_members](http://gitlab.idcos.com/Common/idcos-web-boilerplate/-/project_members)
-
 ## 变更日志
 ---
 
-### Release/0.0.1
-`2020-09-26`
-- 模板项目初始化，配置antd，qiankun。
-
-### Release/0.0.2
-`2020-11-18`
-- 更新部分npm包。
-- 重新打包vendor文件。
-- 去除无用的依赖。
-- 更新`eslint-config-idcos`。
-- 优化错误页面和404页面。
-- 从`redux-injectors`包中导入`injectReducer`和`injectSaga`,删除原有的redux utils。
-- 移除`image-webpack-loader`,因网络原因，该loader会导致npm install卡住。
+### v1.0
+`2021-07-28`
+- iac开源发布
