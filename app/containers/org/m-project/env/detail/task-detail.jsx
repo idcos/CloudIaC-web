@@ -8,6 +8,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_TASK_STATUS_LIST } from "constants/types";
 import taskAPI from 'services/task';
+import { requestWrapper } from 'utils/request';
 
 import Resource from './components/resource';
 import DeployJournal from './components/deployJournal';
@@ -27,44 +28,35 @@ const TaskDetail = (props) => {
 
   const [ panel, setPanel ] = useState('deployJournal');
 
-  const fetchTaskInfo = () => {
-    return new Promise(async (resolve) => {
-      try {
-        const res = await taskAPI.detail({
-          orgId, projectId, taskId
-        });
-        if (res.code != 200) {
-          throw new Error(res.message);
+  const { data: taskInfo = {}, refresh, cancel: cancelLoop } = useRequest(
+    () => requestWrapper(
+      taskAPI.detail.bind(null, {
+        orgId, projectId, taskId
+      })
+    ), 
+    {
+      ready: !!taskId,
+      pollingInterval: 3000,
+      pollingWhenHidden: false,
+      onSuccess: (data) => {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+          cancelLoop();
         }
-        const data = res.result || {};
-        resolve(data);
-      } catch (e) {
+      },
+      onError: (err) => {
         cancelLoop();
         notification.error({
           message: '获取失败',
-          description: e.message
+          description: err.message
         });
       }
-    });
-  };
-
-  const { data: taskInfo, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
-    ready: !!taskId,
-    initialData: {},
-    pollingInterval: 3000,
-    pollingWhenHidden: false
-  });
-
-  useEffect(() => {
-    if (END_TASK_STATUS_LIST.indexOf(taskInfo.status) !== -1) {
-      cancelLoop();
     }
-  }, [taskInfo]);
+  );
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
-      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchTaskInfo}/>,
+      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={refresh}/>,
       variable: () => <Variable taskInfo={taskInfo}/>
     };
     return PAGES[panel]({

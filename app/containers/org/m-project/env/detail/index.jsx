@@ -12,6 +12,7 @@ import { END_TASK_STATUS_LIST } from "constants/types";
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import getPermission from "utils/permission";
+import { requestWrapper } from 'utils/request';
 
 import Info from './components/info';
 import Resource from './components/resource';
@@ -116,44 +117,35 @@ const EnvDetail = (props) => {
     });
   };
 
-  const fetchTaskInfo = () => {
-    return new Promise(async (resolve) => {
-      try {
-        const res = await taskAPI.detail({
-          orgId, projectId, taskId
-        });
-        if (res.code != 200) {
-          throw new Error(res.message);
+  const { data: taskInfo = {}, cancel: cancelLoop } = useRequest(
+    () => requestWrapper(
+      taskAPI.detail.bind(null, {
+        orgId, projectId, taskId
+      })
+    ), 
+    {
+      ready: !!taskId,
+      pollingInterval: 3000,
+      pollingWhenHidden: false,
+      onSuccess: (data) => {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+          cancelLoop();
+          fetchInfo();
         }
-        const data = res.result || {};
-        resolve(data);
-      } catch (e) {
+      },
+      onError: (err) => {
         cancelLoop();
         notification.error({
           message: '获取失败',
-          description: e.message
+          description: err.message
         });
       }
-    });
-  };
+    }
+  );
 
-  const { data: taskInfo, cancel: cancelLoop } = useRequest(fetchTaskInfo, {
-    ready: !!taskId,
-    initialData: {},
-    pollingInterval: 3000,
-    pollingWhenHidden: false
-  });
- 
   useEffect(() => {
     fetchInfo();
   }, []);
-
-  useEffect(() => {
-    if (END_TASK_STATUS_LIST.indexOf(taskInfo.status) !== -1) {
-      cancelLoop();
-      fetchInfo();
-    }
-  }, [taskInfo]);
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
