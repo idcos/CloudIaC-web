@@ -2,8 +2,7 @@ FROM alpine:3.10.2 as builder
 RUN apk add --no-cache npm \
     && apk add --no-cache nodejs
 WORKDIR /workspace
-RUN npm i cross-env rimraf -g \
-    && npm config set registry  http://maven.idcos.net:8081/repository/npm-idcos
+RUN npm i cross-env rimraf -g
 
 COPY . .
 # 构建前端执行代码包
