@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Button, Table, notification, Divider } from 'antd';
 import history from 'utils/history';
-import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { Eb_WP } from 'components/error-boundary';
@@ -89,7 +88,7 @@ const CTList = ({ match = {} }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: '删除失败',
         description: e.message
       });
     }
