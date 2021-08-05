@@ -1,6 +1,6 @@
 {
   "default": {
-    "api": "http://10.0.2.120:9030",
+    "api": "此处替换成后端联调的IP，如：http://127.0.0.1:3000",
     "endpoints": [
       "/catalog/v1/*",
       "/wf/v2/*",
