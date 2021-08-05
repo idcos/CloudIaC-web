@@ -43,12 +43,8 @@ const TaskDetail = (props) => {
           cancelLoop();
         }
       },
-      onError: (err) => {
+      onError: () => {
         cancelLoop();
-        notification.error({
-          message: '获取失败',
-          description: err.message
-        });
       }
     }
   );
