@@ -31,6 +31,12 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
       coderRef.current.execCommand(command);
     }
   };
+  
+  const setFullScreenClose = (e) => {
+    if (e.keyCode === 27) {
+      setFullScreen(false);
+    }
+  };
 
   return (
     <Card
@@ -61,9 +67,18 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
             <VerticalAlignBottomOutlined />
             回底部
           </Button>
-          <Button onClick={() => setFullScreen(!fullScreen)}>
-            {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-            全屏显示
+          <Button onClick={() => setFullScreen(!fullScreen)} onKeyDown={(e) => setFullScreenClose(e)}>
+            {
+              fullScreen ? (
+                <>
+                  <FullscreenExitOutlined />&nbsp;退出全屏
+                </>
+              ) : (
+                <>
+                  <FullscreenOutlined />&nbsp;全屏显示
+                </>
+              )
+            }
           </Button>
         </Space>
       }
