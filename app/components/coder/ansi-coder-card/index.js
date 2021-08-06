@@ -103,10 +103,18 @@ export default ({ value, cardTitleAfter }) => {
             <VerticalAlignBottomOutlined />
             回底部
           </Button>
-          <Button onClick={() => setFullScreen(!fullScreen)}onKeyDown={(e) => setFullScreenClose(e)}>
-            
-            {fullScreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
-            全屏显示
+          <Button onClick={() => setFullScreen(!fullScreen)} onKeyDown={(e) => setFullScreenClose(e)}>
+            {
+              fullScreen ? (
+                <>
+                  <FullscreenExitOutlined />&nbsp;退出全屏
+                </>
+              ) : (
+                <>
+                  <FullscreenOutlined />&nbsp;全屏显示
+                </>
+              )
+            }
           </Button>
         </Space>
       }
