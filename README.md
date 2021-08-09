@@ -1,34 +1,46 @@
-> 欢迎使用CloudIaC，以下文档将带您快速了解CloudIaC的一些基础概念，并带您快速创建您的环境。
+<div align="center"><h1 align="center">CloudIaC Web</h1></div>
+<div align="left">
+  <p>&emsp;&emsp;CloudIaC 是基于基础设施即代码构建的云环境自动化管理平台。 CloudIaC 将易于使用的界面与强大的治理工具相结合，让您和您团队的成员可以快速轻松的在云中部署和管理环境。</p>
+  <p>&emsp;&emsp;通过将 CloudIaC 集成到您的流程中，您可以获得对组织的云使用情况的可见性、可预测性和更好的治理。</p>
+  <p>&emsp;&emsp;Docs: <a href='https://cloudiac.readthedocs.io/' target> https://cloudiac.readthedocs.io/ </a></p>
+</div>
 
-# 快速入门
+<div align="center">
+  <sub>Created by <a href="#">IDCOS FETeam</a>
+</div>
 
-在您第一次登录CloudIaC后，您可以通过以下几个步骤，快速基于您的低代码仓库部署您的环境。
+## 特性
+- webpack
+  - 将部分公用且不易变动的模块抽取为vendor.js文件
 
-![image.png](/app/assets/img/iac-quickstart.png?raw=true)
-## 创建组织
+- ESNext
+  - 支持ES最新语法特性，包括但不限于模板字符串、对象解构、箭头函数等。
 
-组织是CloudIaC中最高层级的逻辑实体，组织间数据隔离；
-在您登录CloudIaC后，您可以快速创建您的组织，组织创建后选择组织即可进入组织视图。
+- CSS Modules
+  - 默认使用Less和模块化CSS，规避了全局选择器的命名冲突，便于高质量CSS代码的编写和维护。
 
-1.  选择右上角下拉菜单中的『系统设置』-『组织管理』；
-2.  点击『新建组织』来创建新的组织。
+- And-Design
+  - 不再以`<script>`和`<link>`方式引入，使用官方推荐的按需加载的方式引入
 
-## 创建云模板并关联项目
+## 开发向导
 
-1.  进入『组织设置』-『云模板』页面并选择『新建云模板』；
-2.  在『基础设置』步骤输入云模板名称、描述，点击下一步；
-3.  进入『选择仓库』步骤，选择版本控制系统（VCS），然后在仓库列表中选择目标仓库，选择分支或Tag；
-4.  在『变量设置』步骤中，设置部署时需要传递的变量，您可以通过Terraform变量中的『导入』按钮来选择导入variables.tf中定义的变量，也可以选择代码仓库中预定义的tfvars文件，如果您需要使用ansible来部署应用，可以在其他变量中选择相应的playbook文件；
-5.  最后选择您要将该云模板关联到哪些项目，关联后的项目将可以看到该云模板，并基于该云模板部署环境。
+1.  确保机器已安装 Node>=8.15.1, npm>=5。
+2.  克隆模板工程到本地 `https://github.com/idcos/CloudIaC-web.git`。
+3.  进入工程文件夹: `cd cloudiac-web`。
+4.  执行 `npm i` 安装所需依赖。
+5.  执行 `npm start` 来启动项目.
 
-注1：在选择仓库步骤，如果没有可选的VCS，您可以快速添加VCS，VCS是您用来管理低代码的版本控制系统，CloudIaC现在支持4种类型的git仓库
-注2：在关联项目步骤，您可以快速创建所要关联的项目来进行项目关联
-注3：『Terraform 变量部分』会自动解析出 **variables.tf** 文件中的变量名称、默认值、描述，在添加时可进行选择
+## 相关文档
 
-## 基于云模板部署环境
+- [**ahooks**](https://ahooks.js.org/): Born for React Hooks.
+- [**webpack**](https://webpack.js.org/): A static module bundler for modern JavaScript applications.
+- [**ESLint**](https://eslint.org/): Find and fix problems in your JavaScript code.
+- [**Ant Design**](https://ant.design/index-cn): A design system for enterprise-level products. Create an efficient and enjoyable work experience.。
+- [**Less**](http://lesscss.org/): It's CSS, with just a little more.
+- [**Qiankun**](https://qiankun.umijs.org/): Probably the most complete micro-frontends solution you ever met 🧐.
 
-1.  进入『项目信息』-『云模板』页面，可以看到与该项目关联的云模板，选择相应的云模板，点击『部署』即可发起环境部署操作；
-2.  在环境部署页面中，可以看到云模板定义的变量以及组织、项目下定义的变量，您可以对继承的变量进行重新赋值，也可以添加新的变量；
-3.  输入环境名称，选择该环境的『存活时间』、『管理密钥』、『部署通道』等信息，点击页面下方的『执行部署』即可发起环境的部署；
-4.  通过『部署日志』，您可以实时查看部署时的日志信息，了解部署实际进展；
-5.  部署完成后，进入环境的详情页面即可查看该环境的基础信息、资源、输出等详细信息。
+## 贡献者
+
+> [https://github.com/idcos/CloudIaC-web/graphs/contributors](https://github.com/idcos/CloudIaC-web/graphs/contributors)
+
+
