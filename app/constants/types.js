@@ -75,7 +75,8 @@ export const TASK_STATUS = {
   "running": '执行中',
   "approving": '待审批',
   "failed": '失败',
-  "complete": '成功'
+  "complete": '成功',
+  "rejected": '驳回'
 };
 export const TASK_STATUS_COLOR = {
   "pending": 'gold',
@@ -91,7 +92,8 @@ export const TASK_TYPE = {
 };
 export const END_TASK_STATUS_LIST = [
   'failed',
-  'complete'
+  'complete',
+  'rejected'
 ];
 export const END_ENV_STATUS_LIST = [
   'active',
