@@ -1,0 +1,49 @@
+@import 'containers/App/styles/variable.less';
+
+.menuSelect {
+  position: relative;
+  :global {
+    .selection {
+      width: 100%;
+      padding: 5px 12px;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      color: @gray-9;
+      
+      .label {
+        &.selecting {
+          color: @primary-color;
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+.menuSelectList {
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0px 9px 28px 8px rgba(0, 0, 0, 0.05), 0px 6px 16px 0px rgba(0, 0, 0, 0.08), 0px 3px 6px -4px rgba(0, 0, 0, 0.12);
+  padding: 4px 0;
+
+  :global {
+    .menu-select-body {
+      width: 100%;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .ant-menu-item {
+      margin: 0 !important;
+      padding: 5px 12px !important;
+      line-height: 22px !important;
+      height: 32px !important;
+
+      &:hover:not(.ant-menu-item-selected) {
+        background-color: @backGroundIac !important;
+        color: inherit !important;
+      }
+    }
+  }
+}

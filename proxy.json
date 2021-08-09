@@ -1,0 +1,16 @@
+{
+  "default": {
+    "api": "此处替换成后端联调的IP，如：http://127.0.0.1:3000",
+    "endpoints": [
+      "/catalog/v1/*",
+      "/wf/v2/*",
+      "/cmp/core/api/v1/*",
+      "/res/saas/api*",
+      "/uc/*",
+      "/api/*",
+      "/rbac/*",
+      "/sso/*",
+      "/xmdb/v2/**"
+    ]
+  }
+}

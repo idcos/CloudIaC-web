@@ -1,0 +1,53 @@
+@import 'containers/App/styles/variable.less';
+
+.orgsList {
+  width: @ctw;
+  margin: 0 auto;
+  &.whiteBg {
+    background: #FFFFFF;
+  }
+  &.withPadding {
+    padding: 16px;
+  }
+  :global {
+    .header {
+      padding: 20px 0 24px;
+      text-align: center;
+      .title {
+        margin-bottom: 4px;
+        height: 32px;
+        line-height: 32px;
+        color: @gray-9;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .des {
+        font-size: 16px;
+        color: @gray-8;
+      }
+    }
+    .list {
+      background: @gray-1;
+
+      .divider {
+        height: 1px;
+        background: @gray-4;
+      }
+      .ant-list-item {
+        padding: 24px;
+
+        .ant-list-item-meta-title {
+          color: @gray-9;
+        }
+
+        .ant-list-item-meta-description {
+          color: @gray-7;
+        }
+
+        &:hover {
+          background: @hoverColorIac;
+        }
+      }
+    }
+  }
+}

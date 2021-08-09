@@ -1,0 +1,73 @@
+@import 'containers/App/styles/variable.less';
+
+.markdownDocWrapper {
+  height: 100%;
+ 
+  :global .help-docs-wrapper {
+   
+    min-height: calc(100% - 24px);
+    max-height: 100%;
+    display: flex;
+
+    .help-docs-menus {
+      flex: 0 0 200px;
+      background: #FAFAFA;
+      padding: 40px 0 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+
+      &.isHide {
+        flex: 0 0 24px;
+        &>*:not(.btn) {
+          display: none !important;
+        }
+      }
+
+      .btn {
+        position: absolute;
+        top: 65px;
+        right: -12px;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        font-size: 16px;
+        border-radius: 50%;
+        border: 1px solid #DEE0E3;
+        background-color: #fff;
+        text-align: center;
+        z-index: 999999999999;
+        cursor: pointer;
+      }
+
+      .title {
+        font-size: 16px;
+        color: @gray-7;
+        padding: 0 32px 24px;
+      }
+
+      .ant-menu {
+        background-color: initial;
+        max-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+        .ant-menu-item {
+          color: @gray-9;
+          padding-left: 32px !important;
+          font-weight: bold;
+
+          &.ant-menu-item-selected {
+            color: @primary-color;
+          }
+        }
+      }
+    }
+
+    .help-docs-content {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
+  
+}
