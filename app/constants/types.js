@@ -83,7 +83,8 @@ export const TASK_STATUS_COLOR = {
   "running": 'cyan',
   "approving": 'processing',
   "failed": 'error',
-  "complete": 'success'
+  "complete": 'success',
+  "rejected": "warning"
 };
 export const TASK_TYPE = {
   'plan': 'plan作业',
