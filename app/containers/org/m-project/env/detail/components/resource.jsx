@@ -110,13 +110,8 @@ const Index = (props) => {
       title: '名称'
     },
     {
-      dataIndex: 'typeUser',
-      title: '模块',
-      editable: true,
-      width: 200,
-      render: (t, r) => {
-        return (<div>{t}</div>); 
-      }
+      dataIndex: 'module',
+      title: '模块'
     }
   ];
   const onExpand = (expanded, record) => {
