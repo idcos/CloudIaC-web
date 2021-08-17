@@ -91,8 +91,10 @@ export const TASK_TYPE = {
   'apply': 'apply作业',
   'destroy': 'destroy作业'
 };
+/** 不需要长轮询获取任务信息的任务状态 */
 export const END_TASK_STATUS_LIST = [
   'failed',
+  'approving',
   'complete',
   'rejected'
 ];

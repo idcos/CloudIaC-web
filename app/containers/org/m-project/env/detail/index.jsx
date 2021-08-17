@@ -117,7 +117,7 @@ const EnvDetail = (props) => {
     });
   };
 
-  const { data: taskInfo = {}, cancel: cancelLoop } = useRequest(
+  const { data: taskInfo = {}, cancel: cancelLoop, run: fetchTaskInfo } = useRequest(
     () => requestWrapper(
       taskAPI.detail.bind(null, {
         orgId, projectId, taskId
@@ -143,13 +143,18 @@ const EnvDetail = (props) => {
     fetchInfo();
   }, []);
 
+  const reload = () => {
+    fetchInfo();
+    fetchTaskInfo();
+  };
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
-      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
+      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={reload} />,
       deployHistory: () => <DeployHistory {...props} info={info}/>,
       variable: () => <Variable type='env' {...props} />,
-      setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
+      setting: () => <Setting {...props} info={info} reload={reload}/>
     };
     return PAGES[panel]();
   }, [ panel, info, taskInfo ]);
