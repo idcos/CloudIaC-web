@@ -1,13 +1,41 @@
-import React, { memo } from 'react';
-import { Card, Table, Tooltip } from 'antd';
+import React, { memo, useState, useEffect } from 'react';
+import { Card, Table, Tooltip, notification } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
 
+import { requestWrapper } from 'utils/request';
+import envAPI from 'services/env';
 import { SCOPE_ENUM } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 
-const Index = (props) => {
+const Variable = (props) => {
 
-  const { taskInfo } = props;
+  const { type, match, taskInfo = {} } = props;
+  const { params: { orgId, projectId, envId } } = match;
+
+  const [ variables, setVariables ] = useState([]);
+
+  const { loading, run: fetchVariables } = useRequest(
+    () => requestWrapper(
+      envAPI.getVariables.bind(null, {
+        orgId, projectId, envId
+      })
+    ), {
+      manual: true,
+      onSuccess: (data) => {
+        setVariables(data || []);
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (type === 'env') {
+      fetchVariables();
+    } else {
+      setVariables(taskInfo.variables);
+    }
+  }, []);
+
     
   const columns = [
     {
@@ -36,11 +64,12 @@ const Index = (props) => {
       }
     }
   ];
-  const defaultTerraformVars = (taskInfo.variables || []).filter(it => it.type === 'terraform');
-  const defaultEnvVars = (taskInfo.variables || []).filter(it => it.type === 'environment');
+  const defaultTerraformVars = (variables || []).filter(it => it.type === 'terraform');
+  const defaultEnvVars = (variables || []).filter(it => it.type === 'environment');
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Terraform变量'}>
       <Table
+        loading={loading}
         columns={columns}
         dataSource={defaultTerraformVars}
         pagination={false}
@@ -53,6 +82,7 @@ const Index = (props) => {
       title={'环境变量'}
     >
       <Table
+        loading={loading}
         columns={columns}
         dataSource={defaultEnvVars}
         pagination={false}
@@ -61,4 +91,4 @@ const Index = (props) => {
   </div>;
 };
 
-export default Eb_WP()(memo(Index));
+export default Eb_WP()(memo(Variable));

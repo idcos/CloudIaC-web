@@ -43,12 +43,24 @@ const envAPI = {
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源列表
-  envsResourcesList: ({ envId, orgId, projectId, q }) => {
+  getResourcesList: ({ envId, orgId, projectId, q }) => {
     return getWithArgs(`/api/v1/envs/${envId}/resources`, {
       pageSize: 99999,
       currentPage: 1,
       q
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  getOutput: ({ orgId, projectId, envId }) => {
+    return getWithArgs(`/api/v1/envs/${envId}/output`, {}, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
+  },
+  getVariables: ({ orgId, projectId, envId }) => {
+    return getWithArgs(`/api/v1/envs/${envId}/variables`, {}, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
   },
   // 创建环境
   createEnv: ({ orgId, projectId, ...resetParams }) => {

@@ -148,7 +148,7 @@ const EnvDetail = (props) => {
       resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={fetchInfo} />,
       deployHistory: () => <DeployHistory {...props} info={info}/>,
-      variable: () => <Variable taskInfo={taskInfo}/>,
+      variable: () => <Variable type='env' {...props} />,
       setting: () => <Setting {...props} info={info} reload={fetchInfo}/>
     };
     return PAGES[panel]();

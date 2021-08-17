@@ -65,7 +65,7 @@ const Index = (props) => {
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
-      <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>
+      <Descriptions.Item label='创建人'>{info.creator || '-'}</Descriptions.Item>
     </Descriptions>
   </Card>;
 };

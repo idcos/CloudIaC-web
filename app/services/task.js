@@ -8,7 +8,7 @@ const taskAPI = {
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // terraform Output
-  envsOutput: ({ orgId, projectId, taskId }) => {
+  getOutput: ({ orgId, projectId, taskId }) => {
     return getWithArgs(`/api/v1/tasks/${taskId}/output`, {}, { 
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
@@ -41,7 +41,7 @@ const taskAPI = {
       'IaC-Project-Id': projectId
     });
   },
-  getResources: ({ orgId, projectId, taskId, ...restParams }) => {
+  getResourcesList: ({ orgId, projectId, taskId, ...restParams }) => {
     return getWithArgs(`/api/v1/tasks/${taskId}/resources`, {
       pageSize: 99999,
       currentPage: 1,

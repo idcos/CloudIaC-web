@@ -54,8 +54,8 @@ const Index = (props) => {
     try {
       setLoading(true);
       const resourcesApis = {
-        env: envAPI.envsResourcesList.bind(null, { orgId, projectId, envId, q: search }),
-        task: taskAPI.getResources.bind(null, { orgId, projectId, taskId, q: search })
+        env: envAPI.getResourcesList.bind(null, { orgId, projectId, envId, q: search }),
+        task: taskAPI.getResourcesList.bind(null, { orgId, projectId, taskId, q: search })
       };
       const res = await resourcesApis[type]();
       if (res.code != 200) {
@@ -78,7 +78,11 @@ const Index = (props) => {
   const fetchOutput = async () => {
     try {
       setLoading(true);
-      const res = await taskAPI.envsOutput({ orgId, projectId, taskId });
+      const outputApis = {
+        env: envAPI.getOutput.bind(null, { orgId, projectId, envId }),
+        task: taskAPI.getOutput.bind(null, { orgId, projectId, taskId })
+      };
+      const res = await outputApis[type]();
       if (res.code != 200) {
         throw new Error(res.message);
       }

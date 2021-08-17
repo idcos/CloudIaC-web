@@ -53,7 +53,7 @@ const TaskDetail = (props) => {
     const PAGES = {
       resource: () => <Resource {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={refresh}/>,
-      variable: () => <Variable taskInfo={taskInfo}/>
+      variable: () => <Variable type='task' {...props} taskInfo={taskInfo}/>
     };
     return PAGES[panel]({
       title: subNavs[panel],
