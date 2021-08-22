@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Form, Input, Button, notification } from 'antd';
-
-import styles from './styles.less';
+import queryString from 'query-string';
 
 import { authAPI } from "../services/auth";
+import styles from './styles.less';
 
 
 const layout = {
@@ -37,7 +37,7 @@ export default () => {
         throw new Error(updateUserInfoRes.message);
       }
       setUserConfig(updateUserInfoRes.result || {});
-      redirectToIndex();
+      redirectToPage();
     } catch (e) {
       notification.error({
         message: e.message
@@ -56,8 +56,17 @@ export default () => {
     }
   }, []);
 
+  const redirectToPage = () => {
+    const { callbackUrl } = queryString.parse(window.location.search);
+    if (callbackUrl) {
+      window.location.href = decodeURIComponent(callbackUrl);
+    } else {
+      redirectToIndex();
+    }
+  };
+
   const redirectToIndex = () => {
-    window.location.pathname = '/';
+    window.location.href = '/';
   };
 
   return (

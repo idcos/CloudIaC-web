@@ -1,4 +1,5 @@
 export const logout = () => {
   localStorage.removeItem('accessToken');
-  window.location.pathname = '/login';
+  const callbackUrl = window.location.href;
+  window.location.href = `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 };
