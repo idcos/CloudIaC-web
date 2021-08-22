@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Tooltip } from 'antd';
+import isNumber from 'lodash/isNumber';
 
 import styles from './styles.less';
 
@@ -7,7 +8,7 @@ export default ({ resAdded, resChanged, resDestroyed }) => {
 
   const changeInfo = useMemo(() => {
     let info;
-    if (!isNaN(resAdded) || !isNaN(resChanged) || !isNaN(resDestroyed)) {
+    if (isNumber(resAdded) || isNumber(resChanged) || isNumber(resDestroyed)) {
       info = {
         text: (
           <span className={styles.text}>
