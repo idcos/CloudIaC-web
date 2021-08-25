@@ -28,7 +28,9 @@ const AppHeader = (props) => {
   const preStateRef = useRef({});
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
-  
+  const [ menuType, setMenuType ] = useState(pathname.indexOf('compliance') !== -1 ? 'execute' : 'compliance');
+  const [ locationHref, setLocationHref ] = useState('/');
+
   useEffect(() => {
    
     if (orgId && !(orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId)) {
@@ -94,7 +96,7 @@ const AppHeader = (props) => {
   }, [ projectList, projectId ]);
 
   useEffect(() => {
-    if (locationPathName.indexOf('org') == -1) {
+    if (locationPathName === '/') {
       dispatch({
         type: 'global/set-curOrg',
         payload: {
@@ -140,12 +142,25 @@ const AppHeader = (props) => {
     }
   };
 
+  const changeMenu = (value) => {
+    setMenuType(value);
+    localStorage.setItem('menuType', value);
+    if (value === 'execute') {
+      setLocationHref(pathname);
+    }
+    value === 'execute' ? history.push(`/compliance/compliance-config/ct`) : history.push(locationHref || '/');
+  };
   return <div className={`idcos-app-header ${theme || ''}`}>
-    <div className='inner'>
-      <div className='logo' onClick={() => history.push('/')}><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
+    <div className='inner'> 
+      <div className='logo' onClick={() => {
+        history.push('/'); 
+        setMenuType('compliance');
+      }}
+      ><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
+      {(pathname !== '/') && <div>{menuType === 'compliance' ? <div className='changeMenu' onClick={() => changeMenu('execute')}>进入合规</div> : <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入执行界面</div>}</div>}
       <div className='rParts'>
         {
-          orgId ? (
+          (pathname !== '/' && pathname.indexOf('compliance') === -1) ? (
             <>
               <SeniorSelect 
                 placeholder='项目：'

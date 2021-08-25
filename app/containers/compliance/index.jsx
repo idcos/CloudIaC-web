@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { connect } from 'react-redux';
 import { Divider } from 'antd';
 
@@ -7,25 +7,19 @@ import RoutesList from 'components/routes-list';
 import history from "utils/history";
 import changeOrg from "utils/changeOrg";
 
-import getMenus from './menus';
+import { getComplianceMenus } from './menus';
 import styles from './styles.less';
 
 const KEY = 'global';
 
-const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, dispatch }) => {
-  const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
-  const orgList = (orgs || {}).list || [];
-  const pjtId = projectId || (curProject || {}).id;
-  const [ dividerVisible, setDividerVisible ] = useState(false);
-  
-  // 跳转 scope作用域
+const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, dispatch, menuType }) => {
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
-    case 'org':
-      history.push(`/org/${orgId}/${menuItemKey}`);
+    case 'compliance-config':
+      history.push(`/compliance/compliance-config/${menuItemKey}`);
       break;
-    case 'project':
-      history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
+    case 'strategy-config':
+      history.push(`/compliance/strategy-config/${menuItemKey}`);
       break;
     default:
       break;
@@ -38,22 +32,8 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
     let scope = subKey, menuKey, isEmptyData = false;
-    switch (subKey) {
-    case 'org':
-      menuKey = mOrgKey;
-      break;
-    case 'project':
-      menuKey = mProjectKey;
-      // 没有项目id情况下 作用域指向组织
-      if (!pjtId) {
-        isEmptyData = true;
-        scope = 'org';
-        menuKey = mOrgKey;
-      }
-      break;
-    default:
-      break;
-    }
+    let pathList = window.location.pathname.split('/');
+    menuKey = pathList[pathList.length - 1];
     return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
       if (menuItem.isHide) {
         return null;
@@ -68,34 +48,14 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
         </div>
       );
     });
-  }, [pjtId]);
+  }, []);
  
   return (
     <div className={styles.orgWrapper}>
       <div className='left-nav'>
-        <MenuSelect
-          options={orgList}
-          onChange={changeCurOrg}
-          setDividerVisible={setDividerVisible}
-          selectionStyle={{ padding: '13px 20px 13px 24px' }}
-          lablePropName='name'
-          valuePropName='id'            
-          value={curOrg && curOrg.id}
-          menuSelectfooter={(
-            <div 
-              className={styles.menuSelectfooterContent} 
-              onClick={() => history.push('/')}
-            >
-              查看更多组织
-            </div>
-          )}
-        />
-        {!dividerVisible && <div style={{ padding: '0 19px' }}>
-          <Divider style={{ margin: '0' }} />
-        </div>}
         <div className='menu-wrapper'>
           {
-            getMenus(userInfo || {}).map(subMenu => {
+            getComplianceMenus().map(subMenu => {
               if (subMenu.isHide) {
                 return null;
               }
@@ -129,6 +89,7 @@ export default connect(
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
     curProject: state[KEY].get('curProject'),
-    userInfo: state[KEY].get('userInfo').toJS()
+    userInfo: state[KEY].get('userInfo').toJS(),
+    menuType: state[KEY].get('menuType')
   })
 )(OrgWrapper);

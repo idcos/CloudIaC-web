@@ -107,6 +107,43 @@ export default function createRoutes() {
           name: '项目信息：创建项目',
           component: loadable(() => import('containers/org/m-project/create'), asyncLoadFallback),
           exact: true
+        },
+        {
+          path: '/org/:orgId/compliance-ct',
+          name: '组织设置：项目',
+          component: loadable(() => import('containers/org/compliance-config/ct'), asyncLoadFallback),
+          exact: true
+        }
+      ]
+    },
+    {
+      path: '/compliance',
+      name: '合规配置',
+      component: loadable(() => import('containers/compliance'), asyncLoadFallback),
+      routes: [
+        {
+          path: '/compliance/compliance-config/ct',
+          name: '云模板',
+          component: loadable(() => import('containers/compliance/compliance-config/ct'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/compliance/compliance-config/env',
+          name: '环境',
+          component: loadable(() => import('containers/compliance/compliance-config/env'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/compliance/strategy-config/strategy-group',
+          name: '云模板',
+          component: loadable(() => import('containers/compliance/strategy-config/strategy-group'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/compliance/strategy-config/strategy',
+          name: '环境',
+          component: loadable(() => import('containers/compliance/strategy-config/strategy'), asyncLoadFallback),
+          exact: true
         }
       ]
     },

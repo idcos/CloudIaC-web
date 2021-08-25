@@ -32,7 +32,13 @@ const breadcrumbNameMap = {
   'updateCT': { text: '编辑云模板' },
   'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
   'task': { text: '部署历史' },
-  'detail': { text: '环境详情', indexDiff: 2 }
+  'detail': { text: '环境详情', indexDiff: 2 },
+  'compliance-config': { text: '合规配置' },
+  'ct': { text: '云模板' },
+  'env': { text: '环境' },
+  'strategy-config': { text: '策略管理' },
+  'strategy-group': { text: '策略组' },
+  'strategy': { text: '策略' }
 };
 
 
