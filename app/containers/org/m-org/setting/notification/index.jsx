@@ -118,7 +118,7 @@ export default ({ orgId }) => {
       <Button 
         type='primary'
         onClick={toggleVisible}
-      >添加通知人</Button>
+      >添加通知</Button>
     </div>
     <Table
       columns={columns}

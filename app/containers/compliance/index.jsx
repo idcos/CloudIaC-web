@@ -82,7 +82,6 @@ export default connect(
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
     curProject: state[KEY].get('curProject'),
-    userInfo: state[KEY].get('userInfo').toJS(),
-    menuType: state[KEY].get('menuType')
+    userInfo: state[KEY].get('userInfo').toJS()
   })
 )(OrgWrapper);
