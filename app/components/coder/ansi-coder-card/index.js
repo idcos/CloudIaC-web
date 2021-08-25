@@ -51,15 +51,15 @@ export default ({ value, cardTitleAfter }) => {
       const scrollDom = ansiCoderWrapperRef.current;
       let top;
       switch (type) {
-        case 'top':
-          top = 0;
-          break;
-        case 'bottom':
-          top = scrollDom.scrollHeight;
-          break;
+      case 'top':
+        top = 0;
+        break;
+      case 'bottom':
+        top = scrollDom.scrollHeight;
+        break;
       
-        default:
-          break;
+      default:
+        break;
       }
       scrollDom.scrollTo({
         top,

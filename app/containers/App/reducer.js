@@ -8,7 +8,7 @@ const initialState = fromJS({
   projects: {},
   curProject: null,
   userInfo: {},
-  curEnv: null,
+  curEnv: null
 });
 
 const reducer = handleActions({

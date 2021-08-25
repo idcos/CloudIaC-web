@@ -15,6 +15,8 @@ import getPermission from "utils/permission";
 import { requestWrapper } from 'utils/request';
 
 import Info from './components/info';
+import ComplianceInfo from './components/compliance-info';
+import ConfigInfo from './components/config-info';
 import Resource from './components/resource';
 import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
@@ -27,6 +29,7 @@ const subNavs = {
   deployJournal: '部署日志',
   deployHistory: '部署历史',
   variable: '变量',
+  complianceInfo: '合规状态',
   setting: '设置'
 };
 
@@ -154,7 +157,8 @@ const EnvDetail = (props) => {
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={reload} />,
       deployHistory: () => <DeployHistory {...props} info={info}/>,
       variable: () => <Variable type='env' {...props} />,
-      setting: () => <Setting {...props} info={info} reload={reload}/>
+      setting: () => <Setting {...props} info={info} reload={reload}/>,
+      complianceInfo: () => <ComplianceInfo {...props} info={info} reload={reload}/>
     };
     return PAGES[panel]();
   }, [ panel, info, taskInfo ]);
@@ -177,6 +181,9 @@ const EnvDetail = (props) => {
   >
     <div className='idcos-card'>
       <Info info={info} taskInfo={taskInfo} />
+    </div>
+    <div className='idcos-card'>
+      <ConfigInfo info={info} taskInfo={taskInfo} />
     </div>
     <div style={{ marginTop: 20 }} className='idcos-card'>
       <div className={styles.depolyDetail}>

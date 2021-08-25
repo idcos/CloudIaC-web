@@ -3,8 +3,11 @@ import { Card, Table, Input, notification } from 'antd';
 
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
+
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
+
+import ResourceModal from './modal/resource-modal';
 
 const Index = (props) => {
   const { match, taskId, type } = props,
@@ -16,6 +19,7 @@ const Index = (props) => {
     }),
     [ jsonData, setJsonData ] = useState({}),
     [ selectKeys, setSelectKeys ] = useState([]),
+    [ visible, setVisible ] = useState(false),
     [ search, setSearch ] = useState('');
 
   const resetList = (list) => {
@@ -111,7 +115,8 @@ const Index = (props) => {
     },
     {
       dataIndex: 'name',
-      title: '名称'
+      title: '名称',
+      render: (t, r) => <a onClick={() => setVisible(true)}>{t}</a>
     },
     {
       dataIndex: 'module',
@@ -150,6 +155,7 @@ const Index = (props) => {
         expandedRowKeys={selectKeys}
         onExpand={(a, b) => onExpand(a, b)}
       />
+      <ResourceModal visible={visible} />
     </Card>
   </div>;
 };

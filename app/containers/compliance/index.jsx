@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-import { Divider } from 'antd';
 
-import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
-import changeOrg from "utils/changeOrg";
 
 import { getComplianceMenus } from './menus';
 import styles from './styles.less';
@@ -24,10 +21,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
     default:
       break;
     }
-  };
-
-  const changeCurOrg = (value) => {
-    changeOrg({ orgId: value, dispatch });
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {

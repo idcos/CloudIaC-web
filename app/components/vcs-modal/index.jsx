@@ -26,15 +26,15 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
 
   const onChangeVcsType = (value) => {
     switch (value) {
-      case 'github':
-        form.setFieldsValue({ address: 'https://api.github.com/' });
-        break;
-      case 'gitee':
-        form.setFieldsValue({ address: 'https://gitee.com/' });
-        break;
-      default:
-        form.setFieldsValue({ address: '' });
-        break;
+    case 'github':
+      form.setFieldsValue({ address: 'https://api.github.com/' });
+      break;
+    case 'gitee':
+      form.setFieldsValue({ address: 'https://gitee.com/' });
+      break;
+    default:
+      form.setFieldsValue({ address: '' });
+      break;
     }
   };
 

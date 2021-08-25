@@ -28,16 +28,16 @@ const Index = (props) => {
       return timeUtils.diff(autoDestroyAt, now, '-');
     }
     switch (ttl) {
-      case '':
-      case null:
-      case undefined:
-        return '-';
-      case 0:
-      case '0':
-        return '不限制';
-      default:
-        const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
-        return it.name;
+    case '':
+    case null:
+    case undefined:
+      return '-';
+    case 0:
+    case '0':
+      return '不限制';
+    default:
+      const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
+      return it.name;
     }
   };
   

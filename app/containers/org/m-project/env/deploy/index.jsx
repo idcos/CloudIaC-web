@@ -5,6 +5,7 @@ import PageHeader from "components/pageHeader";
 import history from 'utils/history';
 
 import VariableForm from 'components/variable-form';
+import AdvancedConfig from './advanced-config';
 import Layout from "components/common/layout";
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
@@ -31,6 +32,7 @@ const {} = Radio;
 const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
   const varRef = useRef();
+  const configRef = useRef();
   const [form] = Form.useForm();
 
   const [ applyLoading, setApplyLoading ] = useState(false);
@@ -173,6 +175,7 @@ const Index = ({ match = {} }) => {
     try {
       const values = await form.validateFields();
       const varData = await varRef.current.validateForm();
+      const configData = await configRef.current.onfinish();
       if (varData.playbook && !values.keyId) {
         return notification.error({
           message: '保存失败',
@@ -388,6 +391,11 @@ const Index = ({ match = {} }) => {
               }}
             </Form.Item>
           </Form.Item>
+          <AdvancedConfig
+            configRef={configRef}
+            isCollapse={true}
+            data={info}
+          />
           <VariableForm 
             varRef={varRef} 
             defaultScope='env' 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Button, Table, Radio, Input, notification, Select, Space } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -7,23 +7,37 @@ import { connect } from "react-redux";
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import projectAPI from 'services/project';
 import tplAPI from 'services/tpl';
-import getPermission from "utils/permission";
+import BindStrategyModal from 'components/strategy-modal';
+import DetectionModal from './component/detection-modal';
 
-const CTList = ({ userInfo, match = {} }) => {
-  const { PROJECT_OPERATOR } = getPermission(userInfo);
-  const { projectId } = match.params || {};
+
+const { Option } = Select;
+const { Search } = Input;
+
+const CTList = ({ orgs }) => {
   const orgId = 'org-c4i8s1rn6m81fm687b0g';
+  const projectId = 'p-c4i8scjn6m81fm687b1g';
+  const orgList = (orgs || {}).list || [];
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
+    [ projectList, setProjectList ] = useState([]),
+    [ visible, setVisible ] = useState(false),
+    [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10
+      currentPage: 1,
+      pageSize: 10,
+      searchorgId: undefined,
+      searchprojectId: undefined,
+      name: ''
     });
-
+  const openStrategy = () => {
+    setVisible(true);
+  };
   const columns = [
     {
       dataIndex: 'name',
@@ -31,7 +45,8 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'description',
-      title: '绑定策略组'
+      title: '绑定策略组',
+      render: (text) => <a onClick={openStrategy}>{text}</a>
     },
     {
       dataIndex: 'repoAddr',
@@ -50,21 +65,16 @@ const CTList = ({ userInfo, match = {} }) => {
       title: '操作',
       width: 60,
       render: (record) => {
-        return PROJECT_OPERATOR ? (
+        return (
           <span className='inlineOp'>
             <a 
-              type='link' 
-              onClick={() => openCheck(record)}
+              onClick={() => setDetectionVisible(true)}
             >检测</a>
           </span>
-        ) : null;
+        );
       }
     }
   ];
-
-  const openCheck = (record) => {
-    return;
-  };
 
   useEffect(() => {
     fetchList();
@@ -73,11 +83,10 @@ const CTList = ({ userInfo, match = {} }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
+      delete query.pageNo;
       const res = await tplAPI.list({
-        currentPage: query.pageNo,
-        pageSize: query.pageSize,
         orgId,
-        projectId
+        ...query
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -102,7 +111,27 @@ const CTList = ({ userInfo, match = {} }) => {
       ...payload
     });
   };
-
+  const selectOrg = async(e) => {
+    try {
+      const res = await projectAPI.allEnableProjects({
+        status: 'enable',
+        pageSize: 100000,
+        currentPage: 1,
+        orgId: e
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setProjectList(res.result.list || []);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+  
   return <Layout
     extraHeader={<PageHeader
       title='云模板'
@@ -110,6 +139,41 @@ const CTList = ({ userInfo, match = {} }) => {
     />}
   >
     <div className='idcos-card'>
+      <Space style={{ marginBottom: 12 }}>
+        <Select 
+          style={{ width: 240 }}  
+          onChange={(e) => {
+            selectOrg(e); changeQuery({ searchorgId: e }); 
+          }}
+          allowClear={true}
+          placeholder={`请选择组织`}
+        >
+          {orgList.map(it => <Option value={it.id}>{it.name}</Option>)}
+        </Select>
+        <Select 
+          style={{ width: 240 }}  
+          onChange={(e) => {
+            changeQuery({
+              searchprojectId: e
+            });
+          }}
+          allowClear={true}
+          placeholder={`请选择项目`}
+        >
+          {projectList.map(it => <Option value={it.id}>{it.name}</Option>)}
+        </Select>
+        <Search 
+          placeholder='请输入云模板名称搜索' 
+          allowClear={true} 
+          onSearch={(v) => {
+            changeQuery({
+              name: v,
+              pageNo: 1
+            });
+          }} 
+          style={{ width: 250 }}
+        />
+      </Space>
       <div>
         <Table
           columns={columns}
@@ -124,7 +188,7 @@ const CTList = ({ userInfo, match = {} }) => {
             showTotal: (total) => `共${total}条`,
             onChange: (pageNo, pageSize) => {
               changeQuery({
-                pageNo,
+                currentPage: pageNo,
                 pageSize
               });
             }
@@ -132,11 +196,14 @@ const CTList = ({ userInfo, match = {} }) => {
         />
       </div>
     </div>
+    <BindStrategyModal visible={visible} />
+    <DetectionModal visible={detectionVisible} />
   </Layout>;
 };
 
 export default connect((state) => {
   return {
-    userInfo: state.global.get('userInfo').toJS()
+    userInfo: state.global.get('userInfo').toJS(),
+    orgs: state.global.get('orgs').toJS()
   };
 })(Eb_WP()(CTList));
