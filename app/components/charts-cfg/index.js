@@ -47,6 +47,57 @@ export const chartOptions = {
         }
       ]
     };
+  },
+  strategy_group: (props) => {
+    return {
+      grid: {
+        x: 50,
+        y: 60,
+        x2: '2%',
+        y2: 30
+      },
+      title: {
+        text: '策略组检测通过率',
+        subtext: '30天内'
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+      },
+      yAxis: {
+        type: 'value',
+        max: 100,
+        min: 0,
+        interval: 25,
+        axisLabel: {
+          formatter: '{value}%'
+        }
+      },
+      series: [{
+        data: [ 12, 22, 33, 55, 77, 88, 99 ],
+        type: 'line',
+        areaStyle: {},
+        symbolSize: 12,
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              position: 'top',
+              formatter: function(params) {
+                return `${params.value}%`;
+              }
+            },
+            color: "#D6F5E9", //折线点的颜色
+            lineStyle: {
+              width: 6,
+              color: "#1890ff" //折线的颜色
+            }
+          }
+        },
+        smooth: true
+      }]
+    };
   }
 };
 

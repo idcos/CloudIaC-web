@@ -7,7 +7,7 @@ import { PROJECT_ROLE } from 'constants/types';
 const { Option } = Select;
 const FL = {
   labelCol: { span: 5 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 18 }
 };
 
 export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
@@ -69,7 +69,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       >
         <Form.Item
           label='绑定策略组'
-          name='role'
+          name='name'
           rules={[
             {
               required: true,
@@ -77,13 +77,24 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
             }
           ]}
         >
-          <Select 
-            getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='绑定策略组'
-            mode={'multiple'}
-          >
-            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
-          </Select>
+          <Input />
+        </Form.Item>
+      </Form>
+      <Form
+        {...FL}
+        form={form}
+      >
+        <Form.Item
+          label='策略组描述'
+          name='name'
+          rules={[
+            {
+              required: true,
+              message: '请输入策略组描述'
+            }
+          ]}
+        >
+          <Input.TextArea />
         </Form.Item>
       </Form>
     </Modal>

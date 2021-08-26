@@ -134,6 +134,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/compliance/compliance-config/env/env-detail',
+          name: '环境详情',
+          component: loadable(() => import('containers/compliance/compliance-config/env/detail'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/compliance/strategy-config/strategy-group',
           name: '云模板',
           component: loadable(() => import('containers/compliance/strategy-config/strategy-group'), asyncLoadFallback),

@@ -3,8 +3,6 @@ import { Button, Table, Radio, Input, notification, Select, Space, Divider, Swit
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
-import BindStrategyGroupModal from './component/bindStrategyGroupModal';
-import Detail from './detail';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -27,7 +25,6 @@ const CTList = ({ orgs }) => {
     }),
     [ projectList, setProjectList ] = useState([]),
     [ visible, setVisible ] = useState(false),
-    [ viewDetail, setViewDetail ] = useState(false),
     [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
@@ -42,8 +39,7 @@ const CTList = ({ orgs }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '策略名称',
-      render: (text) => <a onClick={() => setViewDetail(true)}>{text}</a>
+      title: '策略名称'
     },
     {
       dataIndex: 'description',
@@ -69,28 +65,6 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'creator',
       title: '状态'
-    },
-    {
-      title: '操作',
-      width: 90,
-      render: (record) => {
-        return (
-          <span className='inlineOp'>
-            <a 
-              type='link' 
-              onClick={() => setVisible(true)}
-            >关联策略</a>
-            <Divider type={'vertical'}/>
-            <a 
-              onClick={() => {
-                history.push(`/compliance/compliance-config/env/env-detail`); 
-              }}
-            >编辑</a>
-            <Divider type={'vertical'}/>
-            <a>禁用</a>
-          </span>
-        );
-      }
     }
   ];
 
@@ -152,15 +126,36 @@ const CTList = ({ orgs }) => {
   
   return <Layout
     extraHeader={<PageHeader
-      title={'策略组'}
+      title={'环境名称内容'}
       breadcrumb={true}
     />}
   >
     <div className='idcos-card'>
       <Space style={{ marginBottom: 12 }}>
-        <Button type={'primary'} onClick={() => setVisible(true)}>新建策略组</Button>
+        <Select 
+          style={{ width: 240 }}  
+          onChange={(e) => {
+            selectOrg(e); changeQuery({ searchorgId: e }); 
+          }}
+          allowClear={true}
+          placeholder={`请选择策略组`}
+        >
+          {orgList.map(it => <Option value={it.id}>{it.name}</Option>)}
+        </Select>
+        <Select 
+          style={{ width: 240 }}  
+          onChange={(e) => {
+            changeQuery({
+              searchprojectId: e
+            });
+          }}
+          allowClear={true}
+          placeholder={`请选择严重性`}
+        >
+          {projectList.map(it => <Option value={it.id}>{it.name}</Option>)}
+        </Select>
         <Search 
-          placeholder='请输入策略组名称搜索' 
+          placeholder='请输入策略名称搜索' 
           allowClear={true} 
           onSearch={(v) => {
             changeQuery({
@@ -193,8 +188,6 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    <BindStrategyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />
-    <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>
   </Layout>;
 };
 

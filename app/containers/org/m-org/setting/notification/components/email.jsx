@@ -63,7 +63,7 @@ for (let i = 0; i < 20; i++) {
   });
 }
 
-const originTargetKeys = mockData.filter(item => +item.key % 3 > 1).map(item => item.key);
+const originTargetKeys = mockData.filter(item => +item.key % 2 == 0).map(item => item.key);
 
 const leftTableColumns = [
   {

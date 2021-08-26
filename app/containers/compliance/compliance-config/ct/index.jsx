@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Select, Space } from 'antd';
+import { Button, Table, Radio, Input, notification, Select, Space, Divider, Switch } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -55,7 +55,8 @@ const CTList = ({ orgs }) => {
     },
     {
       dataIndex: 'activeEnvironment',
-      title: '是否开启检测'
+      title: '是否开启检测',
+      render: (text) => <Switch value={true} />
     },
     {
       dataIndex: 'creator',
@@ -63,13 +64,17 @@ const CTList = ({ orgs }) => {
     },
     {
       title: '操作',
-      width: 60,
+      width: 90,
       render: (record) => {
         return (
           <span className='inlineOp'>
             <a 
               onClick={() => setDetectionVisible(true)}
             >检测</a>
+            <Divider type={'vertical'} />
+            <a 
+              onClick={() => setDetectionVisible(true)}
+            >删除</a>
           </span>
         );
       }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
+import { Form, Col, Drawer, notification, Row, Select, Table, Input } from "antd";
 
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
@@ -54,38 +54,16 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
   };
 
   return (
-    <Modal
-      title='绑定策略组/开启合规检测'
+    <Drawer
+      title='检测详情'
+      placement='right'
+      closable={false}
       visible={visible}
-      onCancel={toggleVisible}
-      okButtonProps={{
-        loading: submitLoading
-      }}
-      onOk={onOk}
+      width={600}
     >
-      <Form
-        {...FL}
-        form={form}
-      >
-        <Form.Item
-          label='绑定策略组'
-          name='role'
-          rules={[
-            {
-              required: true,
-              message: '请选择绑定策略组'
-            }
-          ]}
-        >
-          <Select 
-            getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='绑定策略组'
-            mode={'multiple'}
-          >
-            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
-          </Select>
-        </Form.Item>
-      </Form>
-    </Modal>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </Drawer>
   );
 };

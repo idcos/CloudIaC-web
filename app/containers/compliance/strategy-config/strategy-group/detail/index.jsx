@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Select, Space, Divider, Switch } from 'antd';
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, Table, Row, Input, notification, Select, Col, Card, Drawer } from 'antd';
 import history from 'utils/history';
+import { chartUtils } from 'components/charts-cfg';
+
 import moment from 'moment';
 import { connect } from "react-redux";
-import BindStrategyGroupModal from './component/bindStrategyGroupModal';
-import Detail from './detail';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -16,7 +16,7 @@ import tplAPI from 'services/tpl';
 const { Option } = Select;
 const { Search } = Input;
 
-const CTList = ({ orgs }) => {
+const Index = ({ orgs, visible }) => {
   const orgId = 'org-c4i8s1rn6m81fm687b0g';
   const projectId = 'p-c4i8scjn6m81fm687b1g';
   const orgList = (orgs || {}).list || [];
@@ -26,8 +26,7 @@ const CTList = ({ orgs }) => {
       total: 0
     }),
     [ projectList, setProjectList ] = useState([]),
-    [ visible, setVisible ] = useState(false),
-    [ viewDetail, setViewDetail ] = useState(false),
+    // [ visible, setVisible ] = useState(false),
     [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
@@ -36,27 +35,22 @@ const CTList = ({ orgs }) => {
       searchprojectId: undefined,
       name: ''
     });
-  const openStrategy = () => {
-    setVisible(true);
-  };
   const columns = [
     {
       dataIndex: 'name',
-      title: '策略名称',
-      render: (text) => <a onClick={() => setViewDetail(true)}>{text}</a>
+      title: '检测目标'
     },
     {
       dataIndex: 'description',
-      title: '绑定策略组',
-      render: (text) => <a onClick={openStrategy}>{text}</a>
+      title: '目标类型'
     },
     {
       dataIndex: 'tag',
-      title: '标签'
+      title: '组织'
     },
     {
       dataIndex: 'repoAddr',
-      title: '严重性'
+      title: '项目'
     },
     {
       dataIndex: 'repoAddr1',
@@ -64,35 +58,39 @@ const CTList = ({ orgs }) => {
     },
     {
       dataIndex: 'repoAddr2',
-      title: '最后更新时间'
+      title: '通过'
+    },
+
+    {
+      dataIndex: 'repoAddr2',
+      title: '不通过'
     },
     {
       dataIndex: 'creator',
       title: '状态'
     },
     {
-      title: '操作',
-      width: 90,
-      render: (record) => {
-        return (
-          <span className='inlineOp'>
-            <a 
-              type='link' 
-              onClick={() => setVisible(true)}
-            >关联策略</a>
-            <Divider type={'vertical'}/>
-            <a 
-              onClick={() => {
-                history.push(`/compliance/compliance-config/env/env-detail`); 
-              }}
-            >编辑</a>
-            <Divider type={'vertical'}/>
-            <a>禁用</a>
-          </span>
-        );
-      }
+      dataIndex: 'creator',
+      title: '最后更新时间'
     }
   ];
+  let CHART = useRef([
+    { key: 'strategy_group', domRef: useRef(), des: '环境状态占比', ins: null }
+  ]);
+  const resizeHelper = chartUtils.resizeEvent(CHART);
+  
+  useEffect(() => {
+    resizeHelper.attach();
+    return resizeHelper.remove();
+  }, []);
+
+  useEffect(() => {
+    CHART.current.forEach(chart => {
+      if (chart.key === 'strategy_group') {
+        chartUtils.update(chart, {});
+      }
+    });
+  }, [visible]);
 
   useEffect(() => {
     fetchList();
@@ -150,52 +148,38 @@ const CTList = ({ orgs }) => {
     }
   };
   
-  return <Layout
-    extraHeader={<PageHeader
-      title={'策略组'}
-      breadcrumb={true}
-    />}
+  return <Drawer
+    title='策略组详情'
+    placement='right'
+    closable={false}
+    visible={visible}
+    width={1000}
   >
-    <div className='idcos-card'>
-      <Space style={{ marginBottom: 12 }}>
-        <Button type={'primary'} onClick={() => setVisible(true)}>新建策略组</Button>
-        <Search 
-          placeholder='请输入策略组名称搜索' 
-          allowClear={true} 
-          onSearch={(v) => {
+    <div>
+      {CHART.current.map(chart => <div>
+        <div ref={chart.domRef} style={{ width: '100%', height: 300 }}></div>
+      </div>)}
+      <Table
+        columns={columns}
+        dataSource={resultMap.list}
+        loading={loading}
+        pagination={{
+          current: query.pageNo,
+          pageSize: query.pageSize,
+          total: resultMap.total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total) => `共${total}条`,
+          onChange: (pageNo, pageSize) => {
             changeQuery({
-              name: v,
-              pageNo: 1
+              currentPage: pageNo,
+              pageSize
             });
-          }} 
-          style={{ width: 250 }}
-        />
-      </Space>
-      <div>
-        <Table
-          columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
-            onChange: (pageNo, pageSize) => {
-              changeQuery({
-                currentPage: pageNo,
-                pageSize
-              });
-            }
-          }}
-        />
-      </div>
+          }
+        }}
+      />
     </div>
-    <BindStrategyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />
-    <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>
-  </Layout>;
+  </Drawer>;
 };
 
 export default connect((state) => {
@@ -203,4 +187,4 @@ export default connect((state) => {
     userInfo: state.global.get('userInfo').toJS(),
     orgs: state.global.get('orgs').toJS()
   };
-})(Eb_WP()(CTList));
+})(Eb_WP()(Index));

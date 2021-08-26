@@ -60,7 +60,7 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       title: '操作',
-      width: 60,
+      width: 90,
       render: (record) => {
         return PROJECT_OPERATOR ? (
           <span className='inlineOp'>
@@ -68,6 +68,13 @@ const CTList = ({ userInfo, match = {} }) => {
               type='link' 
               onClick={() => openCheck(record)}
             >检测</a>
+            <Divider type={'vertical'}/>
+            <a 
+              type='link' 
+              onClick={() => {
+                history.push(`/compliance/compliance-config/env/env-detail`); 
+              }}
+            >详情</a>
           </span>
         ) : null;
       }
