@@ -5,6 +5,7 @@ import moment from 'moment';
 import { connect } from "react-redux";
 import BindStrategyGroupModal from './component/bindStrategyGroupModal';
 import Detail from './detail';
+import RelevanceStrategyGroupModal from './component/relevanceStrategyGroupModal';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -28,6 +29,7 @@ const CTList = ({ orgs }) => {
     [ projectList, setProjectList ] = useState([]),
     [ visible, setVisible ] = useState(false),
     [ viewDetail, setViewDetail ] = useState(false),
+    [ viewRelevance, setViewRelevance ] = useState(false),
     [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
@@ -72,13 +74,13 @@ const CTList = ({ orgs }) => {
     },
     {
       title: '操作',
-      width: 90,
+      width: 160,
       render: (record) => {
         return (
           <span className='inlineOp'>
             <a 
               type='link' 
-              onClick={() => setVisible(true)}
+              onClick={() => setViewRelevance(true)}
             >关联策略</a>
             <Divider type={'vertical'}/>
             <a 
@@ -195,6 +197,7 @@ const CTList = ({ orgs }) => {
     </div>
     <BindStrategyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />
     <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>
+    <RelevanceStrategyGroupModal visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />
   </Layout>;
 };
 
