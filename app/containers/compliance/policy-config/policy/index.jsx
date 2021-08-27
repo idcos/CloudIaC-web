@@ -130,7 +130,6 @@ const CTList = ({ userInfo, match = {} }) => {
       ...payload
     });
   };
-  console.log(visible, 'visible');
   return <Layout
     extraHeader={<PageHeader
       title='策略'
