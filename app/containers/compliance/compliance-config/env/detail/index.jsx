@@ -33,7 +33,7 @@ const CTList = ({ orgs }) => {
       searchprojectId: undefined,
       name: ''
     });
-  const openStrategy = () => {
+  const openPolicy = () => {
     setVisible(true);
   };
   const columns = [
@@ -44,7 +44,7 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'description',
       title: '绑定策略组',
-      render: (text) => <a onClick={openStrategy}>{text}</a>
+      render: (text) => <a onClick={openPolicy}>{text}</a>
     },
     {
       dataIndex: 'tag',

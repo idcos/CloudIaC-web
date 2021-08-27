@@ -48,7 +48,7 @@ export const chartOptions = {
       ]
     };
   },
-  strategy_group: (props) => {
+  policy_group: (props) => {
     return {
       grid: {
         x: 50,
@@ -92,6 +92,129 @@ export const chartOptions = {
             lineStyle: {
               width: 6,
               color: "#1890ff" //折线的颜色
+            }
+          }
+        },
+        smooth: true
+      }]
+    };
+  },
+  proportion_of_results: () => {
+    return { 
+      title: {
+        text: '检测结果比例',
+        subtext: '通过/未通过/屏蔽比例',
+        left: 10
+      },
+      color: [ '#73DEB3', '#FF4D4F', '#5D7092' ],
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
+      },
+      legend: {
+        left: 10,
+        top: 50,
+        data: [ '通过', '未通过', '屏蔽' ]
+      },
+      series: [
+        {
+          name: '数据',
+          type: 'pie', //设为饼图
+          radius: [ '45%', '75%' ], //可调整大小
+          center: [ "50%", "60%" ], 
+          clockWise: true, //默认逆时针
+          hoverAnimation: false, //移入放大
+          avoidLabelOverlap: false, //避免标注重叠
+          label: {
+            position: 'inside',
+            formatter: '{a|{d}%} ',
+            rich: {
+              a: {
+                fontSize: 12,
+                color: '#fff'
+              }
+            }
+          },
+          data: [
+            { value: 335, name: '通过' },
+            { value: 310, name: '未通过' },
+            { value: 234, name: '屏蔽' }
+          ]
+        }
+      ]
+    };
+  }, 
+  source_has_been_executed: () => {
+    return {
+      grid: {
+        x: 50,
+        y: 60,
+        x2: '2%',
+        y2: 30
+      },
+      title: {
+        text: '检测源执行次数',
+        subtext: '近5天',
+        left: 10
+      },
+      xAxis: {
+        type: 'category',
+        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+      },
+      color: '#5AD8A6',
+      yAxis: {
+        type: 'value'
+      },
+      series: [{
+        data: [ 120, 111, 150, 80, 70, 110, 111 ],
+        type: 'bar'
+      }]
+    };
+  },
+  policy_running_trend: () => {
+    return {
+      grid: {
+        x: 50,
+        y: 60,
+        x2: 30,
+        y2: 30
+      },
+      title: {
+        text: '策略组检测通过率',
+        subtext: '30天内'
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+      },
+      yAxis: {
+        type: 'value',
+        max: 100,
+        min: 0,
+        interval: 25,
+        axisLabel: {
+          formatter: '{value}%'
+        }
+      },
+      series: [{
+        data: [ 12, 22, 33, 55, 77, 88, 99 ],
+        type: 'line',
+        areaStyle: {},
+        symbolSize: 12,
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              position: 'top',
+              formatter: function(params) {
+                return `${params.value}%`;
+              }
+            },
+            color: "#D6F5E9", //折线点的颜色
+            lineStyle: {
+              width: 6,
+              color: "#17C3C2" //折线的颜色
             }
           }
         },

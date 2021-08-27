@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Button, Table, Space, Input, notification, Divider, Menu } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -9,12 +9,14 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import tplAPI from 'services/tpl';
 import getPermission from "utils/permission";
+import Detection from './detection';
 
 const CTList = ({ userInfo, match = {} }) => {
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { projectId } = match.params || {};
   const orgId = 'org-c4i8s1rn6m81fm687b0g';
   const [ loading, setLoading ] = useState(false),
+    [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -27,16 +29,20 @@ const CTList = ({ userInfo, match = {} }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '环境名称'
+      title: '策略名称'
     },
     {
       dataIndex: 'description',
-      title: '云模板名称'
+      title: '标签'
     },
     {
       dataIndex: 'repoAddr',
-      title: '绑定资源组',
-      render: (text) => <a href={text} target='_blank'>{text}</a>
+      title: '策略组'
+      // render: (text) => <a href={text} target='_blank'>{text}</a>
+    },
+    {
+      dataIndex: 'activeEnvironment',
+      title: '严重性'
     },
     {
       dataIndex: 'activeEnvironment',
@@ -52,18 +58,32 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'creator',
-      title: '状态'
+      title: '创建者'
+    },
+    {
+      dataIndex: 'creator',
+      title: '最后更新时间'
     },
     {
       title: '操作',
-      width: 60,
+      width: 130,
       render: (record) => {
         return PROJECT_OPERATOR ? (
           <span className='inlineOp'>
             <a 
               type='link' 
-              onClick={() => openCheck(record)}
+              onClick={() => setVisible(true)}
             >检测</a>
+            <Divider type={'vertical'} />
+            <a 
+              type='link' 
+              onClick={() => openCheck(record)}
+            >编辑</a>
+            <Divider type={'vertical'} />
+            <a 
+              type='link' 
+              onClick={() => openCheck(record)}
+            >禁用</a>
           </span>
         ) : null;
       }
@@ -110,14 +130,20 @@ const CTList = ({ userInfo, match = {} }) => {
       ...payload
     });
   };
-
+  console.log(visible, 'visible');
   return <Layout
     extraHeader={<PageHeader
-      title='云模板'
+      title='策略'
       breadcrumb={true}
     />}
   >
     <div className='idcos-card'>
+      <Space style={{ marginBottom: 12 }}>
+        <Button type={'primary'} onClick={() => {
+          history.push('/compliance/strategy-config/strategy/strategy-create');
+        }}
+        >新建策略</Button>
+      </Space>
       <div>
         <Table
           columns={columns}
@@ -140,6 +166,7 @@ const CTList = ({ userInfo, match = {} }) => {
         />
       </div>
     </div>
+    <Detection visible={visible} toggleVisible={() => setVisible(false)} />
   </Layout>;
 };
 

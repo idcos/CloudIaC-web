@@ -134,15 +134,21 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/compliance/strategy-config/strategy-group',
-          name: '云模板',
-          component: loadable(() => import('containers/compliance/strategy-config/strategy-group'), asyncLoadFallback),
+          path: '/compliance/policy-config/policy-group',
+          name: '策略组',
+          component: loadable(() => import('containers/compliance/policy-config/policy-group'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/compliance/strategy-config/strategy',
-          name: '环境',
-          component: loadable(() => import('containers/compliance/strategy-config/strategy'), asyncLoadFallback),
+          path: '/compliance/policy-config/policy',
+          name: '策略',
+          component: loadable(() => import('containers/compliance/policy-config/policy'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/compliance/policy-config/policy/policy-create',
+          name: '新建策略',
+          component: loadable(() => import('containers/compliance/policy-config/policy/create'), asyncLoadFallback),
           exact: true
         }
       ]

@@ -9,7 +9,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import projectAPI from 'services/project';
 import tplAPI from 'services/tpl';
-import BindStrategyModal from 'components/strategy-modal';
+import BindPolicyModal from 'components/policy-modal';
 import DetectionModal from './component/detection-modal';
 
 
@@ -35,7 +35,7 @@ const CTList = ({ orgs }) => {
       searchprojectId: undefined,
       name: ''
     });
-  const openStrategy = () => {
+  const openPolicy = () => {
     setVisible(true);
   };
   const columns = [
@@ -46,7 +46,7 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'description',
       title: '绑定策略组',
-      render: (text) => <a onClick={openStrategy}>{text}</a>
+      render: (text) => <a onClick={openPolicy}>{text}</a>
     },
     {
       dataIndex: 'repoAddr',
@@ -201,7 +201,7 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    <BindStrategyModal visible={visible} />
+    <BindPolicyModal visible={visible} />
     <DetectionModal visible={detectionVisible} />
   </Layout>;
 };

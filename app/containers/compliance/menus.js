@@ -22,17 +22,17 @@ export const getComplianceMenus = (userInfo) => {
     },
     {
       subName: '策略管理',
-      subKey: 'strategy-config',
+      subKey: 'policy-config',
       emptyMenuList: [],
       menuList: [
         {
           name: '策略组',
-          key: 'strategy-group',
+          key: 'policy-group',
           icon: <ProjectOutlined />
         },
         {
           name: '策略',
-          key: 'strategy',
+          key: 'policy',
           icon: <LayoutOutlined />
         }
       ]

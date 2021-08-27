@@ -3,7 +3,7 @@ import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
-import BindStrategyModal from './component/bindStrategyModal';
+import BindPolicyModal from './component/bindPolicyModal';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -20,13 +20,13 @@ const CTList = ({ userInfo, match = {} }) => {
       list: [],
       total: 0
     }),
-    [ strategyView, setStrategyView ] = useState(false),
+    [ policyView, setPolicyView ] = useState(false),
     [ query, setQuery ] = useState({
       pageNo: 1,
       pageSize: 10
     });
-  const bindStrategy = () => {
-    setStrategyView(true);
+  const bindPolicy = () => {
+    setPolicyView(true);
   };
   const columns = [
     {
@@ -40,7 +40,7 @@ const CTList = ({ userInfo, match = {} }) => {
     {
       dataIndex: 'repoAddr',
       title: '绑定策略组',
-      render: (text) => <a onClick={() => bindStrategy()}>{text}</a>
+      render: (text) => <a onClick={() => bindPolicy()}>{text}</a>
     },
     {
       dataIndex: 'activeEnvironment',
@@ -151,7 +151,7 @@ const CTList = ({ userInfo, match = {} }) => {
         />
       </div>
     </div>
-    <BindStrategyModal visible={strategyView} />
+    <BindPolicyModal visible={policyView} />
   </Layout>;
 };
 

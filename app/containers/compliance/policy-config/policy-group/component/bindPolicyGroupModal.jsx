@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Drawer, notification, Row, Select, Table, Input } from "antd";
+import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
@@ -7,7 +7,7 @@ import { PROJECT_ROLE } from 'constants/types';
 const { Option } = Select;
 const FL = {
   labelCol: { span: 5 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 18 }
 };
 
 export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
@@ -54,16 +54,49 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
   };
 
   return (
-    <Drawer
-      title='检测详情'
-      placement='right'
-      closable={false}
+    <Modal
+      title='新建策略组'
       visible={visible}
-      width={600}
+      onCancel={toggleVisible}
+      okButtonProps={{
+        loading: submitLoading
+      }}
+      onOk={onOk}
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </Drawer>
+      <Form
+        {...FL}
+        form={form}
+      >
+        <Form.Item
+          label='策略组名称'
+          name='name'
+          rules={[
+            {
+              required: true,
+              message: '请输入策略组名称'
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
+      </Form>
+      <Form
+        {...FL}
+        form={form}
+      >
+        <Form.Item
+          label='策略组描述'
+          name='name'
+          rules={[
+            {
+              required: true,
+              message: '请输入策略组描述'
+            }
+          ]}
+        >
+          <Input.TextArea />
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 };

@@ -3,9 +3,9 @@ import { Button, Table, Radio, Input, notification, Select, Space, Divider, Swit
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
-import BindStrategyGroupModal from './component/bindStrategyGroupModal';
+import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import Detail from './detail';
-import RelevanceStrategyGroupModal from './component/relevanceStrategyGroupModal';
+import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -75,9 +75,7 @@ const CTList = ({ orgs }) => {
             >关联策略</a>
             <Divider type={'vertical'}/>
             <a 
-              onClick={() => {
-                history.push(`/compliance/compliance-config/env/env-detail`); 
-              }}
+              onClick={() => setVisible(true)}
             >编辑</a>
             <Divider type={'vertical'}/>
             <a>禁用</a>
@@ -186,9 +184,9 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    <BindStrategyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />
+    <BindPolicyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />
     <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>
-    <RelevanceStrategyGroupModal visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />
+    <RelevancePolicyGroupModal visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />
   </Layout>;
 };
 

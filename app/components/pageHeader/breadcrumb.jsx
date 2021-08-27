@@ -33,12 +33,14 @@ const breadcrumbNameMap = {
   'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
   'task': { text: '部署历史' },
   'detail': { text: '环境详情', indexDiff: 2 },
-  'compliance-config': { text: '合规配置' },
-  'ct': { text: '云模板' },
+  'compliance-config': { text: '合规配置', disabled: true },
+  'ct': { text: '云模板', disabled: true },
   'env': { text: '环境' },
-  'strategy-config': { text: '策略管理' },
-  'strategy-group': { text: '策略组' },
-  'strategy': { text: '策略' }
+  'env-detail': { text: '环境详情' },
+  'policy-config': { text: '策略管理', disabled: true },
+  'policy-group': { text: '策略组', disabled: true },
+  'policy': { text: '策略' },
+  'policy-create': { text: '新建策略' }
 };
 
 
@@ -48,6 +50,7 @@ const BreadcrumbWrapper = ({ location, params }) => {
 
   const breadcrumbContent = useMemo(() => {
     const lastOne = pathSnippets.filter(it => breadcrumbNameMap.hasOwnProperty(it) && breadcrumbNameMap[it]).pop();
+
     return pathSnippets.map((snippet, index) => {
       const link = breadcrumbNameMap.hasOwnProperty(snippet) ? breadcrumbNameMap[snippet] : null;
       if (!link) {

@@ -15,8 +15,8 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
     case 'compliance-config':
       history.push(`/compliance/compliance-config/${menuItemKey}`);
       break;
-    case 'strategy-config':
-      history.push(`/compliance/strategy-config/${menuItemKey}`);
+    case 'policy-config':
+      history.push(`/compliance/policy-config/${menuItemKey}`);
       break;
     default:
       break;
@@ -26,7 +26,11 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
     let scope = subKey, menuKey, isEmptyData = false;
     let pathList = window.location.pathname.split('/');
-    menuKey = pathList[pathList.length - 1];
+    if (pathList.length > 4) {
+      menuKey = pathList[pathList.length - 2];
+    } else {
+      menuKey = pathList[pathList.length - 1];
+    }
     return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
       if (menuItem.isHide) {
         return null;
