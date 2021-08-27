@@ -5,7 +5,7 @@ import userAPI from 'services/user';
 import { ORG_USER } from 'constants/types';
 
 import styles from './style.less';
-import TableTransfer from './email';
+import TableTransfer from 'components/table-transfer';
 
 const { Option } = Select;
 
@@ -25,6 +25,34 @@ const subNavs = {
 };
 
 export default ({ orgId, operation, visible, toggleVisible }) => {
+
+  const leftTableColumns = [
+    {
+      dataIndex: 'name',
+      title: '姓名'
+    },
+    {
+      dataIndex: 'email',
+      title: '邮箱'
+    }
+  ];
+
+  const rightTableColumns = [
+    {
+      dataIndex: 'name',
+      title: '姓名'
+    },
+    {
+      dataIndex: 'email',
+      title: '邮箱'
+    }
+  ];
+
+  const propsModal = {
+    leftTableColumns,
+    rightTableColumns
+  };
+
   const [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
     [ panel, setPanel ] = useState('email'),
     [ loading, setLoading ] = useState(false),
@@ -120,7 +148,7 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
           }
         ]}
       >
-        <TableTransfer />
+        <TableTransfer {...propsModal} />
       </Form.Item>,
       wechat: () => <Form.Item
         name='eventType'

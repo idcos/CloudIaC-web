@@ -30,7 +30,6 @@ const CTList = ({ orgs }) => {
     [ visible, setVisible ] = useState(false),
     [ viewDetail, setViewDetail ] = useState(false),
     [ viewRelevance, setViewRelevance ] = useState(false),
-    [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
       pageSize: 10,
@@ -44,32 +43,24 @@ const CTList = ({ orgs }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '策略名称',
+      title: '策略组名称',
       render: (text) => <a onClick={() => setViewDetail(true)}>{text}</a>
     },
     {
       dataIndex: 'description',
-      title: '绑定策略组',
-      render: (text) => <a onClick={openStrategy}>{text}</a>
+      title: '描述'
     },
     {
       dataIndex: 'tag',
-      title: '标签'
+      title: '关联策略',
+      render: (text) => <a onClick={openStrategy}>{text}</a>
     },
     {
       dataIndex: 'repoAddr',
-      title: '严重性'
+      title: '最后更新日期'
     },
     {
       dataIndex: 'repoAddr1',
-      title: '创建者'
-    },
-    {
-      dataIndex: 'repoAddr2',
-      title: '最后更新时间'
-    },
-    {
-      dataIndex: 'creator',
       title: '状态'
     },
     {

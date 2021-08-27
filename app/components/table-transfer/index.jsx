@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Transfer, Switch, Table, Tag } from 'antd';
 import difference from 'lodash/difference';
 
@@ -65,57 +65,28 @@ for (let i = 0; i < 20; i++) {
 
 const originTargetKeys = mockData.filter(item => +item.key % 2 == 0).map(item => item.key);
 
-const leftTableColumns = [
-  {
-    dataIndex: 'name',
-    title: '姓名'
-  },
-  {
-    dataIndex: 'email',
-    title: '邮箱'
-  }
-];
-const rightTableColumns = [
-  {
-    dataIndex: 'name',
-    title: '姓名'
-  },
-  {
-    dataIndex: 'email',
-    title: '邮箱'
-  }
-];
 
-class Index extends React.Component {
-  state = {
-    targetKeys: originTargetKeys
-  };
+const Index = ({ leftTableColumns, rightTableColumns }) => {
+  const [ targetKeys, setTargetKeys ] = useState(originTargetKeys);
 
-  onChange = nextTargetKeys => {
-    this.setState({ targetKeys: nextTargetKeys });
-  };
-
-  render() {
-    const { targetKeys } = this.state;
-    return (
-      <>
-        <TableTransfer
-          listStyle={{
-            height: 420
-          }}
-          dataSource={mockData}
-          targetKeys={targetKeys}
-          showSearch={true}
-          onChange={this.onChange}
-          filterOption={(inputValue, item) =>
-            item.name.indexOf(inputValue) !== -1 
-          }
-          leftColumns={leftTableColumns}
-          rightColumns={rightTableColumns}
-        />
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <TableTransfer
+        listStyle={{
+          height: 420
+        }}
+        dataSource={mockData}
+        targetKeys={targetKeys}
+        showSearch={true}
+        onChange={(nextTargetKeys) => setTargetKeys(nextTargetKeys)}
+        filterOption={(inputValue, item) =>
+          item.name.indexOf(inputValue) !== -1 
+        }
+        leftColumns={leftTableColumns}
+        rightColumns={rightTableColumns}
+      />
+    </>
+  );
+};
 
 export default Index;

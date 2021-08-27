@@ -2,15 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 
 import projectAPI from 'services/project';
+import TableTransfer from 'components/table-transfer';
 import { PROJECT_ROLE } from 'constants/types';
 
 const { Option } = Select;
 const FL = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 18 }
+  wrapperCol: { span: 24 }
 };
 
 export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
+
+  const leftTableColumns = [
+    {
+      dataIndex: 'name',
+      title: '策略'
+    }
+  ];
+  const rightTableColumns = [
+    {
+      dataIndex: 'name',
+      title: '策略'
+    }
+  ];
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ userOptions, setUserOptions ] = useState([]);
@@ -52,7 +65,10 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       !hasError && toggleVisible();
     });
   };
-
+  const propsModal = {
+    leftTableColumns,
+    rightTableColumns
+  };
   return (
     <Modal
       title='关联策略'
@@ -68,7 +84,6 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         form={form}
       >
         <Form.Item
-          label='绑定策略组'
           name='name'
           rules={[
             {
@@ -77,7 +92,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
             }
           ]}
         >
-          <Input />
+          <TableTransfer {...propsModal} />
         </Form.Item>
       </Form>
     </Modal>

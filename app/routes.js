@@ -107,12 +107,6 @@ export default function createRoutes() {
           name: '项目信息：创建项目',
           component: loadable(() => import('containers/org/m-project/create'), asyncLoadFallback),
           exact: true
-        },
-        {
-          path: '/org/:orgId/compliance-ct',
-          name: '组织设置：项目',
-          component: loadable(() => import('containers/org/compliance-config/ct'), asyncLoadFallback),
-          exact: true
         }
       ]
     },
