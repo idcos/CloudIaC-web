@@ -111,7 +111,7 @@ export default function createRoutes() {
       ]
     },
     {
-      path: '/compliance',
+      path: '/compliance/:configKey/:typeKey',
       name: '合规配置',
       component: loadable(() => import('containers/compliance'), asyncLoadFallback),
       routes: [

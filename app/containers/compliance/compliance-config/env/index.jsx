@@ -4,6 +4,7 @@ import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
 import BindPolicyModal from './component/bindPolicyModal';
+import Detection from './component/detection';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -16,6 +17,7 @@ const CTList = ({ userInfo, match = {} }) => {
   const { projectId } = match.params || {};
   const orgId = 'org-c4i8s1rn6m81fm687b0g';
   const [ loading, setLoading ] = useState(false),
+    [ viewDetection, setViewDetection ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -66,7 +68,7 @@ const CTList = ({ userInfo, match = {} }) => {
           <span className='inlineOp'>
             <a 
               type='link' 
-              onClick={() => openCheck(record)}
+              onClick={() => setViewDetection(true)}
             >检测</a>
             <Divider type={'vertical'}/>
             <a 
@@ -152,6 +154,7 @@ const CTList = ({ userInfo, match = {} }) => {
       </div>
     </div>
     <BindPolicyModal visible={policyView} />
+    <Detection visible={viewDetection}/>
   </Layout>;
 };
 

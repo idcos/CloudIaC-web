@@ -56,16 +56,20 @@ const Index = (props) => {
         }
       </Descriptions.Item>
       <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
-      <Descriptions.Item label='分支/标签'>{info.revision || '-'}</Descriptions.Item>
+      <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
       <Descriptions.Item label='Commit_ID'><span onClick={() => {
         window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
       }} className={styles.linkToCommit}
       >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
       <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
+      <Descriptions.Item label='target'>{info.target || '-'}</Descriptions.Item>
+      <Descriptions.Item label='tfvars文件'>{info.tfvars || '-'}</Descriptions.Item>
+      <Descriptions.Item label='playbook文件'>{info.playbook || '-'}</Descriptions.Item>
+      <Descriptions.Item label='部署通道'>{info.runner || '-'}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
-      <Descriptions.Item label='创建人'>{info.creator || '-'}</Descriptions.Item>
+      <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>
     </Descriptions>
   </Card>;
 };

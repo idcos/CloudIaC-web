@@ -17,7 +17,7 @@ const searchService = new SearchByKeyWord({
   ]
 });
 
-export default ({ value, cardTitleAfter }) => {
+export default ({ value, cardTitleAfter, showHeader }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
@@ -78,7 +78,7 @@ export default ({ value, cardTitleAfter }) => {
     <Card
       className={`card-body-no-paading ${fullScreen ? "full-card" : ""} ${styles.ansiCodeCard}`}
       title={
-        <>
+        !showHeader && <>
           <Input.Search
             ref={searchRef}
             placeholder='请输入内容搜索'
@@ -94,7 +94,7 @@ export default ({ value, cardTitleAfter }) => {
         </>
       }
       extra={
-        <Space>
+        !showHeader && <Space>
           <Button onClick={() => go('top')}>
             <VerticalAlignTopOutlined />
             回顶部

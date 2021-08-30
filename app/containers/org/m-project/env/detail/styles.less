@@ -1,40 +1,47 @@
 @import 'containers/App/styles/variable.less';
 
 .depolyDetail {
-	:global {
-		.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
-				border-bottom: none;
-		}
-		.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
-				border-bottom-color: #ebebeb;
-		}
-	}
+  :global {
+
+    .ant-tabs-top>.ant-tabs-nav::before,
+    .ant-tabs-bottom>.ant-tabs-nav::before,
+    .ant-tabs-top>div>.ant-tabs-nav::before,
+    .ant-tabs-bottom>div>.ant-tabs-nav::before {
+      border-bottom: none;
+    }
+
+    .ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab-active,
+    .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab-active {
+      border-bottom-color: #ebebeb;
+    }
+  }
 }
 
 .deployJournal {
-	:global {
-		
-		.title {
-			color: @gray-9;
-			font-weight: bold;
-		}
-		
-		.subTitle {
-			font-size: 12px;
-			margin-left: 16px;
-			color: @gray-6;
-			font-weight: normal;
-		}
+  :global {
 
-		.content {
-			color: @gray-9;
-		}
-	}
-}
-.linkToCommit {
-    &:hover{
-        color: #13C2C2;
-        cursor: pointer;
-        text-decoration: underline;
+    .title {
+      color: @gray-9;
+      font-weight: bold;
     }
+
+    .subTitle {
+      font-size: 12px;
+      margin-left: 16px;
+      color: @gray-6;
+      font-weight: normal;
+    }
+
+    .content {
+      color: @gray-9;
+    }
+  }
+}
+
+.linkToCommit {
+  &:hover {
+    color: #13C2C2;
+    cursor: pointer;
+    text-decoration: underline;
+  }
 }

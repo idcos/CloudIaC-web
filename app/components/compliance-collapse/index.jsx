@@ -7,8 +7,7 @@ import AnsiCoderCard from "components/coder/ansi-coder-card/index";
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
 import moment from 'moment';
-import styles from '../styles.less';
-import ComplianceCollapse from 'components/compliance-collapse';
+import styles from './style.less';
 
 const { Panel } = Collapse;
 
@@ -45,9 +44,24 @@ const Index = (props) => {
     }
   };
   const a = true;
-  return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 6 }} type={'inner'} title={'合规状态'}>
-    <ComplianceCollapse />
-  </Card>;
+  return <>
+    <div className={styles['collapse-title']}>策略1</div>
+    <div className={styles[a ? 'color-collapse-pass' : 'color-collapse-inject']}>
+      <Collapse expandIconPosition={'right'}>
+        <Panel showArrow={false}
+          header={a ? (
+            <span><span style={{ color: '#13C2C2', paddingRight: 8 }}><CheckCircleOutlined />  通过</span><span>策略1</span></span>
+          ) : <span><span style={{ color: '#CF1322', paddingRight: 8 }}><CloseCircleOutlined />  失败</span><span>策略1</span></span>} 
+          key='1'
+        >
+          <AnsiCoderCard 
+            showHeader={true}
+            value={['aawdadwaawda']} 
+          />
+        </Panel>
+      </Collapse>
+    </div>
+  </>;
 };
 
-export default Eb_WP()(memo(Index));
+export default Eb_WP()(Index);

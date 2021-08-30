@@ -29,7 +29,7 @@ const subNavs = {
   deployJournal: '部署日志',
   deployHistory: '部署历史',
   variable: '变量',
-  complianceInfo: '合规状态',
+  compInfo: '合规状态',
   setting: '设置'
 };
 
@@ -158,7 +158,7 @@ const EnvDetail = (props) => {
       deployHistory: () => <DeployHistory {...props} info={info}/>,
       variable: () => <Variable type='env' {...props} />,
       setting: () => <Setting {...props} info={info} reload={reload}/>,
-      complianceInfo: () => <ComplianceInfo {...props} info={info} reload={reload}/>
+      compInfo: () => <ComplianceInfo {...props} info={info} reload={reload}/>
     };
     return PAGES[panel]();
   }, [ panel, info, taskInfo ]);
