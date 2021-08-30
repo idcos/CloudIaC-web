@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import history from 'utils/history';
 import { QuitIcon } from 'components/iconfont';
+import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
 import projectAPI from 'services/project';
@@ -17,8 +18,9 @@ const { Option } = Select;
 const KEY = 'global';
 
 const AppHeader = (props) => {
-  const { theme, locationPathName, curOrg, projects, curProject, dispatch, userInfo } = props;
+  const { theme, locationPathName, orgs, curOrg, projects, curProject, dispatch, userInfo } = props;
   const { pathname } = window.location;
+  const orgList = (orgs || {}).list || [];
   const projectList = (projects || {}).list || [];
   const projectId = (curProject || {}).id;
   const url_projectId = pathname.indexOf('/project/') !== -1 ? pathname.split('/').filter(i => i)[3] : null;
@@ -74,6 +76,10 @@ const AppHeader = (props) => {
       }
     });
     history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
+  };
+
+  const changeCurOrg = (value) => {
+    changeOrg({ orgId: value, dispatch });
   };
 
   useEffect(() => {
@@ -162,7 +168,24 @@ const AppHeader = (props) => {
         {
           (pathname !== '/' && pathname.indexOf('compliance') === -1) ? (
             <>
-              <SeniorSelect 
+              <SeniorSelect
+                style={{ width: 250, marginLeft: 24 }}
+                options={orgList}
+                onChange={changeCurOrg}
+                value={orgId}
+                valuePropName='id'
+                formatOptionLabel={(name) => `组织：${name}`}
+                seniorSelectfooter={(
+                  <div className={styles.seniorSelectfooter}>
+                    {
+                      projectList.length ? (
+                        <div className='more' onClick={() => history.push('/')}>查看更多</div>
+                      ) : null
+                    }
+                  </div>
+                )}
+              />
+              {/* <SeniorSelect 
                 placeholder='项目：'
                 style={{ width: 250, marginLeft: 24 }}
                 options={projectList}
@@ -199,7 +222,7 @@ const AppHeader = (props) => {
                   toggleVisible={togglePjtModalVsible}
                   operation={pjtOperation}
                 />
-              }
+              } */}
             </>
           ) : null
         }

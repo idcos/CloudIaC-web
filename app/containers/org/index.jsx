@@ -12,12 +12,13 @@ import styles from './styles.less';
 
 const KEY = 'global';
 
-const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, dispatch }) => {
+const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}, orgs, dispatch }) => {
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const orgList = (orgs || {}).list || [];
+  const projectList = (projects || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
   const [ dividerVisible, setDividerVisible ] = useState(false);
-  
+ 
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
@@ -34,6 +35,16 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
 
   const changeCurOrg = (value) => {
     changeOrg({ orgId: value, dispatch });
+  };
+
+  const changeProject = (pjtId) => {
+    dispatch({
+      type: 'global/set-curProject',
+      payload: {
+        projectId: pjtId
+      }
+    });
+    history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
@@ -73,26 +84,32 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   return (
     <div className={styles.orgWrapper}>
       <div className='left-nav'>
-        <MenuSelect
-          options={orgList}
-          onChange={changeCurOrg}
-          setDividerVisible={setDividerVisible}
-          selectionStyle={{ padding: '13px 20px 13px 24px' }}
-          lablePropName='name'
-          valuePropName='id'            
-          value={curOrg && curOrg.id}
-          menuSelectfooter={(
-            <div 
-              className={styles.menuSelectfooterContent} 
-              onClick={() => history.push('/')}
-            >
-              查看更多组织
-            </div>
-          )}
-        />
-        {!dividerVisible && <div style={{ padding: '0 19px' }}>
-          <Divider style={{ margin: '0' }} />
-        </div>}
+        {
+          projectList.length ? (
+            <>
+              <MenuSelect
+                options={projectList}
+                onChange={changeProject}
+                setDividerVisible={setDividerVisible}
+                selectionStyle={{ padding: '13px 20px 13px 24px' }}
+                lablePropName='name'
+                valuePropName='id'            
+                value={pjtId}
+                menuSelectfooter={(
+                  <div 
+                    className={styles.menuSelectfooterContent} 
+                    onClick={() => history.push('/')}
+                  >
+                    查看更多项目
+                  </div>
+                )}
+              />
+              {!dividerVisible && <div style={{ padding: '0 19px' }}>
+                <Divider style={{ margin: '0' }} />
+              </div>}
+            </>
+          ) : null
+        }
         <div className='menu-wrapper'>
           {
             getMenus(userInfo || {}).map(subMenu => {
@@ -129,6 +146,7 @@ export default connect(
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
     curProject: state[KEY].get('curProject'),
+    projects: state[KEY].get('projects').toJS(),
     userInfo: state[KEY].get('userInfo').toJS()
   })
 )(OrgWrapper);
