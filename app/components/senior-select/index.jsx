@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Select } from 'antd';
 import noop from 'lodash/noop';
 import styles from './styles.less';
@@ -15,20 +15,37 @@ export default (props) => {
       name: 'name',
       description: 'description'
     },
+    searchKey=lablePropsNames.name,
     valuePropName = 'value',
     value,
+    listHeight,
+    maxLen,
     seniorSelectfooter = null,
     formatOptionLabel = (t) => t,
     options = []
   } = props || {};
+
+  const [ showOptions, setShowOptions ] = useState([]);
+
+  useEffect(() => {
+    setShowOptions(options.slice(0, maxLen));
+  }, [ maxLen, options ]);
+
+  const onSearch = (keyword) => {
+    const reg = new RegExp(keyword, 'gi');
+    const filterOptions = options.filter((it) => !keyword || reg.test(it[searchKey]));
+    setShowOptions(filterOptions.slice(0, maxLen));
+  };
 
   return (
     <Select
       className={styles.senior_select}
       getPopupContainer={triggerNode => triggerNode.parentNode}
       style={style} 
+      listHeight={listHeight}
       optionLabelProp={lablePropsNames.name}
-      optionFilterProp={lablePropsNames.name}
+      filterOption={false}
+      onSearch={onSearch}
       placeholder={placeholder}
       showArrow={false} 
       showSearch={true}
@@ -48,7 +65,7 @@ export default (props) => {
       )}
     >
       {
-        options.map((option) => {
+        showOptions.map((option) => {
           const { [lablePropsNames.name]: name, [valuePropName]: value, [lablePropsNames.description]: description, disabled } = option;
           return (
             <Option 

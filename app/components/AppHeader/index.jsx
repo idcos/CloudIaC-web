@@ -125,6 +125,8 @@ const AppHeader = (props) => {
                 style={{ width: 250, marginLeft: 24 }}
                 options={orgList}
                 onChange={changeCurOrg}
+                listHeight={800}
+                maxLen={7}
                 value={orgId}
                 valuePropName='id'
                 formatOptionLabel={(name) => `组织：${name}`}

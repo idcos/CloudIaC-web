@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { EyeOutlined, PlusSquareOutlined, notification } from '@ant-design/icons';
+import { EyeOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
-import { Divider } from 'antd';
+import { Divider, notification } from 'antd';
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";

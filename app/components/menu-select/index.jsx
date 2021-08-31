@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useImperativeHandle } from 'react';
+import React, { useState, useMemo, useEffect, useImperativeHandle } from 'react';
 import { Input, Menu, Dropdown } from 'antd';
 import { DownOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
@@ -29,7 +29,11 @@ export default (props) => {
   } = props || {};
 
   const [ visible, setVisible ] = useState(false);
-  const [ showOptions, setShowOptions ] = useState(options.slice(0, maxLen));
+  const [ showOptions, setShowOptions ] = useState([]);
+
+  useEffect(() => {
+    setShowOptions(options.slice(0, maxLen));
+  }, [ options, maxLen ]);
 
   const onSearch = (e) => {
     const keyword = e.target.value;
