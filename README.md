@@ -19,7 +19,7 @@
 - CSS Modules
   - 默认使用Less和模块化CSS，规避了全局选择器的命名冲突，便于高质量CSS代码的编写和维护。
 
-- And-Design
+- Ant-Design
   - 不再以`<script>`和`<link>`方式引入，使用官方推荐的按需加载的方式引入
 
 ## 开发向导
