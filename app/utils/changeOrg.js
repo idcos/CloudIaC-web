@@ -5,7 +5,7 @@ import getPermission from "utils/permission";
 import userAPI from 'services/user';
 import projectAPI from 'services/project';
 
-const changeOrg = async ({ orgId, dispatch }) => {
+const changeOrg = async ({ orgId, dispatch, needJump = true }) => {
   const userInfoRes = await userAPI.info({
     orgId
   });
@@ -28,10 +28,12 @@ const changeOrg = async ({ orgId, dispatch }) => {
     type: 'global/set-projects',
     payload: projects
   });
-  if (ORG_SET) {
-    history.push(`/org/${orgId}/m-org-ct`);
-  } else {
-    history.push(`/org/${orgId}/project/${projects.list[0].id}/m-project-env`);
+  if (needJump) {
+    if (ORG_SET) {
+      history.push(`/org/${orgId}/m-org-ct`);
+    } else {
+      history.push(`/org/${orgId}/project/${projects.list[0].id}/m-project-env`);
+    }
   }
 };
 

@@ -8,7 +8,19 @@ import { Row, Col } from 'antd';
 import BreadcrumbWrapper from './breadcrumb';
 
 const PageHeader = (props) => {
-  const { breadcrumb, title, des, subDes, renderFooter, location, match, curOrg, className, showIcon, headerStyle } = props;
+  const { 
+    breadcrumb,
+    title,
+    des,
+    subDes,
+    renderFooter,
+    location,
+    match,
+    curOrg,
+    className,
+    showIcon,
+    headerStyle
+  } = props;
   return <div style={{ background: !!showIcon && `#fff url(/assets/backgroundIcon/${showIcon}.svg) no-repeat 10px -36px` }} className={`${styles.pageHeader} ${className}`}>
     <div>
       { breadcrumb && <BreadcrumbWrapper

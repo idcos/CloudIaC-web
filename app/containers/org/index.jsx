@@ -12,7 +12,7 @@ import styles from './styles.less';
 
 const KEY = 'global';
 
-const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}, orgs, dispatch }) => {
+const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}, dispatch }) => {
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const projectList = (projects || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
@@ -133,7 +133,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                   <div 
                     className={styles.menuSelectfooterContent} 
                   >
-                    <div className='more' onClick={() => history.push('/')}>
+                    <div className='more' onClick={() => history.push(`/project-select-page?orgId=${orgId}`)}>
                       <EyeOutlined className='icon' />查看更多项目
                     </div>
                     <div className='create'>

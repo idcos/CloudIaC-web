@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown, Tooltip, Button, Badge } from 'antd';
 import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, ToolFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
+import queryString from 'query-string';
 import history from 'utils/history';
 import { QuitIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
@@ -67,6 +68,11 @@ const AppHeader = (props) => {
   }, [ projectList, projectId ]);
 
   useEffect(() => {
+    const { orgId } = queryString.parse(location.search);
+    if (orgId) {
+      changeCurOrg(orgId, false);
+      return;
+    }
     if (locationPathName === '/') {
       dispatch({
         type: 'global/set-curOrg',
@@ -91,8 +97,8 @@ const AppHeader = (props) => {
     }
   };
 
-  const changeCurOrg = (value) => {
-    changeOrg({ orgId: value, dispatch });
+  const changeCurOrg = (value, needJump = true) => {
+    changeOrg({ orgId: value, dispatch, needJump });
   };
 
   const onCloseDevManualTooltip = () => {

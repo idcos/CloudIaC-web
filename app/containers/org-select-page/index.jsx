@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { List } from 'antd';
 import { RightOutlined } from "@ant-design/icons";
-
-import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 import { connect } from "react-redux";
 import { compose } from 'redux';
 import changeOrg from "utils/changeOrg";
-
 import styles from './styles.less';
 
 const Orgs = ({ orgs, dispatch }) => {
@@ -47,7 +44,6 @@ const Orgs = ({ orgs, dispatch }) => {
     </div>
   </Layout>;
 };
-
 
 const mapStateToProps = (state) => {
   return {
