@@ -75,7 +75,7 @@ const Index = ({ orgs, visible }) => {
     }
   ];
   let CHART = useRef([
-    { key: 'strategy_group', domRef: useRef(), des: '环境状态占比', ins: null }
+    { key: 'policy_group', domRef: useRef(), des: '环境状态占比', ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
   
@@ -86,7 +86,7 @@ const Index = ({ orgs, visible }) => {
 
   useEffect(() => {
     CHART.current.forEach(chart => {
-      if (chart.key === 'strategy_group') {
+      if (chart.key === 'policy_group') {
         chartUtils.update(chart, {});
       }
     });

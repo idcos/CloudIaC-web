@@ -30,7 +30,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
       const _html = value.map((line, index) => {
         return `
           <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
-            <span class='line-index' style='width: ${lineIndexWidth}px;'>${index + 1 }</span>
+            <span class='line-index' style='width: ${lineIndexWidth}px;'>${index + 111 }</span>
             <pre class='line-text reset-styles'>${ansi_up.ansi_to_html(line)}</pre>
           </div>
         `;

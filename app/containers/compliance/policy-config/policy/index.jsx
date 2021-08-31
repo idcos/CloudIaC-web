@@ -139,7 +139,7 @@ const CTList = ({ userInfo, match = {} }) => {
     <div className='idcos-card'>
       <Space style={{ marginBottom: 12 }}>
         <Button type={'primary'} onClick={() => {
-          history.push('/compliance/strategy-config/strategy/strategy-create');
+          history.push('/compliance/policy-config/policy/policy-create');
         }}
         >新建策略</Button>
       </Space>

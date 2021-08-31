@@ -43,7 +43,7 @@ const Index = (props) => {
   
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
     <Descriptions 
-      labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
+      labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
     >
       <Descriptions.Item label='状态'>
         {ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}

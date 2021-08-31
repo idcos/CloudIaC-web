@@ -32,16 +32,20 @@ const {} = Radio;
 const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
   const varRef = useRef();
-  const configRef = useRef();
+  const configRef = useRef({});
   const [form] = Form.useForm();
 
   const [ applyLoading, setApplyLoading ] = useState(false);
   const [ planLoading, setPlanLoading ] = useState(false);
   const [ vars, setVars ] = useState([]);
+  const [ runnner, setRunnner ] = useState([]);
+  const [ keys, setKeys ] = useState([]);
   const [ branch, setBranch ] = useState([]);
   const [ tag, setTag ] = useState([]);
   const [ info, setInfo ] = useState({});
   const [ tplInfo, setTplInfo ] = useState({});
+  const [ tfvars, setTfvars ] = useState([]);
+  const [ playbooks, setPlaybooks ] = useState([]);
   
   useEffect(() => {
     fetchInfo();
@@ -87,6 +91,7 @@ const Index = ({ match = {} }) => {
       });
     }
   };
+
   // 获取Info
   const fetchInfo = async () => {
     try {
@@ -95,17 +100,6 @@ const Index = ({ match = {} }) => {
           orgId, projectId, envId
         });
         let data = infores.result || {};
-        if (data.autoApproval) {
-          data.triggers = (data.triggers || []).concat(['autoApproval']);
-        }
-        if (!!data.autoDestroyAt) {
-          data.type = 'time';
-          form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-        } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
-          data.type = 'infinite';
-        } else if (!data.autoDestroyAt) {
-          data.type = 'timequantum';
-        }
         form.setFieldsValue(data);
         setInfo(data);
       }
@@ -115,7 +109,8 @@ const Index = ({ match = {} }) => {
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
       const { vcsId, repoId, repoRevision } = tplInfoRes;
-      !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
+      fetchTfvars(tplInfoRes);
+      fetchPlaybooks(tplInfoRes);
       // 获取分支数据
       const branchRes = await vcsAPI.listRepoBranch({
         orgId, 
@@ -140,6 +135,61 @@ const Index = ({ match = {} }) => {
       if (tagsRes.code === 200) {
         setTag(tagsRes.result || []);
       }
+      // 获取通道数据
+      const runnerRes = await sysAPI.listCTRunner({
+        orgId
+      });
+      let runnerList = runnerRes.result || [];
+      if (runnerRes.code === 200) {
+        setRunnner(runnerList);
+        !envId && runnerList.length && configRef.current.setRunnerValue(runnerList[0].ID);
+      }
+      // 获取密钥数据
+      const keysRes = await keysAPI.list({
+        orgId,
+        pageSize: 99999,
+        currentPage: 1
+      });
+      if (keysRes.code === 200) {
+        setKeys(keysRes.result.list || []);
+      }
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+
+  const fetchTfvars = async (fetchParams) => {
+    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    try {
+      const res = await vcsAPI.listTfvars(params);
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setTfvars(res.result || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+  const fetchPlaybooks = async (fetchParams) => {
+    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    try {
+      const res = await vcsAPI.listPlaybook(params);
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setPlaybooks(res.result || []);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -252,6 +302,10 @@ const Index = ({ match = {} }) => {
             orgId={orgId}
             projectId={projectId}
             envId={envId}
+            runnner={runnner}
+            keys={keys}
+            tfvars={tfvars}
+            playbooks={playbooks}
           />
           <VariableForm 
             varRef={varRef} 

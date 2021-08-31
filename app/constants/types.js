@@ -6,8 +6,10 @@ export const ORG_USER = {
     admin: '管理员'
   },
   notificationType: {
-    all: '全部',
-    failure: '失败'
+    failed: '部署失败',
+    complete: '部署成功',
+    approving: '等待审批',
+    running: '新建部署'
   }
 };
 
@@ -91,6 +93,7 @@ export const TASK_TYPE = {
   'apply': 'apply作业',
   'destroy': 'destroy作业'
 };
+
 /** 不需要长轮询获取任务信息的任务状态 */
 export const END_TASK_STATUS_LIST = [
   'failed',

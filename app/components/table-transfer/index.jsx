@@ -54,34 +54,32 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
   </Transfer>
 );
 
-const mockData = [];
-for (let i = 0; i < 20; i++) {
-  mockData.push({
-    key: i.toString(),
-    name: `content${i + 1}`,
-    email: `description of content${i + 1}`
-  });
-}
+// dataScourt 数据需要转换成
+// {
+//   key: '',
+//   name: '',
+//   email: ''
+// }
 
-const originTargetKeys = mockData.filter(item => +item.key % 2 == 0).map(item => item.key);
-
-
-const Index = ({ leftTableColumns, rightTableColumns }) => {
-  const [ targetKeys, setTargetKeys ] = useState(originTargetKeys);
-
+const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, value, ...propsDemo }) => {
+  const [ targetKeys, setTargetKeys ] = useState(value || []);
   return (
     <>
       <TableTransfer
         listStyle={{
           height: 420
         }}
-        dataSource={mockData}
+        dataSource={dataScourt || []}
         targetKeys={targetKeys}
         showSearch={true}
-        onChange={(nextTargetKeys) => setTargetKeys(nextTargetKeys)}
+        onChange={(nextTargetKeys) => {
+          onChange(nextTargetKeys); 
+          setTargetKeys(nextTargetKeys);
+        }}
         filterOption={(inputValue, item) =>
           item.name.indexOf(inputValue) !== -1 
         }
+        locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入姓名搜索' }}
         leftColumns={leftTableColumns}
         rightColumns={rightTableColumns}
       />

@@ -1,20 +1,11 @@
-import React, { useState, useEffect, useMemo, useRef, useImperativeHandle } from "react";
-import { notification, Tooltip, Select, Form, Input, Collapse, Checkbox, Button, DatePicker, Row, Col, Radio, InputNumber } from "antd";
+import React, { useState, useEffect, useImperativeHandle } from "react";
+import { notification, Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, Radio, InputNumber } from "antd";
 import copy from 'utils/copy';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
-import sysAPI from 'services/sys';
-import envAPI from 'services/env';
-import tplAPI from 'services/tpl';
-import keysAPI from 'services/keys';
-import vcsAPI from 'services/vcs';
-import varsAPI from 'services/variables';
-import isEmpty from "lodash/isEmpty";
 import tokensAPI from 'services/tokens';
-
-import styles from './style.less';
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -27,43 +18,16 @@ const PL = {
 const { Option, OptGroup } = Select;
 const {} = Radio;
   
-const Index = ({ match = {}, configRef, isCollapse, data, orgId, projectId, envId }) => {
+const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, keys, tfvars, playbooks }) => {
   const [form] = Form.useForm();
   const { Panel } = Collapse;
-
   const [ info, setInfo ] = useState({});
-  const [ runnner, setRunnner ] = useState([]);
-  const [ keys, setKeys ] = useState([]);
-  const [ tfvars, setTfvars ] = useState([]);
-  const [ playbooks, setPlaybooks ] = useState([]);
+  const [ activekey, setActivekey ] = useState([]);
+  const [ paramsRunnerId, setParamsRunnerId ] = useState();
 
-
-  
   useEffect(() => {
     fetchInfo();
-    getState();
-  }, []);
-  
-  const getState = async() => {
-    // 获取通道数据
-    const runnerRes = await sysAPI.listCTRunner({
-      orgId
-    });
-    let runnerList = runnerRes.result || [];
-    if (runnerRes.code === 200) {
-      setRunnner(runnerList);
-      !envId && runnerList.length && form.setFieldsValue({ runnerId: runnerList[0].ID });
-    }
-    // 获取密钥数据
-    const keysRes = await keysAPI.list({
-      orgId,
-      pageSize: 99999,
-      currentPage: 1
-    });
-    if (keysRes.code === 200) {
-      setKeys(keysRes.result.list || []);
-    }
-  };
+  }, [data]);
   
   // 获取Info
   const fetchInfo = async () => {
@@ -90,14 +54,22 @@ const Index = ({ match = {}, configRef, isCollapse, data, orgId, projectId, envI
       });
     }
   };
+
   const onfinish = async() => {
     let value = await form.getFieldsValue();
-    return value;
+    let values = activekey.length > 0 ? value : { runnerId: form.getFieldValue('runnerId') };
+    return values;
+  };
+
+  const setRunnerValue = (v) => {
+    form.setFieldsValue({ runnerId: v });
+    setParamsRunnerId(v);
   };
 
   useImperativeHandle(configRef, () => ({
-    onfinish
-  }), [onfinish]);
+    onfinish,
+    setRunnerValue
+  }), [ onfinish, setRunnerValue ]);
 
   const copyToUrl = async(action) => {
     try {
@@ -122,6 +94,7 @@ const Index = ({ match = {}, configRef, isCollapse, data, orgId, projectId, envI
       });
     }
   };
+
   const renderForm = () => {
     return <>
       <Row style={{ height: '100%' }}>
@@ -172,7 +145,7 @@ const Index = ({ match = {}, configRef, isCollapse, data, orgId, projectId, envI
               placeholder='请选择playbook文件'
               style={{ width: '80%' }}
             >
-              {runnner.map(it => <Option value={it.ID}>{it.Service}</Option>)}
+              {playbooks.map(it => <Option value={it}>{it}</Option>)}
             </Select>
           </Form.Item>
         </Col>
@@ -318,6 +291,7 @@ const Index = ({ match = {}, configRef, isCollapse, data, orgId, projectId, envI
       </Row>
     </>;
   };
+  
   return (
     <Form
       scrollToFirstError={true}
@@ -328,8 +302,11 @@ const Index = ({ match = {}, configRef, isCollapse, data, orgId, projectId, envI
       initialValues={info}
     >
       {isCollapse ? (
-        <Collapse defaultActiveKey={['1']} expandIconPosition={'right'} style={{ marginBottom: 20 }}>
-          <Panel header='高级设置' key='1'>
+        <Collapse activekey={activekey} expandIconPosition={'right'} onChange={(e) => {
+          setActivekey(e); 
+        }} style={{ marginBottom: 20 }}
+        >
+          <Panel header='高级设置' key={'open'}>
             {renderForm()}
           </Panel>
         </Collapse>) : (renderForm())}

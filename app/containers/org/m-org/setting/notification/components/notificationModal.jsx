@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Form, Tabs, Drawer, notification, Row, Select, Card, Input } from "antd";
+import { Form, Tabs, Drawer, notification, Button, Select, Card, Input } from "antd";
 import userAPI from 'services/user';
 
 import { ORG_USER } from 'constants/types';
@@ -20,7 +20,7 @@ const PL = {
 const subNavs = {
   email: '邮件',
   wechat: '企业微信',
-  dingTalk: '钉钉',
+  dingtalk: '钉钉',
   slack: 'Slack'
 };
 
@@ -48,46 +48,27 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
     }
   ];
 
-  const propsModal = {
-    leftTableColumns,
-    rightTableColumns
-  };
-
-  const [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
-    [ panel, setPanel ] = useState('email'),
-    [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [{}],
-      total: 0
-    }),
-    [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10
-    });
+  const [ panel, setPanel ] = useState('email'),
+    [ list, setList ] = useState([]);
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     fetchUserList();
-  }, [query]);
+  }, []);
 
   const fetchUserList = async () => {
     try {
-      setLoading(true);
       const res = await userAPI.list({
-        q: query.name,
-        pageSize: query.pageSize,
-        currentPage: query.pageNo,
+        pageSize: 99999,
+        currentPage: 1,
         orgId
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-      setLoading(false);
+      let lists = (res.result.list || []).map(it => ({ name: it.name, email: it.email, key: it.id }));
+      setList(lists || []);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -96,62 +77,26 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
     }
   };
 
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
-  };
-
-  const columns = [
-    {
-      title: '姓名',
-      dataIndex: 'name'
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email'
-    },
-    {
-      title: '手机号',
-      dataIndex: 'phone'
-    }
-  ];
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedRowKeys) => {
-      setSelectedRowKeys(selectedRowKeys);
-    }
-  };
-
-  const onOk = async () => {
-    const values = await form.validateFields();
-    operation({
-      doWhat: 'add',
-      payload: {
-        userIds: selectedRowKeys,
-        ...values
-      }
-    }, toggleVisible);
-  };
-
   const renderByPanel = useCallback(() => {
     const PAGES = {
       email: () => <Form.Item
-        name='email'
+        name='userIds'
         {...PL}
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: '请选择发送人'
           }
         ]}
       >
-        <TableTransfer {...propsModal} />
+        <TableTransfer 
+          leftTableColumns={leftTableColumns}
+          rightTableColumns={rightTableColumns}
+          dataScourt={list}
+        />
       </Form.Item>,
       wechat: () => <Form.Item
-        name='eventType'
+        name='wechat-url'
         label={'URL'}
         {...PL}
         rules={[
@@ -163,8 +108,8 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
       >
         <Input />
       </Form.Item>,
-      dingTalk: () => <><Form.Item
-        name='eventType'
+      dingtalk: () => <><Form.Item
+        name='dingtalk-url'
         label={'URL'}
         {...PL}
         rules={[
@@ -176,8 +121,8 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
       >
         <Input />
       </Form.Item><Form.Item
-        name='eventType'
-        label={'URL'}
+        name='secret'
+        label={'Secret'}
         {...PL}
         rules={[
           {
@@ -189,7 +134,7 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
         <Input />
       </Form.Item></>,
       slack: () => <Form.Item
-        name='eventType'
+        name='slack-url'
         label={'URL'}
         {...PL}
         rules={[
@@ -203,19 +148,42 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
       </Form.Item>
     };
     return PAGES[panel]();
-  }, [panel]);
+  }, [ panel, list ]);
   
+  const onfinsh = async() => {
+    const params = await form.validateFields();
+    if (panel !== 'email') {
+      params.url = params[`${panel}-url`]; 
+      delete params[`${panel}-url`];
+    }
+    operation({
+      doWhat: 'add',
+      payload: {
+        ...params
+      }
+    }, toggleVisible);
+  };
 
   return <>
     <Drawer
       title='添加通知'
       visible={visible}
-      onCancel={toggleVisible}
-      okButtonProps={{
-        disabled: !selectedRowKeys.length
-      }}
+      onClose={toggleVisible}
       width={800}
-      onOk={onOk}
+      footer={
+        <div
+          style={{
+            textAlign: 'right'
+          }}
+        >
+          <Button onClick={toggleVisible} style={{ marginRight: 8 }}>
+            取消
+          </Button>
+          <Button onClick={onfinsh} type='primary'>
+            确认
+          </Button>
+        </div>
+      }
     >
       <Form
         form={form}
@@ -227,7 +195,7 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
           rules={[
             {
               required: true,
-              message: '请输入'
+              message: '请输入名称'
             }
           ]}
         >
@@ -239,13 +207,14 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
           rules={[
             {
               required: true,
-              message: '请选择'
+              message: '请选择事件类型'
             }
           ]}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='请选择事件类型'
+            mode={'multiple'}
           >
             {Object.keys(ORG_USER.notificationType).map(it => <Option value={it}>{ORG_USER.notificationType[it]}</Option>)}
           </Select>
@@ -266,6 +235,7 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
               activeKey={panel}
               onChange={(k) => {
                 setPanel(k); 
+                form.setFieldsValue({ [`${k}-url`]: '' });
               }}
             >
               {Object.keys(subNavs).map((it) => (

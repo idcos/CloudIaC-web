@@ -21,7 +21,7 @@ const subNavs = {
 export default ({ match }) => {
   
   const { orgId } = match.params;
-  const [ panel, setPanel ] = useState('userRole');
+  const [ panel, setPanel ] = useState('notification');
 
   const renderByPanel = useCallback(() => {
     const PAGES = {

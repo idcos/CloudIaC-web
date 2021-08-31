@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Table } from 'antd';
+import { Button, notification, Table, Divider } from 'antd';
 import notificationsAPI from 'services/notifications';
 
 import { ORG_USER } from 'constants/types';
@@ -54,7 +54,9 @@ export default ({ orgId }) => {
     });
   };
 
-  const toggleVisible = () => setVisible(!visible);
+  const toggleVisible = () => {
+    setVisible(!visible); 
+  };
 
   const columns = [
     {
@@ -73,15 +75,25 @@ export default ({ orgId }) => {
     },
     {
       title: '操作',
-      width: 60,
-      render: (_, record) => <a
-        className='danger-text'
-        onClick={() => {
-          operation({ doWhat: 'del', payload: { id: record.id } });
-        }}
-      >
-        移除
-      </a>
+      width: 90,
+      render: (_, record) => <span>
+        <a
+          onClick={() => {
+            operation({ doWhat: 'del', payload: { id: record.id } });
+          }}
+        >
+          编辑
+        </a>
+        <Divider type={'vertical'}/>
+        <a
+          className='danger-text'
+          onClick={() => {
+            operation({ doWhat: 'del', payload: { id: record.id } });
+          }}
+        >
+          删除
+        </a>
+      </span> 
     }
   ];
 
@@ -105,7 +117,6 @@ export default ({ orgId }) => {
       fetchList();
       cb && cb();
     } catch (e) {
-      console.log(e);
       notification.error({
         message: '操作失败',
         description: e.message
@@ -125,7 +136,7 @@ export default ({ orgId }) => {
       dataSource={resultMap.list}
       loading={loading}
 
-      /*pagination={{
+      pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,
         total: resultMap.total,
@@ -138,8 +149,8 @@ export default ({ orgId }) => {
             pageSize
           });
         }
-      }}*/
-      pagination={false}
+      }}
+      // pagination={false}
     />
     {
       visible && <AddModal

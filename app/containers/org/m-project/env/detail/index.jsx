@@ -16,7 +16,6 @@ import { requestWrapper } from 'utils/request';
 
 import Info from './components/info';
 import ComplianceInfo from './components/compliance-info';
-import ConfigInfo from './components/config-info';
 import Resource from './components/resource';
 import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
@@ -181,9 +180,6 @@ const EnvDetail = (props) => {
   >
     <div className='idcos-card'>
       <Info info={info} taskInfo={taskInfo} />
-    </div>
-    <div className='idcos-card'>
-      <ConfigInfo info={info} taskInfo={taskInfo} />
     </div>
     <div style={{ marginTop: 20 }} className='idcos-card'>
       <div className={styles.depolyDetail}>
