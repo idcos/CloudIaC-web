@@ -36,6 +36,7 @@ export default () => {
   return (
     <Layout
       style={{ paddingBottom: 0 }}
+      containerStyle={{ height: 'inherit' }}
       contentStyle={{ paddingTop: 0, marginTop: 0 }}
     >
       <div className={styles.markdownDocWrapper}>
