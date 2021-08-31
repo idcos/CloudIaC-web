@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { EyeOutlined, PlusSquareOutlined, notification } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { Divider } from 'antd';
@@ -16,8 +16,9 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const projectList = (projects || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
-  const [ dividerVisible, setDividerVisible ] = useState(false);
+  const [ pjtSelectActive, setPjtSelectActive ] = useState(false);
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
+  const pjtSelectRef = useRef();
  
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
@@ -33,7 +34,14 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
     }
   };
 
-  const togglePjtModalVsible = () => setPjtModalVsible(!pjtModalVsible);
+  const togglePjtModalVsible = () => {
+    // 打开创建项目modal时 关闭项目选择器
+    if (!pjtModalVsible) {
+      console.log(1, pjtSelectRef.current);
+      pjtSelectRef.current && pjtSelectRef.current.setVisible(false);
+    }
+    setPjtModalVsible(!pjtModalVsible);
+  };
 
   const changeProject = (pjtId) => {
     dispatch({
@@ -113,10 +121,11 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
               <MenuSelect
                 options={projectList}
                 onChange={changeProject}
-                setDividerVisible={setDividerVisible}
+                setActive={setPjtSelectActive}
                 selectionStyle={{ padding: '13px 20px 13px 24px' }}
                 valuePropName='id'          
                 value={pjtId}
+                selectRef={pjtSelectRef}
                 menuSelectfooter={(
                   <div 
                     className={styles.menuSelectfooterContent} 
@@ -144,7 +153,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                   </div>
                 )}
               />
-              {!dividerVisible && <div style={{ padding: '0 19px' }}>
+              {!pjtSelectActive && <div style={{ padding: '0 19px' }}>
                 <Divider style={{ margin: '0' }} />
               </div>}
             </>

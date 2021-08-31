@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useImperativeHandle } from 'react';
 import { Menu, Dropdown } from 'antd';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
@@ -19,10 +19,11 @@ export default (props) => {
     value = undefined,
     menuSelectfooter,
     onChange = noop,
-    setDividerVisible = noop
+    setActive = noop,
+    selectRef
   } = props || {};
 
-  const [ optionVisible, setOptionVisible ] = useState(false);
+  const [ visible, setVisible ] = useState(false);
 
   const menu = useMemo(() => {
     const { name, description } = lablePropsNames;
@@ -64,29 +65,32 @@ export default (props) => {
     return data[name];
   }, [ options, value, valuePropName, lablePropsNames ]);
 
+  useImperativeHandle(selectRef, () => ({
+    setVisible
+  }));  
+
   return (
     <div className={styles.menuSelect} style={style}>
       <Dropdown 
         overlay={menu} 
         trigger={['click']} 
-        visible={optionVisible} 
+        visible={visible} 
         overlayStyle={{ width: '100%' }}
         onVisibleChange={(e) => {
-          setOptionVisible(e); 
-          setDividerVisible(e); 
+          setVisible(e); 
+          setActive(e); 
         }}
         getPopupContainer={triggerNode => triggerNode.parentNode}
       >
         <div className='selection' style={selectionStyle}>
-          <div className={`label fn-ellipsis ${optionVisible ? 'selecting' : ''}`}>
+          <div className={`label fn-ellipsis ${visible ? 'selecting' : ''}`}>
             {name}
           </div>
           <div className='icon'>
-            { optionVisible ? <DownOutlined /> : <RightOutlined /> }
+            { visible ? <DownOutlined /> : <RightOutlined /> }
           </div>
         </div>
       </Dropdown>
     </div>
-    
   );
 };
