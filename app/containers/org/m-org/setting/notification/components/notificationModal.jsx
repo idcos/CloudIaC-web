@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Tabs, Drawer, notification, Button, Select, Card, Input } from "antd";
 import userAPI from 'services/user';
+import notificationsAPI from 'services/notifications';
+
 
 import { ORG_USER } from 'constants/types';
 
@@ -17,14 +19,10 @@ const FL = {
 const PL = {
   wrapperCol: { span: 24 }
 };
-const subNavs = {
-  email: '邮件',
-  wechat: '企业微信',
-  dingtalk: '钉钉',
-  slack: 'Slack'
-};
 
-export default ({ orgId, operation, visible, toggleVisible }) => {
+export default ({ orgId, operation, visible, toggleVisible, notificationId }) => {
+
+  console.log(notificationId, 'notificationId');
 
   const leftTableColumns = [
     {
@@ -49,14 +47,34 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
   ];
 
   const [ panel, setPanel ] = useState('email'),
+    [ info, setInfo ] = useState([]),
     [ list, setList ] = useState([]);
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     fetchUserList();
+    if (notificationId) {
+      getDetail();
+    }
   }, []);
-
+  const getDetail = async() => {
+    try {
+      const res = await notificationsAPI.detailNotification({
+        notificationId,
+        orgId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setPanel();
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
   const fetchUserList = async () => {
     try {
       const res = await userAPI.list({
@@ -152,6 +170,7 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
   
   const onfinsh = async() => {
     const params = await form.validateFields();
+    params.notificationType = panel;
     if (panel !== 'email') {
       params.url = params[`${panel}-url`]; 
       delete params[`${panel}-url`];
@@ -238,9 +257,9 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
                 form.setFieldsValue({ [`${k}-url`]: '' });
               }}
             >
-              {Object.keys(subNavs).map((it) => (
+              {Object.keys(ORG_USER.subNavs).map((it) => (
                 <Tabs.TabPane
-                  tab={subNavs[it]}
+                  tab={ORG_USER.subNavs[it]}
                   key={it}
                 />
               ))}

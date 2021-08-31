@@ -15,7 +15,7 @@ export default (props) => {
       name: 'name',
       description: 'description'
     },
-    searchKey=lablePropsNames.name,
+    searchKey = lablePropsNames.name,
     valuePropName = 'value',
     value,
     listHeight,

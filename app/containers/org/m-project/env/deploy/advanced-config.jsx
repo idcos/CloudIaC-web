@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
 import { notification, Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, Radio, InputNumber } from "antd";
 import copy from 'utils/copy';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 
@@ -24,6 +24,8 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
   const [ info, setInfo ] = useState({});
   const [ activekey, setActivekey ] = useState([]);
   const [ paramsRunnerId, setParamsRunnerId ] = useState();
+  const [ tfvarsView, setTfvarsView ] = useState({ view: false, value: '' });
+  const [ playbookView, setPlaybookView ] = useState({ view: false, value: '' });
 
   useEffect(() => {
     fetchInfo();
@@ -121,10 +123,9 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
         </Col>
         <Col span={8}>
           <Form.Item
-            label='tfvars文件：'
+            label={<span>tfvars文件：<span style={{ cursor: 'pointer' }} onClick={() => setTfvarsView({ view: !tfvarsView.view })}>{tfvarsView.view ? <EyeOutlined /> : <EyeInvisibleOutlined />}</span></span>}
             name='tfvars'
           >
-            
             <Select
               getPopupContainer={triggerNode => triggerNode.parentNode} 
               allowClear={true} 
@@ -136,7 +137,7 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
         </Col>
         <Col span={8}>
           <Form.Item
-            label='playbook文件：'
+            label={<span>playbook文件：<span style={{ cursor: 'pointer' }} onClick={() => setPlaybookView({ view: !playbookView.view })}>{playbookView.view ? <EyeOutlined /> : <EyeInvisibleOutlined />}</span></span>}
             name='playbook'
           >
             <Select 

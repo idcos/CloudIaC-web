@@ -10,6 +10,7 @@ import AddModal from './components/notificationModal';
 export default ({ orgId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
+    [ notificationId, setNotificationId ] = useState(),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -55,23 +56,36 @@ export default ({ orgId }) => {
   };
 
   const toggleVisible = () => {
-    setVisible(!visible); 
+    setVisible(false); 
+    setNotificationId();
   };
 
   const columns = [
     {
       dataIndex: 'name',
-      title: '成员'
+      title: '名称'
+    },
+    {
+      dataIndex: 'notificationType',
+      title: '类型',
+      render: (text) => ORG_USER.subNavs[text]
     },
     {
       dataIndex: 'eventType',
-      title: '通知类型',
+      title: '事件类型',
+      render: (text) => (text || []).map(it => {
+        return ORG_USER.notificationType[it];
+      }).join('、')
+    },
+    {
+      dataIndex: 'aaa',
+      title: '创建人',
       render: (text) => ORG_USER.notificationType[text]
     },
     {
-      dataIndex: '',
-      title: '加入时间',
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      dataIndex: 'ccc',
+      title: '创建时间'
+      // render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
@@ -79,7 +93,8 @@ export default ({ orgId }) => {
       render: (_, record) => <span>
         <a
           onClick={() => {
-            operation({ doWhat: 'del', payload: { id: record.id } });
+            setVisible(true);
+            setNotificationId(record.id);
           }}
         >
           编辑
@@ -105,7 +120,6 @@ export default ({ orgId }) => {
       };
       const res = await method[doWhat]({
         orgId,
-        notificationType: 'email',
         ...payload
       });
       if (res.code != 200) {
@@ -128,7 +142,7 @@ export default ({ orgId }) => {
     <div style={{ marginBottom: 20 }}>
       <Button 
         type='primary'
-        onClick={toggleVisible}
+        onClick={() => setVisible(true)}
       >添加通知</Button>
     </div>
     <Table
@@ -159,6 +173,7 @@ export default ({ orgId }) => {
         operation={operation}
         visible={visible}
         toggleVisible={toggleVisible}
+        notificationId={notificationId}
       />
     }
   </div>;

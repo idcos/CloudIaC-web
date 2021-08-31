@@ -10,6 +10,12 @@ export const ORG_USER = {
     complete: '部署成功',
     approving: '等待审批',
     running: '新建部署'
+  },
+  subNavs: {
+    email: '邮件',
+    wechat: '企业微信',
+    dingtalk: '钉钉',
+    slack: 'Slack'
   }
 };
 

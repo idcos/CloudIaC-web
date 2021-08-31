@@ -15,6 +15,11 @@ const notificationsAPI = {
     return del(`/api/v1/notifications/${id}`, {}, {
       'IaC-Org-Id': orgId
     });
+  },
+  detailNotification: ({ orgId, notificationId }) => {
+    return del(`/api/v1/notifications/${notificationId}`, {}, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
