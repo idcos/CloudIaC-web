@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
+import { EyeOutlined, PlusSquareOutlined, notification } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { Divider } from 'antd';
-
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
-import changeOrg from "utils/changeOrg";
-
+import ProjectModal from 'components/project-modal';
+import projectAPI from 'services/project';
 import getMenus from './menus';
 import styles from './styles.less';
 
@@ -14,10 +14,10 @@ const KEY = 'global';
 
 const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}, orgs, dispatch }) => {
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
-  const orgList = (orgs || {}).list || [];
   const projectList = (projects || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
   const [ dividerVisible, setDividerVisible ] = useState(false);
+  const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
  
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
@@ -33,9 +33,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
     }
   };
 
-  const changeCurOrg = (value) => {
-    changeOrg({ orgId: value, dispatch });
-  };
+  const togglePjtModalVsible = () => setPjtModalVsible(!pjtModalVsible);
 
   const changeProject = (pjtId) => {
     dispatch({
@@ -45,6 +43,31 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
       }
     });
     history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
+  };
+
+  const pjtOperation = async ({ action, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => projectAPI.createProject(param)
+      };
+      let params = {
+        ...payload
+      };
+      const res = await method[action](params);
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: '操作成功'
+      });
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
   };
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
@@ -92,15 +115,32 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 onChange={changeProject}
                 setDividerVisible={setDividerVisible}
                 selectionStyle={{ padding: '13px 20px 13px 24px' }}
-                lablePropName='name'
-                valuePropName='id'            
+                valuePropName='id'          
                 value={pjtId}
                 menuSelectfooter={(
                   <div 
                     className={styles.menuSelectfooterContent} 
-                    onClick={() => history.push('/')}
                   >
-                    查看更多项目
+                    <div className='more' onClick={() => history.push('/')}>
+                      <EyeOutlined className='icon' />查看更多项目
+                    </div>
+                    <div className='create'>
+                      <div className='btn' onClick={togglePjtModalVsible}>
+                        <span className='icon'>
+                          <PlusSquareOutlined/>
+                        </span>
+                        <span>创建新的项目</span>
+                      </div>
+                    </div>
+                    {
+                      pjtModalVsible && <ProjectModal
+                        visible={pjtModalVsible}
+                        orgId={orgId}
+                        opt='add'
+                        toggleVisible={togglePjtModalVsible}
+                        operation={pjtOperation}
+                      />
+                    }
                   </div>
                 )}
               />

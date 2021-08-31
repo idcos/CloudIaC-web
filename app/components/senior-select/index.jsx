@@ -60,7 +60,7 @@ export default (props) => {
               value={value} 
               disabled={disabled}
             >
-              <div className='key-value idcos-text-ellipsis'>
+              <div className='name idcos-text-ellipsis'>
                 { name }
               </div>
               <div className='description idcos-text-ellipsis'>

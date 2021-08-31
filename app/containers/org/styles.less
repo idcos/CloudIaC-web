@@ -5,6 +5,7 @@
   display: flex;
   overflow: hidden;
   min-width: @ctw;
+
   :global {
 
     .left-nav {
@@ -22,12 +23,14 @@
 
         .sub-menu {
           margin-bottom: 12px;
+
           .menu-title {
             font-size: 12px;
             height: 48px;
             line-height: 48px;
             color: @gray-7;
           }
+
           .menu-list {
             .menu-item {
               cursor: pointer;
@@ -43,7 +46,6 @@
               .icon {
                 margin-right: 16px;
               }
-             
             }
           }
         }
@@ -59,17 +61,37 @@
   }
 }
 
-
 .menuSelectfooterContent {
-  
-  line-height: 22px;
-  padding: 5px 12px;
-  color: @gray-6;
-  cursor: pointer;
-  margin-top: 4px;
 
-  &:hover {
-    background-color: @backGroundIac !important;
+  :global {
+    .more {
+      cursor: pointer;
+      padding: 5px 12px;
+      margin-top: 4px;
+      color: @gray-8;
+
+      &:hover {
+        background: @gray-3;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
+
+    .create {
+      padding: 16px 12px 12px;
+      cursor: pointer;
+
+      .btn {
+        line-height: 22px;
+
+        .icon {
+          color: @gray-8;
+          margin-right: 8px;
+        }
+      }
+    }
   }
 
 }

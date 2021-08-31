@@ -37,12 +37,20 @@
     .ant-menu-item {
       margin: 0 !important;
       padding: 5px 12px !important;
-      line-height: 22px !important;
-      height: 32px !important;
+      height: initial;
 
       &:hover:not(.ant-menu-item-selected) {
         background-color: @backGroundIac !important;
         color: inherit !important;
+      }
+
+      .name {
+        line-height: 22px;
+        color: @gray-8;
+      }
+      .description {
+        line-height: 20px;
+        color: @gray-6;
       }
     }
   }

@@ -11,7 +11,10 @@ export default (props) => {
     style = {},
     selectionStyle = {},
     options = [],
-    lablePropName = 'lable',
+    lablePropsNames = {
+      name: 'name',
+      description: 'description'
+    },
     valuePropName = 'value',
     value = undefined,
     menuSelectfooter,
@@ -22,6 +25,7 @@ export default (props) => {
   const [ optionVisible, setOptionVisible ] = useState(false);
 
   const menu = useMemo(() => {
+    const { name, description } = lablePropsNames;
     return (
       <div className={styles.menuSelectList}>
         <div className='menu-select-body'>
@@ -30,7 +34,16 @@ export default (props) => {
             onClick={({ key }) => onChange(key)}
           >
             {
-              options.map((it) => <Menu.Item key={it[valuePropName]}>{it[lablePropName]}</Menu.Item>)
+              options.map((it) => (
+                <Menu.Item key={it[valuePropName]}>
+                  <div className='name idcos-text-ellipsis'>
+                    {it[name]}
+                  </div>
+                  <div className='description idcos-text-ellipsis'>
+                    {it[description] || '-'}
+                  </div>
+                </Menu.Item>
+              ))
             }
           </Menu>
         </div>
@@ -41,16 +54,15 @@ export default (props) => {
             </div>
           ) : null
         }
-       
       </div>
-     
     );
-  }, [ options, value, valuePropName, lablePropName ]);
+  }, [ options, value, valuePropName, lablePropsNames ]);
 
-  const label = useMemo(() => {
+  const name = useMemo(() => {
+    const { name } = lablePropsNames;
     const data = options.find(it => it[valuePropName] === value) || {};
-    return data[lablePropName];
-  }, [ options, value, valuePropName, lablePropName ]);
+    return data[name];
+  }, [ options, value, valuePropName, lablePropsNames ]);
 
   return (
     <div className={styles.menuSelect} style={style}>
@@ -67,7 +79,7 @@ export default (props) => {
       >
         <div className='selection' style={selectionStyle}>
           <div className={`label fn-ellipsis ${optionVisible ? 'selecting' : ''}`}>
-            {label}
+            {name}
           </div>
           <div className='icon'>
             { optionVisible ? <DownOutlined /> : <RightOutlined /> }

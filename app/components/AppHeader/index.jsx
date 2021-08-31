@@ -1,20 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Select, Menu, Dropdown, Tooltip, Button, Badge, notification, Divider } from 'antd';
-import { QuestionCircleFilled, DownOutlined, FundFilled, PlusSquareOutlined, SettingFilled, ToolFilled } from '@ant-design/icons';
+import { Dropdown, Tooltip, Button, Badge } from 'antd';
+import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, ToolFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
-
 import history from 'utils/history';
 import { QuitIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
-import projectAPI from 'services/project';
 import envAPI from 'services/env';
-import OpModal from 'components/project-modal';
-
 import styles from './styles.less';
 
-const { Option } = Select;
 const KEY = 'global';
 
 const AppHeader = (props) => {
@@ -26,9 +21,7 @@ const AppHeader = (props) => {
   const url_projectId = pathname.indexOf('/project/') !== -1 ? pathname.split('/').filter(i => i)[3] : null;
   const envIdbyPath = pathname.indexOf('/detail/') !== -1 ? pathname.split('/').filter(i => i)[6] : null;
   const orgId = (curOrg || {}).id;
-
   const preStateRef = useRef({});
-  const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
   const [ menuType, setMenuType ] = useState(pathname.indexOf('compliance') !== -1 ? 'execute' : 'compliance');
   const [ locationHref, setLocationHref ] = useState('/');
@@ -53,34 +46,6 @@ const AppHeader = (props) => {
     };
     
   }, [ orgId, projectId, envIdbyPath ]);
-
-  const getEnv = async() => {
-    const res = await envAPI.envsInfo({
-      orgId, projectId, envId: envIdbyPath
-    });
-    if (res.code === 200) {
-      dispatch({
-        type: 'global/set-curEnv',
-        payload: {
-          state: res.result || {}
-        }
-      });
-    }
-  };
-
-  const changeProject = (pjtId) => {
-    dispatch({
-      type: 'global/set-curProject',
-      payload: {
-        projectId: pjtId
-      }
-    });
-    history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
-  };
-
-  const changeCurOrg = (value) => {
-    changeOrg({ orgId: value, dispatch });
-  };
 
   useEffect(() => {
     if (projectList.length > 0 && !projectList.find(it => it.id === projectId)) {
@@ -112,40 +77,27 @@ const AppHeader = (props) => {
     }
   }, [locationPathName]);
 
+  const getEnv = async() => {
+    const res = await envAPI.envsInfo({
+      orgId, projectId, envId: envIdbyPath
+    });
+    if (res.code === 200) {
+      dispatch({
+        type: 'global/set-curEnv',
+        payload: {
+          state: res.result || {}
+        }
+      });
+    }
+  };
+
+  const changeCurOrg = (value) => {
+    changeOrg({ orgId: value, dispatch });
+  };
+
   const onCloseDevManualTooltip = () => {
     setDevManualTooltipVisible(false);
     localStorage.newbieGuide_devManual = false;
-  };
-
-  const goMoreProject = () => {
-    history.push(`/org/${orgId}/m-org-project`);
-  };
-
-  const togglePjtModalVsible = () => setPjtModalVsible(!pjtModalVsible);
-
-  const pjtOperation = async ({ action, payload }, cb) => {
-    try {
-      const method = {
-        add: (param) => projectAPI.createProject(param)
-      };
-      let params = {
-        ...payload
-      };
-      const res = await method[action](params);
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      notification.success({
-        message: '操作成功'
-      });
-      cb && cb();
-    } catch (e) {
-      cb && cb(e);
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
   };
 
   const changeMenu = (value) => {
@@ -156,6 +108,7 @@ const AppHeader = (props) => {
     }
     value === 'execute' ? history.push(`/compliance/compliance-config/ct`) : history.push(locationHref || '/');
   };
+
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'> 
       <div className='logo' onClick={() => {
@@ -177,52 +130,12 @@ const AppHeader = (props) => {
                 formatOptionLabel={(name) => `组织：${name}`}
                 seniorSelectfooter={(
                   <div className={styles.seniorSelectfooter}>
-                    {
-                      projectList.length ? (
-                        <div className='more' onClick={() => history.push('/')}>查看更多</div>
-                      ) : null
-                    }
-                  </div>
-                )}
-              />
-              {/* <SeniorSelect 
-                placeholder='项目：'
-                style={{ width: 250, marginLeft: 24 }}
-                options={projectList}
-                onChange={changeProject}
-                value={projectId}
-                valuePropName='id'
-                formatOptionLabel={(name) => `项目：${name}`}
-                seniorSelectfooter={(
-                  <div className={styles.seniorSelectfooter}>
-                    {
-                      projectList.length ? (
-                        <div className='more' onClick={goMoreProject}>查看更多项目</div>
-                      ) : null
-                    }
-                    <div style={{ padding: '10px 19px 0px 19px' }}>
-                      <Divider style={{ margin: '0' }} />
-                    </div>
-                    <div className='create'>
-                      <div className='btn' onClick={togglePjtModalVsible}>
-                        <span className='icon'>
-                          <PlusSquareOutlined/>
-                        </span>
-                        <span>创建新的项目</span>
-                      </div>
+                    <div className='more' onClick={() => history.push('/')}>
+                      <EyeOutlined className='icon' />查看更多
                     </div>
                   </div>
                 )}
               />
-              {
-                pjtModalVsible && <OpModal
-                  visible={pjtModalVsible}
-                  orgId={orgId}
-                  opt='add'
-                  toggleVisible={togglePjtModalVsible}
-                  operation={pjtOperation}
-                />
-              } */}
             </>
           ) : null
         }
@@ -284,7 +197,6 @@ const AppHeader = (props) => {
     </div>
   </div>;
 };
-
 
 export default connect((state) => {
   return {
