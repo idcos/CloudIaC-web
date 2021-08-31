@@ -37,7 +37,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
   const togglePjtModalVsible = () => {
     // 打开创建项目modal时 关闭项目选择器
     if (!pjtModalVsible) {
-      console.log(1, pjtSelectRef.current);
       pjtSelectRef.current && pjtSelectRef.current.setVisible(false);
     }
     setPjtModalVsible(!pjtModalVsible);
@@ -123,9 +122,13 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 onChange={changeProject}
                 setActive={setPjtSelectActive}
                 selectionStyle={{ padding: '13px 20px 13px 24px' }}
+                bodyStyle={{ maxHeight: 'none' }}
                 valuePropName='id'          
                 value={pjtId}
+                showSearch={true}
+                searchPlaceholder='请输入项目名称搜索'
                 selectRef={pjtSelectRef}
+                maxLen={7}
                 menuSelectfooter={(
                   <div 
                     className={styles.menuSelectfooterContent} 

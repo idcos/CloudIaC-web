@@ -28,29 +28,32 @@
   padding: 4px 0;
 
   :global {
+    .menu-select-header {
+      padding: 8px;
+    }
     .menu-select-body {
       width: 100%;
       max-height: 300px;
       overflow-y: auto;
-    }
 
-    .ant-menu-item {
-      margin: 0 !important;
-      padding: 5px 12px !important;
-      height: initial;
-
-      &:hover:not(.ant-menu-item-selected) {
-        background-color: @backGroundIac !important;
-        color: inherit !important;
-      }
-
-      .name {
-        line-height: 22px;
-        color: @gray-8;
-      }
-      .description {
-        line-height: 20px;
-        color: @gray-6;
+      .ant-menu-item {
+        margin: 0 !important;
+        padding: 5px 12px !important;
+        height: initial;
+  
+        &:hover:not(.ant-menu-item-selected) {
+          background-color: @backGroundIac !important;
+          color: inherit !important;
+        }
+  
+        .name {
+          line-height: 22px;
+          color: @gray-8;
+        }
+        .description {
+          line-height: 20px;
+          color: @gray-6;
+        }
       }
     }
   }

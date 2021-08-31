@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useImperativeHandle } from 'react';
-import { Menu, Dropdown } from 'antd';
-import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import { Input, Menu, Dropdown } from 'antd';
+import { DownOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 
 import styles from './styles.less';
@@ -17,25 +17,45 @@ export default (props) => {
     },
     valuePropName = 'value',
     value = undefined,
+    bodyStyle,
     menuSelectfooter,
     onChange = noop,
     setActive = noop,
+    showSearch=false,
+    searchPlaceholder='请输入关键词搜索',
+    searchKey=lablePropsNames.name,
+    maxLen,
     selectRef
   } = props || {};
 
   const [ visible, setVisible ] = useState(false);
+  const [ showOptions, setShowOptions ] = useState(options.slice(0, maxLen));
 
+  const onSearch = (e) => {
+    const keyword = e.target.value;
+    const reg = new RegExp(keyword, 'gi');
+    const filterOptions = options.filter((it) => !keyword || reg.test(it[searchKey]));
+    setShowOptions(filterOptions.slice(0, maxLen));
+  };
+  
   const menu = useMemo(() => {
     const { name, description } = lablePropsNames;
     return (
       <div className={styles.menuSelectList}>
-        <div className='menu-select-body'>
+        {
+          showSearch && (
+            <div className='menu-select-header'>
+              <Input placeholder={searchPlaceholder} suffix={<SearchOutlined />} onChange={onSearch} />
+            </div>
+          )
+        }
+        <div className='menu-select-body' style={bodyStyle}>
           <Menu 
             selectedKeys={[value]} 
             onClick={({ key }) => onChange(key)}
           >
             {
-              options.map((it) => (
+              showOptions.map((it) => (
                 <Menu.Item key={it[valuePropName]}>
                   <div className='name idcos-text-ellipsis'>
                     {it[name]}
@@ -57,7 +77,7 @@ export default (props) => {
         }
       </div>
     );
-  }, [ options, value, valuePropName, lablePropsNames ]);
+  }, [ options, maxLen, value, valuePropName, lablePropsNames, bodyStyle ]);
 
   const name = useMemo(() => {
     const { name } = lablePropsNames;
