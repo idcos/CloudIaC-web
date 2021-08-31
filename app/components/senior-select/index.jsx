@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
-import { Divider, Select, Tooltip } from 'antd';
+import React from 'react';
+import { Select } from 'antd';
 import noop from 'lodash/noop';
-
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -25,6 +24,7 @@ export default (props) => {
 
   return (
     <Select
+      className={styles.senior_select}
       getPopupContainer={triggerNode => triggerNode.parentNode}
       style={style} 
       optionLabelProp={lablePropsNames.name}
