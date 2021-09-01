@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Row, Col, Card, Form, Select, notification } from 'antd';
+import { Row, Col, Collapse, Form, Select, notification } from 'antd';
 
 import vcsAPI from 'services/vcs';
 
@@ -55,57 +55,54 @@ const OtherVarForm = () => {
   };
 
   return (
-    <Card
-      title='其它变量'
-      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}
-    >
-      <Form
-        form={otherVarForm}
-      >
-        <Row gutter={8}>
-          <Col span={11}>
-            <Form.Item
-              name='tfVarsFile'
-              label='tfvars文件'
-              rules={[
-                {
-                  required: false,
-                  message: '请选择'
-                }
-              ]}
-            >
-              <Select
-                getPopupContainer={triggerNode => triggerNode.parentNode} 
-                allowClear={true} 
-                placeholder='请选择tfvars文件'
+    <Collapse expandIconPosition={'right'}>
+      <Collapse.Panel header='其它变量'>
+        <Form form={otherVarForm}>
+          <Row gutter={8}>
+            <Col span={11}>
+              <Form.Item
+                name='tfVarsFile'
+                label='tfvars文件'
+                rules={[
+                  {
+                    required: false,
+                    message: '请选择'
+                  }
+                ]}
               >
-                {tfvars.map(it => <Option value={it}>{it}</Option>)}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col span={11} offset={2}>
-            <Form.Item
-              name='playbook'
-              label='playbook文件'
-              rules={[
-                {
-                  required: false,
-                  message: '请选择'
-                }
-              ]}
-            >
-              <Select 
-                getPopupContainer={triggerNode => triggerNode.parentNode}
-                allowClear={true} 
-                placeholder='请选择playbook文件'
+                <Select
+                  getPopupContainer={triggerNode => triggerNode.parentNode} 
+                  allowClear={true} 
+                  placeholder='请选择tfvars文件'
+                >
+                  {tfvars.map(it => <Option value={it}>{it}</Option>)}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={11} offset={2}>
+              <Form.Item
+                name='playbook'
+                label='playbook文件'
+                rules={[
+                  {
+                    required: false,
+                    message: '请选择'
+                  }
+                ]}
               >
-                {playbooks.map(it => <Option value={it}>{it}</Option>)}
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-      </Form>
-    </Card>
+                <Select 
+                  getPopupContainer={triggerNode => triggerNode.parentNode}
+                  allowClear={true} 
+                  placeholder='请选择playbook文件'
+                >
+                  {playbooks.map(it => <Option value={it}>{it}</Option>)}
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Collapse.Panel>
+    </Collapse>
   );
 };
 

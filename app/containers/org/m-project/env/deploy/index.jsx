@@ -61,22 +61,6 @@ const Index = ({ match = {} }) => {
     };
   }, [tplInfo]);
 
-  const varDefaultData = useMemo(() => {
-    if (envId) { // 编辑时
-      return { 
-        variables: vars,
-        tfVarsFile: info.tfVarsFile, 
-        playbook: info.playbook
-      };
-    } else { // 新增时
-      return { 
-        variables: vars,
-        tfVarsFile: tplInfo.tfVarsFile, 
-        playbook: tplInfo.playbook
-      };
-    }
-  }, [ tplInfo, info, vars ]);
-
   const getVars = async () => {
     try {
       const res = await varsAPI.search({ orgId, projectId, tplId, envId, scope: 'env' });
@@ -203,12 +187,12 @@ const Index = ({ match = {} }) => {
       const values = await form.validateFields();
       const varData = await varRef.current.validateForm();
       const configData = await configRef.current.onfinish();
-      if (varData.playbook && !values.keyId) {
-        return notification.error({
-          message: '保存失败',
-          description: 'playbook存在时管理密钥必填'
-        });
-      }
+      // if (varData.playbook && !values.keyId) {
+      //   return notification.error({
+      //     message: '保存失败',
+      //     description: 'playbook存在时管理密钥必填'
+      //   });
+      // }
       values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
       values.triggers = (values.triggers || []).filter(d => d !== 'autoApproval'); 
       taskType === 'plan' && setPlanLoading(true);
@@ -307,13 +291,12 @@ const Index = ({ match = {} }) => {
             tfvars={tfvars}
             playbooks={playbooks}
           />
-          <VariableForm 
+          <VariableForm
             varRef={varRef} 
             defaultScope='env' 
-            defaultData={varDefaultData} 
+            defaultData={{ variables: vars }} 
             fetchParams={varFetchParams}
             canImportTerraformVar={true}
-            showOtherVars={true}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>

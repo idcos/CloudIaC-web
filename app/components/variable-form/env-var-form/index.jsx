@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect } from 'react';
-import { Card, Input, Checkbox, Tag } from 'antd';
+import { Collapse, Input, Checkbox, Tag } from 'antd';
 import isEqual from 'lodash/isEqual';
 
 import EditableTable from 'components/Editable';
@@ -210,22 +210,21 @@ const EnvVarForm = () => {
   };
 
   return (
-    <Card
-      title='环境变量'
-      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}
-    >
-      <EditableTable
-        getActionRef={ref => (envVarRef.current = ref.current)}
-        defaultData={{ scope: defaultScope, sensitive: false, type: 'environment', isNew: true }}
-        value={envVarList}
-        fields={fields}
-        onDeleteRow={onDeleteRow}
-        addBtnText='添加全局变量'
-        multiple={true}
-        onChange={onChangeEditableTable}
-        optionRender={optionRender}
-      />
-    </Card>
+    <Collapse expandIconPosition={'right'}>
+      <Collapse.Panel header='环境变量'>
+        <EditableTable
+          getActionRef={ref => (envVarRef.current = ref.current)}
+          defaultData={{ scope: defaultScope, sensitive: false, type: 'environment', isNew: true }}
+          value={envVarList}
+          fields={fields}
+          onDeleteRow={onDeleteRow}
+          addBtnText='添加全局变量'
+          multiple={true}
+          onChange={onChangeEditableTable}
+          optionRender={optionRender}
+        />
+      </Collapse.Panel>
+    </Collapse>
   );
 };
 
