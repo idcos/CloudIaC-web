@@ -31,23 +31,27 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
     fetchInfo();
   }, [data]);
   
+  const setTtl = (data) => {
+    if (data.autoApproval) {
+      data.triggers = (data.triggers || []).concat(['autoApproval']);
+    }
+    if (!!data.autoDestroyAt) {
+      data.type = 'time';
+      form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
+    } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
+      data.type = 'infinite';
+    } else if (!data.autoDestroyAt) {
+      data.type = 'timequantum';
+    }
+    setInfo(data);
+    form.setFieldsValue(data);
+  };
+
   // 获取Info
   const fetchInfo = async () => {
     try {
       if (envId) {
-        if (data.autoApproval) {
-          data.triggers = (data.triggers || []).concat(['autoApproval']);
-        }
-        if (!!data.autoDestroyAt) {
-          data.type = 'time';
-          form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-        } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
-          data.type = 'infinite';
-        } else if (!data.autoDestroyAt) {
-          data.type = 'timequantum';
-        }
-        setInfo(data);
-        form.setFieldsValue(data);
+        setTtl(data);
       }
     } catch (e) {
       notification.error({
@@ -63,6 +67,7 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
     return values;
   };
 
+  // 新建时给runnerId赋值
   const setRunnerValue = (v) => {
     form.setFieldsValue({ runnerId: v });
     setParamsRunnerId(v);
@@ -262,15 +267,14 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
       layout={'vertical'}
       initialValues={info}
     >
-      {isCollapse ? (
-        <Collapse activekey={activekey} expandIconPosition={'right'} onChange={(e) => {
-          setActivekey(e); 
-        }} style={{ marginBottom: 20 }}
-        >
-          <Panel header='高级设置' key={'open'}>
-            {renderForm()}
-          </Panel>
-        </Collapse>) : (renderForm())}
+      <Collapse activekey={activekey} expandIconPosition={'right'} onChange={(e) => {
+        setActivekey(e); 
+      }} style={{ marginBottom: 20 }}
+      >
+        <Panel header='高级设置' key={'open'}>
+          {renderForm()}
+        </Panel>
+      </Collapse>
     </Form>
   );
 };

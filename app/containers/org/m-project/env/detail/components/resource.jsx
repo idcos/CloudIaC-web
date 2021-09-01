@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Table, Input, notification } from 'antd';
+import { Card, Table, Input, notification, Collapse } from 'antd';
 
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
@@ -8,6 +8,8 @@ import envAPI from 'services/env';
 import taskAPI from 'services/task';
 
 import ResourceModal from './modal/resource-modal';
+
+const { Panel } = Collapse;
 
 const Index = (props) => {
   const { match, taskId, type } = props,
@@ -100,6 +102,7 @@ const Index = (props) => {
       });
     }
   };
+
   const columns = [
     {
       dataIndex: 'provider',
@@ -123,6 +126,7 @@ const Index = (props) => {
       title: '模块'
     }
   ];
+
   const onExpand = (expanded, record) => {
     if (expanded) {
       setSelectKeys([ ...selectKeys, record.provider ]);
@@ -130,33 +134,34 @@ const Index = (props) => {
       setSelectKeys((selectKeys.filter(d => d !== record.provider) || []));
     }
   };
+
   return <div>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Output'}>
-      <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
-    </Card>
-    <Card 
-      style={{ marginTop: 24 }}
-      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
-      bodyStyle={{ padding: 0 }} 
-      type={'inner'} 
-      title={'资源列表'}
-    >
-      <Input.Search
-        placeholder='请输入关键字搜索'
-        style={{ width: 240, margin: 20 }}
-        onSearch={v => setSearch(v)}
-      />
-      <Table
-        columns={columns}
-        dataSource={resultMap.list}
-        rowKey={record => record.provider}
-        loading={loading}
-        pagination={false}
-        expandedRowKeys={selectKeys}
-        onExpand={(a, b) => onExpand(a, b)}
-      />
-      <ResourceModal visible={visible} />
-    </Card>
+    <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
+      <Panel header='Output' key='1'>
+        <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
+      </Panel>
+    </Collapse>
+    <div className={'collapseInTable'}>
+      <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={['1']} forceRender={true}>
+        <Panel header='Output' key='1'>
+          <Input.Search
+            placeholder='请输入关键字搜索'
+            style={{ width: 240, margin: 20 }}
+            onSearch={v => setSearch(v)}
+          />
+          <Table
+            columns={columns}
+            dataSource={resultMap.list}
+            rowKey={record => record.provider}
+            loading={loading}
+            pagination={false}
+            expandedRowKeys={selectKeys}
+            onExpand={(a, b) => onExpand(a, b)}
+          /> 
+        </Panel>
+      </Collapse>
+    </div>
+    <ResourceModal visible={visible} />
   </div>;
 };
 

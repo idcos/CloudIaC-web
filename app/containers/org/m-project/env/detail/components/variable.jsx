@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Card, Table, Tooltip, notification } from 'antd';
+import { Card, Table, Tooltip, Collapse } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 
@@ -7,6 +7,8 @@ import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import { SCOPE_ENUM } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
+
+const { Panel } = Collapse;
 
 const Variable = (props) => {
 
@@ -24,7 +26,7 @@ const Variable = (props) => {
       manual: true,
       onSuccess: (data) => {
         setVariables(data || []);
-      },
+      }
     }
   );
 
@@ -66,28 +68,28 @@ const Variable = (props) => {
   ];
   const defaultTerraformVars = (variables || []).filter(it => it.type === 'terraform');
   const defaultEnvVars = (variables || []).filter(it => it.type === 'environment');
-  return <div>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'Terraform变量'}>
-      <Table
+  return <div className={'collapseInTable'}>
+    <Collapse expandIconPosition={'right'} style={{ padding: 0 }} defaultActiveKey={['1']} forceRender={true}>
+      <Panel header='Terraform变量' key='1'><Table
         loading={loading}
         columns={columns}
         dataSource={defaultTerraformVars}
         pagination={false}
       />
-    </Card>
-    <Card 
-      style={{ marginTop: 24 }}
-      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
-      type={'inner'} 
-      title={'环境变量'}
-    >
-      <Table
-        loading={loading}
-        columns={columns}
-        dataSource={defaultEnvVars}
-        pagination={false}
-      />
-    </Card>
+
+      </Panel>
+    </Collapse>
+    <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={['1']} forceRender={true}>
+      <Panel header='环境变量' key='1'>
+        <Table
+          loading={loading}
+          columns={columns}
+          dataSource={defaultEnvVars}
+          pagination={false}
+        />
+
+      </Panel>
+    </Collapse>
   </div>;
 };
 

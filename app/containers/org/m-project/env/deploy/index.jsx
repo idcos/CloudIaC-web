@@ -94,23 +94,51 @@ const Index = ({ match = {} }) => {
       });
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
-      const { vcsId, repoId, repoRevision } = tplInfoRes;
       fetchTfvars(tplInfoRes);
       fetchPlaybooks(tplInfoRes);
-      // 获取分支数据
-      const branchRes = await vcsAPI.listRepoBranch({
+      fetchKeys(tplInfoRes);
+      fetchRunner();
+      fetchRepoTag(tplInfoRes);
+      fetchRepoBranch(tplInfoRes);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  // 获取分支数据
+  const fetchRepoBranch = async (tplInfoRes) => {
+    const { vcsId, repoId } = tplInfoRes;
+    try { 
+      const res = await vcsAPI.listRepoBranch({
         orgId, 
         vcsId, 
         repoId,
         currentPage: 1,
         pageSize: 100000
       });
-      if (branchRes.code === 200) {
-        setBranch(branchRes.result || []);
+      if (res.code === 200) {
+        setBranch(res.result || []);
       }
       
-      // 获取标签数据
-      const tagsRes = await vcsAPI.listRepoTag({
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  // 获取标签数据
+  const fetchRepoTag = async (tplInfoRes) => {
+    const { vcsId, repoId } = tplInfoRes;
+    try { 
+      const res = await vcsAPI.listRepoTag({
         orgId, 
         vcsId, 
         repoId,
@@ -118,26 +146,8 @@ const Index = ({ match = {} }) => {
         pageSize: 100000
       });
       
-      if (tagsRes.code === 200) {
-        setTag(tagsRes.result || []);
-      }
-      // 获取通道数据
-      const runnerRes = await sysAPI.listCTRunner({
-        orgId
-      });
-      let runnerList = runnerRes.result || [];
-      if (runnerRes.code === 200) {
-        setRunnner(runnerList);
-        !envId && runnerList.length && configRef.current.setRunnerValue(runnerList[0].ID);
-      }
-      // 获取密钥数据
-      const keysRes = await keysAPI.list({
-        orgId,
-        pageSize: 99999,
-        currentPage: 1
-      });
-      if (keysRes.code === 200) {
-        setKeys(keysRes.result.list || []);
+      if (res.code === 200) {
+        setTag(res.result || []);
       }
       if (res.code != 200) {
         throw new Error(res.message);
@@ -150,7 +160,53 @@ const Index = ({ match = {} }) => {
     }
   };
 
+  // 获取通道数据
+  const fetchRunner = async () => {
+    try { 
+      const res = await sysAPI.listCTRunner({
+        orgId
+      });
+      let runnerList = res.result || [];
+      if (res.code === 200) {
+        setRunnner(runnerList);
+        !envId && runnerList.length && configRef.current.setRunnerValue(runnerList[0].ID);
+      }
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+  
+  // 获取密钥数据
+  const fetchKeys = async (fetchParams) => {
+    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    try { 
+      const res = await keysAPI.list({
+        orgId,
+        pageSize: 99999,
+        currentPage: 1
+      });
+      if (res.code === 200) {
+        setKeys(res.result.list || []);
+      }
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
+  // 获取Tfvars文件
   const fetchTfvars = async (fetchParams) => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId };
@@ -167,6 +223,8 @@ const Index = ({ match = {} }) => {
       });
     }
   };
+
+  // 获取Playbook文件
   const fetchPlaybooks = async (fetchParams) => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId };

@@ -9,10 +9,13 @@ import {
   Row,
   Tag,
   Spin,
-  Tooltip
+  Tooltip,
+  Collapse
 } from "antd";
 import { InfoCircleFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
+
+const { Panel } = Collapse;
 
 import getPermission from "utils/permission";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
@@ -172,129 +175,124 @@ const deployJournal = (props) => {
   return (
     <div className={styles.deployJournal}>
       <div className={"tableRender"}>
-        <Card 
-          headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
-          type={'inner'} 
-          title={'作业内容'}
-        >
-          <AnsiCoderCard 
-            value={taskLog} 
-            cardTitleAfter={(
-              <>
-                {
-                  TASK_STATUS[taskInfo.status] ? (
-                    <Tag color={TASK_STATUS_COLOR[taskInfo.status] || 'default'}>{TASK_STATUS[taskInfo.status]}</Tag>
-                  ) : '-'
-                }
-                {
-                  taskInfo.status === 'failed' && taskInfo.message ? (
-                    <Tooltip title={taskInfo.message}>
-                      <InfoCircleFilled style={{ color: '#ff4d4f' }} />
-                    </Tooltip>
-                  ) : null
-                }
-              </>
-            )} 
-          />
-          {
-            (PROJECT_OPERATOR) ? (
-              <Spin spinning={btnsSpinning}>
-                <Row style={{ display: 'flex', justifyContent: 'center' }}>
+        <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
+          <Panel header='作业内容' key='1'>
+            <AnsiCoderCard 
+              value={taskLog} 
+              cardTitleAfter={(
+                <>
                   {
-                    taskInfo.status === 'approving' && !isApprover ? (
-                      <>
-                        <Button 
-                          disabled={!PROJECT_APPROVER}
-                          onClick={() => passOrRejecy('rejected')} 
-                          style={{ marginTop: 20 }} 
-                        >
-                          驳回
-                        </Button>
-                        <Button 
-                          disabled={!PROJECT_APPROVER}
-                          onClick={() => passOrRejecy('approved')} 
-                          style={{ marginTop: 20, marginLeft: 20 }} 
-                          type='primary'
-                        >
-                          通过
-                        </Button>
-                      </>
-                    ) : null
+                    TASK_STATUS[taskInfo.status] ? (
+                      <Tag color={TASK_STATUS_COLOR[taskInfo.status] || 'default'}>{TASK_STATUS[taskInfo.status]}</Tag>
+                    ) : '-'
                   }
                   {
-                    taskInfo.type === 'plan' && taskInfo.status === 'complete' && !isApprover ? (
-                      <Button 
-                        type='primary'
-                        style={{ marginTop: 20 }} 
-                        onClick={applyTask}
-                        loading={taskLoading}
-                      >
-                        执行部署
-                      </Button>
+                    taskInfo.status === 'failed' && taskInfo.message ? (
+                      <Tooltip title={taskInfo.message}>
+                        <InfoCircleFilled style={{ color: '#ff4d4f' }} />
+                      </Tooltip>
                     ) : null
                   }
-                </Row>
-              </Spin>
-            ) : null
-          }
-        </Card>
-        <Card 
-          style={{ marginTop: 24 }}
-          headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
-          type={'inner'} 
-          title={'评论'}
-        >
-          <List
-            loading={loading}
-            itemLayout='horizontal'
-            dataSource={comments}
-            renderItem={(item) => (
-              <List.Item>
-                <List.Item.Meta
-                  title={
-                    <h2 className='title reset-styles'>
-                      {item.creator}
-                      <span className='subTitle'>
-                        {timeUtils.format(item.createdAt)}
-                      </span>
-                    </h2>
-                  }
-                  description={<p className='content reset-styles'>{item.comment}</p>}
-                />
-              </List.Item>
-            )}
-          />
-          {
-            PROJECT_OPERATOR ? (
-              <Form layout='vertical' onFinish={onFinish} form={form}>
-                <Form.Item
-                  label='描述'
-                  name='comment'
-                  rules={[
+                </>
+              )}
+            />
+            {
+              (PROJECT_OPERATOR) ? (
+                <Spin spinning={btnsSpinning}>
+                  <Row style={{ display: 'flex', justifyContent: 'center' }}>
                     {
-                      message: "请输入"
+                      taskInfo.status === 'approving' && !isApprover ? (
+                        <>
+                          <Button 
+                            disabled={!PROJECT_APPROVER}
+                            onClick={() => passOrRejecy('rejected')} 
+                            style={{ marginTop: 20 }} 
+                          >
+                            驳回
+                          </Button>
+                          <Button 
+                            disabled={!PROJECT_APPROVER}
+                            onClick={() => passOrRejecy('approved')} 
+                            style={{ marginTop: 20, marginLeft: 20 }} 
+                            type='primary'
+                          >
+                            通过
+                          </Button>
+                        </>
+                      ) : null
                     }
-                  ]}
-                >
-                  <Input.TextArea placeholder='请输入评论内容' />
-                </Form.Item>
-                <Form.Item shouldUpdate={true}>
-                  {({ getFieldValue }) => (
-                    <Button
-                      type='primary'
-                      htmlType='submit'
-                      disabled={
-                        !getFieldValue("comment") 
+                    {
+                      taskInfo.type === 'plan' && taskInfo.status === 'complete' && !isApprover ? (
+                        <Button 
+                          type='primary'
+                          style={{ marginTop: 20 }} 
+                          onClick={applyTask}
+                          loading={taskLoading}
+                        >
+                          执行部署
+                        </Button>
+                      ) : null
+                    }
+                  </Row>
+                </Spin>
+              ) : null
+            }
+          </Panel>
+        </Collapse>
+        <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={['1']} forceRender={true}>
+          <Panel header='评论' key='1'>
+            <List
+              loading={loading}
+              itemLayout='horizontal'
+              dataSource={comments}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={
+                      <h2 className='title reset-styles'>
+                        {item.creator}
+                        <span className='subTitle'>
+                          {timeUtils.format(item.createdAt)}
+                        </span>
+                      </h2>
+                    }
+                    description={<p className='content reset-styles'>{item.comment}</p>}
+                  />
+                </List.Item>
+              )}
+            />
+            {
+              PROJECT_OPERATOR ? (
+                <Form layout='vertical' onFinish={onFinish} form={form}>
+                  <Form.Item
+                    label='描述'
+                    name='comment'
+                    rules={[
+                      {
+                        message: "请输入"
                       }
-                    >
-                      发表评论
-                    </Button>
-                  )}
-                </Form.Item>
-              </Form>
-            ) : null
-          }
-        </Card>
+                    ]}
+                  >
+                    <Input.TextArea placeholder='请输入评论内容' />
+                  </Form.Item>
+                  <Form.Item shouldUpdate={true}>
+                    {({ getFieldValue }) => (
+                      <Button
+                        type='primary'
+                        htmlType='submit'
+                        disabled={
+                          !getFieldValue("comment") 
+                        }
+                      >
+                        发表评论
+                      </Button>
+                    )}
+                  </Form.Item>
+                </Form>
+              ) : null
+            }
+          </Panel>
+        </Collapse>
       </div>
     </div>
   );
