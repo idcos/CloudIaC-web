@@ -2,17 +2,13 @@ import React, {
   useContext,
   useEffect,
   useRef,
-  useState,
   useCallback
 } from 'react';
-
 import isEqual from 'lodash/isEqual';
 import get from 'lodash/get';
 import pick from 'lodash/pick';
 import has from 'lodash/has';
-
 import { Form } from 'antd';
-
 import { EditableRowContext, EditableContext } from './context';
 
 const EditableRow = ({

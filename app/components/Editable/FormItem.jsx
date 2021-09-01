@@ -1,8 +1,6 @@
-import React, { useState, useContext } from 'react';
-
+import React, { useState } from 'react';
 import { Popover } from 'antd';
 import { Field } from 'rc-field-form';
-import { EditableRowContext, EditableContext } from './context';
 
 const Error = (props) => {
   const hasError = !!(props.errors && props.errors.length);
@@ -11,15 +9,7 @@ const Error = (props) => {
 
   if (React.isValidElement(props.children)) {
     children = React.cloneElement(props.children, {
-      ...props.children.props,
-      onMouseLeave: (e) => {
-        if (visible) {
-          setVisible(false); 
-        }
-        if (typeof (props.children.props && props.children.props.onMouseLeave) === 'function') {
-          props.children.props.onMouseLeave(e);
-        }
-      }
+      ...props.children.props
     });
   }
 
@@ -51,7 +41,9 @@ const Error = (props) => {
           </div>
         }
       >
-        {children}
+        <div>
+          {children}
+        </div>
       </Popover>
     </div>
   );
@@ -60,10 +52,6 @@ const Error = (props) => {
 const FormItem = props => {
   const { children, ...restProps } = props;
   const trigger = props.trigger || 'value';
-  const { rowId } = useContext(EditableRowContext);
-  const { errorMap, addErrorMapItem, removeErrorMapItem } = useContext(
-    EditableContext
-  );
   return (
     <Field {...restProps}>
       {({ value, onChange }, { errors }) => {
