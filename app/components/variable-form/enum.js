@@ -4,3 +4,8 @@ export const SCOPE_ENUM = {
   template: '云模板',
   env: '环境'
 };
+
+export const VAR_TYPE_ENUM = {
+  terraform: 'Terraform变量',
+  environment: '环境变量'
+};

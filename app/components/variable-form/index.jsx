@@ -3,10 +3,8 @@ import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
-import TerraformVarForm from './terraform-var-form';
-import EnvVarForm from './env-var-form';
-import OtherVarForm from './other-var-form';
-import VarsContext from './context';
+import VarFormTable from './components/var-form-table';
+import OtherVarForm from './components/other-var-form';
 import styles from './styles.less';
 
 const { Link } = Anchor;
@@ -24,7 +22,6 @@ const VariableForm = ({
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
-
   const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
   const [ terraformVarList, setTerraformVarList ] = useState([]);
   const [ envVarList, setEnvVarList ] = useState([]);
@@ -88,63 +85,68 @@ const VariableForm = ({
   }));
 
   return (
-    <VarsContext.Provider
-      value={{
-        terraformVarRef,
-        terraformVarList, 
-        setTerraformVarList,
-        envVarRef,
-        envVarList, 
-        setEnvVarList,
-        otherVarForm,
-        setDeleteVariablesId,
-        defaultScope,
-        defalutTerraformVarList,
-        defalutEnvVarList,
-        fetchParams,
-        canImportTerraformVar
-      }}
-    >
-      <div className={styles.variableWrapper}>
-        <div className={`variable-content ${hasAnchor ? 'hasAnchor' : ''}`}>
-          <Space style={{ width: '100%' }} direction='vertical' size={24}>
-            <a id='terraform-var'>
-              <TerraformVarForm />
-            </a>
-            <a id='env-var'>
-              <EnvVarForm />
-            </a>
-            { 
-              showOtherVars ? (
-                <a id='other-var'>
-                  <OtherVarForm />
-                </a>
-              ) : null 
-            }
-          </Space>
-        </div>
-        {
-          hasAnchor ? (
-            <Affix offsetTop={20} target={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}>
-              <div className='variable-anchor'>
-                <Anchor
-                  onClick={e => e.preventDefault()}
-                  offsetTop={20}
-                  affix={false}
-                  bounds={50}
-                  showInkInFixed={true}
-                  getContainer={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
-                >
-                  <Link href='#terraform-var' title='Terraform变量' />
-                  <Link href='#env-var' title='环境变量' />
-                  { showOtherVars ? <Link href='#other-var' title='其它变量' /> : null }
-                </Anchor>
-              </div>
-            </Affix>
-          ) : null
-        }
+    <div className={styles.variableWrapper}>
+      <div className={`variable-content ${hasAnchor ? 'hasAnchor' : ''}`}>
+        <Space style={{ width: '100%' }} direction='vertical' size={24}>
+          <a id='terraform-var'>
+            <VarFormTable 
+              formVarRef={terraformVarRef}
+              varList={terraformVarList}
+              setVarList={setTerraformVarList}
+              setDeleteVariablesId={setDeleteVariablesId}
+              defaultScope={defaultScope}
+              defalutVarList={defalutTerraformVarList}
+              fetchParams={fetchParams}
+              canImportVar={canImportTerraformVar}
+              type='terraform'
+            />
+          </a>
+          <a id='env-var'>
+            <VarFormTable 
+              formVarRef={envVarRef}
+              varList={envVarList}
+              setVarList={setEnvVarList}
+              setDeleteVariablesId={setDeleteVariablesId}
+              defaultScope={defaultScope}
+              defalutVarList={defalutEnvVarList}
+              fetchParams={fetchParams}
+              canImportVar={false}
+              type='environment'
+            />
+          </a>
+          { 
+            showOtherVars ? (
+              <a id='other-var'>
+                <OtherVarForm 
+                  otherVarForm={otherVarForm}
+                  fetchParams={fetchParams}
+                />
+              </a>
+            ) : null 
+          }
+        </Space>
       </div>
-    </VarsContext.Provider>
+      {
+        hasAnchor ? (
+          <Affix offsetTop={20} target={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}>
+            <div className='variable-anchor'>
+              <Anchor
+                onClick={e => e.preventDefault()}
+                offsetTop={20}
+                affix={false}
+                bounds={50}
+                showInkInFixed={true}
+                getContainer={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
+              >
+                <Link href='#terraform-var' title='Terraform变量' />
+                <Link href='#env-var' title='环境变量' />
+                { showOtherVars ? <Link href='#other-var' title='其它变量' /> : null }
+              </Anchor>
+            </div>
+          </Affix>
+        ) : null
+      }
+    </div>
   );
 };
 

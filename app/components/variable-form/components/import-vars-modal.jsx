@@ -1,15 +1,14 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Modal, Table } from 'antd';
-import uuid from 'utils/uuid.js';
 
 export default (props) => {
 
+  const { visible, defaultScope, terraformVarList, importVars, onClose, onFinish } = props;
   const [ selectedList, setSelectedList ] = useState({
     keys: [],
     rows: []
   });
   
-  const { visible, defaultScope, terraformVarList, importVars, onClose, onFinish } = props;
   const columns = [
     {
       title: 'name',

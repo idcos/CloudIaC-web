@@ -4,45 +4,45 @@ import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
 import EditableTable from 'components/Editable';
 import tplAPI from 'services/tpl';
-import ImportVarsModal from '../components/import-vars-modal';
-import VarsContext from '../context';
-import { SCOPE_ENUM } from '../enum';
+import ImportVarsModal from './import-vars-modal';
+import { SCOPE_ENUM, VAR_TYPE_ENUM } from '../enum';
 
 const EditableTableFooter = styled.div`
   margin-top: 16px;
   text-align: right;
 `;
 
-const TerraformVarForm = () => {
+const VarFormTable = (props) => {
 
   const {
-    terraformVarRef,
-    terraformVarList,
-    setTerraformVarList,
+    formVarRef,
+    varList,
+    setVarList,
     setDeleteVariablesId,
     defaultScope,
-    defalutTerraformVarList,
+    defalutVarList,
     fetchParams,
-    canImportTerraformVar
-  } = useContext(VarsContext);
-  const defalutTerraformVarListRef = useRef([]);
-  const terraformVarDataRef = useRef(terraformVarList);
+    canImportVar,
+    type
+  } = props;
+  const defalutVarListRef = useRef([]);
+  const varDataRef = useRef(varList);
   const [ importVars, setImportVars ] = useState([]);
   const [ importModalVisible, setImportModalVisible ] = useState(false);
 
   useEffect(() => {
-    terraformVarDataRef.current = terraformVarList;
-  }, [terraformVarList]);
+    varDataRef.current = varList;
+  }, [varList]);
 
   useEffect(() => {
-    defalutTerraformVarListRef.current = defalutTerraformVarList;
-  }, [defalutTerraformVarList]);
+    defalutVarListRef.current = defalutVarList;
+  }, [defalutVarList]);
 
   useEffect(() => {
-    if (canImportTerraformVar && fetchParams) {
+    if (canImportVar && fetchParams) {
       fetchImportVars();
     }
-  }, [ fetchParams, canImportTerraformVar ]);
+  }, [ fetchParams, canImportVar ]);
 
   const fetchImportVars = async () => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
@@ -102,7 +102,7 @@ const TerraformVarForm = () => {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const sameList = (terraformVarDataRef.current || []).filter(it => it.name === value);
+                  const sameList = (varDataRef.current || []).filter(it => it.name === value);
                   if (value && sameList.length > 1) {
                     reject(new Error('name值不允许重复!'));
                   }
@@ -207,7 +207,7 @@ const TerraformVarForm = () => {
         rows.filter((item) => item.editable_id !== k)
       );
     }
-    terraformVarRef.current.handleValidate();
+    formVarRef.current.handleValidate();
   };
 
   const onChangeEditableTable = (list) => {
@@ -216,7 +216,7 @@ const TerraformVarForm = () => {
         return it;
       }
       // 如来源不同 则对比数据
-      const sameNameData = defalutTerraformVarListRef.current.find(v => v.name === it.name);
+      const sameNameData = defalutVarListRef.current.find(v => v.name === it.name);
       if (!sameNameData) { // 修改名称的数据
         return it;
       }
@@ -246,20 +246,20 @@ const TerraformVarForm = () => {
       }
       return it;
     });
-    setTerraformVarList(list);
+    setVarList(list);
   };
 
   const onImportFinish = (params, cb) => {
-    setTerraformVarList((preList) => [ ...preList, ...params ]);
+    setVarList((preList) => [ ...preList, ...params ]);
     cb && cb();
   };
 
   const pushVar = (isSelectType) => {
-    setTerraformVarList((preList) => [ 
+    setVarList((preList) => [ 
       ...preList, {
         scope: defaultScope, 
         sensitive: false, 
-        type: 'terraform', 
+        type, 
         isNew: true,
         isSelectType
       } 
@@ -268,11 +268,11 @@ const TerraformVarForm = () => {
 
   return (
     <Collapse expandIconPosition={'right'}>
-      <Collapse.Panel header='Terraform变量' forceRender={true}>
+      <Collapse.Panel header={VAR_TYPE_ENUM[type]} forceRender={true}>
         <EditableTable
-          getActionRef={ref => (terraformVarRef.current = ref.current)}
-          defaultData={{ scope: defaultScope, sensitive: false, type: 'terraform', isNew: true }}
-          value={terraformVarList}
+          getActionRef={ref => (formVarRef.current = ref.current)}
+          defaultData={{ scope: defaultScope, sensitive: false, type, isNew: true }}
+          value={varList}
           fields={fields}
           onDeleteRow={onDeleteRow}
           deleteBtnProps={{ type: 'link' }}
@@ -281,7 +281,7 @@ const TerraformVarForm = () => {
             <EditableTableFooter>
               <Space>
                 {
-                  canImportTerraformVar ? (
+                  canImportVar ? (
                     <Button onClick={() => setImportModalVisible(true)}>导入</Button>
                   ) : null
                 }
@@ -297,7 +297,7 @@ const TerraformVarForm = () => {
         <ImportVarsModal
           importVars={importVars}
           visible={importModalVisible}
-          terraformVarList={terraformVarList}
+          varList={varList}
           onClose={() => setImportModalVisible(false)}
           defaultScope={defaultScope}
           onFinish={onImportFinish}
@@ -307,4 +307,4 @@ const TerraformVarForm = () => {
   );
 };
 
-export default TerraformVarForm;
+export default VarFormTable;

@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Collapse, Form, Select, notification } from 'antd';
-
 import vcsAPI from 'services/vcs';
-
-import VarsContext from '../context';
 
 const { Option } = Select;
 
-const OtherVarForm = () => {
+const OtherVarForm = (props) => {
 
-  const { otherVarForm, fetchParams } = useContext(VarsContext);
+  const { otherVarForm, fetchParams } = props;
   const [ tfvars, setTfvars ] = useState([]);
   const [ playbooks, setPlaybooks ] = useState([]);
 
