@@ -1,13 +1,17 @@
 import React, { useContext, useRef, useEffect, useState } from 'react';
-import { Collapse, Input, Checkbox, Tag, notification, Button } from 'antd';
+import { Collapse, Input, Checkbox, Tag, notification, Button, Space } from 'antd';
+import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
-
 import EditableTable from 'components/Editable';
 import tplAPI from 'services/tpl';
-
 import ImportVarsModal from '../components/import-vars-modal';
 import VarsContext from '../context';
 import { SCOPE_ENUM } from '../enum';
+
+const EditableTableFooter = styled.div`
+  margin-top: 16px;
+  text-align: right;
+`;
 
 const TerraformVarForm = () => {
 
@@ -21,7 +25,6 @@ const TerraformVarForm = () => {
     fetchParams,
     canImportTerraformVar
   } = useContext(VarsContext);
-
   const defalutTerraformVarListRef = useRef([]);
   const terraformVarDataRef = useRef(terraformVarList);
   const [ importVars, setImportVars ] = useState([]);
@@ -251,41 +254,56 @@ const TerraformVarForm = () => {
     cb && cb();
   };
 
+  const pushVar = (isSelectType) => {
+    setTerraformVarList((preList) => [ 
+      ...preList, {
+        scope: defaultScope, 
+        sensitive: false, 
+        type: 'terraform', 
+        isNew: true,
+        isSelectType
+      } 
+    ]);
+  };
+
   return (
-    // <Card
-    //   title='Terraform变量'
-    //   headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}
-    //   extra={
-    //     canImportTerraformVar ? (
-    //       <Button type='primary' onClick={() => setImportModalVisible(true)}>导入</Button>
-    //     ) : null
-    //   }
-    // >
-      <Collapse expandIconPosition={'right'}>
-        <Collapse.Panel header='Terraform变量'>
-          <EditableTable
-            getActionRef={ref => (terraformVarRef.current = ref.current)}
-            defaultData={{ scope: defaultScope, sensitive: false, type: 'terraform', isNew: true }}
-            value={terraformVarList}
-            fields={fields}
-            onDeleteRow={onDeleteRow}
-            deleteBtnProps={{ type: 'link' }}
-            addBtnText='添加全局变量'
-            multiple={true}
-            onChange={onChangeEditableTable}
-            optionRender={optionRender}
-          />
-          <ImportVarsModal
-            importVars={importVars}
-            visible={importModalVisible}
-            terraformVarList={terraformVarList}
-            onClose={() => setImportModalVisible(false)}
-            defaultScope={defaultScope}
-            onFinish={onImportFinish}
-          />
-        </Collapse.Panel>
-      </Collapse>
-    // </Card>
+    <Collapse expandIconPosition={'right'}>
+      <Collapse.Panel header='Terraform变量' forceRender={true}>
+        <EditableTable
+          getActionRef={ref => (terraformVarRef.current = ref.current)}
+          defaultData={{ scope: defaultScope, sensitive: false, type: 'terraform', isNew: true }}
+          value={terraformVarList}
+          fields={fields}
+          onDeleteRow={onDeleteRow}
+          deleteBtnProps={{ type: 'link' }}
+          addBtnText='添加全局变量'
+          footer={
+            <EditableTableFooter>
+              <Space>
+                {
+                  canImportTerraformVar ? (
+                    <Button onClick={() => setImportModalVisible(true)}>导入</Button>
+                  ) : null
+                }
+                <Button onClick={() => pushVar()}>添加普通变量</Button>
+                <Button onClick={() => pushVar(true)}>添加选择型变量</Button>
+              </Space>
+            </EditableTableFooter>
+          }
+          multiple={true}
+          onChange={onChangeEditableTable}
+          optionRender={optionRender}
+        />
+        <ImportVarsModal
+          importVars={importVars}
+          visible={importModalVisible}
+          terraformVarList={terraformVarList}
+          onClose={() => setImportModalVisible(false)}
+          defaultScope={defaultScope}
+          onFinish={onImportFinish}
+        />
+      </Collapse.Panel>
+    </Collapse>
   );
 };
 

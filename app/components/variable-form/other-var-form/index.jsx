@@ -56,7 +56,7 @@ const OtherVarForm = () => {
 
   return (
     <Collapse expandIconPosition={'right'}>
-      <Collapse.Panel header='其它变量'>
+      <Collapse.Panel header='其它变量' forceRender={true}>
         <Form form={otherVarForm}>
           <Row gutter={8}>
             <Col span={11}>

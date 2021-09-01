@@ -211,7 +211,7 @@ const EnvVarForm = () => {
 
   return (
     <Collapse expandIconPosition={'right'}>
-      <Collapse.Panel header='环境变量'>
+      <Collapse.Panel header='环境变量' forceRender={true}>
         <EditableTable
           getActionRef={ref => (envVarRef.current = ref.current)}
           defaultData={{ scope: defaultScope, sensitive: false, type: 'environment', isNew: true }}

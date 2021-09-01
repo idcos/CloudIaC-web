@@ -51,6 +51,7 @@ const EditableTable = (props) => {
     multiple: mult = true,
     sortMode = false,
     onDeleteRow, // eslint-disable-line
+    footer
   } = props;
 
   const {
@@ -103,6 +104,7 @@ const EditableTable = (props) => {
       handleEdit
     });
   }, [ handleAdd, setRowsData ]);
+
   useEffect(() => {
     if (isFunction(getActionRef)) {
       getActionRef(actionRef); 
@@ -118,7 +120,6 @@ const EditableTable = (props) => {
         ? col.children.map(getColumnByField)
         : undefined
     };
-
     if (!col.editable) {
       tableColumn;
     } else {
@@ -130,7 +131,6 @@ const EditableTable = (props) => {
       if (fieldNamesRef.current.indexOf(formItemProps.name) === -1) {
         fieldNamesRef.current.push(formItemProps.name);
       }
-
       tableColumn.onCell = (record, rowIndex) => ({
         record,
         ...pick(col, [
@@ -146,7 +146,6 @@ const EditableTable = (props) => {
         setRowsData
       });
     }
-
     return tableColumn;
   }, []);
 
@@ -196,7 +195,6 @@ const EditableTable = (props) => {
         } else if (optionExtraBefore) {
           optionsNode = concat([], optionExtraBefore, optionsNode);
         }
-
         if (isFunction(optionExtraAfter)) {
           optionsNode = concat(optionsNode, optionExtraAfter(row));
         } else if (optionExtraAfter) {
@@ -271,7 +269,7 @@ const EditableTable = (props) => {
             };
           }}
         />
-        {showAddBtn && (
+        {showAddBtn && !footer && (
           <Button
             block={true}
             type='dashed'
@@ -292,6 +290,7 @@ const EditableTable = (props) => {
             {addBtnText || '添加一行'}
           </Button>
         )}
+        {footer}
       </div>
     </EditableContext.Provider>
   );

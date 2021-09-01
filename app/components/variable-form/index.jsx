@@ -1,6 +1,8 @@
 import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
+import map from 'lodash/map';
+import omit from 'lodash/omit';
 import TerraformVarForm from './terraform-var-form';
 import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
@@ -71,7 +73,7 @@ const VariableForm = ({
           ([ , , { tfVarsFile, playbook } = {} ]) => {
             const data = {
               deleteVariablesId,
-              variables: [ ...terraformVarList, ...envVarList ],
+              variables: map([ ...terraformVarList, ...envVarList ], (it) => omit(it, ['isNew', '_key_id', 'overwrites'])),
               tfVarsFile: tfVarsFile || '',
               playbook: playbook || ''
             };
