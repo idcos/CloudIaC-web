@@ -167,7 +167,15 @@ export const chartOptions = {
       },
       series: [{
         data: [ 120, 111, 150, 80, 70, 110, 111 ],
-        type: 'bar'
+        type: 'bar',
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              position: 'top'
+            }
+          }
+        }
       }]
     };
   },
@@ -181,7 +189,7 @@ export const chartOptions = {
       },
       title: {
         text: '策略组检测通过率',
-        subtext: '30天内'
+        subtext: '近5天'
       },
       xAxis: {
         type: 'category',
@@ -189,13 +197,7 @@ export const chartOptions = {
         data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
       },
       yAxis: {
-        type: 'value',
-        max: 100,
-        min: 0,
-        interval: 25,
-        axisLabel: {
-          formatter: '{value}%'
-        }
+        type: 'value'
       },
       series: [{
         data: [ 12, 22, 33, 55, 77, 88, 99 ],
@@ -206,10 +208,49 @@ export const chartOptions = {
           normal: {
             label: {
               show: true,
-              position: 'top',
-              formatter: function(params) {
-                return `${params.value}%`;
-              }
+              position: 'top'
+            },
+            color: "#D6F5E9", //折线点的颜色
+            lineStyle: {
+              width: 6,
+              color: "#17C3C2" //折线的颜色
+            }
+          }
+        },
+        smooth: true
+      }]
+    };
+  },
+  detect_pass_rate: () => {
+    return {
+      grid: {
+        x: 50,
+        y: 60,
+        x2: 30,
+        y2: 30
+      },
+      title: {
+        text: '检测通过率趋势',
+        subtext: '近5天'
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [{
+        data: [ 12, 24, 36, 48, 52, 66, 88 ],
+        type: 'line',
+        areaStyle: {},
+        symbolSize: 12,
+        itemStyle: {
+          normal: {
+            label: {
+              show: true,
+              position: 'top'
             },
             color: "#D6F5E9", //折线点的颜色
             lineStyle: {

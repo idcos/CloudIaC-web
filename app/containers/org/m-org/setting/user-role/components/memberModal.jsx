@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Modal, Select, Tooltip, Space } from 'antd';
 
 import { ORG_USER } from 'constants/types';
@@ -13,7 +13,9 @@ const FL = {
 export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
-
+  useEffect(() => {
+    console.log('jinlaile');
+  }, []);
   const onOk = async () => {
     const values = await form.validateFields();
     setSubmitLoading(true);

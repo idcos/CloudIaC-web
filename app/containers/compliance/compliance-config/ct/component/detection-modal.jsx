@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Col, Drawer, notification, Row, Select, Card, Input } from "antd";
+import React, { useState, useEffect, memo } from 'react';
+import { Form, Drawer, notification, Select, Card } from "antd";
 
 import projectAPI from 'services/project';
-import { PROJECT_ROLE } from 'constants/types';
 import ComplianceCollapse from 'components/compliance-collapse';
 import moment from 'moment';
 
-const { Option } = Select;
-const FL = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 16 }
-};
+const Index = ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
-export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
-
-  const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ userOptions, setUserOptions ] = useState([]);
   const [form] = Form.useForm();
 
@@ -41,7 +33,6 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
-    setSubmitLoading(true);
     operation({
       doWhat: 'add',
       payload: {
@@ -50,7 +41,6 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         ...values
       }
     }, (hasError) => {
-      setSubmitLoading(false);
       !hasError && toggleVisible();
     });
   };
@@ -59,7 +49,6 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
     <Drawer
       title='检测详情'
       placement='right'
-      // closable={false}
       visible={visible}
       onClose={toggleVisible}
       width={800}
@@ -78,3 +67,4 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
     </Drawer>
   );
 };
+export default memo(Index);

@@ -58,9 +58,9 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       title='绑定策略组/开启合规检测'
       visible={visible}
       onCancel={toggleVisible}
-      okButtonProps={{
-        loading: submitLoading
-      }}
+      // okButtonProps={{
+      //   loading: submitLoading
+      // }}
       onOk={onOk}
     >
       <Form

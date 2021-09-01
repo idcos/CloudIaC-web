@@ -184,9 +184,9 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    <BindPolicyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />
-    <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>
-    <RelevancePolicyGroupModal visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />
+    {visible && <BindPolicyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />}
+    {viewDetail && <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>}
+    {viewRelevance && <RelevancePolicyGroupModal visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />}
   </Layout>;
 };
 

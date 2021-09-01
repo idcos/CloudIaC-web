@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Table, notification, Divider } from 'antd';
 import history from 'utils/history';
-import moment from 'moment';
 import { connect } from "react-redux";
-import BindPolicyModal from './component/bindPolicyModal';
+import BindPolicyModal from 'components/policy-modal';
+
 import Detection from './component/detection';
 
 import { Eb_WP } from 'components/error-boundary';
@@ -83,10 +83,6 @@ const CTList = ({ userInfo, match = {} }) => {
     }
   ];
 
-  const openCheck = (record) => {
-    return;
-  };
-
   useEffect(() => {
     fetchList();
   }, [query]);
@@ -153,8 +149,8 @@ const CTList = ({ userInfo, match = {} }) => {
         />
       </div>
     </div>
-    <BindPolicyModal visible={policyView} />
-    <Detection visible={viewDetection}/>
+    {policyView && <BindPolicyModal visible={policyView} toggleVisible={() => setPolicyView(false)}/>}
+    {viewDetection && <Detection visible={viewDetection} toggleVisible={() => setViewDetection(false)}/>}
   </Layout>;
 };
 

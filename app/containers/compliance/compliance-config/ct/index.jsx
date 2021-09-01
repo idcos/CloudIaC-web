@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Badge, Table, Radio, Input, notification, Select, Space, Divider, Switch } from 'antd';
-import history from 'utils/history';
-import moment from 'moment';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Badge, Table, Input, notification, Select, Space, Divider, Switch } from 'antd';
 
 import { connect } from "react-redux";
 import EllipsisText from 'components/EllipsisText';
@@ -37,9 +35,11 @@ const CTList = ({ orgs }) => {
       searchprojectId: undefined,
       name: ''
     });
+
   const openPolicy = () => {
     setVisible(true);
   };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -50,8 +50,7 @@ const CTList = ({ orgs }) => {
       title: '绑定策略组',
       width: 150,
       render: (text) => {
-        const awd = 'awdawdawdawdawdaddaddadawdawdawdawdadawdawdawdawdawdadawda';
-        return <a onClick={openPolicy}><EllipsisText style={{ maxWidth: 150 }}>{awd}</EllipsisText></a>; 
+        return <a onClick={openPolicy}><EllipsisText style={{ maxWidth: 150 }}>{text}</EllipsisText></a>; 
       }
     },
     {
@@ -62,7 +61,7 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'activeEnvironment',
       title: '是否开启检测',
-      render: (text) => <Switch value={text} />
+      render: (text) => <Switch checked={text} />
     },
     {
       dataIndex: 'creator',
@@ -123,6 +122,7 @@ const CTList = ({ orgs }) => {
       ...payload
     });
   };
+
   const selectOrg = async(e) => {
     try {
       const res = await projectAPI.allEnableProjects({
@@ -143,7 +143,7 @@ const CTList = ({ orgs }) => {
       });
     }
   };
-  
+
   return <Layout
     extraHeader={<PageHeader
       title='云模板'
@@ -208,8 +208,8 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    <BindPolicyModal visible={visible} toggleVisible={() => setVisible(false)}/>
-    <DetectionModal visible={detectionVisible} toggleVisible={() => setDetectionVisible(false)}/>
+    {visible && <BindPolicyModal visible={visible} toggleVisible={() => setVisible(false)}/>}
+    {detectionVisible && <DetectionModal visible={detectionVisible} toggleVisible={() => setDetectionVisible(false)}/>}
   </Layout>;
 };
 
