@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Menu } from 'antd';
 import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons';
-
 import { DOCS } from 'constants/types';
-import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-
 import MarkdownDoc from './markdown-doc';
 import styles from './styles.less';
 

@@ -1,14 +1,6 @@
-/**
- * Common Layout
- *  ______________________
- * |______________________| Header
- * |                      |
- * |       Content        | Body
- * |______________________|
- * |______________________| Footer [Optional]
- */
 import React from 'react';
 import styled from 'styled-components';
+import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 
 const LayoutWrapper = styled.div`
   height: 100%;
@@ -64,14 +56,10 @@ const CommonLayout = ({
 }) => {
  
   return (
-    <LayoutWrapper style={style}>
+    <LayoutWrapper style={style} id={GLOBAL_SCROLL_DOM_ID} >
       <Container style={containerStyle}>
         {extraHeader ? (<Header>{extraHeader}</Header>) : null}
         <Content 
-          id='idcos-layout-content' 
-          // 注意：#idcos-layout-content谨慎改动！！！
-          // 影响范围：全局搜索‘idcos-layout-content’定位影响范围
-          // 影响原因：在固钉和锚点当中使用过，改动其样式请回归测试固钉（Affix）和锚点（Anchor）功能
           style={contentStyle}
           withFooter={footer}
         >

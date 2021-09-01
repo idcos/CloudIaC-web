@@ -1,6 +1,6 @@
 import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
-
+import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import TerraformVarForm from './terraform-var-form';
 import EnvVarForm from './env-var-form';
 import OtherVarForm from './other-var-form';
@@ -16,7 +16,7 @@ const VariableForm = ({
   canImportTerraformVar = false, 
   defaultScope, 
   showOtherVars = false,
-  hasAnchor = true
+  hasAnchor = false
 }) => {
 
   const terraformVarRef = useRef();
@@ -123,7 +123,7 @@ const VariableForm = ({
         </div>
         {
           hasAnchor ? (
-            <Affix offsetTop={20} target={() => document.getElementById('idcos-layout-content')}>
+            <Affix offsetTop={20} target={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}>
               <div className='variable-anchor'>
                 <Anchor
                   onClick={e => e.preventDefault()}
@@ -131,7 +131,7 @@ const VariableForm = ({
                   affix={false}
                   bounds={50}
                   showInkInFixed={true}
-                  getContainer={() => document.getElementById('idcos-layout-content')}
+                  getContainer={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
                 >
                   <Link href='#terraform-var' title='Terraform变量' />
                   <Link href='#env-var' title='环境变量' />

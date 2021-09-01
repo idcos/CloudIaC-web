@@ -1,4 +1,7 @@
-import { AppstoreFilled, CheckCircleFilled, CloseCircleFilled, ExclamationCircleFilled, ClockCircleFilled, AlertFilled } from '@ant-design/icons';
+/**
+ * 全局滚动dom id
+ */
+export const GLOBAL_SCROLL_DOM_ID = 'global_scroll_dom_id';
 
 export const ORG_USER = {
   role: {
