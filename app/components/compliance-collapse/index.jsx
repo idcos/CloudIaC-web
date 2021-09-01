@@ -48,7 +48,6 @@ const Index = (props) => {
   let ll = `"code": "resource "alicloud_vpc" "jack_vpc" {\n  vpc_name = "tf_jack_vpc"\n  cidr_block = "172.16.0.0/12""`;
   let ls = ll.replace(/"/g, '');
   let lt = ls.split('\n');
-  console.log(lt);
   
   return <>
     <div className={styles['collapse-title']}>策略1</div>

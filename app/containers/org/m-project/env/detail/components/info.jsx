@@ -64,7 +64,7 @@ const Index = (props) => {
       <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
       <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
       <Descriptions.Item label='target'>{info.target || '-'}</Descriptions.Item>
-      <Descriptions.Item label='tfvars文件'>{info.tfvars || '-'}</Descriptions.Item>
+      <Descriptions.Item label='tfvars文件'>{info.tfVarsFile || '-'}</Descriptions.Item>
       <Descriptions.Item label='playbook文件'>{info.playbook || '-'}</Descriptions.Item>
       <Descriptions.Item label='部署通道'>{info.runner || '-'}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>

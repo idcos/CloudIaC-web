@@ -136,9 +136,9 @@ export const chartOptions = {
             }
           },
           data: [
-            { value: 335, name: '通过' },
-            { value: 310, name: '未通过' },
-            { value: 234, name: '屏蔽' }
+            { value: 100, name: '通过' },
+            { value: 100, name: '未通过' },
+            { value: 1000, name: '屏蔽' }
           ]
         }
       ]

@@ -48,7 +48,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   }, []);
  
   return (
-    <div className={styles.orgWrapper}>
+    <div className={styles.complianceWrapper}>
       <div className='left-nav'>
         <div className='menu-wrapper'>
           {

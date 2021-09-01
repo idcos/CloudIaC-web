@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Select, Space, Divider, Switch } from 'antd';
+import { Badge, Table, Radio, Input, notification, Select, Space, Divider, Switch } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
+import EllipsisText from 'components/EllipsisText';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -46,7 +47,11 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'description',
       title: '绑定策略组',
-      render: (text) => <a onClick={openPolicy}>{text}</a>
+      width: 150,
+      render: (text) => {
+        const awd = 'awdawdawdawdawdaddaddadawdawdawdawdadawdawdawdawdawdadawda';
+        return <a onClick={openPolicy}><EllipsisText style={{ maxWidth: 150 }}>{awd}</EllipsisText></a>; 
+      }
     },
     {
       dataIndex: 'repoAddr',
@@ -56,11 +61,12 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'activeEnvironment',
       title: '是否开启检测',
-      render: (text) => <Switch value={true} />
+      render: (text) => <Switch value={text} />
     },
     {
       dataIndex: 'creator',
-      title: '状态'
+      title: '状态',
+      render: (text) => <Badge color={'red'} text={text} />
     },
     {
       title: '操作',
@@ -201,8 +207,8 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    <BindPolicyModal visible={visible} />
-    <DetectionModal visible={detectionVisible} />
+    <BindPolicyModal visible={visible} toggleVisible={() => setVisible(false)}/>
+    <DetectionModal visible={detectionVisible} toggleVisible={() => setDetectionVisible(false)}/>
   </Layout>;
 };
 

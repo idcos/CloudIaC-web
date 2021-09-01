@@ -73,30 +73,6 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
     setRunnerValue
   }), [ onfinish, setRunnerValue ]);
 
-  const copyToUrl = async(action) => {
-    try {
-      const res = await tokensAPI.getTriggerUrl({
-        orgId, envId, action, projectId
-      });
-      let data = res.result || {};
-      let copyData = `${window.location.origin}/api/v1/trigger/send?token=${data.key}`;
-      if (res.code === 200) {
-        if (!res.result) {
-          const resCreat = await tokensAPI.createToken({
-            orgId, envId, action, projectId
-          });
-          copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;
-        }
-        copy(copyData);
-      }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
   const renderForm = () => {
     return <>
       <Row style={{ height: '100%' }}>
@@ -246,14 +222,6 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
                     <Row>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }}>
                         <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
-                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>
-                        {
-                          (getFieldValue('triggers') || []).includes('commit') ? (
-                            <a onClick={() => copyToUrl('apply')}>复制URL</a>
-                          ) : (
-                            <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
-                          )
-                        }
                       </Col>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }} >
                         <Checkbox value='commit'>执行失败时，间隔 <Form.Item
@@ -269,14 +237,6 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
                       </Col>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)', paddingTop: 20 }}>
                         <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
-                        <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
-                        {
-                          (getFieldValue('triggers') || []).includes('prmr') ? (
-                            <a onClick={() => copyToUrl('plan')}>复制URL</a>
-                          ) : (
-                            <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
-                          )
-                        }
                       </Col>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)', paddingTop: 20 }}>
                         <Checkbox value='autoApproval'>自动通过审批</Checkbox>

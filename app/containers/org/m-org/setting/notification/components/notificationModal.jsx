@@ -22,8 +22,6 @@ const PL = {
 
 export default ({ orgId, operation, visible, toggleVisible, notificationId }) => {
 
-  console.log(notificationId, 'notificationId');
-
   const leftTableColumns = [
     {
       dataIndex: 'name',
@@ -67,7 +65,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setPanel();
+      // setPanel('email');
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -120,7 +118,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: '请输入url'
           }
         ]}
       >
@@ -133,7 +131,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: '请输入url'
           }
         ]}
       >
@@ -145,7 +143,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: '请输入secret'
           }
         ]}
       >
@@ -158,7 +156,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: '请输入url'
           }
         ]}
       >

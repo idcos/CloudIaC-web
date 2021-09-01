@@ -17,6 +17,8 @@ import keysAPI from 'services/keys';
 import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
+import styles from './style.less';
+import { data } from "vfile";
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -204,7 +206,7 @@ const Index = ({ match = {} }) => {
         values.ttl = '0';
       }
       delete values.type;
-      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined });
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
       if (res.code !== 200) {
         throw new Error(res.message);
       }

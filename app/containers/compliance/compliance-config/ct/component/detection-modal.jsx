@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Drawer, notification, Row, Select, Table, Input } from "antd";
+import { Form, Col, Drawer, notification, Row, Select, Card, Input } from "antd";
 
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
+import ComplianceCollapse from 'components/compliance-collapse';
+import moment from 'moment';
 
 const { Option } = Select;
 const FL = {
@@ -57,13 +59,22 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
     <Drawer
       title='检测详情'
       placement='right'
-      closable={false}
+      // closable={false}
       visible={visible}
-      width={600}
+      onClose={toggleVisible}
+      width={800}
+      bodyStyle={{
+        padding: 0
+      }}
     >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+      <Card 
+        headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
+        bodyStyle={{ padding: 6 }} 
+        type={'inner'} 
+        title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}</div></span>}
+      >
+        <ComplianceCollapse />
+      </Card>
     </Drawer>
   );
 };

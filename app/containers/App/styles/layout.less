@@ -6,37 +6,44 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+
   .idcos-app {
     height: 100%;
     display: flex;
     flex-direction: column;
+
     .idcos-app-header {
       position: relative;
       z-index: 10;
       height: @AppHeaderHeight;
       box-shadow: 1px 0.1px 10px 1px rgba(55, 61, 72, 0.3);
-      & > .inner {
+
+      &>.inner {
         // width: @ctw;
         display: flex;
         align-items: center;
         margin: 0 auto;
+
         .changeMenu {
-          color: rgba(255,255,255,0.7);
+          color: rgba(255, 255, 255, 0.7);
           cursor: pointer;
           width: 84px;
         }
-        & > .logo {
+
+        &>.logo {
           margin-right: 12px;
           height: @AppHeaderHeight;
           line-height: @AppHeaderHeight;
           cursor: pointer;
           overflow: hidden;
+
           img {
             width: 100px;
             margin-left: 26px;
           }
         }
-        & > .rParts {
+
+        &>.rParts {
           flex: 1 0;
           padding-right: 32px;
           display: flex;
@@ -44,6 +51,7 @@
           height: @AppHeaderHeight;
         }
       }
+
       &.dark {
         background: @AppHeaderBg;
       }
@@ -64,7 +72,8 @@
     background: #ffffff;
     padding: 16px 14px 0 14px;
     margin-bottom: 16px;
-    > h2 {
+
+    >h2 {
       font-size: 16px;
       height: 16px;
       line-height: 16px;
@@ -83,4 +92,21 @@
     box-shadow: 0px 6px 14px 3px rgba(0, 0, 0, 0.02),
       0px 3px 8px 0px rgba(0, 0, 0, 0.05), 0px 1px 3px -6px rgba(0, 0, 0, 0.08);
   }
+
+  .idcos-ellipsis-text {
+    width: 100%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
 }
+
+  // 斜体展示时间
+  .UbuntuMonoOblique {
+    font-family: 'testfont';
+    font-style: oblique;
+    margin-left: 8px;
+    color: rgba(0, 0, 0, 0.6);
+  }
