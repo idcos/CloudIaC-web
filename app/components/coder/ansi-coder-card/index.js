@@ -32,11 +32,12 @@ export default ({ value, cardTitleAfter, showHeader }) => {
       const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
       const _html = value.map((line, index) => {
         // 计算indexline展示的位置 
+        let isCode = index > (7 - 1) && index < (7 + 3);
         let indexLine = showHeader ? `${(index > (7 - 1) && index < (7 + 3) ? `${a ++}` : '')}` : `${index + 1}`;
         return `
           <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
             <span class='line-index' style='width: ${lineIndexWidth}px;'>${indexLine}</span>
-            <pre class='line-text reset-styles'>${ansi_up.ansi_to_html(line)}</pre>
+            <pre class='line-text reset-styles ${isCode ? 'UbuntuMonoUnOblique' : ''}'>${ansi_up.ansi_to_html(line)}</pre>
           </div>
         `;
       }).join('');
