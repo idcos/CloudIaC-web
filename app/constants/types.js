@@ -27,12 +27,14 @@ export const SYS = {
     passing: '正常'
   }
 };
+
 export const PROJECT_ROLE = {
   manager: 'manager',
   approver: 'approver',
   operator: 'operator',
   guest: 'guest'
 };
+
 export const AUTO_DESTROY = [
   { name: '12小时', code: '12h' },
   { name: '一天', code: '1d' },
@@ -49,6 +51,7 @@ export const destoryType = [{
 }, {
   name: '具体时间', value: 'time'
 }];
+
 export const ENV_STATUS = {
   'active': '活跃', 
   'failed': '失败', 
@@ -56,6 +59,7 @@ export const ENV_STATUS = {
   'running': '执行中',
   'approving': '待审批'
 };
+
 export const ENV_STATUS_COLOR = {
   'active': 'success', 
   'failed': 'error', 
@@ -63,12 +67,14 @@ export const ENV_STATUS_COLOR = {
   'running': 'cyan',
   'approving': 'processing'
 };
+
 export const SCOPE_ENUM = {
   org: '组织',
   project: '项目',
   template: '云模板',
   env: '环境'
 };
+
 export const DOCS = {
   quickstart: '快速入门',
   developer: '开发者文档',
@@ -81,6 +87,7 @@ export const DOCS = {
   vcs: 'VCS',
   role: '用户和角色'
 };
+
 export const TASK_STATUS = {
   "pending": '排队',
   "running": '执行中',
@@ -89,6 +96,7 @@ export const TASK_STATUS = {
   "complete": '成功',
   "rejected": '驳回'
 };
+
 export const TASK_STATUS_COLOR = {
   "pending": 'gold',
   "running": 'cyan',
@@ -97,6 +105,7 @@ export const TASK_STATUS_COLOR = {
   "complete": 'success',
   "rejected": "warning"
 };
+
 export const TASK_TYPE = {
   'plan': 'plan作业',
   'apply': 'apply作业',
@@ -110,7 +119,13 @@ export const END_TASK_STATUS_LIST = [
   'complete',
   'rejected'
 ];
+
 export const END_ENV_STATUS_LIST = [
   'active',
   'failed'
 ];
+
+/** 策略严重等级 */
+export const POLICIES_SEVERITY_ENUM = {
+  medium: '中'
+};

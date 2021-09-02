@@ -98,7 +98,7 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
               placeholder='请选择部署通道'
               style={{ width: '80%' }}
             >
-              {runnner.map(it => <Option value={it.ID}>{it.Service}</Option>)}
+              {runnner.map(it => <Option value={it.ID}>{it.ID}</Option>)}
             </Select>
           </Form.Item>
         </Col>
