@@ -60,6 +60,7 @@
     "chalk": "3.0.0",
     "classnames": "^2.3.1",
     "codemirror": "5.61.0",
+    "codemirror-rego": "^1.1.0",
     "compression": "1.7.4",
     "connected-react-router": "6.6.0",
     "cross-env": "6.0.3",

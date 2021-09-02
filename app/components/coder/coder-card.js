@@ -6,10 +6,21 @@ import {
   Space
 } from "antd";
 import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
-
 import Coder from "components/coder";
+import noop from 'lodash/noop';
 
-export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) => {
+export default ({ 
+  coderHeight = '100%', 
+  bodyStyle,
+  autoScrollToBottom = false, 
+  options, 
+  value,
+  onChange = noop,
+  title,
+  showSearch = false,
+  tools=['scrollTop', 'scrollBottom', 'fullScreen'],
+  ...props
+}) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const [ lastKeyword, setLastKeyword ] = useState('');
   const coderRef = useRef();
@@ -38,61 +49,76 @@ export default ({ coderHeight = 700, autoScrollToBottom = false, mode, value }) 
     }
   };
 
+  const toolsEnum = {
+    scrollTop: (
+      <Button onClick={() => coderRef.current.scrollToTop()}>
+        <VerticalAlignTopOutlined />
+        回顶部
+      </Button>
+    ),
+    scrollBottom: (
+      <Button onClick={() => coderRef.current.scrollToBottom()}>
+        <VerticalAlignBottomOutlined />
+        回底部
+      </Button>
+    ),
+    fullScreen: (
+      <Button onClick={() => setFullScreen(!fullScreen)} onKeyDown={(e) => setFullScreenClose(e)}>
+        {
+          fullScreen ? (
+            <>
+              <FullscreenExitOutlined />&nbsp;退出全屏
+            </>
+          ) : (
+            <>
+              <FullscreenOutlined />&nbsp;全屏显示
+            </>
+          )
+        }
+      </Button>
+    )
+  };
+
   return (
     <Card
       className={`coder-card card-body-no-paading ${fullScreen ? "full-card" : ""}`}
       title={
-        <Input.Search
-          ref={searchRef}
-          placeholder='请输入内容搜索'
-          onSearch={(keyword) => {
-            if (keyword !== lastKeyword) {
-              coderRef.current.search(keyword);
-              setLastKeyword(keyword);
-            } else {
-              execSearchCommand('findNext');
-            }
-            searchRef.current.focus();
-          }}
-          style={{ width: 240 }}
-        />
+        <>
+          {title}
+          {
+            showSearch && !title && <Input.Search
+              ref={searchRef}
+              placeholder='请输入内容搜索'
+              onSearch={(keyword) => {
+                if (keyword !== lastKeyword) {
+                  coderRef.current.search(keyword);
+                  setLastKeyword(keyword);
+                } else {
+                  execSearchCommand('findNext');
+                }
+                searchRef.current.focus();
+              }}
+              style={{ width: 240 }}
+            />
+          }
+        </>
       }
       extra={
         <Space>
-          <Button onClick={() => coderRef.current.scrollToTop()}>
-            <VerticalAlignTopOutlined />
-            回顶部
-          </Button>
-          <Button onClick={() => coderRef.current.scrollToBottom()}>
-            <VerticalAlignBottomOutlined />
-            回底部
-          </Button>
-          <Button onClick={() => setFullScreen(!fullScreen)} onKeyDown={(e) => setFullScreenClose(e)}>
-            {
-              fullScreen ? (
-                <>
-                  <FullscreenExitOutlined />&nbsp;退出全屏
-                </>
-              ) : (
-                <>
-                  <FullscreenOutlined />&nbsp;全屏显示
-                </>
-              )
-            }
-          </Button>
+          {tools.map(tool => toolsEnum[tool])}
         </Space>
       }
+      bodyStyle={{ ...bodyStyle, overflow: 'hidden' }}
+      {...props}
     >
       <Coder
         childRef={coderRef}
-        options={{
-          mode
-        }}
+        options={options}
         autoScrollToBottom={autoScrollToBottom}
         selfClassName='card-coder'
         style={{ height: coderHeight }}
         value={value}
-        onChange={() => ""}
+        onChange={onChange}
       />
     </Card>
   );

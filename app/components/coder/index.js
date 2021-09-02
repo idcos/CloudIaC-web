@@ -9,6 +9,14 @@ import "codemirror/mode/markdown/markdown";
 import "codemirror/mode/javascript/javascript";
 
 /**
+ * rego mode
+ */
+import 'codemirror-rego/mode';
+import 'codemirror/addon/comment/comment';
+import 'codemirror/addon/edit/matchbrackets';
+import 'codemirror-rego/key-map';
+
+/**
  * search
  */
 import "codemirror/addon/scroll/annotatescrollbar.js";

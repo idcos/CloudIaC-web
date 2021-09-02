@@ -49,7 +49,9 @@ const SelectTypeValue = ({
     if (option === value) {
       onChange();
     }
-    setOptions(options.filter(item => item !== option));
+    const newOptions = options.filter(item => item !== option);
+    setOptions(newOptions);
+    form.setFieldsValue({ options: newOptions });
   };
 
   return (
