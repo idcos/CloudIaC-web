@@ -1,21 +1,14 @@
 import React, { useEffect } from "react";
 import { Select, Form, Input, Button, Row, Col, Radio } from "antd";
 import PageHeader from "components/pageHeader";
-
 import Layout from "components/common/layout";
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
   wrapperCol: { span: 22, offset: 2 }
 };
-const PL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
-const { Option, OptGroup } = Select;
-const {} = Radio;
   
-const Index = ({ match = {} }) => {
+const FormPage = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
   const [form] = Form.useForm();
   
@@ -79,4 +72,4 @@ const Index = ({ match = {} }) => {
   );
 };
 
-export default Index;
+export default FormPage;

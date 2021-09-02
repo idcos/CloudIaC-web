@@ -126,7 +126,7 @@ const Policy = () => {
           <Button
             type={'primary'}
             onClick={() => {
-              history.push('/compliance/policy-config/policy/policy-create');
+              history.push('/compliance/policy-config/policy/policy-form');
             }}
           >
             新建策略

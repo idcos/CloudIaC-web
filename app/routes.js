@@ -146,11 +146,11 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/compliance/policy-config/policy/policy-create',
-          name: '新建策略',
-          component: loadable(() => import('containers/compliance/policy-config/policy/create'), asyncLoadFallback),
+          path: '/compliance/policy-config/policy/policy-form/:policyId?',
+          name: '创建/编辑策略页面',
+          component: loadable(() => import('containers/compliance/policy-config/policy/form-page'), asyncLoadFallback),
           exact: true
-        }
+        },
       ]
     },
     {

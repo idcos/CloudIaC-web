@@ -1,20 +1,9 @@
 import React, { useMemo } from 'react';
-
 import { Breadcrumb } from 'antd';
-
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const KEY = 'global';
-
-/**
- * 分拣出location.pathname中的路由参数
- * @param routeParams
- * @param pathSnippet
- * @return {boolean}
- */
-const isRouteParam = (routeParams, pathSnippet) =>
-  Object.keys(routeParams).find(it => routeParams[it] === pathSnippet);
 
 const breadcrumbNameMap = {
   'org': { text: '组织' },
@@ -40,9 +29,8 @@ const breadcrumbNameMap = {
   'policy-config': { text: '策略管理', disabled: true },
   'policy-group': { text: '策略组', disabled: true },
   'policy': { text: '策略' },
-  'policy-create': { text: '新建策略' }
+  'policy-form': { getText: ({ policyId }) => policyId ? '编辑策略' : '新建策略' },
 };
-
 
 const BreadcrumbWrapper = ({ location, params }) => {
   
@@ -50,7 +38,6 @@ const BreadcrumbWrapper = ({ location, params }) => {
 
   const breadcrumbContent = useMemo(() => {
     const lastOne = pathSnippets.filter(it => breadcrumbNameMap.hasOwnProperty(it) && breadcrumbNameMap[it]).pop();
-
     return pathSnippets.map((snippet, index) => {
       const link = breadcrumbNameMap.hasOwnProperty(snippet) ? breadcrumbNameMap[snippet] : null;
       if (!link) {
@@ -76,7 +63,6 @@ const BreadcrumbWrapper = ({ location, params }) => {
     <Breadcrumb>{breadcrumbContent}</Breadcrumb>
   </div>;
 };
-
 
 export default connect(
   (state) => ({ 
