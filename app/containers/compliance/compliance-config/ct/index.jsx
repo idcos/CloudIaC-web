@@ -9,6 +9,8 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import projectAPI from 'services/project';
 import tplAPI from 'services/tpl';
+import ctplAPI from 'services/ctpl';
+
 import BindPolicyModal from 'components/policy-modal';
 import DetectionModal from './component/detection-modal';
 
@@ -16,7 +18,7 @@ import DetectionModal from './component/detection-modal';
 const { Option } = Select;
 const { Search } = Input;
 
-const CTList = ({ orgs }) => {
+const CCTList = ({ orgs }) => {
   const orgId = 'org-c4i8s1rn6m81fm687b0g';
   const projectId = 'p-c4i8scjn6m81fm687b1g';
   const orgList = (orgs || {}).list || [];
@@ -95,7 +97,7 @@ const CTList = ({ orgs }) => {
     try {
       setLoading(true);
       delete query.pageNo;
-      const res = await tplAPI.list({
+      const res = await ctplAPI.list({
         orgId,
         ...query
       });
@@ -103,11 +105,12 @@ const CTList = ({ orgs }) => {
         throw new Error(res.message);
       }
       setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
+      // setResultMap({
+      //   list: res.result.list || [],
+      //   total: res.result.total || 0
+      // });
     } catch (e) {
+      console.log(e, 'eeeeeee');
       setLoading(false);
       notification.error({
         message: '获取失败',
@@ -218,4 +221,4 @@ export default connect((state) => {
     userInfo: state.global.get('userInfo').toJS(),
     orgs: state.global.get('orgs').toJS()
   };
-})(Eb_WP()(CTList));
+})(Eb_WP()(CCTList));

@@ -92,7 +92,10 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
             }
           ]}
         >
-          <TableTransfer {...propsModal} />
+          <TableTransfer 
+            locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入策略名称搜索' }}
+            {...propsModal}
+          />
         </Form.Item>
       </Form>
     </Modal>

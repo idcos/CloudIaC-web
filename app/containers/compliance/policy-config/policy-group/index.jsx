@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Select, Space, Divider, Switch } from 'antd';
+import { Button, Table, Radio, Input, notification, Select, Space, Divider, Popconfirm } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -12,34 +12,31 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import projectAPI from 'services/project';
 import tplAPI from 'services/tpl';
+import cgroupsAPI from 'services/cgroups';
 
 
 const { Option } = Select;
 const { Search } = Input;
 
 const CTList = ({ orgs }) => {
-  const orgId = 'org-c4i8s1rn6m81fm687b0g';
-  const projectId = 'p-c4i8scjn6m81fm687b1g';
-  const orgList = (orgs || {}).list || [];
-  const [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
+  const [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
-    [ projectList, setProjectList ] = useState([]),
-    [ visible, setVisible ] = useState(false),
-    [ viewDetail, setViewDetail ] = useState(false),
-    [ viewRelevance, setViewRelevance ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
       pageSize: 10,
       searchorgId: undefined,
       searchprojectId: undefined,
       name: ''
-    });
-  const openPolicy = () => {
-    setVisible(true);
-  };
+    }),
+
+    [ loading, setLoading ] = useState(false),
+    [ policyGroupId, setPolicyGroupId ] = useState([]),
+    [ visible, setVisible ] = useState(false),
+    [ viewDetail, setViewDetail ] = useState(false),
+    [ viewRelevance, setViewRelevance ] = useState(false);
+
   const columns = [
     {
       dataIndex: 'name',
@@ -53,7 +50,7 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'tag',
       title: '关联策略',
-      render: (text) => <a onClick={openPolicy}>{text}</a>
+      render: (text) => <a onClick={() => setVisible(true)}>{text}</a>
     },
     {
       dataIndex: 'repoAddr',
@@ -66,7 +63,7 @@ const CTList = ({ orgs }) => {
     {
       title: '操作',
       width: 160,
-      render: (record) => {
+      render: (text, record) => {
         return (
           <span className='inlineOp'>
             <a 
@@ -75,15 +72,39 @@ const CTList = ({ orgs }) => {
             >关联策略</a>
             <Divider type={'vertical'}/>
             <a 
-              onClick={() => setVisible(true)}
+              onClick={() => {
+                setVisible(true); 
+                setPolicyGroupId(record.id);
+              }}
             >编辑</a>
             <Divider type={'vertical'}/>
-            <a>禁用</a>
+            <Popconfirm title='确认禁用策略组?' onConfirm={() => deleteGroup(record.id)} placement='bottomLeft'>
+              <a>禁用</a>
+            </Popconfirm>
           </span>
         );
       }
     }
   ];
+
+  const deleteGroup = async(id) => {
+    try {
+      delete query.pageNo;
+      const res = await cgroupsAPI.del({
+        policiesId: id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      changeQuery({ currentPage: 1 });
+      fetchList();
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   useEffect(() => {
     fetchList();
@@ -93,8 +114,7 @@ const CTList = ({ orgs }) => {
     try {
       setLoading(true);
       delete query.pageNo;
-      const res = await tplAPI.list({
-        orgId,
+      const res = await cgroupsAPI.list({
         ...query
       });
       if (res.code !== 200) {
@@ -102,7 +122,7 @@ const CTList = ({ orgs }) => {
       }
       setLoading(false);
       setResultMap({
-        list: res.result.list || [],
+        list: res.result || [],
         total: res.result.total || 0
       });
     } catch (e) {
@@ -119,26 +139,6 @@ const CTList = ({ orgs }) => {
       ...query,
       ...payload
     });
-  };
-  const selectOrg = async(e) => {
-    try {
-      const res = await projectAPI.allEnableProjects({
-        status: 'enable',
-        pageSize: 100000,
-        currentPage: 1,
-        orgId: e
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setProjectList(res.result.list || []);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
   };
   
   return <Layout
@@ -184,9 +184,18 @@ const CTList = ({ orgs }) => {
         />
       </div>
     </div>
-    {visible && <BindPolicyGroupModal visible={visible} toggleVisible={() => setVisible(false)} />}
+    {visible && (
+      <BindPolicyGroupModal 
+        reload={() => fetchList()} 
+        id={policyGroupId} 
+        visible={visible}
+        toggleVisible={() => {
+          setVisible(false);
+          setPolicyGroupId(); 
+        }}
+      />)}
     {viewDetail && <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>}
-    {viewRelevance && <RelevancePolicyGroupModal visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />}
+    {viewRelevance && <RelevancePolicyGroupModal reload={() => fetchList()} visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />}
   </Layout>;
 };
 

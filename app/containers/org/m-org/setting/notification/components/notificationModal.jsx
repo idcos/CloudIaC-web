@@ -109,6 +109,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
           leftTableColumns={leftTableColumns}
           rightTableColumns={rightTableColumns}
           dataScourt={list}
+          locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入姓名搜索' }}
         />
       </Form.Item>,
       wechat: () => <Form.Item

@@ -16,7 +16,7 @@ import tplAPI from 'services/tpl';
 const { Option } = Select;
 const { Search } = Input;
 
-const Index = ({ orgs, visible }) => {
+const Index = ({ orgs, visible, toggleVisible }) => {
   const orgId = 'org-c4i8s1rn6m81fm687b0g';
   const projectId = 'p-c4i8scjn6m81fm687b1g';
   const orgList = (orgs || {}).list || [];
@@ -151,8 +151,8 @@ const Index = ({ orgs, visible }) => {
   return <Drawer
     title='策略组详情'
     placement='right'
-    closable={false}
     visible={visible}
+    onClose={toggleVisible}
     width={1000}
   >
     <div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 
-import projectAPI from 'services/project';
+import cgroupsAPI from 'services/cgroups';
 import { PROJECT_ROLE } from 'constants/types';
 
 const { Option } = Select;
@@ -10,25 +10,29 @@ const FL = {
   wrapperCol: { span: 18 }
 };
 
-export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
+export default ({ reload, visible, toggleVisible, id }) => {
 
-  const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ userOptions, setUserOptions ] = useState([]);
-  const [form] = Form.useForm();
+  const [ submitLoading, setSubmitLoading ] = useState(false); 
+  const [ info, setInfo ] = useState({}); 
+
+  const [form] = Form.useForm(); 
 
   useEffect(() => {
-    fetchUserOptions();
+    if (id) {
+      getDetail();
+    }
   }, []);
 
-  const fetchUserOptions = async () => {
+  const getDetail = async () => {
     try {
-      const res = await projectAPI.getUserOptions({
-        orgId, projectId
+      const res = await cgroupsAPI.detail({
+        policiesId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setUserOptions(res.result || []);
+      form.setFieldsValue(res.result || {});
+
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -38,19 +42,29 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
   };
 
   const onOk = async () => {
-    const values = await form.validateFields();
-    setSubmitLoading(true);
-    operation({
-      doWhat: 'add',
-      payload: {
-        orgId,
-        type: 'api',
-        ...values
+    try {
+      const values = await form.validateFields();
+      if (!!id) {
+        values.policiesId = id;
       }
-    }, (hasError) => {
+      setSubmitLoading(true);
+      let mode = !!id ? 'update' : 'create';
+      const res = await cgroupsAPI[mode]({
+        ...values
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
       setSubmitLoading(false);
-      !hasError && toggleVisible();
-    });
+      reload();
+      toggleVisible();
+    } catch (e) {
+      setSubmitLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
   };
 
   return (
@@ -86,7 +100,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       >
         <Form.Item
           label='策略组描述'
-          name='name'
+          name='description'
           rules={[
             {
               required: true,

@@ -54,14 +54,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
   </Transfer>
 );
 
-// dataScourt 数据需要转换成
-// {
-//   key: '',
-//   name: '',
-//   email: ''
-// }
-
-const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, value, ...propsDemo }) => {
+const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, value, locale, ...propsDemo }) => {
   const [ targetKeys, setTargetKeys ] = useState(value || []);
   return (
     <>
@@ -79,7 +72,7 @@ const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, valu
         filterOption={(inputValue, item) =>
           item.name.indexOf(inputValue) !== -1 
         }
-        locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入姓名搜索' }}
+        locale={locale}
         leftColumns={leftTableColumns}
         rightColumns={rightTableColumns}
       />
