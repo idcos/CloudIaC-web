@@ -4,6 +4,7 @@ import PageHeader from "components/pageHeader";
 import Layout from "components/common/layout";
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import CoderCard from 'components/coder/coder-card';
+import policiesAPI from 'services/policies';
 
 const FL = {
   labelCol: { span: 24 },

@@ -1,46 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Space, Input, Select, Divider, Tag } from 'antd';
-import history from 'utils/history';
 import { connect } from "react-redux";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import history from 'utils/history';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import { useSearchAndTable } from 'utils/hooks';
+import { useSearchFormAndTable } from 'utils/hooks';
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
+import policiesAPI from 'services/policies';
 import Detection from './detection';
 
 const Policy = () => {
 
   const [visible, setVisible] = useState(false);
-  const [ resultMap, setResultMap ] = useState({
-    list: [],
-    total: 0
-  });
-  const { tableProps, onChangeSearchParams } = useSearchAndTable({
-    resultMap,
+
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList
+  } = useRequest(
+    (params) => requestWrapper(
+      policiesAPI.list.bind(null, params)
+    ), {
+      manual: true
+    }
+  );
+
+  const { 
+    tableProps, 
+    onChangeFormParams
+  } = useSearchFormAndTable({
+    tableData,
     onSearch: (params) => {
-      const { current, pageSize } = params;
-      setResultMap({
-        list: Array.from(new Array(pageSize), (it, index) => ({
-          "createdAt": "2006-01-02 15:04:05",
-          "creatorId": "u-c3lcrjxczjdywmk0go90",
-          "enabled": true,
-          "fixSuggestion": "1. 设置 internet_max_bandwidth_out = 0\n 2. 取消设置 allocate_public_ip",
-          "groupId": "lg-c3lcrjxczjdywmk0go90",
-          "id": index,
-          "name": "ECS分配公网IP",
-          "policyType": "alicloud",
-          "referenceId": "iac_aliyun_public_26",
-          "rego": "package idcos ...",
-          "resourceType": "alicloud_instance",
-          "revision": 1,
-          "ruleName": "instanceNoVpc",
-          "severity": "medium",
-          "tags": "security,aliyun,huawei,小黑,绿豆",
-          "updatedAt": "2006-01-02 15:04:05"
-        })),
-        total: 100
-      });
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams });
     }
   });
 
@@ -135,7 +130,7 @@ const Policy = () => {
             style={{ width: 282 }}
             allowClear={true}
             placeholder='请选择策略组'
-            onChange={(groupId) => onChangeSearchParams({ groupId })}
+            onChange={(groupId) => onChangeFormParams({ groupId })}
           >
             <Select.Option value={1}>1</Select.Option>
           </Select>
@@ -143,7 +138,7 @@ const Policy = () => {
             style={{ width: 282 }}
             allowClear={true}
             placeholder='请选择严重性'
-            onChange={(severity) => onChangeSearchParams({ severity })}
+            onChange={(severity) => onChangeFormParams({ severity })}
           >
             {
               Object.keys(POLICIES_SEVERITY_ENUM).map((it) => (
@@ -155,12 +150,13 @@ const Policy = () => {
             style={{ width: 240 }}
             allowClear={true}
             placeholder='请输入策略名称搜索'
-            onSearch={(q) => onChangeSearchParams({ q })}
+            onSearch={(q) => onChangeFormParams({ q })}
           />
         </Space>
         <Table
           columns={columns}
           scroll={{ x: 'max-content' }}
+          loading={tableLoading}
           {...tableProps}
         />
       </Space>
