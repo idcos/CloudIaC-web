@@ -127,5 +127,7 @@ export const END_ENV_STATUS_LIST = [
 
 /** 策略严重等级 */
 export const POLICIES_SEVERITY_ENUM = {
-  medium: '中'
+  high: '高',
+  medium: '中',
+  low: '低'
 };

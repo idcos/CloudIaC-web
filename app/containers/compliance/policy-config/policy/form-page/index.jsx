@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Select, Form, Input, Button, Row, Col, Space } from "antd";
+import { Select, Form, Input, Button, Row, Col, Space, notification } from "antd";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import history from 'utils/history';
 import PageHeader from "components/pageHeader";
 import Layout from "components/common/layout";
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
@@ -19,8 +22,67 @@ const FormPage = ({ match = {} }) => {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
 
+  const {
+    loading: pageLoading
+  } = useRequest(
+    () => requestWrapper(
+      policiesAPI.detail.bind(null, policyId)
+    ), {
+      ready: !!policyId,
+      onSuccess: (res) => {
+        const { tags, rego, ...restFormValues } = res || {};
+        setRego(rego);
+        form.setFieldsValue({
+          tags: tags ? tags.split(',') : [],
+          ...restFormValues
+        });
+      }
+    }
+  );
+
+  const {
+    loading: saveLoading,
+    run: onSave
+  } = useRequest(
+    (api, params) => requestWrapper(
+      api.bind(null, params),
+      {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        history.push('/compliance/policy-config/policy');
+      }
+    }
+  );
+
   const test = () => {
     setOutput(rego + '\r' + input);
+  };
+
+  const save = async () => {
+    const { tags, ...restFormValues } = await form.validateFields();
+    if (!rego) {
+      return notification.error({
+        message: '请输入策略编辑'
+      });
+    }
+    const params = {
+      tags: tags.join(','), 
+      ...restFormValues, 
+      rego, 
+    };
+    if (policyId) {
+      // 编辑
+      onSave(policiesAPI.update, {
+        ...params,
+        id: policyId 
+      });
+    } else {
+      // 创建
+      onSave(policiesAPI.create, params);
+    }
   };
   
   return (
@@ -55,6 +117,12 @@ const FormPage = ({ match = {} }) => {
                   <Form.Item
                     label='标签：'
                     name='tags'
+                    rules={[
+                      {
+                        required: true,
+                        message: '请输入'
+                      }
+                    ]}
                   >
                     <Select 
                       mode='tags' 
@@ -67,6 +135,12 @@ const FormPage = ({ match = {} }) => {
                   <Form.Item
                     label='严重性：'
                     name='severity'
+                    rules={[
+                      {
+                        required: true,
+                        message: '请输入'
+                      }
+                    ]}
                   >
                     <Select 
                       placeholder='选择严重性'
@@ -85,6 +159,12 @@ const FormPage = ({ match = {} }) => {
               <Form.Item
                 label='参考：'
                 name='fixSuggestion'
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入'
+                  }
+                ]}
               >
                 <Input.TextArea 
                   autoSize={{ minRows: 5, maxRows: 5 }}
@@ -130,7 +210,7 @@ const FormPage = ({ match = {} }) => {
         <div style={{ textAlign: 'right' }}>
           <Space>
             <Button onClick={test}>测试</Button>
-            <Button type='primary'>保存</Button>
+            <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
           </Space>
         </div>
       </div>

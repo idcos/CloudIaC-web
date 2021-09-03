@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Table, Space, Input, Select, Divider, Tag } from 'antd';
-import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
+import moment from 'moment';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
-import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { useSearchFormAndTable } from 'utils/hooks';
@@ -32,17 +31,30 @@ const Policy = () => {
     tableProps, 
     onChangeFormParams
   } = useSearchFormAndTable({
-    tableData,
+    tableData: {
+      list: tableData
+    },
     onSearch: (params) => {
       const { current: currentPage, ...restParams } = params;
       fetchList({ currentPage, ...restParams });
     }
   });
 
+  const goEditPage = (id) => {
+    history.push(`/compliance/policy-config/policy/policy-form/${id}`);
+  };
+
+  const goCreatePage = () => {
+    history.push('/compliance/policy-config/policy/policy-form');
+  };
+
   const columns = [
     {
       dataIndex: 'name',
-      title: '策略名称'
+      title: '策略名称',
+      render: (text, record) => {
+        return <a >{text}</a>
+      }
     },
     {
       dataIndex: 'tags',
@@ -72,38 +84,38 @@ const Policy = () => {
       render: (text) => POLICIES_SEVERITY_ENUM[text]
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'passed',
       title: '通过'
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'failed',
       title: '不通过'
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'suppressed',
       title: '屏蔽'
     },
     {
-      dataIndex: 'creatorId',
+      dataIndex: 'creator',
       title: '创建者'
     },
     {
       dataIndex: 'updatedAt',
-      title: '最后更新时间'
+      title: '最后更新时间',
+      render: (text) => moment(text).format('YYYY-M-DD HH:mm')
     },
     {
       title: '操作',
       width: 130,
       fixed: 'right',
       render: (record) => {
+        const { id } = record;
         return (
-          <span className='inlineOp'>
-            <a type='link' onClick={() => setVisible(true)}>检测</a>
-            <Divider type={'vertical'} />
-            <a type='link'>编辑</a>
-            <Divider type={'vertical'} />
-            <a type='link'>禁用</a>
-          </span>
+          <Space split={<Divider type='vertical'/>}>
+            <Button style={{ padding: 0 }} type='link'>检测</Button>
+            <Button style={{ padding: 0 }} type='link' onClick={() => goEditPage(id)}>编辑</Button>
+            <Button style={{ padding: 0 }} type='link'>禁用</Button>
+          </Space>
         );
       }
     }
@@ -118,12 +130,7 @@ const Policy = () => {
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%'}}>
         <Space>
-          <Button
-            type={'primary'}
-            onClick={() => {
-              history.push('/compliance/policy-config/policy/policy-form');
-            }}
-          >
+          <Button type={'primary'} onClick={goCreatePage}>
             新建策略
           </Button>
           <Select
@@ -132,7 +139,6 @@ const Policy = () => {
             placeholder='请选择策略组'
             onChange={(groupId) => onChangeFormParams({ groupId })}
           >
-            <Select.Option value={1}>1</Select.Option>
           </Select>
           <Select
             style={{ width: 282 }}
@@ -165,8 +171,4 @@ const Policy = () => {
   </Layout>;
 };
 
-export default connect((state) => {
-  return {
-    userInfo: state.global.get('userInfo').toJS()
-  };
-})(Eb_WP()(Policy));
+export default Policy;
