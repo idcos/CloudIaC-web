@@ -7,46 +7,60 @@ import { useDeepCompareEffect } from './useDeepCompareEffect.jsx';
 export const useSearchFormAndTable = (props) => {
 
   const {
-    pagination = {},
-    defaultParams,
+    /** 需要自定义的分页属性 */ 
+    pagination = {}, 
+    /** 默认搜索参数 */ 
+    defaultSearchParams,
+    /** 表格数据 */
     tableData = { list: [], total: 0 },
-    extendParams = {},
+    /** 额外的参数，外部自行维护 */
+    extraParams = {},
+    /** 触发搜索 */
     onSearch = noop
   } = props || {};
 
   const { 
+    /** 分页搜索参数 */
     paginate: defaultPaginate = { current: 1, pageSize: 10 },
+    /** 表单搜索参数 */
     form: defaultFormParams = {},
+    /** 排序搜索参数 */
     sorter: defaultSorter = {},
+    /** 表格过滤搜索参数 */
     filters: defaultFilters = {}
-  } = defaultParams || {};
+  } = defaultSearchParams || {};
 
   const [ paginate, setPaginate ] = useState(defaultPaginate);
   const [ formParams, setFormParams ] = useState(defaultFormParams);
   const [ sorter, setSorter ] = useState(defaultSorter);
   const [ filters, setFilters ] = useState(defaultFilters);
 
+  /**
+   * searchParams[0] 可直接用于搜索的集成参数
+   * searchParams[1] 各个搜索模块的map
+   */
   const searchParams = useMemo(() => {
     return [
-      { ...paginate, ...sorter, ...formParams, ...extendParams, ...filters },
+      { ...paginate, ...sorter, ...formParams, ...extraParams, ...filters },
       {
         paginate,
         sorter,
         formParams,
-        extendParams,
+        extraParams,
         filters
       }
     ];
-  }, [ paginate, formParams, sorter, extendParams ]);
+  }, [ paginate, formParams, sorter, extraParams ]);
 
   useDeepCompareEffect(() => {
     onSearch(...searchParams);
   }, [searchParams]);
 
-  // 改变搜索参数
+  /** 改变搜索参数 */
   const onChangeFormParams = (changeParams, options) => {
     const {
-      isMerge = true // 是否合并原参数
+      /** 是否和原表单参数合并 */
+      isMerge = true
     } = options || {};
     if (isMerge) {
       setFormParams(preValue => ({ ...preValue, ...changeParams }));
@@ -56,6 +70,7 @@ export const useSearchFormAndTable = (props) => {
     setPaginate(({ pageSize }) => ({ current: 1, pageSize }));
   };
 
+  /** 分页、排序、筛选变化时触发 同步各搜索模块参数 */
   const onTableChange = (pagination, filters, sorter, { action }) => {
     const { current, pageSize } = pagination;
     const { field, order } = sorter;
@@ -76,6 +91,10 @@ export const useSearchFormAndTable = (props) => {
   };
 
   return {
+    /** tableProps 关联预置表格属性
+     *  -dataSource 当前页数据
+     *  -pagination 关联预置分页属性
+     */
     tableProps: {
       dataSource: tableData.list,
       pagination: {
