@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select, Form, Input, Button, Row, Col, Space, notification } from "antd";
+import { Select, Form, Input, Button, Row, Col, Space, notification, Affix } from "antd";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
@@ -8,6 +8,7 @@ import Layout from "components/common/layout";
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import CoderCard from 'components/coder/coder-card';
 import policiesAPI from 'services/policies';
+import AffixBtnWrapper from 'components/common/affix-btn-wrapper';
 
 const FL = {
   labelCol: { span: 24 },
@@ -186,33 +187,26 @@ const FormPage = ({ match = {} }) => {
             />
           </Col>
           <Col span={12}>
-            <Row gutter={[0, 24]}>
-              <Col span={24}>
-                <CoderCard 
-                  title='输入' 
-                  value={input} 
-                  onChange={setInput}
-                  bodyStyle={{ height: 200 }}
-                  tools={['fullScreen']}
-                />
-              </Col>
-              <Col span={24}>
-                <CoderCard
-                  title='输出'
-                  value={output}
-                  bodyStyle={{ height: 200 }}
-                  tools={['fullScreen']}
-                />
-              </Col>
-            </Row>
+            <CoderCard 
+              title='输入' 
+              value={input} 
+              onChange={setInput}
+              style={{ marginBottom: 24 }}
+              bodyStyle={{ height: 200 }}
+              tools={['fullScreen']}
+            />
+            <CoderCard
+              title='输出'
+              value={output}
+              bodyStyle={{ height: 200 }}
+              tools={['fullScreen']}
+            />
           </Col>
         </Row>
-        <div style={{ textAlign: 'right' }}>
-          <Space>
-            <Button onClick={test}>测试</Button>
-            <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
-          </Space>
-        </div>
+        <AffixBtnWrapper align='right'>
+          <Button onClick={test}>测试</Button>
+          <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
+        </AffixBtnWrapper>
       </div>
     </Layout>
   );
