@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Badge, Table, Input, notification, Select, Space, Divider, Switch } from 'antd';
+import { Badge, Table, Input, notification, Select, Space, Divider, Switch, Popconfirm } from 'antd';
 
 import { connect } from "react-redux";
 import EllipsisText from 'components/EllipsisText';
+import { useRequest } from 'ahooks';
+import moment from 'moment';
+import { requestWrapper } from 'utils/request';
 
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -38,6 +41,38 @@ const CCTList = ({ orgs }) => {
 
   const openPolicy = () => {
     setVisible(true);
+  };
+
+  // 变更启用状态
+  const { run: changeEnabled, fetches: changeEnabledFetches } = useRequest(
+    (params) => requestWrapper(
+      ctplAPI.del.bind(null, params),
+      { autoSuccess: true }
+    ), {
+      manual: true,
+      fetchKey: (params) => params.id,
+      onSuccess: () => {
+        fetchList();
+      }
+    }
+  );
+  const del = async() => {
+    try {
+      const res = await projectAPI.allEnableProjects({
+        status: 'enable',
+        pageSize: 100000,
+        currentPage: 1
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setProjectList(res.result.list || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
   };
 
   const columns = [
@@ -78,9 +113,9 @@ const CCTList = ({ orgs }) => {
               onClick={() => setDetectionVisible(true)}
             >检测</a>
             <Divider type={'vertical'} />
-            <a 
-              onClick={() => setDetectionVisible(true)}
-            >删除</a>
+            <Popconfirm title='确认禁用策略组?' onConfirm={() => del(record.id)} placement='bottomLeft'>
+              <a>删除</a>
+            </Popconfirm>
           </span>
         );
       }
@@ -135,7 +170,6 @@ const CCTList = ({ orgs }) => {
       }
       setProjectList(res.result.list || []);
     } catch (e) {
-      setLoading(false);
       notification.error({
         message: '获取失败',
         description: e.message

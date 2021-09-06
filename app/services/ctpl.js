@@ -16,10 +16,6 @@ const ctplAPI = {
   // 运行云模板策略扫描
   runScan: ({ tplId, ...restParams }) => {
     return post(`/api/v1/policies/templates/${tplId}/scan`, restParams, {});
-  },
-  // 云模板策略详情
-  detail: ({ tplId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/templates/${tplId}`, restParams, {});
   }
 };
 
