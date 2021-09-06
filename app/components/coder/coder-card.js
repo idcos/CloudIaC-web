@@ -3,20 +3,21 @@ import {
   Button,
   Input,
   Card,
-  Space
+  Space,
+  Spin
 } from "antd";
 import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
 import Coder from "components/coder";
 import noop from 'lodash/noop';
 
 export default ({ 
-  coderHeight = '100%', 
   bodyStyle,
   autoScrollToBottom = false, 
   options, 
   value,
   onChange = noop,
   title,
+  spinning = false,
   showSearch = false,
   tools=['scrollTop', 'scrollBottom', 'fullScreen'],
   bodyBefore,
@@ -109,19 +110,21 @@ export default ({
           {tools.map(tool => toolsEnum[tool])}
         </Space>
       }
-      bodyStyle={{ ...bodyStyle, overflow: 'hidden' }}
+      bodyStyle={{ ...bodyStyle, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
       {...props}
     >
-      {bodyBefore}
-      <Coder
-        childRef={coderRef}
-        options={options}
-        autoScrollToBottom={autoScrollToBottom}
-        selfClassName='card-coder'
-        style={{ height: coderHeight }}
-        value={value}
-        onChange={onChange}
-      />
+      <Spin spinning={spinning}>
+        {bodyBefore}
+        <Coder
+          childRef={coderRef}
+          options={options}
+          autoScrollToBottom={autoScrollToBottom}
+          selfClassName='card-coder'
+          style={{ flex: 1, minHeight: 0 }}
+          value={value}
+          onChange={onChange}
+        />
+      </Spin>
     </Card>
   );
 };

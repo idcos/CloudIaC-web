@@ -78,9 +78,20 @@
   padding: 0 !important;
 }
 
-.coder-card .ant-card-head {
-  border-width: 1px;
-  margin-bottom: 0;
+.coder-card {
+  .ant-card-head {
+    border-width: 1px;
+    margin-bottom: 0;
+  }
+
+  .ant-card-body>.ant-spin-nested-loading {
+    height: 100%;
+    &>.ant-spin-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }
 
 .full-card {
@@ -99,6 +110,7 @@
 
     .card-coder, .ansi-coder-wrapper {
       flex: 1;
+      min-height: 0;
     }
   }
 

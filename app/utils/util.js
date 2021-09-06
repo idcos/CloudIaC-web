@@ -79,3 +79,31 @@ export const getNumLen = (num) => {
   }
   return len;
 };
+
+/**
+ * 安全JsonParse转换
+ * @param {text[, reviver] => array} nativeParam native params of JSON.parse
+ * @param {json object} emptyData default return result on result is empty
+ * @returns {json object} return result
+ */
+export const safeJsonParse = (nativeParam, emptyData = {}) => {
+  try {
+    return JSON.parse(...nativeParam) || emptyData;
+  } catch (error) {
+    return emptyData;
+  }
+};
+
+/**
+ * 安全JsonStringify转换
+ * @param {value[, replacer[, space]] => array} nativeParamArr native params of JSON.stringify
+ * @param {string} emptyData default return result on result is empty
+ * @returns {string} return result
+ */
+export const safeJsonStringify = (nativeParam, emptyData = '') => {
+  try {
+    return JSON.stringify(...nativeParam) || emptyData;
+  } catch (error) {
+    return emptyData;
+  }
+};

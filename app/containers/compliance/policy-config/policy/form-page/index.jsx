@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Select, Form, Input, Button, Row, Col, Spin, notification, Space } from "antd";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
+import { safeJsonStringify } from 'utils/util';
 import PageHeader from "components/pageHeader";
 import Layout from "components/common/layout";
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import CoderCard from 'components/coder/coder-card';
 import policiesAPI from 'services/policies';
 import cenvAPI from 'services/cenv';
+import ctplAPI from 'services/ctpl';
 import AffixBtnWrapper from 'components/common/affix-btn-wrapper';
 import styles from './styles.less';
 
@@ -22,8 +24,37 @@ const FormPage = ({ match = {} }) => {
   const { policyId } = match.params || {};
   const [form] = Form.useForm();
   const [rego, setRego] = useState('');
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
+  const [parseParams, setParseParams] = useState({
+    envId: undefined,
+    tplId: undefined
+  });
+
+  useEffect(() => {
+    if (parseParams.envId && parseParams.tplId) {
+      fetchInput();
+    }
+  }, [parseParams]);
+
+  // input获取
+  const { data: input, run: fetchInput, mutate: mutateInput, loading: fetchInputLoading } = useRequest(
+    () => requestWrapper(
+      policiesAPI.parse.bind(null, parseParams),
+    ),
+    {
+      manual: true,
+      formatResult: (res) => safeJsonStringify([res.template, null, 2])
+    }
+  );
+  
+  // 云模版选项查询
+  const { data: ctOptions } = useRequest(
+    () => requestWrapper(
+      ctplAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      {
+        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
+      }
+    )
+  );
   
   // 环境选项查询
   const { data: envOptions } = useRequest(
@@ -35,11 +66,14 @@ const FormPage = ({ match = {} }) => {
     )
   );
 
-  // 环境选项查询
-  const { data: out, run: test } = useRequest(
+  // 策略测试接口
+  const { data: output, run: test, loading: testLoading } = useRequest(
     () => requestWrapper(
       policiesAPI.test.bind(null, { input, rego }),
-    )
+    ),
+    {
+      formatResult: (res) => res && res.data
+    }
   );
 
   // 策略详情查询回填
@@ -101,10 +135,6 @@ const FormPage = ({ match = {} }) => {
       // 创建
       onSave(policiesAPI.create, params);
     }
-  };
-
-  const changeEnv = (val, option) => {
-    console.log(val, option);
   };
   
   return (
@@ -212,19 +242,23 @@ const FormPage = ({ match = {} }) => {
               <CoderCard 
                 title='输入'
                 value={input} 
-                onChange={setInput}
+                onChange={mutateInput}
                 style={{ marginBottom: 24 }}
                 bodyStyle={{ height: 200 }}
                 tools={['fullScreen']}
+                options={{ mode: 'application/json' }} 
+                spinning={fetchInputLoading}
                 bodyBefore={
                   <div className={styles.input_condition}>
                     <Select 
                       style={{ width: '50%', paddingRight: 4 }} 
                       placeholder='请选择云模版'
-                      // options={envOptions}
+                      options={ctOptions}
                       allowClear={true}
                       optionFilterProp='label'
                       showSearch={true}
+                      onChange={(tplId) => setParseParams((preValue) => ({ ...preValue, tplId }))}
+                      value={parseParams.tplId}
                     />
                     <Select 
                       style={{ width: '50%', paddingLeft: 4 }}
@@ -233,7 +267,8 @@ const FormPage = ({ match = {} }) => {
                       allowClear={true}
                       optionFilterProp='label'
                       showSearch={true}
-                      onChange={changeEnv}
+                      onChange={(envId) => setParseParams((preValue) => ({ ...preValue, envId }))}
+                      value={parseParams.envId}
                     />
                   </div>
                 }
@@ -248,7 +283,7 @@ const FormPage = ({ match = {} }) => {
           </Row>
           <AffixBtnWrapper align='right'>
             <Button onClick={goPolicyListPage}>取消</Button>
-            <Button onClick={test}>测试</Button>
+            <Button onClick={test} loading={testLoading}>测试</Button>
             <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
           </AffixBtnWrapper>
         </Spin>
