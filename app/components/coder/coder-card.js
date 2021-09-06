@@ -19,6 +19,7 @@ export default ({
   title,
   showSearch = false,
   tools=['scrollTop', 'scrollBottom', 'fullScreen'],
+  bodyBefore,
   ...props
 }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
@@ -111,6 +112,7 @@ export default ({
       bodyStyle={{ ...bodyStyle, overflow: 'hidden' }}
       {...props}
     >
+      {bodyBefore}
       <Coder
         childRef={coderRef}
         options={options}

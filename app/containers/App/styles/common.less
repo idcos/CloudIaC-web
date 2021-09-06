@@ -92,9 +92,16 @@
   left: 0!important;
   margin: 0 !important;
 
-  .card-coder, .ansi-coder-wrapper {
+  .ant-card-body {
     height: calc(100vh - 65px)!important;
+    display: flex;
+    flex-direction: column;
+
+    .card-coder, .ansi-coder-wrapper {
+      flex: 1;
+    }
   }
+
 }
 
 // 强制antd表格英文超出换行
