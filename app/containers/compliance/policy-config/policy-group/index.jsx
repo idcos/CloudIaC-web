@@ -1,41 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Select, Space, Divider, Popconfirm } from 'antd';
-import history from 'utils/history';
+import { Button, Table, Input, notification, Select, Space, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
-import { connect } from "react-redux";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import { useSearchFormAndTable } from 'utils/hooks';
+import PageHeader from 'components/pageHeader';
+import Layout from 'components/common/layout';
+import cgroupsAPI from 'services/cgroups';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import Detail from './detail';
 import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
 
-import { Eb_WP } from 'components/error-boundary';
-import PageHeader from 'components/pageHeader';
-import Layout from 'components/common/layout';
-import projectAPI from 'services/project';
-import tplAPI from 'services/tpl';
-import cgroupsAPI from 'services/cgroups';
-
-
-const { Option } = Select;
-const { Search } = Input;
-
-const CTList = ({ orgs }) => {
-  const [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
-    [ query, setQuery ] = useState({
-      currentPage: 1,
-      pageSize: 10,
-      searchorgId: undefined,
-      searchprojectId: undefined,
-      name: ''
-    }),
-
-    [ loading, setLoading ] = useState(false),
-    [ policyGroupId, setPolicyGroupId ] = useState(null),
+const PolicyGroupList = () => {
+  const [ policyGroupId, setPolicyGroupId ] = useState(null),
     [ visible, setVisible ] = useState(false),
     [ viewDetail, setViewDetail ] = useState(false),
     [ viewRelevance, setViewRelevance ] = useState(false);
+
+  // 策略组列表查询
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList,
+    refresh: refreshList
+  } = useRequest(
+    (params) => requestWrapper(
+      cgroupsAPI.list.bind(null, params)
+    ), {
+      manual: true
+    }
+  );
+
+  // 表单搜索和table关联hooks
+  const { 
+    tableProps, 
+    onChangeFormParams
+  } = useSearchFormAndTable({
+    tableData,
+    onSearch: (params) => {
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams });
+    }
+  });
 
   const columns = [
     {
@@ -73,6 +79,7 @@ const CTList = ({ orgs }) => {
     {
       title: '操作',
       width: 160,
+      fixed: 'right',
       render: (text, record) => {
         return (
           <span className='inlineOp'>
@@ -102,56 +109,19 @@ const CTList = ({ orgs }) => {
 
   const deleteGroup = async(id) => {
     try {
-      delete query.pageNo;
       const res = await cgroupsAPI.del({
         policiesId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      changeQuery({ currentPage: 1 });
-      fetchList();
+      refreshList();
     } catch (e) {
       notification.error({
         message: '获取失败',
         description: e.message
       });
     }
-  };
-
-  useEffect(() => {
-    fetchList();
-  }, [query]);
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      delete query.pageNo;
-      const res = await cgroupsAPI.list({
-        ...query
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
   };
   
   return <Layout
@@ -161,41 +131,25 @@ const CTList = ({ orgs }) => {
     />}
   >
     <div className='idcos-card'>
-      <Space style={{ marginBottom: 12 }}>
-        <Button type={'primary'} onClick={() => setVisible(true)}>新建策略组</Button>
-        <Search 
-          placeholder='请输入策略组名称搜索' 
-          allowClear={true} 
-          onSearch={(v) => {
-            changeQuery({
-              name: v,
-              pageNo: 1
-            });
-          }} 
-          style={{ width: 250 }}
-        />
-      </Space>
-      <div>
+      <Space size={16} direction='vertical' style={{ width: '100%'}}>
+        <Space>
+          <Button type={'primary'} onClick={() => setVisible(true)}>
+            新建策略组
+          </Button>
+          <Input.Search
+            style={{ width: 240 }}
+            allowClear={true}
+            placeholder='请输入策略组名称搜索'
+            onSearch={(q) => onChangeFormParams({ q })}
+          />
+        </Space>
         <Table
           columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
-            onChange: (pageNo, pageSize) => {
-              changeQuery({
-                currentPage: pageNo,
-                pageSize
-              });
-            }
-          }}
+          scroll={{ x: 'max-content' }}
+          loading={tableLoading}
+          {...tableProps}
         />
-      </div>
+      </Space>
     </div>
     {visible && (
       <BindPolicyGroupModal 
@@ -229,9 +183,4 @@ const CTList = ({ orgs }) => {
   </Layout>;
 };
 
-export default connect((state) => {
-  return {
-    userInfo: state.global.get('userInfo').toJS(),
-    orgs: state.global.get('orgs').toJS()
-  };
-})(Eb_WP()(CTList));
+export default PolicyGroupList;
