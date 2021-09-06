@@ -199,7 +199,6 @@ const Policy = () => {
             allowClear={true}
             placeholder='请选择策略组'
             options={policyGroupOptions}
-            getPopupContainer={triggerNode => triggerNode.parentNode}
             optionFilterProp='label'
             showSearch={true}
             onChange={(groupId) => onChangeFormParams({ groupId })}
@@ -208,7 +207,6 @@ const Policy = () => {
             style={{ width: 282 }}
             allowClear={true}
             options={Object.keys(POLICIES_SEVERITY_ENUM).map(it => ({ label: POLICIES_SEVERITY_ENUM[it], value: it }))}
-            getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='请选择严重性'
             onChange={(severity) => onChangeFormParams({ severity })}
           />

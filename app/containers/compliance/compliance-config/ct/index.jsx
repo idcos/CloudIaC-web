@@ -1,91 +1,97 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Badge, Table, Input, notification, Select, Space, Divider, Switch, Popconfirm } from 'antd';
-
+import React, { useState } from 'react';
+import { Badge, Table, Input, Select, Space, Divider, Switch, Button } from 'antd';
 import { connect } from "react-redux";
-import EllipsisText from 'components/EllipsisText';
 import { useRequest } from 'ahooks';
-import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
+import { useSearchFormAndTable } from 'utils/hooks';
 import { requestWrapper } from 'utils/request';
-
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import projectAPI from 'services/project';
-import tplAPI from 'services/tpl';
 import ctplAPI from 'services/ctpl';
-
 import BindPolicyModal from 'components/policy-modal';
 import DetectionModal from './component/detection-modal';
 
-
-const { Option } = Select;
-const { Search } = Input;
-
 const CCTList = ({ orgs }) => {
-  const orgList = (orgs || {}).list || [];
-  const [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
-    [ projectList, setProjectList ] = useState([]),
-    [ visible, setVisible ] = useState(false),
-    [ detectionVisible, setDetectionVisible ] = useState(false),
-    [ query, setQuery ] = useState({
-      currentPage: 1,
-      pageSize: 10,
-      searchorgId: undefined,
-      searchprojectId: undefined,
-      name: ''
-    });
+  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
+  const [ visible, setVisible ] = useState(false);
+  const [ detectionVisible, setDetectionVisible ] = useState(false);
+
+  // 项目选项查询
+  const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
+    (orgId) => requestWrapper(
+      projectAPI.allEnableProjects.bind(null, { orgId }),
+      {
+        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
+      }
+    ),
+    {
+      manual: true
+    }
+  );
+
+  // 环境列表查询
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList,
+    refresh: refreshList
+  } = useRequest(
+    (params) => requestWrapper(
+      ctplAPI.list.bind(null, params)
+    ), {
+      manual: true
+    }
+  );
+
+  // 表单搜索和table关联hooks
+  const { 
+    tableProps, 
+    onChangeFormParams,
+    searchParams: [ _allValue, { formParams } ]
+  } = useSearchFormAndTable({
+    tableData,
+    onSearch: (params) => {
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams });
+    }
+  });
+
+  const changeOrg = (orgId) => {
+    onChangeFormParams({ orgId, projectId: undefined });
+    if (orgId) {
+      fetchProjectOptions(orgId);
+    } else {
+      mutateProjectOptions([]);
+    }
+  };
 
   const openPolicy = () => {
     setVisible(true);
   };
 
-  // 变更启用状态
-  const { run: changeEnabled, fetches: changeEnabledFetches } = useRequest(
-    (params) => requestWrapper(
-      ctplAPI.del.bind(null, params),
-      { autoSuccess: true }
-    ), {
-      manual: true,
-      fetchKey: (params) => params.id,
-      onSuccess: () => {
-        fetchList();
-      }
-    }
-  );
-  const del = async() => {
-    try {
-      const res = await projectAPI.allEnableProjects({
-        status: 'enable',
-        pageSize: 100000,
-        currentPage: 1
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setProjectList(res.result.list || []);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
   const columns = [
     {
-      dataIndex: 'tplName',
+      dataIndex: 'name',
       title: '云模板名称'
     },
     {
-      dataIndex: 'description',
+      dataIndex: 'policyGroups',
       title: '绑定策略组',
       width: 150,
-      render: (text) => {
-        return <a onClick={openPolicy}><EllipsisText style={{ maxWidth: 150 }}>{text}</EllipsisText></a>; 
+      render: (policyGroups) => {
+        return (
+          isEmpty(policyGroups) ? (
+            <Button type='link'>绑定</Button>
+          ) : (
+            <Button type='link'>
+              {
+                policyGroups.map((it) => it.name).join('、')
+              }
+            </Button>
+          )
+        ); 
       }
     },
     {
@@ -106,76 +112,19 @@ const CCTList = ({ orgs }) => {
     {
       title: '操作',
       width: 90,
+      fixed: 'right',
       render: (record) => {
         return (
           <span className='inlineOp'>
             <a 
               onClick={() => setDetectionVisible(true)}
             >检测</a>
-            <Divider type={'vertical'} />
-            <Popconfirm title='确认禁用策略组?' onConfirm={() => del(record.id)} placement='bottomLeft'>
-              <a>删除</a>
-            </Popconfirm>
           </span>
         );
       }
     }
   ];
 
-  useEffect(() => {
-    fetchList();
-  }, [query]);
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      delete query.pageNo;
-      const res = await ctplAPI.list({
-        ...query
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
-  };
-
-  const selectOrg = async(e) => {
-    try {
-      const res = await projectAPI.allEnableProjects({
-        status: 'enable',
-        pageSize: 100000,
-        currentPage: 1,
-        orgId: e
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setProjectList(res.result.list || []);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
 
   return <Layout
     extraHeader={<PageHeader
@@ -184,62 +133,39 @@ const CCTList = ({ orgs }) => {
     />}
   >
     <div className='idcos-card'>
-      <Space style={{ marginBottom: 12 }}>
-        <Select 
-          style={{ width: 240 }}  
-          onChange={(e) => {
-            selectOrg(e); changeQuery({ searchorgId: e }); 
-          }}
-          allowClear={true}
-          placeholder={`请选择组织`}
-        >
-          {orgList.map(it => <Option value={it.id}>{it.name}</Option>)}
-        </Select>
-        <Select 
-          style={{ width: 240 }}  
-          onChange={(e) => {
-            changeQuery({
-              searchprojectId: e
-            });
-          }}
-          allowClear={true}
-          placeholder={`请选择项目`}
-        >
-          {projectList.map(it => <Option value={it.id}>{it.name}</Option>)}
-        </Select>
-        <Search 
-          placeholder='请输入云模板名称搜索' 
-          allowClear={true} 
-          onSearch={(v) => {
-            changeQuery({
-              name: v,
-              pageNo: 1
-            });
-          }} 
-          style={{ width: 250 }}
-        />
-      </Space>
-      <div>
+      <Space size={16} direction='vertical' style={{ width: '100%'}}>
+        <Space>
+          <Select
+            style={{ width: 282 }}
+            allowClear={true}
+            placeholder='请选择组织'
+            options={orgOptions}
+            optionFilterProp='label'
+            showSearch={true}
+            onChange={changeOrg}
+          />
+          <Select
+            style={{ width: 282 }}
+            allowClear={true}
+            options={projectOptions}
+            placeholder='请选择项目'
+            value={formParams.projectId}
+            onChange={(projectId) => onChangeFormParams({ projectId })}
+          />
+          <Input.Search
+            style={{ width: 240 }}
+            allowClear={true}
+            placeholder='请输入环境名称搜索'
+            onSearch={(q) => onChangeFormParams({ q })}
+          />
+        </Space>
         <Table
           columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
-            onChange: (pageNo, pageSize) => {
-              changeQuery({
-                currentPage: pageNo,
-                pageSize
-              });
-            }
-          }}
+          scroll={{ x: 'max-content' }}
+          loading={tableLoading}
+          {...tableProps}
         />
-      </div>
+      </Space>
     </div>
     {visible && <BindPolicyModal visible={visible} toggleVisible={() => setVisible(false)}/>}
     {detectionVisible && <DetectionModal visible={detectionVisible} toggleVisible={() => setDetectionVisible(false)}/>}

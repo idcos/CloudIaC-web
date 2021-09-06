@@ -1,31 +1,72 @@
-import React, { useState, useEffect } from 'react';
-import { Table, notification, Divider } from 'antd';
-import history from 'utils/history';
+import React, { useState } from 'react';
+import { Table, Space, Select, Divider, Input } from 'antd';
 import { connect } from "react-redux";
+import { useRequest } from 'ahooks';
+import history from 'utils/history';
+import { requestWrapper } from 'utils/request';
+import { useSearchFormAndTable } from 'utils/hooks';
 import BindPolicyModal from 'components/policy-modal';
-
-import Detection from './component/detection';
-
-import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import cenvAPI from 'services/cenv';
-import getPermission from "utils/permission";
+import projectAPI from 'services/project';
+import Detection from './component/detection';
 
-const CTList = ({ userInfo, match = {} }) => {
+const CenvList = ({ orgs }) => {
 
-  const { PROJECT_OPERATOR } = getPermission(userInfo);
-  const [ loading, setLoading ] = useState(false),
-    [ viewDetection, setViewDetection ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
-    [ policyView, setPolicyView ] = useState(false),
-    [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10
-    });
+  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
+  const [ viewDetection, setViewDetection ] = useState(false);
+  const [ policyView, setPolicyView ] = useState(false);
+
+  // 项目选项查询
+  const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
+    (orgId) => requestWrapper(
+      projectAPI.allEnableProjects.bind(null, { orgId }),
+      {
+        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
+      }
+    ),
+    {
+      manual: true
+    }
+  );
+
+  // 环境列表查询
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList,
+    refresh: refreshList
+  } = useRequest(
+    (params) => requestWrapper(
+      cenvAPI.list.bind(null, params)
+    ), {
+      manual: true
+    }
+  );
+
+  // 表单搜索和table关联hooks
+  const { 
+    tableProps, 
+    onChangeFormParams,
+    searchParams: [ _allValue, { formParams } ]
+  } = useSearchFormAndTable({
+    tableData,
+    onSearch: (params) => {
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams });
+    }
+  });
+
+  const changeOrg = (orgId) => {
+    onChangeFormParams({ orgId, projectId: undefined });
+    if (orgId) {
+      fetchProjectOptions(orgId);
+    } else {
+      mutateProjectOptions([]);
+    }
+  };
+
   const bindPolicy = () => {
     setPolicyView(true);
   };
@@ -44,15 +85,15 @@ const CTList = ({ userInfo, match = {} }) => {
       render: (text) => <a onClick={() => bindPolicy()}>{text.length > 0 && text || '绑定'}</a>
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'passed',
       title: '通过'
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'failed',
       title: '不通过'
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'suppressed',
       title: '屏蔽'
     },
     {
@@ -62,8 +103,9 @@ const CTList = ({ userInfo, match = {} }) => {
     {
       title: '操作',
       width: 90,
+      fixed: 'right',
       render: (record) => {
-        return PROJECT_OPERATOR ? (
+        return (
           <span className='inlineOp'>
             <a 
               type='link' 
@@ -77,45 +119,10 @@ const CTList = ({ userInfo, match = {} }) => {
               }}
             >详情</a>
           </span>
-        ) : null;
+        );
       }
     }
   ];
-
-  useEffect(() => {
-    fetchList();
-  }, [query]);
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const res = await cenvAPI.list({
-        currentPage: query.pageNo,
-        pageSize: query.pageSize
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
-  };
 
   return <Layout
     extraHeader={<PageHeader
@@ -124,35 +131,48 @@ const CTList = ({ userInfo, match = {} }) => {
     />}
   >
     <div className='idcos-card'>
-      <div>
+      <Space size={16} direction='vertical' style={{ width: '100%'}}>
+        <Space>
+          <Select
+            style={{ width: 282 }}
+            allowClear={true}
+            placeholder='请选择组织'
+            options={orgOptions}
+            optionFilterProp='label'
+            showSearch={true}
+            onChange={changeOrg}
+          />
+          <Select
+            style={{ width: 282 }}
+            allowClear={true}
+            options={projectOptions}
+            placeholder='请选择项目'
+            value={formParams.projectId}
+            onChange={(projectId) => onChangeFormParams({ projectId })}
+          />
+          <Input.Search
+            style={{ width: 240 }}
+            allowClear={true}
+            placeholder='请输入环境名称搜索'
+            onSearch={(q) => onChangeFormParams({ q })}
+          />
+        </Space>
         <Table
           columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
-            onChange: (pageNo, pageSize) => {
-              changeQuery({
-                pageNo,
-                pageSize
-              });
-            }
-          }}
+          scroll={{ x: 'max-content' }}
+          loading={tableLoading}
+          {...tableProps}
         />
-      </div>
+      </Space>
     </div>
     {policyView && <BindPolicyModal visible={policyView} toggleVisible={() => setPolicyView(false)}/>}
     {viewDetection && <Detection visible={viewDetection} toggleVisible={() => setViewDetection(false)}/>}
   </Layout>;
 };
 
+
 export default connect((state) => {
   return {
-    userInfo: state.global.get('userInfo').toJS()
+    orgs: state.global.get('orgs').toJS()
   };
-})(Eb_WP()(CTList));
+})(CenvList);
