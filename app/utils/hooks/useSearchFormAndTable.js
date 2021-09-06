@@ -57,16 +57,13 @@ export const useSearchFormAndTable = (props) => {
   }, [searchParams]);
 
   /** 改变搜索参数 */
-  const onChangeFormParams = (changeParams, options) => {
-    const {
-      /** 是否和原表单参数合并 */
-      isMerge = true
-    } = options || {};
-    if (isMerge) {
-      setFormParams(preValue => ({ ...preValue, ...changeParams }));
-    } else {
-      setFormParams(changeParams);
-    }
+  const onChangeFormParams = (changeParams) => {
+    setFormParams(preValue => ({ ...preValue, ...changeParams }));
+    resetPageCurrent();
+  };
+
+  // 重置页码
+  const resetPageCurrent = () => {
     setPaginate(({ pageSize }) => ({ current: 1, pageSize }));
   };
 
@@ -108,6 +105,11 @@ export const useSearchFormAndTable = (props) => {
       onChange: onTableChange 
     },
     searchParams,
-    onChangeFormParams
+    onChangeFormParams,
+    resetPageCurrent,
+    setPaginate,
+    setFormParams,
+    setSorter,
+    setFilters
   };
 };
