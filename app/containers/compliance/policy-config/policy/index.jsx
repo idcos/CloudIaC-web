@@ -9,11 +9,29 @@ import Layout from 'components/common/layout';
 import { useSearchFormAndTable } from 'utils/hooks';
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
+import cgroupsAPI from 'services/cgroups';
 import Detection from './detection';
 
 const Policy = () => {
 
   const [visible, setVisible] = useState(false);
+
+  const { data: policyGroupOptions } = useRequest(
+    () => requestWrapper(
+      cgroupsAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      {
+        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
+      }
+    )
+  );
+
+  const { loading: changeStatusLoading, run: updatePolicy } = useRequest(
+    (params) => requestWrapper(
+      policiesAPI.update.bind(null, params)
+    ), {
+      manual: true
+    }
+  );
 
   const {
     loading: tableLoading,
@@ -31,9 +49,7 @@ const Policy = () => {
     tableProps, 
     onChangeFormParams
   } = useSearchFormAndTable({
-    tableData: {
-      list: tableData
-    },
+    tableData,
     onSearch: (params) => {
       const { current: currentPage, ...restParams } = params;
       fetchList({ currentPage, ...restParams });
@@ -109,12 +125,28 @@ const Policy = () => {
       width: 130,
       fixed: 'right',
       render: (record) => {
-        const { id } = record;
+        const { id, enabled } = record;
         return (
           <Space split={<Divider type='vertical'/>}>
-            <Button style={{ padding: 0 }} type='link'>检测</Button>
+            <Button style={{ padding: 0 }} type='link'>检查</Button>
             <Button style={{ padding: 0 }} type='link' onClick={() => goEditPage(id)}>编辑</Button>
-            <Button style={{ padding: 0 }} type='link'>禁用</Button>
+            {
+              !!enabled ? (
+                <Button 
+                  style={{ padding: 0 }} 
+                  type='link'
+                  onClick={() => updatePolicy({ id, status: 'disable'})}
+                  loading={changeStatusLoading}
+                >禁用</Button>
+              ) : (
+                <Button 
+                  style={{ padding: 0 }} 
+                  type='link'
+                  onClick={() => updatePolicy({ id, status: 'disable'})}
+                  loading={changeStatusLoading}
+                >启用</Button>
+              )
+            }
           </Space>
         );
       }
@@ -137,21 +169,20 @@ const Policy = () => {
             style={{ width: 282 }}
             allowClear={true}
             placeholder='请选择策略组'
+            options={policyGroupOptions}
+            getPopupContainer={triggerNode => triggerNode.parentNode}
+            optionFilterProp='label'
+            showSearch={true}
             onChange={(groupId) => onChangeFormParams({ groupId })}
-          >
-          </Select>
+          />
           <Select
             style={{ width: 282 }}
             allowClear={true}
+            options={Object.keys(POLICIES_SEVERITY_ENUM).map(it => ({ label: POLICIES_SEVERITY_ENUM[it], value: it }))}
+            getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='请选择严重性'
             onChange={(severity) => onChangeFormParams({ severity })}
-          >
-            {
-              Object.keys(POLICIES_SEVERITY_ENUM).map((it) => (
-                <Select.Option value={it}>{POLICIES_SEVERITY_ENUM[it]}</Select.Option>
-              ))
-            }
-          </Select>
+          />
           <Input.Search
             style={{ width: 240 }}
             allowClear={true}
