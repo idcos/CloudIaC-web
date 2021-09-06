@@ -34,7 +34,8 @@ const PolicyGroupList = () => {
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
-    onChangeFormParams
+    onChangeFormParams,
+    resetPageCurrent
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -115,7 +116,7 @@ const PolicyGroupList = () => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      refreshList();
+      resetPageCurrent();
     } catch (e) {
       notification.error({
         message: '获取失败',
