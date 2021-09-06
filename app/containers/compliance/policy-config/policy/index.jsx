@@ -19,6 +19,7 @@ const Policy = () => {
     id: null
   });
 
+  // 策略组选项查询
   const { data: policyGroupOptions } = useRequest(
     () => requestWrapper(
       cgroupsAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
@@ -28,6 +29,7 @@ const Policy = () => {
     )
   );
 
+  // 策略列表查询
   const {
     loading: tableLoading,
     data: tableData,
@@ -41,7 +43,8 @@ const Policy = () => {
     }
   );
 
-  const { run: updatePolicy, fetches: changeStatusFetches } = useRequest(
+  // 变更启用状态
+  const { run: changeEnabled, fetches: changeEnabledFetches } = useRequest(
     (params) => requestWrapper(
       policiesAPI.update.bind(null, params),
       { autoSuccess: true }
@@ -52,6 +55,7 @@ const Policy = () => {
     }
   );
 
+  // 表单搜索和table关联hooks
   const { 
     tableProps, 
     onChangeFormParams
@@ -63,10 +67,12 @@ const Policy = () => {
     }
   });
 
+  // 访问编辑策略页面
   const goEditPage = (id) => {
     history.push(`/compliance/policy-config/policy/policy-form/${id}`);
   };
 
+  // 访问创建策略页面
   const goCreatePage = () => {
     history.push('/compliance/policy-config/policy/policy-form');
   };
@@ -149,25 +155,24 @@ const Policy = () => {
       fixed: 'right',
       render: (record) => {
         const { id, enabled } = record;
-        const { loading: changeStatusLoading } = changeStatusFetches[id] || {};
+        const { loading: changeEnabledLoading } = changeEnabledFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
-            <Button style={{ padding: 0 }} type='link'>检查</Button>
-            <Button style={{ padding: 0 }} type='link' onClick={() => goEditPage(id)}>编辑</Button>
+            <Button disabled={!enabled} style={{ padding: 0 }} type='link' onClick={() => goEditPage(id)}>编辑</Button>
             {
               !!enabled ? (
                 <Button 
                   style={{ padding: 0 }} 
                   type='link'
-                  onClick={() => updatePolicy({ id, enabled: false })}
-                  loading={changeStatusLoading}
+                  onClick={() => changeEnabled({ id, enabled: false })}
+                  loading={changeEnabledLoading}
                 >禁用</Button>
               ) : (
                 <Button 
                   style={{ padding: 0 }} 
                   type='link'
-                  onClick={() => updatePolicy({ id, enabled: true })}
-                  loading={changeStatusLoading}
+                  onClick={() => changeEnabled({ id, enabled: true })}
+                  loading={changeEnabledLoading}
                 >启用</Button>
               )
             }
