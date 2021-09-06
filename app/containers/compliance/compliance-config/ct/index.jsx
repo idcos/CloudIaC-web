@@ -102,10 +102,10 @@ const CCTList = ({ orgs }) => {
         throw new Error(res.message);
       }
       setLoading(false);
-      // setResultMap({
-      //   list: res.result.list || [],
-      //   total: res.result.total || 0
-      // });
+      setResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
     } catch (e) {
       console.log(e, 'eeeeeee');
       setLoading(false);
