@@ -10,11 +10,14 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
 import cgroupsAPI from 'services/cgroups';
-import Detection from './detection';
+import DetailDrawer from './detail-drawer';
 
 const Policy = () => {
-
-  const [visible, setVisible] = useState(false);
+  
+  const [ detailDrawerState, setDetailsDrawerState ] = useState({
+    visible: false,
+    id: null
+  });
 
   const { data: policyGroupOptions } = useRequest(
     () => requestWrapper(
@@ -25,23 +28,27 @@ const Policy = () => {
     )
   );
 
-  const { loading: changeStatusLoading, run: updatePolicy } = useRequest(
-    (params) => requestWrapper(
-      policiesAPI.update.bind(null, params)
-    ), {
-      manual: true
-    }
-  );
-
   const {
     loading: tableLoading,
     data: tableData,
-    run: fetchList
+    run: fetchList,
+    refresh: refreshList
   } = useRequest(
     (params) => requestWrapper(
       policiesAPI.list.bind(null, params)
     ), {
       manual: true
+    }
+  );
+
+  const { run: updatePolicy, fetches: changeStatusFetches } = useRequest(
+    (params) => requestWrapper(
+      policiesAPI.update.bind(null, params),
+      { autoSuccess: true }
+    ), {
+      manual: true,
+      fetchKey: (params) => params.id,
+      onSuccess: refreshList
     }
   );
 
@@ -64,12 +71,28 @@ const Policy = () => {
     history.push('/compliance/policy-config/policy/policy-form');
   };
 
+  // 打开详情抽屉
+  const onOpenDetailsDrawer = (id) => {
+    setDetailsDrawerState({
+      visible: true,
+      id
+    });
+  };
+
+  // 关闭详情抽屉
+  const onCloseDetailsDrawer = () => {
+    setDetailsDrawerState({
+      visible: false,
+      id: null
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'name',
       title: '策略名称',
       render: (text, record) => {
-        return <a >{text}</a>
+        return <a onClick={() => onOpenDetailsDrawer(record.id)}>{text}</a>
       }
     },
     {
@@ -126,6 +149,7 @@ const Policy = () => {
       fixed: 'right',
       render: (record) => {
         const { id, enabled } = record;
+        const { loading: changeStatusLoading } = changeStatusFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
             <Button style={{ padding: 0 }} type='link'>检查</Button>
@@ -135,14 +159,14 @@ const Policy = () => {
                 <Button 
                   style={{ padding: 0 }} 
                   type='link'
-                  onClick={() => updatePolicy({ id, status: 'disable'})}
+                  onClick={() => updatePolicy({ id, enabled: false })}
                   loading={changeStatusLoading}
                 >禁用</Button>
               ) : (
                 <Button 
                   style={{ padding: 0 }} 
                   type='link'
-                  onClick={() => updatePolicy({ id, status: 'disable'})}
+                  onClick={() => updatePolicy({ id, enabled: true })}
                   loading={changeStatusLoading}
                 >启用</Button>
               )
@@ -198,7 +222,9 @@ const Policy = () => {
         />
       </Space>
     </div>
-    <Detection visible={visible} toggleVisible={() => setVisible(false)} />
+    {
+      detailDrawerState.visible && <DetailDrawer visible={detailDrawerState.visible} id={detailDrawerState.id} onClose={onCloseDetailsDrawer} />
+    }
   </Layout>;
 };
 

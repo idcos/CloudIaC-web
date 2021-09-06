@@ -1,29 +1,38 @@
-#app {
-  .ant-collapse-header {
-    background-color: rgba(230, 240, 240, 0.7);
-    font-size: 14px;
-    font-weight: 500;
-  }
+.ant-collapse-header {
+  background-color: rgba(230, 240, 240, 0.7);
+  font-size: 14px;
+  font-weight: 500;
+}
 
-  .collapseInTable {
-    .ant-collapse-content-box {
-      padding: 5px;
-    }
-  }
-
-  .ant-card {
-    &.big-padding {
-      &>.ant-card-head {
-        padding: 0 24px;
-      }
-
-      &>.ant-card-body {
-        padding: 24px;
-      }
-    }
-
-    .ant-card-head {
-      background-color: rgba(230, 240, 240, 0.7);
-    }
+.collapseInTable {
+  .ant-collapse-content-box {
+    padding: 5px;
   }
 }
+
+.ant-card {
+  &.big-padding {
+    &>.ant-card-head {
+      padding: 0 24px;
+    }
+
+    &>.ant-card-body {
+      padding: 24px;
+    }
+  }
+
+  .ant-card-head {
+    background-color: rgba(230, 240, 240, 0.7);
+  }
+}
+
+.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border-bottom: none !important;
+}
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
+  border-bottom-color: #ebebeb !important;
+}
+.ant-transfer-list-body-customize-wrapper {
+  overflow: auto !important;
+}
+

@@ -10,7 +10,7 @@ export default ({ children, offsetBottom = 0, align = 'center' } = {}) => {
 
   return (
     <Affix offsetBottom={offsetBottom} onChange={setAffixed} target={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}>
-      <div style={{ textAlign: align }} className={classnames(styles.btn_wrapper, { [styles[`affixed`]]: affixed })} >
+      <div style={{ textAlign: align }} className={classnames(styles.btn_wrapper, { [styles[`affixed`]]: affixed })}>
         <Space>
           {children}
         </Space>

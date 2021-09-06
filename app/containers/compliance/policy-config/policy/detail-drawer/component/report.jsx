@@ -1,16 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Card, Spin, Radio, Input, notification, Row, Col, Button, Form } from 'antd';
+import React, { useEffect, useRef } from 'react';
+import { Card, Row, Col } from 'antd';
 
 import { Eb_WP } from 'components/error-boundary';
 import { chartUtils } from 'components/charts-cfg';
-import projectAPI from 'services/project';
 
-const FL = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 10 }
-};
-
-const Basic = ({ visible, orgId, projectId, dispatch }) => {
+const Basic = ({ visible }) => {
   const proportion_of_results = useRef();
   const source_has_been_executed = useRef();
   const policy_running_trend = useRef();
