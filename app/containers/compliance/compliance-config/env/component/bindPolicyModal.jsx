@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 
-import projectAPI from 'services/project';
+import cenvAPI from 'services/cenv';
+import policiesAPI from 'services/policies';
+
+
 import { PROJECT_ROLE } from 'constants/types';
 
 const { Option } = Select;
@@ -22,7 +25,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
   const fetchUserOptions = async () => {
     try {
-      const res = await projectAPI.getUserOptions({
+      const res = await policiesAPI.list({
         orgId, projectId
       });
       if (res.code !== 200) {
@@ -40,17 +43,19 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
   const onOk = async () => {
     const values = await form.validateFields();
     setSubmitLoading(true);
-    operation({
-      doWhat: 'add',
-      payload: {
-        orgId,
-        type: 'api',
-        ...values
+    try {
+      const res = await cenvAPI.create({
+        values
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
       }
-    }, (hasError) => {
-      setSubmitLoading(false);
-      !hasError && toggleVisible();
-    });
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
   };
 
   return (
@@ -58,9 +63,9 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       title='绑定策略组/开启合规检测'
       visible={visible}
       onCancel={toggleVisible}
-      // okButtonProps={{
-      //   loading: submitLoading
-      // }}
+      okButtonProps={{
+        loading: submitLoading
+      }}
       onOk={onOk}
     >
       <Form

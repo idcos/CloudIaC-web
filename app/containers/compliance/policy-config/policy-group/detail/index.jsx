@@ -16,18 +16,12 @@ import tplAPI from 'services/tpl';
 const { Option } = Select;
 const { Search } = Input;
 
-const Index = ({ orgs, visible, toggleVisible }) => {
-  const orgId = 'org-c4i8s1rn6m81fm687b0g';
-  const projectId = 'p-c4i8scjn6m81fm687b1g';
-  const orgList = (orgs || {}).list || [];
+const Index = ({ visible, toggleVisible }) => {
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
-    [ projectList, setProjectList ] = useState([]),
-    // [ visible, setVisible ] = useState(false),
-    [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
       pageSize: 10,
@@ -93,15 +87,14 @@ const Index = ({ orgs, visible, toggleVisible }) => {
   }, [visible]);
 
   useEffect(() => {
-    fetchList();
+    fetchDate();
   }, [query]);
 
-  const fetchList = async () => {
+  const fetchDate = async () => {
     try {
       setLoading(true);
       delete query.pageNo;
       const res = await tplAPI.list({
-        orgId,
         ...query
       });
       if (res.code !== 200) {

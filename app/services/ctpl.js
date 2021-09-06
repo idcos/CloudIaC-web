@@ -1,35 +1,25 @@
 import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 
 const ctplAPI = {
-  list: ({ orgId, projectId, ...restParams }) => {
-    return getWithArgs('/api/v1/policies/templates', restParams, {
-      'IaC-Org-Id': orgId
-    });
+  // 查询云模板策略配置
+  list: ({ ...restParams }) => {
+    return getWithArgs('/api/v1/policies/templates', restParams, {});
   },
-  create: ({ orgId, ...restParams }) => {
-    return post('/api/v1/templates', restParams, {
-      'IaC-Org-Id': orgId
-    });
+  // 云模板策略扫描结果
+  result: ({ tplId, ...restParams }) => {
+    return post(`/api/v1/policies/template/${tplId}/result`, restParams, {});
   },
-  detail: ({ orgId, tplId }) => {
-    return getWithArgs(`/api/v1/templates/${tplId}`, {}, {
-      'IaC-Org-Id': orgId
-    });
+  // 修改云模板与策略组关联
+  update: ({ tplId, ...restParams }) => {
+    return put(`/api/v1/policies/templates`, restParams, {});
   },
-  del: ({ orgId, tplId }) => {
-    return del(`/api/v1/templates/${tplId}`, {}, {
-      'IaC-Org-Id': orgId
-    });
+  // 运行云模板策略扫描
+  runScan: ({ tplId, ...restParams }) => {
+    return post(`/api/v1/policies/templates/${tplId}/scan`, restParams, {});
   },
-  update: ({ orgId, tplId, ...restParams }) => {
-    return put(`/api/v1/templates/${tplId}`, restParams, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  listImportVars: ({ orgId, ...restParams }) => {
-    return getWithArgs('/api/v1/templates/variables', restParams, {
-      'IaC-Org-Id': orgId
-    });
+  // 云模板策略详情
+  detail: ({ tplId, ...restParams }) => {
+    return getWithArgs(`/api/v1/policies/templates/${tplId}`, restParams, {});
   }
 };
 

@@ -56,6 +56,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
 
 const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, value, locale, ...propsDemo }) => {
   const [ targetKeys, setTargetKeys ] = useState(value || []);
+  console.log(dataScourt, 'dataScourt');
   return (
     <>
       <TableTransfer

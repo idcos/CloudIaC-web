@@ -19,8 +19,6 @@ const { Option } = Select;
 const { Search } = Input;
 
 const CCTList = ({ orgs }) => {
-  const orgId = 'org-c4i8s1rn6m81fm687b0g';
-  const projectId = 'p-c4i8scjn6m81fm687b1g';
   const orgList = (orgs || {}).list || [];
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -44,7 +42,7 @@ const CCTList = ({ orgs }) => {
 
   const columns = [
     {
-      dataIndex: 'name',
+      dataIndex: 'tplName',
       title: '云模板名称'
     },
     {
@@ -61,12 +59,12 @@ const CCTList = ({ orgs }) => {
       render: (text) => <a href={text} target='_blank'>{text}</a>
     },
     {
-      dataIndex: 'activeEnvironment',
+      dataIndex: 'enabled',
       title: '是否开启检测',
       render: (text) => <Switch checked={text} />
     },
     {
-      dataIndex: 'creator',
+      dataIndex: 'groupStatus',
       title: '状态',
       render: (text) => <Badge color={'red'} text={text} />
     },
@@ -98,7 +96,6 @@ const CCTList = ({ orgs }) => {
       setLoading(true);
       delete query.pageNo;
       const res = await ctplAPI.list({
-        orgId,
         ...query
       });
       if (res.code !== 200) {

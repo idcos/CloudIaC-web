@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 
-import projectAPI from 'services/project';
+import cgroupsAPI from 'services/cgroups';
+import policiesAPI from 'services/policies';
+
 import TableTransfer from 'components/table-transfer';
 import { PROJECT_ROLE } from 'constants/types';
 
@@ -10,7 +12,7 @@ const FL = {
   wrapperCol: { span: 24 }
 };
 
-export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
+export default ({ onload, id, visible, toggleVisible }) => {
 
   const leftTableColumns = [
     {
@@ -26,22 +28,22 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
   ];
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ userOptions, setUserOptions ] = useState([]);
+  const [ list, setList ] = useState([]);
   const [form] = Form.useForm();
-
   useEffect(() => {
-    fetchUserOptions();
+    fetchList();
   }, []);
 
-  const fetchUserOptions = async () => {
+  const fetchList = async () => {
     try {
-      const res = await projectAPI.getUserOptions({
-        orgId, projectId
+      const res = await policiesAPI.list({
+        currentPage: 1, pageSize: 100000
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setUserOptions(res.result || []);
+      let list = (res.result.list || []).map(d => ({ key: d.id, name: d.name, email: d.id }));
+      setList(list || []);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -52,18 +54,23 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
-    setSubmitLoading(true);
-    operation({
-      doWhat: 'add',
-      payload: {
-        orgId,
-        type: 'api',
-        ...values
+    try {
+      setSubmitLoading(true);
+      const res = await cgroupsAPI.addAndDel({
+        values
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
       }
-    }, (hasError) => {
+      onload();
       setSubmitLoading(false);
-      !hasError && toggleVisible();
-    });
+    } catch (e) {
+      setSubmitLoading(false);
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
   };
   const propsModal = {
     leftTableColumns,
@@ -94,7 +101,9 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         >
           <TableTransfer 
             locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入策略名称搜索' }}
-            {...propsModal}
+            leftTableColumns={leftTableColumns}
+            rightTableColumns={rightTableColumns}
+            dataScourt={list || []}
           />
         </Form.Item>
       </Form>

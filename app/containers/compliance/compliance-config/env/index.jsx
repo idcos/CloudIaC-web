@@ -9,13 +9,12 @@ import Detection from './component/detection';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import tplAPI from 'services/tpl';
+import cenvAPI from 'services/cenv';
 import getPermission from "utils/permission";
 
 const CTList = ({ userInfo, match = {} }) => {
+
   const { PROJECT_OPERATOR } = getPermission(userInfo);
-  const { projectId } = match.params || {};
-  const orgId = 'org-c4i8s1rn6m81fm687b0g';
   const [ loading, setLoading ] = useState(false),
     [ viewDetection, setViewDetection ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -36,13 +35,13 @@ const CTList = ({ userInfo, match = {} }) => {
       title: '环境名称'
     },
     {
-      dataIndex: 'description',
+      dataIndex: 'templateName',
       title: '云模板名称'
     },
     {
-      dataIndex: 'repoAddr',
+      dataIndex: 'policyGroups',
       title: '绑定策略组',
-      render: (text) => <a onClick={() => bindPolicy()}>{text}</a>
+      render: (text) => <a onClick={() => bindPolicy()}>{text.length > 0 && text || '绑定'}</a>
     },
     {
       dataIndex: 'activeEnvironment',
@@ -57,7 +56,7 @@ const CTList = ({ userInfo, match = {} }) => {
       title: '屏蔽'
     },
     {
-      dataIndex: 'creator',
+      dataIndex: 'status',
       title: '状态'
     },
     {
@@ -90,11 +89,9 @@ const CTList = ({ userInfo, match = {} }) => {
   const fetchList = async () => {
     try {
       setLoading(true);
-      const res = await tplAPI.list({
+      const res = await cenvAPI.list({
         currentPage: query.pageNo,
-        pageSize: query.pageSize,
-        orgId,
-        projectId
+        pageSize: query.pageSize
       });
       if (res.code !== 200) {
         throw new Error(res.message);

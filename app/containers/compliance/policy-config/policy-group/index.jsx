@@ -32,7 +32,7 @@ const CTList = ({ orgs }) => {
     }),
 
     [ loading, setLoading ] = useState(false),
-    [ policyGroupId, setPolicyGroupId ] = useState([]),
+    [ policyGroupId, setPolicyGroupId ] = useState(null),
     [ visible, setVisible ] = useState(false),
     [ viewDetail, setViewDetail ] = useState(false),
     [ viewRelevance, setViewRelevance ] = useState(false);
@@ -53,8 +53,9 @@ const CTList = ({ orgs }) => {
       render: (text) => <a onClick={() => setVisible(true)}>{text}</a>
     },
     {
-      dataIndex: 'repoAddr',
-      title: '最后更新日期'
+      dataIndex: 'updatedAt',
+      title: '最后更新日期',
+      render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
       dataIndex: 'repoAddr1',
@@ -68,7 +69,10 @@ const CTList = ({ orgs }) => {
           <span className='inlineOp'>
             <a 
               type='link' 
-              onClick={() => setViewRelevance(true)}
+              onClick={() => {
+                setViewRelevance(true); 
+                setPolicyGroupId(record.id);
+              }}
             >关联策略</a>
             <Divider type={'vertical'}/>
             <a 
@@ -122,7 +126,7 @@ const CTList = ({ orgs }) => {
       }
       setLoading(false);
       setResultMap({
-        list: res.result || [],
+        list: res.result.list || [],
         total: res.result.total || 0
       });
     } catch (e) {
@@ -191,11 +195,23 @@ const CTList = ({ orgs }) => {
         visible={visible}
         toggleVisible={() => {
           setVisible(false);
-          setPolicyGroupId(); 
+          setPolicyGroupId(null); 
         }}
       />)}
-    {viewDetail && <Detail visible={viewDetail} toggleVisible={() => setViewDetail(false)}/>}
-    {viewRelevance && <RelevancePolicyGroupModal reload={() => fetchList()} visible={viewRelevance} toggleVisible={() => setViewRelevance(false)} />}
+    {viewDetail && <Detail 
+      visible={viewDetail} 
+      reload={() => fetchList()}
+      toggleVisible={() => setViewDetail(false)}
+    />}
+    {viewRelevance && <RelevancePolicyGroupModal 
+      reload={() => fetchList()} 
+      visible={viewRelevance} 
+      id={policyGroupId} 
+      toggleVisible={() => {
+        setViewRelevance(false);
+        setPolicyGroupId(null); 
+      }}
+    />}
   </Layout>;
 };
 
