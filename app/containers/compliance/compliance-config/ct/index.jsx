@@ -107,7 +107,6 @@ const CCTList = ({ orgs }) => {
         total: res.result.total || 0
       });
     } catch (e) {
-      console.log(e, 'eeeeeee');
       setLoading(false);
       notification.error({
         message: '获取失败',

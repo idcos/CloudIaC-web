@@ -10,29 +10,34 @@ const cgroupsAPI = {
     return post('/api/v1/policies/groups', restParams, {});
   },
   // 策略组详情
-  detail: ({ policiesId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policiesId}`, { restParams }, {});
+  detail: ({ policyGroupId, ...restParams }) => {
+    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}`, { restParams }, {});
   },
   // 修改策略组
-  update: ({ policiesId, ...restParams }) => {
-    return put(`/api/v1/policies/groups/${policiesId}`, restParams, {});
+  update: ({ policyGroupId, ...restParams }) => {
+    return put(`/api/v1/policies/groups/${policyGroupId}`, restParams, {});
   },
   // 添加/移除策略与策略组的关系
-  addAndDel: ({ policiesId, ...restParams }) => {
-    return post(`/api/v1/policies/groups/${policiesId}`, restParams, {});
+  addAndDel: ({ policyGroupId, ...restParams }) => {
+    return post(`/api/v1/policies/groups/${policyGroupId}`, restParams, {});
   },
   // 删除策略组
-  del: ({ policiesId }) => {
-    return del(`/api/v1/policies/groups/${policiesId}`, {}, {});
+  del: ({ policyGroupId }) => {
+    return del(`/api/v1/policies/groups/${policyGroupId}`, {}, {});
   },
   // 策略组最近扫描内容
-  lastTasksInfo: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/${policyGroupId}/last_tasks`, restParams, {});
+  lastTasksList: ({ policyGroupId, ...restParams }) => {
+    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/last_tasks`, restParams, {});
   },
   // 策略详情-报表
   report: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/${policyGroupId}/report`, restParams, {});
+    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/report`, restParams, {});
+  },
+  // 查询策略组关联的策略或未关联策略组的策略
+  isBind: ({ policyGroupId, ...restParams }) => {
+    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/policies`, restParams, {});
   }
+
 };
 
 export default cgroupsAPI;

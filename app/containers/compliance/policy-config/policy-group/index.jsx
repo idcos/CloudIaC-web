@@ -41,16 +41,25 @@ const CTList = ({ orgs }) => {
     {
       dataIndex: 'name',
       title: '策略组名称',
-      render: (text) => <a onClick={() => setViewDetail(true)}>{text}</a>
+      render: (text, record) => <a onClick={() => {
+        setViewDetail(true);
+        setPolicyGroupId(record.id);
+      }}
+      >{text}</a>
     },
     {
       dataIndex: 'description',
       title: '描述'
     },
     {
-      dataIndex: 'tag',
+      dataIndex: 'policyCount',
       title: '关联策略',
-      render: (text) => <a onClick={() => setVisible(true)}>{text}</a>
+      render: (text, record) => <a 
+        onClick={() => {
+          setViewRelevance(true); 
+          setPolicyGroupId(record.id);
+        }}
+      >{text}</a>
     },
     {
       dataIndex: 'updatedAt',
@@ -201,7 +210,12 @@ const CTList = ({ orgs }) => {
     {viewDetail && <Detail 
       visible={viewDetail} 
       reload={() => fetchList()}
-      toggleVisible={() => setViewDetail(false)}
+      id={policyGroupId} 
+      toggleVisible={() => {
+        setViewDetail(false);
+        setPolicyGroupId(null); 
+      }
+      }
     />}
     {viewRelevance && <RelevancePolicyGroupModal 
       reload={() => fetchList()} 

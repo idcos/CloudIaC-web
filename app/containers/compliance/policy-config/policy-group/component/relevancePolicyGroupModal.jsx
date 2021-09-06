@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
+import { Form, Modal, notification } from "antd";
 
 import cgroupsAPI from 'services/cgroups';
 import policiesAPI from 'services/policies';
 
 import TableTransfer from 'components/table-transfer';
-import { PROJECT_ROLE } from 'constants/types';
 
-const { Option } = Select;
 const FL = {
   wrapperCol: { span: 24 }
 };
 
-export default ({ onload, id, visible, toggleVisible }) => {
+export default ({ reload, id, visible, toggleVisible }) => {
 
   const leftTableColumns = [
     {
@@ -29,10 +27,33 @@ export default ({ onload, id, visible, toggleVisible }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ list, setList ] = useState([]);
+  const [ bindDate, setBindDate ] = useState([]);
   const [form] = Form.useForm();
+
   useEffect(() => {
     fetchList();
+    fetchBindPolicy();
   }, []);
+
+  const fetchBindPolicy = async () => {
+    try {
+      const res = await cgroupsAPI.isBind({
+        bind: true,
+        policyGroupId: id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      const list = (res.result.list || []).map(d => d.id);
+      setBindDate(list);
+      form.setFieldsValue({ bindList: list });
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   const fetchList = async () => {
     try {
@@ -57,13 +78,15 @@ export default ({ onload, id, visible, toggleVisible }) => {
     try {
       setSubmitLoading(true);
       const res = await cgroupsAPI.addAndDel({
+        policyGroupId: id,
         values
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      onload();
       setSubmitLoading(false);
+      toggleVisible();
+      reload();
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
@@ -72,10 +95,7 @@ export default ({ onload, id, visible, toggleVisible }) => {
       });
     }
   };
-  const propsModal = {
-    leftTableColumns,
-    rightTableColumns
-  };
+  
   return (
     <Modal
       title='关联策略'
@@ -91,7 +111,7 @@ export default ({ onload, id, visible, toggleVisible }) => {
         form={form}
       >
         <Form.Item
-          name='name'
+          name='bindList'
           rules={[
             {
               required: true,

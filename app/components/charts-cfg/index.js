@@ -48,7 +48,7 @@ export const chartOptions = {
       ]
     };
   },
-  policy_group: (props) => {
+  policy_group: ({ column = [], value = [] }) => {
     return {
       grid: {
         x: 50,
@@ -63,7 +63,7 @@ export const chartOptions = {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        data: column
       },
       yAxis: {
         type: 'value',
@@ -75,7 +75,7 @@ export const chartOptions = {
         }
       },
       series: [{
-        data: [ 12, 22, 33, 55, 77, 88, 99 ],
+        data: value,
         type: 'line',
         areaStyle: {},
         symbolSize: 12,

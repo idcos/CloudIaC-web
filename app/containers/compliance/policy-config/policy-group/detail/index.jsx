@@ -9,19 +9,24 @@ import { connect } from "react-redux";
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import projectAPI from 'services/project';
+import cgroupsAPI from 'services/cgroups';
 import tplAPI from 'services/tpl';
 
 
 const { Option } = Select;
 const { Search } = Input;
 
-const Index = ({ visible, toggleVisible }) => {
+const Index = ({ orgs, visible, toggleVisible, id }) => {
+  const orgId = 'org-c4i8s1rn6m81fm687b0g';
+  const projectId = 'p-c4i8scjn6m81fm687b1g';
+  const orgList = (orgs || {}).list || [];
   const [ loading, setLoading ] = useState(false),
+    [ passedRate, setpassedRate ] = useState({}),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
+    [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
       pageSize: 10,
@@ -29,25 +34,26 @@ const Index = ({ visible, toggleVisible }) => {
       searchprojectId: undefined,
       name: ''
     });
+
   const columns = [
     {
-      dataIndex: 'name',
+      dataIndex: 'targetName',
       title: '检测目标'
     },
     {
-      dataIndex: 'description',
+      dataIndex: 'targetType',
       title: '目标类型'
     },
     {
-      dataIndex: 'tag',
+      dataIndex: 'orgName',
       title: '组织'
     },
     {
-      dataIndex: 'repoAddr',
+      dataIndex: 'projectName',
       title: '项目'
     },
     {
-      dataIndex: 'repoAddr1',
+      dataIndex: 'creator',
       title: '创建者'
     },
     {
@@ -64,8 +70,9 @@ const Index = ({ visible, toggleVisible }) => {
       title: '状态'
     },
     {
-      dataIndex: 'creator',
-      title: '最后更新时间'
+      dataIndex: 'updatedAt',
+      title: '最后更新时间',
+      render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     }
   ];
   let CHART = useRef([
@@ -74,6 +81,7 @@ const Index = ({ visible, toggleVisible }) => {
   const resizeHelper = chartUtils.resizeEvent(CHART);
   
   useEffect(() => {
+    fetchDate();
     resizeHelper.attach();
     return resizeHelper.remove();
   }, []);
@@ -81,21 +89,47 @@ const Index = ({ visible, toggleVisible }) => {
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'policy_group') {
-        chartUtils.update(chart, {});
+        chartUtils.update(chart, passedRate);
       }
     });
-  }, [visible]);
+  }, [ visible, passedRate ]);
 
   useEffect(() => {
-    fetchDate();
+    fetchList();
   }, [query]);
+
+  const formatFloat = (src, pos) => {
+    return Math.round(src * Math.pow(10, pos)) / Math.pow(10, pos);
+  }; 
 
   const fetchDate = async () => {
     try {
+      const res = await cgroupsAPI.report({
+        policyGroupId: id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      let obj = res.passedRate || {};
+      if (!!obj['value']) {
+        obj['value'] = obj['value'].map(d => formatFloat(d, 2)); 
+      }
+      setpassedRate(obj || {});
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
+
+  const fetchList = async () => {
+    console.log(id, 'id');
+    try {
       setLoading(true);
       delete query.pageNo;
-      const res = await tplAPI.list({
-        ...query
+      const res = await cgroupsAPI.lastTasksList({
+        policyGroupId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -119,26 +153,6 @@ const Index = ({ visible, toggleVisible }) => {
       ...query,
       ...payload
     });
-  };
-  const selectOrg = async(e) => {
-    try {
-      const res = await projectAPI.allEnableProjects({
-        status: 'enable',
-        pageSize: 100000,
-        currentPage: 1,
-        orgId: e
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setProjectList(res.result.list || []);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
   };
   
   return <Drawer

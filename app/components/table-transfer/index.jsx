@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Transfer, Switch, Table, Tag } from 'antd';
 import difference from 'lodash/difference';
 
@@ -55,8 +55,13 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
 );
 
 const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, value, locale, ...propsDemo }) => {
+
   const [ targetKeys, setTargetKeys ] = useState(value || []);
-  console.log(dataScourt, 'dataScourt');
+  
+  useEffect(() => {
+    setTargetKeys(value);
+  }, [value]);
+
   return (
     <>
       <TableTransfer
