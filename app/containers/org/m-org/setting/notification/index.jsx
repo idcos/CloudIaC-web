@@ -36,7 +36,8 @@ export default ({ orgId }) => {
         throw new Error(res.message);
       }
       setResultMap({
-        list: res.result || []
+        list: res.result.list || [],
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
