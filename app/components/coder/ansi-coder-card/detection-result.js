@@ -29,33 +29,54 @@ export default ({ value, cardTitleAfter, showHeader }) => {
     { name: '严重程度', code: 'severity' },
     { name: '资源类型', code: 'resourceType' },
     { name: '文件', code: 'filePath' },
-    { name: '错误所在行数', code: 'aaa' },
-    { name: '参考源码 code', code: '提供从 line 开始向后共 3 行源码' },
+    { name: 'name', code: 'filePath' },
+    { name: '错误所在行数', code: 'line' },
+    { name: 'code', code: '提供从 line 开始向后共 3 行源码' },
+    { code: 'source' },
+    { name: '建议', code: 'fixSuggestion', showName: true },
     { code: 'fixSuggestion' }
+
   ];
 
   let forMartData = () => {
     let ll = [];
     formatList.forEach(it => {
-      if (it.name === '参考源码 code') {
-        let obj = {};
-        obj.name = '参考源码 code';
-        obj.code = `提供从 ${value.line} 开始向后共 ${value.aaa} 行源码`;
-        ll.push(obj);
-      } else if (!!it.name) {
-        let obj = {};
-        obj.name = it.name;
-        obj.code = value[it.code] || '';
-        ll.push(obj);
+      if (!!it.name) {
+        if (it.name === 'code') {
+          let obj = {};
+          let aaa = value[it.code];
+          let ls = !!aaa && aaa.replace(/"/g, '');
+          let lt = !!ls && ls.split('\n') || [];
+          obj.name = '参考源码 code';
+          obj.code = `提供从 ${value.line || '-'} 开始向后共 ${lt.length} 行源码`;
+          !!value.source && ll.push(obj);
+        } else {
+          let obj = {};
+          obj.name = it.name;
+          obj.code = it.showName ? '' : value[it.code] || '';
+          !!value[it.code] && ll.push(obj);
+        }
       } else {
-        let aaa = value[it.code];
-        let ls = aaa.replace(/"/g, '');
-        let lt = ls.split('\n');
-        lt.forEach((dt) => {
-          let objs = {};
-          objs.code = dt;
-          ll.push(objs);
-        });
+        if (it.code === 'source') {
+          let aaa = value[it.code];
+          let ls = !!aaa && aaa.replace(/"/g, '');
+          let lt = !!ls && ls.split('\n');
+          !!lt && lt.forEach((dt) => {
+            let objs = {};
+            objs.code = dt;
+            ll.push(objs);
+          });
+        }
+        if (it.code === 'fixSuggestion') {
+          let aaa = value[it.code];
+          let ls = !!aaa && aaa.replace(/"/g, '');
+          let lt = !!ls && ls.split('\n');
+          !!lt && lt.forEach((dt) => {
+            let objs = {};
+            objs.code = dt;
+            ll.push(objs);
+          });
+        }
       }
     });
     return ll;
