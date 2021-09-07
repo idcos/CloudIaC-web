@@ -48,6 +48,16 @@ const PolicyGroupList = () => {
     {
       dataIndex: 'name',
       title: '策略组名称',
+      filters: [
+        {
+          text: 'Joe',
+          value: 'Joe',
+        },
+        {
+          text: 'Jim',
+          value: 'Jim',
+        }
+      ],
       render: (text, record) => <a onClick={() => {
         setViewDetail(true);
         setPolicyGroupId(record.id);

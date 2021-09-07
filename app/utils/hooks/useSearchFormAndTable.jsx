@@ -1,9 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import omit from 'lodash/omit';
 import noop from 'lodash/noop';
-import { useDeepCompareEffect } from './useDeepCompareEffect.jsx';
+import isFunction from 'lodash/isFunction';
 
-// 搜索表单和表格关联封装
+/** 搜索表单和表格关联封装 */
 export const useSearchFormAndTable = (props) => {
 
   const {
@@ -13,8 +13,6 @@ export const useSearchFormAndTable = (props) => {
     defaultSearchParams,
     /** 表格数据 */
     tableData = { list: [], total: 0 },
-    /** 额外的参数，外部自行维护 */
-    extraParams = {},
     /** 触发搜索 */
     onSearch = noop
   } = props || {};
@@ -30,31 +28,49 @@ export const useSearchFormAndTable = (props) => {
     filters: defaultFilters = {}
   } = defaultSearchParams || {};
 
-  const [ paginate, setPaginate ] = useState(defaultPaginate);
-  const [ formParams, setFormParams ] = useState(defaultFormParams);
-  const [ sorter, setSorter ] = useState(defaultSorter);
-  const [ filters, setFilters ] = useState(defaultFilters);
+  const [ searchParams, setSearchParams ] = useState({
+    paginate: defaultPaginate,
+    formParams: defaultFormParams,
+    sorter: defaultSorter,
+    filters: defaultFilters
+  });
 
-  /**
-   * searchParams[0] 可直接用于搜索的集成参数
-   * searchParams[1] 各个搜索模块的map
-   */
-  const searchParams = useMemo(() => {
-    return [
-      { ...paginate, ...sorter, ...formParams, ...extraParams, ...filters },
-      {
-        paginate,
-        sorter,
-        formParams,
-        extraParams,
-        filters
-      }
-    ];
-  }, [ paginate, formParams, sorter, extraParams ]);
-
-  useDeepCompareEffect(() => {
-    onSearch(...searchParams);
+  useEffect(() => {
+    const { paginate, formParams, sorter, filters } = searchParams;
+    onSearch({ ...paginate, ...formParams, ...sorter, ...filters });
   }, [searchParams]);
+
+  /** 设定分页搜索参数 */
+  const setPaginate = (state) => {
+    setSearchParams(({ paginate, ...restParams }) => ({
+      paginate: isFunction(state) ? state(paginate) : state,
+      ...restParams
+    }));
+  };
+
+  /** 设定表单搜索参数 */
+  const setFormParams = (state) => {
+    setSearchParams(({ formParams, ...restParams }) => ({
+      formParams: isFunction(state) ? state(formParams) : state,
+      ...restParams
+    }));
+  };
+
+  /** 设定排序搜索参数 */
+  const setSorter = (state) => {
+    setSearchParams(({ sorter, ...restParams }) => ({
+      sorter: isFunction(state) ? state(sorter) : state,
+      ...restParams
+    }));
+  }; 
+
+  /** 设定表格过滤搜索参数 */
+  const setFilters = (state) => {
+    setSearchParams(({ filters, ...restParams }) => ({
+      filters: isFunction(state) ? state(filters) : state,
+      ...restParams
+    }));
+  }; 
 
   /** 改变搜索参数 */
   const onChangeFormParams = (changeParams) => {
@@ -62,13 +78,13 @@ export const useSearchFormAndTable = (props) => {
     resetPageCurrent();
   };
 
-  // 重置页码
+  /** 重置页码 */
   const resetPageCurrent = () => {
     setPaginate(({ pageSize }) => ({ current: 1, pageSize }));
   };
 
   /** 分页、排序、筛选变化时触发 同步各搜索模块参数 */
-  const onTableChange = (pagination, filters, sorter, { action }) => {
+  const onTableChange = (pagination, newFilters, sorter, { action }) => {
     const { current, pageSize } = pagination;
     const { field, order } = sorter;
     switch (action) {
@@ -76,8 +92,11 @@ export const useSearchFormAndTable = (props) => {
         setPaginate({ current, pageSize });
         break;
       case 'filter':
-        setPaginate({ current: 1, pageSize });
-        setFilters(filters);
+        setSearchParams(({ filters, paginate, ...restParams }) => ({
+          paginate: { current: 1, pageSize },
+          filters: newFilters,
+          ...restParams
+        }));
         break;
       case 'sort':
         setSorter({ field, order });
@@ -95,8 +114,8 @@ export const useSearchFormAndTable = (props) => {
     tableProps: {
       dataSource: tableData.list,
       pagination: {
-        current: paginate.current,
-        pageSize: paginate.pageSize,
+        current: searchParams.paginate.current,
+        pageSize: searchParams.paginate.pageSize,
         total: tableData.total,
         showSizeChanger: true,
         showTotal: (total) => `共${total}条`,
@@ -105,6 +124,7 @@ export const useSearchFormAndTable = (props) => {
       onChange: onTableChange 
     },
     searchParams,
+    setSearchParams,
     onChangeFormParams,
     resetPageCurrent,
     setPaginate,

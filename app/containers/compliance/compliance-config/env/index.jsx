@@ -49,7 +49,7 @@ const CenvList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: [ _allValue, { formParams } ]
+    searchParams: { formParams }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
