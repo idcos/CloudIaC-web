@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle } from 'react';
 import { Space, Select, Form, Input, Button, Empty, notification } from "antd";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import tplAPI from 'services/tpl';
 import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
@@ -12,20 +14,28 @@ const { Option, OptGroup } = Select;
 
 export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) => {
 
+  const formData = ctData[type] || {};
   const [form] = Form.useForm();
-
   const [ vcsVisible, setVcsVisible ] = useState(false);
   const [ repoBranches, setRepoBranches ] = useState([]);
   const [ repoTags, setRepoTags ] = useState([]);
   const [ repos, setRepos ] = useState([]);
   const [ vcsList, setVcsList ] = useState([]);
+
+  // Terraform版本选项列表
+  const {
+    data: tfversionOptions = []
+  } = useRequest(
+    () => requestWrapper(
+      tplAPI.listTfversions.bind(null, { orgId })
+    )
+  );
   
   useEffect(() => {
     fetchVcsList();
   }, []);
 
   useEffect(() => {
-    const formData = ctData[type] || {};
     form.setFieldsValue(formData);
     if (formData.vcsId) {
       fetchRepos(formData);
@@ -34,7 +44,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
       fetchRepoBranches(formData);
       fetchRepoTags(formData);
     }
-  }, [ ctData, type ]);
+  }, [formData]);
 
   const fetchVcsList = async () => {
     try {
@@ -286,6 +296,23 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
         name='workdir'
       >
         <Input placeholder='请输入工作目录' />
+      </Form.Item>
+      <Form.Item
+        label='Terraform版本'
+        name='tfVersion'
+        initialValue=''
+      >
+        <Select>
+          <Option value=''>自动匹配</Option>
+          {
+            (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
+          }
+          {
+            (formData.tfVersion && !(tfversionOptions || []).includes(formData.tfVersion)) && (
+              <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
+            )
+          }
+        </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>

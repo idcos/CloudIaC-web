@@ -1,18 +1,18 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Steps, notification } from 'antd';
 import set from 'lodash/set';
-
+import isFunction from 'lodash/isFunction';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import history from "utils/history";
-
 import Basic from './step/basic';
 import Repo from './step/repo';
 import Variable from './step/variable';
 import Relation from './step/relation';
 import styles from './styles.less';
-import isFunction from 'lodash/isFunction';
 
 const { Step } = Steps;
 
@@ -27,6 +27,19 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
+
+  // 创建/编辑云模版提交接口
+  const {
+    run: onSave
+  } = useRequest(
+    (params) => requestWrapper(
+      tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, params)
+    ),
+    {
+      manual: true,
+      onSuccess: () =>  goCTlist()
+    }
+  );
 
   const stepHelper = useCallback(() => {
     return {
@@ -62,16 +75,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       orgId,
       tplId
     };
-    try {
-      const res = await tplAPI[opType === 'add' ? 'create' : 'update'](params);
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      goCTlist();
-    } catch (e) {
-      notification.error({
-        message: e.message
-      });
+    // 如果选了自动匹配即params.tfVersion === ''，则查询接口获取自动匹配的值
+    if (params.tfVersion === '') {
+      const { repoId, repoRevision, vcsId } = params;
+      const res = await tplAPI.autotfversion({ orgId, repoId, vcsBranch: repoRevision, vcsId });
+      onSave({ ...params, tfVersion: res.result });
+    } else {
+      onSave(params);
     }
   };
 
@@ -100,13 +110,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       }
       const {
         name, description,
-        vcsId, repoId, repoRevision, workdir,
+        vcsId, repoId, repoRevision, workdir, tfVersion,
         tfVarsFile, playbook,
         projectId
       } = res.result || {};
       setCtData({
         basic: { name, description },
-        repo: { vcsId, repoId, repoRevision, workdir },
+        repo: { vcsId, repoId, repoRevision, workdir, tfVersion },
         variable: { tfVarsFile, playbook },
         relation: { projectId }
       });
