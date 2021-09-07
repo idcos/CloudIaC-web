@@ -6,7 +6,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import vcsAPI from 'services/vcs';
-import ViewFileModal from './components/view-file-modal';
+import ViewFileModal from 'components/view-file-modal';
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -22,7 +22,6 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
   const { vcsId, repoId, repoRevision } = tplInfo;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
-  const [ info, setInfo ] = useState({});
   const [ activekey, setActivekey ] = useState([]);
   const [ fileView, setFileView ] = useState({
     title: '',
@@ -41,8 +40,8 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
     ),
     {
       manual: true,
-      onSuccess: (data) => {
-        setFileView(preValue => ({ ...preValue, content: data }));
+      onSuccess: ({ content } = {}) => {
+        setFileView(preValue => ({ ...preValue, content }));
       }
     }
   );
@@ -55,12 +54,15 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
     });
   };
 
-  const viewFile = (fileName) => {
-    setFileView({ 
-      title: fileName,
-      visible: true
-    });
-    fetchFile(fileName);
+  const viewFile = (formName) => {
+    const fileName = form.getFieldValue(formName);
+    if (fileName) {
+      setFileView({ 
+        title: fileName,
+        visible: true
+      });
+      fetchFile(fileName);
+    }
   };
   
   const setTtl = (data) => {
@@ -75,7 +77,6 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
     } else if (!data.autoDestroyAt) {
       data.type = 'timequantum';
     }
-    setInfo(data);
     form.setFieldsValue(data);
   };
 
@@ -312,7 +313,6 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
       form={form}
       {...FL}
       layout={'vertical'}
-      initialValues={info}
     >
       <Collapse activekey={activekey} expandIconPosition={'right'} onChange={(e) => {
         setActivekey(e); 
@@ -321,8 +321,8 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
         <Panel header='高级设置' key={'open'}>
           {renderForm()}
         </Panel>
-        <ViewFileModal {...fileView} onClose={onCloseViewFileModal} />
       </Collapse>
+      <ViewFileModal {...fileView} onClose={onCloseViewFileModal}/>
     </Form>
   );
 };

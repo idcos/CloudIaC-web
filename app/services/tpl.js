@@ -31,7 +31,17 @@ const tplAPI = {
     return getWithArgs('/api/v1/templates/variables', restParams, {
       'IaC-Org-Id': orgId
     });
-  }
+  },
+  autotfversion: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/templates/autotfversion', restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
+  listTfversions: ({ orgId }) => {
+    return getWithArgs('/api/v1/templates/tfversions', {}, {
+      'IaC-Org-Id': orgId
+    });
+  },
 };
 
 export default tplAPI;
