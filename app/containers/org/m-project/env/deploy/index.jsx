@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { notification, Tooltip, Select, Form, Input, Button, Checkbox, Space, DatePicker, Row, Col, Radio } from "antd";
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { notification, Select, Form, Input, Button, Row, Col, Radio } from "antd";
 import PageHeader from "components/pageHeader";
 import history from 'utils/history';
-
 import VariableForm from 'components/variable-form';
 import AdvancedConfig from './advanced-config';
 import Layout from "components/common/layout";
 import moment from 'moment';
-import { AUTO_DESTROY, destoryType } from 'constants/types';
-
 import sysAPI from 'services/sys';
 import envAPI from 'services/env';
 import tplAPI from 'services/tpl';
@@ -17,26 +13,18 @@ import keysAPI from 'services/keys';
 import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
-import styles from './style.less';
-import { data } from "vfile";
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
   wrapperCol: { span: 22, offset: 2 }
 };
-const PL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
 const { Option, OptGroup } = Select;
-const {} = Radio;
   
 const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
   const varRef = useRef();
   const configRef = useRef({});
   const [form] = Form.useForm();
-
   const [ applyLoading, setApplyLoading ] = useState(false);
   const [ planLoading, setPlanLoading ] = useState(false);
   const [ vars, setVars ] = useState([]);
@@ -350,6 +338,7 @@ const Index = ({ match = {} }) => {
             keys={keys}
             tfvars={tfvars}
             playbooks={playbooks}
+            tplInfo={tplInfo}
           />
           <VariableForm
             varRef={varRef} 

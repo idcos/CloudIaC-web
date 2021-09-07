@@ -58,7 +58,12 @@ const vcsAPI = {
     return getWithArgs(`/api/v1/vcs/${vcsId}/repos/tfvars`, restParams, {
       'IaC-Org-Id': orgId
     });
-  }
+  },
+  file: ({ orgId, vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/file`, restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
 };
 
 export default vcsAPI;

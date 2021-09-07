@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
 import { notification, Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, Radio, InputNumber } from "antd";
-import copy from 'utils/copy';
-import { InfoCircleOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
-
-import tokensAPI from 'services/tokens';
+import vcsAPI from 'services/vcs';
+import ViewFileModal from './components/view-file-modal';
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -15,21 +16,52 @@ const PL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
-const { Option, OptGroup } = Select;
-const {} = Radio;
+const { Option } = Select;
   
-const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, keys, tfvars, playbooks }) => {
+const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, keys, tfvars, playbooks }) => {
+  const { vcsId, repoId, repoRevision } = tplInfo;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
   const [ info, setInfo ] = useState({});
   const [ activekey, setActivekey ] = useState([]);
-  const [ paramsRunnerId, setParamsRunnerId ] = useState();
-  const [ tfvarsView, setTfvarsView ] = useState({ view: false, value: '' });
-  const [ playbookView, setPlaybookView ] = useState({ view: false, value: '' });
+  const [ fileView, setFileView ] = useState({
+    title: '',
+    visible: false,
+    content: ''
+  });
 
   useEffect(() => {
     fetchInfo();
   }, [data]);
+
+  // 策略组选项查询
+  const { run: fetchFile } = useRequest(
+    (fileName) => requestWrapper(
+      vcsAPI.file.bind(null, { orgId, vcsId, repoId, branch: repoRevision, fileName })
+    ),
+    {
+      manual: true,
+      onSuccess: (data) => {
+        setFileView(preValue => ({ ...preValue, content: data }));
+      }
+    }
+  );
+
+  const onCloseViewFileModal = () => {
+    setFileView({
+      title: '',
+      visible: false,
+      content: ''
+    });
+  };
+
+  const viewFile = (fileName) => {
+    setFileView({ 
+      title: fileName,
+      visible: true
+    });
+    fetchFile(fileName);
+  };
   
   const setTtl = (data) => {
     if (data.autoApproval) {
@@ -70,7 +102,6 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
   // 新建时给runnerId赋值
   const setRunnerValue = (v) => {
     form.setFieldsValue({ runnerId: v });
-    setParamsRunnerId(v);
   };
 
   useImperativeHandle(configRef, () => ({
@@ -104,7 +135,15 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
         </Col>
         <Col span={8}>
           <Form.Item
-            label={<span>tfvars文件：<span style={{ cursor: 'pointer' }} onClick={() => setTfvarsView({ view: !tfvarsView.view })}>{tfvarsView.view ? <EyeOutlined /> : <EyeInvisibleOutlined />}</span></span>}
+            label={
+              <>
+                tfvars文件：
+                <EyeOutlined 
+                  style={{ cursor: 'pointer' }} 
+                  onClick={() => viewFile('tfvars')}
+                />
+              </>
+            }
             name='tfvars'
           >
             <Select
@@ -118,7 +157,15 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
         </Col>
         <Col span={8}>
           <Form.Item
-            label={<span>playbook文件：<span style={{ cursor: 'pointer' }} onClick={() => setPlaybookView({ view: !playbookView.view })}>{playbookView.view ? <EyeOutlined /> : <EyeInvisibleOutlined />}</span></span>}
+            label={
+              <>
+                playbook文件：
+                <EyeOutlined
+                  style={{ cursor: 'pointer' }} 
+                  onClick={() => viewFile('playbook')}
+                />
+              </>
+            }
             name='playbook'
           >
             <Select 
@@ -274,6 +321,7 @@ const Index = ({ configRef, isCollapse, data, orgId, projectId, envId, runnner, 
         <Panel header='高级设置' key={'open'}>
           {renderForm()}
         </Panel>
+        <ViewFileModal {...fileView} onClose={onCloseViewFileModal} />
       </Collapse>
     </Form>
   );
