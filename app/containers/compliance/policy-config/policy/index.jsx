@@ -119,9 +119,8 @@ const Policy = () => {
       }
     },
     {
-      dataIndex: 'groupId',
+      dataIndex: 'groupName',
       title: '策略组'
-      // render: (text) => <a href={text} target='_blank'>{text}</a>
     },
     {
       dataIndex: 'severity',
