@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Table, Space, Input, Select, Divider, Tag } from 'antd';
+import { Button, Table, Space, Input, Select, Divider, Tag, Popover } from 'antd';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -112,7 +112,17 @@ const Policy = () => {
               tags.slice(0, 3).map((it) => <Tag>{it}</Tag>)
             }
             {
-              tags.length > 3 && <Tag>+{tags.length - 3}</Tag>
+              tags.length > 3 && (
+                <Popover 
+                  content={
+                    <>
+                      {tags.map((it) => <Tag>{it}</Tag>)}
+                    </>
+                  }
+                >
+                  <Tag>...</Tag>
+                </Popover>
+              )
             }
           </>
         )
