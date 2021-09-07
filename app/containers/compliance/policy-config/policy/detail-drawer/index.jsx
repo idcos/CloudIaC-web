@@ -41,15 +41,8 @@ export default ({ id, visible, onClose }) => {
       </Descriptions>
       <Tabs 
         type='card'
-        tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
+        className='idcos-tabs-card'
         animated={false}
-        renderTabBar={(props, DefaultTabBar) => {
-          return (
-            <div style={{ marginBottom: -16 }}>
-              <DefaultTabBar {...props} />
-            </div>
-          );
-        }}
       >
         {
           TabPaneMap.map(tabPaneProps => <Tabs.TabPane {...tabPaneProps}/>)
