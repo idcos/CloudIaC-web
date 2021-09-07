@@ -51,7 +51,7 @@ const Policy = () => {
     ), {
       manual: true,
       fetchKey: (params) => params.id,
-      onSuccess: refreshList
+      onSuccess: () => refreshList()
     }
   );
 

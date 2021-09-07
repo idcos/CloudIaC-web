@@ -107,7 +107,7 @@ const FormPage = ({ match = {} }) => {
       }
     ), {
       manual: true,
-      onSuccess: goPolicyListPage
+      onSuccess: () => goPolicyListPage()
     }
   );
 
