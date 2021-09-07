@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useImperativeHandle, memo } from 'react';
 import { Space, Select, Form, Input, Button, Empty, notification } from "antd";
+import isEqual from 'lodash/isEqual';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import tplAPI from 'services/tpl';
 import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
+import { TFVERSION_AUTO_MATCH } from 'constants/types';
 
 const FL = {
   labelCol: { span: 5 },
@@ -12,7 +14,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) => {
+const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) => {
 
   const formData = ctData[type] || {};
   const [form] = Form.useForm();
@@ -44,7 +46,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
       fetchRepoBranches(formData);
       fetchRepoTags(formData);
     }
-  }, [formData]);
+  }, [ctData, type]);
 
   const fetchVcsList = async () => {
     try {
@@ -300,10 +302,16 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
       <Form.Item
         label='Terraform版本'
         name='tfVersion'
-        initialValue=''
+        initialValue={TFVERSION_AUTO_MATCH}
+        rules={[
+          {
+            required: true,
+            message: '请选择'
+          }
+        ]}
       >
         <Select>
-          <Option value=''>自动匹配</Option>
+          <Option value={TFVERSION_AUTO_MATCH}>自动匹配</Option>
           {
             (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
           }
@@ -343,3 +351,13 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType })
     }
   </div>;
 };
+
+export default memo(Repo, (prevProps, nextProps) => {
+  const preFormData = prevProps.ctData[prevProps.type];
+  const nextFormData = nextProps.ctData[nextProps.type];
+  // 判断前后表单数据源值是否相等 从而避免额外渲染业务
+  if (isEqual(preFormData, nextFormData)) {
+    return true;
+  }
+  return false;
+});

@@ -8,6 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import history from "utils/history";
+import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import Basic from './step/basic';
 import Repo from './step/repo';
 import Variable from './step/variable';
@@ -75,8 +76,8 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       orgId,
       tplId
     };
-    // 如果选了自动匹配即params.tfVersion === ''，则查询接口获取自动匹配的值
-    if (params.tfVersion === '') {
+    // 如果tfVersion选了自动匹配，则查询接口获取自动匹配的值
+    if (params.tfVersion === TFVERSION_AUTO_MATCH) {
       const { repoId, repoRevision, vcsId } = params;
       const res = await tplAPI.autotfversion({ orgId, repoId, vcsBranch: repoRevision, vcsId });
       onSave({ ...params, tfVersion: res.result });
