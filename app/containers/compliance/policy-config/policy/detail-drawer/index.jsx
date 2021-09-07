@@ -11,7 +11,7 @@ const TabPaneMap = [
   { key: 'error', tab: '错误', children: '错误' },
   { key: 'pb', tab: '屏蔽', children: '屏蔽' },
   { key: 'ck', tab: '参考', children: '参考' },
-  { key: 'bb', tab: '报表', children: '报表' },
+  { key: 'bb', tab: '报表', children: '报表' }
 ];
 
 export default ({ id, visible, onClose }) => {
@@ -21,7 +21,7 @@ export default ({ id, visible, onClose }) => {
       policiesAPI.detail.bind(null, id)
     ),
     {
-      ready: !!id,
+      ready: !!id
     }
   );
 

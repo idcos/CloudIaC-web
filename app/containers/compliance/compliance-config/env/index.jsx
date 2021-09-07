@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Space, Select, Divider, Input } from 'antd';
+import { Table, Space, Select, Divider, Input, notification } from 'antd';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
 import history from 'utils/history';
@@ -17,6 +17,7 @@ const CenvList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ viewDetection, setViewDetection ] = useState(false);
   const [ policyView, setPolicyView ] = useState(false);
+  const [ templateId, setTemplateId ] = useState(null);
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
@@ -67,6 +68,24 @@ const CenvList = ({ orgs }) => {
     }
   };
 
+  const runScan = async (record) => {
+    try {
+      const res = await cenvAPI.runScan({
+        tplId: record.id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setTemplateId(record.id);
+      setViewDetection(true); 
+    } catch (e) {
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
   const bindPolicy = () => {
     setPolicyView(true);
   };
@@ -104,13 +123,23 @@ const CenvList = ({ orgs }) => {
       title: '操作',
       width: 90,
       fixed: 'right',
-      render: (record) => {
+      render: (text, record) => {
         return (
           <span className='inlineOp'>
             <a 
               type='link' 
-              onClick={() => setViewDetection(true)}
+              onClick={() => {
+                runScan(record);
+              }}
             >检测</a>
+            <Divider type={'vertical'}/>
+            <a 
+              type='link' 
+              onClick={() => {
+                setTemplateId(record.id);
+                setViewDetection(true);
+              }}
+            >查看结果</a>
             <Divider type={'vertical'}/>
             <a 
               type='link' 
@@ -131,7 +160,7 @@ const CenvList = ({ orgs }) => {
     />}
   >
     <div className='idcos-card'>
-      <Space size={16} direction='vertical' style={{ width: '100%'}}>
+      <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Space>
           <Select
             style={{ width: 282 }}
@@ -166,7 +195,14 @@ const CenvList = ({ orgs }) => {
       </Space>
     </div>
     {policyView && <BindPolicyModal visible={policyView} toggleVisible={() => setPolicyView(false)}/>}
-    {viewDetection && <Detection visible={viewDetection} toggleVisible={() => setViewDetection(false)}/>}
+    {viewDetection && <Detection 
+      id={templateId}
+      visible={viewDetection} 
+      toggleVisible={() => {
+        setViewDetection(false);
+        setTemplateId(null); 
+      }}
+    />}
   </Layout>;
 };
 

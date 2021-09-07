@@ -1,55 +1,72 @@
-import React, { memo, useState, useEffect } from 'react';
-import { Card, Descriptions, Tag, Collapse } from 'antd';
+import React, { useState, useEffect, memo } from 'react';
+import { Form, Drawer, notification, Select, Card } from "antd";
 
-import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
-import { Eb_WP } from 'components/error-boundary';
-import { timeUtils } from "utils/time";
-import moment from 'moment';
+import envAPI from 'services/env';
 import ComplianceCollapse from 'components/compliance-collapse';
+import moment from 'moment';
 
-const { Panel } = Collapse;
 
 const Index = (props) => {
-
-  const { info, taskInfo } = props;
-
-  const [ now, setNow ] = useState(moment());
+  const { match, info } = props,
+    { params: { orgId, projectId, envId } } = match;
+  const [ scanResults, setScanResults ] = useState([]);
+  const [ scanTime, setScanTime ] = useState(null);
+  const [form] = Form.useForm();
 
   useEffect(() => {
-    const t = setInterval(() => {
-      setNow(moment());
-    }, 1000);
-    return () => {
-      clearInterval(t);
-    };
+    fetchResult();
   }, []);
 
-  const formatTTL = ({ autoDestroyAt, ttl }) => {
-    if (autoDestroyAt) {
-      return timeUtils.diff(autoDestroyAt, now, '-');
-    }
-    switch (ttl) {
-    case '':
-    case null:
-    case undefined:
-      return '-';
-    case 0:
-    case '0':
-      return '不限制';
-    default:
-      const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
-      return it.name;
+  const fetchResult = async () => {
+    try {
+      const res = await envAPI.result({
+        orgId, projectId, envId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setScanResults(resetList(res.result.list.scanResults || []));
+      setScanTime(res.result.list.scanTime || null);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
     }
   };
-  const a = true;
-  return <Card 
-    headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
-    bodyStyle={{ padding: 6 }} 
-    type={'inner'} 
-    title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}</div></span>}
-  >
-    <ComplianceCollapse />
-  </Card>;
-};
 
-export default Eb_WP()(memo(Index));
+  const resetList = (list) => {
+    if (list.length) {
+      let typeList = [...new Set(list.map(d => ({ id: d.policyGroupId, name: d.policyGroupName })))];
+      let ll = [];
+      typeList.forEach(d => {
+        let obj = {};
+        let children = list.filter(t => t.policyGroupId === d.id).map(it => {
+          return it || [];
+        });
+        obj.policyGroupName = d.name;
+        obj.children = children;
+        ll.push(obj);
+      });
+      return ll || [];
+    } else {
+      return [];
+    }
+  };
+  
+  return (
+    <Card 
+      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
+      bodyStyle={{ padding: 6 }} 
+      type={'inner'} 
+      title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{scanTime && moment(scanTime).format('YYYY-MM-DD HH:mm:ss') || '-'}</div></span>}
+    >
+      {
+        scanResults.map(info => {
+          return (<ComplianceCollapse info={info} />);
+        })
+      }
+    </Card>
+  );
+};
+export default memo(Index);

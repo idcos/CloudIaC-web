@@ -65,6 +65,13 @@ const envAPI = {
   // 创建环境
   createEnv: ({ orgId, projectId, ...resetParams }) => {
     return post(`/api/v1/envs`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 环境合规详情
+  result: ({ orgId, projectId, envId }) => {
+    return getWithArgs(`/api/v1/envs/${envId}/policy_result`, {}, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
   }
 };
 

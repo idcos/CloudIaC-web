@@ -7,7 +7,7 @@ const ctplAPI = {
   },
   // 云模板策略扫描结果
   result: ({ tplId, ...restParams }) => {
-    return post(`/api/v1/policies/template/${tplId}/result`, restParams, {});
+    return getWithArgs(`/api/v1/policies/templates/${tplId}/result`, restParams, {});
   },
   // 修改云模板与策略组关联
   update: ({ tplId, ...restParams }) => {

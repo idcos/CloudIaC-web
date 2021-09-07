@@ -17,7 +17,7 @@ const notificationsAPI = {
     });
   },
   detailNotification: ({ orgId, notificationId }) => {
-    return del(`/api/v1/notifications/${notificationId}`, {}, {
+    return getWithArgs(`/api/v1/notifications/${notificationId}`, {}, {
       'IaC-Org-Id': orgId
     });
   }

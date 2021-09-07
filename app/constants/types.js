@@ -131,3 +131,19 @@ export const POLICIES_SEVERITY_ENUM = {
   medium: '中',
   low: '低'
 };
+
+export const POLICIES_DETECTION = {
+  pending: '检测中',
+  passed: '通过',
+  failed: '失败',
+  violated: '不通过',
+  suppressed: '已屏蔽'
+};
+
+export const POLICIES_DETECTION_COLOR = {
+  pending: '#FFBF00',
+  passed: '#52C41A',
+  failed: '#FF3B30',
+  violated: '#FF3B30',
+  suppressed: '#c1c1c1'
+};

@@ -1,34 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Form, Drawer, notification, Card } from "antd";
-import userAPI from 'services/user';
+import React, { useState, useEffect, memo } from 'react';
+import { Form, Drawer, notification, Select, Card } from "antd";
 
+import cenvAPI from 'services/cenv';
 import ComplianceCollapse from 'components/compliance-collapse';
+import moment from 'moment';
 
-export default ({ orgId, operation, visible, toggleVisible }) => {
 
-  const [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
-    [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10
-    });
+const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
 
+  const [ scanResults, setScanResults ] = useState([]);
+  const [ scanTime, setScanTime ] = useState(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchUserList();
-  }, [query]);
+    fetchResult();
+  }, []);
 
-  const fetchUserList = async () => {
+  const fetchResult = async () => {
     try {
-      const res = await userAPI.list({
-        q: query.name,
-        pageSize: query.pageSize,
-        currentPage: query.pageNo,
-        orgId
+      const res = await cenvAPI.result({
+        envId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      setScanResults(resetList(res.result.list.scanResults || []));
+      setScanTime(res.result.list.scanTime || null);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -37,29 +34,50 @@ export default ({ orgId, operation, visible, toggleVisible }) => {
     }
   };
 
-  const onOk = async () => {
-    const values = await form.validateFields();
-    operation({
-      doWhat: 'add',
-      payload: {
-        userIds: selectedRowKeys,
-        ...values
-      }
-    }, toggleVisible);
+  const resetList = (list) => {
+    if (list.length) {
+      let typeList = [...new Set(list.map(d => ({ id: d.policyGroupId, name: d.policyGroupName })))];
+      let ll = [];
+      typeList.forEach(d => {
+        let obj = {};
+        let children = list.filter(t => t.policyGroupId === d.id).map(it => {
+          return it || [];
+        });
+        obj.policyGroupName = d.name;
+        obj.children = children;
+        ll.push(obj);
+      });
+      return ll || [];
+    } else {
+      return [];
+    }
   };
   
-  return <>
+  return (
     <Drawer
-      title='策略名称'
-      visible={visible}
+      title='检测详情'
+      placement='right'
+      // visible={visible}
+      visible={true}
       onClose={toggleVisible}
-      bodyStyle={{ padding: 0 }}
-      width={1000}
-      onOk={onOk}
+      width={800}
+      bodyStyle={{
+        padding: 0
+      }}
     >
-      <Card title={'合规检测'} bodyStyle={{ padding: 5 }} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} >
-        <ComplianceCollapse/>
+      <Card 
+        headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
+        bodyStyle={{ padding: 6 }} 
+        type={'inner'} 
+        title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{scanTime && moment(scanTime).format('YYYY-MM-DD HH:mm:ss') || '-'}</div></span>}
+      >
+        {
+          scanResults.map(info => {
+            return (<ComplianceCollapse info={info} />);
+          })
+        }
       </Card>
     </Drawer>
-  </>;
+  );
 };
+export default memo(Index);

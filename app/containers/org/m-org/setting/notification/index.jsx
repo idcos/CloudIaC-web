@@ -37,7 +37,7 @@ export default ({ orgId }) => {
       }
       setResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0,
+        total: res.result.total || 0
       });
       setLoading(false);
     } catch (e) {

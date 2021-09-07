@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
-import { Badge, Table, Input, Select, Space, Divider, Switch, Button } from 'antd';
+import { Badge, Table, Input, Select, Space, Divider, Switch, Button, notification } from 'antd';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
 import isEmpty from 'lodash/isEmpty';
 import { useSearchFormAndTable } from 'utils/hooks';
 import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
+
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+
 import projectAPI from 'services/project';
 import ctplAPI from 'services/ctpl';
+
 import BindPolicyModal from 'components/policy-modal';
 import DetectionModal from './component/detection-modal';
+
+import { POLICIES_DETECTION } from 'constants/types';
 
 const CCTList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ visible, setVisible ] = useState(false);
-  const [ detectionVisible, setDetectionVisible ] = useState(false);
+  const [ templateId, setTemplateId ] = useState(null);
+  const [ detectionVisible, setDetectionVisible ] = useState(true);
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
@@ -67,10 +73,28 @@ const CCTList = ({ orgs }) => {
     }
   };
 
-  const openPolicy = () => {
+  const openPolicy = (record) => {
+    setTemplateId(record.id);
     setVisible(true);
   };
 
+  const runScan = async (record) => {
+    try {
+      const res = await ctplAPI.runScan({
+        tplId: record.id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setTemplateId(record.id);
+      setDetectionVisible(true); 
+    } catch (e) {
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
   const columns = [
     {
       dataIndex: 'name',
@@ -80,12 +104,12 @@ const CCTList = ({ orgs }) => {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
       width: 150,
-      render: (policyGroups) => {
+      render: (policyGroups, record) => {
         return (
           isEmpty(policyGroups) ? (
             <Button type='link'>绑定</Button>
           ) : (
-            <Button type='link'>
+            <Button onClick={() => openPolicy(record)} type='link'>
               {
                 policyGroups.map((it) => it.name).join('、')
               }
@@ -105,7 +129,7 @@ const CCTList = ({ orgs }) => {
       render: (text) => <Switch checked={text} />
     },
     {
-      dataIndex: 'groupStatus',
+      dataIndex: 'status',
       title: '状态',
       render: (text) => <Badge color={'red'} text={text} />
     },
@@ -116,9 +140,20 @@ const CCTList = ({ orgs }) => {
       render: (record) => {
         return (
           <span className='inlineOp'>
-            <a 
-              onClick={() => setDetectionVisible(true)}
+            <a onClick={() => {
+              runScan(record);
+            }}
             >检测</a>
+            <Divider type={'vertical'} />
+            <a 
+              type='link' 
+              onClick={() => {
+                setTemplateId(record.id);
+                setDetectionVisible(true);
+              }}
+            >查看结果</a>
+            <Divider type={'vertical'}/>
+            <a onClick={() => setDetectionVisible(true)}>检测</a>
           </span>
         );
       }
@@ -133,7 +168,7 @@ const CCTList = ({ orgs }) => {
     />}
   >
     <div className='idcos-card'>
-      <Space size={16} direction='vertical' style={{ width: '100%'}}>
+      <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Space>
           <Select
             style={{ width: 282 }}
@@ -167,8 +202,19 @@ const CCTList = ({ orgs }) => {
         />
       </Space>
     </div>
-    {visible && <BindPolicyModal visible={visible} toggleVisible={() => setVisible(false)}/>}
-    {detectionVisible && <DetectionModal visible={detectionVisible} toggleVisible={() => setDetectionVisible(false)}/>}
+    {visible && <BindPolicyModal 
+      visible={visible} 
+      id={templateId}
+      toggleVisible={() => setVisible(false)}
+    />}
+    {detectionVisible && <DetectionModal
+      id={templateId}
+      visible={detectionVisible} 
+      toggleVisible={() => {
+        setDetectionVisible(false); 
+        setTemplateId(null);
+      }}
+    />}
   </Layout>;
 };
 

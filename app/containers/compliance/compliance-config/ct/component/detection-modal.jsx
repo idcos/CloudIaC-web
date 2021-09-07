@@ -1,28 +1,31 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Form, Drawer, notification, Select, Card } from "antd";
 
-import projectAPI from 'services/project';
+import ctplAPI from 'services/ctpl';
 import ComplianceCollapse from 'components/compliance-collapse';
 import moment from 'moment';
 
-const Index = ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
-  const [ userOptions, setUserOptions ] = useState([]);
+const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
+
+  const [ scanResults, setScanResults ] = useState([]);
+  const [ scanTime, setScanTime ] = useState(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchUserOptions();
+    fetchResult();
   }, []);
 
-  const fetchUserOptions = async () => {
+  const fetchResult = async () => {
     try {
-      const res = await projectAPI.getUserOptions({
-        orgId, projectId
+      const res = await ctplAPI.result({
+        tplId: 'tpl-c3okcarn6m88icotqsu0'
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setUserOptions(res.result || []);
+      setScanResults(resetList(res.result.list.scanResults || []));
+      setScanTime(res.result.list.scanTime || null);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -31,25 +34,31 @@ const Index = ({ orgId, projectId, visible, toggleVisible, operation }) => {
     }
   };
 
-  const onOk = async () => {
-    const values = await form.validateFields();
-    operation({
-      doWhat: 'add',
-      payload: {
-        orgId,
-        type: 'api',
-        ...values
-      }
-    }, (hasError) => {
-      !hasError && toggleVisible();
-    });
+  const resetList = (list) => {
+    if (list.length) {
+      let typeList = [...new Set(list.map(d => ({ id: d.policyGroupId, name: d.policyGroupName })))];
+      let ll = [];
+      typeList.forEach(d => {
+        let obj = {};
+        let children = list.filter(t => t.policyGroupId === d.id).map(it => {
+          return it || [];
+        });
+        obj.policyGroupName = d.name;
+        obj.children = children;
+        ll.push(obj);
+      });
+      return ll || [];
+    } else {
+      return [];
+    }
   };
-
+  
   return (
     <Drawer
       title='检测详情'
       placement='right'
-      visible={visible}
+      // visible={visible}
+      visible={true}
       onClose={toggleVisible}
       width={800}
       bodyStyle={{
@@ -60,9 +69,13 @@ const Index = ({ orgId, projectId, visible, toggleVisible, operation }) => {
         headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
         bodyStyle={{ padding: 6 }} 
         type={'inner'} 
-        title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}</div></span>}
+        title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{scanTime && moment(scanTime).format('YYYY-MM-DD HH:mm:ss') || '-'}</div></span>}
       >
-        <ComplianceCollapse />
+        {
+          scanResults.map(info => {
+            return (<ComplianceCollapse info={info} />);
+          })
+        }
       </Card>
     </Drawer>
   );

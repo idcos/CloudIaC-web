@@ -45,7 +45,7 @@ export default ({ reload, visible, toggleVisible, id }) => {
     try {
       const values = await form.validateFields();
       if (!!id) {
-        values.policiesId = id;
+        values.policyGroupId = id;
       }
       setSubmitLoading(true);
       let mode = !!id ? 'update' : 'create';

@@ -22,16 +22,69 @@ export default ({ value, cardTitleAfter, showHeader }) => {
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
   const [ html, setHtml ] = useState('');
+  console.log(value, 'value');
+  let formatList = [
+    { name: '策略组名称', code: 'policyGroupName' },
+    { name: '策略名称', code: 'policyName' },
+    { name: '严重程度', code: 'severity' },
+    { name: '资源类型', code: 'resourceType' },
+    { name: '文件', code: 'filePath' },
+    { name: '错误所在行数', code: 'aaa' },
+    { name: '参考源码 code', code: '提供从 line 开始向后共 3 行源码' },
+    { code: 'fixSuggestion' }
+  ];
 
+  let forMartData = () => {
+    let ll = [];
+    formatList.forEach(it => {
+      if (it.name === '参考源码 code') {
+        let obj = {};
+        obj.name = '参考源码 code';
+        obj.code = `提供从 ${value.line} 开始向后共 ${value.aaa} 行源码`;
+        ll.push(obj);
+      } else if (!!it.name) {
+        let obj = {};
+        obj.name = it.name;
+        obj.code = value[it.code] || '';
+        ll.push(obj);
+      } else {
+        let aaa = value[it.code];
+        let ls = aaa.replace(/"/g, '');
+        let lt = ls.split('\n');
+        lt.forEach((dt) => {
+          let objs = {};
+          objs.code = dt;
+          ll.push(objs);
+        });
+      }
+    });
+    return ll;
+  };
+  console.log(forMartData());
+  //   return [ '策略组名称 policyGroupName',
+  //     '策略名称 policyName',
+  //     '严重程度 severity',
+  //     '资源类型 resourceType',
+  //     '文件 filePath',
+  //     '错误所在行数 10',
+  //     '参考源码 code   提供从 line 开始向后共 3 行源码',
+  //     // eslint-disable-next-line no-unexpected-multiline
+  //     // `"code": "resource "alicloud_vpc" "jack_vpc" {\n  vpc_name = "tf_jack_vpc"\n  cidr_block = "172.16.0.0/12""`
+  //     ...lt
+  //   ];
+  let errorLine = value.line;
   useThrottleEffect(
     () => {
-      const maxLineIndexLen = getNumLen(value.length);
+      const maxLineIndexLen = getNumLen(forMartData().length);
       const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
-      const _html = value.map((line, index) => {
+      const _html = forMartData().map((line, index) => {
+        // 计算indexline展示的位置 
+        let isCode = index > (7 - 1) && index < (7 + 3);
+        let indexLine = !!errorLine ? `${(index > (7 - 1) && index < (7 + 3) ? `${errorLine ++}` : '')}` : '';
         return `
           <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
-            <span class='line-index' style='width: ${lineIndexWidth}px;'>${index + 1 }</span>
-            <pre class='line-text reset-styles'>${ansi_up.ansi_to_html(line)}</pre>
+            <span class='line-index' style='width: ${lineIndexWidth}px;'>${indexLine}</span>
+            <pre class='line-text reset-styles ${isCode ? 'UbuntuMonoUnOblique' : ''}'><span style='color: rgba(0,0,0,0.4)'>${line.name || ''}</span>   ${ansi_up.ansi_to_html(line.code)}</pre>
           </div>
         `;
       }).join('');

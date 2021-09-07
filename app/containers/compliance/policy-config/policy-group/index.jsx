@@ -44,6 +44,24 @@ const PolicyGroupList = () => {
     }
   });
 
+  const enabled = async(value, record) => {
+    try { 
+      const res = await cgroupsAPI.update({
+        enabled: value,
+        policyGroupId: record.id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      fetchList();
+    } catch (e) {
+      notification.error({
+        message: '操作失败',
+        description: e.message
+      });
+    }
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -51,11 +69,11 @@ const PolicyGroupList = () => {
       filters: [
         {
           text: 'Joe',
-          value: 'Joe',
+          value: 'Joe'
         },
         {
           text: 'Jim',
-          value: 'Jim',
+          value: 'Jim'
         }
       ],
       render: (text, record) => <a onClick={() => {
@@ -109,8 +127,11 @@ const PolicyGroupList = () => {
               }}
             >编辑</a>
             <Divider type={'vertical'}/>
-            <Popconfirm title='确认禁用策略组?' onConfirm={() => deleteGroup(record.id)} placement='bottomLeft'>
-              <a>禁用</a>
+            {/* <Popconfirm title='确认禁用策略组?' onConfirm={() => deleteGroup(record.id)} placement='bottomLeft'>
+              <a>删除</a>
+            </Popconfirm> */}
+            <Popconfirm title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} onConfirm={() => enabled(record)} placement='bottomLeft'>
+              {record.enabled ? <a >禁用</a> : <a onClick={() => enabled(true, record)}>启用</a>}
             </Popconfirm>
           </span>
         );
