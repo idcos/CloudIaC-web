@@ -117,9 +117,6 @@ const PolicyGroupList = () => {
               }}
             >编辑</a>
             <Divider type={'vertical'}/>
-            {/* <Popconfirm title='确认禁用策略组?' onConfirm={() => deleteGroup(record.id)} placement='bottomLeft'>
-              <a>删除</a>
-            </Popconfirm> */}
             <Popconfirm title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} onConfirm={() => enabled(record)} placement='bottomLeft'>
               {record.enabled ? <a >禁用</a> : <a onClick={() => enabled(true, record)}>启用</a>}
             </Popconfirm>
@@ -129,23 +126,6 @@ const PolicyGroupList = () => {
     }
   ];
 
-  const deleteGroup = async(id) => {
-    try {
-      const res = await cgroupsAPI.del({
-        policiesId: id
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      resetPageCurrent();
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-  
   return <Layout
     extraHeader={<PageHeader
       title={'策略组'}
