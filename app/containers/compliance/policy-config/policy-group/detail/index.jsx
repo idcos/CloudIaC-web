@@ -1,25 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Table, Row, Input, notification, Select, Col, Card, Drawer } from 'antd';
-import history from 'utils/history';
+import { Table, Input, notification, Select, Drawer } from 'antd';
 import { chartUtils } from 'components/charts-cfg';
 
 import moment from 'moment';
 import { connect } from "react-redux";
 
-import { Eb_WP } from 'components/error-boundary';
-import PageHeader from 'components/pageHeader';
-import Layout from 'components/common/layout';
+import { Eb_WP } from 'components/error-boundary'; 
 import cgroupsAPI from 'services/cgroups';
-import tplAPI from 'services/tpl';
-
-
-const { Option } = Select;
-const { Search } = Input;
 
 const Index = ({ orgs, visible, toggleVisible, id }) => {
-  const orgId = 'org-c4i8s1rn6m81fm687b0g';
-  const projectId = 'p-c4i8scjn6m81fm687b1g';
-  const orgList = (orgs || {}).list || [];
   const [ loading, setLoading ] = useState(false),
     [ passedRate, setpassedRate ] = useState({}),
     [ resultMap, setResultMap ] = useState({
@@ -98,9 +87,9 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
     fetchList();
   }, [query]);
 
-  const formatFloat = (src, pos) => {
-    return Math.round(src * Math.pow(10, pos)) / Math.pow(10, pos);
-  }; 
+  const valueToPercent = (value) => {
+    return Math.round(parseFloat(value) * 10000) / 100;
+  };
 
   const fetchDate = async () => {
     try {
@@ -110,9 +99,9 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      let obj = res.passedRate || {};
+      let obj = res.result.passedRate || {};
       if (!!obj['value']) {
-        obj['value'] = obj['value'].map(d => formatFloat(d, 2)); 
+        obj['value'] = obj['value'].map(d => valueToPercent(d)); 
       }
       setpassedRate(obj || {});
     } catch (e) {
@@ -124,7 +113,6 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
   };
 
   const fetchList = async () => {
-    console.log(id, 'id');
     try {
       setLoading(true);
       delete query.pageNo;
@@ -170,20 +158,7 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
         columns={columns}
         dataSource={resultMap.list}
         loading={loading}
-        pagination={{
-          current: query.pageNo,
-          pageSize: query.pageSize,
-          total: resultMap.total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共${total}条`,
-          onChange: (pageNo, pageSize) => {
-            changeQuery({
-              currentPage: pageNo,
-              pageSize
-            });
-          }
-        }}
+        pagination={false}
       />
     </div>
   </Drawer>;

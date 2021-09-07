@@ -132,7 +132,7 @@ const PolicyGroupList = () => {
     />}
   >
     <div className='idcos-card'>
-      <Space size={16} direction='vertical' style={{ width: '100%'}}>
+      <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Space>
           <Button type={'primary'} onClick={() => setVisible(true)}>
             新建策略组

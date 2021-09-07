@@ -3,6 +3,9 @@ import { Form, Modal, notification } from "antd";
 
 import cgroupsAPI from 'services/cgroups';
 import policiesAPI from 'services/policies';
+import union from 'lodash/union'; // 并集
+import intersection from 'lodash/intersection'; // 合集
+import xor from 'lodash/xor'; // 补集
 
 import TableTransfer from 'components/table-transfer';
 
@@ -28,13 +31,33 @@ export default ({ reload, id, visible, toggleVisible }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ list, setList ] = useState([]);
   const [ bindDate, setBindDate ] = useState([]);
+  const [ unBindDate, setUnBindDate ] = useState([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
     fetchList();
     fetchBindPolicy();
+    fetchUnBindPolicy();
   }, []);
 
+  const fetchUnBindPolicy = async () => {
+    try {
+      const res = await cgroupsAPI.isBind({
+        bind: false,
+        policyGroupId: id
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      const list = (res.result.list || []).map(d => d.id);
+      setUnBindDate(list || []);
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
   const fetchBindPolicy = async () => {
     try {
       const res = await cgroupsAPI.isBind({
@@ -45,7 +68,7 @@ export default ({ reload, id, visible, toggleVisible }) => {
         throw new Error(res.message);
       }
       const list = (res.result.list || []).map(d => d.id);
-      setBindDate(list);
+      setBindDate(list || []);
       form.setFieldsValue({ bindList: list });
     } catch (e) {
       notification.error({
@@ -73,13 +96,36 @@ export default ({ reload, id, visible, toggleVisible }) => {
     }
   };
 
+  const getParams = (values) => {
+    const rmPolicyIds = [];
+    const addPolicyIds = [];
+    const allLIst = (list || []).map(d => d.key);
+    const nowUnBindDate = xor(allLIst, values.bindList); // 未选择的数据
+
+    nowUnBindDate.forEach(k => {
+      if (bindDate.includes(k)) {
+        rmPolicyIds.push(k);
+      }
+    });
+    values.bindList.forEach(k => {
+      if (unBindDate.includes(k)) {
+        addPolicyIds.push(k);
+      }
+    });
+    return {
+      addPolicyIds,
+      rmPolicyIds
+    };
+  };
+
   const onOk = async () => {
-    const values = await form.validateFields();
+    const values = await form.validateFields(); // 已选择的数据
+    
     try {
       setSubmitLoading(true);
       const res = await cgroupsAPI.addAndDel({
         policyGroupId: id,
-        values
+        ...getParams(values)
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -124,6 +170,8 @@ export default ({ reload, id, visible, toggleVisible }) => {
             leftTableColumns={leftTableColumns}
             rightTableColumns={rightTableColumns}
             dataScourt={list || []}
+            bindDate={bindDate}
+            unBindDate={unBindDate}
           />
         </Form.Item>
       </Form>
