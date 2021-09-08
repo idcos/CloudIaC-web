@@ -135,7 +135,7 @@ const CenvList = ({ orgs }) => {
     },
     {
       title: '操作',
-      width: 90,
+      width: 180,
       fixed: 'right',
       render: (text, record) => {
         return (
