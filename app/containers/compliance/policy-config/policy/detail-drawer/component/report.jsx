@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Row, Col } from 'antd';
-
-import { Eb_WP } from 'components/error-boundary';
 import { chartUtils } from 'components/charts-cfg';
 
-const Basic = ({ visible }) => {
+export default ({ policyId }) => {
   const proportion_of_results = useRef();
   const source_has_been_executed = useRef();
   const policy_running_trend = useRef();
@@ -27,10 +25,10 @@ const Basic = ({ visible }) => {
     CHART.current.forEach(chart => {
       chartUtils.update(chart, {});
     });
-  }, [visible]);
+  }, []);
   
   return (
-    <Card title={'报表'} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} style={{ marginTop: 8 }}>
+    <Card title={'报表'} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}>
       <Row>
         {CHART.current.map(chart => 
           <Col span={12}>
@@ -43,5 +41,3 @@ const Basic = ({ visible }) => {
     </Card>
   );
 };
-
-export default Eb_WP()(Basic);
