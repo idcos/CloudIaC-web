@@ -6,8 +6,8 @@ const cenvAPI = {
     return getWithArgs('/api/v1/policies/envs', restParams, {});
   },
   // 修改环境与策略组关联
-  update: ({ tplId, ...restParams }) => {
-    return put(`/api/v1/policies/envs`, restParams, {});
+  update: ({ envId, ...restParams }) => {
+    return put(`/api/v1/policies/envs/${envId}`, restParams, {});
   },
   // 运行环境策略扫描
   runScan: ({ envId, ...restParams }) => {

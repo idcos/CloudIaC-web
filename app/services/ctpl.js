@@ -11,7 +11,7 @@ const ctplAPI = {
   },
   // 修改云模板与策略组关联
   update: ({ tplId, ...restParams }) => {
-    return put(`/api/v1/policies/templates`, restParams, {});
+    return put(`/api/v1/policies/templates/${tplId}`, restParams, {});
   },
   // 运行云模板策略扫描
   runScan: ({ tplId, ...restParams }) => {

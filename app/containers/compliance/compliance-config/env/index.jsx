@@ -5,7 +5,7 @@ import { useRequest } from 'ahooks';
 import history from 'utils/history';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
-import BindPolicyModal from 'components/policy-modal';
+import BindPolicyModal from './component/bindPolicyModal';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import cenvAPI from 'services/cenv';
@@ -16,6 +16,7 @@ const CenvList = ({ orgs }) => {
 
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ viewDetection, setViewDetection ] = useState(false);
+  const [ detail, setDetail ] = useState([]);
   const [ policyView, setPolicyView ] = useState(false);
   const [ templateId, setTemplateId ] = useState(null);
 
@@ -50,7 +51,7 @@ const CenvList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams }
+    searchParams: { formParams, paginate }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -86,7 +87,9 @@ const CenvList = ({ orgs }) => {
     }
   };
 
-  const bindPolicy = () => {
+  const bindPolicy = (record) => {
+    setTemplateId(record.id);
+    setDetail((record.policyGroups || []).map((it) => it.id));
     setPolicyView(true);
   };
   const columns = [
@@ -101,7 +104,7 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      render: (text) => <a onClick={() => bindPolicy()}>{text.length > 0 && text || '绑定'}</a>
+      render: (text, record) => <a onClick={() => bindPolicy(record)}>{text.length > 0 && text || '绑定'}</a>
     },
     {
       dataIndex: 'passed',
@@ -194,7 +197,16 @@ const CenvList = ({ orgs }) => {
         />
       </Space>
     </div>
-    {policyView && <BindPolicyModal visible={policyView} toggleVisible={() => setPolicyView(false)}/>}
+    {policyView && <BindPolicyModal 
+      id={templateId}
+      visible={policyView} 
+      detail={detail}
+      reload={() => fetchList({ ...formParams, ...paginate })}
+      toggleVisible={() => {
+        setPolicyView(false); 
+        setDetail([]);
+      }}
+    />}
     {viewDetection && <Detection 
       id={templateId}
       visible={viewDetection} 

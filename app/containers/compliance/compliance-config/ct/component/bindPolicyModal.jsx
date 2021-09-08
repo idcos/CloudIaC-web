@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
 import isEmpty from 'lodash/isEmpty';
 
-import cenvAPI from 'services/cenv';
+import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
 
 
@@ -48,16 +48,16 @@ export default ({ visible, toggleVisible, id, reload, detail }) => {
     const values = await form.validateFields();
     setSubmitLoading(true);
     try {
-      const res = await cenvAPI.update({
+      const res = await ctplAPI.update({
         ...values,
-        envId: id
+        tplId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setSubmitLoading(false);
-      reload();
       toggleVisible();
+      reload();
     } catch (e) {
       setSubmitLoading(false);
       notification.error({

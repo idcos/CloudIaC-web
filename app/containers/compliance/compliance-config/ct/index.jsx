@@ -13,7 +13,7 @@ import Layout from 'components/common/layout';
 import projectAPI from 'services/project';
 import ctplAPI from 'services/ctpl';
 
-import BindPolicyModal from 'components/policy-modal';
+import BindPolicyModal from './component/bindPolicyModal';
 import DetectionModal from './component/detection-modal';
 
 import { POLICIES_DETECTION } from 'constants/types';
@@ -22,7 +22,8 @@ const CCTList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ visible, setVisible ] = useState(false);
   const [ templateId, setTemplateId ] = useState(null);
-  const [ detectionVisible, setDetectionVisible ] = useState(true);
+  const [ detail, setDetail ] = useState([]);
+  const [ detectionVisible, setDetectionVisible ] = useState(false);
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
@@ -55,7 +56,7 @@ const CCTList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams }
+    searchParams: { formParams, paginate }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -75,6 +76,7 @@ const CCTList = ({ orgs }) => {
 
   const openPolicy = (record) => {
     setTemplateId(record.id);
+    setDetail((record.policyGroups || []).map((it) => it.id));
     setVisible(true);
   };
 
@@ -107,7 +109,7 @@ const CCTList = ({ orgs }) => {
       render: (policyGroups, record) => {
         return (
           isEmpty(policyGroups) ? (
-            <Button type='link'>绑定</Button>
+            <Button onClick={() => openPolicy(record)} type='link'>绑定</Button>
           ) : (
             <Button onClick={() => openPolicy(record)} type='link'>
               {
@@ -135,7 +137,7 @@ const CCTList = ({ orgs }) => {
     },
     {
       title: '操作',
-      width: 90,
+      width: 180,
       fixed: 'right',
       render: (record) => {
         return (
@@ -205,7 +207,12 @@ const CCTList = ({ orgs }) => {
     {visible && <BindPolicyModal 
       visible={visible} 
       id={templateId}
-      toggleVisible={() => setVisible(false)}
+      detail={detail}
+      reload={() => fetchList({ ...formParams, ...paginate })}
+      toggleVisible={() => {
+        setVisible(false); 
+        setDetail([]);
+      }}
     />}
     {detectionVisible && <DetectionModal
       id={templateId}
