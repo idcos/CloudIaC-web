@@ -72,7 +72,7 @@ const CenvList = ({ orgs }) => {
   const runScan = async (record) => {
     try {
       const res = await cenvAPI.runScan({
-        tplId: record.id
+        envId: record.id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
