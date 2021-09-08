@@ -104,7 +104,18 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      render: (text, record) => <a onClick={() => bindPolicy(record)}>{text.length > 0 && text || '绑定'}</a>
+      render: (text, record) => {
+        const policyGroups = text || [];
+        return (
+          <a onClick={() => bindPolicy(record)}>
+            {
+              policyGroups.length > 0 ? (
+                policyGroups.map(it => it.name).join('、')
+              ) : '绑定'
+            }
+          </a>
+        )
+      }
     },
     {
       dataIndex: 'passed',
