@@ -15,6 +15,7 @@ const Index = (props) => {
   const { match, taskId, type } = props,
     { params: { orgId, projectId, envId } } = match;
   const [ loading, setLoading ] = useState(false),
+    [ recordes, setRecordes ] = useState({}),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -119,7 +120,11 @@ const Index = (props) => {
     {
       dataIndex: 'name',
       title: '名称',
-      render: (t, r) => <a onClick={() => setVisible(true)}>{t}</a>
+      render: (t, r) => <a onClick={() => {
+        setVisible(true); 
+        setRecordes(r);
+      }}
+      >{t}</a>
     },
     {
       dataIndex: 'module',
@@ -161,7 +166,15 @@ const Index = (props) => {
         </Panel>
       </Collapse>
     </div>
-    <ResourceModal visible={visible} />
+    {visible && <ResourceModal 
+      params={recordes}
+      visible={visible} 
+      orgId={orgId} projectId={projectId} envId={envId} 
+      toggleVisible={() => {
+        setVisible(false);
+        setRecordes({});
+      }}
+    />}
   </div>;
 };
 

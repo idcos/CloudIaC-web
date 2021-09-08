@@ -72,7 +72,15 @@ const envAPI = {
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
     });
+  },
+  // 资源详情
+  getResources: ({ orgId, projectId, envId, resourceId }) => {
+    return getWithArgs(`/api/v1/envs/${envId}/resources/${resourceId}`, {}, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
   }
+  
 };
 
 export default envAPI;
