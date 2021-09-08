@@ -22,7 +22,6 @@ export default ({ visible, toggleVisible, params, orgId, projectId, envId, resou
       if (res.code != 200) {
         throw new Error(res.message);
       }
-      console.log(res, 'res');
       setData(res.result || {});
     } catch (e) {
       notification.error({

@@ -33,11 +33,11 @@ const Index = (props) => {
   //   ];
   // }, []);
   return <> 
+    <div className={styles['collapse-title']}>{info.policyGroupName || '-'}</div>
     {info.children.map((it) => {
-      const isError = it.status === 'pending';
+      const isError = it.status === 'violated' || it.status === 'failed';
       return (
         <>
-          <div className={styles['collapse-title']}>{info.policyGroupName || '-'}</div>
           <div className={styles[`color-collapse-${it.status}`]}>
             <Collapse collapsible={!isError ? 'disabled' : ''} expandIconPosition={'right'}>
               <Panel showArrow={isError}

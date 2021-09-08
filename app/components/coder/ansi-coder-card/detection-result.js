@@ -32,10 +32,10 @@ export default ({ value, cardTitleAfter, showHeader }) => {
     { name: 'name', code: 'filePath' },
     { name: '错误所在行数', code: 'line' },
     { name: 'code', code: '提供从 line 开始向后共 3 行源码' },
-    { code: 'source' },
+    { code: 'source', isCode: true },
     { name: '建议', code: 'fixSuggestion', showName: true },
-    { code: 'fixSuggestion' }
-
+    { code: 'fixSuggestion' },
+    { name: '建议', code: 'message' }
   ];
 
   let forMartData = () => {
@@ -44,7 +44,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
       if (!!it.name) {
         if (it.name === 'code') {
           let obj = {};
-          let aaa = value[it.code];
+          let aaa = value.source;
           let ls = !!aaa && aaa.replace(/"/g, '');
           let lt = !!ls && ls.split('\n') || [];
           obj.name = '参考源码 code';
@@ -64,12 +64,13 @@ export default ({ value, cardTitleAfter, showHeader }) => {
           !!lt && lt.forEach((dt) => {
             let objs = {};
             objs.code = dt;
+            objs.isViewLine = dt;
             ll.push(objs);
           });
         }
         if (it.code === 'fixSuggestion') {
           let aaa = value[it.code];
-          let ls = !!aaa && aaa.replace(/"/g, '');
+          let ls = !!aaa && aaa.replace(/ /g, '');
           let lt = !!ls && ls.split('\n');
           !!lt && lt.forEach((dt) => {
             let objs = {};
@@ -100,12 +101,10 @@ export default ({ value, cardTitleAfter, showHeader }) => {
       const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
       const _html = forMartData().map((line, index) => {
         // 计算indexline展示的位置 
-        let isCode = index > (7 - 1) && index < (7 + 3);
-        let indexLine = !!errorLine ? `${(index > (7 - 1) && index < (7 + 3) ? `${errorLine ++}` : '')}` : '';
         return `
           <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
-            <span class='line-index' style='width: ${lineIndexWidth}px;'>${indexLine}</span>
-            <pre class='line-text reset-styles ${isCode ? 'UbuntuMonoUnOblique' : ''}'><span style='color: rgba(0,0,0,0.4)'>${line.name || ''}</span>   ${ansi_up.ansi_to_html(line.code)}</pre>
+            <span class='line-index' style='width: ${lineIndexWidth}px;'>${line.isViewLine ? errorLine++ : ""}</span>
+            <pre class='line-text reset-styles ${line.isViewLine ? 'UbuntuMonoUnOblique' : ''}'><span style='color: rgba(0,0,0,0.4)'>${line.name || ''}</span>   ${ansi_up.ansi_to_html(line.code)}</pre>
           </div>
         `;
       }).join('');

@@ -23,7 +23,7 @@ const CCTList = ({ orgs }) => {
   const [ visible, setVisible ] = useState(false);
   const [ templateId, setTemplateId ] = useState(null);
   const [ detail, setDetail ] = useState([]);
-  const [ detectionVisible, setDetectionVisible ] = useState(false);
+  const [ detectionVisible, setDetectionVisible ] = useState(true);
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
