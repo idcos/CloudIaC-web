@@ -20,6 +20,21 @@ const policiesAPI = {
   update: ({ id, ...restParams }) => {
     return put(`${baseUrl}/${id}`, restParams);
   },
+  // 云模板/环境源码解析
+  parse: (params) => {
+    return post(`${baseUrl}/parse`, params);
+  }, 
+  // 策略测试
+  test: (params) => {
+    return post(`${baseUrl}/test`, params);
+  },
+  // 策略屏蔽列表
+  listSuppress: ({ policyId, ...restParams }) => {
+    return getWithArgs(`${baseUrl}/${policyId}/suppress`, restParams);
+  }, 
+ 
+
+
   // 删除策略
   del: (id) => {
     return del(`${baseUrl}/${id}`, {});
@@ -31,22 +46,10 @@ const policiesAPI = {
   // 策略详情-报表
   report: (id) => {
     return get(`${baseUrl}/${id}/report`);
-  }, 
-  // 策略测试
-  test: (params) => {
-    return post(`${baseUrl}/test`, params);
   },
-  // 云模板/环境源码解析
-  parse: (params) => {
-    return post(`${baseUrl}/parse`, params);
-  }, 
   // 创建策略屏蔽
   createSuppress: (params) => {
     return post(`${baseUrl}/suppress`, params);
-  }, 
-  // 查询策略屏蔽
-  detailSuppress: (params) => {
-    return getWithArgs(`${baseUrl}/suppress`, params);
   }, 
   // 删除策略屏蔽
   delSuppress: (params) => {
