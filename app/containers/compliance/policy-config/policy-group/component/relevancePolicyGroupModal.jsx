@@ -35,59 +35,32 @@ export default ({ reload, id, visible, toggleVisible }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    fetchList();
-    fetchBindPolicy();
-    fetchUnBindPolicy();
+    fetchPolicy();
   }, []);
 
-  const fetchUnBindPolicy = async () => {
+  const fetchPolicy = async () => {
     try {
       const res = await cgroupsAPI.isBind({
         bind: false,
         policyGroupId: id
       });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      const list = (res.result.list || []).map(d => d.id);
-      setUnBindDate(list || []);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-  const fetchBindPolicy = async () => {
-    try {
-      const res = await cgroupsAPI.isBind({
+      const bindres = await cgroupsAPI.isBind({
         bind: true,
         policyGroupId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      const list = (res.result.list || []).map(d => d.id);
-      setBindDate(list || []);
-      form.setFieldsValue({ bindList: list });
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
+      let unBindList = res.result.list || [];
+      let bindList = bindres.result.list || [];
+      const listUnBind = unBindList.map(d => d.id);
+      setUnBindDate(listUnBind);
+      
+      const listBind = bindList.map(d => d.id);
+      setBindDate(listBind);
+      form.setFieldsValue({ bindList: listBind });
 
-  const fetchList = async () => {
-    try {
-      const res = await policiesAPI.list({
-        currentPage: 1, pageSize: 100000
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      let list = (res.result.list || []).map(d => ({ key: d.id, name: d.name, email: d.id }));
-      setList(list || []);
+      setList((bindList.concat(unBindList)).map(d => ({ key: d.id, name: d.name, email: d.id })));
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -158,15 +131,9 @@ export default ({ reload, id, visible, toggleVisible }) => {
       >
         <Form.Item
           name='bindList'
-          rules={[
-            {
-              required: true,
-              message: '请选择绑定策略组'
-            }
-          ]}
         >
           <TableTransfer 
-            locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入策略名称搜索' }}
+            locale={{ searchPlaceholder: '请输入策略名称搜索' }}
             leftTableColumns={leftTableColumns}
             rightTableColumns={rightTableColumns}
             dataScourt={list || []}

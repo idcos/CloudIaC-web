@@ -65,9 +65,9 @@ const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, valu
   return (
     <>
       <TableTransfer
-        listStyle={{
-          height: 420
-        }}
+        // listStyle={{
+        //   height: 420
+        // }}
         dataSource={dataScourt || []}
         targetKeys={targetKeys}
         showSearch={true}

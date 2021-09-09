@@ -224,7 +224,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         </Form.Item>
         <Form.Item
           label='事件类型'
-          name='eventTypes'
+          name='eventType'
           rules={[
             {
               required: true,
