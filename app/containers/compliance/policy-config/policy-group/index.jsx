@@ -54,6 +54,9 @@ const PolicyGroupList = () => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      notification.success({
+        message: '操作成功'
+      });
       fetchList({ ...formParams, ...paginate });
     } catch (e) {
       notification.error({
@@ -118,8 +121,8 @@ const PolicyGroupList = () => {
               }}
             >编辑</a>
             <Divider type={'vertical'}/>
-            <Popconfirm title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} onConfirm={() => enabled(record)} placement='bottomLeft'>
-              {record.enabled ? <a >禁用</a> : <a onClick={() => enabled(true, record)}>启用</a>}
+            <Popconfirm title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} onConfirm={() => enabled(!record.enabled, record)} placement='bottomLeft'>
+              {record.enabled ? <a >禁用</a> : <a>启用</a>}
             </Popconfirm>
           </span>
         );

@@ -122,7 +122,7 @@ const AppHeader = (props) => {
         setMenuType('compliance');
       }}
       ><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
-      {(pathname !== '/') && <div>{menuType === 'compliance' ? <div className='changeMenu' onClick={() => changeMenu('execute')}>进入合规</div> : <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入执行界面</div>}</div>}
+      {(pathname !== '/') && userInfo.isAdmin && <div>{menuType === 'compliance' ? <div className='changeMenu' onClick={() => changeMenu('execute')}>进入合规</div> : <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入执行界面</div>}</div>}
       <div className='rParts'>
         {
           (pathname !== '/' && pathname.indexOf('compliance') === -1) ? (

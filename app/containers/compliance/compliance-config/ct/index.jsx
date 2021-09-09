@@ -154,8 +154,6 @@ const CCTList = ({ orgs }) => {
                 setDetectionVisible(true);
               }}
             >查看结果</a>
-            <Divider type={'vertical'}/>
-            <a onClick={() => setDetectionVisible(true)}>检测</a>
           </span>
         );
       }
