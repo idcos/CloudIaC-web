@@ -7,6 +7,7 @@ import { requestWrapper } from 'utils/request';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import vcsAPI from 'services/vcs';
 import ViewFileModal from 'components/view-file-modal';
+import styles from './style.less';
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -69,6 +70,12 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
     if (data.autoApproval) {
       data.triggers = (data.triggers || []).concat(['autoApproval']);
     }
+    if (data.stopOnViolation) {
+      data.triggers = (data.triggers || []).concat(['stopOnViolation']);
+    }
+    if (data.retryAble) {
+      data.triggers = (data.triggers || []).concat(['retryAble']);
+    }
     if (!!data.autoDestroyAt) {
       data.type = 'time';
       form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
@@ -97,6 +104,7 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
   const onfinish = async() => {
     let value = await form.getFieldsValue();
     let values = activekey.length > 0 ? value : { runnerId: form.getFieldValue('runnerId') };
+    console.log(values, 'values');
     return values;
   };
 
@@ -256,7 +264,7 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
         </Col>
       </Row>
       <Row>
-        <Col span={24}>
+        <Col span={24} className={styles.noStepInput}>
           <Form.Item 
             style={{ marginBottom: 0 }}
             {...PL}
@@ -277,16 +285,16 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
                         <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
                       </Col>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }} >
-                        <Checkbox value='commit'>执行失败时，间隔 <Form.Item
+                        <Checkbox value='retryAble'>执行失败时，间隔 <Form.Item
                           noStyle={true}
-                          name='num111'
-                        ><InputNumber style={{ width: 50 }} /></Form.Item> 秒自动重试 <Form.Item
+                          name='retryDelay'
+                        ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 秒自动重试 <Form.Item
                           noStyle={true}
-                          name='num222'
-                        ><InputNumber style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
+                          name='retryNumber'
+                        ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
                       </Col>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }} >
-                        <Checkbox value='commit'>合规不通过时中止部署  </Checkbox> 
+                        <Checkbox value='stopOnViolation'>合规不通过时中止部署  </Checkbox> 
                       </Col>
                       <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)', paddingTop: 20 }}>
                         <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 

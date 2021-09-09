@@ -13,6 +13,8 @@ import keysAPI from 'services/keys';
 import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
+import pullAll from 'lodash/pullAll';
+
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -98,7 +100,8 @@ const Index = ({ match = {} }) => {
 
   // 获取分支数据
   const fetchRepoBranch = async (tplInfoRes) => {
-    const { vcsId, repoId } = tplInfoRes;
+    const { vcsId, repoId, repoRevision } = tplInfoRes;
+    !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
     try { 
       const res = await vcsAPI.listRepoBranch({
         orgId, 
@@ -173,7 +176,6 @@ const Index = ({ match = {} }) => {
   // 获取密钥数据
   const fetchKeys = async (fetchParams) => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
     try { 
       const res = await keysAPI.list({
         orgId,
@@ -232,9 +234,10 @@ const Index = ({ match = {} }) => {
 
   const onFinish = async (taskType) => {
     try {
-      const values = await form.validateFields();
+      const value = await form.validateFields();
       const varData = await varRef.current.validateForm();
       const configData = await configRef.current.onfinish();
+      let values = { ...value, ...configData };
       // if (varData.playbook && !values.keyId) {
       //   return notification.error({
       //     message: '保存失败',
@@ -242,7 +245,9 @@ const Index = ({ match = {} }) => {
       //   });
       // }
       values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
-      values.triggers = (values.triggers || []).filter(d => d !== 'autoApproval'); 
+      values.retryAble = (values.triggers || []).indexOf('retryAble') !== -1;
+      values.stopOnViolation = (values.triggers || []).indexOf('stopOnViolation') !== -1;
+      values.targgers = pullAll(values.triggers, [ 'autoApproval', 'retryAble', 'stopOnViolation' ]);
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
       if (!!values.destroyAt) {

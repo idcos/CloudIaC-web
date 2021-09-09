@@ -39,6 +39,12 @@ const Index = (props) => {
     if (info.autoApproval) {
       info.triggers = (info.triggers || []).concat(['autoApproval']);
     }
+    if (info.retryAble) {
+      info.retryAble = (info.retryAble || []).concat(['retryAble']);
+    }
+    if (info.stopOnViolation) {
+      info.stopOnViolation = (info.stopOnViolation || []).concat(['stopOnViolation']);
+    }
     if (!!info.autoDestroyAt) {
       info.type = 'time';
       form.setFieldsValue({ destroyAt: moment(info.autoDestroyAt) });
@@ -55,8 +61,10 @@ const Index = (props) => {
   const onFinish = async (taskType) => {
     try {
       const values = await form.validateFields();
+      values.retryAble = values.retryAble.indexOf('retryAble') !== -1;
+      values.stopOnViolation = values.stopOnViolation.indexOf('stopOnViolation') !== -1;
       if (values.triggers) {
-        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1 ? true : false;
+        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1;
         values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
       }
       if (values.type === 'infinite') {
@@ -196,19 +204,19 @@ const Index = (props) => {
           <Col span={8} className={styles.noStepInput} style={{ paddingTop: 30 }}>
             <Form.Item
               label=''
-              name='awd111'
+              name='retryAble'
               style={{ marginBottom: 0 }}
             >
               <Checkbox.Group style={{ width: '100%' }}>
                 <Row>
                   <Col span={24} >
-                    <Checkbox value='commit'>执行失败时，间隔 <Form.Item
+                    <Checkbox value='retryAble'>执行失败时，间隔 <Form.Item
                       noStyle={true}
-                      name='num111'
-                    ><InputNumber style={{ width: 50 }} /></Form.Item> 秒自动重试 <Form.Item
+                      name='retryDelay'
+                    ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 秒自动重试 <Form.Item
                       noStyle={true}
-                      name='num222'
-                    ><InputNumber style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
+                      name='retryNumber'
+                    ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
                     <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  
                   </Col>
                 </Row>
@@ -218,13 +226,13 @@ const Index = (props) => {
           <Col span={8} style={{ paddingTop: 30 }}>
             <Form.Item
               label=''
-              name='awd222'
+              name='stopOnViolation'
               style={{ marginBottom: 0 }}
             >
               <Checkbox.Group style={{ width: '100%' }}>
                 <Row>
                   <Col span={24} >
-                    <Checkbox value='commit'>合规不通过时中止部署  </Checkbox> 
+                    <Checkbox value='stopOnViolation'>合规不通过时中止部署  </Checkbox> 
                   </Col>
                 </Row>
               </Checkbox.Group>
