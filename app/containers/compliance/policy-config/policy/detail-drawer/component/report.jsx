@@ -1,5 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Row, Col } from 'antd';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import policiesAPI from 'services/policies';
 import { chartUtils } from 'components/charts-cfg';
 
 export default ({ policyId }) => {
@@ -16,17 +19,32 @@ export default ({ policyId }) => {
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
 
+  const { loading } = useRequest(
+    () => requestWrapper(
+      policiesAPI.report.bind(null, policyId)
+    ),
+    {
+      ready: !!policyId,
+      onSuccess: (data) => {
+        const { policyPassedRate, policyScanCount, scanCount, total } = data || {};
+        chartUtils.updateBatch(CHART.current, [
+          total,
+          scanCount,
+          policyPassedRate,
+          policyScanCount
+        ]);
+      }
+    }
+  );
+
   useEffect(() => {
     resizeHelper.attach();
+    // CHART.current.forEach(chart => {
+    //   chartUtils.update(chart, {});
+    // });
     return resizeHelper.remove();
   }, []);
 
-  useEffect(() => {
-    CHART.current.forEach(chart => {
-      chartUtils.update(chart, {});
-    });
-  }, []);
-  
   return (
     <Card title={'报表'} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'}>
       <Row>

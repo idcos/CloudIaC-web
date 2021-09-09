@@ -1,5 +1,7 @@
+import isArray from 'lodash/isArray';
+
 export const chartOptions = {
-  project_statistics: ({ envActive, envFailed, envInactive }) => {
+  project_statistics: ({ envActive, envFailed, envInactive } = {}) => {
     return {
       tooltip: {
         trigger: 'item',
@@ -48,7 +50,7 @@ export const chartOptions = {
       ]
     };
   },
-  policy_group: ({ column = [], value = [] }) => {
+  policy_group: ({ column = [], value = [] } = {}) => {
     return {
       grid: {
         x: 50,
@@ -99,14 +101,41 @@ export const chartOptions = {
       }]
     };
   },
-  proportion_of_results: () => {
+  proportion_of_results: (inputData) => {
+    inputData = isArray(inputData) ? inputData : [];
+    const nameMap = {
+      passed: {
+        text: '通过',
+        color: '#73DEB3'
+      },
+      violated: {
+        text: '未通过',
+        color: '#FF4D4F'
+      },
+      suppressed: {
+        text: '屏蔽',
+        color: '#5D7092'
+      },
+      failed: {
+        text: '失败',
+        color: '#000000'
+      }
+    };
+    let data = [], names = [], colors = [];
+    inputData.forEach(({ name, value }) => {
+      const nameCN = nameMap[name]['text'] || name;
+      const color = nameMap[name]['color'];
+      names.push(nameCN);
+      colors.push(color);
+      data.push({ name: nameCN, value });
+    });
     return { 
       title: {
         text: '检测结果比例',
-        subtext: '通过/未通过/屏蔽比例',
+        subtext: `${names.join('/')}比例`,
         left: 10
       },
-      color: [ '#73DEB3', '#FF4D4F', '#5D7092' ],
+      color: colors,
       tooltip: {
         trigger: 'item',
         formatter: '{a} <br/>{b}: {c} ({d}%)'
@@ -114,11 +143,11 @@ export const chartOptions = {
       legend: {
         left: 10,
         top: 50,
-        data: [ '通过', '未通过', '屏蔽' ]
+        data: names
       },
       series: [
         {
-          name: '数据',
+          name: '检测结果比例',
           type: 'pie', //设为饼图
           radius: [ '45%', '75%' ], //可调整大小
           center: [ "50%", "60%" ], 
@@ -135,16 +164,12 @@ export const chartOptions = {
               }
             }
           },
-          data: [
-            { value: 100, name: '通过' },
-            { value: 100, name: '未通过' },
-            { value: 1000, name: '屏蔽' }
-          ]
+          data: data
         }
       ]
     };
   }, 
-  source_has_been_executed: () => {
+  source_has_been_executed: ({ column = [], value = [] } = {}) => {
     return {
       grid: {
         x: 50,
@@ -159,14 +184,14 @@ export const chartOptions = {
       },
       xAxis: {
         type: 'category',
-        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        data: column
       },
       color: '#5AD8A6',
       yAxis: {
         type: 'value'
       },
       series: [{
-        data: [ 120, 111, 150, 80, 70, 110, 111 ],
+        data: value,
         type: 'bar',
         itemStyle: {
           normal: {
@@ -179,7 +204,7 @@ export const chartOptions = {
       }]
     };
   },
-  policy_running_trend: () => {
+  policy_running_trend: ({ column = [], value = [] } = {}) => {
     return {
       grid: {
         x: 50,
@@ -194,13 +219,13 @@ export const chartOptions = {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        data: column
       },
       yAxis: {
         type: 'value'
       },
       series: [{
-        data: [ 12, 22, 33, 55, 77, 88, 99 ],
+        data: value,
         type: 'line',
         areaStyle: {},
         symbolSize: 12,
@@ -221,7 +246,7 @@ export const chartOptions = {
       }]
     };
   },
-  detect_pass_rate: () => {
+  detect_pass_rate: ({ column = [], value = [] } = {}) => {
     return {
       grid: {
         x: 50,
@@ -236,13 +261,13 @@ export const chartOptions = {
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        data: column
       },
       yAxis: {
         type: 'value'
       },
       series: [{
-        data: [ 12, 24, 36, 48, 52, 66, 88 ],
+        data: value,
         type: 'line',
         areaStyle: {},
         symbolSize: 12,
