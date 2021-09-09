@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Form, Drawer, notification, Select, Card } from "antd";
+import { Form, Drawer, notification, Empty, Card } from "antd";
 
 import cenvAPI from 'services/cenv';
 import ComplianceCollapse from 'components/compliance-collapse';
@@ -70,11 +70,16 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
         type={'inner'} 
         title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{scanTime && moment(scanTime).format('YYYY-MM-DD HH:mm:ss') || '-'}</div></span>}
       >
-        {
-          scanResults.map(info => {
-            return (<ComplianceCollapse info={info} />);
-          })
-        }
+        {scanResults.length == 0 ? (
+          <Empty />
+        ) : (
+          <>{
+            scanResults.map(info => {
+              return (<ComplianceCollapse info={info} />);
+            })
+          }
+          </>
+        )}
       </Card>
     </Drawer>
   );

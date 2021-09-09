@@ -15,29 +15,12 @@ const { Panel } = Collapse;
 const Index = (props) => {
 
   const { info, taskInfo } = props;
-
-  // const getDate = useMemo(() => {
-  //   let ll = `"code": "resource "alicloud_vpc" "jack_vpc" {\n  vpc_name = "tf_jack_vpc"\n  cidr_block = "172.16.0.0/12""`;
-  //   let ls = ll.replace(/"/g, '');
-  //   let lt = ls.split('\n');
-  //   return [ '策略组名称 policyGroupName',
-  //     '策略名称 policyName',
-  //     '严重程度 severity',
-  //     '资源类型 resourceType',
-  //     '文件 filePath',
-  //     '错误所在行数 10',
-  //     '参考源码 code   提供从 line 开始向后共 3 行源码',
-  //     // eslint-disable-next-line no-unexpected-multiline
-  //     // `"code": "resource "alicloud_vpc" "jack_vpc" {\n  vpc_name = "tf_jack_vpc"\n  cidr_block = "172.16.0.0/12""`
-  //     ...lt
-  //   ];
-  // }, []);
   return <> 
-    <div className={styles['collapse-title']}>{info.policyGroupName || '-'}</div>
-    {info.children.map((it) => {
-      const isError = it.status === 'violated' || it.status === 'failed';
-      return (
-        <>
+    <>
+      <div className={styles['collapse-title']}>{info.policyGroupName || '-'}</div>
+      {info.children.map((it) => {
+        const isError = it.status === 'violated' || it.status === 'failed';
+        return (
           <div className={styles[`color-collapse-${it.status}`]}>
             <Collapse collapsible={!isError ? 'disabled' : ''} expandIconPosition={'right'}>
               <Panel showArrow={isError}
@@ -48,16 +31,14 @@ const Index = (props) => {
               >
                 <AnsiCoderCard 
                   showHeader={true}
-                  value={it} 
+                  value={it}
                 />
               </Panel>
             </Collapse>
           </div>
-        </>
-      );
-    })}
-
-    
+        );
+      })}
+    </>
   </>;
 };
 
