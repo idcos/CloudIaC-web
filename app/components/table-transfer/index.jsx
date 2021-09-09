@@ -36,6 +36,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
         <Table
           rowSelection={rowSelection}
           columns={columns}
+          scroll={{ y: 300 }}
           dataSource={filteredItems}
           size='small'
           pagination={false}
@@ -65,9 +66,6 @@ const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, valu
   return (
     <>
       <TableTransfer
-        // listStyle={{
-        //   height: 420
-        // }}
         dataSource={dataScourt || []}
         targetKeys={targetKeys}
         showSearch={true}
