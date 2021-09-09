@@ -6,6 +6,7 @@ import moment from 'moment';
 import { connect } from "react-redux";
 
 import { Eb_WP } from 'components/error-boundary'; 
+import { POLICIES_DETECTION } from 'constants/types';
 import cgroupsAPI from 'services/cgroups';
 
 const Index = ({ orgs, visible, toggleVisible, id }) => {
@@ -15,7 +16,6 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
       list: [],
       total: 0
     }),
-    [ detectionVisible, setDetectionVisible ] = useState(false),
     [ query, setQuery ] = useState({
       currentPage: 1,
       pageSize: 10,
@@ -46,17 +46,18 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
       title: '创建者'
     },
     {
-      dataIndex: 'repoAddr2',
+      dataIndex: 'passed',
       title: '通过'
     },
 
     {
-      dataIndex: 'repoAddr2',
+      dataIndex: 'violated',
       title: '不通过'
     },
     {
-      dataIndex: 'creator',
-      title: '状态'
+      dataIndex: 'status',
+      title: '状态',
+      render: (t, r) => <span>{POLICIES_DETECTION[t]}</span>
     },
     {
       dataIndex: 'updatedAt',

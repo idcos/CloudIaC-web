@@ -45,7 +45,7 @@ const Index = (props) => {
       title: '创建人'
     },
     {
-      dataIndex: 'taskUpdatedAt',
+      dataIndex: 'createdAt',
       title: '创建时间',
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },

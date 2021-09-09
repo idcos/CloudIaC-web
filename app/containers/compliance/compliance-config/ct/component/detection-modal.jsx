@@ -171,8 +171,7 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
     <Drawer
       title='检测详情'
       placement='right'
-      // visible={visible}
-      visible={true}
+      visible={visible}
       onClose={toggleVisible}
       width={800}
       bodyStyle={{

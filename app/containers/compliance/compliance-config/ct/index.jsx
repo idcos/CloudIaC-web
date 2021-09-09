@@ -16,14 +16,15 @@ import ctplAPI from 'services/ctpl';
 import BindPolicyModal from './component/bindPolicyModal';
 import DetectionModal from './component/detection-modal';
 
-import { POLICIES_DETECTION } from 'constants/types';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
+
 
 const CCTList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ visible, setVisible ] = useState(false);
   const [ templateId, setTemplateId ] = useState(null);
   const [ detail, setDetail ] = useState([]);
-  const [ detectionVisible, setDetectionVisible ] = useState(true);
+  const [ detectionVisible, setDetectionVisible ] = useState(false);
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
@@ -105,17 +106,24 @@ const CCTList = ({ orgs }) => {
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      width: 150,
+      width: 300,
       render: (policyGroups, record) => {
         return (
           isEmpty(policyGroups) ? (
-            <Button onClick={() => openPolicy(record)} type='link'>绑定</Button>
+            <a onClick={() => openPolicy(record)}>绑定</a>
           ) : (
-            <Button onClick={() => openPolicy(record)} type='link'>
+            <a style={{
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: 'inline-block',
+              whiteSpace: 'nowrap',
+              width: '300px'
+            }} onClick={() => openPolicy(record)} type='link'
+            >
               {
                 policyGroups.map((it) => it.name).join('、')
               }
-            </Button>
+            </a>
           )
         ); 
       }
@@ -133,7 +141,7 @@ const CCTList = ({ orgs }) => {
     {
       dataIndex: 'status',
       title: '状态',
-      render: (text) => <Badge color={'red'} text={text} />
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       title: '操作',

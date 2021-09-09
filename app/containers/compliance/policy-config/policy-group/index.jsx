@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, notification, Select, Space, Divider, Popconfirm } from 'antd';
+import { Button, Table, Input, notification, Badge, Space, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -10,6 +10,8 @@ import cgroupsAPI from 'services/cgroups';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import Detail from './detail';
 import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
+
 
 const PolicyGroupList = () => {
   const [ policyGroupId, setPolicyGroupId ] = useState(null),
@@ -96,8 +98,9 @@ const PolicyGroupList = () => {
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
-      dataIndex: 'repoAddr1',
-      title: '状态'
+      dataIndex: 'status',
+      title: '状态',
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       title: '操作',

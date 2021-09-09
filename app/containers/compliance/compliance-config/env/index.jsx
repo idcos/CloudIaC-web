@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Space, Select, Divider, Input, notification } from 'antd';
+import { Table, Space, Select, Divider, Input, notification, Badge } from 'antd';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
 import history from 'utils/history';
@@ -11,6 +11,7 @@ import Layout from 'components/common/layout';
 import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import Detection from './component/detection';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
 
 const CenvList = ({ orgs }) => {
 
@@ -104,10 +105,18 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
+      width: 300,
       render: (text, record) => {
         const policyGroups = text || [];
         return (
-          <a onClick={() => bindPolicy(record)}>
+          <a style={{
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: 'inline-block',
+            whiteSpace: 'nowrap',
+            width: '300px'
+          }} onClick={() => bindPolicy(record)}
+          >
             {
               policyGroups.length > 0 ? (
                 policyGroups.map(it => it.name).join('、')
@@ -131,7 +140,8 @@ const CenvList = ({ orgs }) => {
     },
     {
       dataIndex: 'status',
-      title: '状态'
+      title: '状态',
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       title: '操作',
