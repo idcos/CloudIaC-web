@@ -17,6 +17,10 @@ const FL = {
   labelCol: { span: 22, offset: 2 },
   wrapperCol: { span: 22, offset: 2 }
 };
+const LL = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
+};
 const PL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
@@ -145,7 +149,6 @@ const Index = (props) => {
         {...FL}
         layout={'vertical'}
         // initialValues={info}
-        {...FL}
         onFinish={onFinish}
       >
         <Row>
@@ -206,6 +209,7 @@ const Index = (props) => {
               label=''
               name='retryAble'
               style={{ marginBottom: 0 }}
+              {...LL}
             >
               <Checkbox.Group style={{ width: '100%' }}>
                 <Row>
@@ -217,7 +221,6 @@ const Index = (props) => {
                       noStyle={true}
                       name='retryNumber'
                     ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
-                    <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>  
                   </Col>
                 </Row>
               </Checkbox.Group>
@@ -228,8 +231,9 @@ const Index = (props) => {
               label=''
               name='stopOnViolation'
               style={{ marginBottom: 0 }}
+              {...LL}
             >
-              <Checkbox.Group style={{ width: '100%' }}>
+              <Checkbox.Group style={{ paddingLeft: 'calc(9% - 3px)', width: '100%' }} >
                 <Row>
                   <Col span={24} >
                     <Checkbox value='stopOnViolation'>合规不通过时中止部署  </Checkbox> 
@@ -268,7 +272,7 @@ const Index = (props) => {
                             )
                           }
                         </Col>
-                        <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }}>
+                        <Col span={8}>
                           <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
                           <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
                           {
