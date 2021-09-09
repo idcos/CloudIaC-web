@@ -151,19 +151,16 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
   const resetList = (list) => {
     if (list.length) {
       let typeList = [...new Set(list.map(d => (d.policyGroupId)))];
-      console.log(typeList, 'typeList');
       let ll = [];
       typeList.forEach(d => {
         let obj = {};
         let children = list.filter(t => t.policyGroupId === d).map(it => {
-          console.log(it, 'it');
           return it || [];
         });
-        obj.policyGroupName = d.id;
+        obj.policyGroupName = (children.find(item => item.id === d.id) || {}).policyGroupName || '-';
         obj.children = children;
         ll.push(obj);
       });
-      console.log(ll);
       return ll || [];
     } else {
       return [];

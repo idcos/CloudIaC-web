@@ -79,7 +79,7 @@ export default ({ orgId }) => {
       }).join('、')
     },
     {
-      dataIndex: 'aaa',
+      dataIndex: 'creatorName',
       title: '创建人',
       render: (text) => ORG_USER.notificationType[text]
     },

@@ -22,44 +22,58 @@ export default ({ value, cardTitleAfter, showHeader }) => {
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
   const [ html, setHtml ] = useState('');
-  console.log(value, 'value');
-  let formatList = [
-    { name: '策略组名称', code: 'policyGroupName' },
-    { name: '策略名称', code: 'policyName' },
-    { name: '严重程度', code: 'severity' },
-    { name: '资源类型', code: 'resourceType' },
-    { name: '文件', code: 'filePath' },
-    { name: 'name', code: 'filePath' },
-    { name: '错误所在行数', code: 'line' },
-    { name: 'code', code: '提供从 line 开始向后共 3 行源码' },
-    { code: 'source', isCode: true },
-    { name: '建议', code: 'fixSuggestion', showName: true },
-    { code: 'fixSuggestion' },
-    { name: '建议', code: 'message' }
-  ];
+
+  const formatList = () => {
+    let listViolated = [
+      { name: '策略组名称', code: 'policyGroupName' },
+      { name: '策略名称', code: 'policyName' },
+      { name: '严重程度', code: 'severity' },
+      { name: '资源类型', code: 'resourceType' },
+      { name: '文件', code: 'filePath' },
+      { name: 'name', code: 'filePath' },
+      { name: '行数', code: 'line' },
+      { name: 'code', code: `提供从 ${value.line} 开始向后共 ${value.source.length} 行源码` },
+      { code: 'source', isCode: true },
+      { name: '建议', code: 'fixSuggestion', showName: true, addEmptLine: true },
+      { code: 'fixSuggestion' }
+    ]; 
+    let listFailed = [
+      { name: '策略组名称', code: 'policyGroupName' },
+      { name: '策略名称', code: 'policyName' },
+      { name: '错误信息', code: 'message' }
+    ];
+    let list = value.status === 'violated' ? listViolated : value.status === 'failed' ? listFailed : [];
+    return list;
+  };
 
   let forMartData = () => {
     let ll = [];
-    formatList.forEach(it => {
+    formatList().forEach(it => {
       if (!!it.name) {
         if (it.name === 'code') {
           let obj = {};
-          let aaa = value.source;
-          let ls = !!aaa && aaa.replace(/"/g, '');
+          let sources = value.source;
+          let ls = !!sources && sources.replace(/"/g, '');
           let lt = !!ls && ls.split('\n') || [];
           obj.name = '参考源码 code';
           obj.code = `提供从 ${value.line || '-'} 开始向后共 ${lt.length} 行源码`;
           !!value.source && ll.push(obj);
+        } else if (it.name === '错误信息' && value.status === 'failed') {
+          let obj = {};
+          obj.name = it.name;
+          obj.code = value[it.code] || '暂无';
+          ll.push(obj);
         } else {
           let obj = {};
           obj.name = it.name;
           obj.code = it.showName ? '' : value[it.code] || '';
+          !!value[it.code] && it.addEmptLine && ll.push({});
           !!value[it.code] && ll.push(obj);
         }
       } else {
         if (it.code === 'source') {
-          let aaa = value[it.code];
-          let ls = !!aaa && aaa.replace(/"/g, '');
+          let sources = value[it.code];
+          let ls = !!sources && sources.replace(/"/g, '');
           let lt = !!ls && ls.split('\n');
           !!lt && lt.forEach((dt) => {
             let objs = {};
@@ -69,8 +83,8 @@ export default ({ value, cardTitleAfter, showHeader }) => {
           });
         }
         if (it.code === 'fixSuggestion') {
-          let aaa = value[it.code];
-          let ls = !!aaa && aaa.replace(/ /g, '');
+          let sources = value[it.code];
+          let ls = !!sources && sources.replace(/ /g, '');
           let lt = !!ls && ls.split('\n');
           !!lt && lt.forEach((dt) => {
             let objs = {};
@@ -82,7 +96,6 @@ export default ({ value, cardTitleAfter, showHeader }) => {
     });
     return ll;
   };
-  console.log(forMartData());
   //   return [ '策略组名称 policyGroupName',
   //     '策略名称 policyName',
   //     '严重程度 severity',
@@ -104,7 +117,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
         return `
           <div class='ansi-line' style='padding-left: ${lineIndexWidth}px;'>
             <span class='line-index' style='width: ${lineIndexWidth}px;'>${line.isViewLine ? errorLine++ : ""}</span>
-            <pre class='line-text reset-styles ${line.isViewLine ? 'UbuntuMonoUnOblique' : ''}'><span style='color: rgba(0,0,0,0.4)'>${line.name || ''}</span>   ${ansi_up.ansi_to_html(line.code)}</pre>
+            <pre class='line-text reset-styles ${line.isViewLine ? 'UbuntuMonoUnOblique' : ''}'><span style='color: rgba(0,0,0,0.4)'>${line.name || ''}</span>   ${ansi_up.ansi_to_html(line.code || '')}</pre>
           </div>
         `;
       }).join('');

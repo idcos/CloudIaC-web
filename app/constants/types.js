@@ -1,3 +1,6 @@
+
+import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutlined } from '@ant-design/icons';
+
 /**
  * 全局滚动dom id
  */
@@ -149,4 +152,18 @@ export const POLICIES_DETECTION_COLOR = {
   failed: '#FF3B30',
   violated: '#FF3B30',
   suppressed: '#c1c1c1'
+};
+export const POLICIES_DETECTION_COLOR_COLLAPSE = {
+  pending: '#FFBF00',
+  passed: '#13C2C2',
+  failed: '#FF3B30',
+  violated: '#FF3B30',
+  suppressed: '#c1c1c1'
+};
+export const POLICIES_DETECTION_ICON_COLLAPSE = {
+  pending: <SyncOutlined />,
+  passed: <CheckCircleOutlined />,
+  failed: <CloseCircleOutlined />,
+  violated: <CloseCircleOutlined />,
+  suppressed: <CloseSquareOutlined />
 };

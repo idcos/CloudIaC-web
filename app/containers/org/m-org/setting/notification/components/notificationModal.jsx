@@ -56,6 +56,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       getDetail();
     }
   }, []);
+
   const getDetail = async() => {
     try {
       const res = await notificationsAPI.detailNotification({
@@ -65,6 +66,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       if (res.code !== 200) {
         throw new Error(res.message);
       }
+      form.setFieldsValue(res.result);
       // setPanel('email');
     } catch (e) {
       notification.error({
@@ -73,6 +75,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       });
     }
   };
+
   const fetchUserList = async () => {
     try {
       const res = await userAPI.list({
@@ -221,7 +224,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         </Form.Item>
         <Form.Item
           label='事件类型'
-          name='eventType'
+          name='eventTypes'
           rules={[
             {
               required: true,

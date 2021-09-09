@@ -36,14 +36,14 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
 
   const resetList = (list) => {
     if (list.length) {
-      let typeList = [...new Set(list.map(d => ({ id: d.policyGroupId, name: d.policyGroupName })))];
+      let typeList = [...new Set(list.map(d => (d.policyGroupId)))];
       let ll = [];
       typeList.forEach(d => {
         let obj = {};
-        let children = list.filter(t => t.policyGroupId === d.id).map(it => {
+        let children = list.filter(t => t.policyGroupId === d).map(it => {
           return it || [];
         });
-        obj.policyGroupName = d.name;
+        obj.policyGroupName = (children.find(item => item.id === d.id) || {}).policyGroupName || '-';
         obj.children = children;
         ll.push(obj);
       });
@@ -52,13 +52,12 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
       return [];
     }
   };
-  
+
   return (
     <Drawer
       title='检测详情'
       placement='right'
-      // visible={visible}
-      visible={true}
+      visible={visible}
       onClose={toggleVisible}
       width={800}
       bodyStyle={{

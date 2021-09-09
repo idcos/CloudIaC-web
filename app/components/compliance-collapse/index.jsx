@@ -8,7 +8,7 @@ import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
 import moment from 'moment';
 import styles from './style.less';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
 
 const { Panel } = Collapse;
 
@@ -42,7 +42,7 @@ const Index = (props) => {
             <Collapse collapsible={!isError ? 'disabled' : ''} expandIconPosition={'right'}>
               <Panel showArrow={isError}
                 header={
-                  <span><span style={{ color: POLICIES_DETECTION_COLOR[it.status], paddingRight: 8 }}><CheckCircleOutlined />  {POLICIES_DETECTION[it.status]}</span><span style={{ color: '#000' }}>{it.policyName}</span></span>
+                  <span><span style={{ color: POLICIES_DETECTION_COLOR_COLLAPSE[it.status], paddingRight: 8 }}> {POLICIES_DETECTION_ICON_COLLAPSE[it.status]}  {POLICIES_DETECTION[it.status]}</span><span style={{ color: '#000' }}>{it.policyName}</span></span>
                 } 
                 key='1'
               >

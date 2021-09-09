@@ -26,7 +26,7 @@ export default ({ reload, visible, toggleVisible, id }) => {
   const getDetail = async () => {
     try {
       const res = await cgroupsAPI.detail({
-        policiesId: id
+        policyGroupId: id
       });
       if (res.code !== 200) {
         throw new Error(res.message);
