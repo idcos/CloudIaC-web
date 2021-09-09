@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useImperativeHandle, memo } from 'react';
 import { Space, Select, Form, Input, Button, Empty, notification } from "antd";
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import tplAPI from 'services/tpl';
 import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
-import { TFVERSION_AUTO_MATCH } from 'constants/types';
 
 const FL = {
-  labelCol: { span: 5 },
+  labelCol: { span: 6 },
   wrapperCol: { span: 14 }
 };
 const { Option, OptGroup } = Select;
@@ -32,6 +32,20 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
       tplAPI.listTfversions.bind(null, { orgId })
     )
   );
+
+  // Terraform版本选项列表
+  const {
+    data: autoMatchTfVersion,
+    run: fetchAutoMatchTfVersion,
+    mutate: mutateAutoMatchTfVersion
+  } = useRequest(
+    ({ vcsId, repoRevision, repoId }) => requestWrapper(
+      tplAPI.autotfversion.bind(null, { orgId, repoId, vcsBranch: repoRevision, vcsId })
+    ),
+    {
+      manual: true
+    }
+  );
   
   useEffect(() => {
     fetchVcsList();
@@ -45,6 +59,9 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
     if (formData.repoId) {
       fetchRepoBranches(formData);
       fetchRepoTags(formData);
+    }
+    if (formData.repoRevision) {
+      fetchAutoMatchTfVersion(formData);
     }
   }, [ctData, type]);
 
@@ -163,10 +180,12 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
       setRepoBranches([]);
       setRepoTags([]);
       fetchRepos(allValues);
+      mutateAutoMatchTfVersion(undefined);
       form.setFieldsValue({
         repoId: undefined,
         repoRevision: undefined,
-        workdir: undefined
+        workdir: undefined,
+        tfVersion: undefined
       });
     }
     if (changedValues.repoId) {
@@ -175,9 +194,18 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
       setRepoTags([]);
       fetchRepoBranches(allValues);
       fetchRepoTags(allValues);
+      mutateAutoMatchTfVersion(undefined);
       form.setFieldsValue({
         repoRevision: undefined,
-        workdir: undefined
+        workdir: undefined,
+        tfVersion: undefined
+      });
+    }
+    if (changedValues.repoRevision) {
+      mutateAutoMatchTfVersion(undefined);
+      fetchAutoMatchTfVersion(allValues);
+      form.setFieldsValue({
+        tfVersion: undefined,
       });
     }
   };
@@ -296,13 +324,14 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
       <Form.Item
         label='工作目录'
         name='workdir'
+        tooltip='Terraform执行时的工作目录，不填时默认为代码仓库的根目录，指定的工作目录必须是代码仓库中存在的目录，否则执行部署时将会失败'
       >
-        <Input placeholder='请输入工作目录' />
+        <Input placeholder='请注意工作目录注意事项' />
       </Form.Item>
       <Form.Item
         label='Terraform版本'
         name='tfVersion'
-        initialValue={TFVERSION_AUTO_MATCH}
+        tooltip='当选择“自动检测”时，CloudIaC 会解析工作目录下的 versions.tf 文件，并根据其中的版本约束选择最佳的 terraform 版本，若匹配失败则默认使用 v0.14.0。'
         rules={[
           {
             required: true,
@@ -310,8 +339,10 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
           }
         ]}
       >
-        <Select>
-          <Option value={TFVERSION_AUTO_MATCH}>自动匹配</Option>
+        <Select placeholder='请选择Terraform版本'>
+          {
+            autoMatchTfVersion && <Option value={autoMatchTfVersion}>自动匹配</Option>
+          }
           {
             (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
           }

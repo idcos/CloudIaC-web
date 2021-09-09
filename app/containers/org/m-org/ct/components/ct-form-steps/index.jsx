@@ -8,7 +8,6 @@ import { Eb_WP } from 'components/error-boundary';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import history from "utils/history";
-import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import Basic from './step/basic';
 import Repo from './step/repo';
 import Variable from './step/variable';
@@ -25,6 +24,7 @@ const steps = [
 ];
 
 const CTFormSteps = ({ orgId, tplId, opType }) => {
+  
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
@@ -48,25 +48,21 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       next: () => setStepIndex(stepIndex + 1),
       prev: () => setStepIndex(stepIndex != 0 ? stepIndex - 1 : 0),
       updateData: ({ type, data, isSubmit }) => {
-        setCtData((preCtData) => {
-          const newCtData = {
-            ...preCtData,
-            [type]: data
-          };
-          if (isSubmit) {
-            submit(newCtData);
-          }
-          return newCtData;
-        });
+        const newCtData = { ...ctData, [type]: data };
+        if (isSubmit) {
+          submit(newCtData);
+        } else {
+          setCtData(newCtData);
+        }
       }
     };
-  }, [stepIndex]);
+  }, [stepIndex, ctData]);
 
   const goCTlist = () => {
     history.push(`/org/${orgId}/m-org-ct`);
   };
 
-  const submit = async (data) => {
+  const submit = (data) => {
     const { basic, repo, variable, relation } = data;
     const params = {
       ...basic, 
@@ -76,14 +72,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       orgId,
       tplId
     };
-    // 如果tfVersion选了自动匹配，则查询接口获取自动匹配的值
-    if (params.tfVersion === TFVERSION_AUTO_MATCH) {
-      const { repoId, repoRevision, vcsId } = params;
-      const res = await tplAPI.autotfversion({ orgId, repoId, vcsBranch: repoRevision, vcsId });
-      onSave({ ...params, tfVersion: res.result });
-    } else {
-      onSave(params);
-    }
+    onSave(params);
   };
 
   useEffect(() => {
@@ -94,7 +83,6 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       case 'edit':
         fetchCTDetail();
         break;
-
       default:
         break;
     }
