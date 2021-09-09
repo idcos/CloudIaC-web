@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Select } from 'antd';
 import noop from 'lodash/noop';
+import intersectionWith from 'lodash/intersectionWith';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -51,21 +52,26 @@ export default (props) => {
       showSearch={true}
       onChange={onChange}
       value={value}
-      dropdownRender={menu => (
-        <div className={styles.seniorSelectList}>
-          {menu}
-          {
-            seniorSelectfooter ? (
-              <div className='footer'>
-                {seniorSelectfooter}
-              </div>
-            ) : null
-          }
-        </div>
-      )}
+      dropdownRender={menu => {
+        const showFlattenOptions = intersectionWith(menu.props.flattenOptions, showOptions, (flattenOption, showOption) => {
+          return flattenOption.key === showOption[valuePropName];
+        });
+        return (
+          <div className={styles.seniorSelectList}>
+            {React.cloneElement(menu, { flattenOptions: showFlattenOptions })}
+            {
+              seniorSelectfooter ? (
+                <div className='footer'>
+                  {seniorSelectfooter}
+                </div>
+              ) : null
+            }
+          </div>
+        );
+      }}
     >
       {
-        showOptions.map((option) => {
+        options.map((option) => {
           const { [lablePropsNames.name]: name, [valuePropName]: value, [lablePropsNames.description]: description, disabled } = option;
           return (
             <Option 
