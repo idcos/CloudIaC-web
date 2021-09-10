@@ -32,20 +32,20 @@ const policiesAPI = {
   listSuppress: ({ policyId, ...restParams }) => {
     return getWithArgs(`${baseUrl}/${policyId}/suppress`, restParams);
   }, 
+  // 策略详情-报表
+  report: (id) => {
+    return get(`${baseUrl}/${id}/report`);
+  },
+  // 策略详情-错误
+  error: ({ policyId, ...restParams }) => {
+    return getWithArgs(`${baseUrl}/${policyId}/error`, restParams);
+  }, 
  
 
 
   // 删除策略
   del: (id) => {
     return del(`${baseUrl}/${id}`, {});
-  },
-  // 策略详情-错误
-  error: (id) => {
-    return get(`${baseUrl}/${id}/error`);
-  }, 
-  // 策略详情-报表
-  report: (id) => {
-    return get(`${baseUrl}/${id}/report`);
   },
   // 创建策略屏蔽
   createSuppress: (params) => {

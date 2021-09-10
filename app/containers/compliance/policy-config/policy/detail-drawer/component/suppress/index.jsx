@@ -79,7 +79,7 @@ export default ({ policyId }) => {
   };
 
   return (
-    <Card title='屏蔽内容'>
+    <Card title='屏蔽内容' bodyStyle={{ minHeight: 300 }} type='inner'>
       <Space direction='vertical' size='middle' style={{ width: '100%' }}>
         <Space>
           <Button type='primary' onClick={suppressPolicy}>屏蔽此策略</Button>

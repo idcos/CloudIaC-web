@@ -106,7 +106,7 @@ export const chartOptions = {
     const nameMap = {
       passed: {
         text: '通过',
-        color: '#73DEB3'
+        color: '#52CCA3'
       },
       violated: {
         text: '未通过',
@@ -114,11 +114,11 @@ export const chartOptions = {
       },
       suppressed: {
         text: '屏蔽',
-        color: '#5D7092'
+        color: '#B3CDFF'
       },
       failed: {
         text: '失败',
-        color: '#000000'
+        color: '#A7282A'
       }
     };
     let data = [], names = [], colors = [];
@@ -141,30 +141,35 @@ export const chartOptions = {
         formatter: '{a} <br/>{b}: {c} ({d}%)'
       },
       legend: {
-        left: 10,
-        top: 50,
+        orient: 'vertical',
+        right: 10,
+        top: 110,
+        icon: 'circle',
+        formatter: (name) => {
+          let total = 0;
+          let tarValue;
+          for (let i = 0, l = data.length; i < l; i++) {
+            total += data[i].value;
+            if (data[i].name == name) {
+              tarValue = data[i].value;
+            }
+          }
+          const p = ((tarValue / total) * 100);
+          return `${name} ${p}%`;
+        },
         data: names
       },
       series: [
         {
           name: '检测结果比例',
           type: 'pie', //设为饼图
-          radius: [ '45%', '75%' ], //可调整大小
-          center: [ "50%", "60%" ], 
+          radius: [ '30%', '50%' ], //可调整大小
+          center: [ "30%", "50%" ], 
           clockWise: true, //默认逆时针
-          hoverAnimation: false, //移入放大
+          hoverAnimation: true, //移入放大
           avoidLabelOverlap: false, //避免标注重叠
-          label: {
-            position: 'inside',
-            formatter: '{a|{d}%} ',
-            rich: {
-              a: {
-                fontSize: 12,
-                color: '#fff'
-              }
-            }
-          },
-          data: data
+          label: false,
+          data
         }
       ]
     };

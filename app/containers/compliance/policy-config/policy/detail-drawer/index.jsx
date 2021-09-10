@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { Descriptions, Tabs, Drawer } from "antd";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -7,8 +7,6 @@ import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import FixSuggestion from './component/fix-suggestion';
 import Report from './component/report';
 import Suppress from './component/suppress';
-import styles from './style.less';
-import classNames from 'classnames';
 
 export default ({ id, visible, onClose }) => {
 
@@ -35,24 +33,23 @@ export default ({ id, visible, onClose }) => {
       width={750}
       bodyStyle={{ padding: 16 }}
     >
-      <div className={styles.drawer_body_content}>
-        <Descriptions 
-          column={3}
-          labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
-        >
-          <Descriptions.Item label='严重性'>{POLICIES_SEVERITY_ENUM[detailInfo.severity] || '-'}</Descriptions.Item>
-          <Descriptions.Item label='策略ID'>{detailInfo.id}</Descriptions.Item>
-        </Descriptions>
-        <Tabs 
-          type='card'
-          className={classNames('idcos-tabs-card', styles.drawer_body_content_tabs_card)}
-          animated={false}
-        >
-          {
-            TabPaneMap.map(tabPaneProps => <Tabs.TabPane {...tabPaneProps}/>)
-          }
-        </Tabs>
-      </div>
+      <Descriptions 
+        column={3}
+        labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
+      >
+        <Descriptions.Item label='严重性'>{POLICIES_SEVERITY_ENUM[detailInfo.severity] || '-'}</Descriptions.Item>
+        <Descriptions.Item label='策略ID'>{detailInfo.id}</Descriptions.Item>
+      </Descriptions>
+      <Tabs
+        type='card'
+        className='idcos-tabs-card'
+        animated={false}
+        defaultActiveKey='report' // TODO remove it
+      >
+        {
+          TabPaneMap.map(tabPaneProps => <Tabs.TabPane {...tabPaneProps}/>)
+        }
+      </Tabs>
     </Drawer>
   );
 };
