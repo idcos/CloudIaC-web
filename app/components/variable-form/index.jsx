@@ -67,12 +67,15 @@ const VariableForm = ({
           );
         }
         Promise.all(formValidates).then(
-          ([ , , { tfVarsFile, playbook } = {} ]) => {
+          ([ , , otherVars ]) => {
+            if (otherVars) {
+              otherVars.tfVarsFile = otherVars.tfVarsFile || '';
+              otherVars.playbook = otherVars.tfVarsFile || '';
+            }
             const data = {
               deleteVariablesId,
               variables: map([ ...terraformVarList, ...envVarList ], (it) => omit(it, ['isNew', '_key_id', 'overwrites'])),
-              tfVarsFile: tfVarsFile || '',
-              playbook: playbook || ''
+              ...otherVars
             };
             resolve(data);
           },
