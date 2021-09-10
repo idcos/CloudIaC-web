@@ -81,6 +81,19 @@ export const SCOPE_ENUM = {
   env: '环境'
 };
 
+// 屏蔽目标类型
+export const SUPPRESS_TARGET_TYPE_ENUM = {
+  template: '云模板',
+  env: '环境',
+  policy: '策略'
+};
+
+// 屏蔽类型
+export const SUPPRESS_TYPE_ENUM = {
+  policy: '屏蔽此策略',
+  source: '按来源屏蔽'
+};
+
 export const DOCS = {
   quickstart: '快速入门',
   developer: '开发者文档',

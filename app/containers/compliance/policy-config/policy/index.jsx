@@ -235,7 +235,14 @@ const Policy = () => {
       </Space>
     </div>
     {
-      detailDrawerState.visible && <DetailDrawer visible={detailDrawerState.visible} id={detailDrawerState.id} onClose={onCloseDetailsDrawer} />
+      detailDrawerState.visible && (
+        <DetailDrawer 
+          visible={detailDrawerState.visible} 
+          id={detailDrawerState.id} 
+          onClose={onCloseDetailsDrawer} 
+          reloadPolicyList={refreshList}
+        />
+      )
     }
   </Layout>;
 };

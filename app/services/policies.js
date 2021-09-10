@@ -37,7 +37,7 @@ const policiesAPI = {
     return post(`${baseUrl}/${policyId}/suppress`, restParams);
   }, 
   // 删除策略屏蔽
-  delSuppress: ({ policyId, suppressId }) => {
+  delOneSuppress: ({ policyId, suppressId }) => {
     return del(`${baseUrl}/${policyId}/suppress/${suppressId}`, {});
   },
   // 策略屏蔽来源列表

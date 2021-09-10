@@ -8,9 +8,9 @@ import FixSuggestion from './component/fix-suggestion';
 import Report from './component/report';
 import Suppress from './component/suppress';
 
-export default ({ id, visible, onClose }) => {
+export default ({ id, visible, onClose, reloadPolicyList }) => {
 
-  const { data: detailInfo = {} } = useRequest(
+  const { data: detailInfo = {}, refresh } = useRequest(
     () => requestWrapper(
       policiesAPI.detail.bind(null, id)
     ),
@@ -19,8 +19,13 @@ export default ({ id, visible, onClose }) => {
     }
   );
 
+  const reloadPolicyDetailAndList = () => {
+    refresh();
+    reloadPolicyList();
+  }
+
   const TabPaneMap = [
-    { key: 'suppress', tab: '屏蔽', children: <Suppress policyId={id} detailInfo={detailInfo} /> },
+    { key: 'suppress', tab: '屏蔽', children: <Suppress policyId={id} detailInfo={detailInfo} reloadPolicyDetailAndList={reloadPolicyDetailAndList} /> },
     { key: 'fix-suggestion', tab: '参考', children: <FixSuggestion content={detailInfo.fixSuggestion}/> },
     { key: 'report', tab: '报表', children: <Report policyId={id}/> }
   ];

@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
-import { SCOPE_ENUM } from 'constants/types';
+import { SUPPRESS_TARGET_TYPE_ENUM } from 'constants/types';
 
 const FL = {
   labelCol: { span: 5 },
@@ -57,7 +57,7 @@ export default ({ policyId, visible, onClose, reload }) => {
     {
       dataIndex: 'targetType',
       title: '类型',
-      render: (text) => SCOPE_ENUM[text]
+      render: (text) => SUPPRESS_TARGET_TYPE_ENUM[text]
     }
   ];
 
@@ -114,6 +114,9 @@ export default ({ policyId, visible, onClose, reload }) => {
           loading={tableLoading}
           columns={columns}
           dataSource={tableData.list || []}
+          pagination={{
+            showTotal: (total) => `共${total}条`
+          }}
           rowSelection={{
             onChange: setAddTargetIds
           }}
