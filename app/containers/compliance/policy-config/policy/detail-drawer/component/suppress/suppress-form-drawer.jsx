@@ -118,7 +118,12 @@ export default ({ policyId, visible, onClose, reload }) => {
             showTotal: (total) => `共${total}条`
           }}
           rowSelection={{
-            onChange: setAddTargetIds
+            onChange: setAddTargetIds,
+            selections: [
+              Table.SELECTION_ALL,
+              Table.SELECTION_INVERT,
+              Table.SELECTION_NONE
+            ]
           }}
         />
       </Card>
