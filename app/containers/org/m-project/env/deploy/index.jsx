@@ -238,12 +238,12 @@ const Index = ({ match = {} }) => {
       const varData = await varRef.current.validateForm();
       const configData = await configRef.current.onfinish();
       let values = { ...value, ...configData };
-      // if (varData.playbook && !values.keyId) {
-      //   return notification.error({
-      //     message: '保存失败',
-      //     description: 'playbook存在时管理密钥必填'
-      //   });
-      // }
+      if (values.playbook && !values.keyId) {
+        return notification.error({
+          message: '保存失败',
+          description: 'playbook存在时管理密钥必填'
+        });
+      }
       values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
       values.retryAble = (values.triggers || []).indexOf('retryAble') !== -1;
       values.stopOnViolation = (values.triggers || []).indexOf('stopOnViolation') !== -1;
@@ -315,6 +315,12 @@ const Index = ({ match = {} }) => {
               <Form.Item
                 label='分支/标签：'
                 name='revision'
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择'
+                  }
+                ]}
               >
                 <Select 
                   allowClear={true}

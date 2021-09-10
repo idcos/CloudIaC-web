@@ -66,8 +66,15 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      form.setFieldsValue(res.result);
-      // setPanel('email');
+      if (res.result.notificationType === 'email') {
+        form.setFieldsValue(res.result);
+      } else {
+        let org = {};
+        org[`${res.result.notificationType}-url`] = res.result.url;
+        form.setFieldsValue({ ...org, ...res.result });
+        
+      }
+      setPanel(res.result.notificationType || 'email');
     } catch (e) {
       notification.error({
         message: '获取失败',
