@@ -32,6 +32,18 @@ const policiesAPI = {
   listSuppress: ({ policyId, ...restParams }) => {
     return getWithArgs(`${baseUrl}/${policyId}/suppress`, restParams);
   }, 
+  // 更新策略屏蔽
+  updateSuppress: ({ policyId, ...restParams }) => {
+    return post(`${baseUrl}/${policyId}/suppress`, restParams);
+  }, 
+  // 删除策略屏蔽
+  delSuppress: ({ policyId, suppressId }) => {
+    return del(`${baseUrl}/${policyId}/suppress/${suppressId}`, {});
+  },
+  // 策略屏蔽来源列表
+  listSuppressSources: ({ policyId, ...restParams }) => {
+    return getWithArgs(`${baseUrl}/${policyId}/suppress/sources`, restParams);
+  }, 
   // 策略详情-报表
   report: (id) => {
     return get(`${baseUrl}/${id}/report`);
@@ -40,20 +52,9 @@ const policiesAPI = {
   error: ({ policyId, ...restParams }) => {
     return getWithArgs(`${baseUrl}/${policyId}/error`, restParams);
   }, 
- 
-
-
   // 删除策略
   del: (id) => {
     return del(`${baseUrl}/${id}`, {});
-  },
-  // 创建策略屏蔽
-  createSuppress: (params) => {
-    return post(`${baseUrl}/suppress`, params);
-  }, 
-  // 删除策略屏蔽
-  delSuppress: (params) => {
-    return del(`${baseUrl}/suppress`, params);
   }
 };
 

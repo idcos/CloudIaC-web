@@ -1,25 +1,73 @@
 import React, { useState } from 'react';
-import { Card, Button, Space, Table, Input, Alert, Drawer, Form } from 'antd';
+import { Card, notification, Button, Space, Table, Input, Alert, Drawer, Form } from 'antd';
+import isEmpty from 'lodash/isEmpty';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import policiesAPI from 'services/policies';
+import { SCOPE_ENUM } from 'constants/types';
 
 const FL = {
   labelCol: { span: 5 },
   wrapperCol: { span: 10 }
 };
 
-export default ({ visible, onClose }) => {
+export default ({ policyId, visible, onClose, reload }) => {
 
   const [form] = Form.useForm();
+  const [addTargetIds, setAddTargetIds] = useState([]);
+
+  // 屏蔽列表查询
+  const {
+    loading: tableLoading,
+    data: tableData = {}
+  } = useRequest(
+    () => requestWrapper(
+      policiesAPI.listSuppressSources.bind(null, { policyId, currentPage: 1, pageSize: 100000 })
+    ),
+    {
+      ready: !!policyId
+    }
+  );
+
+  // 更新策略屏蔽列表
+  const {
+    loading: saveLoading,
+    run: updateSuppress
+  } = useRequest(
+    (params) => requestWrapper(
+      policiesAPI.updateSuppress.bind(null, params),
+      {
+        autoSuccess: true
+      }
+    ),
+    {
+      manual: true,
+      onSuccess: () => {
+        onClose();
+        reload();
+      }
+    }
+  );
 
   const columns = [
     {
-      dataIndex: '',
-      title: '云模板名称'
+      dataIndex: 'targetName',
+      title: '名称'
     },
     {
-      dataIndex: '',
-      title: '环境名称'
+      dataIndex: 'targetType',
+      title: '类型',
+      render: (text) => SCOPE_ENUM[text]
     }
   ];
+
+  const save = async () => {
+    const { reason } = await form.validateFields();
+    if (isEmpty(addTargetIds)) {
+      return notification.error({ message: '请勾选来源' });
+    }
+    updateSuppress({ policyId, addTargetIds, reason });
+  };
 
   return (
     <Drawer
@@ -31,8 +79,8 @@ export default ({ visible, onClose }) => {
       footerStyle={{ textAlign: 'right' }}
       footer={
         <Space>
-          <Button>取消</Button>
-          <Button type='primary'>保存</Button>
+          <Button onClick={onClose}>取消</Button>
+          <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
         </Space>
       }
     >
@@ -49,7 +97,7 @@ export default ({ visible, onClose }) => {
       >
         <Form.Item
           label='屏蔽说明'
-          name='a'
+          name='reason'
           rules={[
             {
               required: true,
@@ -60,10 +108,17 @@ export default ({ visible, onClose }) => {
           <Input placeholder={'请填写屏蔽说明'}/>
         </Form.Item>
       </Form>
-      <Table 
-        dataSource={[]}
-        columns={columns}
-      />
+      <Card title='来源' type='inner'>
+        <Table 
+          rowKey='targetId'
+          loading={tableLoading}
+          columns={columns}
+          dataSource={tableData.list || []}
+          rowSelection={{
+            onChange: setAddTargetIds
+          }}
+        />
+      </Card>
     </Drawer>
   );
 };

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { Card, Button, Space, Table, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import policiesAPI from 'services/policies';
 import SuppressFormDrawer from './suppress-form-drawer';
+import { SCOPE_ENUM } from 'constants/types';
 
-export default ({ policyId }) => {
+export default ({ policyId, detailInfo: { enabled } = {} }) => {
 
   const [ visible, setVisible ] = useState(false);
 
@@ -16,7 +18,6 @@ export default ({ policyId }) => {
     loading: tableLoading,
     data: tableData,
     run: fetchList,
-    refresh: refreshList
   } = useRequest(
     (params) => requestWrapper(
       policiesAPI.listSuppress.bind(null, params)
@@ -28,7 +29,8 @@ export default ({ policyId }) => {
 
   // 表单搜索和table关联hooks
   const { 
-    tableProps
+    tableProps,
+    resetPageCurrent
   } = useSearchFormAndTable({
     tableData,
     pagination: { hideOnSinglePage: true },
@@ -40,23 +42,36 @@ export default ({ policyId }) => {
 
   const columns = [
     {
-      dataIndex: '',
-      title: '屏蔽说明'
+      dataIndex: 'targetName',
+      title: '名称'
     },
     {
       dataIndex: 'targetType',
-      title: '屏蔽类型',
+      title: '类型',
+      render: (text) => SCOPE_ENUM[text]
     },
     {
-      dataIndex: '',
+      dataIndex: 'type',
+      title: '屏蔽类型'
+    },
+    {
+      dataIndex: 'reason',
+      title: '屏蔽说明'
+    },
+    {
+      dataIndex: 'creator',
       title: '操作人'
     },
     {
-      dataIndex: '',
-      title: '屏蔽时间'
+      dataIndex: 'createdAt',
+      title: '屏蔽时间',
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm')
     },
     {
-      title: '操作'
+      title: '操作',
+      render: () => {
+        return <Button type='link' style={{ padding: 0 }}>删除</Button>
+      }
     }
   ];
 
@@ -82,8 +97,8 @@ export default ({ policyId }) => {
     <Card title='屏蔽内容' bodyStyle={{ minHeight: 300 }} type='inner'>
       <Space direction='vertical' size='middle' style={{ width: '100%' }}>
         <Space>
-          <Button type='primary' onClick={suppressPolicy}>屏蔽此策略</Button>
-          <Button onClick={openSuppressFormDrawer}>按来源屏蔽</Button>
+          <Button type='primary' onClick={suppressPolicy} disabled={!enabled}>屏蔽此策略</Button>
+          <Button onClick={openSuppressFormDrawer} disabled={!enabled}>按来源屏蔽</Button>
         </Space>
         <Table
           columns={columns}
@@ -91,7 +106,9 @@ export default ({ policyId }) => {
           {...tableProps}
         />
       </Space>
-      <SuppressFormDrawer visible={visible} onClose={closeSuppressFormDrawer}/>
+      {
+        visible && <SuppressFormDrawer policyId={policyId} visible={visible} reload={resetPageCurrent} onClose={closeSuppressFormDrawer}/>
+      }
     </Card>
   );
 };

@@ -20,7 +20,7 @@ export default ({ id, visible, onClose }) => {
   );
 
   const TabPaneMap = [
-    { key: 'suppress', tab: '屏蔽', children: <Suppress policyId={id}/> },
+    { key: 'suppress', tab: '屏蔽', children: <Suppress policyId={id} detailInfo={detailInfo} /> },
     { key: 'fix-suggestion', tab: '参考', children: <FixSuggestion content={detailInfo.fixSuggestion}/> },
     { key: 'report', tab: '报表', children: <Report policyId={id}/> }
   ];
