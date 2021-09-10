@@ -4,6 +4,17 @@ import getPermission from "utils/permission";
 export const getComplianceMenus = (userInfo) => {
   return [
     {
+      subName: 'none',
+      subKey: 'none',
+      menuList: [
+        {
+          name: '概览',
+          key: 'dashboard',
+          icon: <CodeOutlined />
+        }],
+      icon: <CodeOutlined />
+    },
+    {
       subName: '合规配置',
       subKey: 'compliance-config',
       emptyMenuList: [],

@@ -12,6 +12,9 @@ const KEY = 'global';
 const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, dispatch, menuType }) => {
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
+    case 'dashboard':
+      history.push(`/compliance/dashboard`);
+      break;
     case 'compliance-config':
       history.push(`/compliance/compliance-config/${menuItemKey}`);
       break;
@@ -26,6 +29,10 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
     let scope = subKey, menuKey, isEmptyData = false;
     let pathList = window.location.pathname.split('/');
+    if (subKey === 'none') {
+      menuKey = 'dashboard';
+      scope = 'dashboard';
+    }
     if (pathList.length > 4) {
       menuKey = pathList[pathList.length - 2];
     } else {
@@ -58,7 +65,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
               }
               return (
                 <div className='sub-menu'>
-                  <div className='menu-title'>{subMenu.subName}</div>
+                  {subMenu.subName === 'none' ? null : <div className='menu-title'>{subMenu.subName}</div>}
                   <div className='menu-list'>
                     { renderMenus(subMenu) }
                   </div>

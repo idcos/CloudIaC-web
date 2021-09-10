@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="131px" height="31px" viewBox="0 0 131 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 9备份 2</title>
+    <defs>
+        <linearGradient x1="11.1212025%" y1="48.601144%" x2="87.3032932%" y2="51.5242427%" id="linearGradient-1">
+            <stop stop-color="#FEE9D5" offset="0%"></stop>
+            <stop stop-color="#FEC79C" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-5.59402807%" y1="46.6216678%" x2="86.1908991%" y2="51.6961426%" id="linearGradient-2">
+            <stop stop-color="#FEE6CF" offset="0%"></stop>
+            <stop stop-color="#F5BD91" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="79.9629071%" x2="14.4943001%" y2="50%" id="linearGradient-3">
+            <stop stop-color="#DC976B" offset="0%"></stop>
+            <stop stop-color="#D07B34" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="合规" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-9备份-2" transform="translate(0.600000, 1.050040)">
+            <path d="M0,0 C2.96299737,3.23883203 4.68168643,8.44666731 5.15606717,15.6235059 C5.08115661,15.6180881 4.79200857,29.1195047 14.4516945,29.1195047 C14.607471,29.3821053 48.9429008,29.3821053 117.457984,29.1195047 C121.510351,28.2788264 123.727477,25.0814543 124.109364,19.5273886 C124.100293,19.4275538 122.641164,6.91786129 130.23679,0 C130.296376,0.00507307484 86.8841127,0.00507307484 0,0 Z" id="路径-6" stroke="url(#linearGradient-2)" stroke-width="0.5" fill="url(#linearGradient-1)"></path>
+            <g id="编组-8" transform="translate(13.801483, 6.345940)">
+                <polygon id="星形" fill="#DA9363" transform="translate(8.312288, 8.312288) rotate(-330.000000) translate(-8.312288, -8.312288) " points="8.31228801 11.3547966 5.26977944 13.5820675 5.6773983 9.8335423 2.22727086 8.31228801 5.6773983 6.79103373 5.26977944 3.04250858 8.31228801 5.26977944 11.3547966 3.04250858 10.9471777 6.79103373 14.3973052 8.31228801 10.9471777 9.8335423 11.3547966 13.5820675"></polygon>
+                <polyline id="路径-9" stroke="#D3864F" stroke-width="0.5" points="7.02028603 11.1587461 8.31228801 14.3973052 9.6694377 11.2573739"></polyline>
+                <polygon id="路径-7" fill="url(#linearGradient-3)" points="8.31228801 2.22727086 3.04250858 11.3547966 13.5820675 11.3547966"></polygon>
+                <line x1="8.31228801" y1="2.75041397" x2="3.44487368" y2="11.1587461" id="路径-8" stroke="#CA7B42" stroke-width="0.5"></line>
+            </g>
+            <text id="策略组TOP5" font-family="HarmonyOS_Sans_SC_Medium, HarmonyOS Sans SC" font-size="14" font-weight="400" fill="#39001B">
+                <tspan x="33.6695277" y="19.5">策略组TOP5</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

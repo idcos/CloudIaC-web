@@ -111,10 +111,16 @@ export default function createRoutes() {
       ]
     },
     {
-      path: '/compliance/:configKey/:typeKey',
+      path: '/compliance/:configKey?/:typeKey',
       name: '合规配置',
       component: loadable(() => import('containers/compliance'), asyncLoadFallback),
       routes: [
+        {
+          path: '/compliance/dashboard',
+          name: '仪表盘',
+          component: loadable(() => import('containers/compliance/dashboard'), asyncLoadFallback),
+          exact: true
+        },
         {
           path: '/compliance/compliance-config/ct',
           name: '云模板',
@@ -150,7 +156,7 @@ export default function createRoutes() {
           name: '创建/编辑策略页面',
           component: loadable(() => import('containers/compliance/policy-config/policy/form-page'), asyncLoadFallback),
           exact: true
-        },
+        }
       ]
     },
     {
