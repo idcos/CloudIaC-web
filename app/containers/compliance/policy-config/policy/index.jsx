@@ -15,9 +15,8 @@ import DetailDrawer from './detail-drawer';
 const Policy = () => {
   
   const [ detailDrawerState, setDetailsDrawerState ] = useState({
-    // visible: false,
-    // id: null,
-    visible: true, id: 'po-c4ounvbn6m83tb0q9cig' // TODO update it
+    visible: false,
+    id: null
   });
 
   // 策略组选项查询

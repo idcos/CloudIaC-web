@@ -44,7 +44,6 @@ export default ({ id, visible, onClose }) => {
         type='card'
         className='idcos-tabs-card'
         animated={false}
-        defaultActiveKey='report' // TODO remove it
       >
         {
           TabPaneMap.map(tabPaneProps => <Tabs.TabPane {...tabPaneProps}/>)
