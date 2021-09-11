@@ -56,7 +56,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
           let ls = !!sources && sources.replace(/"/g, '');
           let lt = !!ls && ls.split('\n') || [];
           obj.name = '参考源码 code';
-          obj.code = `提供从 ${value.line || '-'} 开始向后共 ${lt.length} 行源码`;
+          obj.code = `提供从 ${value.line || '-'} 开始向后共 ${(lt || []).length} 行源码`;
           !!value.source && ll.push(obj);
         } else if (it.name === '错误信息' && value.status === 'failed') {
           let obj = {};
@@ -110,7 +110,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
   let errorLine = value.line;
   useThrottleEffect(
     () => {
-      const maxLineIndexLen = getNumLen(forMartData().length);
+      const maxLineIndexLen = getNumLen((forMartData() || []).length);
       const lineIndexWidth = 6 + 8.5 * maxLineIndexLen;
       const _html = forMartData().map((line, index) => {
         // 计算indexline展示的位置 
