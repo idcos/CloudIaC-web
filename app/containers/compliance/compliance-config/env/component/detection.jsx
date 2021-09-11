@@ -24,8 +24,11 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setScanResults(resetList(res.result.list.scanResults || []));
-      setScanTime(res.result.list.scanTime || null);
+      const listResult = !!res.result ? res.result : {};
+      setScanResults((listResult.list || {}).scanResults || []);
+      setScanTime((listResult.list || {}).scanTime || null);
+      // setScanResults(resetList(res.result.list.scanResults || []));
+      // setScanTime(res.result.list.scanTime || null);
     } catch (e) {
       notification.error({
         message: '获取失败',
