@@ -15,10 +15,11 @@ const { Panel } = Collapse;
 const Index = (props) => {
 
   const { info, taskInfo } = props;
+
   return <> 
     <>
       <div className={styles['collapse-title']}>{info.policyGroupName || '-'}</div>
-      {info.children.map((it) => {
+      {(info.children || []).map((it) => {
         const isError = it.status === 'violated' || it.status === 'failed';
         return (
           <div className={styles[`color-collapse-${it.status}`]}>

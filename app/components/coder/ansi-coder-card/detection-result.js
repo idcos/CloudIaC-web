@@ -32,7 +32,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
       { name: '文件', code: 'filePath' },
       { name: 'name', code: 'filePath' },
       { name: '行数', code: 'line' },
-      { name: 'code', code: `提供从 ${value.line} 开始向后共 ${value.source.length} 行源码` },
+      { name: 'code', code: `提供从  开始向后共  行源码` },
       { code: 'source', isCode: true },
       { name: '建议', code: 'fixSuggestion', showName: true, addEmptLine: true },
       { code: 'fixSuggestion' }

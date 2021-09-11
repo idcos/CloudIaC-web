@@ -36,9 +36,12 @@ export default ({ visible, toggleVisible, params, orgId, projectId, envId, resou
     visible={visible}
     onCancel={toggleVisible}
     width={600}
+    height={450}
     footer={false}
     zIndex={1111111}
   >
-    <Coder options={{ mode: '' }} value={JSON.stringify(data, null, 2)} style={{ height: 'auto' }} />
+    <div style={{ height: 450, overflowY: 'auto' }}>
+      <Coder options={{ mode: '' }} value={JSON.stringify(data, null, 2)} style={{ height: 'auto' }} />
+    </div>
   </Modal>;
 };

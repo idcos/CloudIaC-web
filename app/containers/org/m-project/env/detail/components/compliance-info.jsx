@@ -26,7 +26,7 @@ const Index = (props) => {
         throw new Error(res.message);
       }
       const listResult = !!res.result ? res.result : {};
-      setScanResults((listResult.list || {}).scanResults || []);
+      setScanResults(resetList((listResult.list || {}).scanResults || []));
       setScanTime((listResult.list || {}).scanTime || null);
     } catch (e) {
       notification.error({

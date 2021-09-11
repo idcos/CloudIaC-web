@@ -112,7 +112,7 @@ const AppHeader = (props) => {
     if (value === 'execute') {
       setLocationHref(pathname);
     }
-    value === 'execute' ? history.push(`/compliance/compliance-config/ct`) : history.push(locationHref || '/');
+    value === 'execute' ? history.push(`/compliance/dashboard`) : history.push(locationHref || '/');
   };
 
   return <div className={`idcos-app-header ${theme || ''}`}>

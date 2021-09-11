@@ -27,10 +27,8 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
       
 
       const listResult = !!res.result ? res.result : {};
-      setScanResults((listResult.list || {}).scanResults || []);
+      setScanResults(resetList((listResult.list || {}).scanResults || []));
       setScanTime((listResult.list || {}).scanTime || null);
-      // setScanResults(resetList(res.result.list.scanResults || []));
-      // setScanTime(res.result.list.scanTime || null);
     } catch (e) {
       notification.error({
         message: '获取失败',
