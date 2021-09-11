@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import { useSearchFormAndTable } from 'utils/hooks';
 import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
-
+import EllipsisText from 'components/EllipsisText';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 
@@ -36,6 +36,21 @@ const CCTList = ({ orgs }) => {
     ),
     {
       manual: true
+    }
+  );
+
+  // 启用/禁用云模版扫描
+  const {
+    run: changeEnabled,
+    fetches: changeEnabledFetches
+  } = useRequest(
+    (params) => requestWrapper(
+      ctplAPI.enabled.bind(null, params),
+      { autoSuccess: true }
+    ), {
+      manual: true,
+      fetchKey: (params) => params.tplId,
+      onSuccess: () => refreshList()
     }
   );
 
@@ -101,7 +116,16 @@ const CCTList = ({ orgs }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模板名称'
+      title: '云模板名称',
+      render: (text, record) => (
+        <a 
+          type='link' 
+          onClick={() => {
+            setTemplateId(record.id);
+            setDetectionVisible(true);
+          }}
+        >{text}</a>
+      )
     },
     {
       dataIndex: 'policyGroups',
@@ -131,12 +155,26 @@ const CCTList = ({ orgs }) => {
     {
       dataIndex: 'repoAddr',
       title: '仓库地址',
-      render: (text) => <a href={text} target='_blank'>{text}</a>
+      render: (text) => <a href={text} target='_blank'>
+        <EllipsisText style={{ maxWidth: 150 }}>{text}</EllipsisText>
+      </a>
     },
     {
       dataIndex: 'enabled',
       title: '是否开启检测',
-      render: (text) => <Switch checked={text} />
+      render: (text) => text === true ? '开启' : '关闭'
+    },
+    {
+      dataIndex: 'passed',
+      title: '通过'
+    },
+    {
+      dataIndex: 'failed',
+      title: '不通过'
+    },
+    {
+      dataIndex: 'suppressed',
+      title: '屏蔽'
     },
     {
       dataIndex: 'status',
@@ -148,21 +186,35 @@ const CCTList = ({ orgs }) => {
       width: 180,
       fixed: 'right',
       render: (record) => {
+        const { enabled, id } = record;
+        const { loading: changeEnabledLoading } = changeEnabledFetches[id] || {};
         return (
-          <span className='inlineOp'>
-            <a onClick={() => {
-              runScan(record);
-            }}
-            >检测</a>
-            <Divider type={'vertical'} />
-            <a 
-              type='link' 
+          <Space split={<Divider type='vertical'/>}>
+            <Button 
+              type='link'
+              style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => {
-                setTemplateId(record.id);
-                setDetectionVisible(true);
+                runScan(record);
               }}
-            >查看结果</a>
-          </span>
+            >检测</Button>
+            {
+              enabled ? (
+                <Button 
+                  type='link' 
+                  style={{ padding: 0, fontSize: '12px' }} 
+                  loading={changeEnabledLoading}
+                  onClick={() => changeEnabled({ tplId: id, enabled: false })}
+                >关闭</Button>
+              ) : (
+                <Button 
+                  type='link' 
+                  style={{ padding: 0, fontSize: '12px' }} 
+                  loading={changeEnabledLoading}
+                  onClick={() => changeEnabled({ tplId: id, enabled: true })}
+                >开启</Button>
+              )
+            }
+          </Space>
         );
       }
     }

@@ -278,7 +278,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
               </Form.Item>
               <span>执行失败时，间隔</span>
               <Form.Item 
-                name='resourceCount'
+                name='retryDelay'
                 initialValue={0}
                 noStyle={true}
               >

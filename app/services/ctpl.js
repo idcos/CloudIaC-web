@@ -16,6 +16,10 @@ const ctplAPI = {
   // 运行云模板策略扫描
   runScan: ({ tplId, ...restParams }) => {
     return post(`/api/v1/policies/templates/${tplId}/scan`, restParams, {});
+  },
+  // 启用/禁用云模版扫描
+  enabled: ({ tplId, ...restParams }) => {
+    return put(`/api/v1/policies/templates/${tplId}/enabled`, restParams, {});
   }
 };
 

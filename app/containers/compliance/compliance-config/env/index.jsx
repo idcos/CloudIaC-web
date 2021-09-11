@@ -19,7 +19,7 @@ const CenvList = ({ orgs }) => {
   const [ viewDetection, setViewDetection ] = useState(false);
   const [ detail, setDetail ] = useState([]);
   const [ policyView, setPolicyView ] = useState(false);
-  const [ templateId, setTemplateId ] = useState(null);
+  const [ envId, setEnvId ] = useState(null);
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
@@ -78,7 +78,7 @@ const CenvList = ({ orgs }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setTemplateId(record.id);
+      setEnvId(record.id);
       setViewDetection(true); 
     } catch (e) {
       notification.error({
@@ -89,14 +89,23 @@ const CenvList = ({ orgs }) => {
   };
 
   const bindPolicy = (record) => {
-    setTemplateId(record.id);
+    setEnvId(record.id);
     setDetail((record.policyGroups || []).map((it) => it.id));
     setPolicyView(true);
   };
   const columns = [
     {
       dataIndex: 'name',
-      title: '环境名称'
+      title: '环境名称',
+      render: (text, record) => (
+        <a 
+          type='link' 
+          onClick={() => {
+            setEnvId(record.id);
+            setViewDetection(true);
+          }}
+        >{text}</a>
+      )
     },
     {
       dataIndex: 'templateName',
@@ -145,33 +154,18 @@ const CenvList = ({ orgs }) => {
     },
     {
       title: '操作',
-      width: 180,
+      width: 80,
       fixed: 'right',
       render: (text, record) => {
         return (
-          <span className='inlineOp'>
+          <Space split={<Divider type='vertical'/>}>
             <a 
               type='link' 
               onClick={() => {
                 runScan(record);
               }}
             >检测</a>
-            <Divider type={'vertical'}/>
-            <a 
-              type='link' 
-              onClick={() => {
-                setTemplateId(record.id);
-                setViewDetection(true);
-              }}
-            >查看结果</a>
-            <Divider type={'vertical'}/>
-            <a 
-              type='link' 
-              onClick={() => {
-                history.push(`/compliance/compliance-config/env/env-detail`); 
-              }}
-            >详情</a>
-          </span>
+          </Space>
         );
       }
     }
@@ -219,7 +213,7 @@ const CenvList = ({ orgs }) => {
       </Space>
     </div>
     {policyView && <BindPolicyModal 
-      id={templateId}
+      id={envId}
       visible={policyView} 
       detail={detail}
       reload={() => fetchList({ ...formParams, ...paginate })}
@@ -229,11 +223,11 @@ const CenvList = ({ orgs }) => {
       }}
     />}
     {viewDetection && <Detection 
-      id={templateId}
+      id={envId}
       visible={viewDetection} 
       toggleVisible={() => {
         setViewDetection(false);
-        setTemplateId(null); 
+        setEnvId(null); 
       }}
     />}
   </Layout>;

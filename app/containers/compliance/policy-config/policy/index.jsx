@@ -167,18 +167,23 @@ const Policy = () => {
         const { loading: changeEnabledLoading } = changeEnabledFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
-            <Button disabled={!enabled} style={{ padding: 0 }} type='link' onClick={() => goEditPage(id)}>编辑</Button>
+            <Button 
+              disabled={!enabled} 
+              style={{ padding: 0, fontSize: '12px' }} 
+              type='link' 
+              onClick={() => goEditPage(id)}
+            >编辑</Button>
             {
               !!enabled ? (
                 <Button 
-                  style={{ padding: 0 }} 
+                  style={{ padding: 0, fontSize: '12px' }} 
                   type='link'
                   onClick={() => changeEnabled({ id, enabled: false })}
                   loading={changeEnabledLoading}
                 >禁用</Button>
               ) : (
                 <Button 
-                  style={{ padding: 0 }} 
+                  style={{ padding: 0, fontSize: '12px' }} 
                   type='link'
                   onClick={() => changeEnabled({ id, enabled: true })}
                   loading={changeEnabledLoading}

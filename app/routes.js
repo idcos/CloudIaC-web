@@ -134,12 +134,6 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/compliance/compliance-config/env/env-detail',
-          name: '环境详情',
-          component: loadable(() => import('containers/compliance/compliance-config/env/detail'), asyncLoadFallback),
-          exact: true
-        },
-        {
           path: '/compliance/policy-config/policy-group',
           name: '策略组',
           component: loadable(() => import('containers/compliance/policy-config/policy-group'), asyncLoadFallback),
