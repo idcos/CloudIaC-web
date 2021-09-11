@@ -55,6 +55,10 @@ const policiesAPI = {
   // 删除策略
   del: (id) => {
     return del(`${baseUrl}/${id}`, {});
+  },
+  // 策略概览
+  policiesSummary: () => {
+    return getWithArgs(`${baseUrl}/summary`, {});
   }
 };
 

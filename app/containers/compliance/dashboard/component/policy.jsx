@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Progress, Table, Input, notification, Badge, Card, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
 import { CaretUpOutlined } from '@ant-design/icons';
 import styles from '../style.less';
 
-const Index = () => {
+const Index = ({ summaryData = [] }) => {
 
   let colorObj = {
     0: '#6699FF',
@@ -12,25 +12,36 @@ const Index = () => {
     2: '#9580FF',
     3: '#9EBFFF',
     4: '#7D8FB3'
-
   };
-  const list = [ 1, 2, 3, 4, 5 ];
+
+  const valueToPercent = (value) => {
+    return Math.round(parseFloat(value) * 10000) / 100;
+  };
+
+  const data = useMemo(() => {
+    const allNumbers = summaryData.reduce((sum, e) => sum + Number(e.value || 0), 0);
+    let datas = summaryData.map(d => ({
+      name: d.name, value: d.value, percent: valueToPercent(d.value / allNumbers)
+    }));
+    return datas;
+  }, [summaryData]);
+
   return <Card bodyStyle={{
     padding: '52px 16px 72px 7%',
     background: `#fff url(/assets/backgroundIcon/corner.svg) no-repeat 95% -1px` 
   }}
   >
     <span className={styles.cardTitle}>策略检测未通过</span>
-    {list.map((item, index) => {
+    {data.map((item, index) => {
       return <div className={styles.lineProgress} style={{ width: '90%' }}>
-        <span className={styles.nameTitle}>{item}</span>
+        <span className={styles.nameTitle}>{item.name || ''}</span>
         <div style={{ display: 'flex' }}>
           <Progress strokeColor={{
             '0%': colorObj[index],
             '100%': colorObj[index]
-          }} percent={30} showInfo={false}
+          }} percent={item.percent || 0} style={{ width: '95%' }} showInfo={false}
           />
-          <span style={{ fontWeight: 'bolder', fontFamily: 'iacNuberFont' }}>{12}</span>
+          <span style={{ fontWeight: 'bolder', fontFamily: 'iacNuberFont', width: '5%' }}>{item.value || ''}</span>
         </div>
       </div>;
     }) }

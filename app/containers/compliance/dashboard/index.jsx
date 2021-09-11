@@ -4,7 +4,7 @@ import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
-import cgroupsAPI from 'services/cgroups';
+import policiesAPI from 'services/policies';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
 import styles from './style.less';
 import Active from './component/active';
@@ -14,52 +14,112 @@ import PolicyGroup from './component/policy-group';
 
 
 const PolicyGroupList = () => {
-  const [ policyGroupId, setPolicyGroupId ] = useState(null),
-    [ visible, setVisible ] = useState(false),
-    [ viewDetail, setViewDetail ] = useState(false),
-    [ viewRelevance, setViewRelevance ] = useState(false);
+  const [ summaryData, setSummaryData ] = useState({});
 
-  // 策略组列表查询
-  const {
-    loading: tableLoading,
-    data: tableData,
-    run: fetchList,
-    refresh: refreshList
-  } = useRequest(
-    (params) => requestWrapper(
-      cgroupsAPI.list.bind(null, params)
-    ), {
-      manual: true
-    }
-  );
+  useEffect(() => {
+    fetchSummary();
+  }, []);
 
-  // 表单搜索和table关联hooks
-  const { 
-    tableProps, 
-    onChangeFormParams,
-    resetPageCurrent,
-    searchParams: { formParams, paginate }
-  } = useSearchFormAndTable({
-    tableData,
-    onSearch: (params) => {
-      const { current: currentPage, ...restParams } = params;
-      fetchList({ currentPage, ...restParams });
-    }
-  });
-
-  const enabled = async(value, record) => {
+  const fetchSummary = async(value, record) => {
     try { 
-      const res = await cgroupsAPI.update({
-        enabled: value,
-        policyGroupId: record.id
-      });
+      const res = await policiesAPI.policiesSummary();
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      notification.success({
-        message: '操作成功'
-      });
-      fetchList({ ...formParams, ...paginate });
+      let resss = {
+        "code": 200,
+        "message": "ok",
+        "message_detail": "ok",
+        "result": {
+          "activePolicy": {
+            "changes": -0.5,
+            "last": 40,
+            "summary": [
+              {
+                "name": "passed",
+                "value": 100
+              },
+              {
+                "name": "suppressed",
+                "value": 6
+              },
+              {
+                "name": "failed",
+                "value": 20
+              },
+              {
+                "name": "violated",
+                "value": 20
+              }
+            ],
+            "total": 20
+          },
+          "policyGroupViolated": [
+            {
+              "name": "ECS未启用监控",
+              "value": 10
+            },
+            {
+              "name": "VPC没有安全组",
+              "value": 6
+            },
+            {
+              "name": "IAM未启用",
+              "value": 4
+            },
+            {
+              "name": "密码登录",
+              "value": 2
+            },
+            {
+              "name": "开放8339端口",
+              "value": 1
+            }
+          ],
+          "policyViolated": [
+            {
+              "name": "ECS未启用监控",
+              "value": 10
+            },
+            {
+              "name": "VPC没有安全组",
+              "value": 6
+            },
+            {
+              "name": "IAM未启用",
+              "value": 4
+            },
+            {
+              "name": "密码登录",
+              "value": 2
+            },
+            {
+              "name": "开放8339端口",
+              "value": 1
+            }
+          ],
+          "unresolvedPolicy": {
+            "summary": [
+              {
+                "name": "high",
+                "value": 2
+              },
+              {
+                "name": "medium",
+                "value": 6
+              },
+              {
+                "name": "low",
+                "value": 4
+              }
+            ],
+            "changes": 1,
+            "last": 6,
+            "total": 12
+          }
+        }
+      };
+      setSummaryData(resss.result);
     } catch (e) {
       notification.error({
         message: '操作失败',
@@ -68,86 +128,21 @@ const PolicyGroupList = () => {
     }
   };
 
-  const columns = [
-    {
-      dataIndex: 'name',
-      title: '策略组名称',
-      render: (text, record) => <a onClick={() => {
-        setViewDetail(true);
-        setPolicyGroupId(record.id);
-      }}
-      >{text}</a>
-    },
-    {
-      dataIndex: 'description',
-      title: '描述'
-    },
-    {
-      dataIndex: 'policyCount',
-      title: '关联策略',
-      render: (text, record) => <a 
-        onClick={() => {
-          setViewRelevance(true); 
-          setPolicyGroupId(record.id);
-        }}
-      >{text}</a>
-    },
-    {
-      dataIndex: 'updatedAt',
-      title: '最后更新日期',
-      render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
-    },
-    {
-      dataIndex: 'status',
-      title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
-    },
-    {
-      title: '操作',
-      width: 160,
-      fixed: 'right',
-      render: (text, record) => {
-        return (
-          <span className='inlineOp'>
-            <a 
-              type='link' 
-              onClick={() => {
-                setViewRelevance(true); 
-                setPolicyGroupId(record.id);
-              }}
-            >关联策略</a>
-            <Divider type={'vertical'}/>
-            <a 
-              onClick={() => {
-                setVisible(true); 
-                setPolicyGroupId(record.id);
-              }}
-            >编辑</a>
-            <Divider type={'vertical'}/>
-            <Popconfirm title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} onConfirm={() => enabled(!record.enabled, record)} placement='bottomLeft'>
-              {record.enabled ? <a >禁用</a> : <a>启用</a>}
-            </Popconfirm>
-          </span>
-        );
-      }
-    }
-  ];
-
   return <div className={styles.dashboard}>
     <Row>
       <Col span={16} style={{ paddingRight: 24 }}>
-        <Active/>
+        <Active summaryData={summaryData.activePolicy}/>
       </Col>
       <Col span={8}>
-        <Unsolved/>
+        <Unsolved summaryData={summaryData.unresolvedPolicy}/>
       </Col>
     </Row>
     <Row style={{ paddingTop: 24 }}>
       <Col span={12} style={{ paddingRight: 12 }}>
-        <Policy/>
+        <Policy summaryData={summaryData.policyViolated}/>
       </Col>
       <Col span={12} style={{ paddingLeft: 12 }}>
-        <PolicyGroup/>
+        <PolicyGroup summaryData={summaryData.policyGroupViolated}/>
       </Col>
     </Row>
   </div>;

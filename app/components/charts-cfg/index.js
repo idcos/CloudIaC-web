@@ -293,8 +293,14 @@ export const chartOptions = {
       }]
     };
   },
-  unsolved_rate: ({ column = [], value = [] } = {}) => {
-    const data = [
+  unsolved_rate: ({ summary = [] }) => {
+    // const namemap = {
+    //   high: '高',
+    //   medium: '中',
+    //   low: '低'
+    // };
+    // let datas = (summary || []).map(d => ({ name: namemap[d.name], value: d.value }));
+    const datas = [
       { value: 5, name: '高' },
       { value: 15, name: '中' },
       { value: 25, name: '低' }
@@ -304,7 +310,7 @@ export const chartOptions = {
         trigger: 'item',
         formatter: '{a} <br/>{b} : {c} ({d}%)'
       },
-      color: [ '#6699FF', '#A1E6CE', '#52CCA3', '#BFB3FF' ],
+      color: [ '#6699FF', '#A1E6CE', '#52CCA3' ],
       legend: {
         x: 'right', //可设定图例在左、右、居中
         y: 'center', //可设定图例在上、下、居中
@@ -313,8 +319,8 @@ export const chartOptions = {
         width: 50,
         icon: "circle",
         formatter: (name) => {
-          let value = data.find(d => d.name === name).value;
-          return `${name}${name !== '严重' ? '    ' : ''}   ${value}`;
+          let value = datas.find(d => d.name === name).value;
+          return `${name}   ${value}`;
         },
         textStyle: {
           fontFamily: 'iacNumberFont'
@@ -329,7 +335,7 @@ export const chartOptions = {
           label: { 
             show: false
           },
-          data: data
+          data: datas
         }
       ]
     };

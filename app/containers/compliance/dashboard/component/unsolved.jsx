@@ -4,8 +4,8 @@ import { chartUtils } from 'components/charts-cfg';
 import { UpPointIcon, DownPointIcon } from 'components/iconfont';
 import styles from '../style.less';
 
-const Index = () => {
-   
+const Index = ({ summaryData = {} }) => {
+
   useEffect(() => {
     // fetchDate();
     resizeHelper.attach();
@@ -15,32 +15,31 @@ const Index = () => {
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'unsolved_rate') {
-        chartUtils.update(chart, {});
+        chartUtils.update(chart, { summary: summaryData.summary });
       }
     });
-  }, [ ]);
+  }, [summaryData.summary]);
 
   let CHART = useRef([
     { key: 'unsolved_rate', domRef: useRef(), ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
-  let aaa = true;
   return <Card bodyStyle={{
     padding: '52px 16px 0'
   }}
-  > 
+  >  
     <div className={styles.title} style={{ paddingBottom: 0 }}>
       <div className={styles.titleHeader}>
-        活跃策略
+        未解决错误策略
       </div>
       <div className={styles.titleContext}>
-        90
+        {summaryData.total || '-'}
       </div>
       <div className={styles.titleFooter}>
-        <div className={styles.values}>最近15天</div>
+        <div className={styles.values}>最近{summaryData.last || '-'}天</div>
         <div className={styles.icon}>
-          {aaa ? <UpPointIcon style={{ padding: '0 5px' }}/> : <DownPointIcon style={{ padding: '0 5px' }}/>}
-          0.9% </div>
+          {summaryData.changes > 0 ? <UpPointIcon style={{ padding: '0 5px' }}/> : <DownPointIcon style={{ padding: '0 5px' }}/>}
+          {summaryData.changes || ''}% </div>
       </div>
     </div>
     {CHART.current.map(chart => <div>
