@@ -70,7 +70,7 @@ const VariableForm = ({
           ([ , , otherVars ]) => {
             if (otherVars) {
               otherVars.tfVarsFile = otherVars.tfVarsFile || '';
-              otherVars.playbook = otherVars.tfVarsFile || '';
+              otherVars.playbook = otherVars.playbook || '';
             }
             const data = {
               deleteVariablesId,

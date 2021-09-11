@@ -244,19 +244,8 @@ const Index = ({ match = {} }) => {
           description: 'playbook存在时管理密钥必填'
         });
       }
-      values.autoApproval = (values.triggers || []).indexOf('autoApproval') !== -1;
-      values.retryAble = (values.triggers || []).indexOf('retryAble') !== -1;
-      values.stopOnViolation = (values.triggers || []).indexOf('stopOnViolation') !== -1;
-      values.targgers = pullAll(values.triggers, [ 'autoApproval', 'retryAble', 'stopOnViolation' ]);
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
-      if (!!values.destroyAt) {
-        values.destroyAt = moment(values.destroyAt);
-      }
-      if (values.type === 'infinite') {
-        values.ttl = '0';
-      }
-      delete values.type;
       const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -308,7 +297,7 @@ const Index = ({ match = {} }) => {
                 ]}
                 initialValue={info.name || undefined}
               >
-                <Input value={info.name} placeholder={'请输入环境名称'} style={{ width: '80%' }} />
+                <Input value={info.name} placeholder={'请输入环境名称'} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -326,7 +315,7 @@ const Index = ({ match = {} }) => {
                   allowClear={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择分支/标签'
-                  style={{ width: '80%' }}
+                  style={{ width: '100%' }}
                 >
                   <OptGroup label='分支'>
                     {branch.map(it => <Option value={it.name}>{it.name}</Option>)}

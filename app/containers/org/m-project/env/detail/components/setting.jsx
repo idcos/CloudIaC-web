@@ -3,15 +3,12 @@ import { InputNumber, Card, DatePicker, Select, Form, Tooltip, Button, Checkbox,
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { connect } from "react-redux";
-import styles from '../../deploy/style.less';
-
 import getPermission from "utils/permission";
 import copy from 'utils/copy';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import envAPI from 'services/env';
 import tokensAPI from 'services/tokens';
-
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
@@ -204,7 +201,7 @@ const Index = (props) => {
               </Row>
             </Form.Item>
           </Col>
-          <Col span={8} className={styles.noStepInput} style={{ paddingTop: 30 }}>
+          <Col span={8} style={{ paddingTop: 30 }}>
             <Form.Item
               label=''
               name='retryAble'

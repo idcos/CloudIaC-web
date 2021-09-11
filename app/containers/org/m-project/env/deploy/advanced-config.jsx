@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
-import { notification, Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, Radio, InputNumber } from "antd";
+import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space } from "antd";
 import { InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -7,23 +7,19 @@ import { requestWrapper } from 'utils/request';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import vcsAPI from 'services/vcs';
 import ViewFileModal from 'components/view-file-modal';
-import styles from './style.less';
+import isEmpty from "lodash/isEmpty";
+import omit from "lodash/omit";
 
 const FL = {
   labelCol: { span: 22, offset: 2 },
   wrapperCol: { span: 22, offset: 2 }
 };
-const PL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
 const { Option } = Select;
   
-const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, keys, tfvars, playbooks }) => {
+const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, playbooks }) => {
   const { vcsId, repoId, repoRevision } = tplInfo;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
-  const [ activekey, setActivekey ] = useState([]);
   const [ fileView, setFileView ] = useState({
     title: '',
     visible: false,
@@ -31,8 +27,10 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
   });
 
   useEffect(() => {
-    fetchInfo();
-  }, [data]);
+    if (envId) {
+      setFormValues(data);
+    }
+  }, [envId, data]);
 
   // 策略组选项查询
   const { run: fetchFile } = useRequest(
@@ -66,15 +64,11 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
     }
   };
   
-  const setTtl = (data) => {
-    if (data.autoApproval) {
-      data.triggers = (data.triggers || []).concat(['autoApproval']);
-    }
-    if (data.stopOnViolation) {
-      data.triggers = (data.triggers || []).concat(['stopOnViolation']);
-    }
-    if (data.retryAble) {
-      data.triggers = (data.triggers || []).concat(['retryAble']);
+  const setFormValues = (data) => {
+    if (!isEmpty(data.triggers)) {
+      data.triggers.forEach((name) => {
+        data[name] = true;
+      });
     }
     if (!!data.autoDestroyAt) {
       data.type = 'time';
@@ -87,25 +81,23 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
     form.setFieldsValue(data);
   };
 
-  // 获取Info
-  const fetchInfo = async () => {
-    try {
-      if (envId) {
-        setTtl(data);
-      }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
   const onfinish = async() => {
-    let value = await form.getFieldsValue();
-    let values = activekey.length > 0 ? value : { runnerId: form.getFieldValue('runnerId') };
-    console.log(values, 'values');
-    return values;
+    let values = await form.getFieldsValue();
+    if (values.commit) {
+      values.triggers = (values.triggers || []).concat(['commit']);
+    }
+    if (values.prmr) {
+      values.triggers = (values.triggers || []).concat(['prmr']);
+    }
+    if (!!values.destroyAt) {
+      values.destroyAt = moment(values.destroyAt);
+    }
+    if (values.type === 'infinite') {
+      values.ttl = '0';
+    }
+    values.tfVarsFile = values.tfVarsFile || '';
+    values.playbook = values.playbook || '';
+    return omit(values, ['commit', 'prmr', 'type']);
   };
 
   // 新建时给runnerId赋值
@@ -136,7 +128,7 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
               allowClear={true}
               getPopupContainer={triggerNode => triggerNode.parentNode}
               placeholder='请选择部署通道'
-              style={{ width: '80%' }}
+              style={{ width: '100%' }}
             >
               {runnner.map(it => <Option value={it.ID}>{it.ID}</Option>)}
             </Select>
@@ -149,16 +141,17 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
                 tfvars文件：
                 <EyeOutlined 
                   style={{ cursor: 'pointer' }} 
-                  onClick={() => viewFile('tfvars')}
+                  onClick={() => viewFile('tfVarsFile')}
                 />
               </>
             }
-            name='tfvars'
+            name='tfVarsFile'
           >
             <Select
               getPopupContainer={triggerNode => triggerNode.parentNode} 
               allowClear={true} 
               placeholder='请选择tfvars文件'
+              style={{ width: '100%' }}
             >
               {tfvars.map(it => <Option value={it}>{it}</Option>)}
             </Select>
@@ -181,7 +174,7 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
               allowClear={true}
               getPopupContainer={triggerNode => triggerNode.parentNode}
               placeholder='请选择playbook文件'
-              style={{ width: '80%' }}
+              style={{ width: '100%' }}
             >
               {playbooks.map(it => <Option value={it}>{it}</Option>)}
             </Select>
@@ -192,7 +185,7 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
             label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
             name='targets'
           >
-            <Input placeholder={'请输入target'} style={{ width: '80%' }} />
+            <Input placeholder={'请输入target'} style={{ width: '100%' }} />
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -206,12 +199,12 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
                   name='type'
                   initialValue={'infinite'}
                 >
-                  <Select style={{ width: '90%' }}>
+                  <Select style={{ width: '100%' }}>
                     {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={16}>
                 <Form.Item 
                   noStyle={true}
                   shouldUpdate={true}
@@ -238,7 +231,7 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
                         noStyle={true}
                         shouldUpdate={true}
                       >
-                        <DatePicker format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                        <DatePicker style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                       </Form.Item>;
                     }
                   }}
@@ -256,58 +249,77 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
               allowClear={true}
               getPopupContainer={triggerNode => triggerNode.parentNode}
               placeholder='请选择密钥'
-              style={{ width: '80%' }}
+              style={{ width: '100%' }}
             >
               {keys.map(it => <Option value={it.id}>{it.name}</Option>)}
             </Select>
           </Form.Item>
         </Col>
-      </Row>
-      <Row>
-        <Col span={24} className={styles.noStepInput}>
+        <Col span={8}>
           <Form.Item 
-            style={{ marginBottom: 0 }}
-            {...PL}
+            name='commit'
+            valuePropName='checked'
+            initialValue={false}
           >
-            <Form.Item 
-              noStyle={true}
-              shouldUpdate={true}
-            >
-              {({ getFieldValue }) => {
-                return <Form.Item
-                  name='triggers'
-                  style={{ marginBottom: 0 }}
-                  {...PL}
-                >
-                  <Checkbox.Group style={{ width: '100%' }}>
-                    <Row>
-                      <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }}>
-                        <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
-                      </Col>
-                      <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }} >
-                        <Checkbox value='retryAble'>执行失败时，间隔 <Form.Item
-                          noStyle={true}
-                          name='retryDelay'
-                        ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 秒自动重试 <Form.Item
-                          noStyle={true}
-                          name='retryNumber'
-                        ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
-                      </Col>
-                      <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }} >
-                        <Checkbox value='stopOnViolation'>合规不通过时中止部署  </Checkbox> 
-                      </Col>
-                      <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)', paddingTop: 20 }}>
-                        <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
-                      </Col>
-                      <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)', paddingTop: 20 }}>
-                        <Checkbox value='autoApproval'>自动通过审批</Checkbox>
-                      </Col>
-                    </Row>
-                  </Checkbox.Group>
-                </Form.Item>;
-              
-              }}
-            </Form.Item>
+            <Checkbox>每次推送到该分支时自动重新部署</Checkbox> 
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item>
+            <Space>
+              <Form.Item 
+                name='retryAble'
+                valuePropName='checked'
+                initialValue={false}
+                noStyle={true}
+              >
+                <Checkbox/>
+              </Form.Item>
+              <span>执行失败时，间隔</span>
+              <Form.Item 
+                name='resourceCount'
+                initialValue={0}
+                noStyle={true}
+              >
+                <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+              </Form.Item>
+              <span>秒自动重试</span>
+              <Form.Item
+                noStyle={true}
+                initialValue={0}
+                name='retryNumber'
+              >
+                <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }} />
+              </Form.Item>
+              <span>次</span> 
+            </Space>
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item 
+            name='stopOnViolation'
+            valuePropName='checked'
+            initialValue={false}
+          >
+            <Checkbox>合规不通过时中止部署</Checkbox> 
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item 
+            name='prmr'
+            valuePropName='checked'
+            initialValue={false}
+          >
+            <Checkbox>该分支提交PR/MR时自动执行plan计划</Checkbox> 
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item 
+            name='autoApproval'
+            valuePropName='checked'
+            initialValue={false}
+          >
+            <Checkbox>自动通过审批</Checkbox> 
           </Form.Item>
         </Col>
       </Row>
@@ -322,11 +334,8 @@ const Index = ({ configRef, isCollapse, data, orgId, tplInfo, envId, runnner, ke
       {...FL}
       layout={'vertical'}
     >
-      <Collapse activekey={activekey} expandIconPosition={'right'} onChange={(e) => {
-        setActivekey(e); 
-      }} style={{ marginBottom: 20 }}
-      >
-        <Panel header='高级设置' key={'open'}>
+      <Collapse expandIconPosition={'right'} style={{ marginBottom: 20 }}>
+        <Panel header='高级设置'>
           {renderForm()}
         </Panel>
       </Collapse>
