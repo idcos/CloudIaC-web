@@ -15,10 +15,10 @@ export const ORG_USER = {
     admin: '管理员'
   },
   notificationType: {
-    failed: '部署失败',
-    complete: '部署成功',
-    approving: '等待审批',
-    running: '新建部署'
+    'task.failed': '部署失败',
+    'task.complete': '部署成功',
+    'task.approving': '等待审批',
+    'task.running': '新建部署'
   },
   subNavs: {
     email: '邮件',
