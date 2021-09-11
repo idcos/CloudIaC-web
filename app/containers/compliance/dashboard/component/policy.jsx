@@ -1,7 +1,5 @@
-import React, { useMemo, useEffect } from 'react';
-import { Progress, Table, Input, notification, Badge, Card, Divider, Popconfirm } from 'antd';
-import moment from 'moment';
-import { CaretUpOutlined } from '@ant-design/icons';
+import React, { useMemo } from 'react';
+import { Progress, Card } from 'antd';
 import styles from '../style.less';
 
 const Index = ({ summaryData = [] }) => {

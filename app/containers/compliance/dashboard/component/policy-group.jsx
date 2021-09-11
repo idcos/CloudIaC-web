@@ -1,7 +1,5 @@
-import React, { useMemo, useEffect } from 'react';
-import { Progress, Table, Input, notification, Badge, Card, Divider, Popconfirm } from 'antd';
-import moment from 'moment';
-import { CaretUpOutlined } from '@ant-design/icons';
+import React, { useMemo } from 'react';
+import { Progress, Card } from 'antd';
 import styles from '../style.less';
 
 const Index = ({ summaryData = [] }) => {
@@ -15,14 +13,14 @@ const Index = ({ summaryData = [] }) => {
 
   };
 
-  const valueToPercent = (value) => {
+  const formatPercent = (value) => {
     return Math.round(parseFloat(value) * 10000) / 100;
   };
 
   const data = useMemo(() => {
     const allNumbers = summaryData.reduce((sum, e) => sum + Number(e.value || 0), 0);
     let datas = summaryData.map(d => ({
-      name: d.name, value: d.value, percent: valueToPercent(d.value / allNumbers)
+      name: d.name, value: d.value, percent: formatPercent(d.value / allNumbers)
     }));
     return datas;
   }, [summaryData]);

@@ -76,7 +76,7 @@ const Index = (props) => {
       const res = await envAPI.envsEdit({ 
         orgId, 
         projectId, 
-        ...omit(values, ['commit', 'prmr', 'type']), 
+        ...omit(values, [ 'commit', 'prmr', 'type' ]), 
         envId: envId ? envId : undefined 
       });
       setSubmitLoading(false);

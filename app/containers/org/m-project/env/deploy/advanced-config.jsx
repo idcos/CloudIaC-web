@@ -30,7 +30,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     if (envId) {
       setFormValues(data);
     }
-  }, [envId, data]);
+  }, [ envId, data ]);
 
   // 策略组选项查询
   const { run: fetchFile } = useRequest(
@@ -98,7 +98,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     }
     values.tfVarsFile = values.tfVarsFile || '';
     values.playbook = values.playbook || '';
-    return omit(values, ['commit', 'prmr', 'type']);
+    return omit(values, [ 'commit', 'prmr', 'type' ]);
   };
 
   // 新建时给runnerId赋值

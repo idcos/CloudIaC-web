@@ -1,6 +1,29 @@
 import isArray from 'lodash/isArray';
 
+// eslint-disable-next-line no-undef
+let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ 
+  offset: 0,
+  color: 'rgba(80,141,255,0.8)'
+}, {
+  offset: 0.1,
+  color: 'rgba(56,155,255,0.7)'
+}, {
+  offset: 0.2,
+  color: 'rgba(38,197,254,0.6)'
+}, {
+  offset: 0.3,
+  color: 'rgba(56,155,255,0.5)'
+}, {
+  offset: 1,
+  color: 'rgba(38,197,254,0.2)'
+}]);
+
+const formatPercent = (value) => {
+  return Math.round(parseFloat(value) * 10000) / 100;
+};
+
 export const chartOptions = {
+  
   project_statistics: ({ envActive, envFailed, envInactive } = {}) => {
     return {
       tooltip: {
@@ -79,7 +102,12 @@ export const chartOptions = {
       series: [{
         data: value,
         type: 'line',
-        areaStyle: {},
+        areaStyle: {
+          normal: {
+            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+            color: colorConfig
+          }
+        },
         symbolSize: 12,
         itemStyle: {
           normal: {
@@ -90,10 +118,10 @@ export const chartOptions = {
                 return `${params.value}%`;
               }
             },
-            color: "#D6F5E9", //折线点的颜色
+            color: colorConfig, //折线点的颜色
             lineStyle: {
               width: 6,
-              color: "#1890ff" //折线的颜色
+              color: colorConfig //折线的颜色
             }
           }
         },
@@ -154,8 +182,9 @@ export const chartOptions = {
               tarValue = data[i].value;
             }
           }
-          const p = ((tarValue / total) * 100);
-          return `${name} ${p}%`;
+          const p = formatPercent(tarValue / total);
+          return `${name}${name !== '未通过' ? '   ' : ''}   ${p}%`;
+
         },
         data: names
       },
@@ -180,7 +209,7 @@ export const chartOptions = {
         x: 50,
         y: 60,
         x2: '2%',
-        y2: 30
+        y2: 100
       },
       title: {
         text: '检测源执行次数',
@@ -189,11 +218,23 @@ export const chartOptions = {
       },
       xAxis: {
         type: 'category',
-        data: column
+        data: column,
+        show: true,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        splitLine: { show: false },
+        splitArea: { show: false },
+        axisLabel: { //坐标轴刻度标签的相关设置。
+          interval: 0,
+          rotate: "45",
+          formatter: (val) => {
+            return (val || '').length > 10 ? `${val.substring(0, 10)}...` : `${val}`;
+          }
+        }
       },
       color: '#5AD8A6',
       yAxis: {
-        type: 'value'
+        show: false
       },
       series: [{
         data: value,
@@ -232,7 +273,12 @@ export const chartOptions = {
       series: [{
         data: value,
         type: 'line',
-        areaStyle: {},
+        areaStyle: {
+          normal: {
+            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+            color: colorConfig
+          }
+        },
         symbolSize: 12,
         itemStyle: {
           normal: {
@@ -240,10 +286,10 @@ export const chartOptions = {
               show: true,
               position: 'top'
             },
-            color: "#D6F5E9", //折线点的颜色
+            color: colorConfig, //折线点的颜色
             lineStyle: {
               width: 6,
-              color: "#17C3C2" //折线的颜色
+              color: colorConfig //折线的颜色
             }
           }
         },
@@ -274,7 +320,12 @@ export const chartOptions = {
       series: [{
         data: value,
         type: 'line',
-        areaStyle: {},
+        areaStyle: {
+          normal: {
+            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+            color: colorConfig
+          }
+        },
         symbolSize: 12,
         itemStyle: {
           normal: {
@@ -282,10 +333,10 @@ export const chartOptions = {
               show: true,
               position: 'top'
             },
-            color: "#D6F5E9", //折线点的颜色
+            color: colorConfig, //折线点的颜色
             lineStyle: {
               width: 6,
-              color: "#17C3C2" //折线的颜色
+              color: colorConfig //折线的颜色
             }
           }
         },
@@ -294,17 +345,12 @@ export const chartOptions = {
     };
   },
   unsolved_rate: ({ summary = [] }) => {
-    // const namemap = {
-    //   high: '高',
-    //   medium: '中',
-    //   low: '低'
-    // };
-    // let datas = (summary || []).map(d => ({ name: namemap[d.name], value: d.value }));
-    const datas = [
-      { value: 5, name: '高' },
-      { value: 15, name: '中' },
-      { value: 25, name: '低' }
-    ];
+    const namemap = {
+      high: '高',
+      medium: '中',
+      low: '低'
+    };
+    let datas = (summary || []).map(d => ({ name: namemap[d.name], value: d.value }));
     return {
       tooltip: {
         trigger: 'item',

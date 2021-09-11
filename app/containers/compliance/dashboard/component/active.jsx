@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Progress, Table, Input, notification, Badge, Card, Divider, Popconfirm } from 'antd';
-import moment from 'moment';
-import { CaretUpOutlined } from '@ant-design/icons';
+import React from 'react';
+import { Progress, Card } from 'antd';
 import { UpPointIcon, DownPointIcon } from 'components/iconfont';
 import styles from '../style.less';
 
