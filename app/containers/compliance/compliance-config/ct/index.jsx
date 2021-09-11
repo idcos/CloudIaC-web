@@ -9,15 +9,11 @@ import { Eb_WP } from 'components/error-boundary';
 import EllipsisText from 'components/EllipsisText';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-
 import projectAPI from 'services/project';
 import ctplAPI from 'services/ctpl';
-
 import BindPolicyModal from './component/bindPolicyModal';
 import DetectionModal from './component/detection-modal';
-
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
-
 
 const CCTList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
@@ -49,7 +45,7 @@ const CCTList = ({ orgs }) => {
       { autoSuccess: true }
     ), {
       manual: true,
-      fetchKey: (params) => params.tplId,
+      fetchKey: (params) => params.id,
       onSuccess: () => refreshList()
     }
   );
@@ -124,31 +120,25 @@ const CCTList = ({ orgs }) => {
             setTemplateId(record.id);
             setDetectionVisible(true);
           }}
-        >{text}</a>
+        >
+          <EllipsisText style={{ maxWidth: 180 }}>{text}</EllipsisText>
+        </a>
       )
     },
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      width: 300,
       render: (policyGroups, record) => {
         return (
-          isEmpty(policyGroups) ? (
-            <a onClick={() => openPolicy(record)}>绑定</a>
-          ) : (
-            <a style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: 'inline-block',
-              whiteSpace: 'nowrap',
-              width: '300px'
-            }} onClick={() => openPolicy(record)} type='link'
-            >
+          <a onClick={() => openPolicy(record)} type='link'>
+            <EllipsisText style={{ maxWidth: 180 }}>
               {
-                policyGroups.map((it) => it.name).join('、')
+                policyGroups.length > 0 ? (
+                  policyGroups.map(it => it.name).join('、')
+                ) : '绑定'
               }
-            </a>
-          )
+            </EllipsisText>
+          </a>
         ); 
       }
     },
@@ -156,7 +146,7 @@ const CCTList = ({ orgs }) => {
       dataIndex: 'repoAddr',
       title: '仓库地址',
       render: (text) => <a href={text} target='_blank'>
-        <EllipsisText style={{ maxWidth: 150 }}>{text}</EllipsisText>
+        <EllipsisText style={{ maxWidth: 180 }}>{text}</EllipsisText>
       </a>
     },
     {

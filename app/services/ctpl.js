@@ -18,8 +18,8 @@ const ctplAPI = {
     return post(`/api/v1/policies/templates/${tplId}/scan`, restParams, {});
   },
   // 启用/禁用云模版扫描
-  enabled: ({ tplId, ...restParams }) => {
-    return put(`/api/v1/policies/templates/${tplId}/enabled`, restParams, {});
+  enabled: ({ id, ...restParams }) => {
+    return put(`/api/v1/policies/templates/${id}/enabled`, restParams, {});
   }
 };
 

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Table, Space, Select, Divider, Input, notification, Badge } from 'antd';
+import { Table, Space, Select, Divider, Input, notification, Badge, Button } from 'antd';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
-import history from 'utils/history';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import BindPolicyModal from './component/bindPolicyModal';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import EllipsisText from 'components/EllipsisText';
 import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import Detection from './component/detection';
@@ -31,6 +31,21 @@ const CenvList = ({ orgs }) => {
     ),
     {
       manual: true
+    }
+  );
+
+  // 启用/禁用云模版扫描
+  const {
+    run: changeEnabled,
+    fetches: changeEnabledFetches
+  } = useRequest(
+    (params) => requestWrapper(
+      cenvAPI.enabled.bind(null, params),
+      { autoSuccess: true }
+    ), {
+      manual: true,
+      fetchKey: (params) => params.id,
+      onSuccess: () => refreshList()
     }
   );
 
@@ -104,7 +119,9 @@ const CenvList = ({ orgs }) => {
             setEnvId(record.id);
             setViewDetection(true);
           }}
-        >{text}</a>
+        >
+          <EllipsisText style={{ maxWidth: 180 }}>{text}</EllipsisText>
+        </a>
       )
     },
     {
@@ -118,22 +135,22 @@ const CenvList = ({ orgs }) => {
       render: (text, record) => {
         const policyGroups = text || [];
         return (
-          <a style={{
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: 'inline-block',
-            whiteSpace: 'nowrap',
-            width: '300px'
-          }} onClick={() => bindPolicy(record)}
-          >
-            {
-              policyGroups.length > 0 ? (
-                policyGroups.map(it => it.name).join('、')
-              ) : '绑定'
-            }
+          <a onClick={() => bindPolicy(record)}>
+            <EllipsisText style={{ maxWidth: 180 }}>
+              {
+                policyGroups.length > 0 ? (
+                  policyGroups.map(it => it.name).join('、')
+                ) : '绑定'
+              }
+            </EllipsisText>
           </a>
         );
       }
+    },
+    {
+      dataIndex: 'enabled',
+      title: '是否开启检测',
+      render: (text) => text === true ? '开启' : '关闭'
     },
     {
       dataIndex: 'passed',
@@ -157,14 +174,34 @@ const CenvList = ({ orgs }) => {
       width: 80,
       fixed: 'right',
       render: (text, record) => {
+        const { enabled, id } = record;
+        const { loading: changeEnabledLoading } = changeEnabledFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
-            <a 
-              type='link' 
+            <Button 
+              type='link'
+              style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => {
                 runScan(record);
               }}
-            >检测</a>
+            >检测</Button>
+            {
+              enabled ? (
+                <Button 
+                  type='link' 
+                  style={{ padding: 0, fontSize: '12px' }} 
+                  loading={changeEnabledLoading}
+                  onClick={() => changeEnabled({ id, enabled: false })}
+                >关闭</Button>
+              ) : (
+                <Button 
+                  type='link' 
+                  style={{ padding: 0, fontSize: '12px' }} 
+                  loading={changeEnabledLoading}
+                  onClick={() => changeEnabled({ id, enabled: true })}
+                >开启</Button>
+              )
+            }
           </Space>
         );
       }
