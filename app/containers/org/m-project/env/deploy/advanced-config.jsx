@@ -83,11 +83,12 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
 
   const onfinish = async() => {
     let values = await form.getFieldsValue();
+    values.triggers = [];
     if (values.commit) {
-      values.triggers = (values.triggers || []).concat(['commit']);
+      values.triggers = values.triggers.concat(['commit']);
     }
     if (values.prmr) {
-      values.triggers = (values.triggers || []).concat(['prmr']);
+      values.triggers = values.triggers.concat(['prmr']);
     }
     if (!!values.destroyAt) {
       values.destroyAt = moment(values.destroyAt);

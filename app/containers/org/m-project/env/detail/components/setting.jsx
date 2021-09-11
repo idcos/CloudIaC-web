@@ -1,7 +1,9 @@
 import React, { useState, useEffect, memo } from 'react';
-import { InputNumber, Card, DatePicker, Select, Form, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
+import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
+import omit from 'lodash/omit';
 import { connect } from "react-redux";
 import getPermission from "utils/permission";
 import copy from 'utils/copy';
@@ -29,51 +31,54 @@ const Index = (props) => {
   const { match, info, reload, userInfo } = props;
   const { params: { orgId, projectId, envId } } = match;
   const { PROJECT_OPERATOR } = getPermission(userInfo);
-
-
   const [ fileLoading, setFileLoading ] = useState(false);
   const [ submitLoading, setSubmitLoading ] = useState(false);
-
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (info.autoApproval) {
-      info.triggers = (info.triggers || []).concat(['autoApproval']);
-    }
-    if (info.retryAble) {
-      info.retryAble = (info.retryAble || []).concat(['retryAble']);
-    }
-    if (info.stopOnViolation) {
-      info.stopOnViolation = (info.stopOnViolation || []).concat(['stopOnViolation']);
-    }
-    if (!!info.autoDestroyAt) {
-      info.type = 'time';
-      form.setFieldsValue({ destroyAt: moment(info.autoDestroyAt) });
-    } else if (info.ttl === '' || info.ttl === null || info.ttl == 0) {
-      info.type = 'infinite';
-      form.setFieldsValue({ ttl: '0' });
-    } else {
-      info.type = 'timequantum';
-      form.setFieldsValue({ ttl: info.ttl });
-    }
-    form.setFieldsValue(info);
+    info && setFormValues(info);
   }, [info]);
 
-  const onFinish = async (taskType) => {
+  const setFormValues = (data) => {
+    if (!isEmpty(data.triggers)) {
+      data.triggers.forEach((name) => {
+        data[name] = true;
+      });
+    }
+    if (!!data.autoDestroyAt) {
+      data.type = 'time';
+      form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
+    } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
+      data.type = 'infinite';
+    } else if (!data.autoDestroyAt) {
+      data.type = 'timequantum';
+    }
+    form.setFieldsValue(data);
+  };
+
+  const onFinish = async () => {
     try {
-      const values = await form.validateFields();
-      values.retryAble = values.retryAble.indexOf('retryAble') !== -1;
-      values.stopOnViolation = values.stopOnViolation.indexOf('stopOnViolation') !== -1;
-      if (values.triggers) {
-        values.autoApproval = values.triggers.indexOf('autoApproval') !== -1;
-        values.triggers = values.triggers.filter(d => d !== 'autoApproval'); 
+      let values = await form.validateFields();
+      values.triggers = [];
+      if (values.commit) {
+        values.triggers = values.triggers.concat(['commit']);
+      }
+      if (values.prmr) {
+        values.triggers = values.triggers.concat(['prmr']);
+      }
+      if (!!values.destroyAt) {
+        values.destroyAt = moment(values.destroyAt);
       }
       if (values.type === 'infinite') {
         values.ttl = '0';
       }
-      delete values.type;
       setSubmitLoading(true);
-      const res = await envAPI.envsEdit({ orgId, projectId, ...values, envId: envId ? envId : undefined });
+      const res = await envAPI.envsEdit({ 
+        orgId, 
+        projectId, 
+        ...omit(values, ['commit', 'prmr', 'type']), 
+        envId: envId ? envId : undefined 
+      });
       setSubmitLoading(false);
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -145,7 +150,6 @@ const Index = (props) => {
         form={form}
         {...FL}
         layout={'vertical'}
-        // initialValues={info}
         onFinish={onFinish}
       >
         <Row>
@@ -201,94 +205,106 @@ const Index = (props) => {
               </Row>
             </Form.Item>
           </Col>
-          <Col span={8} style={{ paddingTop: 30 }}>
-            <Form.Item
-              label=''
-              name='retryAble'
-              style={{ marginBottom: 0 }}
-              {...LL}
-            >
-              <Checkbox.Group style={{ width: '100%' }}>
-                <Row>
-                  <Col span={24} >
-                    <Checkbox value='retryAble'>执行失败时，间隔 <Form.Item
-                      noStyle={true}
-                      name='retryDelay'
-                    ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 秒自动重试 <Form.Item
-                      noStyle={true}
-                      name='retryNumber'
-                    ><InputNumber min={0} step={1} precision={0} style={{ width: 50 }} /></Form.Item> 次 </Checkbox> 
-                  </Col>
-                </Row>
-              </Checkbox.Group>
+          <Col span={8}>
+            <Form.Item label={' '}>
+              <Space>
+                <Form.Item 
+                  name='retryAble'
+                  valuePropName='checked'
+                  initialValue={false}
+                  noStyle={true}
+                >
+                  <Checkbox/>
+                </Form.Item>
+                <span>执行失败时，间隔</span>
+                <Form.Item 
+                  name='resourceCount'
+                  initialValue={0}
+                  noStyle={true}
+                >
+                  <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+                </Form.Item>
+                <span>秒自动重试</span>
+                <Form.Item
+                  noStyle={true}
+                  initialValue={0}
+                  name='retryNumber'
+                >
+                  <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }} />
+                </Form.Item>
+                <span>次</span> 
+              </Space>
             </Form.Item>
           </Col>
-          <Col span={8} style={{ paddingTop: 30 }}>
-            <Form.Item
-              label=''
-              name='stopOnViolation'
-              style={{ marginBottom: 0 }}
-              {...LL}
-            >
-              <Checkbox.Group style={{ paddingLeft: 'calc(9% - 3px)', width: '100%' }} >
-                <Row>
-                  <Col span={24} >
-                    <Checkbox value='stopOnViolation'>合规不通过时中止部署  </Checkbox> 
-                  </Col>
-                </Row>
-              </Checkbox.Group>
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row style={{ height: 32 }}>
-          <Col span={24}>
+          <Col span={8}>
             <Form.Item 
-              style={{ marginBottom: 0 }}
-              {...PL}
+              name='stopOnViolation'
+              label={' '}
+              valuePropName='checked'
+              initialValue={false}
             >
-              <Form.Item 
-                noStyle={true}
-                shouldUpdate={true}
-              >
-                {({ getFieldValue }) => {
-                  return <Form.Item
-                    name='triggers'
-                    style={{ marginBottom: 0 }}
-                    {...PL}
+              <Checkbox>合规不通过时中止部署</Checkbox> 
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item 
+              shouldUpdate={true}
+            >
+              {({ getFieldValue }) => (
+                <>
+                  <Form.Item 
+                    name='commit'
+                    noStyle={true}
+                    valuePropName='checked'
+                    initialValue={false}
                   >
-                    <Checkbox.Group style={{ width: '100%' }}>
-                      <Row>
-                        <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }}>
-                          <Checkbox value='commit'>每次推送到该分支时自动重新部署  </Checkbox> 
-                          <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>
-                          {
-                            (getFieldValue('triggers') || []).includes('commit') ? (
-                              <a onClick={() => copyToUrl('apply')}>复制URL</a>
-                            ) : (
-                              <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
-                            )
-                          }
-                        </Col>
-                        <Col span={8}>
-                          <Checkbox value='prmr'>该分支提交PR/MR时自动执行plan计划  </Checkbox> 
-                          <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
-                          {
-                            (getFieldValue('triggers') || []).includes('prmr') ? (
-                              <a onClick={() => copyToUrl('plan')}>复制URL</a>
-                            ) : (
-                              <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
-                            )
-                          }
-                        </Col>
-                        <Col span={8} style={{ paddingLeft: 'calc(3% - 3px)' }}>
-                          <Checkbox value='autoApproval'>自动通过审批</Checkbox>
-                        </Col>
-                      </Row>
-                    </Checkbox.Group>
-                  </Form.Item>;
-              
-                }}
-              </Form.Item>
+                    <Checkbox>每次推送到该分支时自动重新部署</Checkbox> 
+                  </Form.Item>
+                  <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>
+                  {
+                    getFieldValue('commit') ? (
+                      <a onClick={() => copyToUrl('apply')}>复制URL</a>
+                    ) : (
+                      <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
+                    )
+                  }
+                </>
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item 
+              shouldUpdate={true}
+            >
+              {({ getFieldValue }) => (
+                <>
+                  <Form.Item 
+                    noStyle={true}
+                    name='prmr'
+                    valuePropName='checked'
+                    initialValue={false}
+                  >
+                    <Checkbox>该分支提交PR/MR时自动执行plan计划</Checkbox> 
+                  </Form.Item>
+                  <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
+                  {
+                    getFieldValue('prmr') ? (
+                      <a onClick={() => copyToUrl('plan')}>复制URL</a>
+                    ) : (
+                      <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
+                    )
+                  }
+                </>
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item 
+              name='autoApproval'
+              valuePropName='checked'
+              initialValue={false}
+            >
+              <Checkbox>自动通过审批</Checkbox> 
             </Form.Item>
           </Col>
         </Row>
