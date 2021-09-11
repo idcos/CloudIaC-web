@@ -193,14 +193,14 @@ const CCTList = ({ orgs }) => {
                   type='link' 
                   style={{ padding: 0, fontSize: '12px' }} 
                   loading={changeEnabledLoading}
-                  onClick={() => changeEnabled({ tplId: id, enabled: false })}
+                  onClick={() => changeEnabled({ id, enabled: false })}
                 >关闭</Button>
               ) : (
                 <Button 
                   type='link' 
                   style={{ padding: 0, fontSize: '12px' }} 
                   loading={changeEnabledLoading}
-                  onClick={() => changeEnabled({ tplId: id, enabled: true })}
+                  onClick={() => changeEnabled({ id, enabled: true })}
                 >开启</Button>
               )
             }
