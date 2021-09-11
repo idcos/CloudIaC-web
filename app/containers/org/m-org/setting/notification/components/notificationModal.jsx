@@ -244,7 +244,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
             placeholder='请选择事件类型'
             mode={'multiple'}
           >
-            {Object.keys(ORG_USER.notificationType).map(it => <Option value={it}>{ORG_USER.notificationType[it]}</Option>)}
+            {Object.keys(ORG_USER.eventType).map(it => <Option value={it}>{ORG_USER.eventType[it]}</Option>)}
           </Select>
         </Form.Item>
         <div style={{ marginTop: 20 }}>
@@ -266,9 +266,9 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
                 form.setFieldsValue({ [`${k}-url`]: '' });
               }}
             >
-              {Object.keys(ORG_USER.subNavs).map((it) => (
+              {Object.keys(ORG_USER.notificationType).map((it) => (
                 <Tabs.TabPane
-                  tab={ORG_USER.subNavs[it]}
+                  tab={ORG_USER.notificationType[it]}
                   key={it}
                 />
               ))}

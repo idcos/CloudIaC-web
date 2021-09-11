@@ -69,19 +69,16 @@ export default ({ orgId }) => {
     {
       dataIndex: 'notificationType',
       title: '类型',
-      render: (text) => ORG_USER.subNavs[text]
+      render: (text) => ORG_USER.notificationType[text]
     },
     {
       dataIndex: 'eventType',
       title: '事件类型',
-      render: (text) => (text || []).map(it => {
-        return ORG_USER.notificationType[it];
-      }).join('、')
+      render: (text) => (text || []).map(it => ORG_USER.eventType[it]).join('、')
     },
     {
       dataIndex: 'creatorName',
       title: '创建人',
-      render: (text) => ORG_USER.notificationType[text]
     },
     {
       dataIndex: 'createdAt',
