@@ -64,9 +64,13 @@ export default (props) => {
                   <div className='name idcos-text-ellipsis'>
                     {it[name]}
                   </div>
-                  <div className='description idcos-text-ellipsis'>
-                    {it[description] || '-'}
-                  </div>
+                  {
+                    it[description] && (
+                      <div className='description idcos-text-ellipsis'>
+                        {it[description] || '-'}
+                      </div>
+                    )
+                  }
                 </Menu.Item>
               ))
             }

@@ -86,9 +86,13 @@ export default (props) => {
               <div className='name idcos-text-ellipsis'>
                 { name }
               </div>
-              {name !== description && <div className='description idcos-text-ellipsis'>
-                { description || '' }
-              </div>}
+              {
+                description && (
+                  <div className='description idcos-text-ellipsis'>
+                    { description || '' }
+                  </div>
+                )
+              }
             </Option>
           );
         })

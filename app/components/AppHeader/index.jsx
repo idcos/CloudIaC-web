@@ -132,8 +132,9 @@ const AppHeader = (props) => {
                 options={orgList}
                 onChange={changeCurOrg}
                 listHeight={800}
-                maxLen={7}
+                maxLen={14}
                 value={orgId}
+                lablePropsNames={{ name: 'name' }}
                 valuePropName='id'
                 formatOptionLabel={(name) => `组织：${name}`}
                 seniorSelectfooter={(

@@ -123,12 +123,13 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 setActive={setPjtSelectActive}
                 selectionStyle={{ padding: '13px 20px 13px 24px' }}
                 bodyStyle={{ maxHeight: 'none' }}
-                valuePropName='id'          
+                valuePropName='id' 
+                lablePropsNames={{ name: 'name' }}
                 value={pjtId}
                 showSearch={true}
                 searchPlaceholder='请输入项目名称搜索'
                 selectRef={pjtSelectRef}
-                maxLen={7}
+                maxLen={14}
                 menuSelectfooter={(
                   <div 
                     className={styles.menuSelectfooterContent} 
