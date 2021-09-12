@@ -81,8 +81,12 @@ const FormPage = ({ match = {} }) => {
   const { data: output, run: test, loading: testLoading } = useRequest(
     () => requestWrapper(
       policiesAPI.test.bind(null, { input, rego }),
+      {
+        getErrorFn: (res) => (res.result || {}).error
+      }
     ),
     {
+      manual: true,
       formatResult: (res) => res && res.data
     }
   );

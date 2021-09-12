@@ -1,4 +1,5 @@
 import { notification } from "antd";
+import noop from 'lodash/noop'
 
 export const requestWrapper = (apiFn, options) => {
 
@@ -8,14 +9,15 @@ export const requestWrapper = (apiFn, options) => {
     successMessage, // 自定义成功信息
     errorMessage, // 自定义错误信息
     errorJudgeFn = (res) => res.code != 200, // 接口返回数据错误的判断方法
-    formatDataFn = (res) => res.result // 格式化返回数据
+    formatDataFn = (res) => res.result, // 格式化返回数据
+    getErrorFn = noop
   } = options || {};
   
   return new Promise(async (resolve, reject) => {
     try {
       const res = await apiFn();
-      if (errorJudgeFn(res)) {
-        throw new Error(res.message);
+      if (getErrorFn(res) || errorJudgeFn(res)) {
+        throw new Error(getErrorFn(res) || res.message);
       }
       const data = formatDataFn(res);
       autoSuccess && notification.success({
