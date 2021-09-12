@@ -6,7 +6,7 @@ const FL = {
   wrapperCol: { span: 14 }
 };
 
-export default ({ goCTlist, opType, childRef, stepHelper, ctData, type }) => {
+export default ({ goCTlist, opType, childRef, stepHelper, ctData, type, saveLoading }) => {
 
   const [form] = Form.useForm();
 
@@ -68,7 +68,7 @@ export default ({ goCTlist, opType, childRef, stepHelper, ctData, type }) => {
             ) : (
               <>
                 <Button onClick={goCTlist}>取消</Button>
-                <Button type='primary' htmlType={'submit'}>提交</Button>
+                <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
               </>
             )
           }

@@ -3,7 +3,7 @@ import { Button, Space } from "antd";
 
 import VariableForm from 'components/variable-form';
 
-export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId }) => {
+export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
 
   const varRef = useRef();
 
@@ -57,7 +57,7 @@ export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId })
           ) : (
             <>
               <Button onClick={goCTlist}>取消</Button>
-              <Button type='primary' onClick={onFinish}>提交</Button>
+              <Button type='primary' onClick={onFinish} loading={saveLoading}>提交</Button>
             </>
           )
         }

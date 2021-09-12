@@ -14,7 +14,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) => {
+const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
 
   const formData = ctData[type] || {};
   const [form] = Form.useForm();
@@ -364,7 +364,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType }) =
             ) : (
               <>
                 <Button onClick={goCTlist}>取消</Button>
-                <Button type='primary' htmlType={'submit'}>提交</Button>
+                <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
               </>
             )
           }

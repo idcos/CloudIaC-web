@@ -31,7 +31,8 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
 
   // 创建/编辑云模版提交接口
   const {
-    run: onSave
+    run: onSave,
+    loading: saveLoading
   } = useRequest(
     (params) => requestWrapper(
       tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, params)
@@ -164,6 +165,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               opType={opType}
               goCTlist={goCTlist}
               isShow={stepIndex === index}
+              saveLoading={saveLoading}
             />
           ) : null
         ))
