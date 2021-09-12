@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Table, Input, notification, Badge, Space, Divider, Popconfirm } from 'antd';
+import React, { useState } from 'react';
+import { Button, Table, Input, notification, Space, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -10,8 +10,6 @@ import cgroupsAPI from 'services/cgroups';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import Detail from './detail';
 import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
-
 
 const PolicyGroupList = () => {
   const [ policyGroupId, setPolicyGroupId ] = useState(null),
@@ -96,9 +94,20 @@ const PolicyGroupList = () => {
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
-      dataIndex: 'status',
-      title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
+      dataIndex: 'passed',
+      title: '通过'
+    },
+    {
+      dataIndex: 'failed',
+      title: '不通过'
+    },
+    {
+      dataIndex: 'suppressed',
+      title: '屏蔽'
+    },
+    {
+      dataIndex: 'failed',
+      title: '失败'
     },
     {
       title: '操作',
