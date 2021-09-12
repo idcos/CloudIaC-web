@@ -12,19 +12,22 @@ import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
 import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
-import Detection from './component/detection';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
+import DetectionDrawer from './component/detection-drawer';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
 
 const CenvList = ({ orgs }) => {
 
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
-  const [ viewDetection, setViewDetection ] = useState(false);
-  const [ envId, setEnvId ] = useState(null);
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
     policyGroupIds: [],
     onSuccess: noop
+  });
+  const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
+    visible: false,
+    id: null,
+    needLoopStatus: false
   });
 
   // 项目选项查询
@@ -55,6 +58,23 @@ const CenvList = ({ orgs }) => {
     }
   );
 
+  // 合规检测
+  const {
+    run: runScan,
+    fetches: scanFetches
+  } = useRequest(
+    ({ id }) => requestWrapper(
+      cenvAPI.runScan.bind(null, { envId: id })
+    ), {
+      manual: true,
+      fetchKey: (params) => params.id,
+      onSuccess: (data, params) => {
+        const { id } = params[0] || {};
+        openDetectionDrawer({ id });
+      }
+    }
+  );
+
   // 环境列表查询
   const {
     loading: tableLoading,
@@ -73,7 +93,7 @@ const CenvList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams, paginate }
+    searchParams: { formParams }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -91,25 +111,22 @@ const CenvList = ({ orgs }) => {
     }
   };
 
-  const runScan = async (record) => {
-    try {
-      const res = await cenvAPI.runScan({
-        envId: record.id
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setEnvId(record.id);
-      setViewDetection(true); 
-    } catch (e) {
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
+  const openDetectionDrawer = ({ id }) => {
+    setDetectionDrawerProps({
+      id,
+      visible: true
+    });
   };
 
-  const bindPolicyGroup = ({ id, policyGroups }, onSuccess = refreshList) => {
+  const closeDetectionDrawer = () => {
+    setDetectionDrawerProps({
+      id: null,
+      visible: false,
+      needLoopStatus: false
+    });
+  };
+
+  const openBindPolicyGroupModal = ({ id, policyGroups }, onSuccess = refreshList) => {
     setBindPolicyGroupModalProps({
       visible: true,
       policyGroupIds: (policyGroups || []).map((it) => it.id),
@@ -118,7 +135,7 @@ const CenvList = ({ orgs }) => {
     });
   };
 
-  const closeBindPolicyGroup = () => {
+  const closeBindPolicyGroupModal = () => {
     setBindPolicyGroupModalProps({
       visible: false,
       policyGroupIds: [],
@@ -130,7 +147,7 @@ const CenvList = ({ orgs }) => {
   // 开启/关闭合规检测
   const switchEnabled = ({ enabled, id, policyGroups, name }) => {
     if (enabled) {
-      bindPolicyGroup({ id, policyGroups }, () => {
+      openBindPolicyGroupModal({ id, policyGroups }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
@@ -163,7 +180,7 @@ const CenvList = ({ orgs }) => {
       render: (text, record) => {
         const policyGroups = text || [];
         return policyGroups.length > 0 ? (
-          <a onClick={() => bindPolicyGroup(record)} type='link'>
+          <a onClick={() => openBindPolicyGroupModal(record)} type='link'>
             <EllipsisText style={{ maxWidth: 220 }}>
               {policyGroups.map(it => it.name).join('、')}
             </EllipsisText>
@@ -211,25 +228,22 @@ const CenvList = ({ orgs }) => {
       width: 80,
       fixed: 'right',
       render: (text, record) => {
-        const { policyStatus } = record;
+        const { id, policyStatus } = record;
+        const { loading: scanLoading } = scanFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              onClick={() => {
-                runScan(record);
-              }}
+              onClick={() => runScan({ id })}
+              loading={scanLoading}
               disabled={policyStatus === 'pending'}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
               disabled={policyStatus === 'pending'}
-              onClick={() => {
-                setEnvId(record.id);
-                setViewDetection(true);
-              }}
+              onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>
         );
@@ -280,15 +294,11 @@ const CenvList = ({ orgs }) => {
     </div>
     {bindPolicyGroupModalProps.visible && <BindPolicyGroupModal 
       {...bindPolicyGroupModalProps}
-      onClose={closeBindPolicyGroup}
+      onClose={closeBindPolicyGroupModal}
     />}
-    {viewDetection && <Detection 
-      id={envId}
-      visible={viewDetection} 
-      toggleVisible={() => {
-        setViewDetection(false);
-        setEnvId(null); 
-      }}
+    {detectionDrawerProps.visible && <DetectionDrawer 
+      {...detectionDrawerProps}
+      onClose={closeDetectionDrawer}
     />}
   </Layout>;
 };

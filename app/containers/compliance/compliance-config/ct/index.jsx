@@ -13,18 +13,21 @@ import Layout from 'components/common/layout';
 import projectAPI from 'services/project';
 import ctplAPI from 'services/ctpl';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
-import DetectionModal from './component/detection-modal';
+import DetectionDrawer from './component/detection-drawer';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
 
 const CCTList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
-  const [ templateId, setTemplateId ] = useState(null);
-  const [ detectionVisible, setDetectionVisible ] = useState(false);
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
     policyGroupIds: [],
     onSuccess: noop
+  });
+  const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
+    visible: false,
+    id: null,
+    needLoopStatus: false
   });
 
   // 项目选项查询
@@ -55,6 +58,23 @@ const CCTList = ({ orgs }) => {
     }
   );
 
+  // 合规检测
+  const {
+    run: runScan,
+    fetches: scanFetches
+  } = useRequest(
+    ({ id }) => requestWrapper(
+      ctplAPI.runScan.bind(null, { tplId: id })
+    ), {
+      manual: true,
+      fetchKey: (params) => params.id,
+      onSuccess: (data, params) => {
+        const { id } = params[0] || {};
+        openDetectionDrawer({ id });
+      }
+    }
+  );
+
   // 环境列表查询
   const {
     loading: tableLoading,
@@ -73,7 +93,7 @@ const CCTList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams, paginate }
+    searchParams: { formParams }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -91,7 +111,22 @@ const CCTList = ({ orgs }) => {
     }
   };
 
-  const bindPolicyGroup = ({ id, policyGroups }, onSuccess = refreshList) => {
+  const openDetectionDrawer = ({ id }) => {
+    setDetectionDrawerProps({
+      id,
+      visible: true
+    });
+  };
+
+  const closeDetectionDrawer = () => {
+    setDetectionDrawerProps({
+      id: null,
+      visible: false,
+      needLoopStatus: false
+    });
+  };
+
+  const openBindPolicyGroupModal = ({ id, policyGroups }, onSuccess = refreshList) => {
     setBindPolicyGroupModalProps({
       visible: true,
       policyGroupIds: (policyGroups || []).map((it) => it.id),
@@ -100,7 +135,7 @@ const CCTList = ({ orgs }) => {
     });
   };
 
-  const closeBindPolicyGroup = () => {
+  const closeBindPolicyGroupModal = () => {
     setBindPolicyGroupModalProps({
       visible: false,
       policyGroupIds: [],
@@ -109,28 +144,10 @@ const CCTList = ({ orgs }) => {
     })
   };
 
-  const runScan = async (record) => {
-    try {
-      const res = await ctplAPI.runScan({
-        tplId: record.id
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setTemplateId(record.id);
-      setDetectionVisible(true); 
-    } catch (e) {
-      notification.error({
-        message: '操作失败',
-        description: e.message
-      });
-    }
-  };
-
   // 开启/关闭合规检测
   const switchEnabled = ({ enabled, id, policyGroups, name }) => {
     if (enabled) {
-      bindPolicyGroup({ id, policyGroups }, () => {
+      openBindPolicyGroupModal({ id, policyGroups }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
@@ -157,7 +174,7 @@ const CCTList = ({ orgs }) => {
       title: '绑定策略组',
       render: (policyGroups, record) => {
         return policyGroups.length > 0 ? (
-          <a onClick={() => bindPolicyGroup(record)} type='link'>
+          <a onClick={() => openBindPolicyGroupModal(record)} type='link'>
             <EllipsisText style={{ maxWidth: 220 }}>
               {policyGroups.map(it => it.name).join('、')}
             </EllipsisText>
@@ -205,22 +222,22 @@ const CCTList = ({ orgs }) => {
       width: 180,
       fixed: 'right',
       render: (record) => {
+        const { id, policyStatus } = record;
+        const { loading: scanLoading } = scanFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              onClick={() => {
-                runScan(record);
-              }}
+              onClick={() => runScan({ id })}
+              loading={scanLoading}
+              disabled={policyStatus === 'pending'}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              onClick={() => {
-                setTemplateId(record.id);
-                setDetectionVisible(true);
-              }}
+              disabled={policyStatus === 'pending'}
+              onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>
         );
@@ -272,15 +289,11 @@ const CCTList = ({ orgs }) => {
     </div>
     {bindPolicyGroupModalProps.visible && <BindPolicyGroupModal 
       {...bindPolicyGroupModalProps}
-      onClose={closeBindPolicyGroup}
+      onClose={closeBindPolicyGroupModal}
     />}
-    {detectionVisible && <DetectionModal
-      id={templateId}
-      visible={detectionVisible} 
-      toggleVisible={() => {
-        setDetectionVisible(false); 
-        setTemplateId(null);
-      }}
+    {detectionDrawerProps.visible && <DetectionDrawer 
+      {...detectionDrawerProps}
+      onClose={closeDetectionDrawer}
     />}
   </Layout>;
 };

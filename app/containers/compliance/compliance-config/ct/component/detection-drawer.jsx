@@ -1,39 +1,49 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Form, Drawer, notification, Empty, Card } from "antd";
-
-import cenvAPI from 'services/cenv';
+import React from 'react';
+import { Drawer, Empty, Card } from "antd";
+import ctplAPI from 'services/ctpl';
 import ComplianceCollapse from 'components/compliance-collapse';
 import moment from 'moment';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 
+export default ({  visible, onClose, id  }) => {
 
-const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
-
-  const [ scanResults, setScanResults ] = useState([]);
-  const [ scanTime, setScanTime ] = useState(null);
-  const [form] = Form.useForm();
-
-  useEffect(() => {
-    fetchResult();
-  }, []);
-
-  const fetchResult = async () => {
-    try {
-      const res = await cenvAPI.result({
-        envId: id
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
+  // 合规结果查询
+  const { 
+    data: { policyStatus, scanResults, scanTime } = {
+      policyStatus: '',
+      scanResults: [],
+      scanTime: null
+    },
+    cancel
+  } = useRequest(
+    () => requestWrapper(
+      ctplAPI.result.bind(null, { tplId: id }),
+      {
+        formatDataFn: (res) => {
+          const { list } = res.result || {};
+          const { policyStatus, scanResults, scanTime } = list || {};
+          return {
+            policyStatus,
+            scanResults: resetList(scanResults || []),
+            scanTime: scanTime || null
+          };
+        }
       }
-      const listResult = !!res.result ? res.result : {};
-      setScanResults(resetList((listResult.list || {}).scanResults || []));
-      setScanTime((listResult.list || {}).scanTime || null);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
+    ),
+    {
+      pollingInterval: 3000,
+      pollingWhenHidden: false,
+      onSuccess: (data) => {
+        if (data.policyStatus !== '') {
+          cancel();
+        } 
+      },
+      onError: () => {
+        cancel();
+      }
     }
-  };
+  );
 
   const resetList = (list) => {
     if (list.length) {
@@ -53,13 +63,13 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
       return [];
     }
   };
-
+  
   return (
     <Drawer
       title='检测详情'
       placement='right'
       visible={visible}
-      onClose={toggleVisible}
+      onClose={onClose}
       width={800}
       bodyStyle={{
         padding: 0
@@ -85,4 +95,3 @@ const Index = ({ orgId, projectId, visible, toggleVisible, id }) => {
     </Drawer>
   );
 };
-export default memo(Index);
