@@ -200,12 +200,18 @@ const EnvDetail = (props) => {
             history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
           }}
         >
-          {Object.keys(subNavs).map((it) => (
-            <Tabs.TabPane
-              tab={subNavs[it]}
-              key={it}
-            />
-          ))}
+          {Object.keys(subNavs).map((it) => {
+            // 环境设置没有项目操作权限的话隐藏掉设置tab
+            if (it === 'setting' && !PROJECT_OPERATOR) {
+              return null;
+            }
+            return (
+              <Tabs.TabPane
+                tab={subNavs[it]}
+                key={it}
+              />
+            )
+          })}
         </Tabs>
         {renderByPanel()}
       </div>
