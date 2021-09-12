@@ -3,7 +3,7 @@ import { Modal, Table } from 'antd';
 
 export default (props) => {
 
-  const { visible, defaultScope, terraformVarList, importVars, onClose, onFinish } = props;
+  const { visible, defaultScope, varList, importVars, onClose, onFinish } = props;
   const [ selectedList, setSelectedList ] = useState({
     keys: [],
     rows: []
@@ -29,7 +29,7 @@ export default (props) => {
   const rowSelection = {
     selectedRowKeys: selectedList.keys,
     getCheckboxProps: (record) => {
-      const hasSameName = !!terraformVarList.find(it => it.name === record.name);
+      const hasSameName = !!varList.find(it => it.name === record.name);
       if (hasSameName) {
         return { disabled: true };
       } 
