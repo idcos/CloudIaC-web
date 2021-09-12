@@ -6,7 +6,7 @@ const { Option } = Select;
 
 const OtherVarForm = (props) => {
 
-  const { otherVarForm, fetchParams } = props;
+  const { otherVarForm, fetchParams, defaultExpandCollapse = true } = props;
   const [ tfvars, setTfvars ] = useState([]);
   const [ playbooks, setPlaybooks ] = useState([]);
 
@@ -52,8 +52,8 @@ const OtherVarForm = (props) => {
   };
 
   return (
-    <Collapse expandIconPosition={'right'}>
-      <Collapse.Panel header='其它变量' forceRender={true}>
+    <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'}>
+      <Collapse.Panel key='open' header='其它变量' forceRender={true}>
         <Form form={otherVarForm}>
           <Row gutter={8}>
             <Col span={11}>

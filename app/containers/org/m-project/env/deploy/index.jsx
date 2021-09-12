@@ -346,6 +346,7 @@ const Index = ({ match = {} }) => {
             defaultData={{ variables: vars }} 
             fetchParams={varFetchParams}
             canImportTerraformVar={true}
+            defaultExpandCollapse={false}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>

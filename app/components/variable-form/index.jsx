@@ -16,7 +16,8 @@ const VariableForm = ({
   canImportTerraformVar = false, 
   defaultScope, 
   showOtherVars = false,
-  hasAnchor = false
+  hasAnchor = false,
+  defaultExpandCollapse = true
 }) => {
 
   const terraformVarRef = useRef();
@@ -102,6 +103,7 @@ const VariableForm = ({
               fetchParams={fetchParams}
               canImportVar={canImportTerraformVar}
               type='terraform'
+              defaultExpandCollapse={defaultExpandCollapse}
             />
           </a>
           <a id='env-var'>
@@ -115,6 +117,7 @@ const VariableForm = ({
               fetchParams={fetchParams}
               canImportVar={false}
               type='environment'
+              defaultExpandCollapse={defaultExpandCollapse}
             />
           </a>
           { 
@@ -123,6 +126,7 @@ const VariableForm = ({
                 <OtherVarForm 
                   otherVarForm={otherVarForm}
                   fetchParams={fetchParams}
+                  defaultExpandCollapse={defaultExpandCollapse}
                 />
               </a>
             ) : null 

@@ -112,7 +112,8 @@ const VarFormTable = (props) => {
     defalutVarList,
     fetchParams,
     canImportVar,
-    type
+    type,
+    defaultExpandCollapse = true
   } = props;
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
@@ -386,8 +387,8 @@ const VarFormTable = (props) => {
   };
 
   return (
-    <Collapse expandIconPosition={'right'}>
-      <Collapse.Panel header={VAR_TYPE_ENUM[type]} forceRender={true}>
+    <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'} >
+      <Collapse.Panel key='open' header={VAR_TYPE_ENUM[type]} forceRender={true}>
         <EditableTable
           getActionRef={ref => (formVarRef.current = ref.current)}
           defaultData={{ scope: defaultScope, sensitive: false, type, isNew: true }}
