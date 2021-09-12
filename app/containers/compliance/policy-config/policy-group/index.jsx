@@ -124,8 +124,14 @@ const PolicyGroupList = () => {
               }}
             >编辑</a>
             <Divider type={'vertical'}/>
-            <Popconfirm title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} onConfirm={() => enabled(!record.enabled, record)} placement='bottomLeft'>
-              {record.enabled ? <a >禁用</a> : <a>启用</a>}
+            <Popconfirm 
+              title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} 
+              onConfirm={() => enabled(!record.enabled, record)} 
+              placement='bottomLeft'
+            >
+              <Button type='link' danger={record.enabled} style={{ padding: 0, fontSize: 12 }}>
+                {record.enabled ? '禁用' : '启用'}
+              </Button>
             </Popconfirm>
           </span>
         );

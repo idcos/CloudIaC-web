@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, notification, Table, Divider } from 'antd';
+import { Button, notification, Table, Divider, Popconfirm } from 'antd';
 import notificationsAPI from 'services/notifications';
-
 import { ORG_USER } from 'constants/types';
 import moment from 'moment';
-
 import AddModal from './components/notificationModal';
 
 export default ({ orgId }) => {
@@ -98,14 +96,16 @@ export default ({ orgId }) => {
           编辑
         </a>
         <Divider type={'vertical'}/>
-        <a
-          className='danger-text'
-          onClick={() => {
-            operation({ doWhat: 'del', payload: { id: record.id } });
-          }}
+        <Popconfirm
+          title='确定要删除该通知？'
+          onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
         >
-          删除
-        </a>
+          <a
+            className='danger-text'
+          >
+            删除
+          </a>
+        </Popconfirm>
       </span> 
     }
   ];

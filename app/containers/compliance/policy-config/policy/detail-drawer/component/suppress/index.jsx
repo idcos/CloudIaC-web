@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Button, Space, Table, Modal } from 'antd';
+import { Card, Button, Space, Table, Modal, Popconfirm } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -119,7 +119,12 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
       render: (record) => {
         const { id } = record;
         const { loading: delLoading } = delOneSuppressFetches[id] || {};
-        return <Button type='link' style={{ padding: 0 }} onClick={() => delOneSuppress(id)} loading={delLoading}>删除</Button>
+        return <Popconfirm
+          title='确定要删除该屏蔽内容？'
+          onConfirm={() => delOneSuppress(id)}
+        >
+          <Button type='link' danger={true} style={{ padding: 0, fontSize: 12 }} loading={delLoading}>删除</Button>
+        </Popconfirm>
       }
     }
   ];
