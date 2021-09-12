@@ -116,7 +116,7 @@ export const chartOptions = {
                 return `${params.value}%`;
               }
             },
-            color: colorConfig, //折线点的颜色
+            color: '#D6F5E9', //折线点的颜色
             lineStyle: {
               width: 6,
               color: colorConfig //折线的颜色
@@ -284,7 +284,7 @@ export const chartOptions = {
               show: true,
               position: 'top'
             },
-            color: colorConfig, //折线点的颜色
+            color: '#D6F5E9', //折线点的颜色
             lineStyle: {
               width: 6,
               color: colorConfig //折线的颜色
@@ -331,7 +331,7 @@ export const chartOptions = {
               show: true,
               position: 'top'
             },
-            color: colorConfig, //折线点的颜色
+            color: '#D6F5E9', //折线点的颜色
             lineStyle: {
               width: 6,
               color: colorConfig //折线的颜色
