@@ -196,7 +196,7 @@ const CCTList = ({ orgs }) => {
       title: '失败'
     },
     {
-      dataIndex: 'status',
+      dataIndex: 'policyStatus',
       title: '状态',
       render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },

@@ -202,7 +202,7 @@ const CenvList = ({ orgs }) => {
       title: '失败'
     },
     {
-      dataIndex: 'status',
+      dataIndex: 'policyStatus',
       title: '状态',
       render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },
@@ -211,6 +211,7 @@ const CenvList = ({ orgs }) => {
       width: 80,
       fixed: 'right',
       render: (text, record) => {
+        const { policyStatus } = record;
         return (
           <Space split={<Divider type='vertical'/>}>
             <Button 
@@ -219,10 +220,12 @@ const CenvList = ({ orgs }) => {
               onClick={() => {
                 runScan(record);
               }}
+              disabled={policyStatus === 'pending'}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
+              disabled={policyStatus === 'pending'}
               onClick={() => {
                 setEnvId(record.id);
                 setViewDetection(true);
