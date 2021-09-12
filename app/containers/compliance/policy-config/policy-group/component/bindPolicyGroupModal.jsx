@@ -101,12 +101,6 @@ export default ({ reload, visible, toggleVisible, id }) => {
         <Form.Item
           label='策略组描述'
           name='description'
-          rules={[
-            {
-              required: true,
-              message: '请输入策略组描述'
-            }
-          ]}
         >
           <Input.TextArea />
         </Form.Item>

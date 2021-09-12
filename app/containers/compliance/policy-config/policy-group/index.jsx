@@ -36,9 +36,7 @@ const PolicyGroupList = () => {
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
-    onChangeFormParams,
-    resetPageCurrent,
-    searchParams: { formParams, paginate }
+    onChangeFormParams
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -59,7 +57,7 @@ const PolicyGroupList = () => {
       notification.success({
         message: '操作成功'
       });
-      fetchList({ ...formParams, ...paginate });
+      refreshList();
     } catch (e) {
       notification.error({
         message: '操作失败',
@@ -168,7 +166,7 @@ const PolicyGroupList = () => {
     </div>
     {visible && (
       <BindPolicyGroupModal 
-        reload={() => fetchList({ ...formParams, ...paginate })} 
+        reload={refreshList} 
         id={policyGroupId} 
         visible={visible}
         toggleVisible={() => {
@@ -178,7 +176,7 @@ const PolicyGroupList = () => {
       />)}
     {viewDetail && <Detail 
       visible={viewDetail} 
-      reload={() => fetchList({ ...formParams, ...paginate })}
+      reload={refreshList}
       id={policyGroupId} 
       toggleVisible={() => {
         setViewDetail(false);
@@ -187,7 +185,7 @@ const PolicyGroupList = () => {
       }
     />}
     {viewRelevance && <RelevancePolicyGroupModal 
-      reload={() => fetchList({ ...formParams, ...paginate })} 
+      reload={refreshList} 
       visible={viewRelevance} 
       id={policyGroupId} 
       toggleVisible={() => {
