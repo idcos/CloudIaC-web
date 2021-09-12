@@ -3,19 +3,17 @@ import isArray from 'lodash/isArray';
 // eslint-disable-next-line no-undef
 let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ 
   offset: 0,
-  color: 'rgba(80,141,255,0.8)'
+  color: '#f1f6ff'
 }, {
-  offset: 0.1,
-  color: 'rgba(56,155,255,0.7)'
+  offset: 0.4,
+  color: '#659df7'
 }, {
-  offset: 0.2,
-  color: 'rgba(38,197,254,0.6)'
-}, {
-  offset: 0.3,
-  color: 'rgba(56,155,255,0.5)'
+  offset: 0.8,
+  color: '#4ec5a9'
 }, {
   offset: 1,
-  color: 'rgba(38,197,254,0.2)'
+  color: '#a6e4d1'
+
 }]);
 
 const formatPercent = (value) => {
