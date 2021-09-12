@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
+import { Form, Modal, notification, Select } from "antd";
 import isEmpty from 'lodash/isEmpty';
-
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
-
-
-import { PROJECT_ROLE } from 'constants/types';
 
 const { Option } = Select;
 const FL = {
@@ -14,7 +10,7 @@ const FL = {
   wrapperCol: { span: 16 }
 };
 
-export default ({ visible, toggleVisible, id, reload, detail }) => {
+export default ({ visible, onClose, id, onSuccess, policyGroupIds }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ list, setList ] = useState([]);
@@ -22,8 +18,8 @@ export default ({ visible, toggleVisible, id, reload, detail }) => {
 
   useEffect(() => {
     fetchList();
-    if (!isEmpty(detail)) {
-      form.setFieldsValue({ policyGroupIds: detail });
+    if (!isEmpty(policyGroupIds)) {
+      form.setFieldsValue({ policyGroupIds });
     }
   }, []);
 
@@ -56,8 +52,8 @@ export default ({ visible, toggleVisible, id, reload, detail }) => {
         throw new Error(res.message);
       }
       setSubmitLoading(false);
-      toggleVisible();
-      reload();
+      onClose && onClose();
+      onSuccess && onSuccess();
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
@@ -71,7 +67,7 @@ export default ({ visible, toggleVisible, id, reload, detail }) => {
     <Modal
       title='绑定策略组/开启合规检测'
       visible={visible}
-      onCancel={toggleVisible}
+      onCancel={onClose}
       okButtonProps={{
         loading: submitLoading
       }}

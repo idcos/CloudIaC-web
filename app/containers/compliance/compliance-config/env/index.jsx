@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Table, Space, Select, Divider, Input, notification, Badge, Button } from 'antd';
+import { Table, Space, Select, Divider, Input, notification, Badge, Button, Modal, Switch } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import noop from 'lodash/noop';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
-import BindPolicyModal from './component/bindPolicyModal';
+import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
@@ -17,9 +19,13 @@ const CenvList = ({ orgs }) => {
 
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ viewDetection, setViewDetection ] = useState(false);
-  const [ detail, setDetail ] = useState([]);
-  const [ policyView, setPolicyView ] = useState(false);
   const [ envId, setEnvId ] = useState(null);
+  const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
+    visible: false,
+    id: null,
+    policyGroupIds: [],
+    onSuccess: noop
+  });
 
   // 项目选项查询
   const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
@@ -103,26 +109,48 @@ const CenvList = ({ orgs }) => {
     }
   };
 
-  const bindPolicy = (record) => {
-    setEnvId(record.id);
-    setDetail((record.policyGroups || []).map((it) => it.id));
-    setPolicyView(true);
+  const bindPolicyGroup = ({ id, policyGroups }, onSuccess = refreshList) => {
+    setBindPolicyGroupModalProps({
+      visible: true,
+      policyGroupIds: (policyGroups || []).map((it) => it.id),
+      id,
+      onSuccess
+    });
   };
+
+  const closeBindPolicyGroup = () => {
+    setBindPolicyGroupModalProps({
+      visible: false,
+      policyGroupIds: [],
+      id: null,
+      onSuccess: noop
+    })
+  };
+
+  // 开启/关闭合规检测
+  const switchEnabled = ({ enabled, id, policyGroups, name }) => {
+    if (enabled) {
+      bindPolicyGroup({ id, policyGroups }, () => {
+        changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
+      });
+    } else {
+      Modal.confirm({
+        width: 480,
+        title: `确认操作`,
+        content: `你确定要关闭${name}的合规检测吗？`,
+        icon: <ExclamationCircleFilled />,
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => changeEnabled({ id, enabled: false })
+      });
+    }
+  };
+
   const columns = [
     {
       dataIndex: 'name',
       title: '环境名称',
-      render: (text, record) => (
-        <a 
-          type='link' 
-          onClick={() => {
-            setEnvId(record.id);
-            setViewDetection(true);
-          }}
-        >
-          <EllipsisText style={{ maxWidth: 180 }}>{text}</EllipsisText>
-        </a>
-      )
+      render: (text) => <EllipsisText style={{ maxWidth: 180 }}>{text}</EllipsisText>
     },
     {
       dataIndex: 'templateName',
@@ -134,23 +162,28 @@ const CenvList = ({ orgs }) => {
       width: 300,
       render: (text, record) => {
         const policyGroups = text || [];
-        return (
-          <a onClick={() => bindPolicy(record)}>
-            <EllipsisText style={{ maxWidth: 180 }}>
-              {
-                policyGroups.length > 0 ? (
-                  policyGroups.map(it => it.name).join('、')
-                ) : '绑定'
-              }
+        return policyGroups.length > 0 ? (
+          <a onClick={() => bindPolicyGroup(record)} type='link'>
+            <EllipsisText style={{ maxWidth: 220 }}>
+              {policyGroups.map(it => it.name).join('、')}
             </EllipsisText>
           </a>
-        );
+        ) : '-'; 
       }
     },
     {
       dataIndex: 'enabled',
       title: '是否开启检测',
-      render: (text) => text === true ? '开启' : '关闭'
+      render: (enabled, record) => {
+        const { id, name, policyGroups } = record;
+        return (
+          <Switch 
+            checked={enabled} 
+            size='small' 
+            onChange={(checked) => switchEnabled({ enabled: checked, id, policyGroups, name })} 
+          />
+        );
+      }
     },
     {
       dataIndex: 'passed',
@@ -165,6 +198,10 @@ const CenvList = ({ orgs }) => {
       title: '屏蔽'
     },
     {
+      dataIndex: 'failed',
+      title: '失败'
+    },
+    {
       dataIndex: 'status',
       title: '状态',
       render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
@@ -174,8 +211,6 @@ const CenvList = ({ orgs }) => {
       width: 80,
       fixed: 'right',
       render: (text, record) => {
-        const { enabled, id } = record;
-        const { loading: changeEnabledLoading } = changeEnabledFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
             <Button 
@@ -185,23 +220,14 @@ const CenvList = ({ orgs }) => {
                 runScan(record);
               }}
             >检测</Button>
-            {
-              enabled ? (
-                <Button 
-                  type='link' 
-                  style={{ padding: 0, fontSize: '12px' }} 
-                  loading={changeEnabledLoading}
-                  onClick={() => changeEnabled({ id, enabled: false })}
-                >关闭</Button>
-              ) : (
-                <Button 
-                  type='link' 
-                  style={{ padding: 0, fontSize: '12px' }} 
-                  loading={changeEnabledLoading}
-                  onClick={() => changeEnabled({ id, enabled: true })}
-                >开启</Button>
-              )
-            }
+            <Button 
+              type='link'
+              style={{ padding: 0, fontSize: '12px' }} 
+              onClick={() => {
+                setEnvId(record.id);
+                setViewDetection(true);
+              }}
+            >查看结果</Button>
           </Space>
         );
       }
@@ -249,15 +275,9 @@ const CenvList = ({ orgs }) => {
         />
       </Space>
     </div>
-    {policyView && <BindPolicyModal 
-      id={envId}
-      visible={policyView} 
-      detail={detail}
-      reload={() => fetchList({ ...formParams, ...paginate })}
-      toggleVisible={() => {
-        setPolicyView(false); 
-        setDetail([]);
-      }}
+    {bindPolicyGroupModalProps.visible && <BindPolicyGroupModal 
+      {...bindPolicyGroupModalProps}
+      onClose={closeBindPolicyGroup}
     />}
     {viewDetection && <Detection 
       id={envId}

@@ -25,9 +25,9 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
   }
 
   const TabPaneMap = [
+    { key: 'report', tab: '报表', children: <Report policyId={id}/> },
     { key: 'suppress', tab: '屏蔽', children: <Suppress policyId={id} detailInfo={detailInfo} reloadPolicyDetailAndList={reloadPolicyDetailAndList} /> },
-    { key: 'fix-suggestion', tab: '参考', children: <FixSuggestion content={detailInfo.fixSuggestion}/> },
-    { key: 'report', tab: '报表', children: <Report policyId={id}/> }
+    { key: 'fix-suggestion', tab: '参考', children: <FixSuggestion content={detailInfo.fixSuggestion}/> }
   ];
 
   return (

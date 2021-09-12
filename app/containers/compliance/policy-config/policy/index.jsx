@@ -43,18 +43,6 @@ const Policy = () => {
     }
   );
 
-  // 变更启用状态
-  const { run: changeEnabled, fetches: changeEnabledFetches } = useRequest(
-    (params) => requestWrapper(
-      policiesAPI.update.bind(null, params),
-      { autoSuccess: true }
-    ), {
-      manual: true,
-      fetchKey: (params) => params.id,
-      onSuccess: () => refreshList()
-    }
-  );
-
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
@@ -150,6 +138,10 @@ const Policy = () => {
       title: '屏蔽'
     },
     {
+      dataIndex: 'failed',
+      title: '失败'
+    },
+    {
       dataIndex: 'creator',
       title: '创建者'
     },
@@ -163,33 +155,14 @@ const Policy = () => {
       width: 130,
       fixed: 'right',
       render: (record) => {
-        const { id, enabled } = record;
-        const { loading: changeEnabledLoading } = changeEnabledFetches[id] || {};
+        const { id } = record;
         return (
           <Space split={<Divider type='vertical'/>}>
             <Button 
-              disabled={!enabled} 
               style={{ padding: 0, fontSize: '12px' }} 
               type='link' 
               onClick={() => goEditPage(id)}
             >编辑</Button>
-            {
-              !!enabled ? (
-                <Button 
-                  style={{ padding: 0, fontSize: '12px' }} 
-                  type='link'
-                  onClick={() => changeEnabled({ id, enabled: false })}
-                  loading={changeEnabledLoading}
-                >禁用</Button>
-              ) : (
-                <Button 
-                  style={{ padding: 0, fontSize: '12px' }} 
-                  type='link'
-                  onClick={() => changeEnabled({ id, enabled: true })}
-                  loading={changeEnabledLoading}
-                >启用</Button>
-              )
-            }
           </Space>
         );
       }
