@@ -26,8 +26,7 @@ const CCTList = ({ orgs }) => {
   });
   const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
     visible: false,
-    id: null,
-    needLoopStatus: false
+    id: null
   });
 
   // 项目选项查询
@@ -118,11 +117,12 @@ const CCTList = ({ orgs }) => {
     });
   };
 
+  // 关闭检测详情刷新下列表的检测状态字段
   const closeDetectionDrawer = () => {
+    refreshList();
     setDetectionDrawerProps({
       id: null,
-      visible: false,
-      needLoopStatus: false
+      visible: false
     });
   };
 
