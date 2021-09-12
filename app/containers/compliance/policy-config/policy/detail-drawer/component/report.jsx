@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { Card, Row, Col, Space, Spin, Table } from 'antd';
+import { Card, Row, Col, Space, Spin, Table, Badge } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import policiesAPI from 'services/policies';
 import { chartUtils } from 'components/charts-cfg';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
 
 export default ({ policyId }) => {
   const proportion_of_results = useRef();
@@ -75,7 +76,13 @@ export default ({ policyId }) => {
     {
       dataIndex: 'envName',
       title: '环境名称',
+      render: (text) => text || '-'
     },
+    {
+      dataIndex: 'status',
+      title: '状态',
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
+    }
   ];
 
   return (

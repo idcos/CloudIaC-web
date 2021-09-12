@@ -11,6 +11,7 @@ import CoderCard from 'components/coder/coder-card';
 import policiesAPI from 'services/policies';
 import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
+import cgroupsAPI from 'services/cgroups';
 import AffixBtnWrapper from 'components/common/affix-btn-wrapper';
 import styles from './styles.less';
 
@@ -62,6 +63,16 @@ const FormPage = ({ match = {} }) => {
       cenvAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
+      }
+    )
+  );
+  
+  // 策略组选项查询
+  const { data: policyGroupOptions } = useRequest(
+    () => requestWrapper(
+      cgroupsAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      {
+        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
       }
     )
   );
@@ -204,6 +215,24 @@ const FormPage = ({ match = {} }) => {
                           ))
                         }
                       </Select>
+                    </Form.Item>
+                  </Col>
+                  <Col span={12} style={{ paddingRight: 24 }}>
+                    <Form.Item
+                      label='绑定策略组：'
+                      name='groupId'
+                      rules={[
+                        {
+                          required: true,
+                          message: '请选择'
+                        }
+                      ]}
+                    >
+                      <Select 
+                        getPopupContainer={triggerNode => triggerNode.parentNode}
+                        placeholder='绑定策略组'
+                        options={policyGroupOptions}
+                      />
                     </Form.Item>
                   </Col>
                 </Row>
