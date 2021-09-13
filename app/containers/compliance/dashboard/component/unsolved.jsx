@@ -23,7 +23,13 @@ const Index = ({ summaryData = {} }) => {
   let CHART = useRef([
     { key: 'unsolved_rate', domRef: useRef(), ins: null }
   ]);
+
   const resizeHelper = chartUtils.resizeEvent(CHART);
+
+  const valueToPercent = (value) => {
+    return Math.round(parseFloat(value) * 10000) / 100;
+  };
+
   return <Card bodyStyle={{
     padding: '52px 16px 0'
   }}
@@ -39,7 +45,7 @@ const Index = ({ summaryData = {} }) => {
         <div className={styles.values}>最近15天</div>
         <div className={styles.icon}>
           {summaryData.changes != 0 && <span>{summaryData.changes > 0 ? <UpPointIcon style={{ padding: '0 5px' }}/> : <DownPointIcon style={{ padding: '0 5px' }}/>}</span>}
-          {summaryData.changes != 0 && <span>{`${summaryData.changes}%`}</span>} </div>
+          {summaryData.changes != 0 && <span>{`${valueToPercent(summaryData.changes)}%`}</span>} </div>
       </div>
     </div>
     {CHART.current.map(chart => <div>

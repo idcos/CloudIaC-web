@@ -23,6 +23,14 @@ const Index = ({ summaryData = [] }) => {
     let datas = summaryData.map(d => ({
       name: d.name, value: d.value, percent: formatPercent(d.value / allNumbers)
     }));
+    if (datas.length < 5 && datas.length !== 0) {
+      let count = 5 - datas.length;
+      for (let i = 0; i < count; i++) {
+        datas.push({
+          name: '-', value: '-', percent: 0
+        });
+      }
+    }
     return datas;
   }, [summaryData]);
 
@@ -56,7 +64,7 @@ const Index = ({ summaryData = [] }) => {
             '100%': colorObj[index]
           }} percent={item.percent || 0} style={{ width: '95%' }} showInfo={false}
           />
-          <span style={{ fontWeight: 'bolder', fontFamily: 'iacNuberFont', width: '5%' }}>{item.value || ''}</span>
+          <span style={{ fontWeight: 'bolder', fontFamily: 'iacNuberFont', width: '5%', paddingLeft: 5 }}>{item.value}</span>
         </div>
       </div>;
     }) }</>}

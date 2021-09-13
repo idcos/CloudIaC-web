@@ -41,10 +41,10 @@ const PolicyGroupList = () => {
     </Row>
     <Row style={{ paddingTop: 24 }}>
       <Col span={12} style={{ paddingRight: 12 }}>
-        <Policy summaryData={summaryData.policyViolated}/>
+        <Policy summaryData={summaryData.policyViolated || []}/>
       </Col>
       <Col span={12} style={{ paddingLeft: 12 }}>
-        <PolicyGroup summaryData={summaryData.policyGroupViolated}/>
+        <PolicyGroup summaryData={summaryData.policyGroupViolated || []}/>
       </Col>
     </Row>
   </div>;
