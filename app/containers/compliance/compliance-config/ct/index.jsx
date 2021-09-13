@@ -236,7 +236,7 @@ const CCTList = ({ orgs }) => {
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              disabled={policyStatus === 'pending'}
+              disabled={!policyStatus || policyStatus === 'pending'}
               onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>

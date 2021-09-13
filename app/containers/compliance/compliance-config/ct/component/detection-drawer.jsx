@@ -35,7 +35,7 @@ export default ({  visible, onClose, id  }) => {
       pollingInterval: 3000,
       pollingWhenHidden: false,
       onSuccess: (data) => {
-        if (data.policyStatus !== '') {
+        if (data.policyStatus !== 'pending') {
           cancel();
         } 
       },
