@@ -358,7 +358,7 @@ export const chartOptions = {
       legend: {
         x: 'right', //可设定图例在左、右、居中
         y: 'center', //可设定图例在上、下、居中
-        padding: [ 0, 50, 0, 0 ], 
+        padding: [ 0, 20, 0, 0 ], 
         data: [ '高', '中', '低' ],
         width: 50,
         icon: "circle",
