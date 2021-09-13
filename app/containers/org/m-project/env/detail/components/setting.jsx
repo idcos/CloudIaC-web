@@ -16,14 +16,6 @@ const FL = {
   labelCol: { span: 22, offset: 2 },
   wrapperCol: { span: 22, offset: 2 }
 };
-const LL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
-const PL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
 const { Option } = Select;
     
 const Index = (props) => {

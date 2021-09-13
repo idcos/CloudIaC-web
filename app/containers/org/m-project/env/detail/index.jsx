@@ -205,8 +205,6 @@ const EnvDetail = (props) => {
               <Tabs.TabPane
                 tab={subNavs[it]}
                 key={it}
-                // 设置tab没有项目操作权限的话禁用
-                disabled={it === 'setting' && PROJECT_OPERATOR}
               />
             )
           })}
