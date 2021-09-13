@@ -41,7 +41,7 @@ export default ({ visible, toggleVisible, params, orgId, projectId, envId, resou
     zIndex={1111111}
   >
     <div style={{ height: 450, overflowY: 'auto' }}>
-      <Coder options={{ mode: '' }} value={JSON.stringify(data, null, 2)} style={{ height: 'auto' }} />
+      <Coder value={JSON.stringify(data, null, 2)} style={{ height: 'auto' }} />
     </div>
   </Modal>;
 };

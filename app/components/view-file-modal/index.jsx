@@ -22,7 +22,7 @@ export default ({
       bodyStyle={{ padding: 0, ...bodyStyle }}
       {...props}
     >
-      <Coder options={{ mode: 'application/json' }} value={content} style={{ height: 350 }} />
+      <Coder value={content} style={{ height: 350 }} />
     </Modal>
   );
 }

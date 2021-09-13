@@ -279,7 +279,6 @@ const FormPage = ({ match = {} }) => {
                 style={{ marginBottom: 24 }}
                 bodyStyle={{ height: 200 }}
                 tools={['fullScreen']}
-                options={{ mode: 'application/json' }} 
                 spinning={fetchInputLoading}
                 bodyBefore={
                   <div className={styles.input_condition}>
@@ -309,7 +308,6 @@ const FormPage = ({ match = {} }) => {
               <CoderCard
                 title='输出'
                 value={output}
-                options={{ mode: 'application/json' }} 
                 bodyStyle={{ height: 200 }}
                 tools={['fullScreen']}
               />

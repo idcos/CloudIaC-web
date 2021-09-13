@@ -143,7 +143,7 @@ const Index = (props) => {
   return <div>
     <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
       <Panel header='Output' key='1'>
-        <Coder options={{ mode: '' }} value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
+        <Coder value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
       </Panel>
     </Collapse>
     <div className={'collapseInTable'}>
