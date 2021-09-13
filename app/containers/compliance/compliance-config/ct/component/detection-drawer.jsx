@@ -82,7 +82,7 @@ export default ({  visible, onClose, id  }) => {
         title={<span style={{ display: 'flex' }}>合规状态 <div className={'UbuntuMonoOblique'}>{scanTime && moment(scanTime).format('YYYY-MM-DD HH:mm:ss') || '-'}</div></span>}
       >
         {scanResults.length == 0 ? (
-          <Empty />
+          <Empty description='暂无策略检测则默认显示通过'/>
         ) : (
           <>{
             scanResults.map(info => {

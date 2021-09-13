@@ -222,7 +222,7 @@ const CCTList = ({ orgs }) => {
       width: 180,
       fixed: 'right',
       render: (record) => {
-        const { id, policyStatus } = record;
+        const { id, enabled, policyStatus } = record;
         const { loading: scanLoading } = scanFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
@@ -231,7 +231,7 @@ const CCTList = ({ orgs }) => {
               style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => runScan({ id })}
               loading={scanLoading}
-              disabled={policyStatus === 'pending'}
+              disabled={!enabled || policyStatus === 'pending'}
             >检测</Button>
             <Button 
               type='link'

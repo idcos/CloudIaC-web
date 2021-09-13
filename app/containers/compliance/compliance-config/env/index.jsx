@@ -228,7 +228,7 @@ const CenvList = ({ orgs }) => {
       width: 80,
       fixed: 'right',
       render: (text, record) => {
-        const { id, policyStatus } = record;
+        const { id, enabled, policyStatus } = record;
         const { loading: scanLoading } = scanFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
@@ -237,7 +237,7 @@ const CenvList = ({ orgs }) => {
               style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => runScan({ id })}
               loading={scanLoading}
-              disabled={policyStatus === 'pending'}
+              disabled={!enabled || policyStatus === 'pending'}
             >检测</Button>
             <Button 
               type='link'
