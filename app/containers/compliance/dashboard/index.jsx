@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Input, notification, Badge, Card, Divider, Popconfirm } from 'antd';
-import moment from 'moment';
-import { useRequest } from 'ahooks';
-import { requestWrapper } from 'utils/request';
-import { useSearchFormAndTable } from 'utils/hooks';
+import { Row, Col, notification } from 'antd';
 import policiesAPI from 'services/policies';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
 import styles from './style.less';
 import Active from './component/active';
 import Unsolved from './component/unsolved';

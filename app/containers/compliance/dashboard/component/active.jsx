@@ -31,7 +31,7 @@ const Index = ({ summaryData = {} }) => {
         {summaryData.total}
       </div>
       <div className={styles.titleFooter}>
-        <div className={styles.values}>最近{summaryData.last}天</div>
+        <div className={styles.values}>最近15天</div>
         <div className={styles.icon}>
           {summaryData.changes != 0 && <span>{summaryData.changes > 0 ? <UpPointIcon style={{ padding: '0 5px' }}/> : <DownPointIcon style={{ padding: '0 5px' }}/>}</span>}
           {summaryData.changes != 0 && <span>{`${summaryData.changes}%`}</span>} </div>

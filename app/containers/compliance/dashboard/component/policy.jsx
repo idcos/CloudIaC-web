@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { Progress, Card } from 'antd';
+import { Progress, Card, Empty } from 'antd';
+import { DashboardOutlined } from '@ant-design/icons';
 import styles from '../style.less';
 
 const Index = ({ summaryData = [] }) => {
@@ -26,11 +27,25 @@ const Index = ({ summaryData = [] }) => {
 
   return <Card bodyStyle={{
     padding: '52px 16px 72px 7%',
-    background: `#fff url(/assets/backgroundIcon/corner.svg) no-repeat 95% -1px` 
+    background: `#fff url(/assets/backgroundIcon/corner.svg) no-repeat 95% -1px`,
+    height: 369
   }}
   >
     <span className={styles.cardTitle}>策略检测未通过</span>
-    {data.map((item, index) => {
+    { data.length === 0 ? <Empty 
+      image={<DashboardOutlined />}
+      imageStyle={{
+        fontSize: 24,
+        height: 26,
+        color: '#E6F0F0',
+        marginTop: 50
+      }}
+      description={
+        <span>
+          暂无策略检查
+        </span>
+      }
+    /> : <>{data.map((item, index) => {
       return <div className={styles.lineProgress} style={{ width: '90%' }}>
         <span className={styles.nameTitle}>{item.name || ''}</span>
         <div style={{ display: 'flex' }}>
@@ -42,7 +57,7 @@ const Index = ({ summaryData = [] }) => {
           <span style={{ fontWeight: 'bolder', fontFamily: 'iacNuberFont', width: '5%' }}>{item.value || ''}</span>
         </div>
       </div>;
-    }) }
+    }) }</>}
     
   </Card>;
 };
