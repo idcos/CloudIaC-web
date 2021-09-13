@@ -7,6 +7,7 @@ import { requestWrapper } from 'utils/request';
 import tplAPI from 'services/tpl';
 import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
+import { TFVERSION_AUTO_MATCH } from 'constants/types';
 
 const FL = {
   labelCol: { span: 6 },
@@ -33,7 +34,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
     )
   );
 
-  // Terraform版本选项列表
+  // 获取Terraform版本自动匹配值
   const {
     data: autoMatchTfVersion,
     run: fetchAutoMatchTfVersion,
@@ -215,7 +216,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const values = await form.validateFields();
       stepHelper.updateData({
         type, 
-        data: values
+        data: { ...values, autoMatchTfVersion }
       });
       stepHelper.go(index);
     }
@@ -224,23 +225,15 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
   const onFinish = (values) => {
     stepHelper.updateData({
       type, 
-      data: values,
+      data: { ...values, autoMatchTfVersion },
       isSubmit: opType === 'edit'
     });
     opType === 'add' && stepHelper.next();
   };
 
-  const opVcsModal = () => {
-    setVcsVisible(true);
-  };
-  const clVcsModal = () => {
-    setVcsVisible(false);
-  };
-  const notFoundRender = () => {
-    return <span>
-      暂无数据， <a onClick={opVcsModal}>创建VCS</a>
-    </span>;
-  };
+  const opVcsModal = () => setVcsVisible(true);
+
+  const clVcsModal = () => setVcsVisible(false);
 
   return <div className='form-wrapper' style={{ width: 600 }}>
     <Form
@@ -264,16 +257,15 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
           placeholder='请选择vcs'
           showSearch={true}
           optionFilterProp='children'
-          notFoundContent={<Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            imageStyle={{
-              height: 60
-            }}
-            description={
-              notFoundRender()
-            }
-          >
-          </Empty>}
+          notFoundContent={(
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              imageStyle={{ height: 60 }}
+              description={(
+                <span>暂无数据，&nbsp;<a onClick={opVcsModal}>创建VCS</a></span>
+              )}
+            />
+          )}
         >
           {vcsList.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
@@ -341,7 +333,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       >
         <Select placeholder='请选择Terraform版本'>
           {
-            autoMatchTfVersion && <Option value={autoMatchTfVersion}>自动匹配</Option>
+            autoMatchTfVersion && <Option value={TFVERSION_AUTO_MATCH}>自动匹配</Option>
           }
           {
             (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)

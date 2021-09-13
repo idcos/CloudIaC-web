@@ -5,6 +5,7 @@ import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
+import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import history from "utils/history";
@@ -65,7 +66,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
 
   const submit = (data) => {
     const { basic, repo, variable, relation } = data;
-    const params = {
+    let params = {
       ...basic, 
       ...repo, 
       ...variable, 
@@ -73,6 +74,10 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       orgId,
       tplId
     };
+    if (params.tfVersion === TFVERSION_AUTO_MATCH) {
+      params.tfVersion = params.autoMatchTfVersion;
+      delete params.autoMatchTfVersion;
+    }
     onSave(params);
   };
 

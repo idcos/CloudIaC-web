@@ -7,7 +7,7 @@ import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutl
 export const GLOBAL_SCROLL_DOM_ID = 'global_scroll_dom_id';
 
 // Terraform版本自动匹配值
-export const TFVERSION_AUTO_MATCH = 'auto_match';
+export const TFVERSION_AUTO_MATCH = 'tfversion_auto_match';
 
 export const ORG_USER = {
   role: {
