@@ -98,7 +98,7 @@ const PolicyGroupList = () => {
       title: '通过'
     },
     {
-      dataIndex: 'failed',
+      dataIndex: 'violated',
       title: '不通过'
     },
     {
