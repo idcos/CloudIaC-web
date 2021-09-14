@@ -336,7 +336,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       layout={'vertical'}
     >
       <Collapse expandIconPosition={'right'} style={{ marginBottom: 20 }}>
-        <Panel header='高级设置'>
+        <Panel header='高级设置' forceRender={true}>
           {renderForm()}
         </Panel>
       </Collapse>

@@ -329,10 +329,8 @@ const Index = ({ match = {} }) => {
           </Row>
           <AdvancedConfig
             configRef={configRef}
-            isCollapse={true}
             data={info}
             orgId={orgId}
-            projectId={projectId}
             envId={envId}
             runnner={runnner}
             keys={keys}
