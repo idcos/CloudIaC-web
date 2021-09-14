@@ -2,7 +2,7 @@ function parseJSON(res) {
   return res.json().then(jsonResult => {
     return { ...res, jsonResult, httpCode: res.status };
   }).catch(() => {
-    throw new Error('系统错误');
+    throw new Error('接口错误');
   });
 }
 
