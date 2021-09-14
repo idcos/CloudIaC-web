@@ -31,7 +31,7 @@ const FormPage = ({ match = {} }) => {
   });
 
   useEffect(() => {
-    if (parseParams.envId && parseParams.tplId) {
+    if (parseParams.envId || parseParams.tplId) {
       fetchInput();
     }
   }, [parseParams]);
@@ -87,7 +87,7 @@ const FormPage = ({ match = {} }) => {
     ),
     {
       manual: true,
-      formatResult: (res) => res && res.data
+      formatResult: (res) => safeJsonStringify([res.data, null, 2])
     }
   );
 
@@ -221,7 +221,7 @@ const FormPage = ({ match = {} }) => {
                       </Select>
                     </Form.Item>
                   </Col>
-                  <Col span={12} style={{ paddingRight: 24 }}>
+                  <Col span={12} style={{ padding: '0 12px' }}>
                     <Form.Item
                       label='绑定策略组：'
                       name='groupId'
@@ -289,7 +289,7 @@ const FormPage = ({ match = {} }) => {
                       allowClear={true}
                       optionFilterProp='label'
                       showSearch={true}
-                      onChange={(tplId) => setParseParams((preValue) => ({ ...preValue, tplId }))}
+                      onChange={(tplId) => setParseParams({ tplId })}
                       value={parseParams.tplId}
                     />
                     <Select 
@@ -299,7 +299,7 @@ const FormPage = ({ match = {} }) => {
                       allowClear={true}
                       optionFilterProp='label'
                       showSearch={true}
-                      onChange={(envId) => setParseParams((preValue) => ({ ...preValue, envId }))}
+                      onChange={(envId) => setParseParams({ envId })}
                       value={parseParams.envId}
                     />
                   </div>
