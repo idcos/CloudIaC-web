@@ -117,12 +117,28 @@ const AppHeader = (props) => {
 
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'> 
-      <div className='logo' onClick={() => {
-        history.push('/'); 
-        setMenuType('compliance');
-      }}
-      ><img src='/assets/logo/iac-logo.svg' alt='IaC'/></div>
-      {(pathname !== '/') && userInfo.isAdmin && <div>{menuType === 'compliance' ? <div className='changeMenu' onClick={() => changeMenu('execute')}>进入合规</div> : <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入执行界面</div>}</div>}
+      <div 
+        className='logo' 
+        onClick={() => {
+          history.push('/'); 
+          setMenuType('compliance');
+        }}
+      >
+        <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
+      </div>
+      <div className='change-menu-wrapper'>
+        {(pathname !== '/') && userInfo.isAdmin && (
+          <>
+            {
+              menuType === 'compliance' ? (
+                <div className='changeMenu' onClick={() => changeMenu('execute')}>进入合规</div>
+              ) : (
+                <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入执行界面</div>
+              )
+            }
+          </>
+        )}
+      </div>
       <div className='rParts'>
         {
           (pathname !== '/' && pathname.indexOf('compliance') === -1) ? (
@@ -134,6 +150,8 @@ const AppHeader = (props) => {
                 listHeight={800}
                 maxLen={14}
                 value={orgId}
+                showSearch={true}
+                searchPlaceholder='请输入组织名称搜索'
                 lablePropsNames={{ name: 'name' }}
                 valuePropName='id'
                 formatOptionLabel={(name) => `组织：${name}`}

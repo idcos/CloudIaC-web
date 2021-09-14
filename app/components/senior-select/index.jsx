@@ -21,7 +21,7 @@ export default (props) => {
     valuePropName = 'value',
     value,
     listHeight,
-    showSearch = true,
+    showSearch = false,
     searchPlaceholder = '请输入关键词搜索',
     maxLen,
     seniorSelectfooter = null,
