@@ -144,7 +144,7 @@ const AppHeader = (props) => {
           (pathname !== '/' && pathname.indexOf('compliance') === -1) ? (
             <>
               <SeniorSelect
-                style={{ width: 250, marginLeft: 24 }}
+                style={{ width: 250 }}
                 options={orgList}
                 onChange={changeCurOrg}
                 listHeight={800}
