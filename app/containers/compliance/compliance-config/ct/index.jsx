@@ -174,11 +174,9 @@ const CCTList = ({ orgs }) => {
       title: '绑定策略组',
       render: (policyGroups, record) => {
         return policyGroups.length > 0 ? (
-          <a onClick={() => openBindPolicyGroupModal(record)} type='link'>
-            <EllipsisText maxWidth={220}>
-              {policyGroups.map(it => it.name).join('、')}
-            </EllipsisText>
-          </a>
+          <EllipsisText tagName='a' maxWidth={220} onClick={() => openBindPolicyGroupModal(record)} type='link'>
+            {policyGroups.map(it => it.name).join('、')}
+          </EllipsisText>
         ) : '-'; 
       }
     },
