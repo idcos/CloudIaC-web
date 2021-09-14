@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Select } from 'antd';
+import { Input, Select } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import intersectionWith from 'lodash/intersectionWith';
 import styles from './styles.less';
@@ -20,6 +21,8 @@ export default (props) => {
     valuePropName = 'value',
     value,
     listHeight,
+    showSearch = true,
+    searchPlaceholder = '请输入关键词搜索',
     maxLen,
     seniorSelectfooter = null,
     formatOptionLabel = (t) => t,
@@ -32,7 +35,8 @@ export default (props) => {
     setShowOptions(options.slice(0, maxLen));
   }, [ maxLen, options ]);
 
-  const onSearch = (keyword) => {
+  const onSearch = (e) => {
+    const keyword = e.target.value;
     const reg = new RegExp(keyword, 'gi');
     const filterOptions = options.filter((it) => !keyword || reg.test(it[searchKey]));
     setShowOptions(filterOptions.slice(0, maxLen));
@@ -46,10 +50,9 @@ export default (props) => {
       listHeight={listHeight}
       optionLabelProp={lablePropsNames.name}
       filterOption={false}
-      onSearch={onSearch}
       placeholder={placeholder}
       showArrow={false} 
-      showSearch={true}
+      showSearch={false}
       onChange={onChange}
       value={value}
       dropdownRender={menu => {
@@ -58,6 +61,13 @@ export default (props) => {
         });
         return (
           <div className={styles.seniorSelectList}>
+            {
+              showSearch && (
+                <div className='senior-select-header'>
+                  <Input placeholder={searchPlaceholder} suffix={<SearchOutlined />} onChange={onSearch} />
+                </div>
+              )
+            }
             {React.cloneElement(menu, { flattenOptions: showFlattenOptions })}
             {
               seniorSelectfooter ? (
