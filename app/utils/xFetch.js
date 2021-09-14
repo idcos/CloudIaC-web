@@ -1,5 +1,9 @@
 function parseJSON(res) {
-  return res.json().then(jsonResult => ({ ...res, jsonResult, httpCode: res.status }));
+  return res.json().then(jsonResult => {
+    return { ...res, jsonResult, httpCode: res.status };
+  }).catch(() => {
+    throw new Error('系统错误');
+  });
 }
 
 import { logout } from 'services/logout';
