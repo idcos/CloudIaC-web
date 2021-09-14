@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Table, Space, Input, Select, Divider, Tag, Popover } from 'antd';
 import moment from 'moment';
+import pick from 'lodash/pick';
+import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
@@ -13,7 +15,7 @@ import cgroupsAPI from 'services/cgroups';
 import DetailDrawer from './detail-drawer';
 
 const Policy = () => {
-  
+  const searchQuery = queryString.parse(location.search) || {};
   const [ detailDrawerState, setDetailsDrawerState ] = useState({
     visible: false,
     id: null
@@ -46,9 +48,13 @@ const Policy = () => {
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
+    searchParams: { formParams },
     onChangeFormParams
   } = useSearchFormAndTable({
     tableData,
+    defaultSearchParams: {
+      form: pick(searchQuery, ['groupId'])
+    },
     onSearch: (params) => {
       const { current: currentPage, ...restParams } = params;
       fetchList({ currentPage, ...restParams });
@@ -188,6 +194,7 @@ const Policy = () => {
             options={policyGroupOptions}
             optionFilterProp='label'
             showSearch={true}
+            value={formParams.groupId}
             onChange={(groupId) => onChangeFormParams({ groupId })}
           />
           <Select

@@ -4,6 +4,7 @@ import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
+import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import cgroupsAPI from 'services/cgroups';
@@ -83,8 +84,7 @@ const PolicyGroupList = () => {
       title: '关联策略',
       render: (text, record) => <a 
         onClick={() => {
-          setViewRelevance(true); 
-          setPolicyGroupId(record.id);
+          history.push(`/compliance/policy-config/policy?groupId=${record.id}`);
         }}
       >{text}</a>
     },
