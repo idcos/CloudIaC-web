@@ -167,7 +167,7 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'name',
       title: '环境名称',
-      render: (text) => <EllipsisText style={{ maxWidth: 180 }}>{text}</EllipsisText>
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
     },
     {
       dataIndex: 'templateName',
@@ -181,7 +181,7 @@ const CenvList = ({ orgs }) => {
         const policyGroups = text || [];
         return policyGroups.length > 0 ? (
           <a onClick={() => openBindPolicyGroupModal(record)} type='link'>
-            <EllipsisText style={{ maxWidth: 220 }}>
+            <EllipsisText maxWidth={220}>
               {policyGroups.map(it => it.name).join('、')}
             </EllipsisText>
           </a>
