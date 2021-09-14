@@ -180,7 +180,7 @@ export const chartOptions = {
               tarValue = data[i].value;
             }
           }
-          const p = formatPercent(tarValue / total);
+          const p = formatPercent(total === 0 ? 0 : tarValue / total);
           return `${name}${name !== '未通过' ? '   ' : ''}   ${p}%`;
 
         },
