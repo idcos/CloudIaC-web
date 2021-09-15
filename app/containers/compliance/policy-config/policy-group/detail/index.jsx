@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, notification, Drawer } from 'antd';
+import { Table, notification, Drawer, Badge } from 'antd';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import { chartUtils } from 'components/charts-cfg';
+import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary'; 
-import { POLICIES_DETECTION } from 'constants/types';
+import { POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION, TARGET_TYPE_ENUM } from 'constants/types';
 import cgroupsAPI from 'services/cgroups';
 
 const Index = ({ visible, toggleVisible, id }) => {
@@ -16,19 +17,23 @@ const Index = ({ visible, toggleVisible, id }) => {
   const columns = [
     {
       dataIndex: 'targetName',
-      title: '检测目标'
+      title: '检测目标',
+      render: (text) => <EllipsisText maxWidth={150}>{text}</EllipsisText>
     },
     {
       dataIndex: 'targetType',
-      title: '目标类型'
+      title: '目标类型',
+      render: (text) => TARGET_TYPE_ENUM[text]
     },
     {
       dataIndex: 'orgName',
-      title: '组织'
+      title: '组织',
+      render: (text) => <EllipsisText maxWidth={150}>{text}</EllipsisText>
     },
     {
       dataIndex: 'projectName',
-      title: '项目'
+      title: '项目',
+      render: (text) => <EllipsisText maxWidth={150}>{text}</EllipsisText>
     },
     {
       dataIndex: 'creator',
@@ -38,15 +43,22 @@ const Index = ({ visible, toggleVisible, id }) => {
       dataIndex: 'passed',
       title: '通过'
     },
-
     {
       dataIndex: 'violated',
       title: '不通过'
     },
     {
-      dataIndex: 'status',
+      dataIndex: 'suppressed',
+      title: '屏蔽'
+    },
+    {
+      dataIndex: 'failed',
+      title: '失败'
+    },
+    {
+      dataIndex: 'policyStatus',
       title: '状态',
-      render: (t, r) => <span>{POLICIES_DETECTION[t]}</span>
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       dataIndex: 'updatedAt',

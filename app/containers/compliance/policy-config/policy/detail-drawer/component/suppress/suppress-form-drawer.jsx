@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
-import { SUPPRESS_TARGET_TYPE_ENUM } from 'constants/types';
+import { TARGET_TYPE_ENUM } from 'constants/types';
 
 const FL = {
   labelCol: { span: 5 },
@@ -57,7 +57,7 @@ export default ({ policyId, visible, onClose, reload }) => {
     {
       dataIndex: 'targetType',
       title: '类型',
-      render: (text) => SUPPRESS_TARGET_TYPE_ENUM[text]
+      render: (text) => TARGET_TYPE_ENUM[text]
     }
   ];
 

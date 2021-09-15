@@ -2,16 +2,16 @@ export default (props) => {
   const { 
     noPointerEvents = false,
     children,
-    maxWidth,
+    maxWidth = '100%',
     style,
     tagName: TagName = 'span',
     ...restProps
   } = props || {};
   return <TagName
-    className={`idcos-ellipsis-text ${noPointerEvents ? 'no-pointer-events' : ''}`}
+    className={`idcos-text-ellipsis ${noPointerEvents ? 'no-pointer-events' : ''}`}
     title={children}
     {...restProps}
-    style={{ maxWidth, width: maxWidth ? 'auto' : '100%', ...style }}
+    style={{ display: 'inline-block', maxWidth, ...style }}
   >
     {children}
   </TagName>;

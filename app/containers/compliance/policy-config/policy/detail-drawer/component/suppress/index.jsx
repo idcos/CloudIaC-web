@@ -7,7 +7,7 @@ import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import policiesAPI from 'services/policies';
 import SuppressFormDrawer from './suppress-form-drawer';
-import { SUPPRESS_TARGET_TYPE_ENUM, SUPPRESS_TYPE_ENUM } from 'constants/types';
+import { TARGET_TYPE_ENUM, SUPPRESS_TYPE_ENUM } from 'constants/types';
 
 export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndList }) => {
 
@@ -93,7 +93,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
     {
       dataIndex: 'targetType',
       title: '类型',
-      render: (text) => SUPPRESS_TARGET_TYPE_ENUM[text]
+      render: (text) => TARGET_TYPE_ENUM[text]
     },
     {
       dataIndex: 'type',

@@ -81,8 +81,8 @@ export const SCOPE_ENUM = {
   env: '环境'
 };
 
-// 屏蔽目标类型
-export const SUPPRESS_TARGET_TYPE_ENUM = {
+// 目标类型
+export const TARGET_TYPE_ENUM = {
   template: '云模板',
   env: '环境',
   policy: '策略'
