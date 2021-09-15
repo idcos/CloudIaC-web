@@ -1,5 +1,8 @@
 @import 'containers/App/styles/variable.less';
 
+@AppHeaderBg: #141414;
+@AppHeaderHeight: 50px;
+
 .seniorSelectfooter {
   background-color: #fff;
 
@@ -44,31 +47,19 @@
       }
     }
 
-    .body {
-      // margin: 5px 20px;
-      // border-top: 1px solid @gray-4;
-      // border-bottom: 1px solid @gray-4;
-    }
-
-    .footer {
-      // padding: 5px 0;
-    }
-
     .link-item {
       line-height: 22px;
       cursor: pointer;
-      // padding: 5px 0px;
-          .line-border-top {
-            border-top: 1px solid @gray-4;
-            // border-bottom: 1px solid @gray-4;
-            padding: 5px 0px;
-            margin: 0px 18px;
-          }
-          .line-border-bottom {
-            border-bottom: 1px solid @gray-4;
-            padding: 5px 0px;
-            margin: 0px 18px;
-          }
+      .line-border-top {
+        border-top: 1px solid @gray-4;
+        padding: 5px 0px;
+        margin: 0px 18px;
+      }
+      .line-border-bottom {
+        border-bottom: 1px solid @gray-4;
+        padding: 5px 0px;
+        margin: 0px 18px;
+      }
       &:hover {
         background-color: @backGroundIac;
       }
@@ -79,7 +70,6 @@
       .text {
         color: @gray-8;
         margin-left: 10px;
-        // font-weight: 500;
       }
     }
   }
@@ -87,60 +77,98 @@
 
 :global {
   .idcos-app-header {
-    .change-menu-wrapper {
-      min-width: 84px;
+    position: relative;
+    z-index: 10;
+    height: @AppHeaderHeight;
+    box-shadow: 1px 0.1px 10px 1px rgba(55, 61, 72, 0.3);
+
+    &.dark {
+      background: @AppHeaderBg;
     }
-    .rParts {
-      //Override antd styles
-      .ant-select {
-        &:hover {
-          .ant-select-selector {
-            border-color: unset;
-          }
-        }
-        &.ant-select-focused {
-          .ant-select-selector {
-            border-color: unset;
-          }
-        }
-        .ant-select-selector {
-          background-color: rgba(255,255,255, 0.16);;
-          border-color: transparent;
-          & > .ant-select-selection-item {
-            color: #FFFFFF;
-          }
+
+    &>.inner {
+      display: flex;
+      align-items: center;
+      margin: 0 auto;
+     
+
+      .logo {
+        margin-right: 12px;
+        height: @AppHeaderHeight;
+        line-height: @AppHeaderHeight;
+        cursor: pointer;
+        overflow: hidden;
+
+        img {
+          width: 100px;
+          margin-left: 26px;
         }
       }
-      .ant-menu-item {
-        &:hover {
-          background: unset;
+
+      .change-menu-wrapper {
+        min-width: 84px;
+        .changeMenu {
+          color: rgba(255, 255, 255, 0.7);
+          cursor: pointer;
         }
       }
-      .ant-menu-item-selected {
-        background-color: unset;
-        border-top: 2px solid #00bcd4;;
-        & > a {
-          color: #00bcd4;
-        }
-      }
-      & > .user {
+
+      .rParts {
         flex: 1 0;
-        text-align: right;
-         & > span {
-           margin-right: 20px;
-           cursor: pointer;
-           &:last-child {
-             color: rgba(255,255,255, 0.86);
-             font-weight: 700;
-             margin-right: 6px;
-           }
-           &:hover {
-             transition: all 300ms;
-             color: #FFF;
-           }
-           .anticon {
-             font-size: 16px;
-           }
+        padding-right: 32px;
+        display: flex;
+        align-items: center;
+        height: @AppHeaderHeight;
+        .ant-select {
+          &:hover {
+            .ant-select-selector {
+              border-color: unset;
+            }
+          }
+          &.ant-select-focused {
+            .ant-select-selector {
+              border-color: unset;
+            }
+          }
+          .ant-select-selector {
+            background-color: rgba(255,255,255, 0.16);;
+            border-color: transparent;
+            & > .ant-select-selection-item {
+              color: #FFFFFF;
+            }
+          }
+        }
+        .ant-menu-item {
+          &:hover {
+            background: unset;
+          }
+        }
+        .ant-menu-item-selected {
+          background-color: unset;
+          border-top: 2px solid #00bcd4;;
+          & > a {
+            color: #00bcd4;
+          }
+        }
+        & > .user {
+          flex: 1 0;
+          text-align: right;
+           & > span {
+             margin-right: 20px;
+             cursor: pointer;
+             &:last-child {
+               color: rgba(255,255,255, 0.86);
+               font-weight: 700;
+               margin-right: 6px;
+             }
+             &:hover {
+               transition: all 300ms;
+               color: #FFF;
+             }
+             .anticon {
+               font-size: 16px;
+             }
+          }
         }
       }
     }

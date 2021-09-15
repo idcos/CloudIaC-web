@@ -1,7 +1,3 @@
-@AppHeaderBg: #141414;
-@AppHeaderHeight: 50px;
-
-
 #app {
   width: 100%;
   height: 100%;
@@ -11,51 +7,6 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-
-    .idcos-app-header {
-      position: relative;
-      z-index: 10;
-      height: @AppHeaderHeight;
-      box-shadow: 1px 0.1px 10px 1px rgba(55, 61, 72, 0.3);
-
-      &>.inner {
-        // width: @ctw;
-        display: flex;
-        align-items: center;
-        margin: 0 auto;
-
-        .changeMenu {
-          color: rgba(255, 255, 255, 0.7);
-          cursor: pointer;
-          width: 84px;
-        }
-
-        &>.logo {
-          margin-right: 12px;
-          height: @AppHeaderHeight;
-          line-height: @AppHeaderHeight;
-          cursor: pointer;
-          overflow: hidden;
-
-          img {
-            width: 100px;
-            margin-left: 26px;
-          }
-        }
-
-        &>.rParts {
-          flex: 1 0;
-          padding-right: 32px;
-          display: flex;
-          align-items: center;
-          height: @AppHeaderHeight;
-        }
-      }
-
-      &.dark {
-        background: @AppHeaderBg;
-      }
-    }
   }
 
   /* FullScreen Center-Middle Container */
@@ -103,16 +54,16 @@
 
 }
 
-  // 斜体展示时间
-  .UbuntuMonoOblique {
-    font-family: 'enNubFont';
-    font-style: oblique;
-    margin-left: 8px;
-    color: rgba(0, 0, 0, 0.6);
-  }
-  // 去掉斜体展示时间
-  .UbuntuMonoUnOblique {
-    font-family: 'enNubFont';
-    margin-left: 8px;
-    color: rgba(0, 0, 0, 0.6);
-  }
+// 斜体展示时间
+.UbuntuMonoOblique {
+  font-family: 'enNubFont';
+  font-style: oblique;
+  margin-left: 8px;
+  color: rgba(0, 0, 0, 0.6);
+}
+// 去掉斜体展示时间
+.UbuntuMonoUnOblique {
+  font-family: 'enNubFont';
+  margin-left: 8px;
+  color: rgba(0, 0, 0, 0.6);
+}
