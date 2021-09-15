@@ -32,8 +32,8 @@ export default ({ policyId }) => {
         chartUtils.updateBatch(CHART.current, [
           total,
           scanCount,
-          policyPassedRate,
-          policyScanCount
+          policyScanCount,
+          policyPassedRate
         ]);
       }
     }
