@@ -19,7 +19,7 @@ export function getWithArgs(url, args, options) {
   let keys = Object.keys(args);
   keys = keys
     .map(key => {
-      if (options && options.isEncode) {
+      if (options && options.isEncodeParams) {
         return `${key}=${encodeURIComponent(args[key])}`;
       }
       return `${key}=${args[key]}`;

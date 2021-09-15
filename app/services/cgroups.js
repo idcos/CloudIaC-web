@@ -31,7 +31,7 @@ const cgroupsAPI = {
   },
   // 策略详情-报表
   report: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/report`, restParams, {});
+    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/report`, restParams, { isEncodeParams: true });
   },
   // 查询策略组关联的策略或未关联策略组的策略
   isBind: ({ policyGroupId, ...restParams }) => {

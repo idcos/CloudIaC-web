@@ -17,7 +17,7 @@ async function xFetch(url, options) {
     'IaC-Org-Id': opts['IaC-Org-Id'] || '',
     'IaC-Project-Id': opts['IaC-Project-Id'] || ''
   };
-  if (opts.isEncode) {
+  if (opts.isEncode && !opts.isEncodeParams) {
     url = encodeURI(url);
   }
   const fetchResponse = await fetch(url, opts);

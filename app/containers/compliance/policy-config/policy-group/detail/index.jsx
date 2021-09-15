@@ -1,28 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Input, notification, Select, Drawer } from 'antd';
-import { chartUtils } from 'components/charts-cfg';
-
+import { Table, notification, Drawer } from 'antd';
 import moment from 'moment';
 import { connect } from "react-redux";
-
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import { useSearchFormAndTable } from 'utils/hooks';
+import { chartUtils } from 'components/charts-cfg';
 import { Eb_WP } from 'components/error-boundary'; 
 import { POLICIES_DETECTION } from 'constants/types';
 import cgroupsAPI from 'services/cgroups';
 
-const Index = ({ orgs, visible, toggleVisible, id }) => {
-  const [ loading, setLoading ] = useState(false),
-    [ passedRate, setpassedRate ] = useState({}),
-    [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
-    [ query, setQuery ] = useState({
-      currentPage: 1,
-      pageSize: 10,
-      searchorgId: undefined,
-      searchprojectId: undefined,
-      name: ''
-    });
+const Index = ({ visible, toggleVisible, id }) => {
+  const [ passedRate, setpassedRate ] = useState({});
 
   const columns = [
     {
@@ -84,9 +73,31 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
     });
   }, [ visible, passedRate ]);
 
-  useEffect(() => {
-    fetchList();
-  }, [query]);
+  // 表格数据查询
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList,
+  } = useRequest(
+    (params) => requestWrapper(
+      cgroupsAPI.lastTasksList.bind(null, params)
+    ),
+    {
+      manual: true
+    }
+  );
+
+  // 表单搜索和table关联hooks
+  const { 
+    tableProps
+  } = useSearchFormAndTable({
+    tableData,
+    pagination: { hideOnSinglePage: true },
+    onSearch: (params) => {
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams, policyGroupId: id });
+    }
+  });
 
   const valueToPercent = (value) => {
     return Math.round(parseFloat(value) * 10000) / 100;
@@ -95,7 +106,9 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
   const fetchDate = async () => {
     try {
       const res = await cgroupsAPI.report({
-        policyGroupId: id
+        policyGroupId: id,
+        from: moment().add(-30, 'd').format(),
+        to: moment().format()
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -113,37 +126,6 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
     }
   };
 
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      delete query.pageNo;
-      const res = await cgroupsAPI.lastTasksList({
-        policyGroupId: id
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
-  };
-  
   return <Drawer
     title='策略组详情'
     placement='right'
@@ -157,9 +139,8 @@ const Index = ({ orgs, visible, toggleVisible, id }) => {
       </div>)}
       <Table
         columns={columns}
-        dataSource={resultMap.list}
-        loading={loading}
-        pagination={false}
+        loading={tableLoading}
+        {...tableProps}
       />
     </div>
   </Drawer>;
