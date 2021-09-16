@@ -167,7 +167,7 @@ const CCTList = ({ orgs }) => {
     },
     {
       dataIndex: 'enabled',
-      title: '开启',
+      title: '开启检测',
       render: (enabled, record) => {
         const { id, name, policyGroups } = record;
         return (
