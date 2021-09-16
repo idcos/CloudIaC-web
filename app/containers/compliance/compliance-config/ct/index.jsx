@@ -150,11 +150,16 @@ const CCTList = ({ orgs }) => {
       render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
     },
     {
+      dataIndex: 'orgName',
+      title: '组织名称',
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+    },
+    {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
       render: (policyGroups, record) => {
         return policyGroups.length > 0 ? (
-          <EllipsisText tagName='a' maxWidth={220} onClick={() => openBindPolicyGroupModal(record)} type='link'>
+          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal(record)} type='link'>
             {policyGroups.map(it => it.name).join('、')}
           </EllipsisText>
         ) : '-'; 
