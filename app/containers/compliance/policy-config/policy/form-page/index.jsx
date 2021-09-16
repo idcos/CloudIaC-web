@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Select, Form, Input, Button, Row, Col, Spin, notification, Space } from "antd";
+import { Select, Form, Input, Button, Row, Col, Spin, notification } from "antd";
+import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
@@ -20,12 +21,15 @@ const FL = {
   wrapperCol: { span: 24 }
 };
   
-const FormPage = ({ match = {} }) => {
+const FormPage = ({ orgs, match = {} }) => {
 
+  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const { policyId } = match.params || {};
   const [form] = Form.useForm();
   const [rego, setRego] = useState();
   const [input, mutateInput] = useState();
+  const [parseOrgId, setParseOrgId] = useState();
+  const [parseType, setParseType] = useState('template');
   const [parseParams, setParseParams] = useState({
     envId: undefined,
     tplId: undefined
@@ -37,6 +41,26 @@ const FormPage = ({ match = {} }) => {
     }
   }, [parseParams]);
 
+  useEffect(() => {
+    if (!parseOrgId) {
+      return;
+    }
+    setParseParams({
+      envId: undefined,
+      tplId: undefined
+    });
+    switch (parseType) {
+      case 'template':
+        fetchCtOptions();
+        break;
+      case 'env':
+        fetchEnvOptions();
+        break;
+      default:
+        break;
+    }
+  }, [parseOrgId, parseType]);
+
   // input获取
   const { run: fetchInput, loading: fetchInputLoading } = useRequest(
     () => requestWrapper(
@@ -47,28 +71,37 @@ const FormPage = ({ match = {} }) => {
       formatResult: (res) => safeJsonStringify([res.template, null, 2]),
       onSuccess: (data) => {
         mutateInput(data);
+      },
+      onError: () => {
+        mutateInput();
       }
     }
   );
   
   // 云模版选项查询
-  const { data: ctOptions } = useRequest(
+  const { data: ctOptions, run: fetchCtOptions } = useRequest(
     () => requestWrapper(
-      ctplAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      ctplAPI.list.bind(null, { currentPage: 1, pageSize: 100000, orgId: parseOrgId }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
       }
-    )
+    ),
+    {
+      manual: true
+    }
   );
   
   // 环境选项查询
-  const { data: envOptions } = useRequest(
+  const { data: envOptions, run: fetchEnvOptions } = useRequest(
     () => requestWrapper(
-      cenvAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      cenvAPI.list.bind(null, { currentPage: 1, pageSize: 100000, orgId: parseOrgId }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
       }
-    )
+    ),
+    {
+      manual: true
+    }
   );
   
   // 策略组选项查询
@@ -271,28 +304,60 @@ const FormPage = ({ match = {} }) => {
                 tools={['fullScreen']}
                 spinning={fetchInputLoading}
                 bodyBefore={
-                  <div className={styles.input_condition}>
-                    <Select 
-                      style={{ width: '50%', paddingRight: 4 }} 
-                      placeholder='请选择云模版'
-                      options={ctOptions}
-                      allowClear={true}
-                      optionFilterProp='label'
-                      showSearch={true}
-                      onChange={(tplId) => setParseParams({ tplId })}
-                      value={parseParams.tplId}
-                    />
-                    <Select 
-                      style={{ width: '50%', paddingLeft: 4 }}
-                      placeholder='请选择环境' 
-                      options={envOptions}
-                      allowClear={true}
-                      optionFilterProp='label'
-                      showSearch={true}
-                      onChange={(envId) => setParseParams({ envId })}
-                      value={parseParams.envId}
-                    />
-                  </div>
+                  <Row gutter={[ 8, 0 ]} className={styles.input_condition}>
+                    <Col span={12}>
+                      <Select
+                        style={{ width: '100%' }} 
+                        placeholder='请选择组织'
+                        options={orgOptions}
+                        optionFilterProp='label'
+                        showSearch={true}
+                        onChange={setParseOrgId}
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <Input.Group compact={true}>
+                        <Select 
+                          style={{ width: '36%' }} 
+                          placeholder='类型'
+                          options={[
+                            { label: '云模版', value: 'template' },
+                            { label: '环境', value: 'env' }
+                          ]}
+                          onChange={setParseType}
+                          value={parseType}
+                        />  
+                        {
+                          parseType === 'template' && (
+                            <Select 
+                              style={{ width: '64%' }} 
+                              placeholder='请选择云模版'
+                              options={ctOptions}
+                              allowClear={true}
+                              optionFilterProp='label'
+                              showSearch={true}
+                              onChange={(tplId) => setParseParams({ tplId })}
+                              value={parseParams.tplId}
+                            />
+                          )
+                        }
+                        {
+                          parseType === 'env' && (
+                            <Select 
+                              style={{ width: '64%' }}
+                              placeholder='请选择环境' 
+                              options={envOptions}
+                              allowClear={true}
+                              optionFilterProp='label'
+                              showSearch={true}
+                              onChange={(envId) => setParseParams({ envId })}
+                              value={parseParams.envId}
+                            />
+                          )
+                        }
+                      </Input.Group>
+                    </Col>
+                  </Row>
                 }
               />
               <CoderCard
@@ -315,4 +380,8 @@ const FormPage = ({ match = {} }) => {
   );
 };
 
-export default FormPage;
+export default connect((state) => {
+  return {
+    orgs: state.global.get('orgs').toJS()
+  };
+})(FormPage);
