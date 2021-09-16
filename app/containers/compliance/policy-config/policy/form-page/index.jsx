@@ -3,7 +3,7 @@ import { Select, Form, Input, Button, Row, Col, Spin, notification, Space } from
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
-import { safeJsonStringify } from 'utils/util';
+import { safeJsonStringify, isJsonString } from 'utils/util';
 import PageHeader from "components/pageHeader";
 import Layout from "components/common/layout";
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
@@ -25,6 +25,7 @@ const FormPage = ({ match = {} }) => {
   const { policyId } = match.params || {};
   const [form] = Form.useForm();
   const [rego, setRego] = useState();
+  const [input, mutateInput] = useState();
   const [parseParams, setParseParams] = useState({
     envId: undefined,
     tplId: undefined
@@ -37,13 +38,16 @@ const FormPage = ({ match = {} }) => {
   }, [parseParams]);
 
   // input获取
-  const { data: input, run: fetchInput, mutate: mutateInput, loading: fetchInputLoading } = useRequest(
+  const { run: fetchInput, loading: fetchInputLoading } = useRequest(
     () => requestWrapper(
       policiesAPI.parse.bind(null, parseParams),
     ),
     {
       manual: true,
-      formatResult: (res) => safeJsonStringify([res.template, null, 2])
+      formatResult: (res) => safeJsonStringify([res.template, null, 2]),
+      onSuccess: (data) => {
+        mutateInput(data);
+      }
     }
   );
   
@@ -78,16 +82,16 @@ const FormPage = ({ match = {} }) => {
   );
 
   // 策略测试接口
-  const { data: output, run: test, loading: testLoading } = useRequest(
+  const { data: outputInfo = {}, run: runTest, loading: testLoading } = useRequest(
     () => requestWrapper(
       policiesAPI.test.bind(null, { input, rego }),
-      {
-        getErrorFn: (res) => (res.result || {}).error
-      }
     ),
     {
       manual: true,
-      formatResult: (res) => safeJsonStringify([res.data, null, 2])
+      formatResult: (res) => ({
+        value: res.error || safeJsonStringify([res.data, null, 2]),
+        isError: !!res.error
+      })
     }
   );
 
@@ -127,6 +131,20 @@ const FormPage = ({ match = {} }) => {
   );
 
   const goPolicyListPage = () => history.push('/compliance/policy-config/policy');
+
+  const test = () => {
+    if (!rego) {
+      return notification.error({
+        message: '策略编辑不能为空'
+      });
+    }
+    // if (!input || !isJsonString(input)) {
+    //   return notification.error({
+    //     message: '输入必须为合法 json 字符串，且不能为空'
+    //   });
+    // }
+    runTest();
+  };
 
   const save = async () => {
     const { tags, ...restFormValues } = await form.validateFields();
@@ -279,8 +297,9 @@ const FormPage = ({ match = {} }) => {
               />
               <CoderCard
                 title='输出'
-                value={output}
+                value={outputInfo.value}
                 bodyStyle={{ height: 200 }}
+                options={{ mode: outputInfo.isError ? 'errorText' : 'application/json' }}
                 tools={['fullScreen']}
               />
             </Col>

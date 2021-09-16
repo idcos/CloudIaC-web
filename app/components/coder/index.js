@@ -8,6 +8,11 @@ import "codemirror/mode/markdown/markdown";
 import "codemirror/mode/javascript/javascript";
 
 /**
+ * defineMode
+ */
+import './mode/error-text';
+
+/**
  * rego mode
  */
 import 'codemirror-rego/mode';
@@ -27,7 +32,7 @@ import "codemirror/addon/dialog/dialog.css";
 import "codemirror/addon/search/searchcursor.js";
 import "codemirror/addon/search/search.js";
 
-import "./ansi";
+import "./mode/error-text";
 import { Controlled as ControlledEditor } from "react-codemirror2";
 import styled from "styled-components";
 import get from "lodash/get";
@@ -99,7 +104,6 @@ const FormCoder = ({
   };
 
   useImperativeHandle(childRef, () => ({
-    // 搜索临时方案 - 不喜勿喷 0.0
     search: (keyword) => {
       if (!codemirror) {
         throw new Error('编辑器还未装载完成');
@@ -129,6 +133,11 @@ const FormCoder = ({
         onBeforeChange={(editor, data, value) => onChange(value)}
         options={_options}
         className='Form_CodeMirror'
+        defineMode={{
+          name: 'error-text',
+          fn: () => ({
+          })
+        }}
       />
     </Container>
   );

@@ -107,3 +107,20 @@ export const safeJsonStringify = (nativeParam, emptyData = '') => {
     return emptyData;
   }
 };
+
+/**
+ * 校验是否是Json字符串
+ * @param {string} str 
+ * @returns {boolean}
+ */
+export const isJsonString = (str) => {
+  if (typeof str !== 'string') {
+    return false;
+  }
+  try {
+    const obj = JSON.parse(str);
+    return typeof obj == 'object' && obj;
+  } catch(e) {
+    return false;
+  }
+}
