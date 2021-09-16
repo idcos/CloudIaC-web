@@ -24,7 +24,7 @@ const FormPage = ({ match = {} }) => {
 
   const { policyId } = match.params || {};
   const [form] = Form.useForm();
-  const [rego, setRego] = useState('');
+  const [rego, setRego] = useState();
   const [parseParams, setParseParams] = useState({
     envId: undefined,
     tplId: undefined
@@ -130,13 +130,8 @@ const FormPage = ({ match = {} }) => {
 
   const save = async () => {
     const { tags, ...restFormValues } = await form.validateFields();
-    if (!rego) {
-      return notification.error({
-        message: '请输入策略编辑'
-      });
-    }
     const params = {
-      tags: tags.join(','), 
+      tags: tags && tags.join(','), 
       ...restFormValues, 
       rego, 
     };
@@ -185,12 +180,6 @@ const FormPage = ({ match = {} }) => {
                     <Form.Item
                       label='标签：'
                       name='tags'
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入'
-                        }
-                      ]}
                     >
                       <Select 
                         mode='tags' 
@@ -203,12 +192,7 @@ const FormPage = ({ match = {} }) => {
                     <Form.Item
                       label='严重性：'
                       name='severity'
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入'
-                        }
-                      ]}
+                      initialValue='medium'
                     >
                       <Select 
                         placeholder='选择严重性'
@@ -225,12 +209,6 @@ const FormPage = ({ match = {} }) => {
                     <Form.Item
                       label='绑定策略组：'
                       name='groupId'
-                      rules={[
-                        {
-                          required: true,
-                          message: '请选择'
-                        }
-                      ]}
                     >
                       <Select 
                         getPopupContainer={triggerNode => triggerNode.parentNode}
@@ -245,12 +223,6 @@ const FormPage = ({ match = {} }) => {
                 <Form.Item
                   label='参考：'
                   name='fixSuggestion'
-                  rules={[
-                    {
-                      required: true,
-                      message: '请输入'
-                    }
-                  ]}
                 >
                   <Input.TextArea 
                     autoSize={{ minRows: 5, maxRows: 5 }}
