@@ -8,7 +8,7 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import { chartUtils } from 'components/charts-cfg';
 import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary'; 
-import { POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION, TARGET_TYPE_ENUM } from 'constants/types';
+import { TARGET_TYPE_ENUM } from 'constants/types';
 import cgroupsAPI from 'services/cgroups';
 
 const Index = ({ visible, toggleVisible, id }) => {
@@ -54,11 +54,6 @@ const Index = ({ visible, toggleVisible, id }) => {
     {
       dataIndex: 'failed',
       title: '失败'
-    },
-    {
-      dataIndex: 'policyStatus',
-      title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       dataIndex: 'updatedAt',

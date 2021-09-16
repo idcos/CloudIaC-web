@@ -140,10 +140,6 @@ const Policy = () => {
       title: '不通过'
     },
     {
-      dataIndex: 'suppressed',
-      title: '屏蔽'
-    },
-    {
       dataIndex: 'failed',
       title: '失败'
     },
