@@ -188,7 +188,7 @@ const CenvList = ({ orgs }) => {
     },
     {
       dataIndex: 'enabled',
-      title: '是否开启检测',
+      title: '开启',
       render: (enabled, record) => {
         const { id, name, policyGroups } = record;
         return (
