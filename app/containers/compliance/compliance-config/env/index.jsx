@@ -176,7 +176,6 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      width: 300,
       render: (text, record) => {
         const policyGroups = text || [];
         return policyGroups.length > 0 ? (

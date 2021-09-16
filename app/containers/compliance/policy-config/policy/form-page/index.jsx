@@ -236,6 +236,12 @@ const FormPage = ({ orgs, match = {} }) => {
                         mode='tags' 
                         placeholder='请填写标签'
                         notFoundContent='输入标签并回车'
+                        onInputKeyDown={(e) => {
+                          const value = e.target.value
+                          if (value.length >= 16) {
+                            e.preventDefault();
+                          }
+                        }}
                       ></Select>
                     </Form.Item>
                   </Col>
