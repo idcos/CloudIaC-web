@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Badge, Table, Input, Select, Space, Divider, Switch, Button, Modal, notification } from 'antd';
+import { Badge, Table, Input, Select, Space, Divider, Switch, Button, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import noop from 'lodash/noop';
@@ -29,23 +29,9 @@ const CCTList = ({ orgs }) => {
     id: null
   });
 
-  // 项目选项查询
-  const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
-    (orgId) => requestWrapper(
-      projectAPI.allEnableProjects.bind(null, { orgId }),
-      {
-        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
-      }
-    ),
-    {
-      manual: true
-    }
-  );
-
   // 启用/禁用云模版扫描
   const {
     run: changeEnabled,
-    fetches: changeEnabledFetches
   } = useRequest(
     (params) => requestWrapper(
       ctplAPI.enabled.bind(null, params),
@@ -92,7 +78,6 @@ const CCTList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -103,11 +88,6 @@ const CCTList = ({ orgs }) => {
 
   const changeOrg = (orgId) => {
     onChangeFormParams({ orgId, projectId: undefined });
-    if (orgId) {
-      fetchProjectOptions(orgId);
-    } else {
-      mutateProjectOptions([]);
-    }
   };
 
   const openDetectionDrawer = ({ id }) => {
@@ -261,14 +241,6 @@ const CCTList = ({ orgs }) => {
             optionFilterProp='label'
             showSearch={true}
             onChange={changeOrg}
-          />
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            options={projectOptions}
-            placeholder='请选择项目'
-            value={formParams.projectId}
-            onChange={(projectId) => onChangeFormParams({ projectId })}
           />
           <Input.Search
             style={{ width: 240 }}
