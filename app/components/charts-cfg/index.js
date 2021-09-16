@@ -135,7 +135,7 @@ export const chartOptions = {
         color: '#52CCA3'
       },
       violated: {
-        text: '未通过',
+        text: '不通过',
         color: '#FF4D4F'
       },
       suppressed: {
@@ -181,7 +181,7 @@ export const chartOptions = {
             }
           }
           const p = formatPercent(total === 0 ? 0 : tarValue / total);
-          return `${name}${name !== '未通过' ? '   ' : ''}   ${p}%`;
+          return `${name}${name !== '不通过' ? '   ' : ''}   ${p}%`;
 
         },
         data: names

@@ -6,7 +6,7 @@ import styles from '../style.less';
 const Index = ({ summaryData = {} }) => {
 
   const namemap = {
-    violated: '未通过',
+    violated: '不通过',
     passed: '通过',
     suppressed: '屏蔽',
     failed: '错误'

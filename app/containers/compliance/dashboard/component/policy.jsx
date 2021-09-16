@@ -39,7 +39,7 @@ const Index = ({ summaryData = [] }) => {
     height: 369
   }}
   >
-    <span className={styles.cardTitle}>策略检测未通过</span>
+    <span className={styles.cardTitle}>策略检测不通过</span>
     { data.length === 0 ? <Empty 
       image={<DashboardOutlined />}
       imageStyle={{
