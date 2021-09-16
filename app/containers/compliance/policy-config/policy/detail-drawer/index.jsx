@@ -35,7 +35,7 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
       title={detailInfo.name}
       visible={visible}
       onClose={onClose}
-      width={750}
+      width={1000}
       bodyStyle={{ padding: 16 }}
     >
       <Descriptions 

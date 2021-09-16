@@ -4,7 +4,7 @@ import { Card } from 'antd';
 export default ({ content }) => {
   return (
     <Card title='参考内容' type='inner' bodyStyle={{ minHeight: 300 }}>
-      {content}
+      <div className='idcos-format-html' dangerouslySetInnerHTML={{ __html: content }}></div>
     </Card>
   );
 };
