@@ -133,11 +133,6 @@ const FormCoder = ({
         onBeforeChange={(editor, data, value) => onChange(value)}
         options={_options}
         className='Form_CodeMirror'
-        defineMode={{
-          name: 'error-text',
-          fn: () => ({
-          })
-        }}
       />
     </Container>
   );

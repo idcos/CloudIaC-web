@@ -138,11 +138,11 @@ const FormPage = ({ match = {} }) => {
         message: '策略编辑不能为空'
       });
     }
-    // if (!input || !isJsonString(input)) {
-    //   return notification.error({
-    //     message: '输入必须为合法 json 字符串，且不能为空'
-    //   });
-    // }
+    if (!input || !isJsonString(input)) {
+      return notification.error({
+        message: '输入必须为合法 json 字符串，且不能为空'
+      });
+    }
     runTest();
   };
 
@@ -299,7 +299,7 @@ const FormPage = ({ match = {} }) => {
                 title='输出'
                 value={outputInfo.value}
                 bodyStyle={{ height: 200 }}
-                options={{ mode: outputInfo.isError ? 'errorText' : 'application/json' }}
+                options={{ mode: outputInfo.isError ? 'error-message' : 'application/json' }}
                 tools={['fullScreen']}
               />
             </Col>
