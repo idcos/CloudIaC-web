@@ -66,7 +66,7 @@ const Index = (props) => {
       <Descriptions.Item label='target'>{info.target || '-'}</Descriptions.Item>
       <Descriptions.Item label='tfvars文件'>{info.tfVarsFile || '-'}</Descriptions.Item>
       <Descriptions.Item label='playbook文件'>{info.playbook || '-'}</Descriptions.Item>
-      <Descriptions.Item label='部署通道'>{info.runner || '-'}</Descriptions.Item>
+      <Descriptions.Item label='部署通道'>{info.runnerId || '-'}</Descriptions.Item>
       <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
       <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
       <Descriptions.Item label='执行人'>{info.creator || '-'}</Descriptions.Item>

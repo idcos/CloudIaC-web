@@ -148,7 +148,7 @@ const Index = (props) => {
     </Collapse>
     <div className={'collapseInTable'}>
       <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={['1']} forceRender={true}>
-        <Panel header='Output' key='1'>
+        <Panel header='资源列表' key='1'>
           <Input.Search
             placeholder='请输入关键字搜索'
             style={{ width: 240, margin: 20 }}
