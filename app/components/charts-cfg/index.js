@@ -257,7 +257,7 @@ export const chartOptions = {
         y2: 30
       },
       title: {
-        text: '策略组检测通过率',
+        text: '策略运行趋势',
         subtext: '近5天'
       },
       xAxis: {

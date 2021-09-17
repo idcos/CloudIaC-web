@@ -20,6 +20,10 @@ const ctplAPI = {
   // 启用/禁用云模版扫描
   enabled: ({ id, ...restParams }) => {
     return put(`/api/v1/policies/templates/${id}/enabled`, restParams, {});
+  },
+  // 查询云模版绑定的策略组
+  listBindPoliciesGroups: ({ id, ...restParams }) => {
+    return getWithArgs(`/api/v1/policies/templates/${id}/policies/groups`, restParams, {});
   }
 };
 

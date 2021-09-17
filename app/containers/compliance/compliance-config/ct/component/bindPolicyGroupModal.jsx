@@ -80,6 +80,12 @@ export default ({ visible, onClose, id, onSuccess, policyGroupIds }) => {
         <Form.Item
           label='绑定策略组'
           name='policyGroupIds'
+          rules={[
+            {
+              required: true,
+              message: '请绑定策略组'
+            }
+          ]}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}

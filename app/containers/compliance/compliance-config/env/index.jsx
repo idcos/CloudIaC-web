@@ -21,6 +21,7 @@ const CenvList = ({ orgs }) => {
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
+    tplId: null,
     policyGroupIds: [],
     onSuccess: noop
   });
@@ -126,11 +127,12 @@ const CenvList = ({ orgs }) => {
     });
   };
 
-  const openBindPolicyGroupModal = ({ id, policyGroups }, onSuccess = refreshList) => {
+  const openBindPolicyGroupModal = ({ id, tplId, policyGroups }, onSuccess = refreshList) => {
     setBindPolicyGroupModalProps({
       visible: true,
       policyGroupIds: (policyGroups || []).map((it) => it.id),
       id,
+      tplId,
       onSuccess
     });
   };
@@ -140,14 +142,15 @@ const CenvList = ({ orgs }) => {
       visible: false,
       policyGroupIds: [],
       id: null,
+      tplId: null,
       onSuccess: noop
     })
   };
 
   // 开启/关闭合规检测
-  const switchEnabled = ({ enabled, id, policyGroups, name }) => {
+  const switchEnabled = ({ enabled, id, tplId, policyGroups, name }) => {
     if (enabled) {
-      openBindPolicyGroupModal({ id, policyGroups }, () => {
+      openBindPolicyGroupModal({ id, tplId, policyGroups }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
@@ -200,12 +203,12 @@ const CenvList = ({ orgs }) => {
       dataIndex: 'enabled',
       title: '开启检测',
       render: (enabled, record) => {
-        const { id, name, policyGroups } = record;
+        const { id, name, tplId, policyGroups } = record;
         return (
           <Switch 
             checked={enabled} 
             size='small' 
-            onChange={(checked) => switchEnabled({ enabled: checked, id, policyGroups, name })} 
+            onChange={(checked) => switchEnabled({ enabled: checked, id, tplId, policyGroups, name })} 
           />
         );
       }
