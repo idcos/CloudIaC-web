@@ -42,7 +42,7 @@ export default ({ id, orgId, projectId }) => {
   return (
     <AnsiCoderCard  
       value={taskLog} 
-      ansiCoderWrapperHeight={500}
+      style={{ height: '100%' }}
     />
   );
 }

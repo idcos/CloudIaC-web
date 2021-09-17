@@ -67,6 +67,7 @@ export default ({ requestFn }) => {
 
   return (
     <Card 
+      className={policyStatus === 'failed' ? 'idcos-full-height-card' : ''}
       headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
       bodyStyle={{ padding: 6 }} 
       type={'inner'} 

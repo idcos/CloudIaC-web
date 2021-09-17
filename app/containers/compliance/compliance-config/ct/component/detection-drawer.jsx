@@ -16,7 +16,7 @@ export default ({  visible, onClose, id  }) => {
         padding: 0
       }}
     >
-      <DetectionCard requestFn={ctplAPI.result.bind(null, { tplId: id })} />
+      <DetectionCard requestFn={ctplAPI.result.bind(null, { tplId: id, currentPage: 1, pageSize: 100000 })} />
     </Drawer>
   );
 };

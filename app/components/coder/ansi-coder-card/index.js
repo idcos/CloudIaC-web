@@ -3,6 +3,7 @@ import { Button, Input, Card, Space } from "antd";
 import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
 import { default as AnsiUp } from 'ansi_up';
 import { useThrottleEffect } from 'ahooks';
+import classnames from 'classnames';
 
 import { getNumLen } from 'utils/util';
 
@@ -17,7 +18,7 @@ const searchService = new SearchByKeyWord({
   ]
 });
 
-export default ({ value, cardTitleAfter, showHeader, ansiCoderWrapperHeight = 350 }) => {
+export default ({ value, cardTitleAfter, showHeader, className, style }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
@@ -76,7 +77,15 @@ export default ({ value, cardTitleAfter, showHeader, ansiCoderWrapperHeight = 35
   };
   return (
     <Card
-      className={`card-body-no-paading ${fullScreen ? "full-card" : ""} ${styles.ansiCodeCard}`}
+      className={
+        classnames(
+          'card-body-no-paading', 
+          styles.ansiCodeCard,
+          { 'full-card': fullScreen },
+          className
+        )
+      }
+      style={style}
       title={
         !showHeader && <>
           <Input.Search
@@ -119,7 +128,7 @@ export default ({ value, cardTitleAfter, showHeader, ansiCoderWrapperHeight = 35
         </Space>
       }
     >
-      <div className='ansi-coder-wrapper' style={{ height: ansiCoderWrapperHeight }} ref={ansiCoderWrapperRef} >
+      <div className='ansi-coder-wrapper' ref={ansiCoderWrapperRef} >
         <div className='ansi-coder-content' dangerouslySetInnerHTML={{ __html: html }}>
         </div>
       </div>
