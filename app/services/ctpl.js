@@ -23,7 +23,7 @@ const ctplAPI = {
   },
   // 查询云模版绑定的策略组
   listBindPoliciesGroups: ({ id, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/templates/${id}/policies/groups`, restParams, {});
+    return getWithArgs(`/api/v1/policies/templates/${id}/groups`, restParams, {});
   }
 };
 
