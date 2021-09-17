@@ -1,6 +1,6 @@
 import React from 'react';
 import { Empty, Card } from "antd";
-import DetectionList from './detection-list';
+import DetectionPolicyGroup from './detection-policy-group';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -83,7 +83,7 @@ export default ({ requestFn }) => {
         <>
           {
             list.map(info => {
-              return (<DetectionList info={info} />);
+              return (<DetectionPolicyGroup info={info} />);
             })
           }
         </>
