@@ -24,7 +24,7 @@ import taskAPI from 'services/task';
 import history from 'utils/history';
 import { timeUtils } from "utils/time";
 import { useEventSource } from "utils/hooks";
-import AnsiCoderCard from "components/coder/ansi-coder-card/index";
+import AnsiCoderCard from "components/coder/ansi-coder-card";
 
 import styles from '../styles.less';
 

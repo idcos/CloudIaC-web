@@ -17,7 +17,7 @@ const searchService = new SearchByKeyWord({
   ]
 });
 
-export default ({ value, cardTitleAfter, showHeader }) => {
+export default ({ value, cardTitleAfter, showHeader, ansiCoderWrapperHeight = 350 }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const ansiCoderWrapperRef = useRef();
   const searchRef = useRef();
@@ -119,7 +119,7 @@ export default ({ value, cardTitleAfter, showHeader }) => {
         </Space>
       }
     >
-      <div className='ansi-coder-wrapper' ref={ansiCoderWrapperRef} >
+      <div className='ansi-coder-wrapper' style={{ height: ansiCoderWrapperHeight }} ref={ansiCoderWrapperRef} >
         <div className='ansi-coder-content' dangerouslySetInnerHTML={{ __html: html }}>
         </div>
       </div>

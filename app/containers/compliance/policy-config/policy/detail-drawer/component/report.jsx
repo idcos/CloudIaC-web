@@ -5,7 +5,7 @@ import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import policiesAPI from 'services/policies';
 import { chartUtils } from 'components/charts-cfg';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 
 export default ({ policyId }) => {
   const proportion_of_results = useRef();
@@ -81,7 +81,7 @@ export default ({ policyId }) => {
     {
       dataIndex: 'status',
       title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} />
     }
   ];
 

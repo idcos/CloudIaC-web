@@ -158,13 +158,12 @@ export const POLICIES_DETECTION = {
   violated: '不通过',
   suppressed: '已屏蔽'
 };
-
 export const POLICIES_DETECTION_COLOR = {
   pending: '#FFBF00',
   passed: '#52C41A',
-  failed: '#FF3B30',
+  failed: '#A7282A',
   violated: '#FF3B30',
-  suppressed: '#c1c1c1'
+  suppressed: '#B3CDFF'
 };
 export const POLICIES_DETECTION_COLOR_COLLAPSE = {
   pending: '#FFBF00',
@@ -172,6 +171,13 @@ export const POLICIES_DETECTION_COLOR_COLLAPSE = {
   failed: '#FF3B30',
   violated: '#FF3B30',
   suppressed: '#c1c1c1'
+};
+export const POLICIES_DETECTION_COLOR_TAG = {
+  pending: 'gold',
+  passed: 'green',
+  failed: 'volcano',
+  violated: 'red',
+  suppressed: 'purple'
 };
 export const POLICIES_DETECTION_ICON_COLLAPSE = {
   pending: <SyncOutlined />,

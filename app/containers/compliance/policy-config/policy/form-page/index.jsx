@@ -324,7 +324,7 @@ const FormPage = ({ orgs, match = {} }) => {
                     <Col span={12}>
                       <Input.Group compact={true}>
                         <Select 
-                          style={{ width: '36%' }} 
+                          style={{ width: '40%' }} 
                           placeholder='类型'
                           options={[
                             { label: '云模版', value: 'template' },
@@ -336,7 +336,7 @@ const FormPage = ({ orgs, match = {} }) => {
                         {
                           parseType === 'template' && (
                             <Select 
-                              style={{ width: '64%' }} 
+                              style={{ width: '60%' }} 
                               placeholder='请选择云模版'
                               options={ctOptions}
                               allowClear={true}

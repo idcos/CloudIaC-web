@@ -10,11 +10,10 @@ import { Eb_WP } from 'components/error-boundary';
 import EllipsisText from 'components/EllipsisText';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import projectAPI from 'services/project';
 import ctplAPI from 'services/ctpl';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 
 const CCTList = ({ orgs }) => {
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
@@ -198,7 +197,7 @@ const CCTList = ({ orgs }) => {
     {
       dataIndex: 'policyStatus',
       title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       title: '操作',
@@ -250,7 +249,7 @@ const CCTList = ({ orgs }) => {
           <Input.Search
             style={{ width: 240 }}
             allowClear={true}
-            placeholder='请输入环境名称搜索'
+            placeholder='请输入云模版名称搜索'
             onSearch={(q) => onChangeFormParams({ q })}
           />
         </Space>

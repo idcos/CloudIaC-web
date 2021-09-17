@@ -13,7 +13,7 @@ import EllipsisText from 'components/EllipsisText';
 import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import DetectionDrawer from './component/detection-drawer';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE } from 'constants/types';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 
 const CenvList = ({ orgs }) => {
 
@@ -229,7 +229,7 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'policyStatus',
       title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR_COLLAPSE[text]} text={POLICIES_DETECTION[text]} />
+      render: (text) => <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} />
     },
     {
       title: '操作',

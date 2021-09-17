@@ -1,9 +1,11 @@
 import React from 'react';
-import { Empty, Card } from "antd";
-import DetectionPolicyGroup from './detection-policy-group';
+import { Empty, Card, Space, Tag } from "antd";
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_TAG } from 'constants/types';
+import DetectionPolicyGroup from './detection-policy-group';
+import FailLog from './fail-log';
 
 export default ({ requestFn }) => {
 
@@ -11,7 +13,7 @@ export default ({ requestFn }) => {
   const { 
     data: { 
       list, 
-      task: { startAt } 
+      task: { id, orgId, projectId, startAt, policyStatus } 
     } = {
       list: [],
       task: {}
@@ -69,25 +71,34 @@ export default ({ requestFn }) => {
       bodyStyle={{ padding: 6 }} 
       type={'inner'} 
       title={
-        <span style={{ display: 'flex' }}>
-          合规状态 
-          <div className={'UbuntuMonoOblique'}>
-            {startAt && moment(startAt).format('YYYY-MM-DD HH:mm:ss') || '-'}
-          </div>
-        </span>
+        <Space>
+          <span>合规状态</span>
+          {policyStatus && <Tag color={POLICIES_DETECTION_COLOR_TAG[policyStatus]}>{POLICIES_DETECTION[policyStatus]}</Tag>}
+        </Space>
+      }
+      extra={
+        <div className={'UbuntuMonoOblique'}>
+          {startAt && moment(startAt).format('YYYY-MM-DD HH:mm:ss') || '-'}
+        </div>
       }
     >
-      {list.length == 0 ? (
-        <Empty description='暂无策略检测则默认显示通过'/>
-      ) : (
-        <>
-          {
-            list.map(info => {
-              return (<DetectionPolicyGroup info={info} />);
-            })
-          }
-        </>
-      )}
+      {
+        policyStatus === 'failed' ? (
+          <FailLog id={id} orgId={orgId} projectId={projectId} />
+        ) : (
+          list.length == 0 ? (
+            <Empty description='暂无策略检测则默认显示通过'/>
+          ) : (
+            <>
+              {
+                list.map(info => {
+                  return (<DetectionPolicyGroup info={info} />);
+                })
+              }
+            </>
+          )
+        )
+      }
     </Card>
   );
 }
