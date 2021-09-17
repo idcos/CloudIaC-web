@@ -81,7 +81,7 @@ export default ({ policyId }) => {
     {
       dataIndex: 'status',
       title: '状态',
-      render: (text) => <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} />
+      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
     }
   ];
 
