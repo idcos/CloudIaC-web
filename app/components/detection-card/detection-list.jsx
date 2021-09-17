@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Collapse } from 'antd';
-import ScanResult from "./scan-result";
+import DetectionItem from "./detection-item";
 import { Eb_WP } from 'components/error-boundary';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
 import styles from './style.less';
@@ -32,7 +32,7 @@ const Index = (props) => {
                 } 
                 key='1'
               >
-                <ScanResult 
+                <DetectionItem 
                   showHeader={true}
                   value={it}
                 />
