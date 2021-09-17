@@ -313,7 +313,25 @@ export const chartOptions = {
         data: column
       },
       yAxis: {
-        type: 'value'
+        axisLabel: {
+          formatter: function (val) {
+            return val * 100 + '%';
+          }
+        },
+        axisPointer: {
+          label: {
+            formatter: function (params) {
+              return (params.value * 100).toFixed(1) + '%';
+            }
+          }
+        }
+      },
+      label: { 
+        show: true, 
+        formatter: (params) => {
+          return (params.value * 100).toFixed(1) + '%';
+        },
+        overflow: 'break'
       },
       series: [{
         data: value,
