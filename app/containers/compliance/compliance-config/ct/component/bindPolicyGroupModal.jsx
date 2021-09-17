@@ -10,7 +10,7 @@ const FL = {
   wrapperCol: { span: 16 }
 };
 
-export default ({ visible, onClose, id, onSuccess, policyGroupIds }) => {
+export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ list, setList ] = useState([]);
@@ -65,7 +65,7 @@ export default ({ visible, onClose, id, onSuccess, policyGroupIds }) => {
 
   return (
     <Modal
-      title='绑定策略组/开启合规检测'
+      title={title}
       visible={visible}
       onCancel={onClose}
       okButtonProps={{

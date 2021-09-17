@@ -20,6 +20,7 @@ const CCTList = ({ orgs }) => {
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
+    title: '',
     policyGroupIds: [],
     onSuccess: noop
   });
@@ -105,11 +106,12 @@ const CCTList = ({ orgs }) => {
     });
   };
 
-  const openBindPolicyGroupModal = ({ id, policyGroups }, onSuccess = refreshList) => {
+  const openBindPolicyGroupModal = ({ id, policyGroups, title }, onSuccess = refreshList) => {
     setBindPolicyGroupModalProps({
       visible: true,
       policyGroupIds: (policyGroups || []).map((it) => it.id),
       id,
+      title,
       onSuccess
     });
   };
@@ -119,6 +121,7 @@ const CCTList = ({ orgs }) => {
       visible: false,
       policyGroupIds: [],
       id: null,
+      title: '',
       onSuccess: noop
     })
   };
@@ -126,7 +129,7 @@ const CCTList = ({ orgs }) => {
   // 开启/关闭合规检测
   const switchEnabled = ({ enabled, id, policyGroups, name }) => {
     if (enabled) {
-      openBindPolicyGroupModal({ id, policyGroups }, () => {
+      openBindPolicyGroupModal({ id, policyGroups, title: '开启合规检测' }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
@@ -158,7 +161,7 @@ const CCTList = ({ orgs }) => {
       title: '绑定策略组',
       render: (policyGroups, record) => {
         return policyGroups.length > 0 ? (
-          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal(record)} type='link'>
+          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })} type='link'>
             {policyGroups.map(it => it.name).join('、')}
           </EllipsisText>
         ) : '-'; 

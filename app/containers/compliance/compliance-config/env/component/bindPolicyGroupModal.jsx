@@ -12,7 +12,7 @@ const FL = {
   wrapperCol: { span: 16 }
 };
 
-export default ({ visible, onClose, id, tplId, onSuccess, policyGroupIds }) => {
+export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
@@ -76,7 +76,7 @@ export default ({ visible, onClose, id, tplId, onSuccess, policyGroupIds }) => {
 
   return (
     <Modal
-      title='绑定策略组/开启合规检测'
+      title={title}
       width={600}
       visible={visible}
       onCancel={onClose}

@@ -21,6 +21,7 @@ const CenvList = ({ orgs }) => {
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
+    title: '',
     tplId: null,
     policyGroupIds: [],
     onSuccess: noop
@@ -127,11 +128,12 @@ const CenvList = ({ orgs }) => {
     });
   };
 
-  const openBindPolicyGroupModal = ({ id, tplId, policyGroups }, onSuccess = refreshList) => {
+  const openBindPolicyGroupModal = ({ id, title, tplId, policyGroups }, onSuccess = refreshList) => {
     setBindPolicyGroupModalProps({
       visible: true,
       policyGroupIds: (policyGroups || []).map((it) => it.id),
       id,
+      title,
       tplId,
       onSuccess
     });
@@ -142,6 +144,7 @@ const CenvList = ({ orgs }) => {
       visible: false,
       policyGroupIds: [],
       id: null,
+      title: '',
       tplId: null,
       onSuccess: noop
     })
@@ -150,7 +153,7 @@ const CenvList = ({ orgs }) => {
   // 开启/关闭合规检测
   const switchEnabled = ({ enabled, id, tplId, policyGroups, name }) => {
     if (enabled) {
-      openBindPolicyGroupModal({ id, tplId, policyGroups }, () => {
+      openBindPolicyGroupModal({ id, tplId, policyGroups, title: '开启合规检测' }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
@@ -193,7 +196,7 @@ const CenvList = ({ orgs }) => {
       render: (text, record) => {
         const policyGroups = text || [];
         return policyGroups.length > 0 ? (
-          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal(record)} type='link'>
+          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })} type='link'>
             {policyGroups.map(it => it.name).join('、')}
           </EllipsisText>
         ) : '-'; 
