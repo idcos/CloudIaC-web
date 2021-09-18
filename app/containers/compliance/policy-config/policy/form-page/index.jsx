@@ -292,8 +292,8 @@ const FormPage = ({ orgs, match = {} }) => {
           <Row gutter={[24, 0]}>
             <Col span={12}>
               <CoderCard 
+                height={506}
                 title='策略编辑' 
-                bodyStyle={{ height: 491 }}
                 options={{ mode: 'rego' }} 
                 value={rego} 
                 onChange={setRego}
@@ -303,15 +303,15 @@ const FormPage = ({ orgs, match = {} }) => {
             <Col span={12}>
               <CoderCard 
                 title='输入'
+                height={250}
                 value={input} 
                 onChange={mutateInput}
-                style={{ marginBottom: 24 }}
-                bodyStyle={{ height: 200 }}
+                style={{ marginBottom: 6 }}
                 tools={['fullScreen']}
                 spinning={fetchInputLoading}
-                bodyBefore={
+                bodyPrefix={
                   <Row gutter={[ 8, 0 ]} className={styles.input_condition}>
-                    <Col span={12}>
+                    <Col span={8}>
                       <Select
                         style={{ width: '100%' }} 
                         placeholder='请选择组织'
@@ -321,10 +321,10 @@ const FormPage = ({ orgs, match = {} }) => {
                         onChange={setParseOrgId}
                       />
                     </Col>
-                    <Col span={12}>
+                    <Col span={16}>
                       <Input.Group compact={true}>
                         <Select 
-                          style={{ width: '40%' }} 
+                          style={{ width: '31%' }} 
                           placeholder='类型'
                           options={[
                             { label: '云模版', value: 'template' },
@@ -336,7 +336,7 @@ const FormPage = ({ orgs, match = {} }) => {
                         {
                           parseType === 'template' && (
                             <Select 
-                              style={{ width: '60%' }} 
+                              style={{ width: '69%' }} 
                               placeholder='请选择云模版'
                               options={ctOptions}
                               allowClear={true}
@@ -350,7 +350,7 @@ const FormPage = ({ orgs, match = {} }) => {
                         {
                           parseType === 'env' && (
                             <Select 
-                              style={{ width: '64%' }}
+                              style={{ width: '69%' }}
                               placeholder='请选择环境' 
                               options={envOptions}
                               allowClear={true}
@@ -368,16 +368,16 @@ const FormPage = ({ orgs, match = {} }) => {
               />
               <CoderCard
                 title='输出'
+                height={250}
                 value={outputInfo.value}
-                bodyStyle={{ height: 200 }}
                 options={{ mode: outputInfo.isError ? 'error-message' : 'application/json' }}
                 tools={['fullScreen']}
               />
             </Col>
           </Row>
           <AffixBtnWrapper align='right'>
+            <Button onClick={test} loading={testLoading}>在线测试</Button>
             <Button onClick={goPolicyListPage}>取消</Button>
-            <Button onClick={test} loading={testLoading}>测试</Button>
             <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
           </AffixBtnWrapper>
         </Spin>
