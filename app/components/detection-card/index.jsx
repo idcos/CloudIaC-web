@@ -1,13 +1,15 @@
 import React from 'react';
 import { Empty, Card, Space, Tag } from "antd";
 import moment from 'moment';
+import classnames from 'classnames';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_TAG } from 'constants/types';
 import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
+import styles from './styles.less';
 
-export default ({ requestFn }) => {
+export default ({ requestFn, failLogNeedFullHeight = false }) => {
 
   // 合规结果查询
   const { 
@@ -67,7 +69,12 @@ export default ({ requestFn }) => {
 
   return (
     <Card 
-      className={policyStatus === 'failed' ? 'idcos-full-height-card' : ''}
+      className={classnames('idcos-full-body-card', styles.detectionCard, {
+        // 失败日志高度要固定
+        [styles.fixedHeight]: policyStatus === 'failed', 
+        // failLogNeedFullHeight为true则高度铺满
+        [styles.fullFixedHeight]: failLogNeedFullHeight
+      })}
       headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
       bodyStyle={{ padding: 6 }} 
       type={'inner'} 

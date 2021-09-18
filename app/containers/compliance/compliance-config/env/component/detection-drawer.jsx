@@ -16,7 +16,7 @@ export default ({ visible, onClose, id }) => {
         padding: 0
       }}
     >
-      <DetectionCard requestFn={cenvAPI.result.bind(null, { envId: id, currentPage: 1, pageSize: 100000 })} />
+      <DetectionCard failLogNeedFullHeight={true} requestFn={cenvAPI.result.bind(null, { envId: id, currentPage: 1, pageSize: 100000 })} />
     </Drawer>
   );
 };

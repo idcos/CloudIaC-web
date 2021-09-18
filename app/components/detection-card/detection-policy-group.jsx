@@ -3,7 +3,7 @@ import { Collapse } from 'antd';
 import DetectionPolicy from "./detection-policy";
 import { Eb_WP } from 'components/error-boundary';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_COLLAPSE, POLICIES_DETECTION_ICON_COLLAPSE } from 'constants/types';
-import styles from './style.less';
+import styles from './detection-policy-group.less';
 
 const { Panel } = Collapse;
 
