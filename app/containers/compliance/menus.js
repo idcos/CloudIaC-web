@@ -1,7 +1,12 @@
-import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
-import getPermission from "utils/permission";
+import { 
+  CloudOutlined, 
+  LayoutOutlined, 
+  ClusterOutlined, 
+  ControlOutlined,
+  GatewayOutlined
+} from '@ant-design/icons';
 
-export const getComplianceMenus = (userInfo) => {
+export const getComplianceMenus = () => {
   return [
     {
       subName: 'none',
@@ -10,9 +15,9 @@ export const getComplianceMenus = (userInfo) => {
         {
           name: '概览',
           key: 'dashboard',
-          icon: <CodeOutlined />
+          icon: <ControlOutlined />
         }],
-      icon: <CodeOutlined />
+      icon: <ControlOutlined />
     },
     {
       subName: '合规配置',
@@ -22,12 +27,12 @@ export const getComplianceMenus = (userInfo) => {
         {
           name: '云模板',
           key: 'ct',
-          icon: <CodeOutlined />
+          icon: <LayoutOutlined />
         },
         {
           name: '环境',
           key: 'env',
-          icon: <LayoutOutlined />
+          icon: <CloudOutlined />
         }
       ]
     },
@@ -39,12 +44,12 @@ export const getComplianceMenus = (userInfo) => {
         {
           name: '策略组',
           key: 'policy-group',
-          icon: <ProjectOutlined />
+          icon: <ClusterOutlined />
         },
         {
           name: '策略',
           key: 'policy',
-          icon: <LayoutOutlined />
+          icon: <GatewayOutlined />
         }
       ]
     }

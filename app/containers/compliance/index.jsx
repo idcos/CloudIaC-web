@@ -1,15 +1,13 @@
 import React, { useCallback } from 'react';
 import { connect } from 'react-redux';
-
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
-
 import { getComplianceMenus } from './menus';
 import styles from './styles.less';
 
 const KEY = 'global';
 
-const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, dispatch, menuType }) => {
+const ComplianceWrapper = ({ routes, curOrg }) => {
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
     case 'dashboard':
@@ -90,9 +88,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, curProject, match = {}, orgs, di
 
 export default connect(
   (state) => ({ 
-    orgs: state[KEY].get('orgs').toJS(),
-    curOrg: state[KEY].get('curOrg'),
-    curProject: state[KEY].get('curProject'),
-    userInfo: state[KEY].get('userInfo').toJS()
+    curOrg: state[KEY].get('curOrg')
   })
-)(OrgWrapper);
+)(ComplianceWrapper);
