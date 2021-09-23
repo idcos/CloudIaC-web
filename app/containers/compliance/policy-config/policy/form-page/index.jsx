@@ -27,6 +27,7 @@ const FormPage = ({ orgs, match = {} }) => {
   const { policyId } = match.params || {};
   const [form] = Form.useForm();
   const [rego, setRego] = useState();
+  const [tagSearchValue, setTagSearchValue] = useState();
   const [input, mutateInput] = useState();
   const [parseOrgId, setParseOrgId] = useState();
   const [parseType, setParseType] = useState('template');
@@ -197,6 +198,13 @@ const FormPage = ({ orgs, match = {} }) => {
       onSave(policiesAPI.create, params);
     }
   };
+
+  const changeTagSearchValue = (value) => {
+    if (value && value.length > 16) {
+      return;
+    }
+    setTagSearchValue(value);
+  };
   
   return (
     <Layout
@@ -236,13 +244,9 @@ const FormPage = ({ orgs, match = {} }) => {
                         mode='tags' 
                         placeholder='请填写标签'
                         notFoundContent='输入标签并回车'
-                        onInputKeyDown={(e) => {
-                          const value = e.target.value
-                          if (value.length >= 16) {
-                            e.preventDefault();
-                          }
-                        }}
-                      ></Select>
+                        searchValue={tagSearchValue}
+                        onSearch={changeTagSearchValue}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={12} style={{ paddingRight: 24 }}>
