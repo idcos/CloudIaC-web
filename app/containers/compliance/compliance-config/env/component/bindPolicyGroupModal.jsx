@@ -67,13 +67,6 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     }
   };
 
-  // 过滤云模版已经绑定掉策略组
-  const filterPoliciesGroupOptions = useMemo(() => {
-    return policiesGroupOptions.filter(({ value }) => {
-      return !ctPoliciesGroups.find(({ groupId }) => groupId === value);
-    });
-  }, [ ctPoliciesGroups, policiesGroupOptions ]);
-
   return (
     <Modal
       title={title}
@@ -116,7 +109,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
             showArrow={true}
             optionFilterProp='label'
             mode={'multiple'}
-            options={filterPoliciesGroupOptions}
+            options={policiesGroupOptions}
           />
         </Form.Item>
       </Form>
