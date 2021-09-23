@@ -8,6 +8,7 @@ import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import EllipsisText from 'components/EllipsisText';
 import { useSearchFormAndTable } from 'utils/hooks';
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
@@ -91,9 +92,13 @@ const Policy = () => {
     {
       dataIndex: 'name',
       title: '策略名称',
-      render: (text, record) => {
-        return <a onClick={() => onOpenDetailsDrawer(record.id)}>{text}</a>
-      }
+      render: (text, record) => (
+        <EllipsisText 
+          tagName='a' 
+          maxWidth={180}
+          onClick={() => onOpenDetailsDrawer(record.id)}
+        >{text}</EllipsisText>
+      )
     },
     {
       dataIndex: 'tags',
@@ -124,7 +129,8 @@ const Policy = () => {
     },
     {
       dataIndex: 'groupName',
-      title: '策略组'
+      title: '策略组',
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
     },
     {
       dataIndex: 'severity',

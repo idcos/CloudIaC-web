@@ -6,6 +6,7 @@ import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
+import EllipsisText from 'components/EllipsisText';
 import Layout from 'components/common/layout';
 import cgroupsAPI from 'services/cgroups';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
@@ -69,15 +70,21 @@ const PolicyGroupList = () => {
     {
       dataIndex: 'name',
       title: '策略组名称',
-      render: (text, record) => <a onClick={() => {
-        setViewDetail(true);
-        setPolicyGroupId(record.id);
-      }}
-      >{text}</a>
+      render: (text, record) => (
+        <EllipsisText 
+          maxWidth={180}
+          onClick={() => {
+            setViewDetail(true);
+            setPolicyGroupId(record.id);
+          }}
+          tagName='a'
+        >{text}</EllipsisText>
+      )
     },
     {
       dataIndex: 'description',
-      title: '描述'
+      title: '描述',
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
     },
     {
       dataIndex: 'policyCount',
