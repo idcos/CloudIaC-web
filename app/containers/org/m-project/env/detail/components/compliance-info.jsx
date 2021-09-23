@@ -7,7 +7,7 @@ const Index = (props) => {
   const { params: { orgId, projectId, envId } } = match;
   
   return (
-    <DetectionCard requestFn={envAPI.result.bind(null, { orgId, projectId, envId, currentPage: 1, pageSize: 100000 })} />
+    <DetectionCard failLogParams={{ stepType: 'tfscan' }} requestFn={envAPI.result.bind(null, { orgId, projectId, envId, currentPage: 1, pageSize: 100000 })} />
   );
 };
 export default memo(Index);

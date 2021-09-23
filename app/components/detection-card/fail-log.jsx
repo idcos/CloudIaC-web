@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useEventSource } from "utils/hooks";
+import queryString from 'query-string';
 import AnsiCoderCard from "components/coder/ansi-coder-card";
 
-export default ({ id, orgId, projectId }) => {
+export default ({ id, orgId, projectId, failLogParams }) => {
 
+  
   const [ taskLog, setTaskLog ] = useState([]);
   const [ evtSource, evtSourceInit ] = useEventSource();
 
@@ -18,6 +20,10 @@ export default ({ id, orgId, projectId }) => {
   }, [evtSource]);
 
   const fetchSse = () => {
+    const fetchUrl = queryString.stringifyUrl({
+      url: `/api/v1/tasks/${id}/log/sse`,
+      query: failLogParams
+    });
     evtSourceInit(
       {
         onmessage: (data) => {
@@ -25,7 +31,7 @@ export default ({ id, orgId, projectId }) => {
         }
       },
       {
-        url: `/api/v1/tasks/${id}/log/sse`,
+        url: fetchUrl,
         options: 
         { 
           withCredentials: true,
