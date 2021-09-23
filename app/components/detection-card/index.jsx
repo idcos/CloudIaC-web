@@ -9,7 +9,7 @@ import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
 
-export default ({ requestFn, failLogNeedFullHeight = false }) => {
+export default ({ requestFn, canFullHeight = false }) => {
 
   // 合规结果查询
   const { 
@@ -73,7 +73,7 @@ export default ({ requestFn, failLogNeedFullHeight = false }) => {
         // 失败日志高度要固定
         [styles.fixedHeight]: policyStatus === 'failed', 
         // failLogNeedFullHeight为true则高度铺满
-        [styles.fullFixedHeight]: failLogNeedFullHeight
+        [styles.fullFixedHeight]: canFullHeight
       })}
       headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
       bodyStyle={{ padding: 6 }} 

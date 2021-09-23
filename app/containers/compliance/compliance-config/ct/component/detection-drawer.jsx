@@ -13,10 +13,12 @@ export default ({  visible, onClose, id  }) => {
       onClose={onClose}
       width={800}
       bodyStyle={{
-        padding: 0
+        padding: 0,
+        flex: 1,
+        minHeight: 0
       }}
     >
-      <DetectionCard failLogNeedFullHeight={true} requestFn={ctplAPI.result.bind(null, { tplId: id, currentPage: 1, pageSize: 100000 })} />
+      <DetectionCard canFullHeight={true} requestFn={ctplAPI.result.bind(null, { tplId: id, currentPage: 1, pageSize: 100000 })} />
     </Drawer>
   );
 };
