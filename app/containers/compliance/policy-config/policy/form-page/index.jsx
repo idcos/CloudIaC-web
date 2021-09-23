@@ -174,7 +174,7 @@ const FormPage = ({ orgs, match = {} }) => {
     }
     if (!input || !isJsonString(input)) {
       return notification.error({
-        message: '输入必须为合法 json 字符串，且不能为空'
+        message: '“测试输入”必须为合法 json 字符串，且不能为空'
       });
     }
     runTest();
@@ -306,7 +306,7 @@ const FormPage = ({ orgs, match = {} }) => {
             </Col>
             <Col span={12}>
               <CoderCard 
-                title='输入'
+                title='测试输入'
                 height={250}
                 value={input} 
                 onChange={mutateInput}
@@ -371,7 +371,7 @@ const FormPage = ({ orgs, match = {} }) => {
                 }
               />
               <CoderCard
-                title='输出'
+                title='测试输出'
                 height={250}
                 value={outputInfo.value}
                 options={{ mode: outputInfo.isError ? 'error-message' : 'application/json' }}
