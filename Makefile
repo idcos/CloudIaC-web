@@ -1,5 +1,5 @@
 all: build
 build:
-		docker build -t cloudiac/iac-web:v0.6.0-rc.7 .
+		docker build -t cloudiac/iac-web:v0.6.0-rc.8 .
 push:
-		docker push cloudiac/iac-web:v0.6.0-rc.7
+		docker push cloudiac/iac-web:v0.6.0-rc.8
