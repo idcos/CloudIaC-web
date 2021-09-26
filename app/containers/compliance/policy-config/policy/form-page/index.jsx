@@ -205,6 +205,10 @@ const FormPage = ({ orgs, match = {} }) => {
     }
     setTagSearchValue(value);
   };
+
+  const changeTagsValue = () => {
+    setTagSearchValue();
+  };
   
   return (
     <Layout
@@ -239,6 +243,18 @@ const FormPage = ({ orgs, match = {} }) => {
                     <Form.Item
                       label='标签：'
                       name='tags'
+                      rules={[
+                        {
+                          validator(_, value) {
+                            return new Promise((resolve, reject) => {
+                              if (value.length > 10) {
+                                reject(new Error('最多添加10个标签'));
+                              }
+                              resolve();
+                            });
+                          }
+                        }
+                      ]}
                     >
                       <Select 
                         mode='tags' 
@@ -246,6 +262,7 @@ const FormPage = ({ orgs, match = {} }) => {
                         notFoundContent='输入标签并回车'
                         searchValue={tagSearchValue}
                         onSearch={changeTagSearchValue}
+                        onChange={changeTagsValue}
                       />
                     </Form.Item>
                   </Col>
