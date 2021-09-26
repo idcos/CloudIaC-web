@@ -114,6 +114,7 @@ export default ({ orgId }) => {
     try {
       const method = {
         add: (param) => notificationsAPI.createNotification(param),
+        edit: (param) => notificationsAPI.updateNotification(param),
         del: ({ orgId, id }) => notificationsAPI.delNotification({ orgId, id })
       };
       const res = await method[doWhat]({
@@ -140,7 +141,9 @@ export default ({ orgId }) => {
     <div style={{ marginBottom: 20 }}>
       <Button 
         type='primary'
-        onClick={() => setVisible(true)}
+        onClick={() => {
+          setVisible(true);
+        }}
       >添加通知</Button>
     </div>
     <Table

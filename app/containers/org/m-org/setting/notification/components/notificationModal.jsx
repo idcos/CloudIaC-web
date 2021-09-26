@@ -2,12 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Tabs, Drawer, notification, Button, Select, Card, Input } from "antd";
 import userAPI from 'services/user';
 import notificationsAPI from 'services/notifications';
-
-
 import { ORG_USER } from 'constants/types';
-
-import styles from './style.less';
 import TableTransfer from 'components/table-transfer';
+import styles from './style.less';
 
 const { Option } = Select;
 
@@ -45,7 +42,6 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
   ];
 
   const [ panel, setPanel ] = useState('email'),
-    [ info, setInfo ] = useState([]),
     [ list, setList ] = useState([]);
 
   const [form] = Form.useForm();
@@ -72,7 +68,6 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         let org = {};
         org[`${res.result.notificationType}-url`] = res.result.url;
         form.setFieldsValue({ ...org, ...res.result });
-        
       }
       setPanel(res.result.notificationType || 'email');
     } catch (e) {
@@ -179,22 +174,23 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
   
   const onfinsh = async() => {
     const params = await form.validateFields();
-    params.notificationType = panel;
     if (panel !== 'email') {
       params.url = params[`${panel}-url`]; 
       delete params[`${panel}-url`];
     }
     operation({
-      doWhat: 'add',
+      doWhat: notificationId ? 'edit' : 'add',
       payload: {
-        ...params
+        ...params,
+        type: panel,
+        notificationId
       }
     }, toggleVisible);
   };
 
   return <>
     <Drawer
-      title='添加通知'
+      title={notificationId ? '编辑通知' : '添加通知'}
       visible={visible}
       onClose={toggleVisible}
       width={800}

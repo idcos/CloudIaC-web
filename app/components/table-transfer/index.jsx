@@ -60,7 +60,7 @@ const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, valu
   const [ targetKeys, setTargetKeys ] = useState(value || []);
   
   useEffect(() => {
-    setTargetKeys(value);
+    setTargetKeys(value || []);
   }, [value]);
 
   return (
