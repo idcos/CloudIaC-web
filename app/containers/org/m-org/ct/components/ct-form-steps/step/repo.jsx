@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle, memo } from 'react';
 import { Space, Select, Form, Input, Button, Empty, notification } from "antd";
-import { QuestionCircleOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -97,7 +96,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         orgId,
         vcsId,
         currentPage: 1,
-        pageSize: 100,
+        pageSize: 50,
         q
       })
     ),
@@ -288,8 +287,9 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         <Select 
           showSearch={true}
           filterOption={false}
+          onChange={() => onSearchRepos()}
           onSearch={onSearchRepos}
-          placeholder='请选择仓库'
+          placeholder='请输入仓库名称搜索'
         >
           {repos.map(it => <Option value={it.id}>{it.fullName}</Option>)}
         </Select>
