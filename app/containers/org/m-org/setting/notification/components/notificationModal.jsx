@@ -259,7 +259,6 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
               activeKey={panel}
               onChange={(k) => {
                 setPanel(k); 
-                form.setFieldsValue({ [`${k}-url`]: '' });
               }}
             >
               {Object.keys(ORG_USER.notificationType).map((it) => (
