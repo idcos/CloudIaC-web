@@ -287,7 +287,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         <Select 
           showSearch={true}
           filterOption={false}
-          onChange={() => onSearchRepos()}
+          onDropdownVisibleChange={(open) => open && onSearchRepos()}
           onSearch={onSearchRepos}
           placeholder='请输入仓库名称搜索'
         >
