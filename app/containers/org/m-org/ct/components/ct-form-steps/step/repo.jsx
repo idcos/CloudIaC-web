@@ -22,7 +22,6 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
   const [ vcsVisible, setVcsVisible ] = useState(false);
   const [ repoBranches, setRepoBranches ] = useState([]);
   const [ repoTags, setRepoTags ] = useState([]);
-  const [ repos, setRepos ] = useState([]);
   const [ vcsList, setVcsList ] = useState([]);
 
   // Terraform版本选项列表
@@ -87,25 +86,27 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
     }
   };
 
-  const fetchRepos = async ({ vcsId }) => {
-    try {
-      const res = await vcsAPI.listRepo({
+  // 获取Terraform版本自动匹配值
+  const {
+    data: repos = [],
+    run: fetchRepos,
+    mutate: setRepos
+  } = useRequest(
+    ({ vcsId, q }) => requestWrapper(
+      vcsAPI.listRepo.bind(null, { 
         orgId,
         vcsId,
         currentPage: 1,
-        pageSize: 100000
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setRepos(res.result.list || []);
-    } catch (e) {
-      notification.error({
-        message: '获取仓库失败',
-        description: e.message
-      });
+        pageSize: 100,
+        q
+      })
+    ),
+    {
+      manual: true,
+      debounceInterval: 300,
+      formatResult: data => data.list
     }
-  };
+  );
 
   const fetchRepoBranches = async ({ vcsId, repoId }) => {
     try {
@@ -235,6 +236,11 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
 
   const clVcsModal = () => setVcsVisible(false);
 
+  const onSearchRepos = (value) => {
+    const vcsId = form.getFieldValue('vcsId');
+    vcsId && fetchRepos({ vcsId, q: value });
+  };
+
   return <div className='form-wrapper' style={{ width: 600 }}>
     <Form
       form={form}
@@ -253,7 +259,6 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         ]}
       >
         <Select 
-          getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择vcs'
           showSearch={true}
           optionFilterProp='children'
@@ -282,8 +287,8 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       >
         <Select 
           showSearch={true}
-          optionFilterProp='children'
-          getPopupContainer={triggerNode => triggerNode.parentNode}
+          filterOption={false}
+          onSearch={onSearchRepos}
           placeholder='请选择仓库'
         >
           {repos.map(it => <Option value={it.id}>{it.fullName}</Option>)}
@@ -302,7 +307,6 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         <Select 
           showSearch={true}
           optionFilterProp='children'
-          getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择分支'
         >
           <OptGroup label='分支'>
