@@ -1,0 +1,97 @@
+@import 'containers/App/styles/variable.less';
+
+.orgWrapper {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  min-width: @ctw;
+
+  :global {
+
+    .left-nav {
+      flex: 0 0 200px;
+      height: 100%;
+      overflow: hidden;
+      padding: 10px 0;
+      display: flex;
+      flex-direction: column;
+
+      .menu-wrapper {
+        flex: 1;
+        padding: 0 24px;
+        overflow-y: auto;
+
+        .sub-menu {
+          margin-bottom: 12px;
+
+          .menu-title {
+            font-size: 12px;
+            height: 48px;
+            line-height: 48px;
+            color: @gray-7;
+          }
+
+          .menu-list {
+            .menu-item {
+              cursor: pointer;
+              font-size: 14px;
+              height: 48px;
+              line-height: 48px;
+              color: @gray-8;
+
+              &.checked {
+                color: @primary-color;
+              }
+
+              .icon {
+                margin-right: 16px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .right-content {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      background-color: @backGroundIac;
+    }
+  }
+}
+
+.menuSelectfooterContent {
+
+  :global {
+    .more {
+      cursor: pointer;
+      padding: 5px 12px;
+      margin-top: 4px;
+      color: @gray-8;
+
+      &:hover {
+        background: @gray-3;
+      }
+
+      .icon {
+        margin-right: 8px;
+      }
+    }
+
+    .create {
+      padding: 16px 12px 12px;
+      cursor: pointer;
+
+      .btn {
+        line-height: 22px;
+
+        .icon {
+          color: @gray-8;
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+}
