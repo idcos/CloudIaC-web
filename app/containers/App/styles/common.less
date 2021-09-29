@@ -1,0 +1,152 @@
+.idcos-text-ellipsis {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fn-hide {
+  display: none !important;
+}
+
+.idcos-card {
+  background-color: #fff;
+  padding: 20px;
+}
+
+.idcos-format-html {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.idcos-no-scrollbar {
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  &::-webkit-scrollbar { width: 0 !important }
+}
+
+.container-inner-width {
+  width: @ctw;
+  margin: 0 auto;
+  &.whiteBg {
+    background: #FFFFFF;
+  }
+  &.withPadding {
+    padding: 16px;
+  }
+}
+
+.danger-text {
+  color: @color-error;
+  &:hover {
+    color: @color-error;
+  }
+}
+
+.tableRender {
+  h2 {
+    color: @gray-9;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  p {
+    color: @gray-6;
+  }
+  .status-tip {
+    &::before {
+      content: '●';
+      margin-right: 8px;
+    }
+    &.enabled::before {
+      color: @color-success;
+    }
+    &.disabled::before {
+      color: @color-error;
+    }
+  }
+  .status-text {
+    color: @color-success;
+    display: inline-block;
+    line-height: 1em;
+    &.danger {
+      color: @color-error;
+    }
+    &.normal {
+      color: @color-link;
+    }
+  }
+}
+
+.panel-content-no-paading .ant-collapse-content-box,
+.card-body-no-paading .ant-card-body
+{
+  padding: 0 !important;
+}
+
+.coder-card {
+  .ant-card-head {
+    border-width: 1px;
+    margin-bottom: 0;
+  }
+
+  .ant-card-body>.ant-spin-nested-loading {
+    height: 100%;
+    &>.ant-spin-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.ant-tabs-card.idcos-tabs-card {
+  .ant-tabs-nav {
+    background-color: #fff;
+    margin-bottom: 4px;
+    &::before {
+      border-bottom: none !important;
+    }
+    .ant-tabs-tab-active {
+      border-bottom-color: #ebebeb !important;
+    }
+  }
+}
+
+.full-card {
+  width: 100vw!important;
+  height: 100vh!important;
+  position: fixed!important;
+  z-index: 100!important;
+  top: 0!important;
+  left: 0!important;
+  margin: 0 !important;
+  .ant-card-body {
+    height: calc(100vh - 65px)!important;
+    display: flex;
+    flex-direction: column;
+
+    .card-coder, .ansi-coder-wrapper {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+}
+
+.full-dom {
+  width: 100vw!important;
+  height: 100vh!important;
+  position: fixed!important;
+  z-index: 100!important;
+  top: 0!important;
+  left: 0!important;
+  right: 0!important;
+  bottom: 0!important;
+  margin: 0 !important;
+}
+
+// 强制antd表格英文超出换行
+.ant-table .ant-table-thead > tr > th, .ant-table-tbody > tr > td,
+.ant-table .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+  word-break: break-all;
+}

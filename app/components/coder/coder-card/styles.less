@@ -1,0 +1,80 @@
+@import 'containers/App/styles/variable.less';
+
+.code_card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+
+  &.full_screen_card {
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+
+    .code_card_head {
+      padding: 12px 16px;
+    }
+    .code_card_body {
+      .code_card_body_prefix {
+        max-width: 600px;
+        padding-left: 16px;
+      }
+    }
+  }
+
+  &_head {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    &_title {
+      &_content {
+        color: #000;
+        font-size: 16px;
+      }
+    }
+    
+  }
+  &_body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+
+    :global {
+      .ant-spin-nested-loading, .ant-spin-container {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    .code_wrapper {
+      flex: 1;
+      min-height: 0;
+      .code_container {
+        height: 100%;
+        margin: 0;
+        border: 1px solid #D6D6D6;
+      }
+    }
+  }
+  
+}
+
+.tool {
+  cursor: pointer;
+  &_icon {
+    margin-right: 7px;
+    color: @primary-color;
+  }
+  &_text {
+    color: @gray-7;
+  }
+}
