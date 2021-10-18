@@ -6,6 +6,7 @@ import Layout from 'components/common/layout';
 import EnvList from './componemts/envList';
 import history from 'utils/history';
 import getPermission from "utils/permission";
+import './styles.less';
 
 const envNavs = {
   '': '全部',

@@ -1,19 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import history from 'utils/history';
 import { connect } from 'react-redux';
-import { Modal, notification, Tabs, Button, Form, Input } from "antd";
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
+import { ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
-
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import { END_TASK_STATUS_LIST } from "constants/types";
+import { END_TASK_STATUS_LIST, ENV_STATUS, ENV_STATUS_COLOR } from "constants/types";
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import getPermission from "utils/permission";
 import { requestWrapper } from 'utils/request';
-
 import Info from './components/info';
 import ComplianceInfo from './components/compliance-info';
 import Resource from './components/resource';
@@ -165,7 +163,22 @@ const EnvDetail = (props) => {
   return <Layout
     extraHeader={
       <PageHeader
-        title={info.name || ''}
+        title={(
+          <Space size={8}>
+            <span>{info.name || ''}</span>
+            <span>
+              {ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}
+              {
+                info.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
+                  <Tooltip title={taskInfo.message}>
+                    <InfoCircleFilled style={{ color: '#ff4d4f', fontSize: 14 }} />
+                  </Tooltip>
+                ) : null
+              }
+            </span>
+          </Space>
+        )}
+        
         subDes={
           PROJECT_OPERATOR ? (
             <div>

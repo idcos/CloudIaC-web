@@ -257,12 +257,16 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item 
-            name='commit'
-            valuePropName='checked'
-            initialValue={false}
-          >
-            <Checkbox>每次推送到该分支时自动重新部署</Checkbox> 
+          <Form.Item shouldUpdate={true}>
+            <Form.Item 
+              name='commit'
+              noStyle={true}
+              valuePropName='checked'
+              initialValue={false}
+            >
+              <Checkbox>推送到分支时重新部署</Checkbox> 
+            </Form.Item>
+            <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
           </Form.Item>
         </Col>
         <Col span={8}>
@@ -306,12 +310,16 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item 
-            name='prmr'
-            valuePropName='checked'
-            initialValue={false}
-          >
-            <Checkbox>该分支提交PR/MR时自动执行plan计划</Checkbox> 
+          <Form.Item shouldUpdate={true}>
+            <Form.Item 
+              name='prmr'
+              valuePropName='checked'
+              initialValue={false}
+              noStyle={true}
+            >
+              <Checkbox>PR/MR时执行PLAN</Checkbox> 
+            </Form.Item>
+            <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
           </Form.Item>
         </Col>
         <Col span={8}>

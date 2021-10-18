@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
-import { Card, Descriptions, Tag, Tooltip } from 'antd';
+import { Card, Descriptions, Collapse, Tag, Tooltip } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-
 import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
@@ -41,37 +40,31 @@ const Index = (props) => {
     }
   };
   
-  return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'环境详情'}>
-    <Descriptions 
-      labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
-    >
-      <Descriptions.Item label='状态'>
-        {ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}
-        {
-          info.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
-            <Tooltip title={taskInfo.message}>
-              <InfoCircleFilled style={{ color: '#ff4d4f' }} />
-            </Tooltip>
-          ) : null
-        }
-      </Descriptions.Item>
-      <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
-      <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
-      <Descriptions.Item label='Commit_ID'><span onClick={() => {
-        window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
-      }} className={styles.linkToCommit}
-      >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
-      <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
-      <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
-      <Descriptions.Item label='target'>{info.target || '-'}</Descriptions.Item>
-      <Descriptions.Item label='tfvars文件'>{info.tfVarsFile || '-'}</Descriptions.Item>
-      <Descriptions.Item label='playbook文件'>{info.playbook || '-'}</Descriptions.Item>
-      <Descriptions.Item label='部署通道'>{info.runnerId || '-'}</Descriptions.Item>
-      <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
-      <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
-      <Descriptions.Item label='创建人'>{info.creator || '-'}</Descriptions.Item>
-    </Descriptions>
-  </Card>;
+  return (
+    <Collapse expandIconPosition={'right'} forceRender={true}>
+      <Collapse.Panel header='环境详情'>
+        <Descriptions 
+          labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
+        >
+          <Descriptions.Item label='云模板'>{info.templateName || '-'}</Descriptions.Item>
+          <Descriptions.Item label='分支'>{info.revision || '-'}</Descriptions.Item>
+          <Descriptions.Item label='Commit_ID'><span onClick={() => {
+            window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
+          }} className={styles.linkToCommit}
+          >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
+          <Descriptions.Item label='资源数'>{info.resourceCount}</Descriptions.Item>
+          <Descriptions.Item label='存活时间'>{formatTTL(info)}</Descriptions.Item>
+          <Descriptions.Item label='target'>{info.target || '-'}</Descriptions.Item>
+          <Descriptions.Item label='tfvars文件'>{info.tfVarsFile || '-'}</Descriptions.Item>
+          <Descriptions.Item label='playbook文件'>{info.playbook || '-'}</Descriptions.Item>
+          <Descriptions.Item label='部署通道'>{info.runnerId || '-'}</Descriptions.Item>
+          <Descriptions.Item label='密钥'>{info.keyName || '-'}</Descriptions.Item>
+          <Descriptions.Item label='更新时间'>{timeUtils.format(info.updatedAt) || '-'}</Descriptions.Item>
+          <Descriptions.Item label='创建人'>{info.creator || '-'}</Descriptions.Item>
+        </Descriptions>
+      </Collapse.Panel>
+    </Collapse>
+  );
 };
 
 export default Eb_WP()(memo(Index));
