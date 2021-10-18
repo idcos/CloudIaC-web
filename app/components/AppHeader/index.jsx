@@ -168,7 +168,7 @@ const AppHeader = (props) => {
         }
         <div className='user'>
           <Tooltip 
-            color='#13c2c2'
+            color='#00AB9D'
             visible={devManualTooltipVisible}
             overlayStyle={{ maxWidth: 'none' }}
             title={
@@ -178,7 +178,7 @@ const AppHeader = (props) => {
               </div>
             }
           >
-            <Badge color={devManualTooltipVisible ? '#13c2c2' : null} offset={[ -1, 3 ]}>
+            <Badge color={devManualTooltipVisible ? '#00AB9D' : null} offset={[ -1, 3 ]}>
               <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
             </Badge>
           </Tooltip>
