@@ -20,6 +20,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   const { vcsId, repoId, repoRevision } = tplInfo;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
+  const [ activeKey, setActiveKey] = useState([]);
   const [ fileView, setFileView ] = useState({
     title: '',
     visible: false,
@@ -82,7 +83,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   };
 
   const onfinish = async() => {
-    let values = await form.getFieldsValue();
+    let values = await form.validateFields().catch(() => {
+      setActiveKey(['open']); // 表单报错展开折叠面板
+    });
     values.triggers = [];
     if (values.commit) {
       values.triggers = values.triggers.concat(['commit']);
@@ -343,8 +346,13 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       {...FL}
       layout={'vertical'}
     >
-      <Collapse expandIconPosition={'right'} style={{ marginBottom: 20 }}>
-        <Panel header='高级设置' forceRender={true}>
+      <Collapse 
+        expandIconPosition={'right'} 
+        activeKey={activeKey} 
+        onChange={setActiveKey}
+        style={{ marginBottom: 20 }}
+      >
+        <Panel header='高级设置' forceRender={true} key='open'>
           {renderForm()}
         </Panel>
       </Collapse>
