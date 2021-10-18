@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Select } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, CheckOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import intersectionWith from 'lodash/intersectionWith';
 import styles from './styles.less';
@@ -82,7 +82,7 @@ export default (props) => {
     >
       {
         options.map((option) => {
-          const { [lablePropsNames.name]: name, [valuePropName]: value, [lablePropsNames.description]: description, disabled } = option;
+          const { [lablePropsNames.name]: name, [valuePropName]: itemValue, disabled } = option;
           return (
             <Option 
               {
@@ -90,19 +90,15 @@ export default (props) => {
                   [lablePropsNames.name]: formatOptionLabel(name)
                 }
               }
-              value={value} 
+              value={itemValue} 
               disabled={disabled}
             >
-              <div className='name idcos-text-ellipsis'>
-                { name }
+              <div className='content'>
+                <span className='name idcos-text-ellipsis'>{name}</span>
+                {
+                  itemValue === value && <CheckOutlined className='selected-icon'/>
+                }
               </div>
-              {
-                description && (
-                  <div className='description idcos-text-ellipsis'>
-                    { description || '' }
-                  </div>
-                )
-              }
             </Option>
           );
         })
