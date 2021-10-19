@@ -1,11 +1,22 @@
-import { Space, Table } from 'antd';
+import { Space, Table, ConfigProvider, Empty } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import { PageSearch, usePageSearch } from 'inner-modules/@idcos/components';
+import PageSearch from 'components/PageSearch';
 import orgsAPI from 'services/orgs';
+
+const cateList = [
+  {
+    description: '资源名称',
+    code: 'name'
+  },
+  {
+    description: '资源类型',
+    code: 'type'
+  }
+];
 
 export default ({ match }) => {
 
@@ -32,38 +43,23 @@ export default ({ match }) => {
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
-      const { current: currentPage, name, type, ...restParams } = params;
+      const { current: currentPage, type, keyword, ...restParams } = params;
       fetchList({ 
         currentPage,
-        module: name ? 'name' : 'type',
-        q: name || type,
+        module: type,
+        q: keyword,
         ...restParams 
       });
     }
   });
 
-  const [ 
-    pageSearchProps
-  ] = usePageSearch({
-    mode: 'simple',
-    onSearch: (form) => {
-      setSearchParams((preSearchParams) => ({ 
-        ...preSearchParams,
-        form,
-        paginate: { ...preSearchParams.paginate, current: 1 }
-      }));
-    },
-    conditionList: [
-      {
-        name: '资源名称',
-        code: 'name'
-      },
-      {
-        name: '资源类型',
-        code: 'type'
-      }
-    ]
-  });
+  const onSearch = (type, keyword) => {
+    setSearchParams((preSearchParams) => ({ 
+      ...preSearchParams,
+      form: { type, keyword },
+      paginate: { ...preSearchParams.paginate, current: 1 }
+    }));
+  };
 
   const columns = [
     {
@@ -87,7 +83,7 @@ export default ({ match }) => {
     {
       dataIndex: 'type',
       title: '类型',
-      width: 230,
+      width: 220,
       ellipsis: true
     },
     {
@@ -117,15 +113,24 @@ export default ({ match }) => {
         <Space size='middle' direction='vertical' style={{ width: '100%' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Space size='middle'>
-              <PageSearch {...pageSearchProps}/>
+              <PageSearch 
+                cateList={cateList} 
+                onSearch={onSearch} 
+              />
             </Space>
           </div>
-          <Table
-            columns={columns}
-            scroll={{ x: 'min-content', y: 430 }}
-            loading={tableLoading}
-            {...tableProps}
-          />
+          <ConfigProvider 
+            renderEmpty={
+              () => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='暂无相应资源'/>
+            }
+          >
+            <Table
+              columns={columns}
+              scroll={{ x: 'min-content', y: 430 }}
+              loading={tableLoading}
+              {...tableProps}
+            />
+          </ConfigProvider>
         </Space>
       </div>
     </Layout>
