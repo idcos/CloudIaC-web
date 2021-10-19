@@ -17,6 +17,7 @@ const breadcrumbNameMap = {
   'm-project-ct': { text: '项目信息：云模板' },
   'm-project-variable': { text: '项目信息：变量' },
   'm-project-setting': { text: '项目信息：设置' },
+  'm-other-resource': { text: '资源查询' },
   'createCT': { text: '新建云模板' },
   'updateCT': { text: '编辑云模板' },
   'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },

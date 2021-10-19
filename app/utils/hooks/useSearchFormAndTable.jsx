@@ -30,14 +30,14 @@ export const useSearchFormAndTable = (props) => {
 
   const [ searchParams, setSearchParams ] = useState({
     paginate: defaultPaginate,
-    formParams: defaultFormParams,
+    form: defaultFormParams,
     sorter: defaultSorter,
     filters: defaultFilters
   });
 
   useEffect(() => {
-    const { paginate, formParams, sorter, filters } = searchParams;
-    onSearch({ ...paginate, ...formParams, ...sorter, ...filters });
+    const { paginate, form, sorter, filters } = searchParams;
+    onSearch({ ...paginate, ...form, ...sorter, ...filters });
   }, [searchParams]);
 
   /** 设定分页搜索参数 */
@@ -50,8 +50,8 @@ export const useSearchFormAndTable = (props) => {
 
   /** 设定表单搜索参数 */
   const setFormParams = (state) => {
-    setSearchParams(({ formParams, ...restParams }) => ({
-      formParams: isFunction(state) ? state(formParams) : state,
+    setSearchParams(({ form, ...restParams }) => ({
+      form: isFunction(state) ? state(form) : state,
       ...restParams
     }));
   };

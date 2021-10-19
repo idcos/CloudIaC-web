@@ -56,8 +56,12 @@ const orgsAPI = {
     return del(`/api/v1/orgs/${orgId}/users/${id}`, {}, {
       'IaC-Org-Id': orgId
     });
-  }
+  },
+  listResources: ({ orgId, ...restParams }) => {
+    return getWithArgs(`/api/v1/orgs/resources`, restParams, {
+      'IaC-Org-Id': orgId
+    });
+  },
 };
-
 
 export default orgsAPI;

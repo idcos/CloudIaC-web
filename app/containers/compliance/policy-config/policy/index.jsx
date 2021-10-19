@@ -49,7 +49,7 @@ const Policy = () => {
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
-    searchParams: { formParams },
+    searchParams: { form },
     onChangeFormParams
   } = useSearchFormAndTable({
     tableData,
@@ -196,7 +196,7 @@ const Policy = () => {
             options={policyGroupOptions}
             optionFilterProp='label'
             showSearch={true}
-            value={formParams.groupId}
+            value={form.groupId}
             onChange={(groupId) => onChangeFormParams({ groupId })}
           />
           <Select

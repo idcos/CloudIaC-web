@@ -94,7 +94,7 @@ const CenvList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams }
+    searchParams: { form }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -288,7 +288,7 @@ const CenvList = ({ orgs }) => {
             allowClear={true}
             options={projectOptions}
             placeholder='请选择项目'
-            value={formParams.projectId}
+            value={form.projectId}
             onChange={(projectId) => onChangeFormParams({ projectId })}
           />
           <Input.Search

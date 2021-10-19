@@ -23,14 +23,15 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
-    case 'org':
-      history.push(`/org/${orgId}/${menuItemKey}`);
-      break;
-    case 'project':
-      history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
-      break;
-    default:
-      break;
+      case 'org':
+      case 'other':
+        history.push(`/org/${orgId}/${menuItemKey}`);
+        break;
+      case 'project':
+        history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
+        break;
+      default:
+        break;
     }
   };
 
@@ -81,6 +82,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
     let scope = subKey, menuKey, isEmptyData = false;
     switch (subKey) {
     case 'org':
+    case 'other':
       menuKey = mOrgKey;
       break;
     case 'project':
@@ -171,7 +173,13 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
               }
               return (
                 <div className='sub-menu'>
-                  <div className='menu-title'>{subMenu.subName}</div>
+                  {
+                    subMenu.subName ? (
+                      <div className='menu-title'>{subMenu.subName}</div>
+                    ) : (
+                      <Divider style={{ margin: '12px 0' }} />
+                    )
+                  }
                   <div className='menu-list'>
                     { renderMenus(subMenu) }
                   </div>
