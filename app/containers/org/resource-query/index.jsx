@@ -110,7 +110,7 @@ export default ({ match }) => {
       }
     >
       <div className='idcos-card'>
-        <Space size='middle' direction='vertical' style={{ width: '100%' }}>
+        <Space size='middle' direction='vertical' style={{ width: '100%', display: 'flex' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <Space size='middle'>
               <PageSearch 
