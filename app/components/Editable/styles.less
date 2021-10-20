@@ -1,0 +1,8 @@
+.editableTable {
+  :global {
+    // 修复table因为被折叠面板隐藏时 并且有数据时 表单隐藏的异常问题
+    .ant-table-header>table {
+      visibility: visible !important;
+    }
+  }
+}

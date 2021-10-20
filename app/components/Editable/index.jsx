@@ -29,6 +29,7 @@ import {
   OptionSave,
   OptionSequence
 } from './options';
+import styles from './styles.less';
 
 const EditableTable = (props) => {
   const {
@@ -247,7 +248,7 @@ const EditableTable = (props) => {
         removeErrorMapItem
       }}
     >
-      <div>
+      <div className={styles.editableTable}>
         <Table
           {...tableProps}
           scroll={{ x: 'min-content', y: 570 }}
