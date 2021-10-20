@@ -155,6 +155,7 @@ const EditableTable = (props) => {
     const list = fields.map(getColumnByField);
     list.push({
       title: '操作',
+      width: 110,
       render: (_, row) => {
         let optionsNode = [
           <OptionSave
@@ -249,6 +250,7 @@ const EditableTable = (props) => {
       <div>
         <Table
           {...tableProps}
+          scroll={{ x: 'min-content', y: 570 }}
           pagination={false}
           rowKey='_key_id'
           components={{

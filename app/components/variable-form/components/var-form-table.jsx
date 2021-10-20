@@ -156,27 +156,31 @@ const VarFormTable = (props) => {
       id: 'id',
       editable: true,
       column: {
-        className: 'fn-hide'
+        className: 'fn-hide-column',
+        width: 0
       }
     },
     {
       id: 'options',
       editable: true,
       column: {
-        className: 'fn-hide'
+        className: 'fn-hide-column',
+        width: 0
       }
     },
     {
       id: 'overwrites',
       editable: true,
       column: {
-        className: 'fn-hide'
+        className: 'fn-hide-column',
+        width: 0
       }
     },
     {
       title: '来自',
       id: 'scope',
       column: {
+        width: 118,
         render: (text) => {
           return (
             <Tag>{SCOPE_ENUM[text]}</Tag>
@@ -188,6 +192,9 @@ const VarFormTable = (props) => {
       title: 'key',
       id: 'name',
       editable: true,
+      column: {
+        width: 254,
+      },
       renderFormInput: (record) => {
         const { overwrites } = record;
         return <Input placeholder='请输入key' disabled={overwrites} />;
@@ -215,6 +222,9 @@ const VarFormTable = (props) => {
       title: 'value',
       id: 'value',
       editable: true,
+      column: {
+        width: 258,
+      },
       formItemProps: {
         dependencies: ['sensitive', 'description'],
         rules: [
@@ -265,6 +275,9 @@ const VarFormTable = (props) => {
       title: '描述信息',
       id: 'description',
       editable: true,
+      column: {
+        width: 260,
+      },
       formFieldProps: {
         placeholder: '请输入描述信息'
       }
@@ -275,6 +288,9 @@ const VarFormTable = (props) => {
       ),
       id: 'sensitive',
       editable: true,
+      column: {
+        width: 116
+      },
       renderFormInput: (record, { value, onChange }) => {
         const { options } = record;
         return (
