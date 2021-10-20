@@ -185,23 +185,23 @@ const VarFormTable = (props) => {
       }
     },
     {
-      title: 'name',
+      title: 'key',
       id: 'name',
       editable: true,
       renderFormInput: (record) => {
         const { overwrites } = record;
-        return <Input placeholder='请输入name' disabled={overwrites} />;
+        return <Input placeholder='请输入key' disabled={overwrites} />;
       },
       formItemProps: {
         rules: [
-          { required: true, message: '请输入name' },
+          { required: true, message: '请输入key' },
           {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
                   const sameList = (varDataRef.current || []).filter(it => it.name === value);
                   if (value && sameList.length > 1) {
-                    reject(new Error('name值不允许重复!'));
+                    reject(new Error('key值不允许重复!'));
                   }
                   resolve();
                 }, 300);

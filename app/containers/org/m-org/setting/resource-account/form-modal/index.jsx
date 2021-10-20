@@ -108,14 +108,14 @@ export default ({ orgId, visible, id, event$ }) => {
                     <Space key={key} size={12} style={{ display: 'flex', alignItems: 'start' }}>
                       <Form.Item
                         rules={[
-                          { required: true, message: '请输入name' },
+                          { required: true, message: '请输入key' },
                           () => ({
                             validator(_, value) {
                               return new Promise((resolve, reject) => {
                                 const { variables } = form.getFieldValue();
                                 const filterList = variables.filter(({ name }) => name === value);
                                 if (filterList.length > 1 && value) {
-                                  reject(new Error('name值不允许重复!'));
+                                  reject(new Error('key值不允许重复!'));
                                 }
                                 resolve();
                               });
@@ -125,7 +125,7 @@ export default ({ orgId, visible, id, event$ }) => {
                         name={[name, 'name']}
                         fieldKey={[fieldKey, 'name']}
                       >
-                        <Input style={{ width: 188 }} placeholder='请输入name' />
+                        <Input style={{ width: 188 }} placeholder='请输入key' />
                       </Form.Item>
                       <Form.Item
                         rules={[{ required: true, message: '请输入value' }]}
