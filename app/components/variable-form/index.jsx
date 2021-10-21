@@ -3,8 +3,8 @@ import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
-import VarFormTable from './components/var-form-table';
-import OtherVarForm from './components/other-var-form';
+import VarFormTable from './var-form-table';
+import OtherVarForm from './other-var-form';
 import styles from './styles.less';
 
 const { Link } = Anchor;
@@ -115,7 +115,7 @@ const VariableForm = ({
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
               fetchParams={fetchParams}
-              canImportVar={false}
+              canImportResourceAccount={true}
               type='environment'
               defaultExpandCollapse={defaultExpandCollapse}
             />

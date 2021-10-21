@@ -1,105 +1,22 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Collapse, Select, Input, Divider, Checkbox, Tag, notification, Button, Space } from 'antd';
+import { 
+  Collapse, Input, Checkbox, Tag, notification, Button, Space, Dropdown, Menu
+} from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import isEqual from 'lodash/isEqual';
-import isEmpty from 'lodash/isEmpty';
 import isArray from 'lodash/isArray';
 import EditableTable from 'components/Editable';
 import tplAPI from 'services/tpl';
-import ImportVarsModal from './import-vars-modal';
-import { SCOPE_ENUM, VAR_TYPE_ENUM } from '../enum';
+import ImportVarsModal from './components/import-vars-modal';
+import ImportResourceAccountModal from './components/import-resource-account-modal';
+import SelectTypeValue from './components/select-type-value';
+import { SCOPE_ENUM, VAR_TYPE_ENUM } from './enum';
 
 const EditableTableFooter = styled.div`
   margin-top: 16px;
   text-align: right;
 `;
-
-const OptionWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const SelectTypeValue = ({
-  inputOptions,
-  placeholder,
-  value,
-  onChange,
-  isSameScope,
-  form
-}) => {
-  const [options, setOptions] = useState([]);
-  const [inputValue, setInputValue] = useState();
-
-  useEffect(() => {
-    if (!isEmpty(inputOptions)) {
-      setOptions(inputOptions)
-    }
-  }, [inputOptions]);
-
-  const addOption = () => {
-    const newOptions = [...options, inputValue];
-    setOptions(newOptions);
-    setInputValue();
-    form.setFieldsValue({ options: newOptions });
-  };
-
-  const delOption = (e, option) => {
-    e.stopPropagation();
-    if (option === value) {
-      onChange();
-    }
-    const newOptions = options.filter(item => item !== option);
-    setOptions(newOptions);
-    form.setFieldsValue({ options: newOptions });
-  };
-
-  return (
-    <Select
-      value={value}
-      getPopupContainer={triggerNode => triggerNode.parentNode}
-      optionLabelProp='value'
-      onChange={onChange}
-      placeholder={placeholder}
-      style={{ width: '100%' }}
-      allowClear={true}
-      dropdownRender={menu => (
-        <div>
-          {menu}
-          {
-            isSameScope && (
-              <>
-                <Divider style={{ margin: '4px 0' }} />
-                <Space style={{ padding: 8 }}>
-                  <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-                  <Button
-                    type='link'
-                    style={{ padding: 0 }}
-                    disabled={!inputValue || options.includes(inputValue)}
-                    onClick={addOption}
-                  >
-                    添加
-                  </Button>
-                </Space>
-              </>
-            )
-          }
-        </div>
-      )}
-    >
-      {
-        options.map(item => (
-          <Select.Option key={item} value={item}>
-            <OptionWrapper>
-              <span>{item}</span>
-              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>删除</Button>}
-            </OptionWrapper>
-          </Select.Option>
-        ))
-      }
-    </Select>
-  );
-};
 
 const VarFormTable = (props) => {
 
@@ -111,8 +28,9 @@ const VarFormTable = (props) => {
     defaultScope,
     defalutVarList,
     fetchParams,
-    canImportVar,
     type,
+    canImportVar = false,
+    canImportResourceAccount = false,
     defaultExpandCollapse = true
   } = props;
   const defalutVarListRef = useRef([]);
@@ -416,13 +334,18 @@ const VarFormTable = (props) => {
           footer={
             <EditableTableFooter>
               <Space>
-                {
-                  canImportVar ? (
-                    <Button onClick={() => setImportModalVisible(true)}>导入</Button>
-                  ) : null
-                }
-                <Button onClick={() => pushVar()}>添加普通变量</Button>
-                <Button onClick={() => pushVar(true)}>添加选择型变量</Button>
+                {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
+                <Dropdown 
+                  overlay={
+                    <Menu>
+                      <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
+                      <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
+                      {!!canImportResourceAccount && <Menu.Item>引用资源账号</Menu.Item>}
+                    </Menu>
+                  }
+                >
+                  <Button>添加变量<DownOutlined /></Button>
+                </Dropdown>
               </Space>
             </EditableTableFooter>
           }

@@ -157,6 +157,7 @@ const EditableTable = (props) => {
     list.push({
       title: '操作',
       width: 110,
+      fixed: 'right',
       render: (_, row) => {
         let optionsNode = [
           <OptionSave
