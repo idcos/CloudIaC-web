@@ -179,3 +179,23 @@
     display: none;
   }
 }
+
+.table-cell-vertical-top {
+  .ant-table-cell {
+    vertical-align: top !important;
+  }
+}
+
+.fn-hide-table-tbody {
+  .ant-table-tbody {
+    display: none !important;
+  }
+}
+
+.fn-hide-table-tbody-scroll {
+  .ant-table-content {
+    -ms-overflow-style: none !important;
+    overflow: -moz-scrollbars-none !important;
+    &::-webkit-scrollbar { width: 0 !important; height: 0 !important; }
+  }
+}

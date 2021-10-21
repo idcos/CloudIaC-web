@@ -252,7 +252,7 @@ const EditableTable = (props) => {
       <div className={styles.editableTable}>
         <Table
           {...tableProps}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           pagination={false}
           rowKey='_key_id'
           components={{

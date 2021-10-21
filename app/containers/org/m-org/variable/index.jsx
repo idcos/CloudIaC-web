@@ -72,7 +72,7 @@ export default ({ match }) => {
       <Spin spinning={spinning}>
         <div className={styles.variable}>
           <div className='idcos-card'>
-            <VariableForm varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
+            <VariableForm fetchParams={{ orgId }} varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
             <div className='btn-wrapper'>
               <Button type='primary' onClick={save}>保存</Button>
             </div>

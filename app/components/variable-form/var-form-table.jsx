@@ -4,13 +4,17 @@ import {
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
+import classnames from 'classnames';
+import { useEventEmitter } from 'ahooks';
 import EditableTable from 'components/Editable';
 import tplAPI from 'services/tpl';
 import ImportVarsModal from './components/import-vars-modal';
 import ImportResourceAccountModal from './components/import-resource-account-modal';
 import SelectTypeValue from './components/select-type-value';
+import ResourceAccountFormTable from './resource-account-form-table';
 import { SCOPE_ENUM, VAR_TYPE_ENUM } from './enum';
 
 const EditableTableFooter = styled.div`
@@ -36,6 +40,7 @@ const VarFormTable = (props) => {
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
   const [importVars, setImportVars] = useState([]);
+  const [resourceAccountList, setResourceAccountList] = useState([]);
   const [importModalVisible, setImportModalVisible] = useState(false);
 
   useEffect(() => {
@@ -320,6 +325,23 @@ const VarFormTable = (props) => {
     ]);
   };
 
+  const importResourceAccount = ({ importResourceAccountList }) => {
+    setResourceAccountList(importResourceAccountList);
+  };
+
+  const event$ = useEventEmitter();
+  event$.useSubscription(({ type, data }) => {
+    switch (type) {
+      case 'import-resource-account':
+        importResourceAccount(data);
+        break;
+      default:
+        break;
+    }
+  });
+
+  const scrollTableWrapperClassName = `listen-table-scroll-${type}`;
+
   return (
     <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'} >
       <Collapse.Panel key='open' header={VAR_TYPE_ENUM[type]} forceRender={true}>
@@ -331,23 +353,37 @@ const VarFormTable = (props) => {
           onDeleteRow={onDeleteRow}
           deleteBtnProps={{ type: 'link' }}
           addBtnText='添加全局变量'
+          tableProps={{
+            className: classnames(
+              scrollTableWrapperClassName, 'top-dom', 
+              // varList为空resourceAccountList不为空则隐藏varList的table-tbody
+              { 'fn-hide-table-tbody': !isEmpty(resourceAccountList) && isEmpty(varList) },
+              // varList和resourceAccountList都不为空则隐藏varList的横向滚动条
+              { 'fn-hide-table-tbody-scroll': !isEmpty(resourceAccountList) && !isEmpty(varList) }
+            ) 
+          }}
           footer={
-            <EditableTableFooter>
-              <Space>
-                {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
-                <Dropdown 
-                  overlay={
-                    <Menu>
-                      <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
-                      <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
-                      {!!canImportResourceAccount && <Menu.Item>引用资源账号</Menu.Item>}
-                    </Menu>
-                  }
-                >
-                  <Button>添加变量<DownOutlined /></Button>
-                </Dropdown>
-              </Space>
-            </EditableTableFooter>
+            <>
+              <ResourceAccountFormTable scrollTableWrapperClassName={scrollTableWrapperClassName} dataSource={resourceAccountList} defaultScope={defaultScope}/>
+              <EditableTableFooter>
+                <Space>
+                  {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
+                  <Dropdown 
+                    overlay={
+                      <Menu>
+                        <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
+                        <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
+                        {!!canImportResourceAccount && (
+                          <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>引用资源账号</Menu.Item>
+                        )}
+                      </Menu>
+                    }
+                  >
+                    <Button>添加变量<DownOutlined /></Button>
+                  </Dropdown>
+                </Space>
+              </EditableTableFooter>
+            </>
           }
           multiple={true}
           onChange={onChangeEditableTable}
@@ -361,6 +397,7 @@ const VarFormTable = (props) => {
           defaultScope={defaultScope}
           onFinish={onImportFinish}
         />
+        <ImportResourceAccountModal event$={event$} fetchParams={fetchParams}/>
       </Collapse.Panel>
     </Collapse>
   );

@@ -74,7 +74,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
       <Spin spinning={spinning}>
         <div className={styles.variable}>
           <div className='idcos-card'>
-            <VariableForm varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
+            <VariableForm fetchParams={{ orgId, projectId }} varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
             {
               PROJECT_OPERATOR ? (
                 <div className='btn-wrapper'>
