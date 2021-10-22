@@ -148,7 +148,7 @@ const AppHeader = (props) => {
                 options={orgList}
                 onChange={changeCurOrg}
                 listHeight={800}
-                maxLen={14}
+                maxLen={10}
                 value={orgId}
                 showSearch={true}
                 searchPlaceholder='请输入组织名称搜索'

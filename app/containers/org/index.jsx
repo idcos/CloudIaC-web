@@ -131,7 +131,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 showSearch={true}
                 searchPlaceholder='请输入项目名称搜索'
                 selectRef={pjtSelectRef}
-                maxLen={14}
+                maxLen={10}
                 menuSelectfooter={(
                   <div 
                     className={styles.menuSelectfooterContent} 
