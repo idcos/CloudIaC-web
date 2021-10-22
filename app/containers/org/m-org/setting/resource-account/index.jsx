@@ -5,12 +5,9 @@ import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import varGroupAPI from 'services/var-group';
 import FormModal from './form-modal';
+import moment from 'moment';
 
 export default ({ orgId }) => {
-
-  const [ formModalProps, setFormModalProps ] = useState({
-    visible: false
-  });
 
   // 列表查询
   const {
@@ -66,26 +63,28 @@ export default ({ orgId }) => {
       ellipsis: true
     },
     {
-      dataIndex: '',
+      dataIndex: 'creator',
       title: '创建人',
       width: 270,
       ellipsis: true
     },
     {
-      dataIndex: '',
+      dataIndex: 'updatedAt',
       title: '更新时间',
-      width: 344,
-      ellipsis: true
+      width: 340,
+      ellipsis: true,
+      render: (text) => moment(text).format('YYYY-MM-DD hh:mm')
     },
     {
       title: '操作',
       width: 170,
+      fixed: 'right',
       render: (_text, record) => {
         const { id } = record;
         const { loading: delLoading = false } = delFetches[id] || {};
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' onClick={() => editResourceAccount(id)}>编辑</Button>
+            <Button type='link' onClick={() => event$.emit({ type: 'open-resource-account-form-modal', data: { id } })}>编辑</Button>
             <Popconfirm
               title='确定要删除该资源账号？'
               onConfirm={() => delResourceAccount({ id })}
@@ -98,20 +97,9 @@ export default ({ orgId }) => {
     }
   ];
 
-  const addResourceAccount = () => {
-    setFormModalProps({ visible: true });
-  };
-
-  const editResourceAccount = (id) => {
-    setFormModalProps({ visible: true, id });
-  };
-
   const event$ = useEventEmitter();
-  event$.useSubscription((type) => {
+  event$.useSubscription(({ type }) => {
     switch (type) {
-      case 'close':
-        setFormModalProps({ visible: false });
-        break;
       case 'refresh':
         refresh();
         break;
@@ -122,16 +110,14 @@ export default ({ orgId }) => {
 
   return (
     <Space size='middle' direction='vertical' style={{ width: '100%', display: 'flex' }}>
-      <Button type='primary' onClick={addResourceAccount}>添加资源账号</Button>
+      <Button type='primary' onClick={() => event$.emit({ type: 'open-resource-account-form-modal' })}>添加资源账号</Button>
       <Table
         columns={columns}
         scroll={{ x: 'min-content', y: 430 }}
         loading={tableLoading}
         {...tableProps}
       />
-      {
-        formModalProps.visible && <FormModal {...formModalProps} orgId={orgId} event$={event$}/>
-      }
+     <FormModal orgId={orgId} event$={event$}/>
     </Space>
   );
 };

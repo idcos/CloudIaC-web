@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Table } from 'antd';
 import { useRequest } from 'ahooks';
+import moment from 'moment';
 import { requestWrapper } from 'utils/request';
-import { useSearchFormAndTable } from 'utils/hooks';
 import varGroupAPI from 'services/var-group';
 
 export default ({ event$, fetchParams }) => {
@@ -50,20 +50,21 @@ export default ({ event$, fetchParams }) => {
     {
       dataIndex: 'name',
       title: '账号描述',
-      width: 207,
+      width: 200,
       ellipsis: true
     },
     {
-      dataIndex: '',
+      dataIndex: 'creator',
       title: '创建人',
-      width: 143,
+      width: 140,
       ellipsis: true
     },
     {
-      dataIndex: '',
+      dataIndex: 'updatedAt',
       title: '更新时间',
-      width: 211,
-      ellipsis: true
+      width: 200,
+      ellipsis: true,
+      render: (text) => moment(text).format('YYYY-MM-DD hh:mm')
     }
   ];
 
