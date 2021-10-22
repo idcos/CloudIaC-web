@@ -1,30 +1,28 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Table, Input, notification, Collapse } from 'antd';
-
+import { Table, Input, notification, Collapse } from 'antd';
+import { useEventEmitter } from 'ahooks';
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
-
+import ResourceViewModal from 'components/resource-view-modal';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
-
-import ResourceModal from './modal/resource-modal';
 
 const { Panel } = Collapse;
 
 const Index = (props) => {
-  const { match, taskId, type } = props,
-    { params: { orgId, projectId, envId } } = match;
-  const [ loading, setLoading ] = useState(false),
-    [ recordes, setRecordes ] = useState({}),
-    [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
-    [ jsonData, setJsonData ] = useState({}),
-    [ selectKeys, setSelectKeys ] = useState([]),
-    [ visible, setVisible ] = useState(false),
-    [ search, setSearch ] = useState('');
 
+  const event$ = useEventEmitter();
+  const { match, taskId, type } = props;
+  const { orgId, projectId, envId } = match.params || {};
+  const [ loading, setLoading ] = useState(false);
+  const [ jsonData, setJsonData ] = useState({});
+  const [ selectKeys, setSelectKeys ] = useState([]);
+  const [ search, setSearch ] = useState('');
+  const [ resultMap, setResultMap ] = useState({
+    list: [],
+    total: 0
+  });
+ 
   const resetList = (list) => {
     if (list.length) {
       let typeList = [...new Set(list.map(d => d.provider))];
@@ -55,7 +53,6 @@ const Index = (props) => {
       fetchOutput();
     }
   }, [taskId]);
-
 
   const fetchList = async () => {
     try {
@@ -120,11 +117,16 @@ const Index = (props) => {
     {
       dataIndex: 'name',
       title: '名称',
-      render: (t, r) => <a onClick={() => {
-        setVisible(true); 
-        setRecordes(r);
-      }}
-      >{t}</a>
+      render: (text, record) => {
+        const { id } = record;
+        const params = { resourceName: text, orgId, projectId, envId, resourceId: id };
+        return (
+          <a onClick={() => event$.emit({ type: 'open-resource-view-modal', data: { params } })}>
+            {text}
+          </a>
+        );
+      }
+     
     },
     {
       dataIndex: 'module',
@@ -166,15 +168,7 @@ const Index = (props) => {
         </Panel>
       </Collapse>
     </div>
-    {visible && <ResourceModal 
-      params={recordes}
-      visible={visible} 
-      orgId={orgId} projectId={projectId} envId={envId} 
-      toggleVisible={() => {
-        setVisible(false);
-        setRecordes({});
-      }}
-    />}
+    <ResourceViewModal event$={event$}/>
   </div>;
 };
 

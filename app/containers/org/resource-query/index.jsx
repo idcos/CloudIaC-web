@@ -1,9 +1,12 @@
+import { Link } from 'react-router-dom';
 import { Space, Table, ConfigProvider, Empty } from 'antd';
-import { useRequest } from 'ahooks';
+import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import PageHeader from 'components/pageHeader';
+import ResourceViewModal from 'components/resource-view-modal';
 import Layout from 'components/common/layout';
+import EllipsisText from 'components/EllipsisText';
 import PageSearch from 'components/PageSearch';
 import orgsAPI from 'services/orgs';
 
@@ -21,6 +24,7 @@ const cateList = [
 export default ({ match }) => {
 
   const { orgId } = match.params || {};
+  const event$ = useEventEmitter();
 
   // 列表查询
   const {
@@ -72,7 +76,15 @@ export default ({ match }) => {
       dataIndex: 'envName',
       title: '环境',
       width: 180,
-      ellipsis: true
+      render: (text, record) => {
+        const { projectId, envId } = record;
+        const url = `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/resource`;
+        return (
+          <Link to={url}>
+            <EllipsisText>{text}</EllipsisText>
+          </Link>
+        );
+      }
     },
     {
       dataIndex: 'provider',
@@ -90,7 +102,15 @@ export default ({ match }) => {
       dataIndex: 'resourceName',
       title: '名称',
       width: 200,
-      ellipsis: true
+      render: (text, record) => {
+        const { resourceName, resourceId, projectId, envId } = record;
+        const params = { resourceName, orgId, projectId, envId, resourceId };
+        return (
+          <a onClick={() => event$.emit({ type: 'open-resource-view-modal', data: { params } })}>
+            <EllipsisText>{text}</EllipsisText>
+          </a>
+        );
+      }
     },
     {
       dataIndex: 'module',
@@ -133,6 +153,7 @@ export default ({ match }) => {
           </ConfigProvider>
         </Space>
       </div>
+      <ResourceViewModal event$={event$}/>
     </Layout>
   );
 };

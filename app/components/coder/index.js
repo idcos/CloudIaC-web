@@ -1,7 +1,7 @@
 /**
  * Form item code editor.
  */
-import React, { useState, useImperativeHandle } from "react";
+import React, { useEffect, useState, useImperativeHandle } from "react";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/neo.css";
 import "codemirror/mode/markdown/markdown";
@@ -60,6 +60,12 @@ const FormCoder = ({
   autoScrollToBottom // 是否开启自动滚动至最后一行
 }) => {
   const [ codemirror, setCodemirror ] = useState();
+
+  useEffect(() => {
+    setTimeout(() => {
+      codemirror && codemirror.refresh();
+    }, 300);
+  }, [value]);
 
   const _options = {
     lineNumbers: true, // show linenumbers
@@ -123,6 +129,7 @@ const FormCoder = ({
     scrollToTop,
     scrollToBottom
   }));
+
 
   return (
     <Container style={style} hight={hight} className={selfClassName}>
