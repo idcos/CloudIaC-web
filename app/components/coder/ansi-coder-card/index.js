@@ -4,9 +4,7 @@ import { VerticalAlignTopOutlined, VerticalAlignBottomOutlined, FullscreenExitOu
 import { default as AnsiUp } from 'ansi_up';
 import { useThrottleEffect } from 'ahooks';
 import classnames from 'classnames';
-
 import { getNumLen } from 'utils/util';
-
 import styles from './styles.less';
 import SearchByKeyWord from './dom-event';
 

@@ -28,13 +28,55 @@
         background: none;
         color: rgba(255, 255, 255, .86);
       }
-      .ant-collapse-content-box {
-        color: rgba(255, 255, 255, .66);
-      }
       &.ant-collapse-item-active {
         .ant-collapse-header {
-          background-color: rgba(255, 255, 255, 0.1)
+          background-color: rgba(255, 255, 255, 0.1);
         }
+        .ant-collapse-content {
+          color: rgba(255, 255, 255, .66);
+          .ant-collapse-content-box {
+            height: 350px;
+            padding: 0 36px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.deployLog {
+  height: 100%;
+  overflow: auto;
+  // background-color: #263238;
+  color: #EEFFFF;
+  font-family: inherit;
+
+  :global {
+    .ansi-coder-content {
+      font-size: 12px;
+      word-break:break-all;
+      .ansi-line {
+        min-height: 22px;
+        line-height: 22px;
+        position: relative;
+        
+        .line-index {
+          position: absolute;
+          top: 0;
+          left: 0;
+          padding-left: 3px;
+          padding-right: 11px;
+          text-align: right;
+          color: #546E7A;
+          white-space: nowrap;
+        }
+  
+        .line-text {
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          word-break: break-all;
+        }
+  
       }
     }
   }

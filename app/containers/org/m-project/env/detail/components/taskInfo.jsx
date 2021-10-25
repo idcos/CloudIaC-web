@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect } from 'react';
 import { Card, Descriptions, Tag, Tooltip } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import ChangeInfo from 'components/change-info';
