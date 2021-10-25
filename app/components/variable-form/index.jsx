@@ -3,6 +3,9 @@ import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import map from 'lodash/map';
 import omit from 'lodash/omit';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import varGroupAPI from 'services/var-group';
 import VarFormTable from './var-form-table';
 import OtherVarForm from './other-var-form';
 import styles from './styles.less';
@@ -28,6 +31,22 @@ const VariableForm = ({
   const [ envVarList, setEnvVarList ] = useState([]);
   const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
   const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
+
+  // 资源账号变量组列表查询
+  // const {
+  //   data: tableData,
+  // } = useRequest(
+  //   () => {
+  //     const { orgId, tplId, projectId, envId } = fetchParams;
+  //     const params = { orgId, tplId, projectId, envId, objectType: defaultScope };
+  //     return requestWrapper(
+  //       varGroupAPI.listRelationship.bind(null, params)
+  //     );
+  //   },
+  //   {
+  //     ready: !!fetchParams
+  //   }
+  // );
 
   useEffect(() => {
     if (!defaultData) {

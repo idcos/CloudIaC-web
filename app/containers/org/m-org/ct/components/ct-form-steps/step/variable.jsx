@@ -3,7 +3,7 @@ import { Button, Space } from "antd";
 
 import VariableForm from 'components/variable-form';
 
-export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
+export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
 
   const varRef = useRef();
 
@@ -33,7 +33,7 @@ export default ({ goCTlist, childRef, stepHelper, type, opType, ctData, orgId, s
       return null;
     }
     return {
-      orgId, ...ctData.repo
+      orgId, tplId, ...ctData.repo
     };
   }, [ ctData.repo, orgId ]);
 

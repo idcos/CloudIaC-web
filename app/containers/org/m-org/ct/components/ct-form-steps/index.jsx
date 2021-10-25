@@ -167,6 +167,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               ctData={ctData}
               orgId={orgId}
               type={it.type}
+              tplId={tplId}
               opType={opType}
               goCTlist={goCTlist}
               isShow={stepIndex === index}

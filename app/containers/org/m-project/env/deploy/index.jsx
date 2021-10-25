@@ -49,7 +49,7 @@ const Index = ({ match = {} }) => {
       return null;
     }
     return {
-      orgId, ...tplInfo
+      orgId, projectId, envId, tplId, ...tplInfo
     };
   }, [tplInfo]);
 
