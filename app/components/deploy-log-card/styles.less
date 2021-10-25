@@ -1,48 +1,75 @@
 @import 'containers/App/styles/variable.less';
 
-.card_title {
-  &_top {
-    display: flex;
-
-    .title {
-      line-height: 24px;
-      margin-right: 8px;
-    }
-    
-    .status {
-      line-height: 22px;
-    }
-  }
-  &_bottom {
-    line-height: 20px;
-    color: @gray-8;
-    font-size: 12px;
-    font-weight: normal;
-  }
-}
-
-.deploy_log_collapse {
+.deploy_log_card_wrapper {
   :global {
-    .ant-collapse-item {
-      .ant-collapse-header {
-        background: none;
-        color: rgba(255, 255, 255, .86);
-      }
-      &.ant-collapse-item-active {
-        .ant-collapse-header {
-          background-color: rgba(255, 255, 255, 0.1);
+    .deploy-log-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      &>.ant-card-head {
+        flex: 0 0 auto;
+        .card-title {
+          .card-title-top {
+            display: flex;
+        
+            .title {
+              line-height: 24px;
+              margin-right: 8px;
+            }
+            
+            .status {
+              line-height: 22px;
+            }
+          }
+          .card-title-bottom {
+            line-height: 20px;
+            color: @gray-8;
+            font-size: 12px;
+            font-weight: normal;
+          }
         }
-        .ant-collapse-content {
-          color: rgba(255, 255, 255, .66);
-          .ant-collapse-content-box {
-            height: 350px;
-            padding: 0 36px;
+        .tool {
+          cursor: pointer;
+          .tool-icon {
+            margin-right: 7px;
+            color: @primary-color;
+          }
+          .tool-text {
+            color: #575757;
+          }
+        }
+      }
+      &>.ant-card-body {
+        flex: 1;
+        min-height: 0;
+        &>.deploy-log-collapse {
+          height: 100%;
+          overflow-y: auto;
+          .ant-collapse-item {
+            .ant-collapse-header {
+              background: none;
+              color: rgba(255, 255, 255, .86);
+            }
+            &.ant-collapse-item-active {
+              .ant-collapse-header {
+                background-color: rgba(255, 255, 255, 0.1);
+              }
+              .ant-collapse-content {
+                color: rgba(255, 255, 255, .66);
+                .ant-collapse-content-box {
+                  height: 350px;
+                  padding: 0 36px;
+                }
+              }
+            }
           }
         }
       }
     }
   }
 }
+
+
 
 .deployLog {
   height: 100%;
