@@ -1,0 +1,41 @@
+@import 'containers/App/styles/variable.less';
+
+.card_title {
+  &_top {
+    display: flex;
+
+    .title {
+      line-height: 24px;
+      margin-right: 8px;
+    }
+    
+    .status {
+      line-height: 22px;
+    }
+  }
+  &_bottom {
+    line-height: 20px;
+    color: @gray-8;
+    font-size: 12px;
+    font-weight: normal;
+  }
+}
+
+.deploy_log_collapse {
+  :global {
+    .ant-collapse-item {
+      .ant-collapse-header {
+        background: none;
+        color: rgba(255, 255, 255, .86);
+      }
+      .ant-collapse-content-box {
+        color: rgba(255, 255, 255, .66);
+      }
+      &.ant-collapse-item-active {
+        .ant-collapse-header {
+          background-color: rgba(255, 255, 255, 0.1)
+        }
+      }
+    }
+  }
+}
