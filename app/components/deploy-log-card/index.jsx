@@ -204,11 +204,11 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
           className='deploy-log-collapse'
         >
           {
-            taskSteps.map(({ name, id, startAt, endAt, status }) => (
+            taskSteps.map(({ name, id, startAt, type, endAt, status }) => (
               <Panel 
                 header={
                   <Space>
-                    <span>{name || '-'}</span>
+                    <span>{name || type || '-'}</span>
                     {status === 'complete' && <CheckCircleFilled style={{ color: '#45BC13' }}/>}
                     {status === 'failed' && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
                     {status === 'running' && <SyncOutlined spin={true} style={{ color: '#ffffff' }}/>}
