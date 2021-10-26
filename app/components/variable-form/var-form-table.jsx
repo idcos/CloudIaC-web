@@ -109,7 +109,9 @@ const VarFormTable = (props) => {
         width: 118,
         render: (text) => {
           return (
-            <Tag>{SCOPE_ENUM[text]}</Tag>
+            <div style={{ width: 110 }}>
+              <Tag style={{ marginRight: 0 }}>{SCOPE_ENUM[text]}</Tag>
+            </div>
           );
         }
       }

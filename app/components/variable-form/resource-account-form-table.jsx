@@ -24,7 +24,9 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnl
       dataIndex: 'objectType',
       render: (text) => {
         return (
-          <Tag style={{ marginTop: 5 }}>{SCOPE_ENUM[text]}-资源账号</Tag>
+          <div style={{ width: 110 }}>
+            <Tag style={{ marginTop: 5, marginRight: 0 }}>{SCOPE_ENUM[text]}-资源账号</Tag>
+          </div>
         );
       }
     },
