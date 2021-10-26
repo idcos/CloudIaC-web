@@ -52,7 +52,8 @@ const EditableTable = (props) => {
     multiple: mult = true,
     sortMode = false,
     onDeleteRow, // eslint-disable-line
-    footer
+    footer,
+    readOnly = false
   } = props;
 
   const {
@@ -154,68 +155,70 @@ const EditableTable = (props) => {
   // 注：如果后面需要支持动态更新columns,注意fieldNames的更新；
   const columns = useMemo(() => {
     const list = fields.map(getColumnByField);
-    list.push({
-      title: '操作',
-      width: 110,
-      fixed: 'right',
-      render: (_, row) => {
-        let optionsNode = [
-          <OptionSave
-            key='option_save'
-            id={row.editable_id}
-            buttonProps={props.saveBtnProps}
-            buttonText={props.saveBtnText}
-          />,
-          <OptionEdit
-            key='option_edit'
-            id={row.editable_id}
-            buttonProps={props.editBtnProps}
-            buttonText={props.editBtnText}
-          />,
-          <OptionDelete
-            key='option_delete'
-            id={row.editable_id}
-            buttonProps={props.deleteBtnProps}
-            buttonText={props.deleteBtnText}
-          />,
-          <OptionCancel
-            key='option_cancel'
-            id={row.editable_id}
-            buttonProps={props.cancelBtnProps}
-            buttonText={props.cancelBtnText}
-          />
-        ];
-        if (isFunction(optionRender)) {
-          return optionRender(row, {
-            delete: optionsNode[2],
-            edit: optionsNode[1],
-            cancel: optionsNode[3],
-            save: optionsNode[0]
-          });
+    if (!readOnly) {
+      list.push({
+        title: '操作',
+        width: 110,
+        fixed: 'right',
+        render: (_, row) => {
+          let optionsNode = [
+            <OptionSave
+              key='option_save'
+              id={row.editable_id}
+              buttonProps={props.saveBtnProps}
+              buttonText={props.saveBtnText}
+            />,
+            <OptionEdit
+              key='option_edit'
+              id={row.editable_id}
+              buttonProps={props.editBtnProps}
+              buttonText={props.editBtnText}
+            />,
+            <OptionDelete
+              key='option_delete'
+              id={row.editable_id}
+              buttonProps={props.deleteBtnProps}
+              buttonText={props.deleteBtnText}
+            />,
+            <OptionCancel
+              key='option_cancel'
+              id={row.editable_id}
+              buttonProps={props.cancelBtnProps}
+              buttonText={props.cancelBtnText}
+            />
+          ];
+          if (isFunction(optionRender)) {
+            return optionRender(row, {
+              delete: optionsNode[2],
+              edit: optionsNode[1],
+              cancel: optionsNode[3],
+              save: optionsNode[0]
+            });
+          }
+          if (isFunction(optionExtraBefore)) {
+            optionsNode = concat(optionExtraBefore(row), optionsNode);
+          } else if (optionExtraBefore) {
+            optionsNode = concat([], optionExtraBefore, optionsNode);
+          }
+          if (isFunction(optionExtraAfter)) {
+            optionsNode = concat(optionsNode, optionExtraAfter(row));
+          } else if (optionExtraAfter) {
+            optionsNode = concat(optionsNode, optionExtraAfter);
+          }
+          if (optionsNode.length > 1 && optionSpaceProps !== false) {
+            return (
+              <Space
+                direction='horizontal'
+                {...(isObject(optionSpaceProps) ? optionSpaceProps : {})}
+              >
+                {optionsNode}
+              </Space>
+            );
+          }
+          return optionsNode;
         }
-        if (isFunction(optionExtraBefore)) {
-          optionsNode = concat(optionExtraBefore(row), optionsNode);
-        } else if (optionExtraBefore) {
-          optionsNode = concat([], optionExtraBefore, optionsNode);
-        }
-        if (isFunction(optionExtraAfter)) {
-          optionsNode = concat(optionsNode, optionExtraAfter(row));
-        } else if (optionExtraAfter) {
-          optionsNode = concat(optionsNode, optionExtraAfter);
-        }
-        if (optionsNode.length > 1 && optionSpaceProps !== false) {
-          return (
-            <Space
-              direction='horizontal'
-              {...(isObject(optionSpaceProps) ? optionSpaceProps : {})}
-            >
-              {optionsNode}
-            </Space>
-          );
-        }
-        return optionsNode;
-      }
-    });
+      });
+    }
     // 气泡排序
     if (sortMode === 'popover') {
       list.unshift({

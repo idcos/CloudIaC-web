@@ -30,7 +30,7 @@ const VarFormTable = (props) => {
     setVarList,
     varGroupList,
     setVarGroupList,
-    defalutVarGroupList,
+    readOnly = false,
     setDeleteVariablesId,
     defaultScope,
     defalutVarList,
@@ -123,7 +123,7 @@ const VarFormTable = (props) => {
       },
       renderFormInput: (record) => {
         const { overwrites } = record;
-        return <Input placeholder='请输入key' disabled={overwrites} />;
+        return <Input placeholder='请输入key' disabled={overwrites || readOnly} />;
       },
       formItemProps: {
         rules: [
@@ -177,12 +177,14 @@ const VarFormTable = (props) => {
               autoComplete='new-password'
               placeholder={id ? '空值保存时不会修改原有值' : '请输入value'}
               visibilityToggle={false}
+              disabled={readOnly}
             />
           );
         } else {
           return (
             isArray(options) ? (
               <SelectTypeValue
+                disabled={readOnly}
                 form={form}
                 inputOptions={options}
                 isSameScope={scope === defaultScope}
@@ -191,7 +193,7 @@ const VarFormTable = (props) => {
                 placeholder='请选择value'
               />
             ) : (
-              <Input placeholder='请输入value' />
+              <Input placeholder='请输入value' disabled={readOnly}/>
             )
           );
         }
@@ -205,7 +207,8 @@ const VarFormTable = (props) => {
         width: 260,
       },
       formFieldProps: {
-        placeholder: '请输入描述信息'
+        placeholder: '请输入描述信息',
+        disabled: readOnly
       }
     },
     {
@@ -221,7 +224,7 @@ const VarFormTable = (props) => {
         const { options } = record;
         return (
           <Checkbox
-            disabled={isArray(options)}
+            disabled={isArray(options) || readOnly}
             checked={!!value}
             onChange={e => {
               if (onChange) {
@@ -375,7 +378,10 @@ const VarFormTable = (props) => {
           fields={fields}
           onDeleteRow={onDeleteRow}
           deleteBtnProps={{ type: 'link' }}
-          addBtnText='添加全局变量'
+          readOnly={readOnly}
+          multiple={true}
+          onChange={onChangeEditableTable}
+          optionRender={optionRender}
           tableProps={{
             className: classnames(
               scrollTableWrapperClassName, 'top-dom', 
@@ -392,30 +398,33 @@ const VarFormTable = (props) => {
                 dataSource={varGroupList} 
                 defaultScope={defaultScope}
                 event$={event$}
+                readOnly={readOnly}
               />
-              <EditableTableFooter>
-                <Space>
-                  {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
-                  <Dropdown 
-                    overlay={
-                      <Menu>
-                        <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
-                        <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
-                        {!!canImportResourceAccount && (
-                          <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>引用资源账号</Menu.Item>
-                        )}
-                      </Menu>
-                    }
-                  >
-                    <Button>添加变量<DownOutlined /></Button>
-                  </Dropdown>
-                </Space>
-              </EditableTableFooter>
+              {
+                !readOnly && (
+                  <EditableTableFooter>
+                    <Space>
+                      {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
+                      <Dropdown 
+                        overlay={
+                          <Menu>
+                            <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
+                            <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
+                            {!!canImportResourceAccount && (
+                              <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>引用资源账号</Menu.Item>
+                            )}
+                          </Menu>
+                        }
+                      >
+                        <Button>添加变量<DownOutlined /></Button>
+                      </Dropdown>
+                    </Space>
+                  </EditableTableFooter>
+                )
+              }
+              
             </>
           }
-          multiple={true}
-          onChange={onChangeEditableTable}
-          optionRender={optionRender}
         />
         <ImportVarsModal
           importVars={importVars}

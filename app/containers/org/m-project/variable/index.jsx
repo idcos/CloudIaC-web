@@ -87,6 +87,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
               defaultScope={defaultScope} 
               defaultData={{ variables: vars }}
               event$={event$}
+              readOnly={!PROJECT_OPERATOR}
             />
             {
               PROJECT_OPERATOR ? (

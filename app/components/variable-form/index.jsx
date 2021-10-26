@@ -23,6 +23,7 @@ const VariableForm = ({
   showOtherVars = false,
   hasAnchor = false,
   defaultExpandCollapse = true,
+  readOnly = false,
   event$
 }) => {
 
@@ -148,6 +149,7 @@ const VariableForm = ({
               canImportVar={canImportTerraformVar}
               type='terraform'
               defaultExpandCollapse={defaultExpandCollapse}
+              readOnly={readOnly}
             />
           </a>
           <a id='env-var'>
@@ -162,9 +164,9 @@ const VariableForm = ({
               canImportResourceAccount={true}
               varGroupList={envVarGroupList}
               setVarGroupList={setEnvVarGroupList}
-              defalutVarGroupList={defalutEnvVarGroupList}
               type='environment'
               defaultExpandCollapse={defaultExpandCollapse}
+              readOnly={readOnly}
             />
           </a>
           { 

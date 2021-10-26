@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { useEventListener } from 'ahooks';
 import { SCOPE_ENUM } from './enum';
 
-export default ({ scrollTableWrapperClassName, dataSource, defaultScope, event$ }) => {
+export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnly = false, event$ }) => {
 
   const topSelector = `.top-dom.${scrollTableWrapperClassName} .ant-table-content`;
   const bottomSelector = `.bottom-dom.${scrollTableWrapperClassName} .ant-table-content`;
@@ -84,22 +84,24 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, event$ 
         );
       }
     },
-    {
-      title: '操作',
-      width: 110,
-      fixed: 'right',
-      render: (_, record) => {
-        const { objectType, varGroupId } = record;
-        return (
-          <Button 
-            disabled={objectType !== defaultScope} 
-            type='link' 
-            style={{ padding: 0 }}
-            onClick={() => event$.emit({ type: 'remove-resource-account', data: { varGroupIds: [varGroupId] } })}
-          >删除</Button>
-        );
+    ...(readOnly ? [] : [
+      {
+        title: '操作',
+        width: 110,
+        fixed: 'right',
+        render: (_, record) => {
+          const { objectType, varGroupId } = record;
+          return (
+            <Button 
+              disabled={objectType !== defaultScope} 
+              type='link' 
+              style={{ padding: 0 }}
+              onClick={() => event$.emit({ type: 'remove-resource-account', data: { varGroupIds: [varGroupId] } })}
+            >删除</Button>
+          );
+        }
       }
-    }
+    ])
   ];
 
   return (

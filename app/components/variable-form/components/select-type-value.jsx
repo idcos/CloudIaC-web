@@ -15,7 +15,8 @@ const SelectTypeValue = ({
   value,
   onChange,
   isSameScope,
-  form
+  form,
+  ...props
 }) => {
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState();
@@ -45,6 +46,7 @@ const SelectTypeValue = ({
 
   return (
     <Select
+      {...props}
       value={value}
       optionLabelProp='value'
       onChange={onChange}
