@@ -162,6 +162,7 @@ const VariableForm = ({
               defalutVarList={defalutEnvVarList}
               fetchParams={fetchParams}
               canImportResourceAccount={true}
+              defalutVarGroupList={defalutEnvVarGroupList}
               varGroupList={envVarGroupList}
               setVarGroupList={setEnvVarGroupList}
               type='environment'

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
 import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
+import intersectionBy from 'lodash/intersectionBy';
 import classnames from 'classnames';
 import { useEventEmitter } from 'ahooks';
 import EditableTable from 'components/Editable';
@@ -28,6 +29,7 @@ const VarFormTable = (props) => {
     formVarRef,
     varList,
     setVarList,
+    defalutVarGroupList,
     varGroupList,
     setVarGroupList,
     readOnly = false,
@@ -335,22 +337,41 @@ const VarFormTable = (props) => {
 
   const importResourceAccount = ({ importResourceAccountList }) => {
     setVarGroupList((preValue) => {
-      const otherScopeVarGroupList = preValue.filter((it) => it.objectType !== defaultScope);
-      const defaultScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope);
+      const preSameScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope);
+      const sameScopeVarGroupList = importResourceAccountList.map((it) => {
+        const sameVarGroup = preSameScopeVarGroupList.find(defaultIt => defaultIt.varGroupId === it.varGroupId);
+        return sameVarGroup || it;
+      });
+      const otherScopeVarGroupList = defalutVarGroupList.filter((it) => {
+        const sameScope = it.objectType !== defaultScope;
+        if (!sameScope) {
+          return false;
+        }
+        const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+        return !hasSameVarName;
+      });
       return [
-        ...otherScopeVarGroupList,
-        ...importResourceAccountList.map((it) => {
-          const sameVarGroup = defaultScopeVarGroupList.find(defaultIt => defaultIt.varGroupId === it.varGroupId);
-          return sameVarGroup || it;
-        })
+        ...sameScopeVarGroupList,
+        ...otherScopeVarGroupList
       ];
     });
   };
 
   const removeResourceAccount = ({ varGroupIds }) => {
     setVarGroupList((preValue) => {
-      const newValue = preValue.filter((it) => !varGroupIds.includes(it.varGroupId));
-      return newValue;
+      const sameScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope && !varGroupIds.includes(it.varGroupId));
+      const otherScopeVarGroupList = defalutVarGroupList.filter((it) => {
+        const sameScope = it.objectType !== defaultScope;
+        if (!sameScope) {
+          return false;
+        }
+        const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+        return !hasSameVarName;
+      });
+      return [
+        ...sameScopeVarGroupList,
+        ...otherScopeVarGroupList
+      ];;
     });
   };
 
