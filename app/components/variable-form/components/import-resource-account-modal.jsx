@@ -1,27 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Table } from 'antd';
-import { useRequest } from 'ahooks';
 import moment from 'moment';
+import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
 
-export default ({ event$, fetchParams }) => {
+export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
   const { orgId } = fetchParams || {};
   const [ visible, setVisible ] = useState(false);
   const [ selectedRows, setSelectedRows ] = useState([]);
+  const [ disabledKeys, setDisabledKeys ] = useState([]);
+
+  useEffect(() => {
+    if (visible) {
+      const selectedRows = varGroupList.filter(varGroup => varGroup.objectType === defaultScope);
+      const disabledKeys = varGroupList.filter(varGroup => varGroup.objectType !== defaultScope).map(it => it.varGroupId);
+      setSelectedRows(selectedRows);
+      setDisabledKeys(disabledKeys);
+    }
+  }, [visible]);
 
   // 列表查询
   const {
     loading: tableLoading,
-    data: tableData = {},
+    data: dataSource = [],
     run: fetchList,
     mutate: mutateTableData
   } = useRequest(
     (params) => requestWrapper(
       varGroupAPI.list.bind(null, { orgId, type: 'environment', ...params })
     ), {
-      manual: true
+      manual: true,
+      formatResult: (res) => {
+        return (res.list || []).map(it => {
+          it.objectType = defaultScope;
+          it.varGroupId = it.id;
+          delete it.id;
+          return it;
+        });
+      }
     }
   );
 
@@ -92,12 +110,24 @@ export default ({ event$, fetchParams }) => {
         columns={columns}
         scroll={{ x: 'min-content', y: 258 }}
         loading={tableLoading}
-        dataSource={tableData.list || []}
+        dataSource={dataSource}
         pagination={false}
-        rowKey='id'
+        rowKey='varGroupId'
         rowSelection={{
           hideSelectAll: true,
-          selectedRowKeys: selectedRows.map(({ id }) => id),
+          getCheckboxProps: (record) => ({
+            disabled: disabledKeys.includes(record.varGroupId)
+          }),
+          renderCell: (checked, record, index, originNode) => {
+            console.log('record', record);
+            console.log('selectedRows', selectedRows);
+            return (
+              <>
+                {originNode}
+              </>
+            );
+          },
+          selectedRowKeys: selectedRows.map(({ varGroupId }) => varGroupId),
           onChange: (_selectedRowKeys, selectedRows) => setSelectedRows(selectedRows)
         }}
       />

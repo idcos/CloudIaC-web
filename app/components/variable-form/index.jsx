@@ -2,7 +2,9 @@ import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import map from 'lodash/map';
+import differenceBy from 'lodash/differenceBy';
 import omit from 'lodash/omit';
+import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
@@ -28,25 +30,29 @@ const VariableForm = ({
   const [otherVarForm] = Form.useForm();
   const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
   const [ terraformVarList, setTerraformVarList ] = useState([]);
-  const [ envVarList, setEnvVarList ] = useState([]);
   const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
+  const [ envVarList, setEnvVarList ] = useState([]);
   const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
+  const [ envVarGroupList, setEnvVarGroupList ] = useState([]);
+  const [ defalutEnvVarGroupList, setDefalutEnvVarGroupList ] = useState([]);
 
   // 资源账号变量组列表查询
-  // const {
-  //   data: tableData,
-  // } = useRequest(
-  //   () => {
-  //     const { orgId, tplId, projectId, envId } = fetchParams;
-  //     const params = { orgId, tplId, projectId, envId, objectType: defaultScope };
-  //     return requestWrapper(
-  //       varGroupAPI.listRelationship.bind(null, params)
-  //     );
-  //   },
-  //   {
-  //     ready: !!fetchParams
-  //   }
-  // );
+  useRequest(
+    () => {
+      const { orgId, tplId, projectId, envId } = fetchParams;
+      const params = { orgId, tplId, projectId, envId, objectType: defaultScope };
+      return requestWrapper(
+        varGroupAPI.listRelationship.bind(null, params)
+      );
+    },
+    {
+      ready: !isEmpty(fetchParams),
+      onSuccess: (data) => {
+        setEnvVarGroupList(data || []);
+        setDefalutEnvVarGroupList(data || []);
+      }
+    }
+  );
 
   useEffect(() => {
     if (!defaultData) {
@@ -92,10 +98,16 @@ const VariableForm = ({
               otherVars.tfVarsFile = otherVars.tfVarsFile || '';
               otherVars.playbook = otherVars.playbook || '';
             }
+            const startVarGroupList = defalutEnvVarGroupList.filter(it => it.objectType === defaultScope);
+            const endVarGroupList = envVarGroupList.filter(it => it.objectType === defaultScope);
+            const varGroupIds = differenceBy(endVarGroupList, startVarGroupList, 'varGroupId').map(it => it.varGroupId);
+            const delVarGroupIds = differenceBy(startVarGroupList, endVarGroupList, 'varGroupId').map(it => it.varGroupId);
             const data = {
               deleteVariablesId,
               variables: map([ ...terraformVarList, ...envVarList ], (it) => omit(it, ['isNew', '_key_id', 'overwrites'])),
-              ...otherVars
+              ...otherVars,
+              varGroupIds,
+              delVarGroupIds
             };
             resolve(data);
           },
@@ -135,6 +147,9 @@ const VariableForm = ({
               defalutVarList={defalutEnvVarList}
               fetchParams={fetchParams}
               canImportResourceAccount={true}
+              varGroupList={envVarGroupList}
+              setVarGroupList={setEnvVarGroupList}
+              defalutVarGroupList={defalutEnvVarGroupList}
               type='environment'
               defaultExpandCollapse={defaultExpandCollapse}
             />

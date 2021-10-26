@@ -28,6 +28,9 @@ const VarFormTable = (props) => {
     formVarRef,
     varList,
     setVarList,
+    varGroupList,
+    setVarGroupList,
+    defalutVarGroupList,
     setDeleteVariablesId,
     defaultScope,
     defalutVarList,
@@ -37,10 +40,10 @@ const VarFormTable = (props) => {
     canImportResourceAccount = false,
     defaultExpandCollapse = true
   } = props;
+
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
   const [importVars, setImportVars] = useState([]);
-  const [resourceAccountList, setResourceAccountList] = useState([]);
   const [importModalVisible, setImportModalVisible] = useState(false);
 
   useEffect(() => {
@@ -326,7 +329,24 @@ const VarFormTable = (props) => {
   };
 
   const importResourceAccount = ({ importResourceAccountList }) => {
-    setResourceAccountList(importResourceAccountList);
+    setVarGroupList((preValue) => {
+      const otherScopeVarGroupList = preValue.filter((it) => it.objectType !== defaultScope);
+      const defaultScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope);
+      return [
+        ...otherScopeVarGroupList,
+        ...importResourceAccountList.map((it) => {
+          const sameVarGroup = defaultScopeVarGroupList.find(defaultIt => defaultIt.varGroupId === it.varGroupId);
+          return sameVarGroup || it;
+        })
+      ];
+    });
+  };
+
+  const removeResourceAccount = ({ varGroupIds }) => {
+    setVarGroupList((preValue) => {
+      const newValue = preValue.filter((it) => !varGroupIds.includes(it.varGroupId));
+      return newValue;
+    });
   };
 
   const event$ = useEventEmitter();
@@ -334,6 +354,9 @@ const VarFormTable = (props) => {
     switch (type) {
       case 'import-resource-account':
         importResourceAccount(data);
+        break;
+      case 'remove-resource-account':
+        removeResourceAccount(data);
         break;
       default:
         break;
@@ -357,14 +380,19 @@ const VarFormTable = (props) => {
             className: classnames(
               scrollTableWrapperClassName, 'top-dom', 
               // varList为空resourceAccountList不为空则隐藏varList的table-tbody
-              { 'fn-hide-table-tbody': !isEmpty(resourceAccountList) && isEmpty(varList) },
+              { 'fn-hide-table-tbody': !isEmpty(varGroupList) && isEmpty(varList) },
               // varList和resourceAccountList都不为空则隐藏varList的横向滚动条
-              { 'fn-hide-table-tbody-scroll': !isEmpty(resourceAccountList) && !isEmpty(varList) }
+              { 'fn-hide-table-tbody-scroll': !isEmpty(varGroupList) && !isEmpty(varList) }
             ) 
           }}
           footer={
             <>
-              <ResourceAccountFormTable scrollTableWrapperClassName={scrollTableWrapperClassName} dataSource={resourceAccountList} defaultScope={defaultScope}/>
+              <ResourceAccountFormTable 
+                scrollTableWrapperClassName={scrollTableWrapperClassName} 
+                dataSource={varGroupList} 
+                defaultScope={defaultScope}
+                event$={event$}
+              />
               <EditableTableFooter>
                 <Space>
                   {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
@@ -397,7 +425,7 @@ const VarFormTable = (props) => {
           defaultScope={defaultScope}
           onFinish={onImportFinish}
         />
-        <ImportResourceAccountModal event$={event$} fetchParams={fetchParams}/>
+        <ImportResourceAccountModal event$={event$} fetchParams={fetchParams} varGroupList={varGroupList} defaultScope={defaultScope}/>
       </Collapse.Panel>
     </Collapse>
   );

@@ -35,18 +35,12 @@ const varGroupAPI = {
       'IaC-Project-Id': projectId 
     });
   },
-  // createRelationship: ({ orgId, projectId, ...restParams }) => {
-  //   return post(`/api/v1/var_groups/relationship`, restParams, {
-  //     'IaC-Org-Id': orgId,
-  //     'IaC-Project-Id': projectId 
-  //   });
-  // },
-  // delRelationship: ({ orgId, projectId, ...restParams }) => {
-  //   return post(`/api/v1/var_groups/relationship`, restParams, {
-  //     'IaC-Org-Id': orgId,
-  //     'IaC-Project-Id': projectId 
-  //   });
-  // },
+  updateRelationship: ({ orgId, projectId, ...restParams }) => {
+    return put(`/api/v1/var_groups/relationship/batch`, restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId 
+    });
+  }
 };
 
 export default varGroupAPI;
