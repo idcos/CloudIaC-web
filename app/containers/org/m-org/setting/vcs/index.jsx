@@ -64,30 +64,42 @@ export default ({ title, orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '名称'
+      title: '名称',
+      width: 200,
+      ellipsis: true
     },
     {
       dataIndex: 'vcsType',
-      title: '类型'
+      title: '类型',
+      width: 100,
+      ellipsis: true
     },
     {
       dataIndex: 'status',
       title: '状态',
+      width: 100,
+      ellipsis: true,
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
       </div>
     },
     {
       dataIndex: 'address',
-      title: '地址'
+      title: '地址',
+      width: 230,
+      ellipsis: true
     },
     {
       dataIndex: 'vcsToken',
-      title: 'Token'
+      title: 'Token',
+      width: 320,
+      ellipsis: true
     },
     {
       title: '操作',
-      width: 100,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
@@ -173,6 +185,7 @@ export default ({ title, orgId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.currentPage,
         pageSize: query.pageSize,

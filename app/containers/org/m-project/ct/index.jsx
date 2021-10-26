@@ -3,7 +3,7 @@ import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
-
+import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -27,33 +27,49 @@ const CTList = ({ userInfo, match = {} }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模板名称'
+      title: '云模板名称',
+      width: 154,
+      ellipsis: true
     },
     {
       dataIndex: 'description',
-      title: '云模板描述'
+      title: '云模板描述',
+      width: 213,
+      ellipsis: true
     },
     {
       dataIndex: 'activeEnvironment',
-      title: '活跃环境'
+      title: '活跃环境',
+      width: 100,
+      ellipsis: true
     },
     {
       dataIndex: 'repoAddr',
       title: '仓库',
-      render: (text) => <a href={text} target='_blank'>{text}</a>
+      width: 249,
+      ellipsis: true,
+      render: (text) => (
+        <a href={text} target='_blank'><EllipsisText>{text}</EllipsisText></a>
+      )
     },
     {
       dataIndex: 'creator',
-      title: '创建人'
+      title: '创建人',
+      width: 100,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
+      width: 167,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
-      width: 60,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (record) => {
         return PROJECT_OPERATOR ? (
           <span className='inlineOp'>
@@ -120,6 +136,7 @@ const CTList = ({ userInfo, match = {} }) => {
           columns={columns}
           dataSource={resultMap.list}
           loading={loading}
+          scroll={{ x: 'min-content', y: 570 }}
           pagination={{
             current: query.pageNo,
             pageSize: query.pageSize,

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, notification, Space, Divider, Popconfirm } from 'antd';
-
 import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
 import moment from 'moment';
 import { ORG_USER } from 'constants/types';
-
+import EllipsisText from 'components/EllipsisText';
 import OpModal from './components/memberModal';
 
 export default ({ title, orgId }) => {
@@ -99,28 +98,38 @@ export default ({ title, orgId }) => {
     {
       dataIndex: 'name',
       title: '姓名',
+      width: 268,
+      ellipsis: true,
       render: (_, record) => <div className='tableRender'>
-        <h2 className='reset-styles'>{record.name}</h2>
-        <p className='reset-styles'>{record.email}</p>
+        <h2 className='reset-styles'><EllipsisText>{record.name}</EllipsisText></h2>
+        <p className='reset-styles'><EllipsisText>{record.email}</EllipsisText></p>
       </div>
     },
     {
       dataIndex: 'phone',
-      title: '手机'
+      title: '手机',
+      width: 178,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '加入时间',
+      width: 212,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       dataIndex: 'role',
       title: '权限',
+      width: 160,
+      ellipsis: true,
       render: (text) => ORG_USER.role[text]
     },
     {
       title: '操作',
       width: 180,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           <a onClick={() => {
@@ -160,6 +169,7 @@ export default ({ title, orgId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,

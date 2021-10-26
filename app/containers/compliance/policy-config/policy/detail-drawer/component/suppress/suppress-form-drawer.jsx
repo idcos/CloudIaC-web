@@ -52,11 +52,15 @@ export default ({ policyId, visible, onClose, reload }) => {
   const columns = [
     {
       dataIndex: 'targetName',
-      title: '名称'
+      title: '名称',
+      width: 200,
+      ellipsis: true
     },
     {
       dataIndex: 'targetType',
       title: '类型',
+      width: 200,
+      ellipsis: true,
       render: (text) => TARGET_TYPE_ENUM[text]
     }
   ];
@@ -117,6 +121,7 @@ export default ({ policyId, visible, onClose, reload }) => {
           pagination={{
             showTotal: (total) => `共${total}条`
           }}
+          scroll={{ x: 'min-content', y: 570 }}
           rowSelection={{
             onChange: setAddTargetIds,
             selections: [

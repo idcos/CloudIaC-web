@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Divider, notification, Space, Table } from 'antd';
+import moment from 'moment';
 import keysAPI from 'services/keys';
 import OpModal from './components/op-modal';
 
@@ -63,15 +64,22 @@ export default ({ orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '密钥名称'
+      title: '密钥名称',
+      width: 300,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间'
+      title: '创建时间',
+      width: 169,
+      ellipsis: true,
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
-      width: 60,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (record) => {
         return <Space split={<Divider type='vertical' />}>
           <a className='danger-text' onClick={() => del(record)}>删除</a>
@@ -126,6 +134,7 @@ export default ({ orgId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.currentPage,
         pageSize: query.pageSize,

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
-
 import tokensAPI from 'services/tokens';
-
 import AddModal from './components/add-modal';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -90,32 +87,43 @@ const ApiToken = ({ orgId }) => {
   const columns = [
     {
       dataIndex: 'key',
-      title: 'Token'
+      title: 'Token',
+      width: 286
     },
     {
       dataIndex: 'description',
-      title: '描述'
+      title: '描述',
+      width: 210,
+      ellipsis: true
     },
     {
       dataIndex: 'expiredAt',
       title: '过期时间',
+      width: 150,
+      ellipsis: true,
       render: (text) => moment(text).format(dateFormat)
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
+      width: 150,
+      ellipsis: true,
       render: (text) => moment(text).format(dateFormat)
     },
     {
       dataIndex: 'status',
       title: '状态',
+      width: 132,
+      ellipsis: true,
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
       </div>
     },
     {
       title: '操作',
-      width: 100,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
@@ -155,6 +163,7 @@ const ApiToken = ({ orgId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,

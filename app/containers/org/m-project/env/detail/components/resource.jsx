@@ -104,19 +104,27 @@ const Index = (props) => {
   const columns = [
     {
       dataIndex: 'provider',
-      title: 'Provider'
+      title: 'Provider',
+      ellipsis: true,
+      width: 258
     },
     {
       dataIndex: 'type',
-      title: '类型'
+      title: '类型',
+      ellipsis: true,
+      width: 240
     },
     {
       dataIndex: 'count',
-      title: '数量'
+      title: '数量',
+      ellipsis: true,
+      width: 120
     },
     {
       dataIndex: 'name',
       title: '名称',
+      ellipsis: true,
+      width: 200,
       render: (text, record) => {
         const { id } = record;
         const params = { resourceName: text, orgId, projectId, envId, resourceId: id };
@@ -130,7 +138,9 @@ const Index = (props) => {
     },
     {
       dataIndex: 'module',
-      title: '模块'
+      title: '模块',
+      ellipsis: true,
+      width: 240
     }
   ];
 
@@ -160,6 +170,7 @@ const Index = (props) => {
             columns={columns}
             dataSource={resultMap.list}
             rowKey={record => record.provider}
+            scroll={{ x: 'min-content', y: 570 }}
             loading={loading}
             pagination={false}
             expandedRowKeys={selectKeys}
