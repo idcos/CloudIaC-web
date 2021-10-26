@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Table } from 'antd';
+import { Modal, Table, Popover } from 'antd';
+import { CloseCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
+import intersectionBy from 'lodash/intersectionBy';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
@@ -11,6 +13,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
   const [ visible, setVisible ] = useState(false);
   const [ selectedRows, setSelectedRows ] = useState([]);
   const [ disabledKeys, setDisabledKeys ] = useState([]);
+  const [ popoverVisibleKey, setPopoverVisibleKey ] = useState();
 
   useEffect(() => {
     if (visible) {
@@ -26,7 +29,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
     loading: tableLoading,
     data: dataSource = [],
     run: fetchList,
-    mutate: mutateTableData
+    mutate: mutateDataSource
   } = useRequest(
     (params) => requestWrapper(
       varGroupAPI.list.bind(null, { orgId, type: 'environment', ...params })
@@ -50,7 +53,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
   const onCancel = () => {
     setVisible(false);
-    mutateTableData({});
+    mutateDataSource([]);
   };
 
   const onOk = () => {
@@ -115,22 +118,37 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
         rowKey='varGroupId'
         rowSelection={{
           hideSelectAll: true,
+          selectedRowKeys: selectedRows.map(({ varGroupId }) => varGroupId),
           getCheckboxProps: (record) => ({
             disabled: disabledKeys.includes(record.varGroupId)
           }),
-          renderCell: (checked, record, index, originNode) => {
-            console.log('record', record);
-            console.log('selectedRows', selectedRows);
-            return (
-              <>
-                {originNode}
-              </>
-            );
+          onSelect: (record, selected, selectedRows) => {
+            let _selectedRows = selectedRows;
+            if (selected) {
+              const otherRows = selectedRows.filter(it => it.varGroupId !== record.varGroupId);
+              const hasSameVarNameRecord = otherRows.find((otherRow) => intersectionBy(otherRow.variables, record.variables, 'name').length > 0);
+              if (hasSameVarNameRecord) {
+                setPopoverVisibleKey(record.varGroupId);
+                _selectedRows = otherRows;
+              }
+            }
+            setSelectedRows(_selectedRows);
           },
-          selectedRowKeys: selectedRows.map(({ varGroupId }) => varGroupId),
-          onChange: (_selectedRowKeys, selectedRows) => setSelectedRows(selectedRows)
+          renderCell: (_checked, record, _index, originNode) => {
+            return (
+              <Popover 
+                placement='topLeft'
+                trigger='click'
+                content={<><CloseCircleFilled style={{ color: '#F23C3C', marginRight: 8 }}/>以下资源账号存在相同的key，请重新选择</>} 
+                visible={popoverVisibleKey === record.varGroupId}
+                onVisibleChange={(visible) => !visible && setPopoverVisibleKey()} 
+              >
+                <span>{originNode}</span>
+              </Popover>
+            );
+          }
         }}
       />
     </Modal>
   );
-}
+};
