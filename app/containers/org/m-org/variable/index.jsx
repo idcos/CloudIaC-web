@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { Button, Spin, notification } from 'antd';
-import { useRequest } from 'ahooks';
+import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import VariableForm from 'components/variable-form';
 import PageHeader from 'components/pageHeader';
@@ -13,6 +13,7 @@ const defaultScope = 'org';
 
 export default ({ match }) => {
 
+  const event$ = useEventEmitter();
   const { orgId } = match.params || {};
   const varRef = useRef();
 
@@ -52,7 +53,10 @@ export default ({ match }) => {
       varGroupAPI.updateRelationship.bind(null, { orgId, objectType: defaultScope, objectId: orgId, ...params })
     ),
     {
-      manual: true
+      manual: true,
+      onSuccess: () => {
+        event$.emit({ type: 'fetchVarGroupList' });
+      }
     }
   );
 
@@ -74,7 +78,13 @@ export default ({ match }) => {
       <Spin spinning={spinning}>
         <div className={styles.variable}>
           <div className='idcos-card'>
-            <VariableForm fetchParams={{ orgId }} varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
+            <VariableForm 
+              fetchParams={{ orgId }} 
+              varRef={varRef} 
+              defaultScope={defaultScope} 
+              defaultData={{ variables: vars }}
+              event$={event$}
+            />
             <div className='btn-wrapper'>
               <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>保存</Button>
             </div>

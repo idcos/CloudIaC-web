@@ -1,67 +1,74 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button, Spin, notification } from 'antd';
 import { connect } from "react-redux";
-
+import { useRequest, useEventEmitter } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import VariableForm from 'components/variable-form';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import varsAPI from 'services/variables';
+import varGroupAPI from 'services/var-group';
 import getPermission from "utils/permission";
-
 import styles from './styles.less';
 
 const defaultScope = 'project';
 
 const ProjectVariable = ({ match = {}, userInfo }) => {
 
+  const event$ = useEventEmitter();
   const { orgId, projectId } = match.params || {};
   const varRef = useRef();
-  const [ spinning, setSpinning ] = useState(false);
-  const [ vars, setVars ] = useState([]);
   const { PROJECT_OPERATOR } = getPermission(userInfo);
 
-  useEffect(() => {
-    getVars();
-  }, []);
+  // 变量查询
+  const {
+    loading: spinning,
+    data: vars = [],
+    run: getVars
+  } = useRequest(
+    () => requestWrapper(
+      varsAPI.search.bind(null, { orgId, projectId, scope: defaultScope })
+    )
+  );
 
-  const getVars = async () => {
-    try {
-      setSpinning(true);
-      const res = await varsAPI.search({ orgId, projectId, scope: defaultScope });
-      if (res.code !== 200) {
-        throw new Error(res.message);
+  // 更新变量
+  const {
+    loading: updateLoading,
+    run: updateVars
+  } = useRequest(
+    (params) => requestWrapper(
+      varsAPI.update.bind(null, { orgId, projectId, ...params }),
+    ),
+    {
+      manual: true,
+      onSuccess: () => {
+        getVars();
       }
-      setVars(res.result || []);
-      setSpinning(false);
-    } catch (e) {
-      setSpinning(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
     }
-  };
+  );
+
+  // 更新变量组
+  const {
+    loading: updateVarGroupLoading,
+    run: updateVarGroup
+  } = useRequest(
+    (params) => requestWrapper(
+      varGroupAPI.updateRelationship.bind(null, { orgId, projectId, objectType: defaultScope, objectId: projectId, ...params })
+    ),
+    {
+      manual: true,
+      onSuccess: () => {
+        event$.emit({ type: 'fetchVarGroupList' });
+      }
+    }
+  );
 
   const save = async () => {
-    try {
-      const varData = await varRef.current.validateForm();
-      setSpinning(true);
-      const res = await varsAPI.update({ orgId, projectId, ...varData });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      notification.success({
-        description: '保存成功'
-      });
-      setSpinning(false);
-      getVars();
-    } catch (e) {
-      setSpinning(false);
-      notification.error({
-        message: '保存失败',
-        description: e.message
-      });
-    }
+    const varData = await varRef.current.validateForm();
+    const { varGroupIds, delVarGroupIds, ...params } = varData;
+    await updateVars(params);
+    await updateVarGroup({ varGroupIds, delVarGroupIds });
+    notification.success({ message: '操作成功' });
   };
 
   return (
@@ -74,11 +81,17 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
       <Spin spinning={spinning}>
         <div className={styles.variable}>
           <div className='idcos-card'>
-            <VariableForm fetchParams={{ orgId, projectId }} varRef={varRef} defaultScope={defaultScope} defaultData={{ variables: vars }} />
+            <VariableForm 
+              fetchParams={{ orgId, projectId }} 
+              varRef={varRef} 
+              defaultScope={defaultScope} 
+              defaultData={{ variables: vars }}
+              event$={event$}
+            />
             {
               PROJECT_OPERATOR ? (
                 <div className='btn-wrapper'>
-                  <Button type='primary' onClick={save}>保存</Button>
+                  <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>保存</Button>
                 </div>
               ) : null
             }

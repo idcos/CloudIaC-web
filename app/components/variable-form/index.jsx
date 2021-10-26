@@ -22,7 +22,8 @@ const VariableForm = ({
   defaultScope, 
   showOtherVars = false,
   hasAnchor = false,
-  defaultExpandCollapse = true
+  defaultExpandCollapse = true,
+  event$
 }) => {
 
   const terraformVarRef = useRef();
@@ -36,8 +37,20 @@ const VariableForm = ({
   const [ envVarGroupList, setEnvVarGroupList ] = useState([]);
   const [ defalutEnvVarGroupList, setDefalutEnvVarGroupList ] = useState([]);
 
+  event$ && event$.useSubscription(({ type }) => {
+    switch (type) {
+      case 'fetchVarGroupList':
+        fetchVarGroupList();
+        break;
+      default:
+        break;
+    }
+  });
+
   // 资源账号变量组列表查询
-  useRequest(
+  const {
+    run: fetchVarGroupList
+  } = useRequest(
     () => {
       const { orgId, tplId, projectId, envId } = fetchParams;
       const params = { orgId, tplId, projectId, envId, objectType: defaultScope };
