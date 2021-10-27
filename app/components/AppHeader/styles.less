@@ -33,13 +33,12 @@
 
   :global {
     .header {
-      padding: 10px 20px;
+      padding: 13px 24px 10px;
       .name {
         color: @gray-9;
         line-height: 22px;
         font-weight: bold;
       }
-
       .email {
         line-height: 20px;
         font-size: 12px;
@@ -47,29 +46,23 @@
       }
     }
 
-    .link-item {
-      line-height: 22px;
-      cursor: pointer;
-      .line-border-top {
-        border-top: 1px solid @gray-4;
-        padding: 5px 0px;
-        margin: 0px 18px;
-      }
-      .line-border-bottom {
-        border-bottom: 1px solid @gray-4;
-        padding: 5px 0px;
-        margin: 0px 18px;
-      }
-      &:hover {
-        background-color: @backGroundIac;
-      }
-
-      .icon {
-        color: #000;
-      }
-      .text {
-        color: @gray-8;
-        margin-left: 10px;
+    .body {
+      padding-bottom: 9px;
+      .link-item {
+        line-height: 22px;
+        cursor: pointer;
+        padding: 5px 24px;
+        &:hover {
+          background-color: @backGroundIac;
+        }
+        .icon {
+          color: #575757;
+          font-size: 14px;
+        }
+        .text {
+          color: @gray-9;
+          margin-left: 14px;
+        }
       }
     }
   }

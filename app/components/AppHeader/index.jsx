@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown, Tooltip, Button, Badge } from 'antd';
-import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, ToolFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, SecurityScanFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
@@ -192,24 +192,18 @@ const AppHeader = (props) => {
                 </div>
                 <div className='body'>
                   <div className='link-item' onClick={() => history.push('/user/setting')}>
-                    <div className='line-border-top'>
-                      <span className='icon'><SettingFilled /></span>
-                      <span className='text'>用户设置</span>
-                    </div>
+                    <span className='icon'><SecurityScanFilled /></span>
+                    <span className='text'>用户设置</span>
                   </div>
                   {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
-                        <div className='line-border-bottom'>
-                          <span className='icon'><ToolFilled /></span>
+                          <span className='icon'><SettingFilled /></span>
                           <span className='text'>系统设置</span>
-                        </div>
                       </div>
                     ) : null
                   }
-                </div>
-                <div className='footer'>
-                  <div className='link-item' style={{ padding: '9px 18px' }} onClick={() => logout()}>
+                  <div className='link-item' onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>退出</span>
                   </div>
