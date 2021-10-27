@@ -136,14 +136,14 @@ const ApiToken = ({ orgId }) => {
               title='确定要禁用该资源账号？'
               onConfirm={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'disable' } })}
             >
-              <a className='danger-text'>禁用</a>
+              <a>禁用</a>
             </Popconfirm>
           }
           <Popconfirm
             title='确定删除该资源账号？'
             onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
           >
-            <a className='danger-text'>删除</a>
+            <a>删除</a>
           </Popconfirm>
         </Space>;
       }

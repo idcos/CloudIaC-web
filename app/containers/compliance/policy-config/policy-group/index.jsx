@@ -154,7 +154,7 @@ const PolicyGroupList = () => {
               onConfirm={() => enabled(!record.enabled, record)} 
               placement='bottomLeft'
             >
-              <Button type='link' danger={record.enabled} style={{ padding: 0, fontSize: 12 }}>
+              <Button type='link' style={{ padding: 0, fontSize: 12 }}>
                 {record.enabled ? '禁用' : '启用'}
               </Button>
             </Popconfirm>

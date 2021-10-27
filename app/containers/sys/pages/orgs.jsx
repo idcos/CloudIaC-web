@@ -144,7 +144,7 @@ const Orgs = ({ title, dispatch }) => {
               title='确定要禁用该组织？'
               onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'disable' } })}
             >
-              <a className='danger-text'>禁用</a>
+              <a>禁用</a>
             </Popconfirm>
           }
           <a onClick={() => {

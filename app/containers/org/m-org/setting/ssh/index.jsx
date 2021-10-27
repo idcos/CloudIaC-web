@@ -82,7 +82,7 @@ export default ({ orgId }) => {
       fixed: 'right',
       render: (record) => {
         return <Space split={<Divider type='vertical' />}>
-          <a className='danger-text' onClick={() => del(record)}>删除</a>
+          <a onClick={() => del(record)}>删除</a>
         </Space>;
       }
     }

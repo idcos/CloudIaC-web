@@ -112,9 +112,7 @@ export default ({ orgId }) => {
           title='确定要删除该通知？'
           onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
         >
-          <a
-            className='danger-text'
-          >
+          <a>
             删除
           </a>
         </Popconfirm>

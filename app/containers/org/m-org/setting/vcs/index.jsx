@@ -105,9 +105,9 @@ export default ({ title, orgId }) => {
           {
             record.status == 'disable' ? 
               <a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>启用</a>
-           	 	: <a className='danger-text' onClick={() => disableConfirm(record)}>禁用</a>
+           	 	: <a onClick={() => disableConfirm(record)}>禁用</a>
           }
-          <a className='danger-text' onClick={() => delConfirm(record)}>删除</a>
+          <a onClick={() => delConfirm(record)}>删除</a>
         </Space>;
       }
     }

@@ -137,7 +137,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
           title='确定要删除该屏蔽内容？'
           onConfirm={() => delOneSuppress(id)}
         >
-          <Button type='link' danger={true} style={{ padding: 0, fontSize: 12 }} loading={delLoading}>删除</Button>
+          <Button type='link' style={{ padding: 0, fontSize: 12 }} loading={delLoading}>删除</Button>
         </Popconfirm>
       }
     }
