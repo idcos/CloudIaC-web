@@ -125,7 +125,7 @@ const Index = (props) => {
             resolve(copyData);
           } else {
             const resCreat = await tokensAPI.createToken({
-              orgId, envId, action, projectId
+              orgId, envId, action, projectId, type: 'trigger'
             });
             const copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;
             resolve(copyData);
