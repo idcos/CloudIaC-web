@@ -25,9 +25,10 @@ const VariableForm = ({
   hasAnchor = false,
   defaultExpandCollapse = true,
   readOnly = false,
+  showVarGroupList = true,
   event$
 }) => {
-
+  
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
@@ -61,7 +62,7 @@ const VariableForm = ({
       );
     },
     {
-      ready: !isEmpty(fetchParams),
+      ready: !isEmpty(fetchParams) && showVarGroupList,
       onSuccess: (data) => {
         data = data || [];
         setDefalutEnvVarGroupList(data);
@@ -172,7 +173,7 @@ const VariableForm = ({
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
               fetchParams={fetchParams}
-              canImportResourceAccount={true}
+              canImportResourceAccount={showVarGroupList}
               defalutVarGroupList={defalutEnvVarGroupList}
               varGroupList={envVarGroupList}
               setVarGroupList={setEnvVarGroupList}

@@ -39,6 +39,7 @@ const Variable = (props) => {
         defaultScope='env'
         defaultData={{ variables }}
         readOnly={true}
+        showVarGroupList={false}
       />
     </Spin>
   );
