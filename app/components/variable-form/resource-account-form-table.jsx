@@ -51,8 +51,8 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnl
         const { variables } = record;
         return (
           <Space size={5} direction='vertical' style={{ width: '100%' }}>
-            {(variables || []).map(({ value }) => (
-              <Input placeholder='请输入value' value={value} disabled={true}/>
+            {(variables || []).map(({ value, sensitive }) => (
+              <Input placeholder={sensitive ? '空值保存时不会修改原有值' : '请输入value'} value={value} disabled={true}/>
             ))}
           </Space>
         );
