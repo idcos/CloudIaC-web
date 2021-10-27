@@ -45,6 +45,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
     >
       <Form.Item
         label='邮箱'
+        required={true}
       >
         <Space>
           <Form.Item
@@ -78,12 +79,6 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       <Form.Item
         label='手机号'
         name='phone'
-        rules={[
-          {
-            required: true,
-            message: '请输入'
-          }
-        ]}
       >
         <Input placeholder='请输入手机号' disabled={opt === 'edit'} />
       </Form.Item>
