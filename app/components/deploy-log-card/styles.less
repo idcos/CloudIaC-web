@@ -45,6 +45,11 @@
         &>.deploy-log-collapse {
           height: 100%;
           overflow-y: auto;
+          &.isFullscreen {
+            .ant-collapse-content-box {
+              max-height: 600px !important;
+            }
+          }
           .ant-collapse-item {
             .ant-collapse-header {
               background: none;
@@ -57,8 +62,10 @@
               .ant-collapse-content {
                 color: rgba(255, 255, 255, .66);
                 .ant-collapse-content-box {
-                  height: 350px;
+                  max-height: 350px;
+                  min-height: 22px;
                   padding: 0 36px;
+                  overflow-y: auto;
                 }
               }
             }
