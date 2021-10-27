@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, notification, Space, Divider, Popconfirm } from 'antd';
+import { Button, Table, notification, Space, Divider, Popconfirm, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import moment from 'moment';
 import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
-import moment from 'moment';
 import { ORG_USER } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
 import OpModal from './components/memberModal';
@@ -94,6 +95,23 @@ export default ({ title, orgId }) => {
     setVisible(!visible);
   };
 
+  const remove = ({ id, name }) => {
+    Modal.confirm({
+      width: 480,
+      title: `你确定要移除 ${name} 用户吗？`,
+      content: `从组织移除用户将清除该用户在当前组织下所有项目中的项目角色权限，请确认操作`,
+      icon: <ExclamationCircleFilled style={{ color: '#FF4D4F' }}/>,
+      okText: '移除',
+      cancelText: '取消',
+      okButtonProps: {
+        danger: true
+      },
+      onOk: () => {
+        return operation({ doWhat: 'removeUser', payload: { id } });
+      }
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -131,26 +149,22 @@ export default ({ title, orgId }) => {
       ellipsis: true,
       fixed: 'right',
       render: (_, record) => {
-        return <Space split={<Divider type='vertical' />}>
-          <a onClick={() => {
-            setOpt('edit');
-            setCurRecord(record);
-            toggleVisible();
-          }}
-          >编辑</a>
-          <Popconfirm
-            title='确定要重置密码？'
-            onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
-          >
-            <a>重置密码</a>
-          </Popconfirm>
-          <Popconfirm
-            title='确定要移除改用户？'
-            onConfirm={() => operation({ doWhat: 'removeUser', payload: { id: record.id } })}
-          >
-            <a>移除</a>
-          </Popconfirm>
-        </Space>;
+        return (
+          <div className='common-table-btn-wrapper'>
+            <Button type='link' onClick={() => {
+              setOpt('edit');
+              setCurRecord(record);
+              toggleVisible();
+            }}>编辑</Button>
+            <Popconfirm
+              title='确定要重置密码？'
+              onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
+            >
+              <Button type='link'>重置密码</Button>
+            </Popconfirm>
+            <Button type='link' onClick={() => remove(record)}>移除</Button>
+          </div>
+        );
       }
     }
   ];
