@@ -4,6 +4,7 @@ import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import map from 'lodash/map';
 import differenceBy from 'lodash/differenceBy';
 import omit from 'lodash/omit';
+import intersectionBy from 'lodash/intersectionBy';
 import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -62,8 +63,18 @@ const VariableForm = ({
     {
       ready: !isEmpty(fetchParams),
       onSuccess: (data) => {
-        setEnvVarGroupList(data || []);
-        setDefalutEnvVarGroupList(data || []);
+        data = data || [];
+        setDefalutEnvVarGroupList(data);
+        const sameScopeVarGroupList = data.filter((it) => it.objectType === defaultScope);
+        const otherScopeVarGroupList = data.filter((it) => {
+          const sameScope = it.objectType !== defaultScope;
+          if (!sameScope) {
+            return false;
+          }
+          const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+          return !hasSameVarName;
+        });
+        setEnvVarGroupList([...otherScopeVarGroupList, ...sameScopeVarGroupList]);
       }
     }
   );

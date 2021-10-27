@@ -351,8 +351,8 @@ const VarFormTable = (props) => {
         return !hasSameVarName;
       });
       return [
-        ...sameScopeVarGroupList,
-        ...otherScopeVarGroupList
+        ...otherScopeVarGroupList,
+        ...sameScopeVarGroupList
       ];
     });
   };
@@ -369,8 +369,8 @@ const VarFormTable = (props) => {
         return !hasSameVarName;
       });
       return [
-        ...sameScopeVarGroupList,
-        ...otherScopeVarGroupList
+        ...otherScopeVarGroupList,
+        ...sameScopeVarGroupList
       ];;
     });
   };

@@ -30,7 +30,7 @@ const varGroupAPI = {
     });
   },
   listRelationship: ({ orgId, projectId, ...restParams }) => {
-    return getWithArgs('/api/v1/var_groups/relationship', restParams, {
+    return getWithArgs('/api/v1/var_groups/relationship/all', restParams, {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId 
     });
