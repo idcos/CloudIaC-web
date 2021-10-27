@@ -41,7 +41,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
       taskAPI.getTaskSteps.bind(null, { orgId, projectId, taskId })
     ),
     {
-      formatResult: res => res.list || [],
+      formatResult: res => res || [],
       ready: !!taskId,
       pollingInterval: 3000,
       pollingWhenHidden: false,
