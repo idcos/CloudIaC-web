@@ -31,12 +31,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
   const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status } = taskInfo || {};
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ activeKey, setActiveKey ] = useState();
- 
+
   // 任务步骤列表查询
   const {
     data: taskSteps = [],
     cancel: cancelLoop,
-    run: runLoop
+    run: runLoop,
+    refresh: refreshTaskSteps
   } = useRequest(
     () => requestWrapper(
       taskAPI.getTaskSteps.bind(null, { orgId, projectId, taskId })
@@ -61,7 +62,9 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
           }
         });
         setActiveKey(activeKey);
+        // 任务结束状态时调一次步骤列表接口再去关闭轮询，确保任务步骤是最新的
         if (END_TASK_STATUS_LIST.includes(status)) {
+          refreshTaskSteps();
           cancelLoop();
         }
       }
