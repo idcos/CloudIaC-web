@@ -178,6 +178,7 @@ const VarFormTable = (props) => {
         if (sensitive) {
           return (
             <Input.Password
+              value={readOnly ? '******' : value}
               autoComplete='new-password'
               placeholder={id ? '空值保存时不会修改原有值' : '请输入value'}
               visibilityToggle={false}
