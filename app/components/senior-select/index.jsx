@@ -64,7 +64,7 @@ export default (props) => {
             {
               showSearch && (
                 <div className='senior-select-header'>
-                  <Input placeholder={searchPlaceholder} suffix={<SearchOutlined />} onChange={onSearch} />
+                  <Input placeholder={searchPlaceholder} suffix={<SearchOutlined style={{ color: '#AAACAB' }}/>} onChange={onSearch} />
                 </div>
               )
             }
