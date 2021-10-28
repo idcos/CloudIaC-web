@@ -14,8 +14,8 @@ import tokensAPI from 'services/tokens';
 import Copy from 'components/copy';
 
 const FL = {
-  labelCol: { span: 22, offset: 2 },
-  wrapperCol: { span: 22, offset: 2 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 const { Option } = Select;
     
@@ -151,8 +151,8 @@ const Index = (props) => {
         layout={'vertical'}
         onFinish={onFinish}
       >
-        <Row>
-          <Col span={8}>
+        <Row justify='space-between'>
+          <Col span={7}>
             <Form.Item 
               style={{ marginBottom: 0 }}
               label='存活时间：'
@@ -163,12 +163,12 @@ const Index = (props) => {
                     name='type'
                     initialValue={'infinite'}
                   >
-                    <Select style={{ width: '90%' }}>
+                    <Select style={{ width: '100%' }}>
                       {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                <Col span={16}>
                   <Form.Item 
                     noStyle={true}
                     shouldUpdate={true}
@@ -195,7 +195,7 @@ const Index = (props) => {
                           noStyle={true}
                           shouldUpdate={true}
                         >
-                          <DatePicker format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                          <DatePicker style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                         </Form.Item>;
                       }
                     }}
@@ -204,9 +204,9 @@ const Index = (props) => {
               </Row>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item label={' '}>
-              <Space>
+              <Space style={{ minWidth: 340 }}>
                 <Form.Item 
                   name='retryAble'
                   valuePropName='checked'
@@ -235,7 +235,7 @@ const Index = (props) => {
               </Space>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               name='stopOnViolation'
               label={' '}
@@ -245,7 +245,7 @@ const Index = (props) => {
               <Checkbox>合规不通过时中止部署</Checkbox> 
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               shouldUpdate={true}
             >
@@ -267,7 +267,7 @@ const Index = (props) => {
               )}
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               shouldUpdate={true}
             >
@@ -289,7 +289,7 @@ const Index = (props) => {
               )}
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               name='autoApproval'
               valuePropName='checked'

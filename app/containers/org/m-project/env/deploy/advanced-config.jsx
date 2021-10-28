@@ -11,8 +11,8 @@ import isEmpty from "lodash/isEmpty";
 import omit from "lodash/omit";
 
 const FL = {
-  labelCol: { span: 22, offset: 2 },
-  wrapperCol: { span: 22, offset: 2 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 const { Option } = Select;
   
@@ -116,8 +116,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
 
   const renderForm = () => {
     return <>
-      <Row style={{ height: '100%' }}>
-        <Col span={8}>
+      <Row style={{ height: '100%' }} justify='space-between' style={{ marginBottom: 24 }}>
+        <Col span={7}>
           <Form.Item
             label='部署通道：'
             name='runnerId'
@@ -138,7 +138,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label={
               <>
@@ -161,7 +161,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label={
               <>
@@ -184,7 +184,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
             name='targets'
@@ -192,7 +192,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Input placeholder={'请输入target'} style={{ width: '100%' }} />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item 
             style={{ marginBottom: 0 }}
             label='存活时间：'
@@ -244,7 +244,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Row>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label='密钥：'
             name='keyId'
@@ -259,7 +259,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item shouldUpdate={true}>
             <Form.Item 
               name='commit'
@@ -272,9 +272,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item>
-            <Space>
+            <Space style={{ minWidth: 340 }}>
               <Form.Item 
                 name='retryAble'
                 valuePropName='checked'
@@ -303,7 +303,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Space>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item 
             name='stopOnViolation'
             valuePropName='checked'
@@ -312,7 +312,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Checkbox>合规不通过时中止部署</Checkbox> 
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item shouldUpdate={true}>
             <Form.Item 
               name='prmr'
@@ -325,7 +325,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item 
             name='autoApproval'
             valuePropName='checked'
@@ -334,6 +334,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Checkbox>自动通过审批</Checkbox> 
           </Form.Item>
         </Col>
+        <Col span={7}></Col>
       </Row>
     </>;
   };
