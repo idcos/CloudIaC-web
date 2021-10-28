@@ -61,14 +61,51 @@
     }
   }
 }
+.card {
 
-.cardTitle {
-  position: relative;
-  top: -24px;
-  left: 0;
-  font-size: 16px;
-  font-weight: bolder;
+  :global .ant-card-body {
+    padding: 52px 16px 72px 7%; 
+    height: 369px;
+    position: relative;
+
+    .top5 {
+      position: absolute;
+      top: -1px;
+      right: 25px;
+      width: 130px;
+      height: 30px;
+      background-image: url('/assets/backgroundIcon/top5-wrapper.svg');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      line-height: 20px;
+      box-sizing: border-box;
+      padding: 5px 12px 5px 32px;
+      text-align: center;
+      color: #39001B;
+      font-weight: 500;
+
+      &::before {
+        content: '';
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        top: 6px;
+        left: 14px;
+        background: url('/assets/backgroundIcon/top5-inner.svg');
+      }
+    }
+
+    .title {
+      position: relative;
+      top: -24px;
+      left: 0;
+      font-size: 16px;
+      font-weight: bolder;
+    }
+  }
+ 
 }
+
 
 .lineProgress {
   position: relative;
