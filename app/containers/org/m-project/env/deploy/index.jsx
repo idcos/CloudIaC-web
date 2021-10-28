@@ -47,7 +47,7 @@ const Index = ({ match = {} }) => {
       return null;
     }
     return {
-      orgId, projectId, envId, tplId, ...tplInfo
+      ...tplInfo, orgId, projectId, envId, tplId
     };
   }, [tplInfo]);
 

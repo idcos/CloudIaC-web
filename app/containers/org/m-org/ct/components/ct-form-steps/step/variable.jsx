@@ -33,7 +33,7 @@ export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, o
       return null;
     }
     return {
-      orgId, tplId, ...ctData.repo
+     ...ctData.repo, orgId, tplId, 
     };
   }, [ ctData.repo, orgId ]);
 
