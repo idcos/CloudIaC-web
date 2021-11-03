@@ -74,13 +74,13 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           }
         ]}
       >
-        <Input placeholder='请输入姓名' disabled={opt === 'edit'} />
+        <Input placeholder='请输入姓名' />
       </Form.Item>
       <Form.Item
         label='手机号'
         name='phone'
       >
-        <Input placeholder='请输入手机号' disabled={opt === 'edit'} />
+        <Input placeholder='请输入手机号' />
       </Form.Item>
       <Form.Item
         label='角色'

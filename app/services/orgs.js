@@ -45,6 +45,11 @@ const orgsAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  updateUser: ({ orgId, id: userId, name, phone, role }) => {
+    return put(`/api/v1/orgs/${orgId}/users/${userId}`, { name, phone, role }, {
+      'IaC-Org-Id': orgId
+    });
+  },
   changeOrgUserRole: ({ orgId, id: userId, role }) => {
     return put(`/api/v1/orgs/${orgId}/users/${userId}/role`, {
       role
