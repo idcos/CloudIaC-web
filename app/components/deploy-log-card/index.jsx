@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
-import { Card, Space, Button, Tag, Collapse, Input } from "antd";
-import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined } from '@ant-design/icons';
+import { Card, Space, Button, Tag, Collapse, Input, Tooltip } from "antd";
+import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined, InfoCircleFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import { useRequest, useFullscreen } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -125,6 +125,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
             <div className='card-title-top'>
               <span className='title'>部署日志</span> 
               <Tag className='status' color={TASK_STATUS_COLOR[status]}>{TASK_STATUS[status]}</Tag>
+              {
+                taskInfo.status === 'failed' && taskInfo.message ? (
+                  <Tooltip title={taskInfo.message}>
+                    <InfoCircleFilled style={{ color: '#ff4d4f', fontSize: 14 }} />
+                  </Tooltip>
+                ) : null
+              }
             </div>
             <div className='card-title-bottom'>执行总耗时：{timeUtils.diff(endAt, startAt, '-')}</div>
           </div>
