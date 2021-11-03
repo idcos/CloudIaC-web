@@ -55,8 +55,8 @@ const VariableForm = ({
     run: fetchVarGroupList
   } = useRequest(
     () => {
-      const { orgId, tplId, projectId, envId } = fetchParams;
-      const params = { orgId, tplId, projectId, envId, objectType: defaultScope };
+      const { orgId, tplId, projectId, envId, objectType = defaultScope } = fetchParams;
+      const params = { orgId, tplId, projectId, envId, objectType: objectType };
       return requestWrapper(
         varGroupAPI.listRelationship.bind(null, params)
       );

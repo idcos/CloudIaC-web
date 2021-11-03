@@ -47,7 +47,7 @@ const Index = ({ match = {} }) => {
       return null;
     }
     return {
-      ...tplInfo, orgId, projectId, envId, tplId
+      ...tplInfo, orgId, projectId, envId, tplId, objectType: envId ? 'env' : 'template'
     };
   }, [tplInfo]);
 
