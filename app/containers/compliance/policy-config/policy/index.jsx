@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button, Table, Space, Input, Select, Divider, Tag, Popover } from 'antd';
 import moment from 'moment';
 import pick from 'lodash/pick';
@@ -49,7 +49,7 @@ const Policy = () => {
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
-    searchParams: { formParams },
+    searchParams: { form },
     onChangeFormParams
   } = useSearchFormAndTable({
     tableData,
@@ -88,79 +88,103 @@ const Policy = () => {
     });
   };
 
+  const EllipsisTag = useCallback(({ children }) => (
+    <Tag style={{ maxWidth: 120, height: 22, margin: 0 }}>
+      <EllipsisText>{children}</EllipsisText>
+    </Tag>
+  ), []);
+
   const columns = [
     {
       dataIndex: 'name',
       title: '策略名称',
+      width: 138,
+      ellipsis: true,
       render: (text, record) => (
-        <EllipsisText 
-          tagName='a' 
-          maxWidth={180}
-          onClick={() => onOpenDetailsDrawer(record.id)}
-        >{text}</EllipsisText>
+        <a onClick={() => onOpenDetailsDrawer(record.id)}>
+          <EllipsisText>{text}</EllipsisText>
+        </a>
       )
     },
     {
       dataIndex: 'tags',
       title: '标签',
+      width: 166,
       render: (text) => {
         const tags = text ? text.split(',') : [];
         return (
-          <>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
             {
-              tags.slice(0, 3).map((it) => <Tag>{it}</Tag>)
+              tags.slice(0, 3).map((it) => <EllipsisTag>{it}</EllipsisTag>)
             }
             {
               tags.length > 3 && (
                 <Popover 
                   content={
-                    <>
-                      {tags.map((it) => <Tag>{it}</Tag>)}
-                    </>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                      {tags.map((it) => <EllipsisTag>{it}</EllipsisTag>)}
+                    </div>
                   }
                 >
-                  <Tag>...</Tag>
+                  <span>
+                    <EllipsisTag>...</EllipsisTag>
+                  </span>
                 </Popover>
               )
             }
-          </>
+          </div>
         )
       }
     },
     {
       dataIndex: 'groupName',
       title: '策略组',
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      width: 166,
+      ellipsis: true,
+      render: (text) => <EllipsisText>{text}</EllipsisText>
     },
     {
       dataIndex: 'severity',
       title: '严重性',
+      width: 70,
+      ellipsis: true,
       render: (text) => POLICIES_SEVERITY_ENUM[text]
     },
     {
       dataIndex: 'passed',
-      title: '通过'
+      title: '通过',
+      width: 66,
+      ellipsis: true
     },
     {
       dataIndex: 'violated',
-      title: '不通过'
+      title: '不通过',
+      width: 69,
+      ellipsis: true
     },
     {
       dataIndex: 'failed',
-      title: '失败'
+      title: '失败',
+      width: 56,
+      ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '创建者'
+      title: '创建者',
+      width: 92,
+      ellipsis: true
     },
     {
       dataIndex: 'updatedAt',
       title: '最后更新时间',
+      width: 140,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-M-DD HH:mm')
     },
     {
       title: '操作',
-      width: 130,
+      width: 120,
+      ellipsis: true,
       fixed: 'right',
       render: (record) => {
         const { id } = record;
@@ -196,7 +220,7 @@ const Policy = () => {
             options={policyGroupOptions}
             optionFilterProp='label'
             showSearch={true}
-            value={formParams.groupId}
+            value={form.groupId}
             onChange={(groupId) => onChangeFormParams({ groupId })}
           />
           <Select
@@ -215,7 +239,7 @@ const Policy = () => {
         </Space>
         <Table
           columns={columns}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'min-content', y: 570 }}
           loading={tableLoading}
           {...tableProps}
         />

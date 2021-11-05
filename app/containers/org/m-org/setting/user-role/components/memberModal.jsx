@@ -45,6 +45,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
     >
       <Form.Item
         label='邮箱'
+        required={true}
       >
         <Space>
           <Form.Item
@@ -73,19 +74,14 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           }
         ]}
       >
-        <Input placeholder='请输入姓名' disabled={opt === 'edit'} />
+        <Input placeholder='请输入姓名' />
       </Form.Item>
       <Form.Item
         label='手机号'
         name='phone'
-        rules={[
-          {
-            required: true,
-            message: '请输入'
-          }
-        ]}
+        rules={[{ pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }]}
       >
-        <Input placeholder='请输入手机号' disabled={opt === 'edit'} />
+        <Input placeholder='请输入手机号' />
       </Form.Item>
       <Form.Item
         label='角色'

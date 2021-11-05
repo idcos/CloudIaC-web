@@ -16,13 +16,35 @@
       padding: 8px;
     }
 
-    .name {
-      line-height: 22px;
-      color: @gray-8;
+    .ant-select-item-option-selected {
+      background: none !important;
     }
-    .description {
-      line-height: 20px;
-      color: @gray-6;
+
+    .ant-select-item-option:hover {
+      background-color: @backGroundIac !important;
     }
+
+    .content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 38px;
+
+      .name {
+        line-height: 22px;
+        color: @gray-8;
+        flex: 1;
+        min-width: auto;
+        font-weight: normal;
+      }
+
+      .selected-icon {
+        color: @primary-color;
+        font-size: 16px;
+        margin-left: 8px;
+      }
+
+    }
+
   }
 }

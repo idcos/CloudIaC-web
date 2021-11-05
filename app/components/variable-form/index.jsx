@@ -2,9 +2,15 @@ import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import map from 'lodash/map';
+import differenceBy from 'lodash/differenceBy';
 import omit from 'lodash/omit';
-import VarFormTable from './components/var-form-table';
-import OtherVarForm from './components/other-var-form';
+import intersectionBy from 'lodash/intersectionBy';
+import isEmpty from 'lodash/isEmpty';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import varGroupAPI from 'services/var-group';
+import VarFormTable from './var-form-table';
+import OtherVarForm from './other-var-form';
 import styles from './styles.less';
 
 const { Link } = Anchor;
@@ -17,17 +23,62 @@ const VariableForm = ({
   defaultScope, 
   showOtherVars = false,
   hasAnchor = false,
-  defaultExpandCollapse = true
+  defaultExpandCollapse = true,
+  readOnly = false,
+  showVarGroupList = true,
+  event$
 }) => {
-
+  
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
   const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
   const [ terraformVarList, setTerraformVarList ] = useState([]);
-  const [ envVarList, setEnvVarList ] = useState([]);
   const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
+  const [ envVarList, setEnvVarList ] = useState([]);
   const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
+  const [ envVarGroupList, setEnvVarGroupList ] = useState([]);
+  const [ defalutEnvVarGroupList, setDefalutEnvVarGroupList ] = useState([]);
+
+  event$ && event$.useSubscription(({ type }) => {
+    switch (type) {
+      case 'fetchVarGroupList':
+        fetchVarGroupList();
+        break;
+      default:
+        break;
+    }
+  });
+
+  // 资源账号变量组列表查询
+  const {
+    run: fetchVarGroupList
+  } = useRequest(
+    () => {
+      const { orgId, tplId, projectId, envId, objectType = defaultScope } = fetchParams;
+      const params = { orgId, tplId, projectId, envId, objectType: objectType };
+      return requestWrapper(
+        varGroupAPI.listRelationship.bind(null, params)
+      );
+    },
+    {
+      ready: !isEmpty(fetchParams) && showVarGroupList,
+      onSuccess: (data) => {
+        data = data || [];
+        setDefalutEnvVarGroupList(data);
+        const sameScopeVarGroupList = data.filter((it) => it.objectType === defaultScope);
+        const otherScopeVarGroupList = data.filter((it) => {
+          const sameScope = it.objectType !== defaultScope;
+          if (!sameScope) {
+            return false;
+          }
+          const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+          return !hasSameVarName;
+        });
+        setEnvVarGroupList([...otherScopeVarGroupList, ...sameScopeVarGroupList]);
+      }
+    }
+  );
 
   useEffect(() => {
     if (!defaultData) {
@@ -73,10 +124,16 @@ const VariableForm = ({
               otherVars.tfVarsFile = otherVars.tfVarsFile || '';
               otherVars.playbook = otherVars.playbook || '';
             }
+            const startVarGroupList = defalutEnvVarGroupList.filter(it => it.objectType === defaultScope);
+            const endVarGroupList = envVarGroupList.filter(it => it.objectType === defaultScope);
+            const varGroupIds = differenceBy(endVarGroupList, startVarGroupList, 'varGroupId').map(it => it.varGroupId);
+            const delVarGroupIds = differenceBy(startVarGroupList, endVarGroupList, 'varGroupId').map(it => it.varGroupId);
             const data = {
               deleteVariablesId,
               variables: map([ ...terraformVarList, ...envVarList ], (it) => omit(it, ['isNew', '_key_id', 'overwrites'])),
-              ...otherVars
+              ...otherVars,
+              varGroupIds,
+              delVarGroupIds
             };
             resolve(data);
           },
@@ -104,6 +161,7 @@ const VariableForm = ({
               canImportVar={canImportTerraformVar}
               type='terraform'
               defaultExpandCollapse={defaultExpandCollapse}
+              readOnly={readOnly}
             />
           </a>
           <a id='env-var'>
@@ -115,9 +173,13 @@ const VariableForm = ({
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
               fetchParams={fetchParams}
-              canImportVar={false}
+              canImportResourceAccount={showVarGroupList}
+              defalutVarGroupList={defalutEnvVarGroupList}
+              varGroupList={envVarGroupList}
+              setVarGroupList={setEnvVarGroupList}
               type='environment'
               defaultExpandCollapse={defaultExpandCollapse}
+              readOnly={readOnly}
             />
           </a>
           { 

@@ -67,6 +67,12 @@ export default function createRoutes() {
       component: loadable(() => import('containers/org'), asyncLoadFallback),
       routes: [
         {
+          path: '/org/:orgId/m-other-resource',
+          name: '资源发现',
+          component: loadable(() => import('containers/org/resource-query'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/m-org-project',
           name: '组织设置：项目',
           component: loadable(() => import('containers/org/m-org/project'), asyncLoadFallback),

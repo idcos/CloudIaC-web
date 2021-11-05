@@ -1,0 +1,124 @@
+@import 'containers/App/styles/variable.less';
+
+.deploy_log_card_wrapper {
+  :global {
+    .deploy-log-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      &>.ant-card-head {
+        flex: 0 0 auto;
+        .card-title {
+          .card-title-top {
+            display: flex;
+            align-items: center;
+        
+            .title {
+              line-height: 24px;
+              margin-right: 8px;
+            }
+            
+            .status {
+              line-height: 22px;
+            }
+          }
+          .card-title-bottom {
+            line-height: 20px;
+            color: @gray-8;
+            font-size: 12px;
+            font-weight: normal;
+          }
+        }
+        .tool {
+          cursor: pointer;
+          .tool-icon {
+            margin-right: 7px;
+            color: @primary-color;
+          }
+          .tool-text {
+            color: #575757;
+          }
+        }
+      }
+      &>.ant-card-body {
+        flex: 1;
+        min-height: 0;
+        &>.deploy-log-collapse {
+          height: 100%;
+          overflow-y: auto;
+          &.isFullscreen {
+            .ant-collapse-content-box {
+              max-height: 600px !important;
+            }
+          }
+          .ant-collapse-item {
+            .ant-collapse-header {
+              background: none;
+              color: rgba(255, 255, 255, .86);
+            }
+            &.ant-collapse-item-disabled {
+              .ant-collapse-header {
+                color: rgba(255, 255, 255, .46);
+              }
+            }
+            &.ant-collapse-item-active {
+              .ant-collapse-header {
+                background-color: rgba(255, 255, 255, 0.1);
+              }
+              .ant-collapse-content {
+                color: rgba(255, 255, 255, .66);
+                .ant-collapse-content-box {
+                  max-height: 350px;
+                  min-height: 22px;
+                  padding: 0 36px;
+                  overflow-y: auto;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+.deployLog {
+  height: 100%;
+  max-height: 350px;
+  overflow: auto;
+  // background-color: #263238;
+  color: #EEFFFF;
+  font-family: inherit;
+
+  :global {
+    .ansi-coder-content {
+      font-size: 12px;
+      word-break:break-all;
+      .ansi-line {
+        min-height: 22px;
+        line-height: 22px;
+        position: relative;
+        
+        .line-index {
+          position: absolute;
+          top: 0;
+          left: 0;
+          padding-left: 3px;
+          padding-right: 11px;
+          text-align: right;
+          color: #546E7A;
+          white-space: nowrap;
+        }
+  
+        .line-text {
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          word-break: break-all;
+        }
+  
+      }
+    }
+  }
+}

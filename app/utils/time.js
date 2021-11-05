@@ -27,9 +27,7 @@ export const timeUtils = {
     if (minutes > 0 || text) {
       text += `${minutes}分`; 
     }
-    if (seconds > 0 || text) {
-      text += `${seconds}秒`; 
-    }
+    text += `${seconds}秒`; 
     return text;
   },
   humanize: (seconds) => {

@@ -33,13 +33,9 @@ const Index = ({ summaryData = [] }) => {
     return datas;
   }, [summaryData]);
 
-  return <Card bodyStyle={{
-    padding: '52px 16px 72px 7%',
-    background: `#fff url(/assets/backgroundIcon/corner.svg) no-repeat 95% -1px`,
-    height: 369
-  }}
-  >
-    <span className={styles.cardTitle}>策略检测不通过</span>
+  return <Card className={styles.card}>
+    <div className='top5'>策略TOP5</div>
+    <span className='title'>策略检测不通过</span>
     { data.length === 0 ? <Empty 
       image={<DashboardOutlined />}
       imageStyle={{
@@ -66,7 +62,6 @@ const Index = ({ summaryData = [] }) => {
         </div>
       </div>;
     }) }</>}
-    
   </Card>;
 };
 

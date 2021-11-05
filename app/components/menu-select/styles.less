@@ -40,19 +40,34 @@
         margin: 0 !important;
         padding: 5px 12px !important;
         height: initial;
-  
-        &:hover:not(.ant-menu-item-selected) {
+        &.ant-menu-item-selected {
+          background: none!important;
+        }
+
+        &:hover {
           background-color: @backGroundIac !important;
           color: inherit !important;
         }
-  
-        .name {
-          line-height: 22px;
-          color: @gray-8;
-        }
-        .description {
-          line-height: 20px;
-          color: @gray-6;
+
+        .content {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 38px;
+
+          .name {
+            line-height: 22px;
+            color: @gray-8;
+            flex: 1;
+            min-width: auto;
+          }
+
+          .selected-icon {
+            color: @primary-color;
+            font-size: 16px;
+            margin-left: 8px;
+          }
+
         }
       }
     }

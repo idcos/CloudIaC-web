@@ -149,27 +149,67 @@ const CCTList = ({ orgs }) => {
     {
       dataIndex: 'name',
       title: '云模板名称',
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
-    },
-    {
-      dataIndex: 'orgName',
-      title: '组织名称',
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      width: 175,
+      ellipsis: true,
+      render: (text) => <EllipsisText>{text}</EllipsisText>
     },
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
+      width: 200,
+      ellipsis: true,
       render: (policyGroups, record) => {
         return policyGroups.length > 0 ? (
-          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })} type='link'>
-            {policyGroups.map(it => it.name).join('、')}
-          </EllipsisText>
+          <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
+            <EllipsisText>{policyGroups.map(it => it.name).join('、')}</EllipsisText>
+          </a>
         ) : '-'; 
       }
     },
     {
+      dataIndex: 'orgName',
+      title: '组织名称',
+      width: 160,
+      ellipsis: true,
+      render: (text) => <EllipsisText>{text}</EllipsisText>
+    },
+    {
+      dataIndex: 'passed',
+      title: '通过',
+      width: 64,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'violated',
+      title: '不通过',
+      width: 68,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'suppressed',
+      title: '屏蔽',
+      width: 61,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'failed',
+      title: '失败',
+      width: 72,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'policyStatus',
+      title: '状态',
+      width: 94,
+      ellipsis: true,
+      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
+    },
+    {
       dataIndex: 'enabled',
       title: '开启检测',
+      width: 88,
+      ellipsis: true,
+      fixed: 'right',
       render: (enabled, record) => {
         const { id, name, policyGroups } = record;
         return (
@@ -182,29 +222,9 @@ const CCTList = ({ orgs }) => {
       }
     },
     {
-      dataIndex: 'passed',
-      title: '通过'
-    },
-    {
-      dataIndex: 'violated',
-      title: '不通过'
-    },
-    {
-      dataIndex: 'suppressed',
-      title: '屏蔽'
-    },
-    {
-      dataIndex: 'failed',
-      title: '失败'
-    },
-    {
-      dataIndex: 'policyStatus',
-      title: '状态',
-      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
-    },
-    {
       title: '操作',
-      width: 180,
+      width: 169,
+      ellipsis: true,
       fixed: 'right',
       render: (record) => {
         const { id, enabled, policyStatus } = record;
@@ -258,7 +278,7 @@ const CCTList = ({ orgs }) => {
         </Space>
         <Table
           columns={columns}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'min-content', y: 570 }}
           loading={tableLoading}
           {...tableProps}
         />

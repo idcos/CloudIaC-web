@@ -49,6 +49,12 @@ const projectAPI = {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
+  },
+  removeUser: ({ orgId, projectId, userId }) => {
+    return del(`/api/v1/projects/users/${userId}`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
   }
 };
 

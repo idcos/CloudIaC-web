@@ -13,16 +13,20 @@ export default (props) => {
     {
       title: 'name',
       dataIndex: 'name',
-      width: 200
+      width: 180,
+      ellipsis: true
     }, 
     {
       title: 'value',
       dataIndex: 'value',
-      width: 200
+      width: 180,
+      ellipsis: true
     }, 
     {
       title: '描述信息',
-      dataIndex: 'description'
+      dataIndex: 'description',
+      width: 180,
+      ellipsis: true
     } 
   ];
 
@@ -69,11 +73,11 @@ export default (props) => {
   };
   
   return (
-    <Modal width={795} title='导入' visible={visible} onCancel={onCancel} onOk={onOk}>
+    <Modal width={720} title='导入' visible={visible} onCancel={onCancel} onOk={onOk}>
       <Table 
         columns={columns} 
         dataSource={importVars}
-        scroll={{ y: 465 }} 
+        scroll={{ x: 'min-content', y: 350 }} 
         pagination={false} 
         rowKey={(record) => record.name}
         rowSelection={rowSelection}

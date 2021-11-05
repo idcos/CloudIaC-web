@@ -13,12 +13,10 @@ import keysAPI from 'services/keys';
 import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
-import pullAll from 'lodash/pullAll';
-
 
 const FL = {
-  labelCol: { span: 22, offset: 2 },
-  wrapperCol: { span: 22, offset: 2 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 const { Option, OptGroup } = Select;
   
@@ -49,7 +47,7 @@ const Index = ({ match = {} }) => {
       return null;
     }
     return {
-      orgId, ...tplInfo
+      ...tplInfo, orgId, projectId, envId, tplId, objectType: envId ? 'env' : 'template'
     };
   }, [tplInfo]);
 
@@ -284,8 +282,8 @@ const Index = ({ match = {} }) => {
           layout={'vertical'}
           initialValues={info}
         >
-          <Row>
-            <Col span={8}>
+          <Row justify='space-between' style={{ marginBottom: 24 }}>
+            <Col span={7}>
               <Form.Item
                 label='环境名称：'
                 name='name'
@@ -300,7 +298,7 @@ const Index = ({ match = {} }) => {
                 <Input value={info.name} placeholder={'请输入环境名称'} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={7}>
               <Form.Item
                 label='分支/标签：'
                 name='revision'
@@ -326,6 +324,7 @@ const Index = ({ match = {} }) => {
                 </Select>
               </Form.Item>
             </Col>
+            <Col span={7}></Col>
           </Row>
           <AdvancedConfig
             configRef={configRef}

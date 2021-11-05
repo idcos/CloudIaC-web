@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useImperativeHandle, memo } from 'react';
-import { Space, Select, Form, Input, Button, Empty, notification } from "antd";
+import { Space, Select, Form, Input, Button, Empty, notification, Tooltip, Row, Col } from "antd";
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -317,37 +318,57 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
           </OptGroup>
         </Select>
       </Form.Item>
-      <Form.Item
-        label='工作目录'
-        name='workdir'
-        tooltip='Terraform执行时的工作目录，不填时默认为代码仓库的根目录，指定的工作目录必须是代码仓库中存在的目录，否则执行部署时将会失败'
-      >
-        <Input placeholder='请注意工作目录注意事项' />
+      <Form.Item label='工作目录' wrapperCol={{ span: 18 }}>
+        <Row>
+          <Col flex='14'>
+            <Form.Item
+              noStyle={true}
+              name='workdir'
+            >
+              <Input placeholder='请注意工作目录注意事项' />
+            </Form.Item>
+          </Col>
+          <Col flex='4'>
+            <Tooltip title='Terraform执行时的工作目录，不填时默认为代码仓库的根目录，指定的工作目录必须是代码仓库中存在的目录，否则执行部署时将会失败'>
+              <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+            </Tooltip>
+          </Col>
+        </Row>
       </Form.Item>
-      <Form.Item
-        label='Terraform版本'
-        name='tfVersion'
-        tooltip='当选择“自动检测”时，CloudIaC 会解析工作目录下的 versions.tf 文件，并根据其中的版本约束选择最佳的 terraform 版本，若匹配失败则默认使用 v0.14.0。'
-        rules={[
-          {
-            required: true,
-            message: '请选择'
-          }
-        ]}
-      >
-        <Select placeholder='请选择Terraform版本'>
-          {
-            autoMatchTfVersion && <Option value={TFVERSION_AUTO_MATCH}>自动匹配</Option>
-          }
-          {
-            (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
-          }
-          {
-            (formData.tfVersion && !(tfversionOptions || []).includes(formData.tfVersion)) && (
-              <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
-            )
-          }
-        </Select>
+      <Form.Item label='Terraform版本' required={true} wrapperCol={{ span: 18 }}>
+        <Row>
+          <Col flex='14'>
+            <Form.Item
+              noStyle={true}
+              name='tfVersion'
+              rules={[
+                {
+                  required: true,
+                  message: '请选择'
+                }
+              ]}
+            >
+              <Select placeholder='请选择Terraform版本'>
+                {
+                  autoMatchTfVersion && <Option value={TFVERSION_AUTO_MATCH}>自动匹配</Option>
+                }
+                {
+                  (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
+                }
+                {
+                  (formData.tfVersion && !(tfversionOptions || []).includes(formData.tfVersion)) && (
+                    <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
+                  )
+                }
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col flex='4'>
+            <Tooltip title='当选择“自动检测”时，CloudIaC 会解析工作目录下的 versions.tf 文件，并根据其中的版本约束选择最佳的 terraform 版本，若匹配失败则默认使用 v0.14.0。'>
+              <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+            </Tooltip>
+          </Col>
+        </Row>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>
