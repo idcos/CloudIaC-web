@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown, Tooltip, Button, Badge } from 'antd';
-import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, ToolFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, SecurityScanFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
@@ -148,7 +148,7 @@ const AppHeader = (props) => {
                 options={orgList}
                 onChange={changeCurOrg}
                 listHeight={800}
-                maxLen={14}
+                maxLen={10}
                 value={orgId}
                 showSearch={true}
                 searchPlaceholder='请输入组织名称搜索'
@@ -168,7 +168,7 @@ const AppHeader = (props) => {
         }
         <div className='user'>
           <Tooltip 
-            color='#13c2c2'
+            color='#00AB9D'
             visible={devManualTooltipVisible}
             overlayStyle={{ maxWidth: 'none' }}
             title={
@@ -178,7 +178,7 @@ const AppHeader = (props) => {
               </div>
             }
           >
-            <Badge color={devManualTooltipVisible ? '#13c2c2' : null} offset={[ -1, 3 ]}>
+            <Badge color={devManualTooltipVisible ? '#00AB9D' : null} offset={[ -1, 3 ]}>
               <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
             </Badge>
           </Tooltip>
@@ -192,24 +192,18 @@ const AppHeader = (props) => {
                 </div>
                 <div className='body'>
                   <div className='link-item' onClick={() => history.push('/user/setting')}>
-                    <div className='line-border-top'>
-                      <span className='icon'><SettingFilled /></span>
-                      <span className='text'>用户设置</span>
-                    </div>
+                    <span className='icon'><SecurityScanFilled /></span>
+                    <span className='text'>用户设置</span>
                   </div>
                   {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
-                        <div className='line-border-bottom'>
-                          <span className='icon'><ToolFilled /></span>
+                          <span className='icon'><SettingFilled /></span>
                           <span className='text'>系统设置</span>
-                        </div>
                       </div>
                     ) : null
                   }
-                </div>
-                <div className='footer'>
-                  <div className='link-item' style={{ padding: '9px 18px' }} onClick={() => logout()}>
+                  <div className='link-item' onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>退出</span>
                   </div>

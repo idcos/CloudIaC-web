@@ -70,25 +70,31 @@ const PolicyGroupList = () => {
     {
       dataIndex: 'name',
       title: '策略组名称',
+      width: 188,
+      ellipsis: true,
       render: (text, record) => (
-        <EllipsisText 
-          maxWidth={180}
+        <a
           onClick={() => {
             setViewDetail(true);
             setPolicyGroupId(record.id);
           }}
-          tagName='a'
-        >{text}</EllipsisText>
+        >
+          <EllipsisText>{text}</EllipsisText>
+        </a>
       )
     },
     {
       dataIndex: 'description',
       title: '描述',
+      width: 230,
+      ellipsis: true,
       render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
     },
     {
       dataIndex: 'policyCount',
       title: '关联策略',
+      width: 100,
+      ellipsis: true,
       render: (text, record) => <a 
         onClick={() => {
           history.push(`/compliance/policy-config/policy?groupId=${record.id}`);
@@ -98,23 +104,32 @@ const PolicyGroupList = () => {
     {
       dataIndex: 'updatedAt',
       title: '最后更新日期',
+      width: 180,
+      ellipsis: true,
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
       dataIndex: 'passed',
-      title: '通过'
+      title: '通过',
+      width: 66,
+      ellipsis: true
     },
     {
       dataIndex: 'violated',
-      title: '不通过'
+      title: '不通过',
+      width: 69,
+      ellipsis: true
     },
     {
       dataIndex: 'failed',
-      title: '失败'
+      title: '失败',
+      width: 56,
+      ellipsis: true
     },
     {
       title: '操作',
-      width: 160,
+      width: 208,
+      ellipsis: true,
       fixed: 'right',
       render: (text, record) => {
         return (
@@ -139,7 +154,7 @@ const PolicyGroupList = () => {
               onConfirm={() => enabled(!record.enabled, record)} 
               placement='bottomLeft'
             >
-              <Button type='link' danger={record.enabled} style={{ padding: 0, fontSize: 12 }}>
+              <Button type='link' style={{ padding: 0, fontSize: 12 }}>
                 {record.enabled ? '禁用' : '启用'}
               </Button>
             </Popconfirm>
@@ -170,7 +185,7 @@ const PolicyGroupList = () => {
         </Space>
         <Table
           columns={columns}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'min-content', y: 570 }}
           loading={tableLoading}
           {...tableProps}
         />

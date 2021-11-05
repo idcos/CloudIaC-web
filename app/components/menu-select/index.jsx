@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useImperativeHandle } from 'react';
 import { Input, Menu, Dropdown } from 'antd';
-import { DownOutlined, RightOutlined, SearchOutlined } from '@ant-design/icons';
+import { DownOutlined, RightOutlined, SearchOutlined, CheckOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import styles from './styles.less';
 
@@ -42,13 +42,13 @@ export default (props) => {
   };
   
   const menu = useMemo(() => {
-    const { name, description } = lablePropsNames;
+    const { name } = lablePropsNames;
     return (
       <div className={styles.menuSelectList}>
         {
           showSearch && (
             <div className='menu-select-header'>
-              <Input placeholder={searchPlaceholder} suffix={<SearchOutlined />} onChange={onSearch} />
+              <Input placeholder={searchPlaceholder} suffix={<SearchOutlined style={{ color: '#AAACAB' }}/>} onChange={onSearch} />
             </div>
           )
         }
@@ -60,16 +60,12 @@ export default (props) => {
             {
               showOptions.map((it) => (
                 <Menu.Item key={it[valuePropName]}>
-                  <div className='name idcos-text-ellipsis'>
-                    {it[name]}
+                  <div className='content'>
+                    <span className='name idcos-text-ellipsis'>{it[name]}</span>
+                    {
+                      it[valuePropName] === value && <CheckOutlined className='selected-icon'/>
+                    }
                   </div>
-                  {
-                    it[description] && (
-                      <div className='description idcos-text-ellipsis'>
-                        {it[description] || '-'}
-                      </div>
-                    )
-                  }
                 </Menu.Item>
               ))
             }

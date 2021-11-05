@@ -1,105 +1,27 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Collapse, Select, Input, Divider, Checkbox, Tag, notification, Button, Space } from 'antd';
+import { 
+  Collapse, Input, Checkbox, Tag, notification, Button, Space, Dropdown, Menu
+} from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import isEqual from 'lodash/isEqual';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
+import intersectionBy from 'lodash/intersectionBy';
+import classnames from 'classnames';
+import { useEventEmitter } from 'ahooks';
 import EditableTable from 'components/Editable';
 import tplAPI from 'services/tpl';
-import ImportVarsModal from './import-vars-modal';
-import { SCOPE_ENUM, VAR_TYPE_ENUM } from '../enum';
+import ImportVarsModal from './components/import-vars-modal';
+import ImportResourceAccountModal from './components/import-resource-account-modal';
+import SelectTypeValue from './components/select-type-value';
+import ResourceAccountFormTable from './resource-account-form-table';
+import { SCOPE_ENUM, VAR_TYPE_ENUM } from './enum';
 
 const EditableTableFooter = styled.div`
   margin-top: 16px;
   text-align: right;
 `;
-
-const OptionWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const SelectTypeValue = ({
-  inputOptions,
-  placeholder,
-  value,
-  onChange,
-  isSameScope,
-  form
-}) => {
-  const [options, setOptions] = useState([]);
-  const [inputValue, setInputValue] = useState();
-
-  useEffect(() => {
-    if (!isEmpty(inputOptions)) {
-      setOptions(inputOptions)
-    }
-  }, [inputOptions]);
-
-  const addOption = () => {
-    const newOptions = [...options, inputValue];
-    setOptions(newOptions);
-    setInputValue();
-    form.setFieldsValue({ options: newOptions });
-  };
-
-  const delOption = (e, option) => {
-    e.stopPropagation();
-    if (option === value) {
-      onChange();
-    }
-    const newOptions = options.filter(item => item !== option);
-    setOptions(newOptions);
-    form.setFieldsValue({ options: newOptions });
-  };
-
-  return (
-    <Select
-      value={value}
-      getPopupContainer={triggerNode => triggerNode.parentNode}
-      optionLabelProp='value'
-      onChange={onChange}
-      placeholder={placeholder}
-      style={{ width: '100%' }}
-      allowClear={true}
-      dropdownRender={menu => (
-        <div>
-          {menu}
-          {
-            isSameScope && (
-              <>
-                <Divider style={{ margin: '4px 0' }} />
-                <Space style={{ padding: 8 }}>
-                  <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-                  <Button
-                    type='link'
-                    style={{ padding: 0 }}
-                    disabled={!inputValue || options.includes(inputValue)}
-                    onClick={addOption}
-                  >
-                    添加
-                  </Button>
-                </Space>
-              </>
-            )
-          }
-        </div>
-      )}
-    >
-      {
-        options.map(item => (
-          <Select.Option key={item} value={item}>
-            <OptionWrapper>
-              <span>{item}</span>
-              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>删除</Button>}
-            </OptionWrapper>
-          </Select.Option>
-        ))
-      }
-    </Select>
-  );
-};
 
 const VarFormTable = (props) => {
 
@@ -107,14 +29,20 @@ const VarFormTable = (props) => {
     formVarRef,
     varList,
     setVarList,
+    defalutVarGroupList,
+    varGroupList,
+    setVarGroupList,
+    readOnly = false,
     setDeleteVariablesId,
     defaultScope,
     defalutVarList,
     fetchParams,
-    canImportVar,
     type,
+    canImportVar = false,
+    canImportResourceAccount = false,
     defaultExpandCollapse = true
   } = props;
+
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
   const [importVars, setImportVars] = useState([]);
@@ -156,52 +84,61 @@ const VarFormTable = (props) => {
       id: 'id',
       editable: true,
       column: {
-        className: 'fn-hide'
+        className: 'fn-hide-column',
+        width: 0
       }
     },
     {
       id: 'options',
       editable: true,
       column: {
-        className: 'fn-hide'
+        className: 'fn-hide-column',
+        width: 0
       }
     },
     {
       id: 'overwrites',
       editable: true,
       column: {
-        className: 'fn-hide'
+        className: 'fn-hide-column',
+        width: 0
       }
     },
     {
       title: '来自',
       id: 'scope',
       column: {
+        width: 118,
         render: (text) => {
           return (
-            <Tag>{SCOPE_ENUM[text]}</Tag>
+            <div style={{ width: 110 }}>
+              <Tag style={{ marginRight: 0 }}>{SCOPE_ENUM[text]}</Tag>
+            </div>
           );
         }
       }
     },
     {
-      title: 'name',
+      title: 'key',
       id: 'name',
       editable: true,
+      column: {
+        width: 254,
+      },
       renderFormInput: (record) => {
         const { overwrites } = record;
-        return <Input placeholder='请输入name' disabled={overwrites} />;
+        return <Input placeholder='请输入key' disabled={overwrites || readOnly} />;
       },
       formItemProps: {
         rules: [
-          { required: true, message: '请输入name' },
+          { required: true, message: '请输入key' },
           {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
                   const sameList = (varDataRef.current || []).filter(it => it.name === value);
                   if (value && sameList.length > 1) {
-                    reject(new Error('name值不允许重复!'));
+                    reject(new Error('key值不允许重复!'));
                   }
                   resolve();
                 }, 300);
@@ -215,6 +152,9 @@ const VarFormTable = (props) => {
       title: 'value',
       id: 'value',
       editable: true,
+      column: {
+        width: 258,
+      },
       formItemProps: {
         dependencies: ['sensitive', 'description'],
         rules: [
@@ -238,15 +178,18 @@ const VarFormTable = (props) => {
         if (sensitive) {
           return (
             <Input.Password
+              value={readOnly ? '******' : value}
               autoComplete='new-password'
               placeholder={id ? '空值保存时不会修改原有值' : '请输入value'}
               visibilityToggle={false}
+              disabled={readOnly}
             />
           );
         } else {
           return (
             isArray(options) ? (
               <SelectTypeValue
+                disabled={readOnly}
                 form={form}
                 inputOptions={options}
                 isSameScope={scope === defaultScope}
@@ -255,7 +198,7 @@ const VarFormTable = (props) => {
                 placeholder='请选择value'
               />
             ) : (
-              <Input placeholder='请输入value' />
+              <Input placeholder='请输入value' disabled={readOnly}/>
             )
           );
         }
@@ -265,8 +208,12 @@ const VarFormTable = (props) => {
       title: '描述信息',
       id: 'description',
       editable: true,
+      column: {
+        width: 260,
+      },
       formFieldProps: {
-        placeholder: '请输入描述信息'
+        placeholder: '请输入描述信息',
+        disabled: readOnly
       }
     },
     {
@@ -275,11 +222,14 @@ const VarFormTable = (props) => {
       ),
       id: 'sensitive',
       editable: true,
+      column: {
+        width: 116
+      },
       renderFormInput: (record, { value, onChange }) => {
         const { options } = record;
         return (
           <Checkbox
-            disabled={isArray(options)}
+            disabled={isArray(options) || readOnly}
             checked={!!value}
             onChange={e => {
               if (onChange) {
@@ -386,6 +336,62 @@ const VarFormTable = (props) => {
     ]);
   };
 
+  const importResourceAccount = ({ importResourceAccountList }) => {
+    setVarGroupList((preValue) => {
+      const preSameScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope);
+      const sameScopeVarGroupList = importResourceAccountList.map((it) => {
+        const sameVarGroup = preSameScopeVarGroupList.find(defaultIt => defaultIt.varGroupId === it.varGroupId);
+        return sameVarGroup || it;
+      });
+      const otherScopeVarGroupList = defalutVarGroupList.filter((it) => {
+        const sameScope = it.objectType !== defaultScope;
+        if (!sameScope) {
+          return false;
+        }
+        const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+        return !hasSameVarName;
+      });
+      return [
+        ...otherScopeVarGroupList,
+        ...sameScopeVarGroupList
+      ];
+    });
+  };
+
+  const removeResourceAccount = ({ varGroupIds }) => {
+    setVarGroupList((preValue) => {
+      const sameScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope && !varGroupIds.includes(it.varGroupId));
+      const otherScopeVarGroupList = defalutVarGroupList.filter((it) => {
+        const sameScope = it.objectType !== defaultScope;
+        if (!sameScope) {
+          return false;
+        }
+        const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+        return !hasSameVarName;
+      });
+      return [
+        ...otherScopeVarGroupList,
+        ...sameScopeVarGroupList
+      ];;
+    });
+  };
+
+  const event$ = useEventEmitter();
+  event$.useSubscription(({ type, data }) => {
+    switch (type) {
+      case 'import-resource-account':
+        importResourceAccount(data);
+        break;
+      case 'remove-resource-account':
+        removeResourceAccount(data);
+        break;
+      default:
+        break;
+    }
+  });
+
+  const scrollTableWrapperClassName = `listen-table-scroll-${type}`;
+
   return (
     <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'} >
       <Collapse.Panel key='open' header={VAR_TYPE_ENUM[type]} forceRender={true}>
@@ -396,23 +402,53 @@ const VarFormTable = (props) => {
           fields={fields}
           onDeleteRow={onDeleteRow}
           deleteBtnProps={{ type: 'link' }}
-          addBtnText='添加全局变量'
-          footer={
-            <EditableTableFooter>
-              <Space>
-                {
-                  canImportVar ? (
-                    <Button onClick={() => setImportModalVisible(true)}>导入</Button>
-                  ) : null
-                }
-                <Button onClick={() => pushVar()}>添加普通变量</Button>
-                <Button onClick={() => pushVar(true)}>添加选择型变量</Button>
-              </Space>
-            </EditableTableFooter>
-          }
+          readOnly={readOnly}
           multiple={true}
           onChange={onChangeEditableTable}
           optionRender={optionRender}
+          tableProps={{
+            className: classnames(
+              scrollTableWrapperClassName, 'top-dom', 
+              // varList为空resourceAccountList不为空则隐藏varList的table-tbody
+              { 'fn-hide-table-tbody': !isEmpty(varGroupList) && isEmpty(varList) },
+              // varList和resourceAccountList都不为空则隐藏varList的横向滚动条
+              { 'fn-hide-table-tbody-scroll': !isEmpty(varGroupList) && !isEmpty(varList) }
+            ) 
+          }}
+          footer={
+            <>
+              <ResourceAccountFormTable 
+                scrollTableWrapperClassName={scrollTableWrapperClassName} 
+                dataSource={varGroupList} 
+                defaultScope={defaultScope}
+                event$={event$}
+                readOnly={readOnly}
+              />
+              {
+                !readOnly && (
+                  <EditableTableFooter>
+                    <Space>
+                      {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
+                      <Dropdown 
+                        overlay={
+                          <Menu>
+                            <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
+                            <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
+                            {!!canImportResourceAccount && (
+                              <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>引用资源账号</Menu.Item>
+                            )}
+                          </Menu>
+                        }
+                      >
+                        <Button>添加变量<DownOutlined /></Button>
+                      </Dropdown>
+                    </Space>
+                  </EditableTableFooter>
+                )
+              }
+              
+            </>
+          }
         />
         <ImportVarsModal
           importVars={importVars}
@@ -422,6 +458,7 @@ const VarFormTable = (props) => {
           defaultScope={defaultScope}
           onFinish={onImportFinish}
         />
+        <ImportResourceAccountModal event$={event$} fetchParams={fetchParams} varGroupList={varGroupList} defaultScope={defaultScope}/>
       </Collapse.Panel>
     </Collapse>
   );

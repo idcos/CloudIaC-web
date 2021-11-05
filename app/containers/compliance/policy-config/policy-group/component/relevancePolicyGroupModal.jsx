@@ -18,13 +18,15 @@ export default ({ reload, id, visible, toggleVisible }) => {
   const leftTableColumns = [
     {
       dataIndex: 'name',
-      title: '策略'
+      title: '策略',
+      ellipsis: true
     }
   ];
   const rightTableColumns = [
     {
       dataIndex: 'name',
-      title: '策略'
+      title: '策略',
+      ellipsis: true
     }
   ];
 
@@ -117,6 +119,7 @@ export default ({ reload, id, visible, toggleVisible }) => {
   
   return (
     <Modal
+      width={614}
       title='关联策略'
       visible={visible}
       onCancel={toggleVisible}

@@ -62,30 +62,42 @@ export default ({ orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '名称'
+      title: '名称',
+      width: 165,
+      ellipsis: true
     },
     {
       dataIndex: 'notificationType',
       title: '类型',
+      width: 149,
+      ellipsis: true,
       render: (text) => ORG_USER.notificationType[text]
     },
     {
       dataIndex: 'eventType',
       title: '事件类型',
+      width: 277,
+      ellipsis: true,
       render: (text) => (text || []).map(it => ORG_USER.eventType[it]).join('、')
     },
     {
       dataIndex: 'creatorName',
       title: '创建人',
+      width: 169,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
+      width: 219,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
-      width: 90,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => <span>
         <a
           onClick={() => {
@@ -100,9 +112,7 @@ export default ({ orgId }) => {
           title='确定要删除该通知？'
           onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
         >
-          <a
-            className='danger-text'
-          >
+          <a>
             删除
           </a>
         </Popconfirm>
@@ -150,7 +160,7 @@ export default ({ orgId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
-
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,
@@ -165,7 +175,6 @@ export default ({ orgId }) => {
           });
         }
       }}
-      // pagination={false}
     />
     {
       visible && <AddModal

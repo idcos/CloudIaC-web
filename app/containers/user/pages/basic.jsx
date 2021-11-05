@@ -61,11 +61,7 @@ const Basic = ({ title, userInfo, updateUserInfo }) => {
       <Form.Item
         label='手机号'
         name='phone'
-        rules={[
-          {
-            message: '请选择'
-          }
-        ]}
+        rules={[{ pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }]}
       >
         <Input placeholder='请输入手机号'/>
       </Form.Item>

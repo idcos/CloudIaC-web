@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Select, notification, Table } from 'antd';
+import { Button, Select, notification, Table, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
-
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
-
 import AddModal from './components/add-modal';
 
 const { Option } = Select;
@@ -25,6 +26,23 @@ const User = ({ orgId, projectId }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+
+  // 移除用户接口
+  const {
+    run: removeUser
+  } = useRequest(
+    (userId) => requestWrapper(
+      projectAPI.removeUser.bind(null, { orgId, projectId, userId }),
+      {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        fetchList();
+      }
+    }
+  );
 
   const fetchList = async () => {
     try {
@@ -96,38 +114,74 @@ const User = ({ orgId, projectId }) => {
     }
   };
 
+  const remove = ({ id, name }) => {
+    Modal.confirm({
+      width: 480,
+      title: `你确定要移除 ${name} 用户吗？`,
+      content: `该操作将同时把该用户从参与的项目中移除`,
+      icon: <ExclamationCircleFilled style={{ color: '#FF4D4F' }}/>,
+      okText: '移除',
+      cancelText: '取消',
+      okButtonProps: {
+        danger: true
+      },
+      onOk: () => {
+        return removeUser(id);
+      }
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'name',
-      title: '姓名'
+      title: '姓名',
+      ellipsis: true,
+      width: 165
     },
     {
       dataIndex: 'email',
-      title: '邮箱'
+      title: '邮箱',
+      ellipsis: true,
+      width: 256
     },
     {
       dataIndex: 'phone',
-      title: '手机号'
+      title: '手机号',
+      ellipsis: true,
+      width: 180
     },
     {
       dataIndex: 'updatedAt',
       title: '加入时间',
+      ellipsis: true,
+      width: 180,
       render: (text) => moment(text).format(dateFormat)
     },
     {
       title: '项目角色',
-      width: 150,
+      ellipsis: true,
+      width: 180,
       render: (record) => {
         const { role, id } = record;
         return (
           <Select 
             style={{ width: '100%' }}
-            getPopupContainer={triggerNode => triggerNode.parentNode}
             value={role}
             onChange={(role) => onChangeRole({ role, userId: id })}
           >
             {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
           </Select>
+        );
+      }
+    },
+    {
+      title: '操作',
+      width: 169,
+      render: (_text, record) => {
+        return (
+          <div className='common-table-btn-wrapper'>
+            <Button type='link' onClick={() => remove(record)}>移除</Button>
+          </div>
         );
       }
     }
@@ -146,6 +200,7 @@ const User = ({ orgId, projectId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,

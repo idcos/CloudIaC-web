@@ -11,8 +11,8 @@ import isEmpty from "lodash/isEmpty";
 import omit from "lodash/omit";
 
 const FL = {
-  labelCol: { span: 22, offset: 2 },
-  wrapperCol: { span: 22, offset: 2 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 const { Option } = Select;
   
@@ -20,6 +20,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   const { vcsId, repoId, repoRevision } = tplInfo;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
+  const [ activeKey, setActiveKey] = useState([]);
   const [ fileView, setFileView ] = useState({
     title: '',
     visible: false,
@@ -82,7 +83,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   };
 
   const onfinish = async() => {
-    let values = await form.getFieldsValue();
+    let values = await form.validateFields().catch(() => {
+      setActiveKey(['open']); // 表单报错展开折叠面板
+    });
     values.triggers = [];
     if (values.commit) {
       values.triggers = values.triggers.concat(['commit']);
@@ -113,8 +116,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
 
   const renderForm = () => {
     return <>
-      <Row style={{ height: '100%' }}>
-        <Col span={8}>
+      <Row style={{ height: '100%' }} justify='space-between' style={{ marginBottom: 24 }}>
+        <Col span={7}>
           <Form.Item
             label='部署通道：'
             name='runnerId'
@@ -135,7 +138,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label={
               <>
@@ -158,7 +161,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label={
               <>
@@ -181,7 +184,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
             name='targets'
@@ -189,7 +192,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Input placeholder={'请输入target'} style={{ width: '100%' }} />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item 
             style={{ marginBottom: 0 }}
             label='存活时间：'
@@ -241,7 +244,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Row>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item
             label='密钥：'
             name='keyId'
@@ -256,18 +259,22 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item 
-            name='commit'
-            valuePropName='checked'
-            initialValue={false}
-          >
-            <Checkbox>每次推送到该分支时自动重新部署</Checkbox> 
+        <Col span={7}>
+          <Form.Item shouldUpdate={true}>
+            <Form.Item 
+              name='commit'
+              noStyle={true}
+              valuePropName='checked'
+              initialValue={false}
+            >
+              <Checkbox>推送到分支时重新部署</Checkbox> 
+            </Form.Item>
+            <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item>
-            <Space>
+            <Space style={{ minWidth: 340 }}>
               <Form.Item 
                 name='retryAble'
                 valuePropName='checked'
@@ -296,7 +303,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             </Space>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item 
             name='stopOnViolation'
             valuePropName='checked'
@@ -305,16 +312,20 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Checkbox>合规不通过时中止部署</Checkbox> 
           </Form.Item>
         </Col>
-        <Col span={8}>
-          <Form.Item 
-            name='prmr'
-            valuePropName='checked'
-            initialValue={false}
-          >
-            <Checkbox>该分支提交PR/MR时自动执行plan计划</Checkbox> 
+        <Col span={7}>
+          <Form.Item shouldUpdate={true}>
+            <Form.Item 
+              name='prmr'
+              valuePropName='checked'
+              initialValue={false}
+              noStyle={true}
+            >
+              <Checkbox>PR/MR时执行PLAN</Checkbox> 
+            </Form.Item>
+            <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col span={7}>
           <Form.Item 
             name='autoApproval'
             valuePropName='checked'
@@ -323,6 +334,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
             <Checkbox>自动通过审批</Checkbox> 
           </Form.Item>
         </Col>
+        <Col span={7}></Col>
       </Row>
     </>;
   };
@@ -335,8 +347,13 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       {...FL}
       layout={'vertical'}
     >
-      <Collapse expandIconPosition={'right'} style={{ marginBottom: 20 }}>
-        <Panel header='高级设置' forceRender={true}>
+      <Collapse 
+        expandIconPosition={'right'} 
+        activeKey={activeKey} 
+        onChange={setActiveKey}
+        style={{ marginBottom: 20 }}
+      >
+        <Panel header='高级设置' forceRender={true} key='open'>
           {renderForm()}
         </Panel>
       </Collapse>

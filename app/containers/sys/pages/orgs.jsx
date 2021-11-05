@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from "react-redux";
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
-
+import EllipsisText from 'components/EllipsisText';
 import orgsAPI from 'services/orgs';
 import changeOrg from "utils/changeOrg";
-
 import OrgModal from './components/orgModal';
 
 const Orgs = ({ title, dispatch }) => {
@@ -106,20 +105,23 @@ const Orgs = ({ title, dispatch }) => {
     {
       dataIndex: 'name',
       title: '组织名称',
-      width: 170,
+      width: 240,
+      ellipsis: true,
       render: (_, record) => <div className='tableRender'>
-        <h2 className='reset-styles'>{record.name}</h2>
+        <h2 className='reset-styles'><EllipsisText>{record.name}</EllipsisText></h2>
         <p className='reset-styles'>{record.id}</p>
       </div>
     },
     {
       dataIndex: 'description',
-      width: 160,
+      width: 240,
+      ellipsis: true,
       title: '描述'
     },
     {
       dataIndex: 'status',
-      width: 104,
+      width: 150,
+      ellipsis: true,
       title: '状态',
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
@@ -127,7 +129,9 @@ const Orgs = ({ title, dispatch }) => {
     },
     {
       title: '操作',
-      width: 107,
+      width: 180,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
@@ -140,7 +144,7 @@ const Orgs = ({ title, dispatch }) => {
               title='确定要禁用该组织？'
               onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'disable' } })}
             >
-              <a className='danger-text'>禁用</a>
+              <a>禁用</a>
             </Popconfirm>
           }
           <a onClick={() => {
@@ -169,6 +173,7 @@ const Orgs = ({ title, dispatch }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,

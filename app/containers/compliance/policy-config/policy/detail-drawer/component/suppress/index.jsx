@@ -88,33 +88,47 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
   const columns = [
     {
       dataIndex: 'targetName',
-      title: '名称'
+      title: '名称',
+      width: 170,
+      ellipsis: true
     },
     {
       dataIndex: 'targetType',
       title: '类型',
+      width: 75,
+      ellipsis: true,
       render: (text) => TARGET_TYPE_ENUM[text]
     },
     {
       dataIndex: 'type',
       title: '屏蔽类型',
+      width: 86,
+      ellipsis: true,
       render: (text) => SUPPRESS_TYPE_ENUM[text]
     },
     {
       dataIndex: 'reason',
-      title: '屏蔽说明'
+      title: '屏蔽说明',
+      width: 149,
+      ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '操作人'
+      title: '操作人',
+      width: 72,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '屏蔽时间',
+      width: 123,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm')
     },
     {
       title: '操作',
+      width: 50,
+      ellipsis: true,
       fixed: 'right',
       render: (record) => {
         const { id } = record;
@@ -123,7 +137,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
           title='确定要删除该屏蔽内容？'
           onConfirm={() => delOneSuppress(id)}
         >
-          <Button type='link' danger={true} style={{ padding: 0, fontSize: 12 }} loading={delLoading}>删除</Button>
+          <Button type='link' style={{ padding: 0, fontSize: 12 }} loading={delLoading}>删除</Button>
         </Popconfirm>
       }
     }
@@ -159,7 +173,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
         <Table
           columns={columns}
           loading={tableLoading}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'min-content', y: 570 }}
           {...tableProps}
         />
       </Space>

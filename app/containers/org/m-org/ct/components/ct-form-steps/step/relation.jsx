@@ -110,7 +110,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
     }
   };
 
-  return <div className='form-wrapper' style={{ width: 720 }}>
+  return <div className='form-wrapper' style={{ width: 824 }}>
     <Form
       form={form}
       {...FL}

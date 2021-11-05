@@ -34,31 +34,43 @@ const Index = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '项目名称'
+      title: '项目名称',
+      width: 230,
+      ellipsis: true
     },
     {
       dataIndex: 'description',
-      title: '项目描述'
+      title: '项目描述',
+      width: 264,
+      ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '创建人'
+      title: '创建人',
+      width: 160,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
+      width: 210,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       dataIndex: 'status',
       title: '状态',
+      width: 100,
+      ellipsis: true,
       render: (text) => {
         return <span>{text === 'enable' ? '正常' : '归档'}</span>; 
       }
     },
     {
       title: '操作',
-      width: 90,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => {
         return (
           <span className='inlineOp'>
@@ -209,6 +221,7 @@ const Index = (props) => {
           columns={columns}
           dataSource={resultMap.list}
           loading={loading}
+          scroll={{ x: 'min-content', y: 570 }}
           onChange={(pagination, filters, sorter, { action }) => {
             if (action == 'filter') {
               const statusFilter = filters[tableFilterFieldName];

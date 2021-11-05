@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="131px" height="31px" viewBox="0 0 131 31" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>路径 6</title>
+    <defs>
+        <linearGradient x1="11.1212025%" y1="48.601144%" x2="87.3032932%" y2="51.5242427%" id="linearGradient-1">
+            <stop stop-color="#FEE9D5" offset="0%"></stop>
+            <stop stop-color="#FEC79C" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-5.59402807%" y1="46.6216678%" x2="86.1908991%" y2="51.6961426%" id="linearGradient-2">
+            <stop stop-color="#FEE6CF" offset="0%"></stop>
+            <stop stop-color="#F5BD91" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="合规" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M0.6,0.683544861 C3.56299737,3.92237689 5.28168643,9.13021217 5.75606717,16.3070507 C5.68115661,16.301633 5.39200857,29.8030496 15.0516945,29.8030496 C15.207471,30.0656501 49.5429008,30.0656501 118.057984,29.8030496 C122.110351,28.9623712 124.327477,25.7649992 124.709364,20.2109334 C124.700293,20.1110986 123.241164,7.60140615 130.83679,0.683544861 C130.896376,0.688617935 87.4841127,0.688617935 0.6,0.683544861 Z" id="路径-6" stroke="url(#linearGradient-2)" stroke-width="0.5" fill="url(#linearGradient-1)"></path>
+    </g>
+</svg>

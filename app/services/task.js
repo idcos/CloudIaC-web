@@ -50,6 +50,18 @@ const taskAPI = {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
+  },
+  getTaskSteps: ({ orgId, projectId, taskId }) => {
+    return getWithArgs(`/api/v1/tasks/${taskId}/steps`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  getTaskStepLog: ({ orgId, projectId, taskId, stepId }) => {
+    return getWithArgs(`/api/v1/tasks/${taskId}/steps/${stepId}/log`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
   }
 };
 

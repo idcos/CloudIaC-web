@@ -71,16 +71,22 @@ export default ({ policyId }) => {
   const columns = [
     {
       dataIndex: 'templateName',
-      title: '云模板名称'
+      title: '云模板名称',
+      width: 280,
+      ellipsis: true
     },
     {
       dataIndex: 'envName',
       title: '环境名称',
+      width: 280,
+      ellipsis: true,
       render: (text) => text || '-'
     },
     {
       dataIndex: 'status',
       title: '状态',
+      width: 120,
+      ellipsis: true,
       render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
     }
   ];
@@ -108,6 +114,7 @@ export default ({ policyId }) => {
       <Card title='错误列表' type='inner' bodyStyle={{ minHeight: 300 }}>
         <Table
           columns={columns}
+          scroll={{ x: 'min-content', y: 570 }}
           loading={tableLoading}
           {...tableProps}
         />

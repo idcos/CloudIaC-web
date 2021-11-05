@@ -18,46 +18,66 @@ const Index = ({ visible, toggleVisible, id }) => {
     {
       dataIndex: 'targetName',
       title: '检测目标',
-      render: (text) => <EllipsisText maxWidth={150}>{text}</EllipsisText>
+      width: 180,
+      ellipsis: true,
+      render: (text) => <EllipsisText>{text}</EllipsisText>
     },
     {
       dataIndex: 'targetType',
       title: '目标类型',
+      width: 100,
+      ellipsis: true,
       render: (text) => TARGET_TYPE_ENUM[text]
     },
     {
       dataIndex: 'orgName',
       title: '组织',
-      render: (text) => <EllipsisText maxWidth={150}>{text}</EllipsisText>
+      width: 147,
+      ellipsis: true,
+      render: (text) => <EllipsisText>{text}</EllipsisText>
     },
     {
       dataIndex: 'projectName',
       title: '项目',
-      render: (text) => <EllipsisText maxWidth={150}>{text}</EllipsisText>
+      width: 129,
+      ellipsis: true,
+      render: (text) => <EllipsisText>{text}</EllipsisText>
     },
     {
       dataIndex: 'creator',
-      title: '创建者'
+      title: '创建者',
+      width: 88,
+      ellipsis: true
     },
     {
       dataIndex: 'passed',
-      title: '通过'
+      title: '通过',
+      width: 60,
+      ellipsis: true
     },
     {
       dataIndex: 'violated',
-      title: '不通过'
+      title: '不通过',
+      width: 70,
+      ellipsis: true
     },
     {
       dataIndex: 'suppressed',
-      title: '屏蔽'
+      title: '屏蔽',
+      width: 60,
+      ellipsis: true
     },
     {
       dataIndex: 'failed',
-      title: '失败'
+      title: '失败',
+      width: 60,
+      ellipsis: true
     },
     {
       dataIndex: 'updatedAt',
       title: '最后更新时间',
+      width: 150,
+      ellipsis: true,
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     }
   ];
@@ -138,7 +158,7 @@ const Index = ({ visible, toggleVisible, id }) => {
     placement='right'
     visible={visible}
     onClose={toggleVisible}
-    width={1000}
+    width={1141}
   >
     <div>
       {CHART.current.map(chart => <div>
@@ -147,6 +167,7 @@ const Index = ({ visible, toggleVisible, id }) => {
       <Table
         columns={columns}
         loading={tableLoading}
+        scroll={{ x: 'min-content', y: 570 }}
         {...tableProps}
       />
     </div>

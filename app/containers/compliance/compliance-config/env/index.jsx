@@ -94,7 +94,7 @@ const CenvList = ({ orgs }) => {
   const { 
     tableProps, 
     onChangeFormParams,
-    searchParams: { formParams }
+    searchParams: { form }
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -173,38 +173,84 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'name',
       title: '环境名称',
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
-    },
-    {
-      dataIndex: 'orgName',
-      title: '组织名称',
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
-    },
-    {
-      dataIndex: 'projectName',
-      title: '项目名称',
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
-    },
-    {
-      dataIndex: 'templateName',
-      title: '云模板名称',
+      width: 152,
+      ellipsis: true,
       render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
     },
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
+      width: 200,
+      ellipsis: true,
       render: (text, record) => {
         const policyGroups = text || [];
         return policyGroups.length > 0 ? (
-          <EllipsisText tagName='a' maxWidth={180} onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })} type='link'>
-            {policyGroups.map(it => it.name).join('、')}
-          </EllipsisText>
+          <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
+            <EllipsisText>
+              {policyGroups.map(it => it.name).join('、')}
+            </EllipsisText>
+          </a>
         ) : '-'; 
       }
     },
     {
+      dataIndex: 'policyStatus',
+      title: '状态',
+      width: 90,
+      ellipsis: true,
+      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
+    },
+    {
+      dataIndex: 'passed',
+      title: '通过',
+      width: 64,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'violated',
+      title: '不通过',
+      width: 67,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'suppressed',
+      title: '屏蔽',
+      width: 62,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'failed',
+      title: '失败',
+      width: 70,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'orgName',
+      title: '组织名称',
+      width: 132,
+      ellipsis: true,
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+    },
+    {
+      dataIndex: 'projectName',
+      title: '项目名称',
+      width: 132,
+      ellipsis: true,
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+    },
+    {
+      dataIndex: 'templateName',
+      title: '云模板名称',
+      width: 132,
+      ellipsis: true,
+      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+    },
+    {
       dataIndex: 'enabled',
       title: '开启检测',
+      width: 75,
+      ellipsis: true,
+      fixed: 'right',
       render: (enabled, record) => {
         const { id, name, tplId, policyGroups } = record;
         return (
@@ -217,29 +263,9 @@ const CenvList = ({ orgs }) => {
       }
     },
     {
-      dataIndex: 'passed',
-      title: '通过'
-    },
-    {
-      dataIndex: 'violated',
-      title: '不通过'
-    },
-    {
-      dataIndex: 'suppressed',
-      title: '屏蔽'
-    },
-    {
-      dataIndex: 'failed',
-      title: '失败'
-    },
-    {
-      dataIndex: 'policyStatus',
-      title: '状态',
-      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
-    },
-    {
       title: '操作',
-      width: 80,
+      width: 169,
+      ellipsis: true,
       fixed: 'right',
       render: (text, record) => {
         const { id, enabled, policyStatus } = record;
@@ -288,7 +314,7 @@ const CenvList = ({ orgs }) => {
             allowClear={true}
             options={projectOptions}
             placeholder='请选择项目'
-            value={formParams.projectId}
+            value={form.projectId}
             onChange={(projectId) => onChangeFormParams({ projectId })}
           />
           <Input.Search
@@ -300,7 +326,7 @@ const CenvList = ({ orgs }) => {
         </Space>
         <Table
           columns={columns}
-          scroll={{ x: 'max-content' }}
+          scroll={{ x: 'min-content', y: 570 }}
           loading={tableLoading}
           {...tableProps}
         />

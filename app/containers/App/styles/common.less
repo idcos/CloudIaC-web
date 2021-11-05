@@ -150,3 +150,52 @@
 .ant-table .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
   word-break: break-all;
 }
+
+.common-card-tabs {
+  .ant-tabs-nav {
+    &::before {
+      border-bottom: none !important;
+    }
+    .ant-tabs-tab-active {
+      border-bottom-color: #ebebeb !important;
+    }
+  }
+}
+
+.common-table-btn-wrapper {
+  .ant-btn-link {
+    font-size: 12px;
+    padding: 0;
+    margin-right: 8px;
+  }
+}
+
+.fn-hide-column {
+  padding: 0 !important; 
+  margin: 0!important;
+  width: 0 !important;
+  max-width: 0 !important;
+  &>* {
+    display: none;
+  }
+}
+
+.table-cell-vertical-top {
+  .ant-table-cell {
+    vertical-align: top !important;
+  }
+}
+
+.fn-hide-table-tbody {
+  .ant-table-tbody {
+    display: none !important;
+  }
+}
+
+.fn-hide-table-tbody-scroll {
+  .ant-table-content {
+    -ms-overflow-style: none !important;
+    overflow: -moz-scrollbars-none !important;
+    &::-webkit-scrollbar { width: 0 !important; height: 0 !important; }
+  }
+}

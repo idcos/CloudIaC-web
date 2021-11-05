@@ -46,6 +46,7 @@ const ProjectSelectPage = ({ projects, dispatch }) => {
           title='全部项目'
           headerStyle={{ padding: '42px 24px' }}
           breadcrumb={false}
+          showIcon='document'
           subDes={
             <Input.Search placeholder='请输入项目名称搜索' onSearch={onSearch} style={{ width: 240 }} />
           }

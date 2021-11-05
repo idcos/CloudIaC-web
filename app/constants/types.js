@@ -167,7 +167,7 @@ export const POLICIES_DETECTION_COLOR = {
 };
 export const POLICIES_DETECTION_COLOR_COLLAPSE = {
   pending: '#FFBF00',
-  passed: '#13C2C2',
+  passed: '#00AB9D',
   failed: '#FF3B30',
   violated: '#FF3B30',
   suppressed: '#c1c1c1'

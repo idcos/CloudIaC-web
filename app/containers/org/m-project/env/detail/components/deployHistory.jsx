@@ -51,11 +51,15 @@ const Index = (props) => {
     {
       dataIndex: 'type',
       title: '作业类型',
+      width: 168,
+      ellipsis: true,
       render: (t, r) => <span>{TASK_TYPE[t] || '-'}</span>
     },
     {
       dataIndex: 'status',
       title: '状态',
+      width: 134,
+      ellipsis: true,
       render: (t, r) => (
         <>
           {
@@ -76,6 +80,8 @@ const Index = (props) => {
     {
       dataIndex: 'result',
       title: '资源变更',
+      width: 153,
+      ellipsis: true,
       render: (t, r) => {
         return <ChangeInfo {...r.result} />;
       }
@@ -83,22 +89,29 @@ const Index = (props) => {
     {
       dataIndex: 'createdAt',
       title: '开始执行时间',
+      width: 180,
+      ellipsis: true,
       render: (t) => timeUtils.format(t)
     },
     {
       dataIndex: 'startAt',
       title: '执行时长',
+      width: 180,
+      ellipsis: true,
       render: (t, r) => timeUtils.diff(r.endAt, t)
     },
     {
       dataIndex: 'creator',
-      title: '执行人'
+      title: '执行人',
+      width: 130,
+      ellipsis: true
     },
     {
       dataIndex: 'action',
       title: '操作',
-      editable: true,
-      width: 80,
+      width: 169,
+      ellipsis: true,
+      fixed: 'right',
       render: (t, r) => {
         return (<a
           onClick={() => {
@@ -112,6 +125,7 @@ const Index = (props) => {
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
       <Table
         columns={columns}
+        scroll={{ x: 'min-content', y: 570 }}
         dataSource={resultMap.list}
         loading={loading}
         pagination={false}

@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Menu, notification, Tabs } from 'antd';
-
+import React, { useState, useCallback } from 'react';
+import { Tabs } from 'antd';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-
 import ApiToken from './api-token';
 import UserRole from './user-role';
 import Vcs from './vcs';
 import Ssh from './ssh';
 import Notification from './notification';
+import ResourceAccount from './resource-account';
 
 const subNavs = {
   userRole: '用户角色',
   apiToken: 'API Token',
   vcs: 'VCS',
   ssh: 'ssh密钥',
-  notification: '通知'
+  notification: '通知',
+  resourceAccount: '资源账号'
 };
 
 export default ({ match }) => {
@@ -25,12 +25,12 @@ export default ({ match }) => {
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      // orgs: (props) => <Orgs {...props} />,
       userRole: (props) => <UserRole {...props} />,
       apiToken: (props) => <ApiToken {...props} />,
       vcs: (props) => <Vcs {...props} />,
       ssh: (props) => <Ssh {...props} />,
-      notification: (props) => <Notification {...props} />
+      notification: (props) => <Notification {...props} />,
+      resourceAccount: (props) => <ResourceAccount {...props} />
     };
     return PAGES[panel]({
       title: subNavs[panel],

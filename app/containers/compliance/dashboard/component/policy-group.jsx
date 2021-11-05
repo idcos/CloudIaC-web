@@ -35,13 +35,9 @@ const Index = ({ summaryData = [] }) => {
   }, [summaryData]);
 
   const list = [ 1, 2, 3, 4, 5 ];
-  return <Card bodyStyle={{
-    padding: '52px 16px 72px 7%',
-    background: `#fff url(/assets/backgroundIcon/cornergroup.svg) no-repeat 95% -1px`,
-    height: 369
-  }}
-  >
-    <span className={styles.cardTitle}>策略组检测不通过</span>
+  return <Card className={styles.card}>
+    <div className='top5'>策略组TOP5</div>
+    <span className='title'>策略组检测不通过</span>
     { data.length === 0 ? <Empty 
       image={<DashboardOutlined />}
       imageStyle={{

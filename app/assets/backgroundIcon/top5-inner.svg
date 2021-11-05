@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="17px" viewBox="0 0 18 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 8</title>
+    <defs>
+        <linearGradient x1="100%" y1="79.9629071%" x2="14.4943001%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#DC976B" offset="0%"></stop>
+            <stop stop-color="#D07B34" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="合规" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组-8" transform="translate(0.401483, 0.029484)">
+            <polygon id="星形" fill="#DA9363" transform="translate(8.312288, 8.312288) rotate(-330.000000) translate(-8.312288, -8.312288) " points="8.31228801 11.3547966 5.26977944 13.5820675 5.6773983 9.8335423 2.22727086 8.31228801 5.6773983 6.79103373 5.26977944 3.04250858 8.31228801 5.26977944 11.3547966 3.04250858 10.9471777 6.79103373 14.3973052 8.31228801 10.9471777 9.8335423 11.3547966 13.5820675"></polygon>
+            <polyline id="路径-9" stroke="#D3864F" stroke-width="0.5" points="7.02028603 11.1587461 8.31228801 14.3973052 9.6694377 11.2573739"></polyline>
+            <polygon id="路径-7" fill="url(#linearGradient-1)" points="8.31228801 2.22727086 3.04250858 11.3547966 13.5820675 11.3547966"></polygon>
+            <line x1="8.31228801" y1="2.75041397" x2="3.44487368" y2="11.1587461" id="路径-8" stroke="#CA7B42" stroke-width="0.5"></line>
+        </g>
+    </g>
+</svg>

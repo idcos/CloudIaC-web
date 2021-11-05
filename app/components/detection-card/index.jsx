@@ -95,7 +95,7 @@ export default ({ requestFn, canFullHeight = false, failLogParams }) => {
           <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
         ) : (
           list.length == 0 ? (
-            <Empty description='暂无策略检测则默认显示通过'/>
+            <Empty description='暂无策略检测则默认显示通过' image={Empty.PRESENTED_IMAGE_SIMPLE}/>
           ) : (
             <>
               {

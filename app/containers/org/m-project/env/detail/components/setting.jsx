@@ -11,10 +11,11 @@ import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import envAPI from 'services/env';
 import tokensAPI from 'services/tokens';
+import Copy from 'components/copy';
 
 const FL = {
-  labelCol: { span: 22, offset: 2 },
-  wrapperCol: { span: 22, offset: 2 }
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 }
 };
 const { Option } = Select;
     
@@ -111,29 +112,39 @@ const Index = (props) => {
     }
   };
 
-  const copyToUrl = async(action) => {
-    try {
-      const res = await tokensAPI.getTriggerUrl({
-        orgId, envId, action, projectId
-      });
-      let data = res.result || {};
-      let copyData = `${window.location.origin}/api/v1/trigger/send?token=${data.key}`;
-      if (res.code === 200) {
-        if (!res.result) {
-          const resCreat = await tokensAPI.createToken({
-            orgId, envId, action, projectId
-          });
-          copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;
+  const copyRequest = (action) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await tokensAPI.getTriggerUrl({
+          orgId, envId, action, projectId
+        });
+        if (res.code !== 200) {
+          throw new Error(res.message);
         }
-        copy(copyData);
+        if (res.result) {
+          const { key } = res.result || {};
+          const copyData = `${window.location.origin}/api/v1/trigger/send?token=${key}`;
+          resolve(copyData);
+        } else {
+          const resCreat = await tokensAPI.createToken({
+            orgId, envId, action, projectId, type: 'trigger'
+          });
+          if (resCreat.code !== 200) {
+            throw new Error(resCreat.message);
+          }
+          const copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;
+          resolve(copyData);
+        }
+      } catch (e) {
+        reject();
+        notification.error({
+          message: '获取失败',
+          description: e.message
+        });
       }
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
+    });
   };
+
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
       <Form
@@ -144,8 +155,8 @@ const Index = (props) => {
         layout={'vertical'}
         onFinish={onFinish}
       >
-        <Row>
-          <Col span={8}>
+        <Row justify='space-between'>
+          <Col span={7}>
             <Form.Item 
               style={{ marginBottom: 0 }}
               label='存活时间：'
@@ -156,12 +167,12 @@ const Index = (props) => {
                     name='type'
                     initialValue={'infinite'}
                   >
-                    <Select style={{ width: '90%' }}>
+                    <Select style={{ width: '100%' }}>
                       {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={12}>
+                <Col span={16}>
                   <Form.Item 
                     noStyle={true}
                     shouldUpdate={true}
@@ -188,7 +199,7 @@ const Index = (props) => {
                           noStyle={true}
                           shouldUpdate={true}
                         >
-                          <DatePicker format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                          <DatePicker style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                         </Form.Item>;
                       }
                     }}
@@ -197,9 +208,9 @@ const Index = (props) => {
               </Row>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item label={' '}>
-              <Space>
+              <Space style={{ minWidth: 340 }}>
                 <Form.Item 
                   name='retryAble'
                   valuePropName='checked'
@@ -228,7 +239,7 @@ const Index = (props) => {
               </Space>
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               name='stopOnViolation'
               label={' '}
@@ -238,7 +249,7 @@ const Index = (props) => {
               <Checkbox>合规不通过时中止部署</Checkbox> 
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               shouldUpdate={true}
             >
@@ -250,21 +261,17 @@ const Index = (props) => {
                     valuePropName='checked'
                     initialValue={false}
                   >
-                    <Checkbox>每次推送到该分支时自动重新部署</Checkbox> 
+                    <Checkbox>推送到分支时重新部署</Checkbox> 
                   </Form.Item>
-                  <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您将代码推送到分支时对环境进行持续部署'><InfoCircleOutlined /></Tooltip>
-                  {
-                    getFieldValue('commit') ? (
-                      <a onClick={() => copyToUrl('apply')}>复制URL</a>
-                    ) : (
-                      <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
-                    )
-                  }
+                  <Space size={8}>
+                    <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
+                    <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest('apply')}/>
+                  </Space>
                 </>
               )}
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               shouldUpdate={true}
             >
@@ -276,21 +283,17 @@ const Index = (props) => {
                     valuePropName='checked'
                     initialValue={false}
                   >
-                    <Checkbox>该分支提交PR/MR时自动执行plan计划</Checkbox> 
+                    <Checkbox>PR/MR时执行PLAN</Checkbox> 
                   </Form.Item>
-                  <Tooltip title='勾选该选项后CloudIaC会创建一个hook url，您可以在稍后创建的环境详情->『设置』标签中复制该url，并将其配置到您的代码仓库的webhook中，以便您在提交PR/MR时执行预览计划'><InfoCircleOutlined /></Tooltip>  
-                  {
-                    getFieldValue('prmr') ? (
-                      <a onClick={() => copyToUrl('plan')}>复制URL</a>
-                    ) : (
-                      <span style={{ color: 'rgba(0, 0, 0, 0.3)' }}>复制URL</span>
-                    )
-                  }
+                  <Space size={8}>
+                    <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
+                    <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest('plan')}/>
+                  </Space>
                 </>
               )}
             </Form.Item>
           </Col>
-          <Col span={8}>
+          <Col span={7}>
             <Form.Item 
               name='autoApproval'
               valuePropName='checked'

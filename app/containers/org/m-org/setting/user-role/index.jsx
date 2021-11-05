@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, notification, Space, Divider, Popconfirm } from 'antd';
-
+import { Button, Table, notification, Space, Divider, Popconfirm, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import moment from 'moment';
 import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
-import moment from 'moment';
 import { ORG_USER } from 'constants/types';
-
+import EllipsisText from 'components/EllipsisText';
 import OpModal from './components/memberModal';
 
 export default ({ title, orgId }) => {
@@ -61,7 +61,7 @@ export default ({ title, orgId }) => {
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        edit: (param) => orgsAPI.changeOrgUserRole(param),
+        edit: (param) => orgsAPI.updateUser(param),
         add: (param) => orgsAPI.inviteUser(param),
         resetUserPwd: ({ orgId, id }) => userAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
@@ -95,53 +95,76 @@ export default ({ title, orgId }) => {
     setVisible(!visible);
   };
 
+  const remove = ({ id, name }) => {
+    Modal.confirm({
+      width: 480,
+      title: `你确定要移除 ${name} 用户吗？`,
+      content: `从组织移除用户将清除该用户在当前组织下所有项目中的项目角色权限，请确认操作`,
+      icon: <ExclamationCircleFilled style={{ color: '#FF4D4F' }}/>,
+      okText: '移除',
+      cancelText: '取消',
+      okButtonProps: {
+        danger: true
+      },
+      onOk: () => {
+        return operation({ doWhat: 'removeUser', payload: { id } });
+      }
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'name',
       title: '姓名',
+      width: 268,
+      ellipsis: true,
       render: (_, record) => <div className='tableRender'>
-        <h2 className='reset-styles'>{record.name}</h2>
-        <p className='reset-styles'>{record.email}</p>
+        <h2 className='reset-styles'><EllipsisText>{record.name}</EllipsisText></h2>
+        <p className='reset-styles'><EllipsisText>{record.email}</EllipsisText></p>
       </div>
     },
     {
       dataIndex: 'phone',
-      title: '手机'
+      title: '手机',
+      width: 178,
+      ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '加入时间',
+      width: 212,
+      ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       dataIndex: 'role',
       title: '权限',
+      width: 160,
+      ellipsis: true,
       render: (text) => ORG_USER.role[text]
     },
     {
       title: '操作',
       width: 180,
+      ellipsis: true,
+      fixed: 'right',
       render: (_, record) => {
-        return <Space split={<Divider type='vertical' />}>
-          <a onClick={() => {
-            setOpt('edit');
-            setCurRecord(record);
-            toggleVisible();
-          }}
-          >编辑</a>
-          <Popconfirm
-            title='确定要重置密码？'
-            onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
-          >
-            <a>重置密码</a>
-          </Popconfirm>
-          <Popconfirm
-            title='确定要移除改用户？'
-            onConfirm={() => operation({ doWhat: 'removeUser', payload: { id: record.id } })}
-          >
-            <a>移除</a>
-          </Popconfirm>
-        </Space>;
+        return (
+          <div className='common-table-btn-wrapper'>
+            <Button type='link' onClick={() => {
+              setOpt('edit');
+              setCurRecord(record);
+              toggleVisible();
+            }}>编辑</Button>
+            <Popconfirm
+              title='确定要重置密码？'
+              onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
+            >
+              <Button type='link'>重置密码</Button>
+            </Popconfirm>
+            <Button type='link' onClick={() => remove(record)}>移除</Button>
+          </div>
+        );
       }
     }
   ];
@@ -160,6 +183,7 @@ export default ({ title, orgId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
+      scroll={{ x: 'min-content', y: 570 }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,

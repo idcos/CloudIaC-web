@@ -22,22 +22,30 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
   const leftTableColumns = [
     {
       dataIndex: 'name',
-      title: '姓名'
+      title: '姓名',
+      width: 96,
+      ellipsis: true
     },
     {
       dataIndex: 'email',
-      title: '邮箱'
+      title: '邮箱',
+      width: 184,
+      ellipsis: true
     }
   ];
 
   const rightTableColumns = [
     {
       dataIndex: 'name',
-      title: '姓名'
+      title: '姓名',
+      width: 96,
+      ellipsis: true
     },
     {
       dataIndex: 'email',
-      title: '邮箱'
+      title: '邮箱',
+      width: 184,
+      ellipsis: true
     }
   ];
 

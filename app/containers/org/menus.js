@@ -1,4 +1,4 @@
-import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
 import getPermission from "utils/permission";
 
 const getMenus = (userInfo) => {
@@ -63,6 +63,18 @@ const getMenus = (userInfo) => {
           name: '设定',
           key: 'm-org-setting',
           icon: <FormOutlined />
+        }
+      ]
+    },
+    {
+      subName: '',
+      subKey: 'other',
+      emptyMenuList: [],
+      menuList: [
+        {
+          name: '资源查询',
+          key: 'm-other-resource',
+          icon: <SearchOutlined />
         }
       ]
     }
