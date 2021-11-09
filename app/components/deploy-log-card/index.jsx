@@ -31,21 +31,11 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
   const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status } = taskInfo || {};
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ activeKey, setActiveKey ] = useState();
-  const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
-
-  useEffect(() => {
-    if (taskHasEnd) {
-      refreshTaskSteps();
-      cancelLoop();
-    }
-  }, [taskHasEnd]);
+  const [ canAutoChangeActiveKey, setCanAutoChangeActiveKey ] = useState(true);
 
   // 任务步骤列表查询
   const {
-    data: taskSteps = [],
-    cancel: cancelLoop,
-    run: runLoop,
-    refresh: refreshTaskSteps
+    data: taskSteps = []
   } = useRequest(
     () => requestWrapper(
       taskAPI.getTaskSteps.bind(null, { orgId, projectId, taskId })
@@ -56,23 +46,30 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
       pollingInterval: 3000,
       pollingWhenHidden: false,
       onSuccess: (data) => {
-        let activeKey;
-        // 获取最后一个有日志输出的步骤
-        data.forEach((item) => {
-          switch (item.status) {
-            case 'complete':
-            case 'failed':
-            case 'running':
-              activeKey = item.id;
-              break;
-            default:
-              break;
-          }
-        });
-        setActiveKey(activeKey);
+        if (canAutoChangeActiveKey) {
+          const autoActiveKey = getAutoActiveKey(data);
+          setActiveKey(autoActiveKey);
+        }
       }
     }
   );
+
+  const getAutoActiveKey = (data) => {
+    let activeKey;
+    // 获取最后一个有日志输出的步骤
+    data.forEach((item) => {
+      switch (item.status) {
+        case 'complete':
+        case 'failed':
+        case 'running':
+          activeKey = item.id;
+          break;
+        default:
+          break;
+      }
+    });
+    return activeKey;
+  };
 
   // 执行部署
   const {
@@ -113,10 +110,15 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
       manual: true,
       onSuccess: () => {
         reload && reload();
-        runLoop();
       }
     }
   ); 
+
+  const manualChangeActiveKey = (key) => {
+    const autoActiveKey = getAutoActiveKey(taskSteps);
+    setCanAutoChangeActiveKey(autoActiveKey === key);
+    setActiveKey(key);
+  };
 
   return (
     <div ref={ref} className={styles.deploy_log_card_wrapper}>
@@ -212,7 +214,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
       >
         <Collapse 
           activeKey={activeKey} 
-          onChange={setActiveKey}
+          onChange={manualChangeActiveKey}
           ghost={true} 
           accordion={true}
           className={classnames('deploy-log-collapse', { 'isFullscreen': isFullscreen })}
