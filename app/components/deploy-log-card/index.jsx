@@ -13,7 +13,6 @@ import { timeUtils } from "utils/time";
 import SearchByKeyWord from 'components/coder/ansi-coder-card/dom-event';
 import DeployLog from './deploy-log';
 import styles from './styles.less';
-import classnames from "classnames";
 
 const { Panel } = Collapse;
 const searchService = new SearchByKeyWord({ 
@@ -217,7 +216,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
           onChange={manualChangeActiveKey}
           ghost={true} 
           accordion={true}
-          className={classnames('deploy-log-collapse', { 'isFullscreen': isFullscreen })}
+          className='deploy-log-collapse'
         >
           {
             taskSteps.map(({ name, id, startAt, type, endAt, status }) => (
@@ -234,7 +233,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
                 key={id}
                 extra={timeUtils.diff(endAt, startAt)}
               >
-                <DeployLog taskInfo={taskInfo} stepId={id} stepStatus={status}/>
+                <DeployLog isFullscreen={isFullscreen} taskInfo={taskInfo} stepId={id} stepStatus={status}/>
               </Panel>
             ))
           }
