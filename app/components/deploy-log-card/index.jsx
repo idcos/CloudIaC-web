@@ -26,15 +26,39 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
 
   const searchRef = useRef();
   const ref = useRef();
+  const timeRef = useRef();
+  const stopLoopRef = useRef(false);
   const [ isFullscreen, { toggleFull } ] = useFullscreen(ref);
   const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status } = taskInfo || {};
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ activeKey, setActiveKey ] = useState();
   const [ canAutoChangeActiveKey, setCanAutoChangeActiveKey ] = useState(true);
+  const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
+
+  useEffect(() => {
+    if (!taskId) {
+      return;
+    }
+    if (taskHasEnd) {
+      timeRef.current = setTimeout(() => {
+        stopLoopRef.current = true;
+      }, 30000);
+    } else {
+      timeRef.current && clearTimeout(timeRef.current);
+      stopLoopRef.current = false;
+      cancelLoop();
+      runLoop();
+    }
+    return () => {
+      timeRef.current && clearTimeout(timeRef.current);
+    };
+  }, [taskHasEnd]);
 
   // 任务步骤列表查询
   const {
-    data: taskSteps = []
+    data: taskSteps = [],
+    run: runLoop,
+    cancel: cancelLoop
   } = useRequest(
     () => requestWrapper(
       taskAPI.getTaskSteps.bind(null, { orgId, projectId, taskId })
@@ -48,6 +72,9 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
         if (canAutoChangeActiveKey) {
           const autoActiveKey = getAutoActiveKey(data);
           setActiveKey(autoActiveKey);
+        }
+        if (stopLoopRef.current) {
+          cancelLoop();
         }
       }
     }
@@ -111,7 +138,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
         reload && reload();
       }
     }
-  ); 
+  );
 
   const manualChangeActiveKey = (key) => {
     const autoActiveKey = getAutoActiveKey(taskSteps);
