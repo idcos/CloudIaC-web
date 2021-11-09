@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { notification, Tabs } from "antd";
+import { Tabs } from "antd";
 import { useRequest } from 'ahooks';
-
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -88,7 +87,6 @@ const TaskDetail = (props) => {
           activeKey={panel}
           onChange={(k) => {
             setPanel(k); 
-            window.history.replaceState(null, null, `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
           }}
         >
           {Object.keys(subNavs).map((it) => (
