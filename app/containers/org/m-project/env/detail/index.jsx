@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import history from 'utils/history';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
 import { ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_TASK_STATUS_LIST, ENV_STATUS, ENV_STATUS_COLOR } from "constants/types";
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
+import history from 'utils/history';
 import getPermission from "utils/permission";
-import { requestWrapper } from 'utils/request';
 import Info from './components/info';
 import ComplianceInfo from './components/compliance-info';
 import Resource from './components/resource';
+import Output from './components/output';
 import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
@@ -23,6 +24,7 @@ import styles from './styles.less';
 
 const subNavs = {
   resource: '资源',
+  output: 'Output',
   deployJournal: '部署日志',
   deployHistory: '部署历史',
   variable: '变量',
@@ -151,6 +153,7 @@ const EnvDetail = (props) => {
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
+      output: () => <Output {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={reload} />,
       deployHistory: () => <DeployHistory {...props} info={info}/>,
       variable: () => <Variable type='env' {...props} />,

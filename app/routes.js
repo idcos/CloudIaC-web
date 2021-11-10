@@ -32,7 +32,7 @@ export default function createRoutes() {
         },
         {
           path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey',
-          //(resource,deploy,deployHistory,variable,setting)
+          //(resource,output,deploy,deployHistory,variable,setting)
           component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
           exact: true
         },

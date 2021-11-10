@@ -2,14 +2,14 @@ import React, { useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Tabs } from "antd";
 import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_TASK_STATUS_LIST } from "constants/types";
 import taskAPI from 'services/task';
-import { requestWrapper } from 'utils/request';
-
 import Resource from './components/resource';
+import Output from './components/output';
 import DeployJournal from './components/deployJournal';
 import Variable from './components/variable';
 import TaskInfo from './components/taskInfo';
@@ -18,6 +18,7 @@ import styles from './styles.less';
 const subNavs = {
   deployJournal: '部署日志',
   resource: '资源',
+  output: 'Output',
   variable: '变量'
 };
 
@@ -51,6 +52,7 @@ const TaskDetail = (props) => {
   const renderByPanel = useCallback(() => {
     const PAGES = {
       resource: () => <Resource {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
+      output: () => <Output {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
       deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={refresh}/>,
       variable: () => <Variable type='task' {...props} taskInfo={taskInfo}/>
     };

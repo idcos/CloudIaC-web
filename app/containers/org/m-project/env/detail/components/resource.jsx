@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Table, Input, notification, Collapse } from 'antd';
-import { useEventEmitter } from 'ahooks';
-import Coder from "components/coder";
+import { Table, Input, Collapse, Space } from 'antd';
+import { useRequest, useEventEmitter } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
 import ResourceViewModal from 'components/resource-view-modal';
 import envAPI from 'services/env';
@@ -14,15 +14,31 @@ const Index = (props) => {
   const event$ = useEventEmitter();
   const { match, taskId, type } = props;
   const { orgId, projectId, envId } = match.params || {};
-  const [ loading, setLoading ] = useState(false);
-  const [ jsonData, setJsonData ] = useState({});
-  const [ selectKeys, setSelectKeys ] = useState([]);
+  const [ expandedRowKeys, setExpandedRowKeys ] = useState([]);
   const [ search, setSearch ] = useState('');
-  const [ resultMap, setResultMap ] = useState({
-    list: [],
-    total: 0
-  });
  
+  useEffect(() => {
+    fetchResourceData();
+  }, [search]);
+  
+  const { data: resourceData = [], run: fetchResourceData, loading } = useRequest(
+    () => {
+      const resourcesApis = {
+        env: envAPI.getResourcesList.bind(null, { orgId, projectId, envId, q: search }),
+        task: taskAPI.getResourcesList.bind(null, { orgId, projectId, taskId, q: search })
+      };
+      return requestWrapper(resourcesApis[type]);
+    }, {
+      manual: true,
+      formatResult: (res) => resetList(res.list),
+      onSuccess: (data) => {
+        if (data[0]) {
+          setExpandedRowKeys([data[0].provider]);
+        }
+      }
+    }
+  );
+
   const resetList = (list) => {
     if (list.length) {
       let typeList = [...new Set(list.map(d => d.provider))];
@@ -44,67 +60,18 @@ const Index = (props) => {
     }
   };
 
-  useEffect(() => {
-    fetchList();
-  }, [search]); 
-
-  useEffect(() => {
-    if (taskId) {
-      fetchOutput();
-    }
-  }, [taskId]);
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const resourcesApis = {
-        env: envAPI.getResourcesList.bind(null, { orgId, projectId, envId, q: search }),
-        task: taskAPI.getResourcesList.bind(null, { orgId, projectId, taskId, q: search })
-      };
-      const res = await resourcesApis[type]();
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setResultMap({
-        list: resetList(res.result.list)
-      });
-      !!resetList(res.result.list)[0] && setSelectKeys([resetList(res.result.list)[0].provider]);
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
-
-  const fetchOutput = async () => {
-    try {
-      setLoading(true);
-      const outputApis = {
-        env: envAPI.getOutput.bind(null, { orgId, projectId, envId }),
-        task: taskAPI.getOutput.bind(null, { orgId, projectId, taskId })
-      };
-      const res = await outputApis[type]();
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setJsonData(res.result || {});
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
+  const onExpand = (expanded, record) => {
+    if (expanded) {
+      setExpandedRowKeys([ ...expandedRowKeys, record.provider ]);
+    } else {
+      setExpandedRowKeys((expandedRowKeys.filter(d => d !== record.provider) || []));
     }
   };
 
   const columns = [
     {
       dataIndex: 'provider',
-      title: 'Provider',
+      title: '云平台',
       ellipsis: true,
       width: 258
     },
@@ -134,7 +101,6 @@ const Index = (props) => {
           </a>
         );
       }
-     
     },
     {
       dataIndex: 'module',
@@ -144,43 +110,32 @@ const Index = (props) => {
     }
   ];
 
-  const onExpand = (expanded, record) => {
-    if (expanded) {
-      setSelectKeys([ ...selectKeys, record.provider ]);
-    } else {
-      setSelectKeys((selectKeys.filter(d => d !== record.provider) || []));
-    }
-  };
-
-  return <div>
-    <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
-      <Panel header='Output' key='1'>
-        <Coder value={JSON.stringify(jsonData, null, 2)} style={{ height: 'auto' }} />
-      </Panel>
-    </Collapse>
-    <div className={'collapseInTable'}>
-      <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={['1']} forceRender={true}>
+  return (
+    <>
+      <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
         <Panel header='资源列表' key='1'>
-          <Input.Search
-            placeholder='请输入关键字搜索'
-            style={{ width: 240, margin: 20 }}
-            onSearch={v => setSearch(v)}
-          />
-          <Table
-            columns={columns}
-            dataSource={resultMap.list}
-            rowKey={record => record.provider}
-            scroll={{ x: 'min-content', y: 570 }}
-            loading={loading}
-            pagination={false}
-            expandedRowKeys={selectKeys}
-            onExpand={(a, b) => onExpand(a, b)}
-          /> 
+          <Space size='middle' direction='vertical' style={{ width: '100%' }}>
+            <Input.Search
+              placeholder='请输入关键字搜索'
+              style={{ width: 240 }}
+              onSearch={v => setSearch(v)}
+            />
+            <Table
+              columns={columns}
+              dataSource={resourceData}
+              rowKey='provider'
+              scroll={{ x: 'min-content', y: 570 }}
+              loading={loading}
+              pagination={false}
+              expandedRowKeys={expandedRowKeys}
+              onExpand={onExpand}
+            /> 
+          </Space>
         </Panel>
       </Collapse>
-    </div>
-    <ResourceViewModal event$={event$}/>
-  </div>;
+      <ResourceViewModal event$={event$}/>
+    </>
+  );
 };
 
 export default Eb_WP()(memo(Index));
