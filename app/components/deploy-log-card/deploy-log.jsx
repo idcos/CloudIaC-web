@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import taskAPI from 'services/task';
 import { default as AnsiUp } from 'ansi_up';
+import classnames from 'classnames';
 import { useThrottleEffect } from 'ahooks';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -10,7 +11,7 @@ import styles from './styles.less';
 
 const ansi_up = new AnsiUp();
 
-export default ({ taskInfo, stepId, stepStatus }) => {
+export default ({ taskInfo, stepId, stepStatus, isFullscreen }) => {
 
   const { orgId, projectId, id: taskId } = taskInfo || {};
   const ansiCoderWrapperRef = useRef();
@@ -124,7 +125,7 @@ export default ({ taskInfo, stepId, stepStatus }) => {
   };
 
   return (
-    <div className={styles.deployLog} ref={ansiCoderWrapperRef} >
+    <div className={classnames(styles.deployLog, { [styles.isFullscreen]: isFullscreen })} ref={ansiCoderWrapperRef} >
       <div className='ansi-coder-content' dangerouslySetInnerHTML={{ __html: html }}>
       </div>
     </div>
