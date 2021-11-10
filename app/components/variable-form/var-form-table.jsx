@@ -372,7 +372,7 @@ const VarFormTable = (props) => {
       return [
         ...otherScopeVarGroupList,
         ...sameScopeVarGroupList
-      ];;
+      ];
     });
   };
 
