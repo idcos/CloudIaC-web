@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Spin, Collapse } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { safeJsonStringify } from 'utils/util';
 import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
 import envAPI from 'services/env';
@@ -14,7 +15,7 @@ const Output = (props) => {
   const { match, taskId, type } = props;
   const { orgId, projectId, envId } = match.params || {};
 
-  const { data: outputData = {}, loading } = useRequest(
+  const { data: outputStr = '', loading } = useRequest(
     () => {
       const outputApis = {
         env: envAPI.getOutput.bind(null, { orgId, projectId, envId }),
@@ -24,7 +25,7 @@ const Output = (props) => {
     }, 
     {
       ready: !!taskId,
-      formatResult: (data) => data || {}
+      formatResult: (data) => safeJsonStringify([data, null, 2])
     }
   );
 
@@ -32,7 +33,7 @@ const Output = (props) => {
     <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
       <Panel header='Output' key='1'>
         <Spin spinning={loading}>
-          <Coder value={JSON.stringify(outputData, null, 2)} style={{ height: 350 }} />
+          <Coder value={outputStr} style={{ height: 350 }} />
         </Spin>
       </Panel>
     </Collapse>
