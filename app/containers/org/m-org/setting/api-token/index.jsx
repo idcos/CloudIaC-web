@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
 import tokensAPI from 'services/tokens';
-import AddModal from './components/add-modal';
+import TokenForm from './components/add-modal';
+import Popover from 'components/Popover';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -152,12 +153,28 @@ const ApiToken = ({ orgId }) => {
 
   return <>
     <div style={{ marginBottom: 20 }}>
-      <Button 
-        type='primary'
-        onClick={() => {
-          toggleVisible();
-        }}
-      >创建Token</Button>
+      <Popover 
+        placement='right' 
+        visible={visible}
+        arrowPointAtCenter={true}
+        autoAdjustOverflow={true}
+        trigger={'click'}
+        close={toggleVisible}
+        formContent={<TokenForm 
+          orgId={orgId}
+          reload={fetchList}
+          operation={operation}
+          visible={visible}
+          toggleVisible={toggleVisible}
+        />}
+      >
+        <Button 
+          type='primary'
+          onClick={() => {
+            toggleVisible();
+          }}
+        >创建Token</Button>
+      </Popover>
     </div>
     <Table
       columns={columns}
@@ -179,15 +196,6 @@ const ApiToken = ({ orgId }) => {
         }
       }}
     />
-    {
-      visible && <AddModal
-        orgId={orgId}
-        reload={fetchList}
-        operation={operation}
-        visible={visible}
-        toggleVisible={toggleVisible}
-      />
-    }
   </>;
 };
 
