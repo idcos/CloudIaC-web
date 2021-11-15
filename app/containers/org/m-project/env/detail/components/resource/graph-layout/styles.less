@@ -1,0 +1,24 @@
+@import 'containers/App/styles/variable.less';
+
+.graphLayout {
+  width: 100%;
+  
+  .resourceTreeContainer {
+    background: rgba(237, 244, 244, 0.3);
+    border-top: 1px solid @gray-4;
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+
+    :global {
+      .g6-component-toolbar {
+        left: auto;
+        right: 8px;
+        top: 8px;
+      }
+    }
+
+   
+  }
+}

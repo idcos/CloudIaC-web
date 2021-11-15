@@ -1,19 +1,14 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Table, Input, Collapse, Space } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Input, Space, Button, Row } from 'antd';
 import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
-import { Eb_WP } from 'components/error-boundary';
 import ResourceViewModal from 'components/resource-view-modal';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 
-const { Panel } = Collapse;
-
-const Index = (props) => {
+const TableLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
 
   const event$ = useEventEmitter();
-  const { match, taskId, type } = props;
-  const { orgId, projectId, envId } = match.params || {};
   const [ expandedRowKeys, setExpandedRowKeys ] = useState([]);
   const [ search, setSearch ] = useState('');
  
@@ -112,30 +107,29 @@ const Index = (props) => {
 
   return (
     <>
-      <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
-        <Panel header='资源列表' key='1'>
-          <Space size='middle' direction='vertical' style={{ width: '100%' }}>
-            <Input.Search
-              placeholder='请输入关键字搜索'
-              style={{ width: 240 }}
-              onSearch={v => setSearch(v)}
-            />
-            <Table
-              columns={columns}
-              dataSource={resourceData}
-              rowKey='provider'
-              scroll={{ x: 'min-content', y: 570 }}
-              loading={loading}
-              pagination={false}
-              expandedRowKeys={expandedRowKeys}
-              onExpand={onExpand}
-            /> 
-          </Space>
-        </Panel>
-      </Collapse>
+     <Space size='middle' direction='vertical' style={{ width: '100%' }}>
+       <Row justify='space-between'>
+          <Input.Search
+            placeholder='请输入关键字搜索'
+            style={{ width: 240 }}
+            onSearch={v => setSearch(v)}
+          />
+          <Button onClick={() => setMode('graph')}>切换图形展示</Button>
+        </Row>
+        <Table
+          columns={columns}
+          dataSource={resourceData}
+          rowKey='provider'
+          scroll={{ x: 'min-content', y: 570 }}
+          loading={loading}
+          pagination={false}
+          expandedRowKeys={expandedRowKeys}
+          onExpand={onExpand}
+        /> 
+      </Space>
       <ResourceViewModal event$={event$}/>
     </>
   );
 };
 
-export default Eb_WP()(memo(Index));
+export default TableLayout;

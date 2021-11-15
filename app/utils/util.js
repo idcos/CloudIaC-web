@@ -124,3 +124,9 @@ export const isJsonString = (str) => {
     return false;
   }
 }
+
+
+export const ellipsisText = (text, maxLen = 15) => {
+  text = text || '';
+  return text.length > maxLen ? (text.slice(0, maxLen) + '...') : text;
+}
