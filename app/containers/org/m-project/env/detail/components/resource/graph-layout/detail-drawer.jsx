@@ -1,7 +1,6 @@
 import React from 'react';
 import { Drawer } from 'antd';
 
-
 export default ({ visible, id, onClose }) => {
 
   return (

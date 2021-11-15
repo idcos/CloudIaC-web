@@ -186,3 +186,8 @@ export const POLICIES_DETECTION_ICON_COLLAPSE = {
   violated: <CloseCircleOutlined />,
   suppressed: <CloseSquareOutlined />
 };
+export const DIMENSION_ENUM = {
+  module: '所属模块',
+  provider: 'Provider',
+  type: '资源类型'
+};

@@ -49,7 +49,7 @@ const Dot = () => (
 
 const TreeNode = ({ cfg }) => {
 
-  const { nodeName, resourceList, isRoot } = cfg;
+  const { nodeName, resourcesList, isRoot } = cfg;
   
   return isRoot ? <Dot /> : (
     <Group>
@@ -67,14 +67,14 @@ const TreeNode = ({ cfg }) => {
         >
           <Dot />
           <Text customNodeType='collapse-expand-btn' style={{ fill: '#0B847C', fontSize: 16, margin: [0, 0, 0, 8], cursor: 'pointer' }}>
-            {ellipsisText(nodeName, 20)}
+            {ellipsisText(nodeName, 20)}{resourcesList.length > 0 ? `[${resourcesList.length}]` : ''}
           </Text>
         </Rect>
         {
-          resourceList.length > 0 && (
+          resourcesList.length > 0 && (
             <Rect style={{ maxWidth: 22 * 10, flexWrap: 'wrap', flexDirection: 'row', margin: [8, 0, 0, 16] }}>
               {
-                resourceList.map(({ nodeId, nodeName, deviation }) => (
+                resourcesList.map(({ nodeId, nodeName, deviation }) => (
                   <Cell id={nodeId} name={nodeName} deviation={deviation}/>
                 ))
               }
@@ -87,7 +87,7 @@ const TreeNode = ({ cfg }) => {
 };
 
 export const getNodeHeight = (cfg) => {
-  const cellRowLen = Math.ceil((cfg.resourceList || []).length / 10);
+  const cellRowLen = Math.ceil((cfg.resourcesList || []).length / 10);
   return cfg.isRoot ? 8 : (20 + 8 + 22 * cellRowLen);
 };
 

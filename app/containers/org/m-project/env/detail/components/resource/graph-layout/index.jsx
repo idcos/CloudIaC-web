@@ -1,11 +1,16 @@
 import React, { useRef, useState, useEffect } from 'react';
 import G6 from '@antv/g6';
 import { appenAutoShapeListener } from '@antv/g6-react-node';
-import { Space, Input, Button, Row, Drawer } from 'antd';
-import { mockData1 } from './mock-data';
-import styles from './styles.less';
+import { Space, Input, Button, Row, Select, Spin } from 'antd';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import envAPI from 'services/env';
+import taskAPI from 'services/task';
+import { DIMENSION_ENUM } from 'constants/types';
 import { registerNode, getNodeHeight } from './register-node';
 import DetailDrawer from './detail-drawer';
+import styles from './styles.less';
+import isEmpty from 'lodash/isEmpty';
 
 registerNode('self-tree-node');
 
@@ -14,6 +19,7 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
   const containerRef = useRef();
   const graphRef = useRef();
   const [ search, setSearch ] = useState('');
+  const [ dimension, setDimension ] = useState('module');
   const [ detailDrawerProps, setDetailDrawerProps ] = useState({
     visible: false
   });
@@ -22,6 +28,26 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
     initGraph();
   }, []);
 
+  const { loading } = useRequest(
+    () => {
+      const resourcesApis = {
+        env: envAPI.getResourcesGraphList.bind(null, { orgId, projectId, envId, q: search, dimension }),
+        // task: taskAPI.getResourcesGraphList.bind(null, { orgId, projectId, taskId, q: search, dimension })
+      };
+      return requestWrapper(resourcesApis[type]);
+    }, {
+      ready: dimension && envId,
+      refreshDeps: [dimension, search],
+      onSuccess: (data) => {
+        if (!isEmpty(data)) {
+          graphRef.current.data(data);
+          graphRef.current.render();
+          graphRef.current.fitView();
+        }
+      }
+    }
+  );
+
   // 初始化图表
   const initGraph = () => {
     const container = containerRef.current;
@@ -29,8 +55,8 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
     const height = container.offsetHeight || 500;
     const toolbar = new G6.ToolBar();
     const tooltip = new G6.Tooltip({
-      offsetX: -20,
-      offsetY: -300,
+      offsetX: 10,
+      offsetY: 10,
       itemTypes: ['node'],
       shouldBegin: (ev) => {
         const { customNodeType } = ev.target.cfg || {};
@@ -86,9 +112,9 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
       let allLeafList = [];
       (children || []).forEach((item) => {
         const itemChildren = item.children || [];
-        const resourceList = item.resourceList || [];
-        if (resourceList.length > 0) {
-          allLeafList = [...allLeafList, ...resourceList];
+        const resourcesList = item.resourcesList || [];
+        if (resourcesList.length > 0) {
+          allLeafList = [...allLeafList, ...resourcesList];
         } else {
           allLeafList = [...allLeafList, ...getAllLeafList(itemChildren)];
         }
@@ -96,16 +122,13 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
       return allLeafList;
     };
     graphRef.current.node(function (node) {
-      const { id, children, isRoot, resourceList } = node;
+      const { id, children, isRoot, resourcesList } = node;
       return {
         id,
-        resourceList: (resourceList || []).length > 0 ? resourceList : getAllLeafList(children),
+        resourcesList: (resourcesList || []).length > 0 ? resourcesList : getAllLeafList(children),
         isRoot
       };
     });
-    graphRef.current.data(mockData1);
-    graphRef.current.render();
-    graphRef.current.fitView();
     // 鼠标进入节点
     graphRef.current.on('node:mouseenter', (ev) => {
       const { customNodeType, id } = ev.target.cfg || {};
@@ -155,11 +178,19 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
             style={{ width: 240 }}
             onSearch={v => setSearch(v)}
           />
+          <Select 
+            value={dimension}
+            onChange={setDimension}
+            style={{ width: 153 }}
+            options={Object.keys(DIMENSION_ENUM).map(key => ({ label: DIMENSION_ENUM[key], value: key }))}
+          />
         </Space>
         <Button onClick={() => setMode('table')}>切换列表展示</Button>
       </Row>
-      <div ref={containerRef} className={styles.resourceTreeContainer}>
-      </div>
+      <Spin spinning={loading}>
+        <div ref={containerRef} className={styles.resourceTreeContainer}>
+        </div>
+      </Spin>
       {detailDrawerProps.visible && (
         <DetailDrawer {...detailDrawerProps} onClose={onCloseDetailDrawer}/>
       )}
