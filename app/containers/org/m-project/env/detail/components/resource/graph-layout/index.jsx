@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from 'react';
 import G6 from '@antv/g6';
 import { appenAutoShapeListener } from '@antv/g6-react-node';
 import { Space, Input, Button, Row, Drawer } from 'antd';
-import { mockData1 } from '../mock-data';
+import { mockData1 } from './mock-data';
 import styles from './styles.less';
-import { registerNode } from './register-node';
+import { registerNode, getNodeHeight } from './register-node';
 import DetailDrawer from './detail-drawer';
 
 registerNode('self-tree-node');
@@ -28,11 +28,27 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
     const width = container.offsetWidth;
     const height = container.offsetHeight || 500;
     const toolbar = new G6.ToolBar();
+    const tooltip = new G6.Tooltip({
+      offsetX: -20,
+      offsetY: -300,
+      itemTypes: ['node'],
+      shouldBegin: (ev) => {
+        const { customNodeType } = ev.target.cfg || {};
+        return customNodeType === 'resource-cell';
+      },
+      getContent: (ev) => {
+        const { name } = ev.target.cfg || {};
+        return `
+          <div style='width: 180px;'>${name}</div>
+        `;
+      }
+    });
     graphRef.current = new G6.TreeGraph({
       container,
       width,
       height,
       plugins: [
+        tooltip,
         // toolbar
       ],
       modes: {
@@ -40,8 +56,8 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
           {
             type: 'collapse-expand',
             shouldBegin: (e) => {
-              const { name } = e.target.cfg;
-              return name === 'collapse-expand-btn';
+              const { customNodeType } = e.target.cfg;
+              return customNodeType === 'collapse-expand-btn';
             }
           },
           'drag-canvas',
@@ -55,26 +71,16 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
         type: 'cubic-horizontal',
       },
       layout: {
-        type: 'compactBox',
+        type: 'mindmap',
         direction: 'LR',
         getId: function getId(d) {
           return d.id;
         },
         getWidth: function getWidth() {
-          return 236;
+          return 400;
         },
-        getHeight: function getHeight(d) {
-          const cellRowLen = Math.ceil((d.list || []).length / 10);
-          // 20文本高度 16间距 22一列
-          return 20 + 16 + 22 * cellRowLen;
-        },
-        getVGap: function getVGap() {
-          return 10;
-        },
-        getHGap: function getHGap() {
-          return 100;
-        },
-      },
+        getHeight: getNodeHeight
+      }
     });
     const getAllLeafList = (children) => {
       let allLeafList = [];
@@ -97,25 +103,26 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
         isRoot
       };
     });
-    // // 鼠标进入节点
-    // graphRef.current.on('node:mouseenter', (e) => {
-    //   console.log('mouseenter', e);
-    //   const nodeItem = e.item; // 获取鼠标进入的节点元素对象
-    //   graphRef.current.setItemState(nodeItem, 'hover', true); // 设置当前节点的 hover 状态为 true
-    // });
-    // // 鼠标离开节点
-    // graphRef.current.on('node:mouseleave', (e) => {
-    //   console.log('mouseleave', e);
-    //   const nodeItem = e.item; // 获取鼠标离开的节点元素对象
-    //   graphRef.current.setItemState(nodeItem, 'hover', false); // 设置当前节点的 hover 状态为 false
-    // });
     graphRef.current.data(mockData1);
     graphRef.current.render();
     graphRef.current.fitView();
+    // 鼠标进入节点
+    graphRef.current.on('node:mouseenter', (ev) => {
+      const { customNodeType, id } = ev.target.cfg || {};
+      if (customNodeType === 'resource-cell') {
+        // ev.target.attrs.fill = '#ccc';
+      }
+    });
+    // 鼠标离开节点
+    graphRef.current.on('node:mouseleave', (ev) => {
+      const { customNodeType, id } = ev.target.cfg || {};
+      if (customNodeType === 'resource-cell') {
+        // ev.target.attrs.fill = '#000';
+      }
+    });
     graphRef.current.on('node:click', (ev) => {
-      const { name, id } = ev.target.cfg || {};
-      console.log(1, ev);
-      if (name === 'resource-cell') {
+      const { customNodeType, id } = ev.target.cfg || {};
+      if (customNodeType === 'resource-cell') {
         onOpenDetailDrawer(id);
       }
     });

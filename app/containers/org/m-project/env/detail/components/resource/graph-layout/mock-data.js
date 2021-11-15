@@ -13,6 +13,7 @@ export const mockData1 = {
           "resourceList": [
             {
               "nodeId": "4",
+              "deviation": true,
               "nodeName": "this[1]"
             }
           ]
@@ -29,7 +30,7 @@ export const mockData1 = {
         },
         {
           "nodeId": "7",
-          "nodeName": "vsw"
+          "nodeName": "77777"
         }
       ],
       "children": []
@@ -191,6 +192,7 @@ export const mockData1 = {
             },
             {
               "nodeId": "14",
+              "deviation": true,
               "nodeName": "vsw"
             },
             {
