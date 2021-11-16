@@ -13,10 +13,6 @@ const FL = {
   wrapperCol: { span: 12 }
 };
 
-const PL = {
-  wrapperCol: { span: 24 }
-};
-
 export default ({ orgId, operation, visible, toggleVisible, notificationId }) => {
 
   const leftTableColumns = [
@@ -110,7 +106,6 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
     const PAGES = {
       email: () => <Form.Item
         name='userIds'
-        {...PL}
         rules={[
           {
             required: true,
@@ -128,7 +123,6 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       wechat: () => <Form.Item
         name='wechat-url'
         label={'URL'}
-        {...PL}
         rules={[
           {
             required: true,
@@ -138,35 +132,35 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       >
         <Input />
       </Form.Item>,
-      dingtalk: () => <><Form.Item
-        name='dingtalk-url'
-        label={'URL'}
-        {...PL}
-        rules={[
-          {
-            required: true,
-            message: '请输入url'
-          }
-        ]}
-      >
-        <Input />
-      </Form.Item><Form.Item
-        name='secret'
-        label={'Secret'}
-        {...PL}
-        rules={[
-          {
-            required: true,
-            message: '请输入secret'
-          }
-        ]}
-      >
-        <Input />
-      </Form.Item></>,
+      dingtalk: () => <>
+        <Form.Item
+          name='dingtalk-url'
+          label={'URL'}
+          rules={[
+            {
+              required: true,
+              message: '请输入url'
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name='secret'
+          label={'Secret'}
+          rules={[
+            {
+              required: true,
+              message: '请输入secret'
+            }
+          ]}
+        >
+          <Input />
+        </Form.Item>
+      </>,
       slack: () => <Form.Item
         name='slack-url'
         label={'URL'}
-        {...PL}
         rules={[
           {
             required: true,
@@ -251,36 +245,26 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
             {Object.keys(ORG_USER.eventType).map(it => <Option value={it}>{ORG_USER.eventType[it]}</Option>)}
           </Select>
         </Form.Item>
-        <div style={{ marginTop: 20 }}>
-          <div className={styles.depolyDetail}>
-            <Tabs
-              type={'card'}
-              tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
-              animated={false}
-              renderTabBar={(props, DefaultTabBar) => {
-                return (
-                  <div style={{ marginBottom: -16 }}>
-                    <DefaultTabBar {...props} />
-                  </div>
-                );
-              }}
-              activeKey={panel}
-              onChange={(k) => {
-                setPanel(k); 
-              }}
-            >
-              {Object.keys(ORG_USER.notificationType).map((it) => (
-                <Tabs.TabPane
-                  tab={ORG_USER.notificationType[it]}
-                  key={it}
-                />
-              ))}
-            </Tabs>
-            <Card style={{ height: 500 }} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置内容'}>
-              {renderByPanel()}
-            </Card>
-          </div>
-        </div>
+
+        <Form.Item
+          label='通知类型'
+          name='notificationType'
+          rules={[
+            {
+              required: true,
+              message: '请选择通知类型'
+            }
+          ]}
+        >
+          <Select 
+            getPopupContainer={triggerNode => triggerNode.parentNode}
+            placeholder='请选择通知类型'
+            onChange={e => setPanel(e)}
+          >
+            {Object.keys(ORG_USER.notificationType).map(it => <Option value={it}>{ORG_USER.notificationType[it]}</Option>)}
+          </Select>
+        </Form.Item>
+        {renderByPanel()}
       </Form>
     </Drawer>
   </>;
