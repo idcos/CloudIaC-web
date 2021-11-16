@@ -307,7 +307,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                       </Form.Item>
                     </Col>
                     <Col span={7}>
-                      <Form.Item>
+                      <Form.Item
+                        label={' '}
+                      >
                         <Space style={{ minWidth: 340 }}>
                           <Form.Item 
                             name='retryAble'
