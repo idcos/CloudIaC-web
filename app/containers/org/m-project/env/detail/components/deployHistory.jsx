@@ -115,7 +115,7 @@ const Index = (props) => {
       render: (t, r) => {
         return (<a
           onClick={() => {
-            history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${r.id}`); 
+            history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${r.id}`); 
           }}
         >进入详情</a>); 
       }

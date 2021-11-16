@@ -83,7 +83,7 @@ const EnvList = (props) => {
             <Space>
               <a onClick={() => {
                 const tabKey = data.status === 'approving' ? 'deployJournal' : 'resource';
-                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}/${tabKey}`); 
+                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
               }}
               >{data.name || '-'}</a>
               <span style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 12 }}>ID：{data.id}</span>

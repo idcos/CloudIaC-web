@@ -22,7 +22,7 @@ const breadcrumbNameMap = {
   'updateCT': { text: '编辑云模板' },
   'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
   'task': { text: '部署历史' },
-  'detail': { text: '环境详情', indexDiff: 2 },
+  'detail': { text: '环境详情', indexDiff: 1, search: '?tabKey=deployHistory' },
   'compliance-config': { text: '合规配置', disabled: true },
   'ct': { text: '云模板', disabled: true },
   'env': { text: '环境' },
@@ -44,8 +44,8 @@ const BreadcrumbWrapper = ({ location, params }) => {
       if (!link) {
         return null;
       }
-      const { indexDiff, getText, text, disabled } = link;
-      const url = `/${pathSnippets.slice(0, index + 1 + (indexDiff || 0)).join('/')}`;
+      const { indexDiff, getText, text, disabled, search = '' } = link;
+      const url = `/${pathSnippets.slice(0, index + 1 + (indexDiff || 0)).join('/')}${search}`;
       const isLastOne = snippet === lastOne;
       return (
         <Breadcrumb.Item key={url}>

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { notification, Select, Form, Input, Button, Row, Col, Radio } from "antd";
+import { notification, Select, Form, Input, Button, Row, Col } from "antd";
 import PageHeader from "components/pageHeader";
 import history from 'utils/history';
 import VariableForm from 'components/variable-form';
 import AdvancedConfig from './advanced-config';
 import Layout from "components/common/layout";
-import moment from 'moment';
 import sysAPI from 'services/sys';
 import envAPI from 'services/env';
 import tplAPI from 'services/tpl';
@@ -259,9 +258,9 @@ const Index = ({ match = {} }) => {
       });
       const envInfo = res.result || {};
       if (envId) { // 重新部署环境，跳部署历史详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployHistory/task/${envInfo.taskId}`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`); 
       } else { // 创建部署环境，跳环境详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployJournal`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`); 
       }
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);

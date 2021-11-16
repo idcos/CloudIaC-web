@@ -112,7 +112,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
       manual: true,
       onSuccess: (data) => {
         const { taskId } = data;
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${taskId}`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${taskId}`); 
       }
     }
   ); 

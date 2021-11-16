@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
 import { ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons';
+import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
@@ -21,6 +22,7 @@ import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
 import styles from './styles.less';
+import { createBrowserHistory } from 'history';
 
 const subNavs = {
   resource: '资源',
@@ -34,9 +36,9 @@ const subNavs = {
 
 const EnvDetail = (props) => {
 
-  const { userInfo, match: { params: { orgId, projectId, envId, tabKey } } } = props;
+  const { userInfo, location, match: { params: { orgId, projectId, envId } } } = props;
+  const { tabKey } = queryString.parse(location.search);
   const { PROJECT_OPERATOR } = getPermission(userInfo);
-
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ info, setInfo ] = useState({});
@@ -113,7 +115,7 @@ const EnvDetail = (props) => {
           message: '操作成功'
         });
         form.resetFields();
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${res.result.taskId}`);
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${res.result.taskId}`);
       },
       onCancel: () => form.resetFields()
     });
@@ -212,8 +214,11 @@ const EnvDetail = (props) => {
           }}
           activeKey={panel}
           onChange={(k) => {
+            const history = createBrowserHistory({ forceRefresh: false });
+            history.replace({
+              search: `?tabKey=${k}`
+            });
             setPanel(k); 
-            history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/${k}`);
           }}
         >
           {Object.keys(subNavs).map((it) => {

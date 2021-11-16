@@ -31,13 +31,13 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey',
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId',
           //(resource,output,deploy,deployHistory,variable,setting)
           component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey/task/:taskId',
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/task/:taskId',
           component: loadable(() => import('containers/org/m-project/env/detail/task-detail'), asyncLoadFallback),
           exact: true
         },
