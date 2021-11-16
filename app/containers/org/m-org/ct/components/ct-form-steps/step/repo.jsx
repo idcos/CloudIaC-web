@@ -357,7 +357,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
                   (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
                 }
                 {
-                  (formData.tfVersion && !(tfversionOptions || []).includes(formData.tfVersion)) && (
+                  (formData.tfVersion && !([...tfversionOptions, TFVERSION_AUTO_MATCH]).includes(formData.tfVersion)) && (
                     <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
                   )
                 }
