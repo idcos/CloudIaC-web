@@ -113,8 +113,7 @@ export const TASK_STATUS = {
   "approving": '待审批',
   "failed": '失败',
   "complete": '成功',
-  "rejected": '驳回',
-  "timeout": '超时'
+  "rejected": '驳回'
 };
 
 export const TASK_STATUS_COLOR = {
@@ -123,8 +122,7 @@ export const TASK_STATUS_COLOR = {
   "approving": 'processing',
   "failed": 'error',
   "complete": 'success',
-  "rejected": "warning",
-  "timeout": 'error'
+  "rejected": "warning"
 };
 
 export const TASK_TYPE = {
@@ -138,8 +136,7 @@ export const END_TASK_STATUS_LIST = [
   'failed',
   'approving',
   'complete',
-  'rejected',
-  'timeout'
+  'rejected'
 ];
 
 export const END_ENV_STATUS_LIST = [
