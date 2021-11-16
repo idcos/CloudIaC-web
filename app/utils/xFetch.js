@@ -7,6 +7,7 @@ function parseJSON(res) {
 }
 
 import { logout } from 'services/logout';
+import history from 'utils/history';
 
 async function xFetch(url, options) {
   const opts = { isEncode: true, ...options, credentials: 'include' };
@@ -25,6 +26,9 @@ async function xFetch(url, options) {
   if (jsonResponse.httpCode == 401) {
     // Here for your logout logic.
     logout();
+    return;
+  } else if (jsonResponse.httpCode == 403) {
+    history.push('/no-access');
     return;
   } else {
     return jsonResponse.jsonResult;

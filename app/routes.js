@@ -190,6 +190,11 @@ export default function createRoutes() {
       exact: true
     },
     {
+      path: '/no-access',
+      name: 'NoAccessPage',
+      component: loadable(() => import('containers/no-access'), asyncLoadFallback)
+    },
+    {
       path: '*',
       name: 'NotFoundPage',
       component: loadable(() => import('containers/NotFoundPage'), asyncLoadFallback)
