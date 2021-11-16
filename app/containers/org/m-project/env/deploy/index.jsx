@@ -232,9 +232,15 @@ const Index = ({ match = {} }) => {
 
   const onFinish = async (taskType) => {
     try {
-      const value = await form.validateFields();
-      const varData = await varRef.current.validateForm();
-      const configData = await configRef.current.onfinish();
+      const value = await form.validateFields().catch(() => {
+        throw new Error('表单校验错误');
+      });
+      const configData = await configRef.current.onfinish().catch(() => {
+        throw new Error('表单校验错误');
+      });
+      const varData = await varRef.current.validateForm().catch(() => {
+        throw new Error('表单校验错误');
+      });
       let values = { ...value, ...configData };
       if (values.playbook && !values.keyId) {
         return notification.error({
@@ -264,7 +270,7 @@ const Index = ({ match = {} }) => {
       taskType === 'apply' && setApplyLoading(false);
       notification.error({
         message: '保存失败',
-        description: e.message || '表单校验错误'
+        description: e.message
       });
     }
   };
