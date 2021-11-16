@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col } from "antd";
+import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
@@ -12,6 +12,7 @@ import { AUTO_DESTROY, destoryType } from 'constants/types';
 import envAPI from 'services/env';
 import tokensAPI from 'services/tokens';
 import Copy from 'components/copy';
+import styles from '../styles.less';
 
 const FL = {
   labelCol: { span: 24 },
@@ -26,6 +27,8 @@ const Index = (props) => {
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ fileLoading, setFileLoading ] = useState(false);
   const [ submitLoading, setSubmitLoading ] = useState(false);
+  const [ panel, setPanel ] = useState('execute');
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -155,154 +158,200 @@ const Index = (props) => {
         layout={'vertical'}
         onFinish={onFinish}
       >
-        <Row justify='space-between'>
-          <Col span={7}>
-            <Form.Item 
-              style={{ marginBottom: 0 }}
-              label='存活时间：'
+        <div>
+          <Tabs
+            tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
+            animated={false}
+            activeKey={panel}
+            onChange={(k) => {
+              setPanel(k); 
+            }}
+          >
+            <Tabs.TabPane
+              tab={'执行'}
+              key={'execute'}
+              forceRender={true}
             >
-              <Row>
-                <Col span={8}>
+              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={7}>
                   <Form.Item 
-                    name='type'
-                    initialValue={'infinite'}
+                    style={{ marginBottom: 0 }}
+                    label='存活时间：'
                   >
-                    <Select style={{ width: '100%' }}>
-                      {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={16}>
-                  <Form.Item 
-                    noStyle={true}
-                    shouldUpdate={true}
-                  >
-                    {({ getFieldValue }) => {
-                      let type = getFieldValue('type'); 
-                      if (type === 'infinite') {
-                        return <></>;
-                      }
-                      if (type === 'timequantum') {
-                        return <Form.Item 
-                          name='ttl'
-                          noStyle={true}
-                          shouldUpdate={true}
+                    <Row>
+                      <Col span={8}>
+                        <Form.Item 
+                          name='type'
+                          initialValue={'infinite'}
                         >
                           <Select style={{ width: '100%' }}>
-                            {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
+                            {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                           </Select>
-                        </Form.Item>;
-                      }
-                      if (type === 'time') {
-                        return <Form.Item 
-                          name='destroyAt'
+                        </Form.Item>
+                      </Col>
+                      <Col span={16}>
+                        <Form.Item 
                           noStyle={true}
                           shouldUpdate={true}
                         >
-                          <DatePicker style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
-                        </Form.Item>;
-                      }
-                    }}
+                          {({ getFieldValue }) => {
+                            let type = getFieldValue('type'); 
+                            if (type === 'infinite') {
+                              return <></>;
+                            }
+                            if (type === 'timequantum') {
+                              return <Form.Item 
+                                name='ttl'
+                                noStyle={true}
+                                shouldUpdate={true}
+                              >
+                                <Select style={{ width: '100%' }}>
+                                  {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
+                                </Select>
+                              </Form.Item>;
+                            }
+                            if (type === 'time') {
+                              return <Form.Item 
+                                name='destroyAt'
+                                noStyle={true}
+                                shouldUpdate={true}
+                              >
+                                <DatePicker style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                              </Form.Item>;
+                            }
+                          }}
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                  <Form.Item label={' '}>
+                    <Space style={{ minWidth: 340 }}>
+                      <Form.Item 
+                        name='retryAble'
+                        valuePropName='checked'
+                        initialValue={false}
+                        noStyle={true}
+                      >
+                        <Checkbox/>
+                      </Form.Item>
+                      <span>执行失败时，间隔</span>
+                      <Form.Item 
+                        name='retryDelay'
+                        initialValue={0}
+                        noStyle={true}
+                      >
+                        <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+                      </Form.Item>
+                      <span>秒自动重试</span>
+                      <Form.Item
+                        noStyle={true}
+                        initialValue={0}
+                        name='retryNumber'
+                      >
+                        <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }} />
+                      </Form.Item>
+                      <span>次</span> 
+                    </Space>
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                </Col>
+              </Row>
+            </Tabs.TabPane>
+            <Tabs.TabPane
+              tab={'CI/CD'}
+              key={'deploy'}
+              forceRender={true}
+            >
+              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={7}>
+                  <Form.Item 
+                    shouldUpdate={true}
+                  >
+                    {({ getFieldValue }) => (
+                      <>
+                        <Form.Item 
+                          name='commit'
+                          noStyle={true}
+                          valuePropName='checked'
+                          initialValue={false}
+                        >
+                          <Checkbox>推送到分支时重新部署</Checkbox> 
+                        </Form.Item>
+                        <Space size={8}>
+                          <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
+                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest('apply')}/>
+                        </Space>
+                      </>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                  <Form.Item 
+                    shouldUpdate={true}
+                  >
+                    {({ getFieldValue }) => (
+                      <>
+                        <Form.Item 
+                          noStyle={true}
+                          name='prmr'
+                          valuePropName='checked'
+                          initialValue={false}
+                        >
+                          <Checkbox>PR/MR时执行PLAN</Checkbox> 
+                        </Form.Item>
+                        <Space size={8}>
+                          <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
+                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest('plan')}/>
+                        </Space>
+                      </>
+                    )}
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
+                </Col>
+              </Row>
+            </Tabs.TabPane>
+            <Tabs.TabPane
+              tab={'合规'}
+              key={'compliance'}
+              forceRender={true}
+            >
+              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={7}>
+                  <Form.Item 
+                    name='stopOnViolation'
+                    label={''}
+                    valuePropName='checked'
+                    initialValue={false}
+                  >
+                    <Checkbox>合规不通过时中止部署</Checkbox> 
                   </Form.Item>
                 </Col>
               </Row>
-            </Form.Item>
-          </Col>
-          <Col span={7}>
-            <Form.Item label={' '}>
-              <Space style={{ minWidth: 340 }}>
-                <Form.Item 
-                  name='retryAble'
-                  valuePropName='checked'
-                  initialValue={false}
-                  noStyle={true}
-                >
-                  <Checkbox/>
-                </Form.Item>
-                <span>执行失败时，间隔</span>
-                <Form.Item 
-                  name='retryDelay'
-                  initialValue={0}
-                  noStyle={true}
-                >
-                  <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }}/>
-                </Form.Item>
-                <span>秒自动重试</span>
-                <Form.Item
-                  noStyle={true}
-                  initialValue={0}
-                  name='retryNumber'
-                >
-                  <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }} />
-                </Form.Item>
-                <span>次</span> 
-              </Space>
-            </Form.Item>
-          </Col>
-          <Col span={7}>
-            <Form.Item 
-              name='stopOnViolation'
-              label={' '}
-              valuePropName='checked'
-              initialValue={false}
+            </Tabs.TabPane>
+
+            <Tabs.TabPane
+              tab={'审批'}
+              key={'approval'}
+              forceRender={true}
             >
-              <Checkbox>合规不通过时中止部署</Checkbox> 
-            </Form.Item>
-          </Col>
-          <Col span={7}>
-            <Form.Item 
-              shouldUpdate={true}
-            >
-              {({ getFieldValue }) => (
-                <>
+              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={7}>
                   <Form.Item 
-                    name='commit'
-                    noStyle={true}
+                    name='autoApproval'
                     valuePropName='checked'
                     initialValue={false}
                   >
-                    <Checkbox>推送到分支时重新部署</Checkbox> 
+                    <Checkbox>自动通过审批</Checkbox> 
                   </Form.Item>
-                  <Space size={8}>
-                    <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
-                    <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest('apply')}/>
-                  </Space>
-                </>
-              )}
-            </Form.Item>
-          </Col>
-          <Col span={7}>
-            <Form.Item 
-              shouldUpdate={true}
-            >
-              {({ getFieldValue }) => (
-                <>
-                  <Form.Item 
-                    noStyle={true}
-                    name='prmr'
-                    valuePropName='checked'
-                    initialValue={false}
-                  >
-                    <Checkbox>PR/MR时执行PLAN</Checkbox> 
-                  </Form.Item>
-                  <Space size={8}>
-                    <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
-                    <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest('plan')}/>
-                  </Space>
-                </>
-              )}
-            </Form.Item>
-          </Col>
-          <Col span={7}>
-            <Form.Item 
-              name='autoApproval'
-              valuePropName='checked'
-              initialValue={false}
-            >
-              <Checkbox>自动通过审批</Checkbox> 
-            </Form.Item>
-          </Col>
-        </Row>
+                </Col>
+              </Row>
+            </Tabs.TabPane>
+          </Tabs>  
+        </div>
         {
           PROJECT_OPERATOR ? (
             <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
