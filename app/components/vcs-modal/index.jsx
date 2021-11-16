@@ -79,6 +79,7 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择VCS类型'
           onChange={onChangeVcsType}
+          disabled={opt === 'edit'}
         >
           <Option value='gitlab'>gitlab</Option>
           <Option value='github'>github</Option>
@@ -103,12 +104,12 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
         name='vcsToken'
         rules={[
           {
-            required: true,
-            message: '请输入'
+            required: opt === 'add',
+            message: '请输入Token密码'
           }
         ]}
       >
-        <Input placeholder='请输入Token密码'/>
+        <Input placeholder={opt === 'add' ? '请输入' : '空值保存时不会修改原有值'}/>
       </Form.Item>
     </Form>
   </Modal>;

@@ -90,12 +90,6 @@ export default ({ title, orgId }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'vcsToken',
-      title: 'Token',
-      width: 320,
-      ellipsis: true
-    },
-    {
       title: '操作',
       width: 169,
       ellipsis: true,
