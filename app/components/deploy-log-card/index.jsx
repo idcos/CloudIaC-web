@@ -248,12 +248,12 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
           {
             taskSteps.map(({ name, id, startAt, type, endAt, status }) => (
               <Panel 
-                collapsible={!['complete', 'failed', 'running'].includes(status) && 'disabled'}
+                collapsible={!['complete', 'failed', 'timeout', 'running'].includes(status) && 'disabled'}
                 header={
                   <Space>
                     <span>{name || type || '-'}</span>
                     {status === 'complete' && <CheckCircleFilled style={{ color: '#45BC13' }}/>}
-                    {status === 'failed' && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
+                    {status === 'failed' || status === 'timeout' && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
                     {status === 'running' && <SyncOutlined spin={true} style={{ color: '#ffffff' }}/>}
                   </Space>
                 } 
