@@ -1,7 +1,6 @@
 import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
-import map from 'lodash/map';
 import differenceBy from 'lodash/differenceBy';
 import omit from 'lodash/omit';
 import intersectionBy from 'lodash/intersectionBy';
@@ -138,9 +137,14 @@ const VariableForm = ({
             const endVarGroupList = envVarGroupList.filter(it => it.objectType === defaultScope);
             const varGroupIds = differenceBy(endVarGroupList, startVarGroupList, 'varGroupId').map(it => it.varGroupId);
             const delVarGroupIds = differenceBy(startVarGroupList, endVarGroupList, 'varGroupId').map(it => it.varGroupId);
+            const variables = [ ...terraformVarList, ...envVarList ].filter(
+              ({ scope }) => scope === defaultScope
+            ).map(
+              (it) => omit(it, ['isNew', '_key_id', 'overwrites'])
+            );
             const data = {
               deleteVariablesId,
-              variables: map([ ...terraformVarList, ...envVarList ], (it) => omit(it, ['isNew', '_key_id', 'overwrites'])),
+              variables,
               ...otherVars,
               varGroupIds,
               delVarGroupIds
