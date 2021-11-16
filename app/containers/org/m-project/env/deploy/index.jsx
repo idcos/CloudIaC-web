@@ -264,7 +264,7 @@ const Index = ({ match = {} }) => {
       taskType === 'apply' && setApplyLoading(false);
       notification.error({
         message: '保存失败',
-        description: e.message
+        description: e.message || '表单校验错误'
       });
     }
   };

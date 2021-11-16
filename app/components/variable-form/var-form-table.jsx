@@ -40,7 +40,8 @@ const VarFormTable = (props) => {
     type,
     canImportVar = false,
     canImportResourceAccount = false,
-    defaultExpandCollapse = true
+    expandCollapse,
+    setExpandCollapse
   } = props;
 
   const defalutVarListRef = useRef([]);
@@ -393,7 +394,14 @@ const VarFormTable = (props) => {
   const scrollTableWrapperClassName = `listen-table-scroll-${type}`;
 
   return (
-    <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'} >
+    <Collapse 
+      activeKey={expandCollapse && 'open'}
+      expandIconPosition={'right'} 
+      onChange={(keys) => {
+        const expandCollapse = keys.includes('open');
+        setExpandCollapse(expandCollapse);
+      }}
+    >
       <Collapse.Panel key='open' header={VAR_TYPE_ENUM[type]} forceRender={true}>
         <EditableTable
           getActionRef={ref => (formVarRef.current = ref.current)}

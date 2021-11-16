@@ -39,6 +39,10 @@ const VariableForm = ({
   const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
   const [ envVarGroupList, setEnvVarGroupList ] = useState([]);
   const [ defalutEnvVarGroupList, setDefalutEnvVarGroupList ] = useState([]);
+  const [ expandCollapseCfg, setExpandCollapseCfg ] = useState({
+    terraform: defaultExpandCollapse,
+    environment: defaultExpandCollapse
+  });
 
   event$ && event$.useSubscription(({ type }) => {
     switch (type) {
@@ -110,8 +114,14 @@ const VariableForm = ({
     validateForm: () => {
       return new Promise((resolve, reject) => {
         let formValidates = [
-          terraformVarRef.current.handleValidate(),
-          envVarRef.current.handleValidate()
+          terraformVarRef.current.handleValidate().catch(() => {
+            setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: true }));
+            throw new Error();
+          }),
+          envVarRef.current.handleValidate().catch(() => {
+            setExpandCollapseCfg((preValue) => ({ ...preValue, environment: true }));
+            throw new Error();
+          })
         ];
         if (showOtherVars) {
           formValidates.push(
@@ -157,6 +167,8 @@ const VariableForm = ({
               setDeleteVariablesId={setDeleteVariablesId}
               defaultScope={defaultScope}
               defalutVarList={defalutTerraformVarList}
+              expandCollapse={expandCollapseCfg.terraform}
+              setExpandCollapse={(expandCollapse) => setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: expandCollapse }))}
               fetchParams={fetchParams}
               canImportVar={canImportTerraformVar}
               type='terraform'
@@ -172,6 +184,8 @@ const VariableForm = ({
               setDeleteVariablesId={setDeleteVariablesId}
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
+              expandCollapse={expandCollapseCfg.environment}
+              setExpandCollapse={(expandCollapse) => setExpandCollapseCfg((preValue) => ({ ...preValue, environment: expandCollapse }))}
               fetchParams={fetchParams}
               canImportResourceAccount={showVarGroupList}
               defalutVarGroupList={defalutEnvVarGroupList}
