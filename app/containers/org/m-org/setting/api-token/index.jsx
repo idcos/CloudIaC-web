@@ -102,7 +102,7 @@ const ApiToken = ({ orgId }) => {
       title: '过期时间',
       width: 150,
       ellipsis: true,
-      render: (text) => moment(text).format(dateFormat)
+      render: (text) => text ? moment(text).format(dateFormat) : '-'
     },
     {
       dataIndex: 'createdAt',

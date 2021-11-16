@@ -48,12 +48,6 @@ export default ({ orgId, toggleVisible, operation }) => {
         <Form.Item
           label='过期时间'
           name='expiredAt'
-          rules={[
-            {
-              required: true,
-              message: '请选择'
-            }
-          ]}
         >
           <DatePicker style={{ width: '100%' }} placeholder='请选择过期时间' format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
         </Form.Item>

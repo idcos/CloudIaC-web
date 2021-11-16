@@ -30,8 +30,10 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   useEffect(() => {
     if (envId) {
       setFormValues(data);
+    } else {
+      setFormValues(tplInfo);
     }
-  }, [ envId, data ]);
+  }, [ envId, data, tplInfo ]);
 
   // 策略组选项查询
   const { run: fetchFile } = useRequest(
