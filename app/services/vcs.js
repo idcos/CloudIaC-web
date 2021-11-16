@@ -16,8 +16,7 @@ const vcsAPI = {
   },
   updateVcs: ({ orgId, id, name, vcsType, address, vcsToken, status }) => {
     return put(`/api/v1/vcs/${id}`, {
-      status: status || 'enable',
-      name, vcsType, address, vcsToken 
+      status, name, vcsType, address, vcsToken 
     }, {
       'IaC-Org-Id': orgId
     });

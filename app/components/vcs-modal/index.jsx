@@ -13,11 +13,10 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
+    const payload = opt === 'add' ? values : { ...values, id: curRecord.id };
     operation({
       doWhat: opt,
-      payload: {
-        ...values
-      }
+      payload
     }, (hasError) => {
       setSubmitLoading(false);
       !hasError && toggleVisible();
@@ -39,7 +38,7 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
   };
 
   return <Modal
-    title='添加VCS'
+    title={opt === 'add' ? '添加VCS' : '编辑VCS'}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{

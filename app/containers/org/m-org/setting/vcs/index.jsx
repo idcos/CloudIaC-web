@@ -102,6 +102,13 @@ export default ({ title, orgId }) => {
       fixed: 'right',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
+          <a 
+            onClick={() => {
+              setOpt('edit');
+              toggleVisible();
+              setCurRecord(record);
+            }}
+          >编辑</a>
           {
             record.status == 'disable' ? 
               <a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>启用</a>

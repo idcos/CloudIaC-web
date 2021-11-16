@@ -165,6 +165,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       notification.success({
         message: '操作成功'
       });
+      fetchVcsList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -393,7 +394,6 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         visible={vcsVisible}
         toggleVisible={clVcsModal}
         opt={'add'}
-        reload={fetchVcsList}
         operation={vcsOperation}
       />
     }
