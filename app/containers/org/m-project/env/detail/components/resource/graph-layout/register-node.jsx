@@ -2,6 +2,7 @@ import React from 'react';
 import G6 from '@antv/g6';
 import { Rect, Text, Circle, Group, Image, createNodeFromReact } from '@antv/g6-react-node';
 import { ellipsisText } from 'utils/util';
+import isEmpty from 'lodash/isEmpty';
 
 const Cell = ({ name, id, deviation }) => {
   const props = {
@@ -49,8 +50,12 @@ const Dot = () => (
 
 const TreeNode = ({ cfg }) => {
 
-  const { nodeName, resourcesList, isRoot } = cfg;
-  
+  const { nodeName, resourcesList, children, isRoot } = cfg;
+  // 节点展开状态 展开false 收起true 默认展开
+  const { collapsed = false } = cfg; 
+  // 父节点收起状态或者叶子节点 并且 资源数量大于0
+  const isShowResourcesList = (collapsed || isEmpty(children)) && resourcesList.length > 0;
+
   return isRoot ? <Dot /> : (
     <Group>
       <Rect
@@ -71,7 +76,7 @@ const TreeNode = ({ cfg }) => {
           </Text>
         </Rect>
         {
-          resourcesList.length > 0 && (
+          isShowResourcesList && (
             <Rect style={{ maxWidth: 22 * 10, flexWrap: 'wrap', flexDirection: 'row', margin: [8, 0, 0, 16] }}>
               {
                 resourcesList.map(({ resourceId, nodeName, deviation }) => (

@@ -37,6 +37,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
       visible={visible} 
       onClose={onClose}
       width={460}
+      getContainer={false}
     >
       <Form layout="vertical">
         <Form.Item label='ID：'>

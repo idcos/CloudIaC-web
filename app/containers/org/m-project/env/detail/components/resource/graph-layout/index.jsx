@@ -14,6 +14,7 @@ import styles from './styles.less';
 import isEmpty from 'lodash/isEmpty';
 import DetailPageContext from '../../../detail-page-context';
 import classNames from 'classnames';
+import { mockData1 } from './mock-data'
 
 registerNode('self-tree-node');
 
@@ -32,6 +33,9 @@ const GraphLayout = ({ setMode }) => {
 
   useEffect(() => {
     initGraph();
+    // setTimeout(() => {
+    //   renderGraph(mockData1);
+    // }, 300);
     window.onresize = () => {
       autoChangeSize();
     };
@@ -52,14 +56,18 @@ const GraphLayout = ({ setMode }) => {
       ready: dimension && envId,
       refreshDeps: [dimension],
       onSuccess: (data) => {
-        if (!isEmpty(data)) {
-          graphRef.current.data(data);
-          graphRef.current.render();
-          graphRef.current.fitView();
-        }
+        renderGraph(data);
       }
     }
   );
+
+  const renderGraph = (data) => {
+    if (!isEmpty(data)) {
+      graphRef.current.data(data);
+      graphRef.current.render();
+      graphRef.current.fitView();
+    }
+  };
 
   // 初始化图表
   const initGraph = () => {
@@ -141,6 +149,11 @@ const GraphLayout = ({ setMode }) => {
         resourcesList: (resourcesList || []).length > 0 ? resourcesList : getAllLeafList(children),
         isRoot
       };
+    });
+    graphRef.current.on('itemcollapsed', (e) => {
+      graphRef.current.updateItem(e.item, {
+        collapsed: e.collapsed,
+      });
     });
     // 鼠标进入节点
     graphRef.current.on('node:mouseenter', (ev) => {
