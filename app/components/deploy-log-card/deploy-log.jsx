@@ -29,6 +29,7 @@ export default ({ taskInfo, stepId, stepStatus, isFullscreen }) => {
     switch (stepStatus) {
       case 'complete':
       case 'failed':
+      case 'timeout':
         fetchTaskStepLog();
         break;
       case 'running':
