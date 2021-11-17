@@ -1,4 +1,4 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useContext } from 'react';
 import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -6,13 +6,12 @@ import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import { connect } from "react-redux";
 import getPermission from "utils/permission";
-import copy from 'utils/copy';
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import envAPI from 'services/env';
 import tokensAPI from 'services/tokens';
 import Copy from 'components/copy';
-import styles from '../styles.less';
+import DetailPageContext from '../detail-page-context';
 
 const FL = {
   labelCol: { span: 24 },
@@ -20,20 +19,18 @@ const FL = {
 };
 const { Option } = Select;
     
-const Index = (props) => {
+const Setting = () => {
   
-  const { match, info, reload, userInfo } = props;
-  const { params: { orgId, projectId, envId } } = match;
+  const [form] = Form.useForm();
+  const { userInfo, envInfo, reload, orgId, projectId, envId } = useContext(DetailPageContext);
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ fileLoading, setFileLoading ] = useState(false);
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ panel, setPanel ] = useState('execute');
 
-  const [form] = Form.useForm();
-
   useEffect(() => {
-    info && setFormValues(info);
-  }, [info]);
+    envInfo && setFormValues(envInfo);
+  }, [envInfo]);
 
   const setFormValues = (data) => {
     if (!isEmpty(data.triggers)) {
@@ -355,7 +352,7 @@ const Index = (props) => {
         {
           PROJECT_OPERATOR ? (
             <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
-              <Button loading={fileLoading} onClick={archive} disabled={info.status !== 'inactive'} >归档</Button>
+              <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档</Button>
               <Button loading={submitLoading} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
             </Row>
           ) : null
@@ -365,10 +362,4 @@ const Index = (props) => {
   </div>;
 };
 
-export default connect((state) => {
-  return {
-    userInfo: state.global.get('userInfo').toJS()
-  };
-})(
-  Eb_WP()(memo(Index))
-);
+export default Eb_WP()(memo(Setting));

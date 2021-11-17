@@ -1,7 +1,6 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect, memo, useContext } from 'react';
 import { Card, Table, notification, Tag, Tooltip } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-
 import history from 'utils/history';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
@@ -9,21 +8,22 @@ import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import taskAPI from 'services/task';
 import isEmpty from 'lodash/isEmpty';
+import DetailPageContext from '../detail-page-context';
 
-const Index = (props) => {
-  const { match, info } = props,
-    { params: { orgId, projectId, envId } } = match;
-  const [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [{ name: 1, id: 0 }],
-      total: 0
-    });
+const DeployHistory = () => {
+
+  const { envInfo, orgId, projectId, envId } = useContext(DetailPageContext);
+  const [ loading, setLoading ] = useState(false);
+  const [ resultMap, setResultMap ] = useState({
+    list: [],
+    total: 0
+  });
 
   useEffect(() => {
-    if (!isEmpty(info)) {
+    if (!isEmpty(envInfo)) {
       fetchList();
     }
-  }, [info]);
+  }, [envInfo]);
 
   const fetchList = async () => {
     try {
@@ -135,4 +135,4 @@ const Index = (props) => {
   ;
 };
 
-export default Eb_WP()(memo(Index));
+export default Eb_WP()(memo(DeployHistory));

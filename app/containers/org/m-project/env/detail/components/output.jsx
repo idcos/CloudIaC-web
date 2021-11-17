@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
 import { Spin, Collapse } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -7,13 +7,13 @@ import Coder from "components/coder";
 import { Eb_WP } from 'components/error-boundary';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
+import DetailPageContext from '../detail-page-context';
 
 const { Panel } = Collapse;
 
-const Output = (props) => {
+const Output = () => {
 
-  const { match, taskId, type } = props;
-  const { orgId, projectId, envId } = match.params || {};
+  const { taskId, type, orgId, projectId, envId } = useContext(DetailPageContext);
 
   const { data: outputStr = '', loading } = useRequest(
     () => {

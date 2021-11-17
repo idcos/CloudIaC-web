@@ -13,6 +13,7 @@ import Output from './components/output';
 import DeployJournal from './components/deployJournal';
 import Variable from './components/variable';
 import TaskInfo from './components/taskInfo';
+import DetailPageContext from './detail-page-context';
 import styles from './styles.less';
 
 const subNavs = {
@@ -24,7 +25,7 @@ const subNavs = {
 
 const TaskDetail = (props) => {
 
-  const { curEnv, dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
+  const { userInfo, curEnv, dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
 
   const [ panel, setPanel ] = useState('deployJournal');
 
@@ -49,12 +50,16 @@ const TaskDetail = (props) => {
     }
   );
 
+  const reload = () => {
+    refresh();
+  };
+
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
-      output: () => <Output {...props} type='task' taskId={taskId} taskInfo={taskInfo} />,
-      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={refresh}/>,
-      variable: () => <Variable type='task' {...props} taskInfo={taskInfo}/>
+      resource: () => <Resource />,
+      output: () => <Output />,
+      deployJournal: () => <DeployJournal />,
+      variable: () => <Variable />
     };
     return PAGES[panel]({
       title: subNavs[panel],
@@ -62,52 +67,68 @@ const TaskDetail = (props) => {
     });
   }, [ panel, taskInfo ]);
   
-  return <Layout
-    extraHeader={
-      <PageHeader
-        title={(curEnv || {}).name || ''}
-        breadcrumb={true}
-      />
-    }
-  >
-    <div className='idcos-card'>
-      <TaskInfo taskInfo={taskInfo} />
-    </div>
-    <div style={{ marginTop: 20 }} className='idcos-card'>
-      <div className={styles.depolyDetail}>
-        <Tabs
-          type={'card'}
-          tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
-          animated={false}
-          renderTabBar={(props, DefaultTabBar) => {
-            return (
-              <div style={{ marginBottom: -16 }}>
-                <DefaultTabBar {...props} />
-              </div>
-            );
-          }}
-          activeKey={panel}
-          onChange={(k) => {
-            setPanel(k); 
-          }}
-        >
-          {Object.keys(subNavs).map((it) => (
-            <Tabs.TabPane
-              tab={subNavs[it]}
-              key={it}
-            />
-          ))}
-        </Tabs>
-        {renderByPanel()}
-      </div>
-    </div>
-  </Layout>;
+  return (
+    <DetailPageContext.Provider
+      value={{
+        userInfo,
+        taskInfo,
+        reload,
+        envId,
+        taskId,
+        orgId, 
+        projectId,
+        type: 'task'
+      }}
+    >
+      <Layout
+        extraHeader={
+          <PageHeader
+            title={(curEnv || {}).name || ''}
+            breadcrumb={true}
+          />
+        }
+      >
+        <div className='idcos-card'>
+          <TaskInfo taskInfo={taskInfo} />
+        </div>
+        <div style={{ marginTop: 20 }} className='idcos-card'>
+          <div className={styles.depolyDetail}>
+            <Tabs
+              type={'card'}
+              tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
+              animated={false}
+              renderTabBar={(props, DefaultTabBar) => {
+                return (
+                  <div style={{ marginBottom: -16 }}>
+                    <DefaultTabBar {...props} />
+                  </div>
+                );
+              }}
+              activeKey={panel}
+              onChange={(k) => {
+                setPanel(k); 
+              }}
+            >
+              {Object.keys(subNavs).map((it) => (
+                <Tabs.TabPane
+                  tab={subNavs[it]}
+                  key={it}
+                />
+              ))}
+            </Tabs>
+            {renderByPanel()}
+          </div>
+        </div>
+      </Layout>
+    </DetailPageContext.Provider>
+  );
 };
 
 export default connect(
   (state) => {
     return {
-      curEnv: state['global'].get('curEnv')
+      curEnv: state['global'].get('curEnv'),
+      userInfo: state.global.get('userInfo').toJS()
     };
   }
 )(

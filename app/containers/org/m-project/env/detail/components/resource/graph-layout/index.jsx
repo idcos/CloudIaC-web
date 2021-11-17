@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import G6 from '@antv/g6';
 import { appenAutoShapeListener } from '@antv/g6-react-node';
 import { Space, Input, Button, Row, Select, Spin } from 'antd';
@@ -11,11 +11,13 @@ import { registerNode, getNodeHeight } from './register-node';
 import DetailDrawer from './detail-drawer';
 import styles from './styles.less';
 import isEmpty from 'lodash/isEmpty';
+import DetailPageContext from '../../../detail-page-context';
 
 registerNode('self-tree-node');
 
-const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
+const GraphLayout = ({ setMode }) => {
 
+  const { taskId, type, orgId, projectId, envId } = useContext(DetailPageContext);
   const containerRef = useRef();
   const graphRef = useRef();
   const [ search, setSearch ] = useState('');
@@ -192,7 +194,7 @@ const GraphLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
         </div>
       </Spin>
       {detailDrawerProps.visible && (
-        <DetailDrawer {...detailDrawerProps} onClose={onCloseDetailDrawer}/>
+        <DetailDrawer {...detailDrawerProps} onClose={onCloseDetailDrawer} orgId={orgId} projectId={projectId} envId={envId} type={type}/>
       )}
     </Space>
   );

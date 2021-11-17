@@ -1,28 +1,22 @@
-import React, { useState, useEffect, useMemo, memo } from 'react';
-import { Table, Input, Collapse, Space } from 'antd';
-import { useRequest, useEventEmitter } from 'ahooks';
-import { requestWrapper } from 'utils/request';
+import React, { useState, useContext, useMemo, memo } from 'react';
+import { Collapse } from 'antd';
+import { useEventEmitter } from 'ahooks';
 import { Eb_WP } from 'components/error-boundary';
 import ResourceViewModal from 'components/resource-view-modal';
-import envAPI from 'services/env';
-import taskAPI from 'services/task';
 import GraphLayout from './graph-layout';
 import TableLayout from './table-layout';
 
 const { Panel } = Collapse;
 
-const Index = (props) => {
+const Resource = () => {
 
   const event$ = useEventEmitter();
-  const { match, taskId, type } = props;
-  const { orgId, projectId, envId } = match.params || {};
   const [ mode, setMode ] = useState('graph');
 
   const content = useMemo(() => {
-    const props = { taskId, type, orgId, projectId, envId, setMode };
     const modeMap = {
-      'graph': <GraphLayout {...props} />,
-      'table': <TableLayout {...props} />
+      'graph': <GraphLayout setMode={setMode} />,
+      'table': <TableLayout setMode={setMode} />
     }
     return modeMap[mode];
   });
@@ -39,4 +33,4 @@ const Index = (props) => {
   );
 };
 
-export default Eb_WP()(memo(Index));
+export default Eb_WP()(memo(Resource));

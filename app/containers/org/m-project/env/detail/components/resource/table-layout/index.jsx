@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Table, Input, Space, Button, Row } from 'antd';
 import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import ResourceViewModal from 'components/resource-view-modal';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
+import DetailPageContext from '../../../detail-page-context';
 
-const TableLayout = ({ taskId, type, orgId, projectId, envId, setMode }) => {
+const TableLayout = ({ setMode }) => {
 
   const event$ = useEventEmitter();
+  const { taskId, type, orgId, projectId, envId } = useContext(DetailPageContext);
   const [ expandedRowKeys, setExpandedRowKeys ] = useState([]);
   const [ search, setSearch ] = useState('');
  

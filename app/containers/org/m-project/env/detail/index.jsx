@@ -13,7 +13,7 @@ import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import history from 'utils/history';
 import getPermission from "utils/permission";
-import Info from './components/info';
+import EnvInfo from './components/envInfo';
 import ComplianceInfo from './components/compliance-info';
 import Resource from './components/resource';
 import Output from './components/output';
@@ -23,6 +23,7 @@ import Variable from './components/variable';
 import Setting from './components/setting';
 import styles from './styles.less';
 import { createBrowserHistory } from 'history';
+import DetailPageContext from './detail-page-context';
 
 const subNavs = {
   resource: '资源',
@@ -41,7 +42,7 @@ const EnvDetail = (props) => {
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
-  const [ info, setInfo ] = useState({});
+  const [ envInfo, setEnvInfo ] = useState({});
   const [ taskId, setTaskId ] = useState();
 
   // 获取Info
@@ -57,7 +58,7 @@ const EnvDetail = (props) => {
       if (!taskId) {
         setTaskId(data.lastTaskId);
       }
-      setInfo(data);
+      setEnvInfo(data);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -67,13 +68,13 @@ const EnvDetail = (props) => {
   };
   
   const redeploy = async() => {
-    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${info.tplId}/${envId}`); 
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${envInfo.tplId}/${envId}`); 
   };
 
   const destroy = () => {
     Modal.confirm({
       width: 480,
-      title: `你确定要销毁环境“${info.name}”吗？`,
+      title: `你确定要销毁环境“${envInfo.name}”吗？`,
       icon: <ExclamationCircleFilled />,
       content: (
         <>
@@ -86,7 +87,7 @@ const EnvDetail = (props) => {
                 { required: true, message: '请输入环境名称' },
                 () => ({
                   validator(_, value) {
-                    if (!value || info.name === value) {
+                    if (!value || envInfo.name === value) {
                       return Promise.resolve();
                     }
                     return Promise.reject(new Error('环境名称不一致!'));
@@ -154,86 +155,102 @@ const EnvDetail = (props) => {
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      resource: () => <Resource {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
-      output: () => <Output {...props} type='env' taskId={taskId} taskInfo={taskInfo} />,
-      deployJournal: () => <DeployJournal {...props} taskId={taskId} taskInfo={taskInfo} reload={reload} />,
-      deployHistory: () => <DeployHistory {...props} info={info}/>,
-      variable: () => <Variable type='env' {...props} />,
-      setting: () => <Setting {...props} info={info} reload={reload}/>,
-      compInfo: () => <ComplianceInfo {...props} info={info} reload={reload}/>
+      resource: () => <Resource />,
+      output: () => <Output />,
+      deployJournal: () => <DeployJournal />,
+      deployHistory: () => <DeployHistory />,
+      variable: () => <Variable />,
+      setting: () => <Setting/>,
+      compInfo: () => <ComplianceInfo/>
     };
     return PAGES[panel]();
-  }, [ panel, info, taskInfo ]);
+  }, [ panel ]);
   
-  return <Layout
-    extraHeader={
-      <PageHeader
-        title={(
-          <Space size={8}>
-            <span>{info.name || ''}</span>
-            <span>
-              {ENV_STATUS[info.status] && <Tag color={ENV_STATUS_COLOR[info.status] || 'default'}>{ENV_STATUS[info.status]}</Tag> || '-'}
-              {
-                info.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
-                  <Tooltip title={taskInfo.message}>
-                    <InfoCircleFilled style={{ color: '#ff4d4f', fontSize: 14 }} />
-                  </Tooltip>
-                ) : null
-              }
-            </span>
-          </Space>
-        )}
-        
-        subDes={
-          PROJECT_OPERATOR ? (
-            <div>
-              <Button onClick={redeploy}>重新部署</Button>
-              <Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button>
-            </div>
-          ) : null
+  return (
+    <DetailPageContext.Provider
+      value={{
+        userInfo,
+        taskInfo,
+        envInfo,
+        reload,
+        envId,
+        taskId,
+        orgId, 
+        projectId,
+        type: 'env'
+      }}
+    >
+      <Layout
+        extraHeader={
+          <PageHeader
+            title={(
+              <Space size={8}>
+                <span>{envInfo.name || ''}</span>
+                <span>
+                  {ENV_STATUS[envInfo.status] && <Tag color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>{ENV_STATUS[envInfo.status]}</Tag> || '-'}
+                  {
+                    envInfo.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
+                      <Tooltip title={taskInfo.message}>
+                        <InfoCircleFilled style={{ color: '#ff4d4f', fontSize: 14 }} />
+                      </Tooltip>
+                    ) : null
+                  }
+                </span>
+              </Space>
+            )}
+            
+            subDes={
+              PROJECT_OPERATOR ? (
+                <div>
+                  <Button onClick={redeploy}>重新部署</Button>
+                  <Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button>
+                </div>
+              ) : null
+            }
+            breadcrumb={true}
+          />
         }
-        breadcrumb={true}
-      />
-    }
-  >
-    <div className='idcos-card'>
-      <Info info={info} taskInfo={taskInfo} />
-    </div>
-    <div style={{ marginTop: 20 }} className='idcos-card'>
-      <div className={styles.depolyDetail}>
-        <Tabs
-          type={'card'}
-          tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
-          animated={false}
-          renderTabBar={(props, DefaultTabBar) => {
-            return (
-              <div style={{ marginBottom: -16 }}>
-                <DefaultTabBar {...props} />
-              </div>
-            );
-          }}
-          activeKey={panel}
-          onChange={(k) => {
-            const history = createBrowserHistory({ forceRefresh: false });
-            history.replace({
-              search: `?tabKey=${k}`
-            });
-            setPanel(k); 
-          }}
-        >
-          {Object.keys(subNavs).map((it) => {
-            return (
-              <Tabs.TabPane
-                tab={subNavs[it]}
-                key={it}
-              />
-            )
-          })}
-        </Tabs>
-        {renderByPanel()}
-      </div>
-    </div>
-  </Layout>;
+      >
+        <div className='idcos-card'>
+          <EnvInfo envInfo={envInfo} taskInfo={taskInfo} />
+        </div>
+        <div style={{ marginTop: 20 }} className='idcos-card'>
+          <div className={styles.depolyDetail}>
+            <Tabs
+              type={'card'}
+              tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
+              animated={false}
+              renderTabBar={(props, DefaultTabBar) => {
+                return (
+                  <div style={{ marginBottom: -16 }}>
+                    <DefaultTabBar {...props} />
+                  </div>
+                );
+              }}
+              activeKey={panel}
+              onChange={(k) => {
+                const history = createBrowserHistory({ forceRefresh: false });
+                history.replace({
+                  search: `?tabKey=${k}`
+                });
+                setPanel(k); 
+              }}
+            >
+              {Object.keys(subNavs).map((it) => {
+                return (
+                  <Tabs.TabPane
+                    tab={subNavs[it]}
+                    key={it}
+                  />
+                )
+              })}
+            </Tabs>
+            {renderByPanel()}
+          </div>
+        </div>
+      </Layout>
+    </DetailPageContext.Provider>
+  );
 };
 
 export default connect((state) => {

@@ -1,13 +1,14 @@
-import React, { memo } from 'react';
+import React, { memo, useContext } from 'react';
 import envAPI from 'services/env';
 import DetectionCard from 'components/detection-card';
+import DetailPageContext from '../detail-page-context';
 
-const Index = (props) => {
-  const { match } = props;
-  const { params: { orgId, projectId, envId } } = match;
+const ComplianceInfo = () => {
+
+  const { orgId, projectId, envId } = useContext(DetailPageContext);
   
   return (
     <DetectionCard failLogParams={{ stepType: 'tfscan' }} requestFn={envAPI.result.bind(null, { orgId, projectId, envId, currentPage: 1, pageSize: 100000 })} />
   );
 };
-export default memo(Index);
+export default memo(ComplianceInfo);
