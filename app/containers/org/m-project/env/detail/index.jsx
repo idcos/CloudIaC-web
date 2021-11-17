@@ -42,30 +42,47 @@ const EnvDetail = (props) => {
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
-  const [ envInfo, setEnvInfo ] = useState({});
   const [ taskId, setTaskId ] = useState();
 
-  // 获取Info
-  const fetchInfo = async () => {
-    try {
-      const res = await envAPI.envsInfo({
+  // 获取环境详情
+  const { data: envInfo = {}, run: fetchEnvInfo } = useRequest(
+    () => requestWrapper(
+      envAPI.envsInfo.bind(null, {
         orgId, projectId, envId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
+      })
+    ), 
+    {
+      ready: !!envId,
+      formatResult: data => data || {},
+      onSuccess: (data) => {
+        if (!taskId) {
+          setTaskId(data.lastTaskId);
+        }
       }
-      const data = res.result || {};
-      if (!taskId) {
-        setTaskId(data.lastTaskId);
-      }
-      setEnvInfo(data);
-    } catch (e) {
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
     }
-  };
+  );
+
+  const { data: taskInfo = {}, cancel: cancelLoop, run: fetchTaskInfo } = useRequest(
+    () => requestWrapper(
+      taskAPI.detail.bind(null, {
+        orgId, projectId, taskId
+      })
+    ), 
+    {
+      ready: !!taskId,
+      pollingInterval: 3000,
+      pollingWhenHidden: false,
+      onSuccess: (data) => {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+          cancelLoop();
+          fetchEnvInfo();
+        }
+      },
+      onError: () => {
+        cancelLoop();
+      }
+    }
+  );
   
   const redeploy = async() => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${envInfo.tplId}/${envId}`); 
@@ -122,34 +139,8 @@ const EnvDetail = (props) => {
     });
   };
 
-  const { data: taskInfo = {}, cancel: cancelLoop, run: fetchTaskInfo } = useRequest(
-    () => requestWrapper(
-      taskAPI.detail.bind(null, {
-        orgId, projectId, taskId
-      })
-    ), 
-    {
-      ready: !!taskId,
-      pollingInterval: 3000,
-      pollingWhenHidden: false,
-      onSuccess: (data) => {
-        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
-          cancelLoop();
-          fetchInfo();
-        }
-      },
-      onError: () => {
-        cancelLoop();
-      }
-    }
-  );
-
-  useEffect(() => {
-    fetchInfo();
-  }, []);
-
   const reload = () => {
-    fetchInfo();
+    fetchEnvInfo();
     fetchTaskInfo();
   };
 

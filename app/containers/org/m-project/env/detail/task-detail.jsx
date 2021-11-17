@@ -8,6 +8,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { END_TASK_STATUS_LIST } from "constants/types";
 import taskAPI from 'services/task';
+import envAPI from 'services/env';
 import Resource from './components/resource';
 import Output from './components/output';
 import DeployJournal from './components/deployJournal';
@@ -25,9 +26,20 @@ const subNavs = {
 
 const TaskDetail = (props) => {
 
-  const { userInfo, curEnv, dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
+  const { userInfo, dispatch, match: { params: { orgId, projectId, envId, taskId } } } = props;
 
   const [ panel, setPanel ] = useState('deployJournal');
+
+  const { data: envInfo = {} } = useRequest(
+    () => requestWrapper(
+      envAPI.envsInfo.bind(null, {
+        orgId, projectId, envId
+      })
+    ), 
+    {
+      ready: !!envId
+    }
+  );
 
   const { data: taskInfo = {}, refresh, cancel: cancelLoop } = useRequest(
     () => requestWrapper(
@@ -83,7 +95,7 @@ const TaskDetail = (props) => {
       <Layout
         extraHeader={
           <PageHeader
-            title={(curEnv || {}).name || ''}
+            title={envInfo.name || ''}
             breadcrumb={true}
           />
         }
@@ -127,7 +139,6 @@ const TaskDetail = (props) => {
 export default connect(
   (state) => {
     return {
-      curEnv: state['global'].get('curEnv'),
       userInfo: state.global.get('userInfo').toJS()
     };
   }
