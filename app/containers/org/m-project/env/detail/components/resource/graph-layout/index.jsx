@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import G6 from '@antv/g6';
 import { appenAutoShapeListener } from '@antv/g6-react-node';
 import { Space, Input, Button, Row, Select, Spin } from 'antd';
-import { useRequest } from 'ahooks';
+import { FullscreenExitOutlined, FullscreenOutlined, MenuOutlined } from "@ant-design/icons";
+import { useRequest, useFullscreen } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
@@ -12,6 +13,7 @@ import DetailDrawer from './detail-drawer';
 import styles from './styles.less';
 import isEmpty from 'lodash/isEmpty';
 import DetailPageContext from '../../../detail-page-context';
+import classNames from 'classnames';
 
 registerNode('self-tree-node');
 
@@ -19,6 +21,8 @@ const GraphLayout = ({ setMode }) => {
 
   const { taskId, type, orgId, projectId, envId } = useContext(DetailPageContext);
   const containerRef = useRef();
+  const ref = useRef();
+  const [ isFullscreen, { toggleFull } ] = useFullscreen(ref);
   const graphRef = useRef();
   const [ search, setSearch ] = useState('');
   const [ dimension, setDimension ] = useState('module');
@@ -28,7 +32,14 @@ const GraphLayout = ({ setMode }) => {
 
   useEffect(() => {
     initGraph();
+    window.onresize = () => {
+      autoChangeSize();
+    };
   }, []);
+
+  useEffect(() => {
+    autoChangeSize();
+  }, [isFullscreen]);
 
   const { loading } = useRequest(
     () => {
@@ -152,12 +163,14 @@ const GraphLayout = ({ setMode }) => {
       }
     });
     appenAutoShapeListener(graphRef.current);
-    window.onresize = () => {
-      const container = containerRef.current;
-      if (!graphRef.current || graphRef.current.get('destroyed')) return;
-      if (!container || !container.offsetWidth || !container.offsetHeight) return;
-      graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
-    };
+   
+  };
+
+  const autoChangeSize = () => {
+    const container = containerRef.current;
+    if (!graphRef.current || graphRef.current.get('destroyed')) return;
+    if (!container || !container.offsetWidth || !container.offsetHeight) return;
+    graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
   };
 
   const onOpenDetailDrawer = (id) => {
@@ -172,8 +185,11 @@ const GraphLayout = ({ setMode }) => {
   };
 
   return (
-    <Space size='middle' direction='vertical' className={styles.graphLayout} style={{ width: '100%' }}>
-      <Row justify='space-between'>
+    <div 
+      ref={ref}
+      className={styles.graphLayout}
+    >
+      <Row justify='space-between' className={styles.header}>
         <Space>
           <Input.Search
             placeholder='请输入关键字搜索'
@@ -186,17 +202,44 @@ const GraphLayout = ({ setMode }) => {
             style={{ width: 153 }}
             options={Object.keys(DIMENSION_ENUM).map(key => ({ label: DIMENSION_ENUM[key], value: key }))}
           />
+          <div className='tool-item' onClick={toggleFull}>
+            {
+              isFullscreen ? (
+                <>
+                  <FullscreenExitOutlined className='icon'/>
+                  <span>退出全屏</span> 
+                </>
+              ) : (
+                <>
+                  <FullscreenOutlined className='icon'/>
+                  <span>全屏显示</span>
+                </>
+              )
+            }
+          </div>
         </Space>
-        <Button onClick={() => setMode('table')}>切换列表展示</Button>
+        <Button onClick={() => setMode('table')} icon={<MenuOutlined/>}>
+          切换列表展示
+        </Button>
       </Row>
-      <Spin spinning={loading}>
-        <div ref={containerRef} className={styles.resourceTreeContainer}>
-        </div>
-      </Spin>
+      <div ref={containerRef} className={classNames(styles.resourceTreeContainer, { [styles.isFullscreen]: isFullscreen })}>
+        <Space className='explain' size={16}>
+          <div className='explain-item resource'>
+            <span className='icon'></span>
+            <span className='text'>资源</span>
+          </div>
+          <div className='explain-item deviation'>
+            <span className='icon'></span>
+            <span className='text'>偏移</span>
+          </div>
+        </Space>
+        <Spin spinning={loading} style={{ width: '100%', marginTop: 100 }}>
+        </Spin>
+      </div>
       {detailDrawerProps.visible && (
         <DetailDrawer {...detailDrawerProps} onClose={onCloseDetailDrawer} orgId={orgId} projectId={projectId} envId={envId} type={type}/>
       )}
-    </Space>
+    </div>
   );
 };
 

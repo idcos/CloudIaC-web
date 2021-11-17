@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Table, Input, Space, Button, Row } from 'antd';
 import { useRequest, useEventEmitter } from 'ahooks';
+import { FundViewOutlined } from "@ant-design/icons";
 import { requestWrapper } from 'utils/request';
 import ResourceViewModal from 'components/resource-view-modal';
 import envAPI from 'services/env';
@@ -116,7 +117,7 @@ const TableLayout = ({ setMode }) => {
             style={{ width: 240 }}
             onSearch={v => setSearch(v)}
           />
-          <Button onClick={() => setMode('graph')}>切换图形展示</Button>
+          <Button onClick={() => setMode('graph')} icon={<FundViewOutlined />}>切换图形展示</Button>
         </Row>
         <Table
           columns={columns}
