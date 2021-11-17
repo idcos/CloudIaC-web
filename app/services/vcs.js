@@ -26,13 +26,6 @@ const vcsAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  searchEnableVcs: ({ orgId }) => {
-    return getWithArgs('/api/v1/vcs', {
-      status: 'enable'
-    }, {
-      'IaC-Org-Id': orgId
-    });
-  },
   listRepo: ({ orgId, vcsId, ...restParams }) => {
     return getWithArgs(`/api/v1/vcs/${vcsId}/repo`, restParams, {
       'IaC-Org-Id': orgId

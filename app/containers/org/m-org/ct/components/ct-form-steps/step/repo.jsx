@@ -70,9 +70,8 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const res = await vcsAPI.searchVcs({
         orgId,
         status: 'enable',
-        currentPage: 1,
         isShowDefaultVcs: true,
-        pageSize: 100000
+        pageSize: 0
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -113,9 +112,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const res = await vcsAPI.listRepoBranch({
         orgId,
         vcsId,
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -134,9 +131,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const res = await vcsAPI.listRepoTag({
         orgId,
         vcsId,
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       if (res.code != 200) {
         throw new Error(res.message);

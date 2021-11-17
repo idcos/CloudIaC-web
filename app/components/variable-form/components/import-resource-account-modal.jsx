@@ -48,7 +48,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
   const onOpen = () => {
     setVisible(true);
-    fetchList({ currentPage: 1, pageSize: 100000 });
+    fetchList({ pageSize: 0 });
   };
 
   const onCancel = () => {

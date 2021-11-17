@@ -103,9 +103,7 @@ const Index = ({ match = {} }) => {
       const res = await vcsAPI.listRepoBranch({
         orgId, 
         vcsId, 
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       if (res.code === 200) {
         setBranch(res.result || []);
@@ -129,9 +127,7 @@ const Index = ({ match = {} }) => {
       const res = await vcsAPI.listRepoTag({
         orgId, 
         vcsId, 
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       
       if (res.code === 200) {
@@ -176,8 +172,7 @@ const Index = ({ match = {} }) => {
     try { 
       const res = await keysAPI.list({
         orgId,
-        pageSize: 99999,
-        currentPage: 1
+        pageSize: 0
       });
       if (res.code === 200) {
         setKeys(res.result.list || []);

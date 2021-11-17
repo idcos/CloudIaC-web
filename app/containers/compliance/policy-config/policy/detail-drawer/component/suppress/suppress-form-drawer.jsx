@@ -22,7 +22,7 @@ export default ({ policyId, visible, onClose, reload }) => {
     data: tableData = {}
   } = useRequest(
     () => requestWrapper(
-      policiesAPI.listSuppressSources.bind(null, { policyId, currentPage: 1, pageSize: 100000 })
+      policiesAPI.listSuppressSources.bind(null, { policyId, pageSize: 0 })
     ),
     {
       ready: !!policyId

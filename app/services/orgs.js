@@ -12,8 +12,7 @@ const orgsAPI = {
   allEnableOrgs: (params) => {
     return getWithArgs('/api/v1/orgs', {
       status: 'enable',
-      pageSize: 100000,
-      currentPage: 1,
+      pageSize: 0,
       ...params
     });
   },

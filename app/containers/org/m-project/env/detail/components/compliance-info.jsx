@@ -8,7 +8,7 @@ const ComplianceInfo = () => {
   const { orgId, projectId, envId } = useContext(DetailPageContext);
   
   return (
-    <DetectionCard failLogParams={{ stepType: 'tfscan' }} requestFn={envAPI.result.bind(null, { orgId, projectId, envId, currentPage: 1, pageSize: 100000 })} />
+    <DetectionCard failLogParams={{ stepType: 'tfscan' }} requestFn={envAPI.result.bind(null, { orgId, projectId, envId, pageSize: 0 })} />
   );
 };
 export default memo(ComplianceInfo);

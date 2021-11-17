@@ -85,8 +85,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
   const fetchUserList = async () => {
     try {
       const res = await userAPI.list({
-        pageSize: 99999,
-        currentPage: 1,
+        pageSize: 0,
         orgId
       });
       if (res.code !== 200) {

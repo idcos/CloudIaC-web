@@ -4,8 +4,8 @@ const envAPI = {
   // 环境列表
   envsList: ({ orgId, projectId, status }) => {
     let values = { 
-      pageSize: 99999,
-      currentPage: 1 };
+      pageSize: 0
+    };
     if (status == 'filed') {
       values.archived = true;
     } else {
@@ -45,8 +45,7 @@ const envAPI = {
   // 获取环境资源列表
   getResourcesList: ({ envId, orgId, projectId, q }) => {
     return getWithArgs(`/api/v1/envs/${envId}/resources`, {
-      pageSize: 99999,
-      currentPage: 1,
+      pageSize: 0,
       q
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
@@ -78,8 +77,8 @@ const envAPI = {
     return post(`/api/v1/envs`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境合规详情
-  result: ({ orgId, projectId, envId }) => {
-    return getWithArgs(`/api/v1/envs/${envId}/policy_result`, {}, { 
+  result: ({ orgId, projectId, envId, ...restParams }) => {
+    return getWithArgs(`/api/v1/envs/${envId}/policy_result`, restParams, { 
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
     });
