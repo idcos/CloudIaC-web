@@ -102,7 +102,8 @@ export const safeJsonParse = (nativeParam, emptyData = {}) => {
  */
 export const safeJsonStringify = (nativeParam, emptyData = '') => {
   try {
-    return JSON.stringify(...nativeParam) || emptyData;
+    const str = JSON.stringify(...nativeParam);
+    return str === 'null' || str === 'undefined' ? emptyData : str;
   } catch (error) {
     return emptyData;
   }
