@@ -33,13 +33,13 @@ const GraphLayout = ({ setMode }) => {
   const { loading } = useRequest(
     () => {
       const resourcesApis = {
-        env: envAPI.getResourcesGraphList.bind(null, { orgId, projectId, envId, q: search, dimension }),
+        env: envAPI.getResourcesGraphList.bind(null, { orgId, projectId, envId, dimension }),
         // task: taskAPI.getResourcesGraphList.bind(null, { orgId, projectId, taskId, q: search, dimension })
       };
       return requestWrapper(resourcesApis[type]);
     }, {
       ready: dimension && envId,
-      refreshDeps: [dimension, search],
+      refreshDeps: [dimension],
       onSuccess: (data) => {
         if (!isEmpty(data)) {
           graphRef.current.data(data);
