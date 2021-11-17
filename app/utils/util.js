@@ -35,16 +35,16 @@ export const statusTextCls = (status) => {
   let cls = '',
     color = 'blue';
   switch (status) {
-    case 'failed':
-      cls = 'danger';
-      color = 'red';
-      break;
-    case 'pending':
-      cls = 'normal';
-      color = 'green';
-      break;
-    default:
-      break;
+  case 'failed':
+    cls = 'danger';
+    color = 'red';
+    break;
+  case 'pending':
+    cls = 'normal';
+    color = 'green';
+    break;
+  default:
+    break;
   }
   return {
     cls,
@@ -121,13 +121,49 @@ export const isJsonString = (str) => {
   try {
     const obj = JSON.parse(str);
     return typeof obj == 'object' && obj;
-  } catch(e) {
+  } catch (e) {
     return false;
   }
-}
+};
 
 
 export const ellipsisText = (text, maxLen = 15) => {
   text = text || '';
   return text.length > maxLen ? (text.slice(0, maxLen) + '...') : text;
-}
+};
+
+// 导出文件
+
+export const downloadImportTemplate = async(downloadApi, opts) => {
+  try {
+    const token = localStorage['accessToken'];
+    const res = await fetch(downloadApi, {
+      method: 'GET',
+      cache: 'no-cache',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': token,
+        'IaC-Org-Id': opts.orgId || '',
+        'IaC-Project-Id': opts['IaC-Project-Id'] || ''
+      }
+    });
+    const fileNameEncode = res.headers.get('content-disposition').split('filename="')[1];
+    const fileNameDecode = decodeURIComponent(fileNameEncode).replace(/^\"|\"$/g, '');
+    if (res.status == 200) {
+      let filename = fileNameDecode;
+      res.blob().then(blob => {
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+      });
+    } else {
+      throw res.statusText;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+};

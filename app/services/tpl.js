@@ -1,4 +1,4 @@
-import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
+import { get, post, put, del, getWithArgs, postFile } from 'utils/xFetch2';
 
 const tplAPI = {
   list: ({ orgId, projectId, ...restParams }) => {
@@ -42,6 +42,12 @@ const tplAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  // 导入云模版
+  importTemplates: ({ orgId, file }) => {
+    return postFile(`/api/v1/templates/import`, file, {
+      'IaC-Org-Id': orgId
+    });
+  }
 };
 
 export default tplAPI;

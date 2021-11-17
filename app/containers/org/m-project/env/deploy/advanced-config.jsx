@@ -40,7 +40,6 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       setFormValues(tplInfo);
     }
   }, [ envId, data, tplInfo ]);
-
   // 策略组选项查询
   const { run: fetchFile } = useRequest(
     (fileName) => requestWrapper(
@@ -82,7 +81,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     if (!!data.autoDestroyAt) {
       data.type = 'time';
       form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-    } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
+    } else if (((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt || !envId)) {
       data.type = 'infinite';
     } else if (!data.autoDestroyAt) {
       data.type = 'timequantum';

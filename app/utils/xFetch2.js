@@ -49,12 +49,8 @@ export function postFile(url, data, options) {
     method: 'POST',
     cache: 'no-cache',
     headers: {
-      Accept: '*/*',
-      'Content-Type':
-        'multipart/form-data;boundary=----WebKitFormBoundaryiqw6SEM6EXa7FlBk',
-      authorization: 'authorization-text'
     },
-    body: JSON.stringify(data)
+    body: data
   };
   return xFetch(url, opts);
 }
