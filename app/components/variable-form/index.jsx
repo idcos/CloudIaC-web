@@ -4,6 +4,7 @@ import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import differenceBy from 'lodash/differenceBy';
 import omit from 'lodash/omit';
 import intersectionBy from 'lodash/intersectionBy';
+import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -136,13 +137,8 @@ const VariableForm = ({
             const endVarGroupList = envVarGroupList.filter(it => it.objectType === defaultScope);
             const varGroupIds = differenceBy(endVarGroupList, startVarGroupList, 'varGroupId').map(it => it.varGroupId);
             const delVarGroupIds = differenceBy(startVarGroupList, endVarGroupList, 'varGroupId').map(it => it.varGroupId);
-            const variables = [ ...terraformVarList, ...envVarList ].filter(
-              ({ scope }) => scope === defaultScope
-            ).map(
-              (it) => omit(it, ['isNew', '_key_id', 'overwrites'])
-            );
             const data = {
-              variables,
+              variables: [ ...terraformVarList, ...envVarList ],
               ...otherVars,
               varGroupIds,
               delVarGroupIds
@@ -233,4 +229,19 @@ const VariableForm = ({
   );
 };
 
+// 格式化变量组件数据作为请求入参
+export const formatVariableRequestParams = (data, defaultScope) => {
+  const { variables, ...params } = cloneDeep(data);
+  const newVariables = variables.filter(
+    ({ scope }) => scope === defaultScope
+  ).map(
+    (it) => omit(it, ['isNew', '_key_id', 'overwrites'])
+  );
+  return {
+    variables: newVariables,
+    ...params
+  };
+};
+
 export default VariableForm;
+

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { notification, Select, Form, Input, Button, Row, Col } from "antd";
 import PageHeader from "components/pageHeader";
 import history from 'utils/history';
-import VariableForm from 'components/variable-form';
+import VariableForm, { formatVariableRequestParams } from 'components/variable-form';
 import AdvancedConfig from './advanced-config';
 import Layout from "components/common/layout";
 import sysAPI from 'services/sys';
@@ -18,6 +18,7 @@ const FL = {
   wrapperCol: { span: 24 }
 };
 const { Option, OptGroup } = Select;
+const defaultScope = 'env';
   
 const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
@@ -244,7 +245,7 @@ const Index = ({ match = {} }) => {
       }
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
-      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -339,7 +340,7 @@ const Index = ({ match = {} }) => {
           />
           <VariableForm
             varRef={varRef} 
-            defaultScope='env' 
+            defaultScope={defaultScope}
             defaultData={{ variables: vars }} 
             fetchParams={varFetchParams}
             canImportTerraformVar={true}

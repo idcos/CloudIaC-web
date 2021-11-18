@@ -4,6 +4,7 @@ import set from 'lodash/set';
 import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { formatVariableRequestParams } from 'components/variable-form';
 import { Eb_WP } from 'components/error-boundary';
 import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
@@ -15,6 +16,7 @@ import Variable from './step/variable';
 import Relation from './step/relation';
 import styles from './styles.less';
 
+const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
@@ -36,7 +38,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     loading: saveLoading
   } = useRequest(
     (params) => requestWrapper(
-      tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, params)
+      tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, formatVariableRequestParams(params, defaultScope))
     ),
     {
       manual: true,
