@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle, useCallback } from "react";
-import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Card } from "antd";
+import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Switch } from "antd";
 import { InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -275,7 +275,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               shouldUpdate={true}
                             >
                               {({ getFieldValue }) => {
-                                let type = getFieldValue('type'); 
+                                let type = getFieldValue('type');
                                 if (type === 'infinite') {
                                   return <></>;
                                 }
@@ -390,6 +390,53 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                       >
                         <Checkbox>合规不通过时中止部署</Checkbox> 
                       </Form.Item>
+                    </Col>
+                    <Col span={7} style={{ display: 'flex' }}>
+                      <Form.Item 
+                        noStyle={true}
+                        shouldUpdate={true}
+                      >
+                        {({ getFieldValue }) => {
+                          return <div style={{ minWidth: 340, display: 'flex' }}>
+                            <Form.Item 
+                              name='excursionChecked'
+                              valuePropName='checked'
+                              initialValue={false}
+                              offset={1}
+                              extra={<>
+                                {getFieldValue('excursionChecked') === true && <Form.Item 
+                                  label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
+                                  name='crontab'
+                                  valuePropName='checked'
+                                  initialValue={false}
+                                  extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
+                                >
+                                  <Input placeholder={'请输入crontab表达式'} /> 
+                                </Form.Item>}</>}
+                            >
+                              <Checkbox>偏移检测</Checkbox> 
+                            </Form.Item>
+                            <Form.Item 
+                              noStyle={true}
+                              shouldUpdate={true}
+                            >
+                              {({ getFieldValue }) => {
+                                if (getFieldValue('excursionChecked') === true) {
+                                  return <Form.Item 
+                                    name='autoexcursionChecked'
+                                    valuePropName='checked'
+                                    initialValue={false}
+                                  >
+                                    <span style={{ display: 'flex', alignItems: 'center', position: 'relative', left: '-155px' }}><Switch /> 自动纠偏</span>
+                                  </Form.Item>;
+                                }
+                              }}
+                            </Form.Item>
+                          </div>;
+                        }}
+                      </Form.Item>
+                    </Col>
+                    <Col span={7}>
                     </Col>
                   </Row>
                 </Tabs.TabPane>

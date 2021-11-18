@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
-import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs } from "antd";
+import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs, Input, Switch } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
@@ -66,6 +66,13 @@ const Setting = () => {
         values.ttl = '0';
       }
       setSubmitLoading(true);
+      console.log({ 
+        orgId, 
+        projectId, 
+        ...omit(values, [ 'commit', 'prmr', 'type' ]), 
+        envId: envId ? envId : undefined 
+      }, '-------');
+      return;
       const res = await envAPI.envsEdit({ 
         orgId, 
         projectId, 
@@ -326,6 +333,50 @@ const Setting = () => {
                   >
                     <Checkbox>合规不通过时中止部署</Checkbox> 
                   </Form.Item>
+                </Col><Col span={7} style={{ display: 'flex' }}>
+                  <Form.Item 
+                    noStyle={true}
+                    shouldUpdate={true}
+                  >
+                    {({ getFieldValue }) => {
+                      return <div style={{ minWidth: 340, display: 'flex' }}>
+                        <Form.Item 
+                          name='excursionChecked'
+                          valuePropName='checked'
+                          initialValue={false}
+                          offset={1}
+                          extra={<>
+                            {getFieldValue('excursionChecked') === true && <Form.Item 
+                              label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
+                              name='crontab'
+                              extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
+                            >
+                              <Input placeholder={'请输入crontab表达式'} /> 
+                            </Form.Item>}</>}
+                        >
+                          <Checkbox>偏移检测</Checkbox> 
+                        </Form.Item>
+                        <Form.Item 
+                          noStyle={true}
+                          shouldUpdate={true}
+                        >
+                          {({ getFieldValue }) => {
+                            if (getFieldValue('excursionChecked') === true) {
+                              return <Form.Item 
+                                name='autoexcursionChecked'
+                                valuePropName='checked'
+                                initialValue={false}
+                              >
+                                <span style={{ display: 'flex', alignItems: 'center', position: 'relative', left: '-155px' }}><Switch /> 自动纠偏</span>
+                              </Form.Item>;
+                            }
+                          }}
+                        </Form.Item>
+                      </div>;
+                    }}
+                  </Form.Item>
+                </Col>
+                <Col span={7}>
                 </Col>
               </Row>
             </Tabs.TabPane>
