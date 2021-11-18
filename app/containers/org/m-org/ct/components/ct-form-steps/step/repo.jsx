@@ -15,7 +15,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
+const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
 
   const formData = ctData[type] || {};
   const [form] = Form.useForm();
@@ -211,6 +211,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
   useImperativeHandle(childRef, () => ({
     onFinish: async (index) => {
       const values = await form.validateFields();
+      await onlineCheckForm(values);
       stepHelper.updateData({
         type, 
         data: { ...values, autoMatchTfVersion }
@@ -219,7 +220,8 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
     }
   }));
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    await onlineCheckForm(values);
     stepHelper.updateData({
       type, 
       data: { ...values, autoMatchTfVersion },

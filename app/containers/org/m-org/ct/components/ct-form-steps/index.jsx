@@ -44,6 +44,18 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     }
   );
 
+  // 创建/编辑云模版提交接口
+  const {
+    run: onlineCheckForm
+  } = useRequest(
+    (params) => requestWrapper(
+      tplAPI.check.bind(null, { ...params, templateId: tplId, orgId })
+    ),
+    {
+      manual: true
+    }
+  );
+
   const stepHelper = useCallback(() => {
     return {
       go: (index) => setStepIndex(index),
@@ -172,6 +184,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               goCTlist={goCTlist}
               isShow={stepIndex === index}
               saveLoading={saveLoading}
+              onlineCheckForm={onlineCheckForm}
             />
           ) : null
         ))

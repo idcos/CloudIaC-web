@@ -6,13 +6,14 @@ const FL = {
   wrapperCol: { span: 14 }
 };
 
-export default ({ goCTlist, opType, childRef, stepHelper, ctData, type, saveLoading }) => {
+export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctData, type, saveLoading }) => {
 
   const [form] = Form.useForm();
 
   useImperativeHandle(childRef, () => ({
     onFinish: async (index) => {
       const values = await form.validateFields();
+      await onlineCheckForm(values);
       stepHelper.updateData({
         type, 
         data: values
@@ -21,7 +22,8 @@ export default ({ goCTlist, opType, childRef, stepHelper, ctData, type, saveLoad
     }
   }));
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    await onlineCheckForm(values);
     stepHelper.updateData({
       type, 
       data: values,
