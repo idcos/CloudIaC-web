@@ -31,7 +31,6 @@ const VariableForm = ({
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
-  const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
   const [ terraformVarList, setTerraformVarList ] = useState([]);
   const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
   const [ envVarList, setEnvVarList ] = useState([]);
@@ -143,7 +142,6 @@ const VariableForm = ({
               (it) => omit(it, ['isNew', '_key_id', 'overwrites'])
             );
             const data = {
-              deleteVariablesId,
               variables,
               ...otherVars,
               varGroupIds,
@@ -168,7 +166,6 @@ const VariableForm = ({
               formVarRef={terraformVarRef}
               varList={terraformVarList}
               setVarList={setTerraformVarList}
-              setDeleteVariablesId={setDeleteVariablesId}
               defaultScope={defaultScope}
               defalutVarList={defalutTerraformVarList}
               expandCollapse={expandCollapseCfg.terraform}
@@ -185,7 +182,6 @@ const VariableForm = ({
               formVarRef={envVarRef}
               varList={envVarList}
               setVarList={setEnvVarList}
-              setDeleteVariablesId={setDeleteVariablesId}
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
               expandCollapse={expandCollapseCfg.environment}

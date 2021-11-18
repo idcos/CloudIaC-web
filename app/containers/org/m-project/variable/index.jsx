@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { Button, Spin, notification } from 'antd';
 import { connect } from "react-redux";
 import { useRequest, useEventEmitter } from 'ahooks';
@@ -37,7 +37,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
     run: updateVars
   } = useRequest(
     (params) => requestWrapper(
-      varsAPI.update.bind(null, { orgId, projectId, ...params }),
+      varsAPI.update.bind(null, { orgId, projectId, objectType: defaultScope, objectId: projectId, ...params }),
     ),
     {
       manual: true,

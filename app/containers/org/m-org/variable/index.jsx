@@ -34,7 +34,7 @@ export default ({ match }) => {
     run: updateVars
   } = useRequest(
     (params) => requestWrapper(
-      varsAPI.update.bind(null, { orgId, ...params }),
+      varsAPI.update.bind(null, { orgId, scope: defaultScope, objectId: orgId, ...params }),
     ),
     {
       manual: true,

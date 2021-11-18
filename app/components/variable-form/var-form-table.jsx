@@ -33,7 +33,6 @@ const VarFormTable = (props) => {
     varGroupList,
     setVarGroupList,
     readOnly = false,
-    setDeleteVariablesId,
     defaultScope,
     defalutVarList,
     fetchParams,
@@ -256,13 +255,6 @@ const VarFormTable = (props) => {
   };
 
   const onDeleteRow = ({ row, rows, k, handleChange }) => {
-    setDeleteVariablesId((preIds) => {
-      if (row.id && preIds.indexOf(row.id) === -1) {
-        return [...preIds, row.id];
-      } else {
-        return preIds;
-      }
-    });
     const { overwrites, editable_id, _key_id } = row;
     if (overwrites) {
       handleChange(
