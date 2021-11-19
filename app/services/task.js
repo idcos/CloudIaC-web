@@ -21,6 +21,12 @@ const taskAPI = {
       q
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
+  // 获取环境资源图形列表
+  getResourcesGraphList: ({ taskId, orgId, projectId, dimension }) => {
+    return getWithArgs(`/api/v1/tasks/${taskId}/resources/graph`, {
+      dimension
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
   taskComment: ({ orgId, taskId, projectId }) => {
     return getWithArgs(`/api/v1/tasks/${taskId}/comment`, {
     }, {

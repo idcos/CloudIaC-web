@@ -50,14 +50,14 @@ const envAPI = {
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   getResourcesGraphDetail: ({ envId, orgId, projectId, resourceId }) => {
-    return get(`/api/v1/envs/${envId}/resources/${resourceId}/graph`, { 
+    return get(`/api/v1/envs/${envId}/resources/graph/${resourceId}`, { 
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
     });
   },
-  getResourcesGraphList: ({ envId, orgId, projectId, q, dimension }) => {
+  getResourcesGraphList: ({ envId, orgId, projectId, dimension }) => {
     return getWithArgs(`/api/v1/envs/${envId}/resources/graph`, {
-      q, dimension
+      dimension
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   getOutput: ({ orgId, projectId, envId }) => {

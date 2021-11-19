@@ -33,9 +33,6 @@ const GraphLayout = ({ setMode }) => {
 
   useEffect(() => {
     initGraph();
-    // setTimeout(() => {
-    //   renderGraph(mockData1);
-    // }, 300);
     window.onresize = () => {
       autoChangeSize();
     };
@@ -49,7 +46,7 @@ const GraphLayout = ({ setMode }) => {
     () => {
       const resourcesApis = {
         env: envAPI.getResourcesGraphList.bind(null, { orgId, projectId, envId, dimension }),
-        // task: taskAPI.getResourcesGraphList.bind(null, { orgId, projectId, taskId, q: search, dimension })
+        task: taskAPI.getResourcesGraphList.bind(null, { orgId, projectId, taskId, dimension })
       };
       return requestWrapper(resourcesApis[type]);
     }, {
@@ -211,6 +208,7 @@ const GraphLayout = ({ setMode }) => {
           />
           <Select 
             value={dimension}
+            getPopupContainer={triggerNode => triggerNode.parentElement}
             onChange={setDimension}
             style={{ width: 153 }}
             options={Object.keys(DIMENSION_ENUM).map(key => ({ label: DIMENSION_ENUM[key], value: key }))}

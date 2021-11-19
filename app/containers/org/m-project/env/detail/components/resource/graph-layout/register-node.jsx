@@ -79,8 +79,8 @@ const TreeNode = ({ cfg }) => {
           isShowResourcesList && (
             <Rect style={{ maxWidth: 22 * 10, flexWrap: 'wrap', flexDirection: 'row', margin: [8, 0, 0, 16] }}>
               {
-                resourcesList.map(({ resourceId, nodeName, deviation }) => (
-                  <Cell id={resourceId} name={nodeName} deviation={deviation}/>
+                resourcesList.map(({ resourceId, resourceName, deviation }) => (
+                  <Cell id={resourceId} name={resourceName} deviation={deviation}/>
                 ))
               }
             </Rect>
