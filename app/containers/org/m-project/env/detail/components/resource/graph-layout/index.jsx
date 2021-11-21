@@ -14,7 +14,7 @@ import styles from './styles.less';
 import isEmpty from 'lodash/isEmpty';
 import DetailPageContext from '../../../detail-page-context';
 import classNames from 'classnames';
-import { mockData1 } from './mock-data'
+import { filterTreeData } from './util';
 
 registerNode('self-tree-node');
 
@@ -42,7 +42,7 @@ const GraphLayout = ({ setMode }) => {
     autoChangeSize();
   }, [isFullscreen]);
 
-  const { loading } = useRequest(
+  const { loading, data: graphData } = useRequest(
     () => {
       const resourcesApis = {
         env: envAPI.getResourcesGraphList.bind(null, { orgId, projectId, envId, dimension }),
@@ -52,11 +52,25 @@ const GraphLayout = ({ setMode }) => {
     }, {
       ready: dimension && envId,
       refreshDeps: [dimension],
-      onSuccess: (data) => {
-        renderGraph(data);
-      }
     }
   );
+
+  useEffect(() => {
+    if (!graphData) {
+      // 清空画布
+      return;
+    } 
+    switch (dimension) {
+      case 'module':
+        const data = filterTreeData(graphData, search);
+        console.log('data', data);
+        console.log('graphData', graphData);
+        renderGraph(data);
+        break;
+      default:
+        break;
+    }
+  }, [search, graphData]);
 
   const renderGraph = (data) => {
     if (!isEmpty(data)) {
@@ -126,25 +140,10 @@ const GraphLayout = ({ setMode }) => {
         getHeight: getNodeHeight
       }
     });
-    const getAllLeafList = (children) => {
-      let allLeafList = [];
-      (children || []).forEach((item) => {
-        const itemChildren = item.children || [];
-        const resourcesList = item.resourcesList || [];
-        if (resourcesList.length > 0) {
-          allLeafList = [...allLeafList, ...resourcesList];
-        } else {
-          allLeafList = [...allLeafList, ...getAllLeafList(itemChildren)];
-        }
-      });
-      return allLeafList;
-    };
     graphRef.current.node(function (node) {
       const { id, children, isRoot, resourcesList } = node;
       return {
-        id,
-        resourcesList: (resourcesList || []).length > 0 ? resourcesList : getAllLeafList(children),
-        isRoot
+        id, children, isRoot, resourcesList 
       };
     });
     graphRef.current.on('itemcollapsed', (e) => {
