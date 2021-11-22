@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Descriptions, Tag, Space, Empty, Spin, Collapse } from 'antd';
+import { Card, Descriptions, Tag, Space, Empty, Spin, Collapse, Tooltip } from 'antd';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -88,6 +88,10 @@ const EnvList = (props) => {
               >{data.name || '-'}</a>
               <span style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 12 }}>ID：{data.id}</span>
               <span>{ENV_STATUS[data.status] && <Tag color={ENV_STATUS_COLOR[data.status] || 'default'}>{ENV_STATUS[data.status]}</Tag>}</span>
+              <span>{<Tooltip context={'检测到该环境存在偏移资源'}><Tag onClick={() => {
+                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=resource`); 
+              }} color={'orange'}
+              >偏移</Tag></Tooltip>}</span>
             </Space>
           }
         >

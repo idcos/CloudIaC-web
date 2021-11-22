@@ -155,7 +155,7 @@ const EnvDetail = (props) => {
       compInfo: () => <ComplianceInfo/>
     };
     return PAGES[panel]();
-  }, [ panel ]);
+  }, [panel]);
   
   return (
     <DetailPageContext.Provider
@@ -179,6 +179,7 @@ const EnvDetail = (props) => {
                 <span>{envInfo.name || ''}</span>
                 <span>
                   {ENV_STATUS[envInfo.status] && <Tag color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>{ENV_STATUS[envInfo.status]}</Tag> || '-'}
+                  <Tag color={'orange'}>偏移</Tag>
                   {
                     envInfo.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
                       <Tooltip title={taskInfo.message}>
@@ -233,7 +234,7 @@ const EnvDetail = (props) => {
                     tab={subNavs[it]}
                     key={it}
                   />
-                )
+                );
               })}
             </Tabs>
             {renderByPanel()}

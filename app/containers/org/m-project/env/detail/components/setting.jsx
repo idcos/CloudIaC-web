@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
-import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs, Input, Switch } from "antd";
+import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
@@ -38,6 +38,7 @@ const Setting = () => {
         data[name] = true;
       });
     }
+    data.autoRepairDriftVisible = !!data.autoRepairDrift;
     if (!!data.autoDestroyAt) {
       data.type = 'time';
       form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
@@ -66,13 +67,6 @@ const Setting = () => {
         values.ttl = '0';
       }
       setSubmitLoading(true);
-      console.log({ 
-        orgId, 
-        projectId, 
-        ...omit(values, [ 'commit', 'prmr', 'type' ]), 
-        envId: envId ? envId : undefined 
-      }, '-------');
-      return;
       const res = await envAPI.envsEdit({ 
         orgId, 
         projectId, 
@@ -151,6 +145,34 @@ const Setting = () => {
       }
     });
   };
+
+
+  const checkedChange = (e) => {
+    if (e && !form.getFieldValue('autoApproval')) {
+      Modal.confirm({
+        title: '开启『自动纠偏』功能需要同时开启『自动通过审批』，否则纠偏功能无法自动进行，是否继续？',
+        okText: '继续',
+        cancelText: '取消',
+        onOk() {
+          form.setFieldsValue({ autoApproval: true });
+        }
+      });
+    }
+  };
+
+  const autoApprovalClick = (e) => {
+    if (!e.target.checked && form.getFieldValue('autoRepairDrift') || !e.target.checked && form.getFieldValue('commit')) {
+      Modal.confirm({
+        title: '当前环境已开启『自动纠偏|推送到分支重新部署』，如取消该选项，则『自动纠偏|推送到分支重新部署』功能也将一并取消，是否继续？',
+        okText: '继续',
+        cancelText: '取消',
+        onOk() {
+          form.setFieldsValue({ autoApproval: false, autoRepairDrift: false, commit: false });
+        }
+      });
+    }
+  };
+
 
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
@@ -282,7 +304,7 @@ const Setting = () => {
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox>推送到分支时重新部署</Checkbox> 
+                          <Checkbox onChange={e => checkedChange(e)}>推送到分支时重新部署</Checkbox> 
                         </Form.Item>
                         <Space size={8}>
                           <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
@@ -333,7 +355,9 @@ const Setting = () => {
                   >
                     <Checkbox>合规不通过时中止部署</Checkbox> 
                   </Form.Item>
-                </Col><Col span={7} style={{ display: 'flex' }}>
+                </Col>
+                <Col span={7} style={{ display: 'flex' }}>
+                  
                   <Form.Item 
                     noStyle={true}
                     shouldUpdate={true}
@@ -341,14 +365,16 @@ const Setting = () => {
                     {({ getFieldValue }) => {
                       return <div style={{ minWidth: 340, display: 'flex' }}>
                         <Form.Item 
-                          name='excursionChecked'
+                          name='autoRepairDriftVisible'
                           valuePropName='checked'
                           initialValue={false}
                           offset={1}
                           extra={<>
-                            {getFieldValue('excursionChecked') === true && <Form.Item 
+                            {getFieldValue('autoRepairDriftVisible') === true && <Form.Item 
                               label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
-                              name='crontab'
+                              name='cronDriftExpression'
+                              valuePropName='checked'
+                              initialValue={false}
                               extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
                             >
                               <Input placeholder={'请输入crontab表达式'} /> 
@@ -356,22 +382,18 @@ const Setting = () => {
                         >
                           <Checkbox>偏移检测</Checkbox> 
                         </Form.Item>
-                        <Form.Item 
-                          noStyle={true}
-                          shouldUpdate={true}
-                        >
-                          {({ getFieldValue }) => {
-                            if (getFieldValue('excursionChecked') === true) {
-                              return <Form.Item 
-                                name='autoexcursionChecked'
-                                valuePropName='checked'
-                                initialValue={false}
-                              >
-                                <span style={{ display: 'flex', alignItems: 'center', position: 'relative', left: '-155px' }}><Switch /> 自动纠偏</span>
-                              </Form.Item>;
-                            }
-                          }}
-                        </Form.Item>
+                        <span style={{ display: 'flex', position: 'relative', left: '-155px', height: 22 }}>
+                          { (getFieldValue('autoRepairDriftVisible') === true) &&
+                          <Form.Item 
+                            name='autoRepairDrift'
+                            valuePropName='checked'
+                            initialValue={false}
+                          >
+                            <Switch onChange={e => checkedChange(e)} /> 
+                          </Form.Item>
+                          }
+                          { (getFieldValue('autoRepairDriftVisible') === true) && <span style={{ marginTop: 6 }}>自动纠偏</span>}
+                        </span>
                       </div>;
                     }}
                   </Form.Item>
@@ -393,7 +415,7 @@ const Setting = () => {
                     valuePropName='checked'
                     initialValue={false}
                   >
-                    <Checkbox>自动通过审批</Checkbox> 
+                    <Checkbox onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
                   </Form.Item>
                 </Col>
               </Row>
