@@ -37,11 +37,30 @@ export const filterTreeData = (data, keyword) => {
       newChildren.forEach(it => it.children && (it.children = filterChildren(it.children)));
       return newChildren;
     };
-    const formatData = formatTreeData(cloneDeep(data));
+    data = cloneDeep(data) || {};
+    const formatData = formatTreeData();
     formatData.children = filterChildren(formatData.children);
     return formatData;
   } catch (error) {
     console.error('解析树状数据异常');
     return {};
+  }
+};
+
+
+export const filterListData = (data, keyword) => {
+  data = cloneDeep(data) || [];
+  try {
+    const reg = new RegExp(keyword, 'gi');
+    // 匹配关键词的资源方法
+    const filterByKeyword = (it) => !keyword || reg.test(it.name);
+    const filterData = data.map((it) => {
+      it.list = (it.list || []).filter(filterByKeyword);
+      return it;
+    }).filter(it => it.list.length > 0);
+    return filterData;
+  } catch (error) {
+    console.error('解析列表数据异常');
+    return [];
   }
 };

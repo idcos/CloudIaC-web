@@ -1,5 +1,7 @@
 @import 'containers/App/styles/variable.less';
 
+@cellSize: 22px;
+
 .graphLayout {
   width: calc(100% + 32px);
   margin: -16px;
@@ -14,6 +16,7 @@
     :global {
       .tool-item {
         cursor: pointer;
+
         .icon {
           color: @primary-color;
           margin-right: 4px;
@@ -21,7 +24,74 @@
       }
     }
   }
+
+  .resourceTreeContainer {
+    :global {
+      .g6-component-toolbar {
+        left: auto;
+        right: 8px;
+        top: 8px;
+      }
+    }
+  }
+
+  .resourceListContainer {
+
+    :global {
+      .graph-body {
+        padding: 60px 24px 24px;
+        overflow-y: auto;
+        height: 500px;
+
+        .graph-list {
+          .graph-item {
+            margin-bottom: 24px;
+            .item-text {
+              color: #0B847C;
+              margin-right: 24px;
+              display: flex;
   
+              .node-name {
+                max-width: 360px;
+              }
+            }
+  
+            .cell-wrapper {
+              display: flex;
+              flex-wrap: wrap;
+              max-width: @cellSize * 10;
+  
+              .cell {
+                width: @cellSize;
+                height: @cellSize;
+                background: #11978E;
+                border: 1px solid #0B847C;
+                margin: 0 -1px -1px 0;
+                cursor: pointer;
+                position: relative;
+                z-index: 1;
+
+                &.deviation {
+                  border: 1px solid #916504;
+                  background-color: #E3A322;
+                  background-image: url(/assets/icons/drift.svg);
+                  background-repeat: no-repeat;
+                  background-size: cover;
+                }
+  
+                &:hover {
+                  opacity: 0.66;
+                  z-index: 2;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .resourceListContainer,
   .resourceTreeContainer {
     background: rgba(237, 244, 244, 0.3);
     border-top: 1px solid @gray-4;
@@ -44,10 +114,12 @@
         border: 1px solid @gray-4;
         border-top: none;
         border-left: none;
+        z-index: 10;
 
         .explain-item {
           display: flex;
           align-items: center;
+
           &.resource {
             .icon {
               background: #11978E;
@@ -55,6 +127,7 @@
               border-radius: 1px;
             }
           }
+
           &.deviation {
             .icon {
               background-image: url(/assets/icons/drift.svg);
@@ -64,22 +137,18 @@
               border-radius: 1px;
             }
           }
+
           .icon {
             width: 22px;
             height: 22px;
             margin-right: 4px;
           }
+
           .text {
             color: @gray-8;
           }
         }
       }
-      .g6-component-toolbar {
-        left: auto;
-        right: 8px;
-        top: 8px;
-      }
     }
-   
   }
 }
