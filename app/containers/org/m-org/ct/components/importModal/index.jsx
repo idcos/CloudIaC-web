@@ -119,7 +119,25 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span className={styles.resultText}>{dt.id}</span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+              </>}
+            </span>);
+          });
+        })}
+        {Object.keys(importInfo).map(it => {
+          return (importInfo[it].varGroups || []).map((dt) => {
+            return (<span>
+              {!!infoType[it] && <>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+              </>}
+            </span>);
+          });
+        })}
+        {Object.keys(importInfo).map(it => {
+          return (importInfo[it].vcs || []).map((dt) => {
+            return (<span>
+              {!!infoType[it] && <>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -134,6 +152,24 @@ const Index = ({ reload, toggleVisible, orgId }) => {
             return (<span>
               {!!infoErrorType[it] && <>
                 <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}</span>: <span className={styles.resultText}>{dt.id}</span>
+              </>}
+            </span>);
+          });
+        })}
+        {Object.keys(importInfo).map(it => {
+          return (importInfo[it].varGroups || []).map((dt) => {
+            return (<span>
+              {!!infoErrorType[it] && <>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+              </>}
+            </span>);
+          });
+        })}
+        {Object.keys(importInfo).map(it => {
+          return (importInfo[it].vcs || []).map((dt) => {
+            return (<span>
+              {!!infoErrorType[it] && <>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
