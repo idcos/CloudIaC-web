@@ -39,7 +39,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
                 <Input value={data.createAt && moment(data.createAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
               </Form.Item>
               <Form.Item label='漂移信息：'>
-                <FormCoder value={safeJsonStringify([data.resourceDetail, null, 2])}/>
+                <FormCoder value={data.resourceDetail} options={{ mode: '' }}/>
               </Form.Item>
             </>
           )}
