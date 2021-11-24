@@ -32,12 +32,16 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
           <Form.Item label='资源名称：'>
             <Input value={data.name} disabled/>
           </Form.Item>
-          {/* <Form.Item label='偏移检测时间：'>
-            <Input value={''} disabled/>
-          </Form.Item>
-          <Form.Item label='偏移信息：'>
-            <FormCoder value={''}/>
-          </Form.Item> */}
+          {data.isDrift && (
+            <>
+              <Form.Item label='漂移检测时间：'>
+                <Input value={data.createAt} disabled/>
+              </Form.Item>
+              <Form.Item label='漂移信息：'>
+                <FormCoder value={safeJsonStringify([data.resourceDetail, null, 2])}/>
+              </Form.Item>
+            </>
+          )}
           <Form.Item label='所属模块：'>
             <Input value={data.module} disabled/>
           </Form.Item>

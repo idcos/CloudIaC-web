@@ -19,7 +19,7 @@ const ListGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
         </div>
         <div className='explain-item deviation'>
           <span className='icon'></span>
-          <span className='text'>偏移</span>
+          <span className='text'>漂移</span>
         </div>
       </Space>
       {loading ? (
@@ -34,9 +34,9 @@ const ListGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
                 </Col>
                 <Col>
                   <div className='cell-wrapper'>
-                    {(list || []).map(({ name, id }, index) => (
+                    {(list || []).map(({ name, id, isDrift }) => (
                       <Tooltip title={name}>
-                        <div className={classNames('cell', { 'deviation': false })} onClick={() => onOpenDetailDrawer(id)}></div>
+                        <div className={classNames('cell', { 'deviation': isDrift })} onClick={() => onOpenDetailDrawer(id)}></div>
                       </Tooltip>
                     ))}
                   </div>

@@ -153,7 +153,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
         </div>
         <div className='explain-item deviation'>
           <span className='icon'></span>
-          <span className='text'>偏移</span>
+          <span className='text'>漂移</span>
         </div>
       </Space>
       <Spin spinning={loading} style={{ width: '100%', marginTop: 100 }}>

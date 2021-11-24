@@ -4,7 +4,7 @@ import { Rect, Text, Circle, Group, Image, createNodeFromReact } from '@antv/g6-
 import { ellipsisText } from 'utils/util';
 import isEmpty from 'lodash/isEmpty';
 
-const Cell = ({ name, id, deviation }) => {
+const Cell = ({ name, id, isDrift }) => {
   const props = {
     id,
     name,
@@ -17,7 +17,7 @@ const Cell = ({ name, id, deviation }) => {
     alignItems: 'center', 
     cursor: 'pointer'
   };
-  return deviation ? (
+  return isDrift ? (
     <Rect 
       {...props} 
       zIndex={20}
@@ -79,8 +79,8 @@ const TreeNode = ({ cfg }) => {
           isShowResourcesList && (
             <Rect style={{ maxWidth: 22 * 10, flexWrap: 'wrap', flexDirection: 'row', margin: [8, 0, 0, 16] }}>
               {
-                resourcesList.map(({ resourceId, resourceName, deviation }) => (
-                  <Cell id={resourceId} name={resourceName} deviation={deviation}/>
+                resourcesList.map(({ resourceId, resourceName, isDrift }) => (
+                  <Cell id={resourceId} name={resourceName} isDrift={isDrift}/>
                 ))
               }
             </Rect>

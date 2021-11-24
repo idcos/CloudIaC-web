@@ -88,10 +88,10 @@ const EnvList = (props) => {
               >{data.name || '-'}</a>
               <span style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 12 }}>ID：{data.id}</span>
               <span>{ENV_STATUS[data.status] && <Tag color={ENV_STATUS_COLOR[data.status] || 'default'}>{ENV_STATUS[data.status]}</Tag>}</span>
-              <span>{<Tooltip context={'检测到该环境存在偏移资源'}><Tag onClick={() => {
+              <span>{<Tooltip context={'检测到该环境存在漂移资源'}><Tag onClick={() => {
                 history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=resource`); 
               }} color={'orange'}
-              >偏移</Tag></Tooltip>}</span>
+              >漂移</Tag></Tooltip>}</span>
             </Space>
           }
         >
