@@ -380,7 +380,7 @@ const Setting = () => {
                               <Input placeholder={'请输入crontab表达式'} /> 
                             </Form.Item>}</>}
                         >
-                          <Checkbox>偏移检测</Checkbox> 
+                          <Checkbox>漂移检测</Checkbox> 
                         </Form.Item>
                         <span style={{ display: 'flex', position: 'relative', left: '-155px', height: 22 }}>
                           { (getFieldValue('autoRepairDriftVisible') === true) &&
@@ -392,7 +392,7 @@ const Setting = () => {
                             <Switch onChange={e => checkedChange(e)} /> 
                           </Form.Item>
                           }
-                          { (getFieldValue('autoRepairDriftVisible') === true) && <span style={{ marginTop: 6 }}>自动纠偏</span>}
+                          { (getFieldValue('autoRepairDriftVisible') === true) && <span style={{ marginTop: 6 }}>自动纠正漂移</span>}
                         </span>
                       </div>;
                     }}
