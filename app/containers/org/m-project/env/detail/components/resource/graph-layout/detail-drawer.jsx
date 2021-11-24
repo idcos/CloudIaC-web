@@ -1,5 +1,6 @@
 import React from 'react';
 import { Drawer, Form, Input, Spin } from 'antd';
+import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
@@ -35,7 +36,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
           {data.isDrift && (
             <>
               <Form.Item label='漂移检测时间：'>
-                <Input value={data.createAt} disabled/>
+                <Input value={data.createAt && moment(data.createAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
               </Form.Item>
               <Form.Item label='漂移信息：'>
                 <FormCoder value={safeJsonStringify([data.resourceDetail, null, 2])}/>
