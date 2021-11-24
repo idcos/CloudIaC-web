@@ -10,11 +10,11 @@ const { Option } = Select;
 const infoType = {
   created: '新增',
   updated: '覆盖',
-  skipped: '跳过',
   copied: '创建副本'
 };
 const infoErrorType = {
   renamed: '重命名',
+  skipped: '跳过',
   duplicate: '中止'
 };
 const Index = ({ reload, toggleVisible, orgId }) => {
@@ -42,16 +42,18 @@ const Index = ({ reload, toggleVisible, orgId }) => {
       });
     }
   };
+  
   const computeCount = () => {
     let count = 0;
     let successTypeList = Object.keys(infoType);
     Object.keys(importInfo).map((it, i) => {
-      if (successTypeList.includes(it)) {
+      if (successTypeList.includes(it) && (it === 'created' || it === 'copied')) {
         count += (importInfo[it].templates || []).length;
       }
     });
     return count;
   };
+  
   const onOk = async () => {
     if (fileList.length === 0) {
       return notification.error({ message: '请选择文件。' });
@@ -146,7 +148,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     )}
     {importStatus === 'error' && (
       <Space direction='vertical'>
-        <span style={{ fontWeight: 900 }}>UUID存在冲突，操作已中止，导入{computeCount('success')}条数据：</span>
+        <span style={{ fontWeight: 900 }}>UUID存在冲突，操作已中止，导入0条数据：</span>
         {Object.keys(importInfo).map(it => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
