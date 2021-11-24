@@ -38,7 +38,7 @@ export const filterTreeData = (data, keyword) => {
       return newChildren;
     };
     data = cloneDeep(data) || {};
-    const formatData = formatTreeData();
+    const formatData = formatTreeData(data);
     formatData.children = filterChildren(formatData.children);
     return formatData;
   } catch (error) {
