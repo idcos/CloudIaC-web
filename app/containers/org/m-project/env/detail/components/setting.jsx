@@ -150,7 +150,7 @@ const Setting = () => {
   const checkedChange = (e) => {
     if (e && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
-        title: '开启『自动纠偏』功能需要同时开启『自动通过审批』，否则纠偏功能无法自动进行，是否继续？',
+        title: '开启『自动纠正漂移』功能需要同时开启『自动通过审批』，否则纠正漂移功能无法自动进行，是否继续？',
         okText: '继续',
         cancelText: '取消',
         onOk() {
@@ -163,7 +163,7 @@ const Setting = () => {
   const autoApprovalClick = (e) => {
     if (!e.target.checked && form.getFieldValue('autoRepairDrift') || !e.target.checked && form.getFieldValue('commit')) {
       Modal.confirm({
-        title: '当前环境已开启『自动纠偏|推送到分支重新部署』，如取消该选项，则『自动纠偏|推送到分支重新部署』功能也将一并取消，是否继续？',
+        title: '当前环境已开启『自动纠正漂移|推送到分支重新部署』，如取消该选项，则『自动纠正漂移|推送到分支重新部署』功能也将一并取消，是否继续？',
         okText: '继续',
         cancelText: '取消',
         onOk() {
@@ -365,16 +365,13 @@ const Setting = () => {
                     {({ getFieldValue }) => {
                       return <div style={{ minWidth: 340, display: 'flex' }}>
                         <Form.Item 
-                          name='autoRepairDriftVisible'
+                          name='openCronDrift'
                           valuePropName='checked'
                           initialValue={false}
-                          offset={1}
                           extra={<>
-                            {getFieldValue('autoRepairDriftVisible') === true && <Form.Item 
+                            {getFieldValue('openCronDrift') === true && <Form.Item 
                               label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
-                              name='cronDriftExpression'
-                              valuePropName='checked'
-                              initialValue={false}
+                              name='cronDriftExpress'
                               extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
                             >
                               <Input placeholder={'请输入crontab表达式'} /> 
@@ -382,8 +379,8 @@ const Setting = () => {
                         >
                           <Checkbox>漂移检测</Checkbox> 
                         </Form.Item>
-                        <span style={{ display: 'flex', position: 'relative', left: '-155px', height: 22 }}>
-                          { (getFieldValue('autoRepairDriftVisible') === true) &&
+                        <span style={{ display: 'flex', position: 'relative', left: '-124px', height: 22, width: 152 }}>
+                          { (getFieldValue('openCronDrift') === true) &&
                           <Form.Item 
                             name='autoRepairDrift'
                             valuePropName='checked'
@@ -392,7 +389,7 @@ const Setting = () => {
                             <Switch onChange={e => checkedChange(e)} /> 
                           </Form.Item>
                           }
-                          { (getFieldValue('autoRepairDriftVisible') === true) && <span style={{ marginTop: 6 }}>自动纠正漂移</span>}
+                          { (getFieldValue('openCronDrift') === true) && <span style={{ marginTop: 6 }}>自动纠正漂移</span>}
                         </span>
                       </div>;
                     }}

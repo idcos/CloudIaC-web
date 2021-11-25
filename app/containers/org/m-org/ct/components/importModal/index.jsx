@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Radio, Space, Upload, notification, Select } from 'antd';
+import { Button, Modal, Radio, Space, Upload, notification, Select, Tag } from 'antd';
 import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 import styles from './index.less';
 import tplAPI from 'services/tpl';
@@ -10,12 +10,17 @@ const { Option } = Select;
 const infoType = {
   created: '新增',
   updated: '覆盖',
+  skipped: '跳过',
   copied: '创建副本'
 };
 const infoErrorType = {
   renamed: '重命名',
-  skipped: '跳过',
   duplicate: '中止'
+};
+const infoTypeName = {
+  templates: '云模板',
+  vcs: 'VCS',
+  varGroups: 'varGroups'
 };
 const Index = ({ reload, toggleVisible, orgId }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
@@ -49,6 +54,8 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     Object.keys(importInfo).map((it, i) => {
       if (successTypeList.includes(it) && (it === 'created' || it === 'copied')) {
         count += (importInfo[it].templates || []).length;
+        count += (importInfo[it].varGroups || []).length;
+        count += (importInfo[it].vcs || []).length;
       }
     });
     return count;
@@ -105,7 +112,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     okButtonProps={{
       loading: submitLoading
     }}
-    width={573}
+    width={600}
     onOk={importStatus === 'init' ? onOk : toggleVisible}
     footer={<>
       {importStatus === 'init' ? <Space>
@@ -116,12 +123,12 @@ const Index = ({ reload, toggleVisible, orgId }) => {
   >
     {importStatus === 'success' && (
       <Space direction='vertical'>
-        <span style={{ fontWeight: 900 }}>成功导入云模板{computeCount('success')}条：</span>
+        <span style={{ fontWeight: 900 }}>成功导入模板{computeCount('success')}条：</span>
         {Object.keys(importInfo).map(it => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【云模板】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -130,7 +137,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【varGroups】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -139,7 +146,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].vcs || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -153,7 +160,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}</span>: <span className={styles.resultText}>{dt.id}</span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【云模板】</span>: <span className={styles.resultText}>{dt.id}</span>
               </>}
             </span>);
           });
@@ -162,7 +169,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【varGroups】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -171,7 +178,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].vcs || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
