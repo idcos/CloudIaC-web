@@ -370,9 +370,17 @@ const Setting = () => {
                           initialValue={false}
                           extra={<>
                             {getFieldValue('openCronDrift') === true && <Form.Item 
-                              label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
+                              label={<>定时检测  <Tooltip
+                                content={<pre>{`
+最小时间单位为分钟, 支持 "分 时 日 月 周"
+举例：
+每隔1 分钟执行一次 */1 * * * *
+每天 23点 执行一次 0 23 * * *
+每个月1号23 点执行一次 0 23 1 * *
+每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *`}</pre>}
+                              ><InfoCircleOutlined style={{ marginLeft: 8 }} /></Tooltip></>}
                               name='cronDriftExpress'
-                              extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
+                              extra={'例：*/10 * * * * 代表每隔10分钟执行一次'}
                               rules={[
                                 {
                                   required: getFieldValue('openCronDrift') === true,

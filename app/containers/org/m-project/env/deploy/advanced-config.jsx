@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle, useCallback } from "react";
-import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Switch, Modal } from "antd";
+import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Switch, Modal, Popover } from "antd";
 import { InfoCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -432,9 +432,17 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               offset={1}
                               extra={<>
                                 {getFieldValue('openCronDrift') === true && <Form.Item 
-                                  label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
+                                  label={<>定时检测  <Popover
+                                    content={<pre>{`
+最小时间单位为分钟, 支持 "分 时 日 月 周"
+举例：
+每隔1 分钟执行一次 */1 * * * *
+每天 23点 执行一次 0 23 * * *
+每个月1号23 点执行一次 0 23 1 * *
+每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *`}</pre>}
+                                  ><InfoCircleOutlined style={{ marginLeft: 8 }} /></Popover></>}
                                   name='cronDriftExpress'
-                                  extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
+                                  extra={'例：*/10 * * * * 代表每隔10分钟执行一次'}
                                   rules={[
                                     {
                                       required: getFieldValue('openCronDrift') === true,
