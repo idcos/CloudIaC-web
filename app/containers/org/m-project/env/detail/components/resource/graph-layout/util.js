@@ -3,9 +3,11 @@ import cloneDeep from 'lodash/cloneDeep';
 
 export const filterTreeData = (data, keyword) => {
   try {
-    const reg = new RegExp(keyword, 'gi');
     // 匹配关键词的资源方法
-    const filterByKeyword = (it) => !keyword || reg.test(it.resourceName);
+    const filterByKeyword = (it) => {
+      const reg = new RegExp(keyword, 'gi');
+      return !keyword || reg.test(it.resourceName);
+    };
     // 获取所有子节点的资源列表
     const getAllResourcesList = (children) => {
       let allResourcesList = [];
