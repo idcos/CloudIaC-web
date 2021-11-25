@@ -30,6 +30,7 @@ export default (props) => {
   } = props || {};
 
   const [ showOptions, setShowOptions ] = useState([]);
+  const [ searchValue, setSearchValue ] = useState('');
 
   useEffect(() => {
     setShowOptions(options.slice(0, maxLen));
@@ -37,6 +38,7 @@ export default (props) => {
 
   const onSearch = (e) => {
     const keyword = e.target.value;
+    setSearchValue(keyword);
     const reg = new RegExp(keyword, 'gi');
     const filterOptions = options.filter((it) => !keyword || reg.test(it[searchKey]));
     setShowOptions(filterOptions.slice(0, maxLen));
@@ -53,7 +55,11 @@ export default (props) => {
       placeholder={placeholder}
       showArrow={false} 
       showSearch={false}
-      onChange={onChange}
+     
+      onChange={(value) => {
+        setSearchValue('');
+        onChange(value);
+      }}
       value={value}
       dropdownRender={menu => {
         const showFlattenOptions = intersectionWith(menu.props.flattenOptions, showOptions, (flattenOption, showOption) => {
@@ -64,7 +70,7 @@ export default (props) => {
             {
               showSearch && (
                 <div className='senior-select-header'>
-                  <Input placeholder={searchPlaceholder} suffix={<SearchOutlined style={{ color: '#AAACAB' }}/>} onChange={onSearch} />
+                  <Input value={searchValue} placeholder={searchPlaceholder} suffix={<SearchOutlined style={{ color: '#AAACAB' }}/>} onChange={onSearch} />
                 </div>
               )
             }
