@@ -9,6 +9,20 @@ import classNames from 'classnames';
 import { filterTreeData } from './util';
 
 registerNode('self-tree-node');
+const toolbar = new G6.ToolBar();
+const tooltip = new G6.Tooltip({
+  itemTypes: ['node'],
+  shouldBegin: (ev) => {
+    const { customNodeType } = ev.target.cfg || {};
+    return customNodeType === 'resource-cell';
+  },
+  getContent: (ev) => {
+    const { name } = ev.target.cfg || {};
+    return `
+      <div style='width: 180px;'>${name}</div>
+    `;
+  }
+});
 
 const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawer }) => {
 
@@ -48,22 +62,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     const container = containerRef.current;
     const width = container.offsetWidth;
     const height = container.offsetHeight || 500;
-    const toolbar = new G6.ToolBar();
-    const tooltip = new G6.Tooltip({
-      offsetX: 10,
-      offsetY: 10,
-      itemTypes: ['node'],
-      shouldBegin: (ev) => {
-        const { customNodeType } = ev.target.cfg || {};
-        return customNodeType === 'resource-cell';
-      },
-      getContent: (ev) => {
-        const { name } = ev.target.cfg || {};
-        return `
-          <div style='width: 180px;'>${name}</div>
-        `;
-      }
-    });
+    resetTooltipOffset();
     graphRef.current = new G6.TreeGraph({
       container,
       width,
@@ -141,8 +140,15 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     const container = containerRef.current;
     if (!graphRef.current || graphRef.current.get('destroyed')) return;
     if (!container || !container.offsetWidth || !container.offsetHeight) return;
+    resetTooltipOffset();
     graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
     graphRef.current.fitView();
+  };
+
+  const resetTooltipOffset = () => {
+    const container = containerRef.current;
+    tooltip.set('offsetX', -container.offsetLeft - 20);
+    tooltip.set('offsetY', -container.offsetTop - 60);
   };
 
   return (
