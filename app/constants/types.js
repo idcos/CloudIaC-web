@@ -18,7 +18,8 @@ export const ORG_USER = {
     'task.failed': '部署失败',
     'task.complete': '部署成功',
     'task.approving': '等待审批',
-    'task.running': '新建部署'
+    'task.running': '新建部署',
+    'task.crondrift': '配置漂移'
   },
   notificationType: {
     email: '邮件',
