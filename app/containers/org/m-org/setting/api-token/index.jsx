@@ -94,27 +94,27 @@ const ApiToken = ({ orgId }) => {
     {
       dataIndex: 'description',
       title: '描述',
-      width: 210,
+      width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'expiredAt',
       title: '过期时间',
-      width: 150,
+      width: 160,
       ellipsis: true,
       render: (text) => text ? moment(text).format(dateFormat) : '-'
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
-      width: 150,
+      width: 160,
       ellipsis: true,
       render: (text) => moment(text).format(dateFormat)
     },
     {
       dataIndex: 'status',
       title: '状态',
-      width: 132,
+      width: 120,
       ellipsis: true,
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>

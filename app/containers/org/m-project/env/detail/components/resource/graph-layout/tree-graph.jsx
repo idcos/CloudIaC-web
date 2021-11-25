@@ -70,7 +70,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
       height,
       plugins: [
         tooltip,
-        // toolbar
+        toolbar
       ],
       modes: {
         default: [
@@ -142,6 +142,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     if (!graphRef.current || graphRef.current.get('destroyed')) return;
     if (!container || !container.offsetWidth || !container.offsetHeight) return;
     graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
+    graphRef.current.fitView();
   };
 
   return (
