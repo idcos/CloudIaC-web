@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
-import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
+import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, Popover, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
 import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
@@ -370,15 +370,27 @@ const Setting = () => {
                           initialValue={false}
                           extra={<>
                             {getFieldValue('openCronDrift') === true && <Form.Item 
-                              label={<>定时检测  <Tooltip
-                                content={<pre>{`
-最小时间单位为分钟, 支持 "分 时 日 月 周"
-举例：
-每隔1 分钟执行一次 */1 * * * *
-每天 23点 执行一次 0 23 * * *
-每个月1号23 点执行一次 0 23 1 * *
-每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *`}</pre>}
-                              ><InfoCircleOutlined style={{ marginLeft: 8 }} /></Tooltip></>}
+                              label={
+                                <>
+                                  <span>定时检测</span>
+                                  <Popover
+                                    content={(
+                                      <>
+                                        <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
+                                        <div style={{ fontWeight: 500 }}>举例：</div>
+                                        <div>
+                                          1.每隔1 分钟执行一次 */1 * * * *<br/>
+                                          2.每天 23点 执行一次 0 23 * * *<br/>
+                                          3.每个月1号23 点执行一次 0 23 1 * *<br/>
+                                          4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
+                                        </div>
+                                      </>
+                                    )}
+                                  >
+                                    <InfoCircleOutlined style={{ marginLeft: 8 }} />
+                                  </Popover>
+                                </>
+                              }
                               name='cronDriftExpress'
                               extra={'例：*/10 * * * * 代表每隔10分钟执行一次'}
                               rules={[
