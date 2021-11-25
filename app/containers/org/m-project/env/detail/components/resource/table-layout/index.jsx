@@ -117,7 +117,9 @@ const TableLayout = ({ setMode }) => {
             style={{ width: 240 }}
             onSearch={v => setSearch(v)}
           />
-          <Button onClick={() => setMode('graph')} icon={<FundViewOutlined />}>切换图形展示</Button>
+          {type === 'env' && (
+            <Button onClick={() => setMode('graph')} icon={<FundViewOutlined />}>切换图形展示</Button>
+          )}
         </Row>
         <Table
           columns={columns}

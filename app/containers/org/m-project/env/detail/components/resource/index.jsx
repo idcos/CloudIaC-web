@@ -5,13 +5,15 @@ import { Eb_WP } from 'components/error-boundary';
 import ResourceViewModal from 'components/resource-view-modal';
 import GraphLayout from './graph-layout';
 import TableLayout from './table-layout';
+import DetailPageContext from '../../detail-page-context';
 
 const { Panel } = Collapse;
 
 const Resource = () => {
 
+  const { type } = useContext(DetailPageContext);
   const event$ = useEventEmitter();
-  const [ mode, setMode ] = useState('graph');
+  const [ mode, setMode ] = useState(type === 'env' ? 'graph' : 'table');
 
   const content = useMemo(() => {
     const modeMap = {

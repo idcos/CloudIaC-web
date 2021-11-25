@@ -89,9 +89,11 @@ const GraphLayout = ({ setMode }) => {
             }
           </div>
         </Space>
-        <Button onClick={() => setMode('table')} icon={<MenuOutlined/>}>
-          切换列表展示
-        </Button>
+        {type === 'env' && (
+          <Button onClick={() => setMode('table')} icon={<MenuOutlined/>}>
+            切换列表展示
+          </Button>
+        )}
       </Row>
       {dimension === 'module' ? (
         <TreeGraph 
