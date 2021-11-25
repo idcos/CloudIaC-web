@@ -373,6 +373,12 @@ const Setting = () => {
                               label={<>定时检测  <Tooltip title=''><InfoCircleOutlined /></Tooltip></>}
                               name='cronDriftExpress'
                               extra={'例：0 0 12 ** 3代表每周3中午12点执行'}
+                              rules={[
+                                {
+                                  required: getFieldValue('openCronDrift') === true,
+                                  message: '请输入crontab表达式'
+                                }
+                              ]}
                             >
                               <Input placeholder={'请输入crontab表达式'} /> 
                             </Form.Item>}</>}
