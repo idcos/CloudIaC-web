@@ -93,7 +93,8 @@ const TreeNode = ({ cfg }) => {
 
 export const getNodeHeight = (cfg) => {
   const cellRowLen = Math.ceil((cfg.resourcesList || []).length / 10);
-  return cfg.isRoot ? 8 : (20 + 8 + 22 * cellRowLen);
+  const noCollapsedParent = !cfg.collapsed && (cfg.children || []).length > 0; // 展示=开的父节点
+  return noCollapsedParent ? 8 : (20 + 8 + 22 * cellRowLen);
 };
 
 export const registerNode = (shapeType) => {
@@ -101,7 +102,8 @@ export const registerNode = (shapeType) => {
     ...createNodeFromReact(TreeNode), 
     getAnchorPoints: (cfg) => {
       const top = 20 / getNodeHeight(cfg) / 2;
-      if (cfg.isRoot) {
+      const noCollapsedParent = !cfg.collapsed && (cfg.children || []).length > 0; // 展开的父节点
+      if (noCollapsedParent) {
         return [[0, 0.5], [1, 0.5]];
       } else {
         return [[0, top], [1, top]];
