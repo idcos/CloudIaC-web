@@ -5,6 +5,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import FormCoder from 'components/coder/form-coder';
+import FormAnsiCoder from 'components/coder/form-ansi-coder';
 import { safeJsonStringify } from 'utils/util';
 
 export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
@@ -39,7 +40,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
                 <Input value={data.createAt && moment(data.createAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
               </Form.Item>
               <Form.Item label='漂移信息：'>
-                <FormCoder value={data.resourceDetail} options={{ mode: '' }}/>
+                <FormAnsiCoder value={data.resourceDetail}/>
               </Form.Item>
             </>
           )}
