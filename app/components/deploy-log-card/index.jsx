@@ -254,7 +254,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
                   <Space>
                     <span>{name || type || '-'}</span>
                     {status === 'complete' && <CheckCircleFilled style={{ color: '#45BC13' }}/>}
-                    {status === 'failed' || status === 'timeout' && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
+                    {(status === 'failed' || status === 'timeout') && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
                     {status === 'running' && <SyncOutlined spin={true} style={{ color: '#ffffff' }}/>}
                   </Space>
                 } 
