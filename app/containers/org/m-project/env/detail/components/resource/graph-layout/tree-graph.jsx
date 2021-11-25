@@ -46,12 +46,12 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     } 
     const data = filterTreeData(graphData, search);
     renderGraph(data);
-  }, [search, graphData]);
+  }, [graphData, search]);
 
   const renderGraph = (data) => {
     if (!isEmpty(data)) {
       // 确保图标实例化成功再渲染
-      graphRef.current.data(data);
+      graphRef.current.changeData(data);
       graphRef.current.render();
       graphRef.current.fitView();
     }
@@ -67,6 +67,11 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
       container,
       width,
       height,
+      animate: true,
+      animateCfg: {
+        duration: 500, // Number，一次动画的时长
+        easing: 'linearEasing', // String，动画函数
+      },
       plugins: [
         tooltip,
         toolbar
