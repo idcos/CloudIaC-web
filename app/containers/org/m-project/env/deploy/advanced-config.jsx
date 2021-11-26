@@ -122,10 +122,11 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     setRunnerValue
   }), [ onfinish, setRunnerValue ]);
 
-  const checkedChange = (e) => {
-    if (e && !form.getFieldValue('autoApproval')) {
+  const checkedChange = (e, str) => {
+    let checked = e.target ? e.target.checked : e;
+    if (checked && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
-        title: '开启『自动纠正漂移』功能需要同时开启『自动通过审批』，否则纠正漂移功能无法自动进行，是否继续？',
+        title: `开启『${str}』功能需要同时开启『自动通过审批』，否则${str}功能无法自动进行，是否继续？`,
         okText: '继续',
         cancelText: '取消',
         onOk() {
@@ -381,7 +382,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox onChange={e => checkedChange(e)}>推送到分支时重新部署</Checkbox> 
+                          <Checkbox onChange={e => checkedChange(e, '推送到分支时重新部署')}>推送到分支时重新部署</Checkbox> 
                         </Form.Item>
                         <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
@@ -474,7 +475,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 valuePropName='checked'
                                 initialValue={false}
                               >
-                                <Switch onChange={e => checkedChange(e)} /> 
+                                <Switch onChange={e => checkedChange(e, '自动纠正漂移')} /> 
                               </Form.Item>
                               }
                               { (getFieldValue('openCronDrift') === true) && <span style={{ marginTop: 6 }}>自动纠正漂移</span>}
