@@ -177,7 +177,7 @@ const Setting = () => {
         okText: '继续',
         cancelText: '取消',
         onOk() {
-          form.setFieldsValue({ openCronDrift: false, autoRepairDrift: false, commit: false });
+          form.setFieldsValue({ autoRepairDrift: false, commit: false });
         },
         onCancel() {
           form.setFieldsValue({ autoApproval: true });
