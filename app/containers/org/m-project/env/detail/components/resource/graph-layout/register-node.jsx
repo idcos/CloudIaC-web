@@ -13,6 +13,7 @@ const Cell = ({ name, id, isDrift }) => {
   const commonRectStyle = {
     width: 22, 
     height: 22, 
+    radius: 3,
     justifyContent: 'center', 
     alignItems: 'center', 
     cursor: 'pointer'
@@ -37,7 +38,7 @@ const Cell = ({ name, id, isDrift }) => {
     <Rect 
       {...props} 
       zIndex={1}
-      style={{ ...commonRectStyle, stroke: '#0B847C', fill: '#11978E' }}
+      style={{ ...commonRectStyle, stroke: '#056760', fill: '#85C9C4' }}
     >
     </Rect>
   );
