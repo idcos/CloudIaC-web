@@ -45,7 +45,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
     }
   ];
 
-  const [ panel, setPanel ] = useState('email'),
+  const [ panel, setPanel ] = useState('none'),
     [ list, setList ] = useState([]);
 
   const [form] = Form.useForm();
@@ -168,7 +168,8 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         ]}
       >
         <Input />
-      </Form.Item>
+      </Form.Item>,
+      none: () => <></>
     };
     return PAGES[panel]();
   }, [ panel, list ]);
