@@ -1,52 +1,50 @@
-import React, { useState, useEffect, memo, useContext } from 'react';
-import { Card, Table, notification, Tag, Tooltip } from 'antd';
+import React, { memo, useContext } from 'react';
+import { Card, Table, Tag, Tooltip } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
+import { useRequest } from 'ahooks';
+import { useSearchFormAndTable } from 'utils/hooks';
+import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import taskAPI from 'services/task';
-import isEmpty from 'lodash/isEmpty';
 import DetailPageContext from '../detail-page-context';
 
 const DeployHistory = () => {
 
-  const { envInfo, orgId, projectId, envId } = useContext(DetailPageContext);
-  const [ loading, setLoading ] = useState(false);
-  const [ resultMap, setResultMap ] = useState({
-    list: [],
-    total: 0
+  const { orgId, projectId, envId } = useContext(DetailPageContext);
+
+  // 列表查询
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList,
+  } = useRequest(
+    (params) => requestWrapper(
+      taskAPI.envsTaskList.bind(null, {
+        orgId, 
+        projectId, 
+        envId,
+        ...params
+      })
+    ), {
+      manual: true
+    }
+  );
+
+  // 表单搜索和table关联hooks
+  const { 
+    tableProps
+  } = useSearchFormAndTable({
+    tableData,
+    onSearch: (params) => {
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams });
+    }
   });
 
-  useEffect(() => {
-    if (!isEmpty(envInfo)) {
-      fetchList();
-    }
-  }, [envInfo]);
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const res = await taskAPI.envsTaskList({
-        orgId, projectId, envId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
-  };
   const columns = [
     {
       dataIndex: 'type',
@@ -121,14 +119,14 @@ const DeployHistory = () => {
       }
     }
   ];
+
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
       <Table
         columns={columns}
         scroll={{ x: 'min-content', y: 570 }}
-        dataSource={resultMap.list}
-        loading={loading}
-        pagination={false}
+        loading={tableLoading}
+        {...tableProps}
       />
     </Card>
   </div>
