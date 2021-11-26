@@ -36,12 +36,14 @@
   }
 
   .resourceListContainer {
-
+    display: flex;
+    flex-direction: column;
     :global {
       .graph-body {
         padding: 60px 24px 24px;
         overflow-y: auto;
-        height: 500px;
+        flex: 1;
+        min-height: 0;
 
         .graph-list {
           .graph-item {
