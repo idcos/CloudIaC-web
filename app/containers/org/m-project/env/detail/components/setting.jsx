@@ -147,9 +147,8 @@ const Setting = () => {
   };
 
 
-  const checkedChange = (e, str) => {
+  const checkedChange = (e, str, type) => {
     let checked = e.target ? e.target.checked : e;
-
     if (checked && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
         title: `开启『${str}』功能需要同时开启『自动通过审批』，否则${str}功能无法自动进行，是否继续？`,
@@ -157,19 +156,31 @@ const Setting = () => {
         cancelText: '取消',
         onOk() {
           form.setFieldsValue({ autoApproval: true });
+        },
+        onCancel() {
+          if (str === '推送到分支时重新部署') {
+            form.setFieldsValue({ commit: false });
+          } else {
+            form.setFieldsValue({ autoRepairDrift: false });
+          }
         }
       });
     }
+
   };
 
   const autoApprovalClick = (e) => {
     if (!e.target.checked && form.getFieldValue('autoRepairDrift') || !e.target.checked && form.getFieldValue('commit')) {
+      let title = `${!!form.getFieldValue('autoRepairDrift') && '自动纠正漂移' || ''}${(!!form.getFieldValue('autoRepairDrift') && !!form.getFieldValue('commit')) && '|' || ''}${!!form.getFieldValue('commit') && '推送到分支重新部署' || ''}`;
       Modal.confirm({
-        title: '当前环境已开启『自动纠正漂移|推送到分支重新部署』，如取消该选项，则『自动纠正漂移|推送到分支重新部署』功能也将一并取消，是否继续？',
+        title: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
         okText: '继续',
         cancelText: '取消',
         onOk() {
-          form.setFieldsValue({ autoApproval: false, autoRepairDrift: false, commit: false });
+          form.setFieldsValue({ openCronDrift: false, autoRepairDrift: false, commit: false });
+        },
+        onCancel() {
+          form.setFieldsValue({ autoApproval: true });
         }
       });
     }
@@ -306,7 +317,7 @@ const Setting = () => {
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox onChange={e => checkedChange(e, '推送到分支时重新部署')}>推送到分支时重新部署</Checkbox> 
+                          <Checkbox onChange={e => checkedChange(e, '推送到分支时重新部署', 'commit')}>推送到分支时重新部署</Checkbox> 
                         </Form.Item>
                         <Space size={8}>
                           <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
@@ -407,14 +418,14 @@ const Setting = () => {
                         >
                           <Checkbox>漂移检测</Checkbox> 
                         </Form.Item>
-                        <span style={{ display: 'flex', position: 'relative', left: '-124px', height: 22, width: 152 }}>
+                        <span style={{ display: 'flex', position: 'relative', left: '-124px', height: 22, width: 160 }}>
                           { (getFieldValue('openCronDrift') === true) &&
                           <Form.Item 
                             name='autoRepairDrift'
                             valuePropName='checked'
                             initialValue={false}
                           >
-                            <Switch onChange={e => checkedChange(e, '自动纠正漂移')} /> 
+                            <Switch onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')} /> 
                           </Form.Item>
                           }
                           { (getFieldValue('openCronDrift') === true) && <span style={{ marginTop: 6 }}>自动纠正漂移</span>}

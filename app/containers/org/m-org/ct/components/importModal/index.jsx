@@ -137,7 +137,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【varGroups】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -169,7 +169,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【varGroups】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });

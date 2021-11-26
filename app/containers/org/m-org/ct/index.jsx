@@ -10,6 +10,7 @@ import ImportModal from './components/importModal';
 import tplAPI from 'services/tpl';
 import { VerticalAlignBottomOutlined, ImportOutlined } from '@ant-design/icons';
 import { downloadImportTemplate } from 'utils/util';
+import { UploadtIcon } from 'components/iconfont';
 import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 
@@ -178,7 +179,7 @@ const CTList = ({ match = {} }) => {
           >新建云模板</Button>
           <span>
             <Button disabled={selectedRowKeys.length === 0} icon={<VerticalAlignBottomOutlined />} style={{ marginRight: 8 }} onClick={() => download()}>导出</Button>
-            <Button icon={<ImportOutlined />} onClick={() => setVisible(true)}>导入</Button>
+            <Button icon={<UploadtIcon />} onClick={() => setVisible(true)}>导入</Button>
           </span>
         </Space>
         <Table
