@@ -28,8 +28,8 @@ const Cell = ({ name, id, isDrift }) => {
        {...props} 
         style={{
           img: '/assets/icons/drift.svg',
-          width: 22, 
-          height: 22, 
+          width: 16, 
+          height: 16, 
           cursor: 'pointer' 
         }}
       />
