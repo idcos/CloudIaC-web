@@ -28,7 +28,8 @@ async function xFetch(url, options) {
     logout();
     return;
   } else if (jsonResponse.httpCode == 403) {
-    history.push('/no-access');
+    // 使用window.location.href不用location.push跳转 防止后续代码执行导致的报错等问题
+    window.location.href = `/no-access`;
     return;
   } else {
     return jsonResponse.jsonResult;
