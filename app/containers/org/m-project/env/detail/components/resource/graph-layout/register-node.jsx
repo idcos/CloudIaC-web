@@ -22,7 +22,7 @@ const Cell = ({ name, id, isDrift }) => {
     <Rect 
       {...props} 
       zIndex={20}
-      style={{ ...commonRectStyle, stroke: '#916504', fill: '#E3A322' }}
+      style={{ ...commonRectStyle, stroke: '#916504', fill: '#E9BC60' }}
     >
       <Image 
        {...props} 
