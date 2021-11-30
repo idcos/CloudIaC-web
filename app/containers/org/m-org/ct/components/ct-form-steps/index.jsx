@@ -119,13 +119,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       }
       const {
         name, description,
-        vcsId, repoId, repoRevision, workdir, tfVersion,
+        vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
         tfVarsFile, playbook,
         projectId
       } = res.result || {};
       setCtData({
         basic: { name, description },
-        repo: { vcsId, repoId, repoRevision, workdir, tfVersion },
+        repo: { vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion },
         variable: { tfVarsFile, playbook },
         relation: { projectId }
       });

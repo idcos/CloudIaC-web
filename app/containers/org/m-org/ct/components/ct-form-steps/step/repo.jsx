@@ -2,6 +2,7 @@ import React, { useState, useEffect, useImperativeHandle, memo } from 'react';
 import { Space, Select, Form, Input, Button, Empty, notification, Tooltip, Row, Col } from "antd";
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import tplAPI from 'services/tpl';
@@ -103,7 +104,10 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
     {
       manual: true,
       debounceInterval: 300,
-      formatResult: data => data.list
+      formatResult: data => {
+        const { repoId, repoFullName } = form.getFieldsValue();
+        return uniqBy([ ...data.list, { id: repoId, fullName: repoFullName } ], 'id');
+      }
     }
   );
 
@@ -194,6 +198,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       fetchRepoTags(allValues);
       mutateAutoMatchTfVersion(undefined);
       form.setFieldsValue({
+        repoFullName: (repos.find(it => it.id === changedValues.repoId) || {}).fullName,
         repoRevision: undefined,
         workdir: undefined,
         tfVersion: undefined
@@ -292,6 +297,12 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
         >
           {repos.map(it => <Option value={it.id}>{it.fullName}</Option>)}
         </Select>
+      </Form.Item>
+      <Form.Item
+        name='repoFullName'
+        hidden={true}
+      >
+        <Input />
       </Form.Item>
       <Form.Item
         label='分支/标签'
