@@ -12,6 +12,7 @@ import envAPI from 'services/env';
 import tokensAPI from 'services/tokens';
 import Copy from 'components/copy';
 import DetailPageContext from '../detail-page-context';
+import styles from '../styles.less';
 
 const FL = {
   labelCol: { span: 24 },
@@ -187,7 +188,7 @@ const Setting = () => {
   };
 
 
-  return <div>
+  return <div className={styles.depolySettingDetail}>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
       <Form
         scrollToFirstError={true}
