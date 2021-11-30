@@ -128,7 +128,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【云模板】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【云模板】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -137,7 +137,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -146,7 +146,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].vcs || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -160,7 +160,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【云模板】</span>: <span className={styles.resultText}>{dt.id}</span>
+                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【云模板】</span>: <span className={styles.resultText}>{dt.id}</span>
               </>}
             </span>);
           });
@@ -169,7 +169,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -178,7 +178,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].vcs || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'create' ? '#088245' : '#000' }}> {infoErrorType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });

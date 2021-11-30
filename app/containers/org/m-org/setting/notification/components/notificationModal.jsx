@@ -45,7 +45,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
     }
   ];
 
-  const [ panel, setPanel ] = useState('none'),
+  const [ panel, setPanel ] = useState('email'),
     [ list, setList ] = useState([]);
 
   const [form] = Form.useForm();
@@ -168,8 +168,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         ]}
       >
         <Input />
-      </Form.Item>,
-      none: () => <></>
+      </Form.Item>
     };
     return PAGES[panel]();
   }, [ panel, list ]);
@@ -255,6 +254,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
               message: '请选择通知类型'
             }
           ]}
+          initialValue={'email'}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
