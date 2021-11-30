@@ -249,12 +249,6 @@ const Index = ({ match = {} }) => {
         };
       });
       let values = { ...value, ...configData };
-      if (values.playbook && !values.keyId) {
-        return notification.error({
-          message: '表单校验错误',
-          description: 'playbook存在时管理密钥必填'
-        });
-      }
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
       const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });

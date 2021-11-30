@@ -250,6 +250,16 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                       <Form.Item
                         label='密钥：'
                         name='keyId'
+                        dependencies={['playbook']}
+                        rules={[
+                          (form) => {
+                            const playbook = form.getFieldValue('playbook');
+                            return  {
+                              required: !!playbook,
+                              message: '请选择密钥'
+                            };
+                          }
+                        ]}
                       >
                         <Select 
                           allowClear={true}
