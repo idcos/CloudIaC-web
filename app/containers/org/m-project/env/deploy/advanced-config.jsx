@@ -89,27 +89,35 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     form.setFieldsValue(data);
   };
 
-  const onfinish = async() => {
-    let values = await form.validateFields().catch(() => {
-      setActiveKey(['open']); // 表单报错展开折叠面板
+  const onfinish = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let values = await form.validateFields().catch((res) => {
+          setActiveKey(['open']); // 表单报错展开折叠面板
+          reject(res);
+        });
+        values.triggers = [];
+        if (values.commit) {
+          values.triggers = values.triggers.concat(['commit']);
+        }
+        if (values.prmr) {
+          values.triggers = values.triggers.concat(['prmr']);
+        }
+        if (!!values.destroyAt) {
+          values.destroyAt = moment(values.destroyAt);
+        }
+        if (values.type === 'infinite') {
+          values.ttl = '0';
+        }
+        values.tfVarsFile = values.tfVarsFile || '';
+        values.playbook = values.playbook || '';
+        delete values.autoRepairDriftVisible;
+        const data = omit(values, [ 'commit', 'prmr', 'type' ]);
+        resolve(data);
+      } catch (error) {
+        reject();
+      }
     });
-    values.triggers = [];
-    if (values.commit) {
-      values.triggers = values.triggers.concat(['commit']);
-    }
-    if (values.prmr) {
-      values.triggers = values.triggers.concat(['prmr']);
-    }
-    if (!!values.destroyAt) {
-      values.destroyAt = moment(values.destroyAt);
-    }
-    if (values.type === 'infinite') {
-      values.ttl = '0';
-    }
-    values.tfVarsFile = values.tfVarsFile || '';
-    values.playbook = values.playbook || '';
-    delete values.autoRepairDriftVisible;
-    return omit(values, [ 'commit', 'prmr', 'type' ]);
   };
 
   // 新建时给runnerId赋值

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { notification, Select, Form, Input, Button, Row, Col } from "antd";
+import get from 'lodash/get';
 import PageHeader from "components/pageHeader";
 import history from 'utils/history';
 import VariableForm, { formatVariableRequestParams } from 'components/variable-form';
@@ -227,19 +228,30 @@ const Index = ({ match = {} }) => {
 
   const onFinish = async (taskType) => {
     try {
-      const value = await form.validateFields().catch(() => {
-        throw new Error('表单校验错误');
+      const value = await form.validateFields().catch((err) => {
+        const errInfo = get(err, 'errorFields[0].errors[0]', '');
+        throw {
+          message: '表单校验错误',
+          description: errInfo
+        };
       });
-      const configData = await configRef.current.onfinish().catch(() => {
-        throw new Error('表单校验错误');
+      const configData = await configRef.current.onfinish().catch((err) => {
+        const errInfo = get(err, 'errorFields[0].errors[0]', '');
+        throw {
+          message: '表单校验错误',
+          description: errInfo
+        };
       });
       const varData = await varRef.current.validateForm().catch(() => {
-        throw new Error('表单校验错误');
+        throw {
+          message: '表单校验错误',
+          description: '请检查变量表单填写是否有误'
+        };
       });
       let values = { ...value, ...configData };
       if (values.playbook && !values.keyId) {
         return notification.error({
-          message: '保存失败',
+          message: '表单校验错误',
           description: 'playbook存在时管理密钥必填'
         });
       }
@@ -247,10 +259,13 @@ const Index = ({ match = {} }) => {
       taskType === 'apply' && setApplyLoading(true);
       const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
       if (res.code !== 200) {
-        throw new Error(res.message);
+        throw {
+          message: res.message,
+          description: res.message_detail
+        };
       }
       notification.success({
-        description: '保存成功'
+        message: '保存成功'
       });
       const envInfo = res.result || {};
       if (envId) { // 重新部署环境，跳部署历史详情
@@ -260,13 +275,10 @@ const Index = ({ match = {} }) => {
       }
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
-    } catch (e) {
+    } catch (err) {
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
-      notification.error({
-        message: '保存失败',
-        description: e.message
-      });
+      notification.error(err);
     }
   };
 
@@ -291,7 +303,7 @@ const Index = ({ match = {} }) => {
                 rules={[
                   {
                     required: true,
-                    message: '请输入'
+                    message: '请输入环境名称'
                   }
                 ]}
                 initialValue={info.name || undefined}
@@ -306,7 +318,7 @@ const Index = ({ match = {} }) => {
                 rules={[
                   {
                     required: true,
-                    message: '请选择'
+                    message: '请选择分支/标签'
                   }
                 ]}
               >
