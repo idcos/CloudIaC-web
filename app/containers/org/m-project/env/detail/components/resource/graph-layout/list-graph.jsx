@@ -35,7 +35,7 @@ const ListGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
                 <Col>
                   <div className='cell-wrapper'>
                     {(list || []).map(({ name, id, isDrift }) => (
-                      <Tooltip title={name}>
+                      <Tooltip title={name} getTooltipContainer={(triggerNode) => triggerNode.parentElement}>
                         <div className={classNames('cell', { 'deviation': isDrift })} onClick={() => onOpenDetailDrawer(id)}></div>
                       </Tooltip>
                     ))}

@@ -18,7 +18,7 @@ const tooltip = new G6.Tooltip({
   },
   getContent: (ev) => {
     const { name } = ev.target.cfg || {};
-    return name;
+    return String(name);
   }
 });
 
