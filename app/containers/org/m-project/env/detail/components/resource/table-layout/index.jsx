@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Table, Input, Space, Button, Row } from 'antd';
+import { Table, Input, Space, Button, Row, Tag } from 'antd';
 import { useRequest, useEventEmitter } from 'ahooks';
 import { FundViewOutlined } from "@ant-design/icons";
 import { requestWrapper } from 'utils/request';
@@ -42,9 +42,14 @@ const TableLayout = ({ setMode }) => {
       let typeList = [...new Set(list.map(d => d.provider))];
       let ll = [];
       typeList.forEach(d => {
-        let obj = {};
+        let obj = {
+          isDrift: false
+        };
         let children = list.filter(t => t.provider === d).map(it => {
           it.count = 1;
+          if (it.isDrift) {
+            obj.isDrift = true;
+          }
           return it;
         });
         obj.provider = d;
@@ -71,19 +76,19 @@ const TableLayout = ({ setMode }) => {
       dataIndex: 'provider',
       title: '云平台',
       ellipsis: true,
-      width: 258
+      width: 220
     },
     {
       dataIndex: 'type',
       title: '类型',
       ellipsis: true,
-      width: 240
+      width: 180
     },
     {
       dataIndex: 'count',
       title: '数量',
       ellipsis: true,
-      width: 120
+      width: 80
     },
     {
       dataIndex: 'name',
@@ -104,7 +109,14 @@ const TableLayout = ({ setMode }) => {
       dataIndex: 'module',
       title: '模块',
       ellipsis: true,
-      width: 240
+      width: 200
+    },
+    {
+      dataIndex: 'isDrift',
+      title: '是否漂移',
+      ellipsis: true,
+      width: 120,
+      render: T => T ? <Tag color='green'>是</Tag> : <Tag>否</Tag>
     }
   ];
 
