@@ -436,7 +436,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         shouldUpdate={true}
                       >
                         {({ getFieldValue }) => {
-                          return <div style={{ minWidth: 340, display: 'flex' }}>
+                          return <div style={{ minWidth: 360, display: 'flex' }}>
                             <Form.Item 
                               name='openCronDrift'
                               valuePropName='checked'
@@ -479,7 +479,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                             >
                               <Checkbox>漂移检测</Checkbox> 
                             </Form.Item>
-                            <span style={{ display: 'flex', position: 'relative', left: '-124px', height: 22, width: 160 }}>
+                            <span style={{ display: 'flex', position: 'relative', left: '-136px', height: 22, width: 160 }}>
                               { (getFieldValue('openCronDrift') === true) &&
                               <Form.Item 
                                 name='autoRepairDrift'
@@ -489,7 +489,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 <Switch onChange={e => checkedChange(e, '自动纠正漂移')} /> 
                               </Form.Item>
                               }
-                              { (getFieldValue('openCronDrift') === true) && <span style={{ marginTop: 6 }}>自动纠正漂移</span>}
+                              { (getFieldValue('openCronDrift') === true) && <span style={{ marginTop: 6, marginLeft: 8 }}>自动纠正漂移</span>}
                             </span>
                           </div>;
                         }}
