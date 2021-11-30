@@ -129,6 +129,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
         title: `开启『${str}』功能需要同时开启『自动通过审批』，否则${str}功能无法自动进行，是否继续？`,
         okText: '继续',
         cancelText: '取消',
+        onOk() {
+          form.setFieldsValue({ autoApproval: true });
+        },
         onCancel() {
           if (str === '推送到分支时重新部署') {
             form.setFieldsValue({ commit: false });
