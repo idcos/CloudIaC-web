@@ -27,7 +27,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
       getContainer={false}
     >
       <Spin spinning={loading}>
-        <Form layout="vertical">
+        <Form layout="vertical" className='idcos-exhibition-form'>
           <Form.Item label='ID：'>
             <Input value={data.id} disabled/>
           </Form.Item>
@@ -40,7 +40,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
                 <Input value={data.createAt && moment(data.createAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
               </Form.Item>
               <Form.Item label='漂移信息：'>
-                <FormAnsiCoder value={data.resourceDetail}/>
+                <FormAnsiCoder value={data.resourceDetail || ''}/>
               </Form.Item>
             </>
           )}
