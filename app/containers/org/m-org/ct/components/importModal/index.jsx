@@ -216,6 +216,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='请选择关联项目'
             mode={'multiple'}
+            showArrow={true}
             style={{ width: 350 }}
             onChange={e => setSelectProject(e)}
           >
