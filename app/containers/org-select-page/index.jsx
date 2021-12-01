@@ -1,5 +1,5 @@
 import React from 'react';
-import { List } from 'antd';
+import { List, Typography } from 'antd';
 import { RightOutlined } from "@ant-design/icons";
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
@@ -31,7 +31,20 @@ const Orgs = ({ orgs, dispatch }) => {
               >
                 <List.Item.Meta
                   title={item.name}
-                  description={item.description || '-'}
+                  description={
+                    <Typography.Paragraph
+                      title={item.description || '-'}
+                      ellipsis={{
+                        rows: 2,
+                        expandable: true,
+                        onExpand: (e) => {
+                          e.stopPropagation();
+                        }
+                      }}
+                    >
+                      {item.description || '-'}
+                    </Typography.Paragraph>
+                  }
                 />
                 <div>
                   <RightOutlined />
