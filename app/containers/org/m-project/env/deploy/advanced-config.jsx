@@ -254,7 +254,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         rules={[
                           (form) => {
                             const playbook = form.getFieldValue('playbook');
-                            return  {
+                            return {
                               required: !!playbook,
                               message: '请选择密钥'
                             };
@@ -316,7 +316,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         label='存活时间：'
                       >
                         <Row>
-                          <Col span={8}>
+                          <Col span={8} className={styles.survivalTimeRight}>
                             <Form.Item 
                               name='type'
                               initialValue={'infinite'}
@@ -326,7 +326,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               </Select>
                             </Form.Item>
                           </Col>
-                          <Col span={16}>
+                          <Col span={16} className={styles.survivalTimeLeft}>
                             <Form.Item 
                               noStyle={true}
                               shouldUpdate={true}

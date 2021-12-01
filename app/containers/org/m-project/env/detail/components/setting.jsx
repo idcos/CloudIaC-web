@@ -219,7 +219,7 @@ const Setting = () => {
                     label='存活时间：'
                   >
                     <Row>
-                      <Col span={8}>
+                      <Col span={8} className={styles.survivalTimeRight}>
                         <Form.Item 
                           name='type'
                           initialValue={'infinite'}
@@ -229,7 +229,7 @@ const Setting = () => {
                           </Select>
                         </Form.Item>
                       </Col>
-                      <Col span={16}>
+                      <Col span={16} className={styles.survivalTimeLeft}>
                         <Form.Item 
                           noStyle={true}
                           shouldUpdate={true}
