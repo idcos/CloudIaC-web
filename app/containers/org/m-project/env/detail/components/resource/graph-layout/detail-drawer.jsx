@@ -37,7 +37,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
           {data.isDrift && (
             <>
               <Form.Item label='漂移检测时间：'>
-                <Input value={data.createAt && moment(data.createAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
+                <Input value={data.driftAt && moment(data.driftAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
               </Form.Item>
               <Form.Item label='漂移信息：'>
                 <FormAnsiCoder value={data.driftDetail || ''}/>
