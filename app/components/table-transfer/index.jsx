@@ -16,6 +16,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
       const columns = direction === 'left' ? leftColumns : rightColumns;
 
       const rowSelection = {
+        columnWidth: 26,
         getCheckboxProps: item => ({ disabled: listDisabled || item.disabled }),
         onSelectAll(selected, selectedRows) {
           const treeSelectedKeys = selectedRows

@@ -117,6 +117,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
         pagination={false}
         rowKey='varGroupId'
         rowSelection={{
+          columnWidth: 26,
           hideSelectAll: true,
           selectedRowKeys: selectedRows.map(({ varGroupId }) => varGroupId),
           getCheckboxProps: (record) => ({

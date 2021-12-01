@@ -204,6 +204,7 @@ const CTList = ({ match = {} }) => {
           }}
           rowSelection={
             {
+              columnWidth: 26,
               fixed: true,
               selectedRowKeys,
               onChange: (keys, rows) => {

@@ -123,6 +123,7 @@ export default ({ policyId, visible, onClose, reload }) => {
           }}
           scroll={{ x: 'min-content', y: 570 }}
           rowSelection={{
+            columnWidth: 26,
             onChange: setAddTargetIds,
             selections: [
               Table.SELECTION_ALL,
