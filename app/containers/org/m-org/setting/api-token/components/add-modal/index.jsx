@@ -52,7 +52,7 @@ export default ({ orgId, toggleVisible, operation }) => {
           <DatePicker style={{ width: '100%' }} placeholder='请选择过期时间' format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
         </Form.Item>
       </Form>
-      <Space style={{ height: 32, display: 'flex', justifyContent: 'flex-end' }} >
+      <Space style={{ height: 32, display: 'flex', justifyContent: 'flex-end', marginTop: 45 }} >
         <Button loading={submitLoading} onClick={() => toggleVisible()}>
           取消
         </Button>

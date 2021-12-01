@@ -3,7 +3,7 @@ import { Popover } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
 
-const Index = ({ formContent, title = '新建', close, children, style = { width: 500 }, ...restProps }) => {
+const Index = ({ formContent, title = '创建Token', close, children, style = { width: 500 }, ...restProps }) => {
   let content = () => {
     return (<div style={style} className={'popoverform-box'}>
       <div className={'popoverform-header'}>
