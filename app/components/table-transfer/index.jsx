@@ -41,7 +41,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
           dataSource={filteredItems}
           size='small'
           pagination={false}
-          style={{ pointerEvents: listDisabled ? 'none' : null }}
+          style={{ pointerEvents: listDisabled ? 'none' : null, minHeight: 335 }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) {
