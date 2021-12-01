@@ -200,29 +200,31 @@ const Index = ({ reload, toggleVisible, orgId }) => {
       </Space>
     )}
     { importStatus === 'init' && (
-      <Space direction='vertical'>
+      <Space direction='vertical' size='middle'>
         <Space>
           <Upload 
             {...props} 
           >
             <Button
               icon={<>{fileList[0] && fileList[0] ? <UploadtIcon/> : <VerticalAlignBottomOutlined/>}</>}
-              style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, marginBottom: 8 }}
+              style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
             >
               {fileList[0] && fileList[0] ? '重新选择' : '选择文件'}
             </Button>
           </Upload>
           <span className={styles.radioText} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#00AB9D' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : '支持json文件'}</span> 
         </Space>
-        <span className={styles.importHeader}><span>*</span> 导入时以UUID作为是否重复导入的依据，UUID重复时的操作方式：</span>
-        <Radio.Group onChange={(e) => setType(e.target.value)} value={type}>
-          <Space direction='vertical'>
-            <Radio value={'update'}>覆盖 <span className={styles.radioText}>UUID重复时更新该条数据（包括云模板、VCS、资源帐号）</span></Radio> 
-            <Radio value={'skip'}>跳过 <span className={styles.radioText}>UUID重复时跳过该条数据，继续导入其他数据</span></Radio> 
-            <Radio value={'copy'}>创建副本 <span style={{ marginLeft: 0 }} className={styles.radioText}>UUID重复时，重新创建一条数据，如果名称也相同，给名称加上_copy后缀</span></Radio> 
-            <Radio value={'abort'}>中止 <span className={styles.radioText}>UUID重复时中止导入操作，不做任何变更</span></Radio>
-          </Space>
-        </Radio.Group>
+        <Space direction='vertical' size={6}>
+          <div className={styles.importHeader}><span>*</span> 导入时以UUID作为是否重复导入的依据，UUID重复时的操作方式：</div>
+          <Radio.Group onChange={(e) => setType(e.target.value)} value={type}>
+            <Space direction='vertical' size={4}>
+              <Radio value={'update'}>覆盖 <span className={styles.radioText}>UUID重复时更新该条数据（包括云模板、VCS、资源帐号）</span></Radio> 
+              <Radio value={'skip'}>跳过 <span className={styles.radioText}>UUID重复时跳过该条数据，继续导入其他数据</span></Radio> 
+              <Radio value={'copy'}>创建副本 <span style={{ marginLeft: 0 }} className={styles.radioText}>UUID重复时，重新创建一条数据，如果名称也相同，给名称加上_copy后缀</span></Radio> 
+              <Radio value={'abort'}>中止 <span className={styles.radioText}>UUID重复时中止导入操作，不做任何变更</span></Radio>
+            </Space>
+          </Radio.Group>
+        </Space>
         <Space>
           <span>关联项目：</span><Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
