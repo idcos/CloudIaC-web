@@ -33,7 +33,8 @@ const Index = ({ reload, toggleVisible, orgId }) => {
   const [ type, setType ] = useState();
   const [ projectList, setProjectList ] = useState([]);
   const [ selectProject, setSelectProject ] = useState([]);
-
+  const [ hasColon, setHasColon ] = useState(false);
+  
   useEffect(() => {
     fetchProject();
   }, []);
@@ -62,7 +63,17 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     });
     return count;
   };
-  
+
+  const computeHasColon = (data) => {
+    let flag = false;
+    Object.keys(data).map((it, i) => {
+      if ((data[it].templates || []).length > 0 || (data[it].varGroups || []).length > 0 || (data[it].vcs || []).length > 0) {
+        flag = true;
+      }
+      setHasColon(flag);
+    });
+  };
+
   const onOk = async () => {
     if (fileList.length === 0) {
       return notification.error({ message: '请选择文件。' });
@@ -89,6 +100,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
       setImportStatus('error');
       if (res.result) {
         setImportInfo(res.result || {});
+        computeHasColon(res.result || {});
       }
       return notification.error({ message: res.message });
     } else {
@@ -157,7 +169,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     )}
     {importStatus === 'error' && (
       <Space direction='vertical'>
-        <span style={{ fontWeight: 900 }}>UUID存在冲突，操作已中止，导入0条数据：</span>
+        <span style={{ fontWeight: 900 }}>UUID存在冲突，操作已中止，导入0条数据{hasColon ? '：' : '。'}</span>
         {Object.keys(importInfo).map(it => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
