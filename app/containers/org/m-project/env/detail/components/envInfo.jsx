@@ -43,7 +43,8 @@ const EnvInfo = (props) => {
     <Collapse expandIconPosition={'right'} forceRender={true}>
       <Collapse.Panel header='环境详情'>
         <Descriptions 
-          labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
+          labelStyle={{ color: 'rgba(0, 0, 0, 0.46)', width: 105, textAlign: 'right', display: 'block' }}
+          contentStyle={{ color: 'rgba(0, 0, 0, 0.86)' }}
         >
           <Descriptions.Item label='云模板'>{envInfo.templateName || '-'}</Descriptions.Item>
           <Descriptions.Item label='分支'>{envInfo.revision || '-'}</Descriptions.Item>

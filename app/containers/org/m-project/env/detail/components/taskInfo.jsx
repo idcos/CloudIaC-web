@@ -13,7 +13,8 @@ const TaskInfo = (props) => {
 
   return <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'作业详情'}>
     <Descriptions 
-      labelStyle={{ width: 100, textAlign: 'right', display: 'block' }}
+      labelStyle={{ color: 'rgba(0, 0, 0, 0.46)', width: 105, textAlign: 'right', display: 'block' }}
+      contentStyle={{ color: 'rgba(0, 0, 0, 0.86)' }}
     >
       <Descriptions.Item label='状态'>
         {
