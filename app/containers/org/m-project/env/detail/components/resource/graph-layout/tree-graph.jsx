@@ -43,9 +43,10 @@ const toolbar = new G6.ToolBar({
         graph.zoom(0.9);
         break;
       case 'realZoom':
-        const height = graph.get('height');
-        graph.fitView();
-        graph.zoomTo(1, { x: 0, y: height / 2 });
+        const width = graph.get('width');
+        graph.zoomTo(1);
+        graph.focusItem('rootNode', false);
+        graph.translate(-width/2 + 10, 0);
         break;
       case 'autoZoom':
         graph.fitView();
@@ -96,9 +97,10 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
       // 确保图标实例化成功再渲染
       graphRef.current.changeData(data);
       graphRef.current.render();
-      const height = graphRef.current.get('height');
-      graphRef.current.fitView();
-      graphRef.current.zoomTo(1, { x: 0, y: height / 2 });
+      const width = graphRef.current.get('width');
+      graphRef.current.zoomTo(1);
+      graphRef.current.focusItem('rootNode', false);
+      graphRef.current.translate(-width/2 + 10, 0);
     }
   };
 
@@ -131,7 +133,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
             }
           },
           'drag-canvas',
-          'zoom-canvas',
+          // 'zoom-canvas',
         ],
       },
       defaultNode: {
@@ -155,7 +157,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     graphRef.current.node(function (node) {
       const { id, children, isRoot, resourcesList } = node;
       return {
-        id, children, isRoot, resourcesList 
+        id: isRoot ? 'rootNode' : id, children, isRoot, resourcesList 
       };
     });
     graphRef.current.on('itemcollapsed', (e) => {
@@ -192,9 +194,10 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     if (!container || !container.offsetWidth || !container.offsetHeight) return;
     resetTooltipOffset();
     graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
-    const height = graphRef.current.get('height');
-    graphRef.current.fitView();
-    graphRef.current.zoomTo(1, { x: 0, y: height / 2 });
+    const width = graphRef.current.get('width');
+    graphRef.current.zoomTo(1);
+    graphRef.current.focusItem('rootNode', false);
+    graphRef.current.translate(-width/2 + 10, 0);
   };
 
   const resetTooltipOffset = () => {
