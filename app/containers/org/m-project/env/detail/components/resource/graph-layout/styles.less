@@ -84,6 +84,10 @@
                 cursor: pointer;
                 position: relative;
                 z-index: 1;
+                &:hover {
+                  background-color: #379711;
+                  z-index: 2;
+                }
 
                 &.deviation {
                   border: 1px solid #916504;
@@ -92,11 +96,10 @@
                   background-repeat: no-repeat;
                   background-size: 16px;
                   background-position: center;
-                }
-  
-                &:hover {
-                  opacity: 0.66;
-                  z-index: 2;
+                  &:hover {
+                    background-color: #F6E383;
+                    z-index: 2;
+                  }
                 }
               }
             }
