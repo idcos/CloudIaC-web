@@ -113,13 +113,13 @@ const VariableForm = ({
     validateForm: () => {
       return new Promise((resolve, reject) => {
         let formValidates = [
-          terraformVarRef.current.handleValidate().catch(() => {
+          terraformVarRef.current.handleValidate().catch((err) => {
             setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: true }));
-            throw new Error();
+            reject(err);
           }),
-          envVarRef.current.handleValidate().catch(() => {
+          envVarRef.current.handleValidate().catch((err) => {
             setExpandCollapseCfg((preValue) => ({ ...preValue, environment: true }));
-            throw new Error();
+            reject(err);
           })
         ];
         if (showOtherVars) {
