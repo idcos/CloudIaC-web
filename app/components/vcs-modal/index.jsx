@@ -45,7 +45,7 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
       loading: submitLoading
     }}
     onOk={onOk}
-    width={408}
+    width={550}
     zIndex={1111111}
   >
     <Form

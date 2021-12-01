@@ -40,7 +40,7 @@ export default ({ visible, id, onClose, orgId, projectId, envId, type }) => {
                 <Input value={data.createAt && moment(data.createAt).format('YYYY-MM-DD HH:mm:ss')} disabled/>
               </Form.Item>
               <Form.Item label='漂移信息：'>
-                <FormAnsiCoder value={data.resourceDetail || ''}/>
+                <FormAnsiCoder value={data.driftDetail || ''}/>
               </Form.Item>
             </>
           )}
