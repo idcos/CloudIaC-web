@@ -379,7 +379,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
+      <Form.Item wrapperCol={{ offset: 6, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (
