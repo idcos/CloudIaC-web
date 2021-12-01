@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Radio, Space, Upload, notification, Select, Tag } from 'antd';
 import { VerticalAlignBottomOutlined } from '@ant-design/icons';
+import { UploadtIcon } from 'components/iconfont';
+
 import styles from './index.less';
 import tplAPI from 'services/tpl';
 import projectAPI from 'services/project';
@@ -123,12 +125,12 @@ const Index = ({ reload, toggleVisible, orgId }) => {
   >
     {importStatus === 'success' && (
       <Space direction='vertical'>
-        <span style={{ fontWeight: 900 }}>成功导入模板{computeCount('success')}条：</span>
+        <span style={{ fontWeight: 900, fontSize: 16 }}>成功导入模板{computeCount('success')}条：</span>
         {Object.keys(importInfo).map(it => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【云模板】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTitle} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【云模板】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -137,7 +139,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTitle} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -146,7 +148,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].vcs || []).map((dt) => {
             return (<span>
               {!!infoType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTitle} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -160,7 +162,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].templates || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【云模板】</span>: <span className={styles.resultText}>{dt.id}</span>
+                <span className={styles.resultTitle} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【云模板】</span>: <span className={styles.resultText}>{dt.id}</span>
               </>}
             </span>);
           });
@@ -169,7 +171,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].varGroups || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTitle} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -178,7 +180,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
           return (importInfo[it].vcs || []).map((dt) => {
             return (<span>
               {!!infoErrorType[it] && <>
-                <span className={styles.resultTiele} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                <span className={styles.resultTitle} style={{ color: it === 'created' || it === 'copied' ? '#088245' : '#000' }}> {infoErrorType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
               </>}
             </span>);
           });
@@ -192,13 +194,13 @@ const Index = ({ reload, toggleVisible, orgId }) => {
             {...props} 
           >
             <Button
-              icon={<VerticalAlignBottomOutlined/>}
-              style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
+              icon={<>{fileList[0] && fileList[0] ? <UploadtIcon/> : <VerticalAlignBottomOutlined/>}</>}
+              style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4, marginBottom: 8 }}
             >
-              选择文件
+              {fileList[0] && fileList[0] ? '重新选择' : '选择文件'}
             </Button>
           </Upload>
-          <span className={styles.radioText} style={{ marginLeft: 0 }}>{fileList[0] && fileList[0] ? fileList[0].name : '支持json文件'}</span> 
+          <span className={styles.radioText} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#00AB9D' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : '支持json文件'}</span> 
         </Space>
         <span className={styles.importHeader}><span>*</span> 导入时以UUID作为是否重复导入的依据，UUID重复时的操作方式：</span>
         <Radio.Group onChange={(e) => setType(e.target.value)} value={type}>
