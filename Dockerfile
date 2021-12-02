@@ -1,5 +1,4 @@
 FROM node:14.16.1 as builder
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && apk upgrade
 WORKDIR /workspace
 RUN npm i cross-env rimraf -g
 
