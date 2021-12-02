@@ -1,7 +1,5 @@
-FROM alpine:3.10.2 as builder
+FROM node:14.16.1 as builder
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && apk update && apk upgrade
-RUN apk add --no-cache npm \
-    && apk add --no-cache nodejs
 WORKDIR /workspace
 RUN npm i cross-env rimraf -g
 
