@@ -26,6 +26,12 @@ const vcsAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  getWebhook: ({ orgId, envId, projectId }) => {
+    return getWithArgs('/api/v1/vcs/webhook', { envId }, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
   listRepo: ({ orgId, vcsId, ...restParams }) => {
     return getWithArgs(`/api/v1/vcs/${vcsId}/repo`, restParams, {
       'IaC-Org-Id': orgId

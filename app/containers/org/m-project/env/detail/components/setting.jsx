@@ -4,12 +4,11 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
-import { connect } from "react-redux";
 import getPermission from "utils/permission";
 import { Eb_WP } from 'components/error-boundary';
 import { AUTO_DESTROY, destoryType } from 'constants/types';
 import envAPI from 'services/env';
-import tokensAPI from 'services/tokens';
+import vcsAPI from 'services/vcs';
 import Copy from 'components/copy';
 import DetailPageContext from '../detail-page-context';
 import styles from '../styles.less';
@@ -114,29 +113,16 @@ const Setting = () => {
     }
   };
 
-  const copyRequest = (action) => {
+  const copyRequest = () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await tokensAPI.getTriggerUrl({
-          orgId, envId, action, projectId
+        const res = await vcsAPI.getWebhook({
+          orgId, envId, projectId
         });
         if (res.code !== 200) {
           throw new Error(res.message);
         }
-        if (res.result) {
-          const { key } = res.result || {};
-          const copyData = `${window.location.origin}/api/v1/trigger/send?token=${key}`;
-          resolve(copyData);
-        } else {
-          const resCreat = await tokensAPI.createToken({
-            orgId, envId, action, projectId, type: 'trigger'
-          });
-          if (resCreat.code !== 200) {
-            throw new Error(resCreat.message);
-          }
-          const copyData = `${window.location.origin}/api/v1/trigger/send?token=${resCreat.result.key}`;
-          resolve(copyData);
-        }
+        resolve((res.result || {}).url);
       } catch (e) {
         reject();
         notification.error({
@@ -322,7 +308,7 @@ const Setting = () => {
                         </Form.Item>
                         <Space size={8}>
                           <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
-                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest('apply')}/>
+                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest()}/>
                         </Space>
                       </>
                     )}
@@ -344,7 +330,7 @@ const Setting = () => {
                         </Form.Item>
                         <Space size={8}>
                           <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
-                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest('plan')}/>
+                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest()}/>
                         </Space>
                       </>
                     )}
