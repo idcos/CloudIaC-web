@@ -35,6 +35,7 @@ const toolbar = new G6.ToolBar({
     </ul>`;
   },
   handleClick: (code, graph) => {
+    const width = graph.get('width');
     switch (code) {
       case 'zoomOut':
         graph.zoom(1/0.9);
@@ -43,13 +44,14 @@ const toolbar = new G6.ToolBar({
         graph.zoom(0.9);
         break;
       case 'realZoom':
-        const width = graph.get('width');
         graph.zoomTo(1);
         graph.focusItem('rootNode', false);
         graph.translate(-width/2 + 10, 0);
         break;
       case 'autoZoom':
         graph.fitView();
+        graph.focusItem('rootNode', false);
+        graph.translate(-width/2 + 10, 0);
         break;
       default:
         break;
@@ -98,7 +100,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
       graphRef.current.changeData(data);
       graphRef.current.render();
       const width = graphRef.current.get('width');
-      graphRef.current.zoomTo(1);
+      graphRef.current.fitView();
       graphRef.current.focusItem('rootNode', false);
       graphRef.current.translate(-width/2 + 10, 0);
     }
@@ -195,7 +197,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     resetTooltipOffset();
     graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
     const width = graphRef.current.get('width');
-    graphRef.current.zoomTo(1);
+    graphRef.current.fitView();
     graphRef.current.focusItem('rootNode', false);
     graphRef.current.translate(-width/2 + 10, 0);
   };
