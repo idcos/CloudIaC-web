@@ -57,7 +57,7 @@ const TreeNode = ({ cfg }) => {
   // 父节点收起状态或者叶子节点 并且 资源数量大于0
   const isShowResourcesList = (collapsed || isEmpty(children)) && resourcesList.length > 0;
 
-  return isRoot ? <Dot /> : (
+  return (
     <Group>
       <Rect
         style={{
@@ -73,7 +73,7 @@ const TreeNode = ({ cfg }) => {
         >
           <Dot />
           <Text customNodeType='collapse-expand-btn' style={{ fill: '#0B847C', fontSize: 16, margin: [0, 0, 0, 8], cursor: 'pointer' }}>
-            {ellipsisText(nodeName, 20)}{resourcesList.length > 0 ? `[${resourcesList.length}]` : ''}
+            {isRoot ? 'Root节点' : ellipsisText(nodeName, 20)}{resourcesList.length > 0 ? `[${resourcesList.length}]` : ''}
           </Text>
         </Rect>
         {

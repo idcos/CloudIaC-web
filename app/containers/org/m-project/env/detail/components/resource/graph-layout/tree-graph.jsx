@@ -30,10 +30,12 @@ const autoZoom = (graph) => {
   graph.translate(viewLeftCenter.x - groupLeftCenter.x, viewLeftCenter.y - groupLeftCenter.y);
 };
 const realZoom = (graph) => {
+  const viewController = graph.get('viewController');
+  const padding = viewController.getFormatPadding();
   graph.zoomTo(1);
   const width = graph.get('width');
   graph.focusItem('rootNode', false);
-  graph.translate(-width/2 + 10, 0);
+  graph.translate(-width/2 + padding[3], 0);
 };
 const toolbar = new G6.ToolBar({
   getContent: () => {
