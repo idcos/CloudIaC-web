@@ -9,6 +9,32 @@ import classNames from 'classnames';
 import { filterTreeData } from './util';
 
 registerNode('self-tree-node');
+const autoZoom = (graph) => {
+  graph.fitView();
+  const height = graph.get('height');
+  const viewController = graph.get('viewController');
+  const padding = viewController.getFormatPadding();
+  // 左对齐， 水平居中
+  const viewLeftCenter = {
+    x: padding[3],
+    y: (height - padding[0] - padding[2]) / 2 + padding[0]
+  };
+  const group = graph.get('group');
+  // group.resetMatrix();
+  const bbox = group.getCanvasBBox();
+  // 左对齐， 水平居中
+  const groupLeftCenter = {
+    x: bbox.x,
+    y: bbox.y + bbox.height / 2,
+  };
+  graph.translate(viewLeftCenter.x - groupLeftCenter.x, viewLeftCenter.y - groupLeftCenter.y);
+};
+const realZoom = (graph) => {
+  graph.zoomTo(1);
+  const width = graph.get('width');
+  graph.focusItem('rootNode', false);
+  graph.translate(-width/2 + 10, 0);
+};
 const toolbar = new G6.ToolBar({
   getContent: () => {
     return `<ul class="g6-component-toolbar">
@@ -35,7 +61,6 @@ const toolbar = new G6.ToolBar({
     </ul>`;
   },
   handleClick: (code, graph) => {
-    const width = graph.get('width');
     switch (code) {
       case 'zoomOut':
         graph.zoom(1/0.9);
@@ -44,14 +69,10 @@ const toolbar = new G6.ToolBar({
         graph.zoom(0.9);
         break;
       case 'realZoom':
-        graph.zoomTo(1);
-        graph.focusItem('rootNode', false);
-        graph.translate(-width/2 + 10, 0);
+        realZoom(graph);
         break;
       case 'autoZoom':
-        graph.fitView();
-        graph.focusItem('rootNode', false);
-        graph.translate(-width/2 + 10, 0);
+        autoZoom(graph);
         break;
       default:
         break;
@@ -99,10 +120,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
       // 确保图标实例化成功再渲染
       graphRef.current.changeData(data);
       graphRef.current.render();
-      const width = graphRef.current.get('width');
-      graphRef.current.fitView();
-      graphRef.current.focusItem('rootNode', false);
-      graphRef.current.translate(-width/2 + 10, 0);
+      autoZoom(graphRef.current);
     }
   };
 
@@ -196,10 +214,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
     if (!container || !container.offsetWidth || !container.offsetHeight) return;
     resetTooltipOffset();
     graphRef.current.changeSize(container.offsetWidth, container.offsetHeight);
-    const width = graphRef.current.get('width');
-    graphRef.current.fitView();
-    graphRef.current.focusItem('rootNode', false);
-    graphRef.current.translate(-width/2 + 10, 0);
+    autoZoom(graphRef.current);
   };
 
   const resetTooltipOffset = () => {
