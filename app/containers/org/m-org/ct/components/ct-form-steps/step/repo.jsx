@@ -106,7 +106,12 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       debounceInterval: 300,
       formatResult: data => {
         const { repoId, repoFullName } = form.getFieldsValue();
-        return uniqBy([ ...data.list, { id: repoId, fullName: repoFullName } ], 'id');
+        const hasSelectedItem = (data.list || []).find((it) => it.id === repoId);
+        if (repoId && repoFullName && !hasSelectedItem) {
+          return [ ...data.list, { id: repoId, fullName: repoFullName } ];
+        } else {
+          return data.list || [];
+        }
       }
     }
   );
