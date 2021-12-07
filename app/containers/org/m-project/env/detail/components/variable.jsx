@@ -7,7 +7,7 @@ import envAPI from 'services/env';
 import { Eb_WP } from 'components/error-boundary';
 import DetailPageContext from '../detail-page-context';
 
-const Variable = (props) => {
+const Variable = () => {
 
   const { taskInfo, type, orgId, projectId, envId } = useContext(DetailPageContext);
   const [ variables, setVariables ] = useState([]);

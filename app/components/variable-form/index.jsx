@@ -9,6 +9,7 @@ import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
+import { useDeepCompareEffect } from 'utils/hooks';
 import VarFormTable from './var-form-table';
 import OtherVarForm from './other-var-form';
 import styles from './styles.less';
@@ -83,7 +84,7 @@ const VariableForm = ({
     }
   );
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (!defaultData) {
       return;
     }
