@@ -6,7 +6,7 @@ import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import { DIMENSION_ENUM } from 'constants/types';
-import DetailDrawer from './detail-drawer';
+import DetailDrawer from '../components/detail-drawer';
 import styles from './styles.less';
 import DetailPageContext from '../../../detail-page-context';
 import TreeGraph from './tree-graph';

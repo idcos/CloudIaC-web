@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Table, Input, Space, Button, Row, Tag } from 'antd';
-import { useRequest, useEventEmitter } from 'ahooks';
+import { useRequest } from 'ahooks';
 import { FundViewOutlined } from "@ant-design/icons";
 import { requestWrapper } from 'utils/request';
-import ResourceViewModal from 'components/resource-view-modal';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import DetailPageContext from '../../../detail-page-context';
+import DetailDrawer from '../components/detail-drawer';
 
 const TableLayout = ({ setMode }) => {
 
-  const event$ = useEventEmitter();
   const { taskId, type, orgId, projectId, envId } = useContext(DetailPageContext);
   const [ expandedRowKeys, setExpandedRowKeys ] = useState([]);
   const [ search, setSearch ] = useState('');
+  const [ detailDrawerProps, setDetailDrawerProps ] = useState({
+    visible: false
+  });
  
   useEffect(() => {
     fetchResourceData();
@@ -71,6 +73,17 @@ const TableLayout = ({ setMode }) => {
     }
   };
 
+  const onOpenDetailDrawer = (id) => {
+    setDetailDrawerProps({
+      visible: true, 
+      id
+    });
+  };
+
+  const onCloseDetailDrawer = () => {
+    setDetailDrawerProps({ visible: false });
+  };
+
   const columns = [
     {
       dataIndex: 'provider',
@@ -97,9 +110,8 @@ const TableLayout = ({ setMode }) => {
       width: 200,
       render: (text, record) => {
         const { id } = record;
-        const params = { resourceName: text, orgId, projectId, envId, resourceId: id };
         return (
-          <a onClick={() => event$.emit({ type: 'open-resource-view-modal', data: { params } })}>
+          <a onClick={() => onOpenDetailDrawer(id)}>
             {text}
           </a>
         );
@@ -122,8 +134,8 @@ const TableLayout = ({ setMode }) => {
 
   return (
     <>
-     <Space size='middle' direction='vertical' style={{ width: '100%' }}>
-       <Row justify='space-between'>
+      <Space size='middle' direction='vertical' style={{ width: '100%' }}>
+        <Row justify='space-between'>
           <Input.Search
             placeholder='请输入关键字搜索'
             style={{ width: 240 }}
@@ -144,7 +156,9 @@ const TableLayout = ({ setMode }) => {
           onExpand={onExpand}
         /> 
       </Space>
-      <ResourceViewModal event$={event$}/>
+      {detailDrawerProps.visible && (
+        <DetailDrawer {...detailDrawerProps} onClose={onCloseDetailDrawer} orgId={orgId} projectId={projectId} envId={envId} type={type}/>
+      )}
     </>
   );
 };
