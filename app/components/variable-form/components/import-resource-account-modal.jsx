@@ -48,7 +48,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
   const onOpen = () => {
     setVisible(true);
-    fetchList({ currentPage: 1, pageSize: 100000 });
+    fetchList({ pageSize: 0 });
   };
 
   const onCancel = () => {
@@ -117,6 +117,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
         pagination={false}
         rowKey='varGroupId'
         rowSelection={{
+          columnWidth: 26,
           hideSelectAll: true,
           selectedRowKeys: selectedRows.map(({ varGroupId }) => varGroupId),
           getCheckboxProps: (record) => ({

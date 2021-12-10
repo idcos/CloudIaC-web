@@ -13,11 +13,10 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
+    const payload = opt === 'add' ? values : { ...values, id: curRecord.id };
     operation({
       doWhat: opt,
-      payload: {
-        ...values
-      }
+      payload
     }, (hasError) => {
       setSubmitLoading(false);
       !hasError && toggleVisible();
@@ -39,14 +38,14 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
   };
 
   return <Modal
-    title='添加VCS'
+    title={opt === 'add' ? '添加VCS' : '编辑VCS'}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
       loading: submitLoading
     }}
     onOk={onOk}
-    width={408}
+    width={550}
     zIndex={1111111}
   >
     <Form
@@ -80,6 +79,7 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择VCS类型'
           onChange={onChangeVcsType}
+          disabled={opt === 'edit'}
         >
           <Option value='gitlab'>gitlab</Option>
           <Option value='github'>github</Option>
@@ -104,12 +104,12 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
         name='vcsToken'
         rules={[
           {
-            required: true,
-            message: '请输入'
+            required: opt === 'add',
+            message: '请输入Token密码'
           }
         ]}
       >
-        <Input placeholder='请输入Token密码'/>
+        <Input placeholder={opt === 'add' ? '请输入' : '空值保存时不会修改原有值'}/>
       </Form.Item>
     </Form>
   </Modal>;

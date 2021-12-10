@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import moment from 'moment';
 import tokensAPI from 'services/tokens';
-import AddModal from './components/add-modal';
+import TokenForm from './components/add-modal';
+import Popover from 'components/Popover';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -93,27 +94,27 @@ const ApiToken = ({ orgId }) => {
     {
       dataIndex: 'description',
       title: '描述',
-      width: 210,
+      width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'expiredAt',
       title: '过期时间',
-      width: 150,
+      width: 160,
       ellipsis: true,
-      render: (text) => moment(text).format(dateFormat)
+      render: (text) => text ? moment(text).format(dateFormat) : '-'
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
-      width: 150,
+      width: 160,
       ellipsis: true,
       render: (text) => moment(text).format(dateFormat)
     },
     {
       dataIndex: 'status',
       title: '状态',
-      width: 132,
+      width: 120,
       ellipsis: true,
       render: (text) => <div className='tableRender'>
         <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
@@ -152,12 +153,28 @@ const ApiToken = ({ orgId }) => {
 
   return <>
     <div style={{ marginBottom: 20 }}>
-      <Button 
-        type='primary'
-        onClick={() => {
-          toggleVisible();
-        }}
-      >创建Token</Button>
+      <Popover 
+        placement='right' 
+        visible={visible}
+        arrowPointAtCenter={true}
+        autoAdjustOverflow={true}
+        trigger={'click'}
+        close={toggleVisible}
+        formContent={<TokenForm 
+          orgId={orgId}
+          reload={fetchList}
+          operation={operation}
+          visible={visible}
+          toggleVisible={toggleVisible}
+        />}
+      >
+        <Button 
+          type='primary'
+          onClick={() => {
+            toggleVisible();
+          }}
+        >创建Token</Button>
+      </Popover>
     </div>
     <Table
       columns={columns}
@@ -179,15 +196,6 @@ const ApiToken = ({ orgId }) => {
         }
       }}
     />
-    {
-      visible && <AddModal
-        orgId={orgId}
-        reload={fetchList}
-        operation={operation}
-        visible={visible}
-        toggleVisible={toggleVisible}
-      />
-    }
   </>;
 };
 

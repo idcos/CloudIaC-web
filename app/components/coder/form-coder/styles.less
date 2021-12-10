@@ -1,0 +1,42 @@
+@import 'containers/App/styles/variable.less';
+
+.formCoder {
+  border: 1px solid #D6D6D6;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  height: 450px;
+  :global {
+    .header {
+      flex: 0 0 auto;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .tool-item {
+        line-height: 24px;
+        padding: 0 3px;
+        color: @gray-7;
+        border-radius: 2px;
+        cursor: pointer;
+        
+        .icon {
+          margin-right: 4px;
+          font-size: 14px;
+        }
+        &:hover {
+          color: #08857C;
+          background: #F5F5F5;
+        }
+      }
+    }
+    .body {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      .form-coder-cotent {
+        height: 100%;
+      }
+    }
+  }
+}

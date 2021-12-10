@@ -24,7 +24,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
   // 云模版绑定策略组查询
   const { data: ctPoliciesGroups = [] } = useRequest(
     () => requestWrapper(
-      ctplAPI.listBindPoliciesGroups.bind(null, { id: tplId, currentPage: 1, pageSize: 100000 }),
+      ctplAPI.listBindPoliciesGroups.bind(null, { id: tplId, pageSize: 0 }),
       {
         formatDataFn: (res) => (res.result || {}).list || []
       }
@@ -37,7 +37,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
   // 策略组选项列表查询
   const { data: policiesGroupOptions = [] } = useRequest(
     () => requestWrapper(
-      cgroupsAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      cgroupsAPI.list.bind(null, { pageSize: 0 }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map(({ name, id }) => ({ label: name, value: id }))
       }

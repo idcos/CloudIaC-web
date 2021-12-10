@@ -1,6 +1,4 @@
-FROM alpine:3.10.2 as builder
-RUN apk add --no-cache npm \
-    && apk add --no-cache nodejs
+FROM node:14.16.1 as builder
 WORKDIR /workspace
 RUN npm i cross-env rimraf -g
 

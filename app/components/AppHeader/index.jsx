@@ -20,7 +20,6 @@ const AppHeader = (props) => {
   const projectList = (projects || {}).list || [];
   const projectId = (curProject || {}).id;
   const url_projectId = pathname.indexOf('/project/') !== -1 ? pathname.split('/').filter(i => i)[3] : null;
-  const envIdbyPath = pathname.indexOf('/detail/') !== -1 ? pathname.split('/').filter(i => i)[6] : null;
   const orgId = (curOrg || {}).id;
   const preStateRef = useRef({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
@@ -39,14 +38,11 @@ const AppHeader = (props) => {
       });
     }
     
-    if (orgId && projectId && envIdbyPath) {
-      getEnv();
-    }
     preStateRef.current = {
       orgId, projectId
     };
     
-  }, [ orgId, projectId, envIdbyPath ]);
+  }, [ orgId, projectId ]);
 
   useEffect(() => {
     if (projectList.length > 0 && !projectList.find(it => it.id === projectId)) {
@@ -82,20 +78,6 @@ const AppHeader = (props) => {
       });
     }
   }, [locationPathName]);
-
-  const getEnv = async() => {
-    const res = await envAPI.envsInfo({
-      orgId, projectId, envId: envIdbyPath
-    });
-    if (res.code === 200) {
-      dispatch({
-        type: 'global/set-curEnv',
-        payload: {
-          state: res.result || {}
-        }
-      });
-    }
-  };
 
   const changeCurOrg = (value, needJump = true) => {
     changeOrg({ orgId: value, dispatch, needJump });

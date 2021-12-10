@@ -7,8 +7,7 @@ const initialState = fromJS({
   curOrg: null,
   projects: {},
   curProject: null,
-  userInfo: {},
-  curEnv: null
+  userInfo: {}
 });
 
 const reducer = handleActions({
@@ -31,9 +30,6 @@ const reducer = handleActions({
     }
     const projects = state.toJS().projects.list;
     return state.set('curProject', projects.find(it => it.id == payload.projectId));
-  },
-  'global/set-curEnv': (state, { payload }) => {
-    return state.set('curEnv', payload.state);
   },
   'global/set-userInfo': (state, { payload }) => {
     return state.set('userInfo', fromJS(payload));

@@ -19,15 +19,11 @@ const projectAPI = {
   allEnableProjects: ({ orgId }) => {
     return getWithArgs('/api/v1/projects', {
       status: 'enable',
-      pageSize: 100000,
-      currentPage: 1
+      pageSize: 0
     }, { 'IaC-Org-Id': orgId });
   },
   getUserOptions: ({ orgId, projectId }) => {
-    return getWithArgs('/api/v1/projects/users', { 
-      currentPage: 1,
-      pageSize: 100000
-    }, {
+    return get('/api/v1/projects/users', {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });

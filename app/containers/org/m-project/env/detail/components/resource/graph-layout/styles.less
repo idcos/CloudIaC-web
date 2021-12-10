@@ -1,0 +1,171 @@
+@import 'containers/App/styles/variable.less';
+
+@cellSize: 22px;
+
+.graphLayout {
+  width: calc(100% + 32px);
+  margin: -16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    padding: 16px;
+    flex: 0 0 auto;
+
+    :global {
+      .tool-item {
+        cursor: pointer;
+
+        .icon {
+          color: @primary-color;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+
+  .resourceTreeContainer {
+    :global {
+      .g6-component-tooltip {
+        z-index: 12;
+        border: none;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.75);
+        border-radius: 2px;
+        box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
+      }
+      .g6-component-toolbar {
+        left: auto;
+        right: 8px;
+        top: 8px;
+      }
+    }
+  }
+
+  .resourceListContainer {
+    display: flex;
+    flex-direction: column;
+    :global {
+      .graph-body {
+        padding: 60px 24px 24px;
+        overflow-y: auto;
+        flex: 1;
+        min-height: 0;
+
+        .graph-list {
+          .graph-item {
+            margin-bottom: 24px;
+            .item-text {
+              color: #0B847C;
+              margin-right: 24px;
+              display: flex;
+  
+              .node-name {
+                max-width: 360px;
+              }
+            }
+  
+            .cell-wrapper {
+              display: flex;
+              flex-wrap: wrap;
+              max-width: @cellSize * 10;
+  
+              .cell {
+                width: @cellSize;
+                height: @cellSize;
+                background: #85C9C4;
+                border-radius: 3px;
+                border: 1px solid #056760;
+                margin: 0 -1px -1px 0;
+                cursor: pointer;
+                position: relative;
+                z-index: 1;
+                &:hover {
+                  // background-color: #379711; // 因树图暂无法做节点内部格子的hover 先去掉此样式
+                  z-index: 2;
+                }
+
+                &.deviation {
+                  border: 1px solid #916504;
+                  background-color: #E9BC60;
+                  background-image: url(/assets/icons/drift.svg);
+                  background-repeat: no-repeat;
+                  background-size: 16px;
+                  background-position: center;
+                  &:hover {
+                    // background-color: #F6E383; // 因树图暂无法做节点内部格子的hover 先去掉此样式
+                    z-index: 2;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .resourceListContainer,
+  .resourceTreeContainer {
+    background: rgba(237, 244, 244, 0.3);
+    border-top: 1px solid @gray-4;
+    position: relative;
+    flex: 0 0 500px;
+    min-height: 0;
+    overflow: hidden;
+
+    &.isFullscreen {
+      flex: 1;
+    }
+
+    :global {
+      .explain {
+        position: absolute;
+        left: 0;
+        top: 0;
+        padding: 7px 24px;
+        background: #fff;
+        border: 1px solid @gray-4;
+        border-top: none;
+        border-left: none;
+        z-index: 3;
+
+        .explain-item {
+          display: flex;
+          align-items: center;
+
+          &.resource {
+            .icon {
+              background: #85C9C4;
+              border: 1px solid #056760;
+              border-radius: 3px;
+            }
+          }
+
+          &.deviation {
+            .icon {
+              background-image: url(/assets/icons/drift.svg);
+              background-size: 16px;
+              background-position: center;
+              background-repeat: no-repeat;
+              background-color: #E9BC60;
+              border: 1px solid #916504;
+              border-radius: 3px;
+            }
+          }
+
+          .icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 4px;
+          }
+
+          .text {
+            color: @gray-8;
+          }
+        }
+      }
+    }
+  }
+}

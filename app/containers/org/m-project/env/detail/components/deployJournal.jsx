@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Form, notification, List, Button, Input, Collapse } from "antd";
 import { connect } from "react-redux";
 import getPermission from "utils/permission";
@@ -6,13 +6,13 @@ import taskAPI from 'services/task';
 import { timeUtils } from "utils/time";
 import DeployLogCard from 'components/deploy-log-card';
 import styles from '../styles.less';
+import DetailPageContext from '../detail-page-context';
 
 const { Panel } = Collapse;
 
-const deployJournal = (props) => {
+const deployJournal = () => {
 
-  const { match, reload, taskInfo, taskId, userInfo } = props;
-  const { params: { orgId, projectId } } = match;
+  const { userInfo, taskInfo, taskId, reload, orgId, projectId } = useContext(DetailPageContext);
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ comments, setComments ] = useState([]);
   const [ loading, setLoading ] = useState(false);

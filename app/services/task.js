@@ -17,9 +17,14 @@ const taskAPI = {
   // 获取环境资源列表
   envsTaskList: ({ envId, orgId, projectId, q }) => {
     return getWithArgs(`/api/v1/envs/${envId}/tasks`, {
-      pageSize: 99999,
-      currentPage: 1,
+      pageSize: 0,
       q
+    }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 获取环境资源图形列表
+  getResourcesGraphList: ({ taskId, orgId, projectId, dimension }) => {
+    return getWithArgs(`/api/v1/tasks/${taskId}/resources/graph`, {
+      dimension
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   taskComment: ({ orgId, taskId, projectId }) => {
@@ -43,8 +48,7 @@ const taskAPI = {
   },
   getResourcesList: ({ orgId, projectId, taskId, ...restParams }) => {
     return getWithArgs(`/api/v1/tasks/${taskId}/resources`, {
-      pageSize: 99999,
-      currentPage: 1,
+      pageSize: 0,
       ...restParams
     }, {
       'IaC-Org-Id': orgId,

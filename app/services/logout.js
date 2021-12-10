@@ -1,5 +1,5 @@
-export const logout = () => {
+export const logout = (url) => {
   localStorage.removeItem('accessToken');
-  const callbackUrl = window.location.href;
+  const callbackUrl = url ? url : window.location.href;
   window.location.href = `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`;
 };

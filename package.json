@@ -1,6 +1,6 @@
 {
   "name": "cloudiac-web",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "cloudiac-web",
   "repository": {
     "type": "git",
@@ -51,6 +51,8 @@
     "babel-core": "7.0.0-bridge.0"
   },
   "dependencies": {
+    "@antv/g6": "^4.3.11",
+    "@antv/g6-react-node": "^1.4.4",
     "@hot-loader/react-dom": "16.11.0",
     "ahooks": "^2.10.9",
     "ansi-regex": "^6.0.0",

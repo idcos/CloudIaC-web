@@ -17,6 +17,44 @@
   }
 }
 
+.depolySettingDetail {
+  :global {
+
+    .ant-tabs-top>.ant-tabs-nav::before,
+    .ant-tabs-bottom>.ant-tabs-nav::before,
+    .ant-tabs-top>div>.ant-tabs-nav::before,
+    .ant-tabs-bottom>div>.ant-tabs-nav::before {
+      border-bottom: 1px solid #ebebeb;
+    }
+
+    .ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab-active,
+    .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab-active {
+      border-bottom-color: #ebebeb;
+    }
+  }
+}
+
+.survivalTimeRight {
+  :global {
+    .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+      border-radius:  2px 0 0 2px!important;
+    }
+  }
+}
+
+.survivalTimeLeft {
+  :global {
+    .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+      border-radius: 0 2px 2px 0 !important;
+      border-left: none !important;
+    }
+    .ant-picker {
+      border-radius: 0 2px 2px 0 !important;
+      border-left: none !important;
+    }
+  }
+}
+
 .deployJournal {
   :global {
 

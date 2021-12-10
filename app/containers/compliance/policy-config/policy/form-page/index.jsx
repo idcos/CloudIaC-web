@@ -82,7 +82,7 @@ const FormPage = ({ orgs, match = {} }) => {
   // 云模版选项查询
   const { data: ctOptions, run: fetchCtOptions } = useRequest(
     () => requestWrapper(
-      ctplAPI.list.bind(null, { currentPage: 1, pageSize: 100000, orgId: parseOrgId }),
+      ctplAPI.list.bind(null, { pageSize: 0, orgId: parseOrgId }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
       }
@@ -95,7 +95,7 @@ const FormPage = ({ orgs, match = {} }) => {
   // 环境选项查询
   const { data: envOptions, run: fetchEnvOptions } = useRequest(
     () => requestWrapper(
-      cenvAPI.list.bind(null, { currentPage: 1, pageSize: 100000, orgId: parseOrgId }),
+      cenvAPI.list.bind(null, { pageSize: 0, orgId: parseOrgId }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
       }
@@ -108,7 +108,7 @@ const FormPage = ({ orgs, match = {} }) => {
   // 策略组选项查询
   const { data: policyGroupOptions } = useRequest(
     () => requestWrapper(
-      cgroupsAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      cgroupsAPI.list.bind(null, { pageSize: 0 }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
       }

@@ -1,20 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, notification, Divider } from 'antd';
+import { Button, Table, notification, Divider, Space } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import ImportModal from './components/importModal';
 import tplAPI from 'services/tpl';
+import { VerticalAlignBottomOutlined, ImportOutlined } from '@ant-design/icons';
+import { downloadImportTemplate } from 'utils/util';
+import { UploadtIcon } from 'components/iconfont';
+import cloneDeep from 'lodash/cloneDeep';
+import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
   const { orgId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
+    [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
+    [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
     [ query, setQuery ] = useState({
       pageNo: 1,
       pageSize: 10
@@ -144,6 +152,18 @@ const CTList = ({ match = {} }) => {
     });
   };
 
+  const download = () => {
+    const ids = selectedRowKeys;
+    let keys;
+    if (selectedRowKeys && !isEmpty(selectedRowKeys)) {
+      keys = selectedRowKeys.map(key => {
+        return `ids=${key}`;
+      }).join('&');
+    }
+    let url = `/api/v1/templates/export?download=true${!isEmpty(ids) && ('&' + keys) || ''}`;
+    downloadImportTemplate(url, { orgId });
+  };
+
   return <Layout
     extraHeader={<PageHeader
       title='云模板'
@@ -152,13 +172,18 @@ const CTList = ({ match = {} }) => {
   >
     <div className='idcos-card'>
       <div>
-        <div style={{ marginBottom: 20 }}>
+        <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Button 
             type='primary'
             onClick={createCT}
           >新建云模板</Button>
-        </div>
+          <span>
+            <Button disabled={selectedRowKeys.length === 0} icon={<VerticalAlignBottomOutlined />} style={{ marginRight: 8 }} onClick={() => download()}>导出</Button>
+            <Button icon={<UploadtIcon />} onClick={() => setVisible(true)}>导入</Button>
+          </span>
+        </Space>
         <Table
+          rowKey={'id'}
           columns={columns}
           dataSource={resultMap.list}
           loading={loading}
@@ -177,8 +202,22 @@ const CTList = ({ match = {} }) => {
               });
             }
           }}
+          rowSelection={
+            {
+              columnWidth: 26,
+              fixed: true,
+              selectedRowKeys,
+              onChange: (keys, rows) => {
+                setSelectedRowKeys(keys);
+              },
+              getCheckboxProps: (R) => ({
+                disabled: R.internal
+              })
+            }
+          }
         />
       </div>
+      {visible && <ImportModal orgId={orgId} reload={() => fetchList()} toggleVisible={() => setVisible(false)}/>}
     </div>
   </Layout>;
 };

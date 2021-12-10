@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Button, Spin, notification } from 'antd';
 import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
-import VariableForm from 'components/variable-form';
+import VariableForm, { formatVariableRequestParams } from 'components/variable-form';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import varsAPI from 'services/variables';
@@ -34,7 +34,7 @@ export default ({ match }) => {
     run: updateVars
   } = useRequest(
     (params) => requestWrapper(
-      varsAPI.update.bind(null, { orgId, ...params }),
+      varsAPI.update.bind(null, { orgId, scope: defaultScope, objectId: orgId, ...formatVariableRequestParams(params, defaultScope) }),
     ),
     {
       manual: true,

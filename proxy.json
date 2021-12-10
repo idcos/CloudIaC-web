@@ -1,6 +1,6 @@
 {
   "default": {
-    "api": "http://iac-dev.com:9030",
+    "api": "http://10.0.2.135",
     "endpoints": [
       "/catalog/v1/*",
       "/wf/v2/*",
