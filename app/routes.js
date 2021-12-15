@@ -31,13 +31,13 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey',
-          //(resource,deploy,deployHistory,variable,setting)
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId',
+          //(resource,output,deploy,deployHistory,variable,setting)
           component: loadable(() => import('containers/org/m-project/env/detail'), asyncLoadFallback),
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/:tabKey/task/:taskId',
+          path: '/org/:orgId/project/:projectId/m-project-env/detail/:envId/task/:taskId',
           component: loadable(() => import('containers/org/m-project/env/detail/task-detail'), asyncLoadFallback),
           exact: true
         },
@@ -188,6 +188,11 @@ export default function createRoutes() {
       name: '帮助文档',
       component: loadable(() => import('containers/devManual'), asyncLoadFallback),
       exact: true
+    },
+    {
+      path: '/no-access',
+      name: 'NoAccessPage',
+      component: loadable(() => import('containers/no-access'), asyncLoadFallback)
     },
     {
       path: '*',

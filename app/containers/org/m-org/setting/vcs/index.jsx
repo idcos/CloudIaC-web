@@ -90,18 +90,19 @@ export default ({ title, orgId }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'vcsToken',
-      title: 'Token',
-      width: 320,
-      ellipsis: true
-    },
-    {
       title: '操作',
       width: 169,
       ellipsis: true,
       fixed: 'right',
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
+          <a 
+            onClick={() => {
+              setOpt('edit');
+              toggleVisible();
+              setCurRecord(record);
+            }}
+          >编辑</a>
           {
             record.status == 'disable' ? 
               <a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>启用</a>

@@ -1,52 +1,50 @@
-import React, { useState, useEffect, memo } from 'react';
-import { Card, Table, notification, Tag, Tooltip } from 'antd';
+import React, { memo, useContext } from 'react';
+import { Card, Table, Tag, Tooltip } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
-
+import { useRequest } from 'ahooks';
+import { useSearchFormAndTable } from 'utils/hooks';
+import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import taskAPI from 'services/task';
-import isEmpty from 'lodash/isEmpty';
+import DetailPageContext from '../detail-page-context';
 
-const Index = (props) => {
-  const { match, info } = props,
-    { params: { orgId, projectId, envId } } = match;
-  const [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [{ name: 1, id: 0 }],
-      total: 0
-    });
+const DeployHistory = () => {
 
-  useEffect(() => {
-    if (!isEmpty(info)) {
-      fetchList();
+  const { orgId, projectId, envId } = useContext(DetailPageContext);
+
+  // 列表查询
+  const {
+    loading: tableLoading,
+    data: tableData,
+    run: fetchList,
+  } = useRequest(
+    (params) => requestWrapper(
+      taskAPI.envsTaskList.bind(null, {
+        orgId, 
+        projectId, 
+        envId,
+        ...params
+      })
+    ), {
+      manual: true
     }
-  }, [info]);
+  );
 
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const res = await taskAPI.envsTaskList({
-        orgId, projectId, envId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
+  // 表单搜索和table关联hooks
+  const { 
+    tableProps
+  } = useSearchFormAndTable({
+    tableData,
+    onSearch: (params) => {
+      const { current: currentPage, ...restParams } = params;
+      fetchList({ currentPage, ...restParams });
     }
-  };
+  });
+
   const columns = [
     {
       dataIndex: 'type',
@@ -115,24 +113,24 @@ const Index = (props) => {
       render: (t, r) => {
         return (<a
           onClick={() => {
-            history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/deployHistory/task/${r.id}`); 
+            history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${r.id}`); 
           }}
         >进入详情</a>); 
       }
     }
   ];
+
   return <div>
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
       <Table
         columns={columns}
         scroll={{ x: 'min-content', y: 570 }}
-        dataSource={resultMap.list}
-        loading={loading}
-        pagination={false}
+        loading={tableLoading}
+        {...tableProps}
       />
     </Card>
   </div>
   ;
 };
 
-export default Eb_WP()(memo(Index));
+export default Eb_WP()(memo(DeployHistory));

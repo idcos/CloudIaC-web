@@ -78,7 +78,7 @@ export default ({ match }) => {
       width: 180,
       render: (text, record) => {
         const { projectId, envId } = record;
-        const url = `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/resource`;
+        const url = `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}?tabKey=resource`;
         return (
           <Link to={url}>
             <EllipsisText>{text}</EllipsisText>

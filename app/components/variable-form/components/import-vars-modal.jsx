@@ -31,6 +31,7 @@ export default (props) => {
   ];
 
   const rowSelection = {
+    columnWidth: 26,
     selectedRowKeys: selectedList.keys,
     getCheckboxProps: (record) => {
       const hasSameName = !!varList.find(it => it.name === record.name);

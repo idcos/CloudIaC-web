@@ -7,8 +7,8 @@ const varsAPI = {
       'IaC-Project-Id': projectId
     });
   },
-  update: ({ orgId, projectId, ...restParams }) => {
-    return put('/api/v1/variables/batch', { ...restParams }, { 
+  update: ({ orgId, projectId, scope, objectId, ...restParams }) => {
+    return put(`/api/v1/variables/scope/${scope}/${objectId}`, restParams, { 
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });

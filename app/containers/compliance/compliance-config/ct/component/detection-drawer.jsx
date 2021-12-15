@@ -18,7 +18,7 @@ export default ({  visible, onClose, id  }) => {
         minHeight: 0
       }}
     >
-      <DetectionCard canFullHeight={true} requestFn={ctplAPI.result.bind(null, { tplId: id, currentPage: 1, pageSize: 100000 })} />
+      <DetectionCard canFullHeight={true} requestFn={ctplAPI.result.bind(null, { tplId: id, pageSize: 0 })} />
     </Drawer>
   );
 };

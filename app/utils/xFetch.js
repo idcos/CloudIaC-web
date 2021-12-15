@@ -7,6 +7,7 @@ function parseJSON(res) {
 }
 
 import { logout } from 'services/logout';
+import history from 'utils/history';
 
 async function xFetch(url, options) {
   const opts = { isEncode: true, ...options, credentials: 'include' };
@@ -25,6 +26,11 @@ async function xFetch(url, options) {
   if (jsonResponse.httpCode == 401) {
     // Here for your logout logic.
     logout();
+    return;
+  } else if (jsonResponse.httpCode == 403) {
+    // 使用window.location.href不用location.push跳转 防止后续代码执行导致的报错等问题
+    const callbackUrl = window.location.href;
+    window.location.href = `/no-access?callbackUrl=${encodeURIComponent(callbackUrl)}`;
     return;
   } else {
     return jsonResponse.jsonResult;

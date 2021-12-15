@@ -16,8 +16,7 @@ const vcsAPI = {
   },
   updateVcs: ({ orgId, id, name, vcsType, address, vcsToken, status }) => {
     return put(`/api/v1/vcs/${id}`, {
-      status: status || 'enable',
-      name, vcsType, address, vcsToken 
+      status, name, vcsType, address, vcsToken 
     }, {
       'IaC-Org-Id': orgId
     });
@@ -27,11 +26,10 @@ const vcsAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  searchEnableVcs: ({ orgId }) => {
-    return getWithArgs('/api/v1/vcs', {
-      status: 'enable'
-    }, {
-      'IaC-Org-Id': orgId
+  getWebhook: ({ orgId, envId, projectId }) => {
+    return getWithArgs('/api/v1/vcs/webhook', { envId }, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
     });
   },
   listRepo: ({ orgId, vcsId, ...restParams }) => {

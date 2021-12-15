@@ -1,15 +1,15 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useContext } from 'react';
 import { Spin } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import VariableForm from 'components/variable-form';
 import envAPI from 'services/env';
 import { Eb_WP } from 'components/error-boundary';
+import DetailPageContext from '../detail-page-context';
 
-const Variable = (props) => {
+const Variable = () => {
 
-  const { type, match, taskInfo = {} } = props;
-  const { params: { orgId, projectId, envId } } = match;
+  const { taskInfo, type, orgId, projectId, envId } = useContext(DetailPageContext);
   const [ variables, setVariables ] = useState([]);
   const { loading, run: fetchVariables } = useRequest(
     () => requestWrapper(

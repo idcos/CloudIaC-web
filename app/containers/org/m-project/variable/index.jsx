@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef } from 'react';
 import { Button, Spin, notification } from 'antd';
 import { connect } from "react-redux";
 import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
-import VariableForm from 'components/variable-form';
+import VariableForm, { formatVariableRequestParams } from 'components/variable-form';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import varsAPI from 'services/variables';
@@ -37,7 +37,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
     run: updateVars
   } = useRequest(
     (params) => requestWrapper(
-      varsAPI.update.bind(null, { orgId, projectId, ...params }),
+      varsAPI.update.bind(null, { orgId, projectId, scope: defaultScope, objectId: projectId, ...formatVariableRequestParams(params, defaultScope) }),
     ),
     {
       manual: true,

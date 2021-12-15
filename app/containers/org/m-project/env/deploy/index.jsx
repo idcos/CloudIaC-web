@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { notification, Select, Form, Input, Button, Row, Col, Radio } from "antd";
+import { notification, Select, Form, Input, Button, Row, Col } from "antd";
+import get from 'lodash/get';
 import PageHeader from "components/pageHeader";
 import history from 'utils/history';
-import VariableForm from 'components/variable-form';
+import VariableForm, { formatVariableRequestParams } from 'components/variable-form';
 import AdvancedConfig from './advanced-config';
 import Layout from "components/common/layout";
-import moment from 'moment';
 import sysAPI from 'services/sys';
 import envAPI from 'services/env';
 import tplAPI from 'services/tpl';
@@ -19,6 +19,7 @@ const FL = {
   wrapperCol: { span: 24 }
 };
 const { Option, OptGroup } = Select;
+const defaultScope = 'env';
   
 const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
@@ -104,9 +105,7 @@ const Index = ({ match = {} }) => {
       const res = await vcsAPI.listRepoBranch({
         orgId, 
         vcsId, 
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       if (res.code === 200) {
         setBranch(res.result || []);
@@ -130,9 +129,7 @@ const Index = ({ match = {} }) => {
       const res = await vcsAPI.listRepoTag({
         orgId, 
         vcsId, 
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       
       if (res.code === 200) {
@@ -177,8 +174,7 @@ const Index = ({ match = {} }) => {
     try { 
       const res = await keysAPI.list({
         orgId,
-        pageSize: 99999,
-        currentPage: 1
+        pageSize: 0
       });
       if (res.code === 200) {
         setKeys(res.result.list || []);
@@ -232,40 +228,51 @@ const Index = ({ match = {} }) => {
 
   const onFinish = async (taskType) => {
     try {
-      const value = await form.validateFields();
-      const varData = await varRef.current.validateForm();
-      const configData = await configRef.current.onfinish();
+      const value = await form.validateFields().catch((err) => {
+        const errInfo = get(err, 'errorFields[0].errors[0]', '');
+        throw {
+          message: '表单校验错误',
+          description: errInfo
+        };
+      });
+      const configData = await configRef.current.onfinish().catch((err) => {
+        const errInfo = get(err, 'errorFields[0].errors[0]', '');
+        throw {
+          message: '表单校验错误',
+          description: errInfo
+        };
+      });
+      const varData = await varRef.current.validateForm().catch(() => {
+        throw {
+          message: '表单校验错误',
+          description: '请检查变量表单填写是否有误'
+        };
+      });
       let values = { ...value, ...configData };
-      if (values.playbook && !values.keyId) {
-        return notification.error({
-          message: '保存失败',
-          description: 'playbook存在时管理密钥必填'
-        });
-      }
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
-      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...varData, ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
       if (res.code !== 200) {
-        throw new Error(res.message);
+        throw {
+          message: res.message,
+          description: res.message_detail
+        };
       }
       notification.success({
-        description: '保存成功'
+        message: '保存成功'
       });
       const envInfo = res.result || {};
       if (envId) { // 重新部署环境，跳部署历史详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployHistory/task/${envInfo.taskId}`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`); 
       } else { // 创建部署环境，跳环境详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/deployJournal`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`); 
       }
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
-    } catch (e) {
+    } catch (err) {
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
-      notification.error({
-        message: '保存失败',
-        description: e.message
-      });
+      notification.error(err);
     }
   };
 
@@ -290,7 +297,7 @@ const Index = ({ match = {} }) => {
                 rules={[
                   {
                     required: true,
-                    message: '请输入'
+                    message: '请输入环境名称'
                   }
                 ]}
                 initialValue={info.name || undefined}
@@ -305,7 +312,7 @@ const Index = ({ match = {} }) => {
                 rules={[
                   {
                     required: true,
-                    message: '请选择'
+                    message: '请选择分支/标签'
                   }
                 ]}
               >
@@ -339,7 +346,7 @@ const Index = ({ match = {} }) => {
           />
           <VariableForm
             varRef={varRef} 
-            defaultScope='env' 
+            defaultScope={defaultScope}
             defaultData={{ variables: vars }} 
             fetchParams={varFetchParams}
             canImportTerraformVar={true}

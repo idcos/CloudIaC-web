@@ -33,14 +33,14 @@ const VarFormTable = (props) => {
     varGroupList,
     setVarGroupList,
     readOnly = false,
-    setDeleteVariablesId,
     defaultScope,
     defalutVarList,
     fetchParams,
     type,
     canImportVar = false,
     canImportResourceAccount = false,
-    defaultExpandCollapse = true
+    expandCollapse,
+    setExpandCollapse
   } = props;
 
   const defalutVarListRef = useRef([]);
@@ -255,13 +255,6 @@ const VarFormTable = (props) => {
   };
 
   const onDeleteRow = ({ row, rows, k, handleChange }) => {
-    setDeleteVariablesId((preIds) => {
-      if (row.id && preIds.indexOf(row.id) === -1) {
-        return [...preIds, row.id];
-      } else {
-        return preIds;
-      }
-    });
     const { overwrites, editable_id, _key_id } = row;
     if (overwrites) {
       handleChange(
@@ -372,7 +365,7 @@ const VarFormTable = (props) => {
       return [
         ...otherScopeVarGroupList,
         ...sameScopeVarGroupList
-      ];;
+      ];
     });
   };
 
@@ -393,7 +386,14 @@ const VarFormTable = (props) => {
   const scrollTableWrapperClassName = `listen-table-scroll-${type}`;
 
   return (
-    <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'} >
+    <Collapse 
+      activeKey={expandCollapse && 'open'}
+      expandIconPosition={'right'} 
+      onChange={(keys) => {
+        const expandCollapse = keys.includes('open');
+        setExpandCollapse(expandCollapse);
+      }}
+    >
       <Collapse.Panel key='open' header={VAR_TYPE_ENUM[type]} forceRender={true}>
         <EditableTable
           getActionRef={ref => (formVarRef.current = ref.current)}

@@ -25,7 +25,7 @@ const Policy = () => {
   // 策略组选项查询
   const { data: policyGroupOptions } = useRequest(
     () => requestWrapper(
-      cgroupsAPI.list.bind(null, { currentPage: 1, pageSize: 100000 }),
+      cgroupsAPI.list.bind(null, { pageSize: 0 }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
       }

@@ -256,6 +256,7 @@ const EditableTable = (props) => {
         <Table
           {...tableProps}
           scroll={{ x: 'min-content' }}
+          tableLayout='fixed'
           pagination={false}
           rowKey='_key_id'
           components={{

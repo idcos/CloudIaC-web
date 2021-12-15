@@ -1,14 +1,15 @@
 import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
-import map from 'lodash/map';
 import differenceBy from 'lodash/differenceBy';
 import omit from 'lodash/omit';
 import intersectionBy from 'lodash/intersectionBy';
+import cloneDeep from 'lodash/cloneDeep';
 import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
+import { useDeepCompareEffect } from 'utils/hooks';
 import VarFormTable from './var-form-table';
 import OtherVarForm from './other-var-form';
 import styles from './styles.less';
@@ -32,13 +33,16 @@ const VariableForm = ({
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
-  const [ deleteVariablesId, setDeleteVariablesId ] = useState([]);
   const [ terraformVarList, setTerraformVarList ] = useState([]);
   const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
   const [ envVarList, setEnvVarList ] = useState([]);
   const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
   const [ envVarGroupList, setEnvVarGroupList ] = useState([]);
   const [ defalutEnvVarGroupList, setDefalutEnvVarGroupList ] = useState([]);
+  const [ expandCollapseCfg, setExpandCollapseCfg ] = useState({
+    terraform: defaultExpandCollapse,
+    environment: defaultExpandCollapse
+  });
 
   event$ && event$.useSubscription(({ type }) => {
     switch (type) {
@@ -80,7 +84,7 @@ const VariableForm = ({
     }
   );
 
-  useEffect(() => {
+  useDeepCompareEffect(() => {
     if (!defaultData) {
       return;
     }
@@ -110,8 +114,14 @@ const VariableForm = ({
     validateForm: () => {
       return new Promise((resolve, reject) => {
         let formValidates = [
-          terraformVarRef.current.handleValidate(),
-          envVarRef.current.handleValidate()
+          terraformVarRef.current.handleValidate().catch((err) => {
+            setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: true }));
+            reject(err);
+          }),
+          envVarRef.current.handleValidate().catch((err) => {
+            setExpandCollapseCfg((preValue) => ({ ...preValue, environment: true }));
+            reject(err);
+          })
         ];
         if (showOtherVars) {
           formValidates.push(
@@ -129,8 +139,7 @@ const VariableForm = ({
             const varGroupIds = differenceBy(endVarGroupList, startVarGroupList, 'varGroupId').map(it => it.varGroupId);
             const delVarGroupIds = differenceBy(startVarGroupList, endVarGroupList, 'varGroupId').map(it => it.varGroupId);
             const data = {
-              deleteVariablesId,
-              variables: map([ ...terraformVarList, ...envVarList ], (it) => omit(it, ['isNew', '_key_id', 'overwrites'])),
+              variables: [ ...terraformVarList, ...envVarList ],
               ...otherVars,
               varGroupIds,
               delVarGroupIds
@@ -154,9 +163,10 @@ const VariableForm = ({
               formVarRef={terraformVarRef}
               varList={terraformVarList}
               setVarList={setTerraformVarList}
-              setDeleteVariablesId={setDeleteVariablesId}
               defaultScope={defaultScope}
               defalutVarList={defalutTerraformVarList}
+              expandCollapse={expandCollapseCfg.terraform}
+              setExpandCollapse={(expandCollapse) => setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: expandCollapse }))}
               fetchParams={fetchParams}
               canImportVar={canImportTerraformVar}
               type='terraform'
@@ -169,9 +179,10 @@ const VariableForm = ({
               formVarRef={envVarRef}
               varList={envVarList}
               setVarList={setEnvVarList}
-              setDeleteVariablesId={setDeleteVariablesId}
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
+              expandCollapse={expandCollapseCfg.environment}
+              setExpandCollapse={(expandCollapse) => setExpandCollapseCfg((preValue) => ({ ...preValue, environment: expandCollapse }))}
               fetchParams={fetchParams}
               canImportResourceAccount={showVarGroupList}
               defalutVarGroupList={defalutEnvVarGroupList}
@@ -219,4 +230,19 @@ const VariableForm = ({
   );
 };
 
+// 格式化变量组件数据作为请求入参
+export const formatVariableRequestParams = (data, defaultScope) => {
+  const { variables, ...params } = cloneDeep(data);
+  const newVariables = variables.filter(
+    ({ scope }) => scope === defaultScope
+  ).map(
+    (it) => omit(it, ['isNew', '_key_id', 'overwrites'])
+  );
+  return {
+    variables: newVariables,
+    ...params
+  };
+};
+
 export default VariableForm;
+

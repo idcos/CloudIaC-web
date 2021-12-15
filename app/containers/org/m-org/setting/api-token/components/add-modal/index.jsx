@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Modal, DatePicker, Row, Select, Table, Input } from "antd";
+import { Form, DatePicker, Space, Button, Input } from "antd";
 
 const FL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
 };
 
-export default ({ orgId, visible, toggleVisible, operation }) => {
+export default ({ orgId, toggleVisible, operation }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [form] = Form.useForm();
@@ -28,16 +28,7 @@ export default ({ orgId, visible, toggleVisible, operation }) => {
   };
 
   return (
-    <Modal
-      title='添加token'
-      visible={visible}
-      width={427}
-      onCancel={toggleVisible}
-      okButtonProps={{
-        loading: submitLoading
-      }}
-      onOk={onOk}
-    >
+    <>
       <Form
         {...FL}
         form={form}
@@ -57,16 +48,18 @@ export default ({ orgId, visible, toggleVisible, operation }) => {
         <Form.Item
           label='过期时间'
           name='expiredAt'
-          rules={[
-            {
-              required: true,
-              message: '请选择'
-            }
-          ]}
         >
           <DatePicker style={{ width: '100%' }} placeholder='请选择过期时间' format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
         </Form.Item>
       </Form>
-    </Modal>
+      <Space style={{ height: 32, display: 'flex', justifyContent: 'flex-end', marginTop: 45 }} >
+        <Button loading={submitLoading} onClick={() => toggleVisible()}>
+          取消
+        </Button>
+        <Button onClick={() => onOk()} type={'primary'}>
+          确认
+        </Button>
+      </Space>
+    </>
   );
 };

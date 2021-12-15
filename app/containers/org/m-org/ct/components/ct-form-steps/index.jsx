@@ -4,6 +4,7 @@ import set from 'lodash/set';
 import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { formatVariableRequestParams } from 'components/variable-form';
 import { Eb_WP } from 'components/error-boundary';
 import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
@@ -15,6 +16,7 @@ import Variable from './step/variable';
 import Relation from './step/relation';
 import styles from './styles.less';
 
+const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
@@ -36,11 +38,23 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     loading: saveLoading
   } = useRequest(
     (params) => requestWrapper(
-      tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, params)
+      tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, formatVariableRequestParams(params, defaultScope))
     ),
     {
       manual: true,
       onSuccess: () =>  goCTlist()
+    }
+  );
+
+  // 创建/编辑云模版提交接口
+  const {
+    run: onlineCheckForm
+  } = useRequest(
+    (params) => requestWrapper(
+      tplAPI.check.bind(null, { ...params, templateId: tplId, orgId })
+    ),
+    {
+      manual: true
     }
   );
 
@@ -105,13 +119,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       }
       const {
         name, description,
-        vcsId, repoId, repoRevision, workdir, tfVersion,
+        vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
         tfVarsFile, playbook,
         projectId
       } = res.result || {};
       setCtData({
         basic: { name, description },
-        repo: { vcsId, repoId, repoRevision, workdir, tfVersion },
+        repo: { vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion },
         variable: { tfVarsFile, playbook },
         relation: { projectId }
       });
@@ -172,6 +186,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               goCTlist={goCTlist}
               isShow={stepIndex === index}
               saveLoading={saveLoading}
+              onlineCheckForm={onlineCheckForm}
             />
           ) : null
         ))

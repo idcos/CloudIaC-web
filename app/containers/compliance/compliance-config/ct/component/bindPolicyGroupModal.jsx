@@ -26,7 +26,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
   const fetchList = async () => {
     try {
       const res = await cgroupsAPI.list({
-        currentPage: 1, pageSize: 100000
+        pageSize: 0
       });
       if (res.code !== 200) {
         throw new Error(res.message);

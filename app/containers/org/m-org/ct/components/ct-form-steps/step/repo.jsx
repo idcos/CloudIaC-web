@@ -2,6 +2,7 @@ import React, { useState, useEffect, useImperativeHandle, memo } from 'react';
 import { Space, Select, Form, Input, Button, Empty, notification, Tooltip, Row, Col } from "antd";
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import isEqual from 'lodash/isEqual';
+import uniqBy from 'lodash/uniqBy';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import tplAPI from 'services/tpl';
@@ -15,7 +16,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
+const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
 
   const formData = ctData[type] || {};
   const [form] = Form.useForm();
@@ -70,9 +71,8 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const res = await vcsAPI.searchVcs({
         orgId,
         status: 'enable',
-        currentPage: 1,
         isShowDefaultVcs: true,
-        pageSize: 100000
+        pageSize: 0
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -104,7 +104,15 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
     {
       manual: true,
       debounceInterval: 300,
-      formatResult: data => data.list
+      formatResult: data => {
+        const { repoId, repoFullName } = form.getFieldsValue();
+        const hasSelectedItem = (data.list || []).find((it) => it.id === repoId);
+        if (repoId && repoFullName && !hasSelectedItem) {
+          return [ ...data.list, { id: repoId, fullName: repoFullName } ];
+        } else {
+          return data.list || [];
+        }
+      }
     }
   );
 
@@ -113,9 +121,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const res = await vcsAPI.listRepoBranch({
         orgId,
         vcsId,
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -134,9 +140,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       const res = await vcsAPI.listRepoTag({
         orgId,
         vcsId,
-        repoId,
-        currentPage: 1,
-        pageSize: 100000
+        repoId
       });
       if (res.code != 200) {
         throw new Error(res.message);
@@ -165,6 +169,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       notification.success({
         message: '操作成功'
       });
+      fetchVcsList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -198,6 +203,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
       fetchRepoTags(allValues);
       mutateAutoMatchTfVersion(undefined);
       form.setFieldsValue({
+        repoFullName: (repos.find(it => it.id === changedValues.repoId) || {}).fullName,
         repoRevision: undefined,
         workdir: undefined,
         tfVersion: undefined
@@ -215,6 +221,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
   useImperativeHandle(childRef, () => ({
     onFinish: async (index) => {
       const values = await form.validateFields();
+      await onlineCheckForm(values);
       stepHelper.updateData({
         type, 
         data: { ...values, autoMatchTfVersion }
@@ -223,7 +230,8 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
     }
   }));
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    await onlineCheckForm(values);
     stepHelper.updateData({
       type, 
       data: { ...values, autoMatchTfVersion },
@@ -296,6 +304,12 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         </Select>
       </Form.Item>
       <Form.Item
+        name='repoFullName'
+        hidden={true}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
         label='分支/标签'
         name='repoRevision'
         rules={[
@@ -356,7 +370,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
                   (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
                 }
                 {
-                  (formData.tfVersion && !(tfversionOptions || []).includes(formData.tfVersion)) && (
+                  (formData.tfVersion && !([...tfversionOptions, TFVERSION_AUTO_MATCH]).includes(formData.tfVersion)) && (
                     <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
                   )
                 }
@@ -370,7 +384,7 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
+      <Form.Item wrapperCol={{ offset: 6, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (
@@ -393,7 +407,6 @@ const Repo = ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, sav
         visible={vcsVisible}
         toggleVisible={clVcsModal}
         opt={'add'}
-        reload={fetchVcsList}
         operation={vcsOperation}
       />
     }
