@@ -14,6 +14,49 @@ export default function createRoutes() {
       exact: true
     },
     {
+      path: '/org/:orgId/compliance/:configKey?/:typeKey',
+      name: '合规配置',
+      component: loadable(() => import('containers/compliance'), asyncLoadFallback),
+      routes: [
+        {
+          path: '/org/:orgId/compliance/dashboard',
+          name: '仪表盘',
+          component: loadable(() => import('containers/compliance/dashboard'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/compliance/compliance-config/ct',
+          name: '云模板',
+          component: loadable(() => import('containers/compliance/compliance-config/ct'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/compliance/compliance-config/env',
+          name: '环境',
+          component: loadable(() => import('containers/compliance/compliance-config/env'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/compliance/policy-config/policy-group',
+          name: '策略组',
+          component: loadable(() => import('containers/compliance/policy-config/policy-group'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/compliance/policy-config/policy',
+          name: '策略',
+          component: loadable(() => import('containers/compliance/policy-config/policy'), asyncLoadFallback),
+          exact: true
+        },
+        {
+          path: '/org/:orgId/compliance/policy-config/policy/policy-form/:policyId?',
+          name: '创建/编辑策略页面',
+          component: loadable(() => import('containers/compliance/policy-config/policy/form-page'), asyncLoadFallback),
+          exact: true
+        }
+      ]
+    },
+    {
       path: '/org/:orgId/project/:projectId/:mProjectKey',
       name: '组织主页',
       component: loadable(() => import('containers/org'), asyncLoadFallback),
@@ -112,49 +155,6 @@ export default function createRoutes() {
           path: '/org/:orgId/m-project-create',
           name: '项目信息：创建项目',
           component: loadable(() => import('containers/org/m-project/create'), asyncLoadFallback),
-          exact: true
-        }
-      ]
-    },
-    {
-      path: '/compliance/:configKey?/:typeKey',
-      name: '合规配置',
-      component: loadable(() => import('containers/compliance'), asyncLoadFallback),
-      routes: [
-        {
-          path: '/compliance/dashboard',
-          name: '仪表盘',
-          component: loadable(() => import('containers/compliance/dashboard'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/compliance/compliance-config/ct',
-          name: '云模板',
-          component: loadable(() => import('containers/compliance/compliance-config/ct'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/compliance/compliance-config/env',
-          name: '环境',
-          component: loadable(() => import('containers/compliance/compliance-config/env'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/compliance/policy-config/policy-group',
-          name: '策略组',
-          component: loadable(() => import('containers/compliance/policy-config/policy-group'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/compliance/policy-config/policy',
-          name: '策略',
-          component: loadable(() => import('containers/compliance/policy-config/policy'), asyncLoadFallback),
-          exact: true
-        },
-        {
-          path: '/compliance/policy-config/policy/policy-form/:policyId?',
-          name: '创建/编辑策略页面',
-          component: loadable(() => import('containers/compliance/policy-config/policy/form-page'), asyncLoadFallback),
           exact: true
         }
       ]

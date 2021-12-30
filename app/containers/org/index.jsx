@@ -112,6 +112,10 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
       );
     });
   }, [pjtId]);
+
+  const menus = getMenus(userInfo || {}, {
+    projectList
+  });
  
   return (
     <div className={styles.orgWrapper}>
@@ -167,17 +171,16 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
         }
         <div className='menu-wrapper'>
           {
-            getMenus(userInfo || {}).map(subMenu => {
-              if (subMenu.isHide) {
-                return null;
-              }
+            menus.map(subMenu => {
               return (
                 <div className='sub-menu'>
                   {
                     subMenu.subName ? (
                       <div className='menu-title'>{subMenu.subName}</div>
                     ) : (
-                      <Divider style={{ margin: '12px 0' }} />
+                      menus.length > 1 && (
+                        <Divider style={{ margin: '12px 0' }} />
+                      )
                     )
                   }
                   <div className='menu-list'>

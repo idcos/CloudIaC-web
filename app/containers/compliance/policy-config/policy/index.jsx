@@ -15,7 +15,9 @@ import policiesAPI from 'services/policies';
 import cgroupsAPI from 'services/cgroups';
 import DetailDrawer from './detail-drawer';
 
-const Policy = () => {
+const Policy = ({ location, match }) => {
+
+  const { orgId } = match.params || {};
   const searchQuery = queryString.parse(location.search) || {};
   const [ detailDrawerState, setDetailsDrawerState ] = useState({
     visible: false,
@@ -64,12 +66,12 @@ const Policy = () => {
 
   // 访问编辑策略页面
   const goEditPage = (id) => {
-    history.push(`/compliance/policy-config/policy/policy-form/${id}`);
+    history.push(`/org/${orgId}/compliance/policy-config/policy/policy-form/${id}`);
   };
 
   // 访问创建策略页面
   const goCreatePage = () => {
-    history.push('/compliance/policy-config/policy/policy-form');
+    history.push(`/org/${orgId}/compliance/policy-config/policy/policy-form`);
   };
 
   // 打开详情抽屉

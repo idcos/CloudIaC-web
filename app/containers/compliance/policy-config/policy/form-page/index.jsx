@@ -24,7 +24,7 @@ const FL = {
 const FormPage = ({ orgs, match = {} }) => {
 
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
-  const { policyId } = match.params || {};
+  const { policyId, orgId } = match.params || {};
   const [form] = Form.useForm();
   const [rego, setRego] = useState();
   const [tagSearchValue, setTagSearchValue] = useState();
@@ -164,7 +164,7 @@ const FormPage = ({ orgs, match = {} }) => {
     }
   );
 
-  const goPolicyListPage = () => history.push('/compliance/policy-config/policy');
+  const goPolicyListPage = () => history.push(`/org/${orgId}/compliance/policy-config/policy`);
 
   const test = () => {
     if (!rego) {

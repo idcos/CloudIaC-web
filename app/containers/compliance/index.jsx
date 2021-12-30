@@ -7,17 +7,20 @@ import styles from './styles.less';
 
 const KEY = 'global';
 
-const ComplianceWrapper = ({ routes, curOrg }) => {
+const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
+
+  const { orgId, typeKey } = match.params || {};
+
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
     case 'dashboard':
-      history.push(`/compliance/dashboard`);
+      history.push(`/org/${orgId}/compliance/dashboard`);
       break;
     case 'compliance-config':
-      history.push(`/compliance/compliance-config/${menuItemKey}`);
+      history.push(`/org/${orgId}/compliance/compliance-config/${menuItemKey}`);
       break;
     case 'policy-config':
-      history.push(`/compliance/policy-config/${menuItemKey}`);
+      history.push(`/org/${orgId}/compliance/policy-config/${menuItemKey}`);
       break;
     default:
       break;
@@ -26,15 +29,9 @@ const ComplianceWrapper = ({ routes, curOrg }) => {
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
     let scope = subKey, menuKey, isEmptyData = false;
-    let pathList = window.location.pathname.split('/');
     if (subKey === 'none') {
       menuKey = 'dashboard';
       scope = 'dashboard';
-    }
-    if (pathList.length > 4) {
-      menuKey = pathList[pathList.length - 2];
-    } else {
-      menuKey = pathList[pathList.length - 1];
     }
     return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
       if (menuItem.isHide) {
@@ -42,7 +39,7 @@ const ComplianceWrapper = ({ routes, curOrg }) => {
       }
       return (
         <div 
-          className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
+          className={`menu-item ${typeKey === menuItem.key ? 'checked' : ''}`} 
           onClick={() => linkTo(scope, menuItem.key)}
         >
           <span className='icon'>{menuItem.icon}</span>

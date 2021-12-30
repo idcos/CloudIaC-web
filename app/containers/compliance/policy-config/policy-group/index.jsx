@@ -13,7 +13,9 @@ import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import Detail from './detail';
 import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
 
-const PolicyGroupList = () => {
+const PolicyGroupList = ({ match }) => {
+
+  const { orgId } = match.params || {};
   const [ policyGroupId, setPolicyGroupId ] = useState(null),
     [ visible, setVisible ] = useState(false),
     [ viewDetail, setViewDetail ] = useState(false),
@@ -97,7 +99,7 @@ const PolicyGroupList = () => {
       ellipsis: true,
       render: (text, record) => <a 
         onClick={() => {
-          history.push(`/compliance/policy-config/policy?groupId=${record.id}`);
+          history.push(`/org/${orgId}/compliance/policy-config/policy?groupId=${record.id}`);
         }}
       >{text}</a>
     },
