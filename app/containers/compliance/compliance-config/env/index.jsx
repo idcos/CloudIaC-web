@@ -9,15 +9,13 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import EllipsisText from 'components/EllipsisText';
 import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import DetectionDrawer from './component/detection-drawer';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 
-const CenvList = ({ orgs }) => {
+const CenvList = () => {
 
-  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -32,16 +30,13 @@ const CenvList = ({ orgs }) => {
   });
 
   // 项目选项查询
-  const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
-    (orgId) => requestWrapper(
-      projectAPI.allEnableProjects.bind(null, { orgId }),
+  const { data: projectOptions = [] } = useRequest(
+    () => requestWrapper(
+      projectAPI.allEnableProjects.bind(null, {}),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
       }
-    ),
-    {
-      manual: true
-    }
+    )
   );
 
   // 启用/禁用云模版扫描
@@ -103,15 +98,6 @@ const CenvList = ({ orgs }) => {
     }
   });
 
-  const changeOrg = (orgId) => {
-    onChangeFormParams({ orgId, projectId: undefined });
-    if (orgId) {
-      fetchProjectOptions(orgId);
-    } else {
-      mutateProjectOptions([]);
-    }
-  };
-
   const openDetectionDrawer = ({ id }) => {
     setDetectionDrawerProps({
       id,
@@ -147,7 +133,7 @@ const CenvList = ({ orgs }) => {
       title: '',
       tplId: null,
       onSuccess: noop
-    })
+    });
   };
 
   // 开启/关闭合规检测
@@ -174,8 +160,7 @@ const CenvList = ({ orgs }) => {
       dataIndex: 'name',
       title: '环境名称',
       width: 152,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'policyGroups',
@@ -186,9 +171,7 @@ const CenvList = ({ orgs }) => {
         const policyGroups = text || [];
         return policyGroups.length > 0 ? (
           <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
-            <EllipsisText>
-              {policyGroups.map(it => it.name).join('、')}
-            </EllipsisText>
+            {policyGroups.map(it => it.name).join('、')}
           </a>
         ) : '-'; 
       }
@@ -225,25 +208,16 @@ const CenvList = ({ orgs }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'orgName',
-      title: '组织名称',
-      width: 132,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
-    },
-    {
       dataIndex: 'projectName',
       title: '项目名称',
       width: 132,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'templateName',
       title: '云模板名称',
       width: 132,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'enabled',
@@ -300,15 +274,6 @@ const CenvList = ({ orgs }) => {
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Space>
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            placeholder='请选择组织'
-            options={orgOptions}
-            optionFilterProp='label'
-            showSearch={true}
-            onChange={changeOrg}
-          />
           <Select
             style={{ width: 282 }}
             allowClear={true}

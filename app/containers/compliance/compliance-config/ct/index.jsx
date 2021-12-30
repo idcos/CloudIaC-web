@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Badge, Table, Input, Select, Space, Divider, Switch, Button, Modal } from 'antd';
+import { Badge, Table, Input, Space, Divider, Switch, Button, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import noop from 'lodash/noop';
@@ -7,7 +7,6 @@ import { useRequest } from 'ahooks';
 import { useSearchFormAndTable } from 'utils/hooks';
 import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
-import EllipsisText from 'components/EllipsisText';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import ctplAPI from 'services/ctpl';
@@ -15,8 +14,7 @@ import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 
-const CCTList = ({ orgs }) => {
-  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
+const CCTList = () => {
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -31,7 +29,7 @@ const CCTList = ({ orgs }) => {
 
   // 启用/禁用云模版扫描
   const {
-    run: changeEnabled,
+    run: changeEnabled
   } = useRequest(
     (params) => requestWrapper(
       ctplAPI.enabled.bind(null, params),
@@ -77,7 +75,7 @@ const CCTList = ({ orgs }) => {
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
-    onChangeFormParams,
+    onChangeFormParams
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -85,10 +83,6 @@ const CCTList = ({ orgs }) => {
       fetchList({ currentPage, ...restParams });
     }
   });
-
-  const changeOrg = (orgId) => {
-    onChangeFormParams({ orgId, projectId: undefined });
-  };
 
   const openDetectionDrawer = ({ id }) => {
     setDetectionDrawerProps({
@@ -123,7 +117,7 @@ const CCTList = ({ orgs }) => {
       id: null,
       title: '',
       onSuccess: noop
-    })
+    });
   };
 
   // 开启/关闭合规检测
@@ -150,8 +144,7 @@ const CCTList = ({ orgs }) => {
       dataIndex: 'name',
       title: '云模板名称',
       width: 175,
-      ellipsis: true,
-      render: (text) => <EllipsisText>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'policyGroups',
@@ -161,17 +154,10 @@ const CCTList = ({ orgs }) => {
       render: (policyGroups, record) => {
         return policyGroups.length > 0 ? (
           <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
-            <EllipsisText>{policyGroups.map(it => it.name).join('、')}</EllipsisText>
+            {policyGroups.map(it => it.name).join('、')}
           </a>
         ) : '-'; 
       }
-    },
-    {
-      dataIndex: 'orgName',
-      title: '组织名称',
-      width: 160,
-      ellipsis: true,
-      render: (text) => <EllipsisText>{text}</EllipsisText>
     },
     {
       dataIndex: 'passed',
@@ -260,15 +246,6 @@ const CCTList = ({ orgs }) => {
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Space>
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            placeholder='请选择组织'
-            options={orgOptions}
-            optionFilterProp='label'
-            showSearch={true}
-            onChange={changeOrg}
-          />
           <Input.Search
             style={{ width: 240 }}
             allowClear={true}
