@@ -49,9 +49,9 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/compliance/policy-config/policy/policy-form/:policyId?',
-          name: '创建/编辑策略页面',
-          component: loadable(() => import('containers/compliance/policy-config/policy/form-page'), asyncLoadFallback),
+          path: '/org/:orgId/compliance/policy-config/policy/online-test/:policyId?',
+          name: '在线测试',
+          component: loadable(() => import('containers/compliance/policy-config/policy/online-test'), asyncLoadFallback),
           exact: true
         }
       ]

@@ -30,7 +30,7 @@ const breadcrumbNameMap = {
   'policy-config': { text: '策略管理', disabled: true },
   'policy-group': { text: '策略组', disabled: true },
   'policy': { text: '策略' },
-  'policy-form': { getText: ({ policyId }) => policyId ? '编辑策略' : '新建策略' },
+  'online-test': { text: '在线测试' }
 };
 
 const BreadcrumbWrapper = ({ location, params }) => {

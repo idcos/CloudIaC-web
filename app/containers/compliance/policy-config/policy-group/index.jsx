@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Table, Input, notification, Space, Divider, Popconfirm } from 'antd';
+import { Button, Table, Input, notification, Space, Divider, Popconfirm, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
 import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
-import EllipsisText from 'components/EllipsisText';
 import Layout from 'components/common/layout';
 import cgroupsAPI from 'services/cgroups';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
@@ -18,7 +18,6 @@ const PolicyGroupList = ({ match }) => {
   const { orgId } = match.params || {};
   const [ policyGroupId, setPolicyGroupId ] = useState(null),
     [ visible, setVisible ] = useState(false),
-    [ viewDetail, setViewDetail ] = useState(false),
     [ viewRelevance, setViewRelevance ] = useState(false);
 
   // 策略组列表查询
@@ -73,24 +72,13 @@ const PolicyGroupList = ({ match }) => {
       dataIndex: 'name',
       title: '策略组名称',
       width: 188,
-      ellipsis: true,
-      render: (text, record) => (
-        <a
-          onClick={() => {
-            setViewDetail(true);
-            setPolicyGroupId(record.id);
-          }}
-        >
-          <EllipsisText>{text}</EllipsisText>
-        </a>
-      )
+      ellipsis: true
     },
     {
       dataIndex: 'description',
       title: '描述',
       width: 230,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'policyCount',
@@ -111,46 +99,19 @@ const PolicyGroupList = ({ match }) => {
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
-      dataIndex: 'passed',
-      title: '通过',
-      width: 66,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'violated',
-      title: '不通过',
-      width: 69,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'failed',
-      title: '失败',
-      width: 56,
-      ellipsis: true
-    },
-    {
       title: '操作',
-      width: 208,
+      width: 120,
       ellipsis: true,
       fixed: 'right',
       render: (text, record) => {
         return (
-          <span className='inlineOp'>
-            <a 
-              type='link' 
-              onClick={() => {
-                setViewRelevance(true); 
-                setPolicyGroupId(record.id);
-              }}
-            >关联策略</a>
-            <Divider type={'vertical'}/>
+          <Space>
             <a 
               onClick={() => {
                 setVisible(true); 
                 setPolicyGroupId(record.id);
               }}
             >编辑</a>
-            <Divider type={'vertical'}/>
             <Popconfirm 
               title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} 
               onConfirm={() => enabled(!record.enabled, record)} 
@@ -160,7 +121,7 @@ const PolicyGroupList = ({ match }) => {
                 {record.enabled ? '禁用' : '启用'}
               </Button>
             </Popconfirm>
-          </span>
+          </Space>
         );
       }
     }
@@ -174,17 +135,25 @@ const PolicyGroupList = ({ match }) => {
   >
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
-        <Space>
-          <Button type={'primary'} onClick={() => setVisible(true)}>
-            新建策略组
-          </Button>
-          <Input.Search
-            style={{ width: 240 }}
-            allowClear={true}
-            placeholder='请输入策略组名称搜索'
-            onSearch={(q) => onChangeFormParams({ q })}
-          />
-        </Space>
+        <Row justify='space-between' wrap={false}>
+          <Col>
+            <Button type={'primary'} onClick={() => setVisible(true)}>
+              新建策略组
+            </Button>
+          </Col>
+          <Col>
+            <Input
+              style={{ width: 320 }}
+              allowClear={true}
+              placeholder='请输入策略组名称搜索'
+              prefix={<SearchOutlined />}
+              onPressEnter={(e) => {
+                const q = e.target.value;
+                onChangeFormParams({ q });
+              }}
+            />
+          </Col>
+        </Row>
         <Table
           columns={columns}
           scroll={{ x: 'min-content', y: 570 }}
@@ -203,16 +172,6 @@ const PolicyGroupList = ({ match }) => {
           setPolicyGroupId(null); 
         }}
       />)}
-    {viewDetail && <Detail 
-      visible={viewDetail} 
-      reload={refreshList}
-      id={policyGroupId} 
-      toggleVisible={() => {
-        setViewDetail(false);
-        setPolicyGroupId(null); 
-      }
-      }
-    />}
     {viewRelevance && <RelevancePolicyGroupModal 
       reload={refreshList} 
       visible={viewRelevance} 

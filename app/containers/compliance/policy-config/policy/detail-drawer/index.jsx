@@ -22,7 +22,7 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
   const reloadPolicyDetailAndList = () => {
     refresh();
     reloadPolicyList();
-  }
+  };
 
   const TabPaneMap = [
     { key: 'report', tab: '报表', children: <Report policyId={id}/> },
@@ -32,7 +32,7 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
 
   return (
     <Drawer
-      title={detailInfo.name}
+      title={detailInfo.name || '-'}
       visible={visible}
       onClose={onClose}
       width={1000}

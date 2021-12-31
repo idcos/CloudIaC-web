@@ -209,7 +209,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
               )
             }
             <Input
-              prefix={<SearchOutlined style={{ color: '#AAACAB' }} />}
+              prefix={<SearchOutlined />}
               ref={searchRef}
               placeholder='搜索日志'
               onPressEnter={(e) => {

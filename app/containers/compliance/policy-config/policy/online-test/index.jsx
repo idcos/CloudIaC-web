@@ -7,7 +7,6 @@ import history from 'utils/history';
 import { safeJsonStringify, isJsonString } from 'utils/util';
 import PageHeader from "components/pageHeader";
 import Layout from "components/common/layout";
-import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import CoderCard from 'components/coder/coder-card';
 import policiesAPI from 'services/policies';
 import cenvAPI from 'services/cenv';
@@ -21,11 +20,10 @@ const FL = {
   wrapperCol: { span: 24 }
 };
   
-const FormPage = ({ orgs, match = {} }) => {
+const OnlineTest = ({ orgs, match = {} }) => {
 
   const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const { policyId, orgId } = match.params || {};
-  const [form] = Form.useForm();
   const [rego, setRego] = useState();
   const [tagSearchValue, setTagSearchValue] = useState();
   const [input, mutateInput] = useState();
@@ -43,9 +41,6 @@ const FormPage = ({ orgs, match = {} }) => {
   }, [parseParams]);
 
   useEffect(() => {
-    if (!parseOrgId) {
-      return;
-    }
     setParseParams({
       envId: undefined,
       tplId: undefined
@@ -60,7 +55,7 @@ const FormPage = ({ orgs, match = {} }) => {
       default:
         break;
     }
-  }, [parseOrgId, parseType]);
+  }, [parseType]);
 
   // input获取
   const { run: fetchInput, loading: fetchInputLoading } = useRequest(
@@ -104,16 +99,6 @@ const FormPage = ({ orgs, match = {} }) => {
       manual: true
     }
   );
-  
-  // 策略组选项查询
-  const { data: policyGroupOptions } = useRequest(
-    () => requestWrapper(
-      cgroupsAPI.list.bind(null, { pageSize: 0 }),
-      {
-        formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
-      }
-    )
-  );
 
   // 策略测试接口
   const { data: outputInfo = {}, run: runTest, loading: testLoading } = useRequest(
@@ -138,29 +123,9 @@ const FormPage = ({ orgs, match = {} }) => {
     ), {
       ready: !!policyId,
       onSuccess: (res) => {
-        const { tags, rego, ...restFormValues } = res || {};
+        const { rego } = res || {};
         setRego(rego);
-        form.setFieldsValue({
-          tags: tags ? tags.split(',') : [],
-          ...restFormValues
-        });
       }
-    }
-  );
-
-  // 创建/编辑策略-保存提交
-  const {
-    loading: saveLoading,
-    run: onSave
-  } = useRequest(
-    (api, params) => requestWrapper(
-      api.bind(null, params),
-      {
-        autoSuccess: true
-      }
-    ), {
-      manual: true,
-      onSuccess: () => goPolicyListPage()
     }
   );
 
@@ -179,137 +144,13 @@ const FormPage = ({ orgs, match = {} }) => {
     }
     runTest();
   };
-
-  const save = async () => {
-    const { tags, ...restFormValues } = await form.validateFields();
-    const params = {
-      tags: tags && tags.join(','), 
-      ...restFormValues, 
-      rego, 
-    };
-    if (policyId) {
-      // 编辑
-      onSave(policiesAPI.update, {
-        ...params,
-        id: policyId 
-      });
-    } else {
-      // 创建
-      onSave(policiesAPI.create, params);
-    }
-  };
-
-  const changeTagSearchValue = (value) => {
-    if (value && value.length > 16) {
-      return;
-    }
-    setTagSearchValue(value);
-  };
-
-  const changeTagsValue = () => {
-    setTagSearchValue();
-  };
   
   return (
     <Layout
-      extraHeader={<PageHeader title={!!policyId ? '编辑策略' : '新建策略'} breadcrumb={true}/>}
+      extraHeader={<PageHeader title='在线测试' breadcrumb={true}/>}
     >
       <div className='idcos-card'>
         <Spin spinning={pageLoading}>
-          <Form
-            scrollToFirstError={true}
-            form={form}
-            {...FL}
-            layout={'vertical'}
-          >
-            <Row>
-              <Col span={16}>
-                <Row>
-                  <Col span={12} style={{ paddingRight: 24 }}>
-                    <Form.Item
-                      label='策略名称：'
-                      name='name'
-                      rules={[
-                        {
-                          required: true,
-                          message: '请输入'
-                        }
-                      ]}
-                    >
-                      <Input placeholder={'请输入策略名称'}/>
-                    </Form.Item>
-                  </Col>
-                  <Col span={12} style={{ padding: '0 12px' }}>
-                    <Form.Item
-                      label='标签：'
-                      name='tags'
-                      rules={[
-                        {
-                          validator(_, value) {
-                            return new Promise((resolve, reject) => {
-                              if (value.length > 10) {
-                                reject(new Error('最多添加10个标签'));
-                              }
-                              resolve();
-                            });
-                          }
-                        }
-                      ]}
-                    >
-                      <Select 
-                        mode='tags' 
-                        placeholder='请填写标签'
-                        notFoundContent='输入标签并回车'
-                        searchValue={tagSearchValue}
-                        onSearch={changeTagSearchValue}
-                        onChange={changeTagsValue}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12} style={{ paddingRight: 24 }}>
-                    <Form.Item
-                      label='严重性：'
-                      name='severity'
-                      initialValue='medium'
-                    >
-                      <Select 
-                        placeholder='选择严重性'
-                      >
-                        {
-                          Object.keys(POLICIES_SEVERITY_ENUM).map((it) => (
-                            <Select.Option value={it}>{POLICIES_SEVERITY_ENUM[it]}</Select.Option>
-                          ))
-                        }
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                  <Col span={12} style={{ padding: '0 12px' }}>
-                    <Form.Item
-                      label='绑定策略组：'
-                      name='groupId'
-                    >
-                      <Select 
-                        getPopupContainer={triggerNode => triggerNode.parentNode}
-                        placeholder='绑定策略组'
-                        options={policyGroupOptions}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Col>
-              <Col span={8} style={{ paddingLeft: 24 }}>
-                <Form.Item
-                  label='参考：'
-                  name='fixSuggestion'
-                >
-                  <Input.TextArea 
-                    autoSize={{ minRows: 5, maxRows: 5 }}
-                    placeholder={'请输入策略名称'}
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
           <Row gutter={[24, 0]}>
             <Col span={12}>
               <CoderCard 
@@ -332,17 +173,7 @@ const FormPage = ({ orgs, match = {} }) => {
                 spinning={fetchInputLoading}
                 bodyPrefix={
                   <Row gutter={[ 8, 0 ]} className={styles.input_condition}>
-                    <Col span={8}>
-                      <Select
-                        style={{ width: '100%' }} 
-                        placeholder='请选择组织'
-                        options={orgOptions}
-                        optionFilterProp='label'
-                        showSearch={true}
-                        onChange={setParseOrgId}
-                      />
-                    </Col>
-                    <Col span={16}>
+                    <Col span={24}>
                       <Input.Group compact={true}>
                         <Select 
                           style={{ width: '31%' }} 
@@ -399,7 +230,6 @@ const FormPage = ({ orgs, match = {} }) => {
           <AffixBtnWrapper align='right'>
             <Button onClick={test} loading={testLoading}>在线测试</Button>
             <Button onClick={goPolicyListPage}>取消</Button>
-            <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
           </AffixBtnWrapper>
         </Spin>
       </div>
@@ -411,4 +241,4 @@ export default connect((state) => {
   return {
     orgs: state.global.get('orgs').toJS()
   };
-})(FormPage);
+})(OnlineTest);

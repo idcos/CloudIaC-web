@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Table, Space, Select, Divider, Input, notification, Badge, Button, Modal, Switch } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Table, Space, Select, Divider, Input, Badge, Button, Modal, Switch, Row, Col } from 'antd';
+import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
@@ -273,22 +273,31 @@ const CenvList = () => {
   >
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
-        <Space>
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            options={projectOptions}
-            placeholder='请选择项目'
-            value={form.projectId}
-            onChange={(projectId) => onChangeFormParams({ projectId })}
-          />
-          <Input.Search
-            style={{ width: 240 }}
-            allowClear={true}
-            placeholder='请输入环境名称搜索'
-            onSearch={(q) => onChangeFormParams({ q })}
-          />
-        </Space>
+        <Row justify='space-between' wrap={false}>
+          <Col></Col>
+          <Col>
+            <Space>
+              <Select
+                style={{ width: 282 }}
+                allowClear={true}
+                options={projectOptions}
+                placeholder='请选择项目'
+                value={form.projectId}
+                onChange={(projectId) => onChangeFormParams({ projectId })}
+              />
+              <Input
+                style={{ width: 320 }}
+                allowClear={true}
+                placeholder='请输入环境名称搜索'
+                prefix={<SearchOutlined />}
+                onPressEnter={(e) => {
+                  const q = e.target.value;
+                  onChangeFormParams({ q });
+                }}
+              />
+            </Space>
+          </Col>
+        </Row>
         <Table
           columns={columns}
           scroll={{ x: 'min-content', y: 570 }}

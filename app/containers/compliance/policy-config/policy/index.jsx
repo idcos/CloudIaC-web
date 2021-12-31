@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Table, Space, Input, Select, Divider, Tag, Popover } from 'antd';
+import { Button, Table, Space, Input, Select, Divider, Tag, Popover, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import pick from 'lodash/pick';
 import queryString from 'query-string';
@@ -64,14 +65,9 @@ const Policy = ({ location, match }) => {
     }
   });
 
-  // 访问编辑策略页面
-  const goEditPage = (id) => {
-    history.push(`/org/${orgId}/compliance/policy-config/policy/policy-form/${id}`);
-  };
-
-  // 访问创建策略页面
-  const goCreatePage = () => {
-    history.push(`/org/${orgId}/compliance/policy-config/policy/policy-form`);
+  // 访问在线测试页面
+  const goOnlineTestPage = (id) => {
+    history.push(`/org/${orgId}/compliance/policy-config/policy/online-test/${id || ''}`);
   };
 
   // 打开详情抽屉
@@ -104,7 +100,7 @@ const Policy = ({ location, match }) => {
       ellipsis: true,
       render: (text, record) => (
         <a onClick={() => onOpenDetailsDrawer(record.id)}>
-          <EllipsisText>{text}</EllipsisText>
+          {text}
         </a>
       )
     },
@@ -135,15 +131,14 @@ const Policy = ({ location, match }) => {
               )
             }
           </div>
-        )
+        );
       }
     },
     {
       dataIndex: 'groupName',
       title: '策略组',
       width: 166,
-      ellipsis: true,
-      render: (text) => <EllipsisText>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'severity',
@@ -185,7 +180,7 @@ const Policy = ({ location, match }) => {
     },
     {
       title: '操作',
-      width: 120,
+      width: 80,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
@@ -195,8 +190,8 @@ const Policy = ({ location, match }) => {
             <Button 
               style={{ padding: 0, fontSize: '12px' }} 
               type='link' 
-              onClick={() => goEditPage(id)}
-            >编辑</Button>
+              onClick={() => goOnlineTestPage(id)}
+            >在线测试</Button>
           </Space>
         );
       }
@@ -207,38 +202,46 @@ const Policy = ({ location, match }) => {
     extraHeader={<PageHeader
       title='策略'
       breadcrumb={true}
+      subDes={<Button onClick={() => goOnlineTestPage()}>在线测试</Button>}
     />}
   >
     <div className='idcos-card'>
-      <Space size={16} direction='vertical' style={{ width: '100%'}}>
-        <Space>
-          <Button type={'primary'} onClick={goCreatePage}>
-            新建策略
-          </Button>
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            placeholder='请选择策略组'
-            options={policyGroupOptions}
-            optionFilterProp='label'
-            showSearch={true}
-            value={form.groupId}
-            onChange={(groupId) => onChangeFormParams({ groupId })}
-          />
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            options={Object.keys(POLICIES_SEVERITY_ENUM).map(it => ({ label: POLICIES_SEVERITY_ENUM[it], value: it }))}
-            placeholder='请选择严重性'
-            onChange={(severity) => onChangeFormParams({ severity })}
-          />
-          <Input.Search
-            style={{ width: 240 }}
-            allowClear={true}
-            placeholder='请输入策略名称搜索'
-            onSearch={(q) => onChangeFormParams({ q })}
-          />
-        </Space>
+      <Space size={16} direction='vertical' style={{ width: '100%' }}>
+        <Row justify='space-between' wrap={false}>
+          <Col>
+          </Col>
+          <Col>
+            <Space>
+              <Select
+                style={{ width: 264 }}
+                allowClear={true}
+                placeholder='请选择策略组'
+                options={policyGroupOptions}
+                optionFilterProp='label'
+                showSearch={true}
+                value={form.groupId}
+                onChange={(groupId) => onChangeFormParams({ groupId })}
+              />
+              <Select
+                style={{ width: 264 }}
+                allowClear={true}
+                options={Object.keys(POLICIES_SEVERITY_ENUM).map(it => ({ label: POLICIES_SEVERITY_ENUM[it], value: it }))}
+                placeholder='请选择严重性'
+                onChange={(severity) => onChangeFormParams({ severity })}
+              />
+              <Input
+                style={{ width: 320 }}
+                allowClear={true}
+                placeholder='请输入策略名称或标签搜索'
+                prefix={<SearchOutlined />}
+                onPressEnter={(e) => {
+                  const q = e.target.value;
+                  onChangeFormParams({ q });
+                }}
+              />
+            </Space>
+          </Col>
+        </Row>
         <Table
           columns={columns}
           scroll={{ x: 'min-content', y: 570 }}

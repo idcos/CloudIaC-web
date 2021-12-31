@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Badge, Table, Input, Space, Divider, Switch, Button, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Badge, Table, Input, Space, Divider, Switch, Button, Modal, Row, Col } from 'antd';
+import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 import noop from 'lodash/noop';
 import { useRequest } from 'ahooks';
@@ -245,14 +245,21 @@ const CCTList = () => {
   >
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
-        <Space>
-          <Input.Search
-            style={{ width: 240 }}
-            allowClear={true}
-            placeholder='请输入云模版名称搜索'
-            onSearch={(q) => onChangeFormParams({ q })}
-          />
-        </Space>
+        <Row justify='space-between' wrap={false}>
+          <Col></Col>
+          <Col>
+            <Input
+              style={{ width: 320 }}
+              allowClear={true}
+              placeholder='请输入云模版名称搜索'
+              prefix={<SearchOutlined />}
+              onPressEnter={(e) => {
+                const q = e.target.value;
+                onChangeFormParams({ q });
+              }}
+            />
+          </Col>
+        </Row>
         <Table
           columns={columns}
           scroll={{ x: 'min-content', y: 570 }}
