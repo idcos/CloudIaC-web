@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Table, Input, notification, Space, Divider, Popconfirm, Row, Col } from 'antd';
+import React, { useState, useCallback } from 'react';
+import { Button, Table, Input, notification, Space, Popover, Tag, Popconfirm, Row, Col } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -8,6 +8,7 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import EllipsisText from 'components/EllipsisText';
 import cgroupsAPI from 'services/cgroups';
 import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
 
@@ -31,10 +32,30 @@ const PolicyGroupList = ({ match }) => {
     }
   );
 
+  // 删除策略组
+  const {
+    run: deleteGroup
+  } = useRequest(
+    (policyGroupId) => requestWrapper(
+      cgroupsAPI.del.bind(null, { policyGroupId }), {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        setSearchParams((preSearchParams) => ({ 
+          ...preSearchParams,
+          paginate: { ...preSearchParams.paginate, current: 1 }
+        }));
+      }
+    }
+  );
+
   // 表单搜索和table关联hooks
   const { 
     tableProps, 
-    onChangeFormParams
+    onChangeFormParams,
+    setSearchParams
   } = useSearchFormAndTable({
     tableData,
     onSearch: (params) => {
@@ -68,6 +89,12 @@ const PolicyGroupList = ({ match }) => {
     history.push(`/org/${orgId}/compliance/policy-config/policy-group/form-page/${id || ''}`);
   };
 
+  const EllipsisTag = useCallback(({ children }) => (
+    <Tag style={{ maxWidth: 120, height: 22, margin: 0 }}>
+      <EllipsisText>{children}</EllipsisText>
+    </Tag>
+  ), []);
+
   const columns = [
     {
       dataIndex: 'name',
@@ -78,8 +105,39 @@ const PolicyGroupList = ({ match }) => {
     {
       dataIndex: 'description',
       title: '描述',
-      width: 230,
+      width: 170,
       ellipsis: true
+    },
+    {
+      dataIndex: 'labels',
+      title: '标签',
+      width: 370,
+      ellipsis: true,
+      render: (text) => {
+        const tags = text || [];
+        return (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+            {
+              tags.slice(0, 3).map((it) => <EllipsisTag>{it}</EllipsisTag>)
+            }
+            {
+              tags.length > 3 && (
+                <Popover 
+                  content={
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                      {tags.map((it) => <EllipsisTag>{it}</EllipsisTag>)}
+                    </div>
+                  }
+                >
+                  <span>
+                    <EllipsisTag>...</EllipsisTag>
+                  </span>
+                </Popover>
+              )
+            }
+          </div>
+        );
+      }
     },
     {
       dataIndex: 'policyCount',
@@ -117,6 +175,15 @@ const PolicyGroupList = ({ match }) => {
             >
               <Button type='link' style={{ padding: 0, fontSize: 12 }}>
                 {record.enabled ? '禁用' : '启用'}
+              </Button>
+            </Popconfirm>
+            <Popconfirm 
+              title={`确认删除策略组?`} 
+              onConfirm={() => deleteGroup(record.id)} 
+              placement='bottomLeft'
+            >
+              <Button type='link' style={{ padding: 0, fontSize: 12 }}>
+                删除
               </Button>
             </Popconfirm>
           </Space>
