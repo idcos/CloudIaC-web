@@ -62,6 +62,9 @@ const vcsAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  readme: ({ vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/readme`, restParams);
+  }
 };
 
 export default vcsAPI;

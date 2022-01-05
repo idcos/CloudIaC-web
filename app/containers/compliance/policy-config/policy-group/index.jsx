@@ -9,15 +9,12 @@ import history from 'utils/history';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import cgroupsAPI from 'services/cgroups';
-import BindPolicyGroupModal from './component/bindPolicyGroupModal';
-import Detail from './detail';
 import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
 
 const PolicyGroupList = ({ match }) => {
 
   const { orgId } = match.params || {};
   const [ policyGroupId, setPolicyGroupId ] = useState(null),
-    [ visible, setVisible ] = useState(false),
     [ viewRelevance, setViewRelevance ] = useState(false);
 
   // 策略组列表查询
@@ -67,6 +64,10 @@ const PolicyGroupList = ({ match }) => {
     }
   };
 
+  const goFormPage = (id) => {
+    history.push(`/org/${orgId}/compliance/policy-config/policy-group/form-page/${id || ''}`);
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -107,10 +108,7 @@ const PolicyGroupList = ({ match }) => {
         return (
           <Space>
             <a 
-              onClick={() => {
-                setVisible(true); 
-                setPolicyGroupId(record.id);
-              }}
+              onClick={() => goFormPage(record.id)}
             >编辑</a>
             <Popconfirm 
               title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} 
@@ -137,7 +135,7 @@ const PolicyGroupList = ({ match }) => {
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Row justify='space-between' wrap={false}>
           <Col>
-            <Button type={'primary'} onClick={() => setVisible(true)}>
+            <Button type={'primary'} onClick={() => goFormPage()}>
               新建策略组
             </Button>
           </Col>
@@ -162,16 +160,6 @@ const PolicyGroupList = ({ match }) => {
         />
       </Space>
     </div>
-    {visible && (
-      <BindPolicyGroupModal 
-        reload={refreshList} 
-        id={policyGroupId} 
-        visible={visible}
-        toggleVisible={() => {
-          setVisible(false);
-          setPolicyGroupId(null); 
-        }}
-      />)}
     {viewRelevance && <RelevancePolicyGroupModal 
       reload={refreshList} 
       visible={viewRelevance} 
