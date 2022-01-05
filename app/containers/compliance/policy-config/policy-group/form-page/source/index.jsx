@@ -28,6 +28,8 @@ export default () => {
     createLoading,
     update,
     updateLoading,
+    check,
+    checkLoading,
     ready
   } = useContext(FormPageContext);
   const [form] = Form.useForm();
@@ -216,6 +218,8 @@ export default () => {
 
   const next = async () => {
     const formValues = await form.validateFields();
+    const params = formDataToParams({ ...formData, [type]: formValues });
+    await check(params);
     setFormData(preValue => ({ ...preValue, [type]: formValues }));
     setCurrent(preValue => preValue + 1);
   };
@@ -223,12 +227,15 @@ export default () => {
   const onUpdate = async () => {
     const formValues = await form.validateFields();
     const params = formDataToParams({ ...formData, [type]: formValues });
+    await check(params);
     update(params);
   };
 
   useImperativeHandle(stepRef, () => ({
     onFinish: async (index) => {
       const formValues = await form.validateFields();
+      const params = formDataToParams({ ...formData, [type]: formValues });
+      await check(params);
       setFormData(preValue => ({ ...preValue, [type]: formValues }));
       setCurrent(index);
     }
