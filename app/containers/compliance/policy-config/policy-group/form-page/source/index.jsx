@@ -35,7 +35,7 @@ export default () => {
   useEffect(() => {
     if (ready) {
       const formValues = formData[type] || {};
-      const { vcsId, repoId, branch } = formValues;
+      const { vcsId, repoId, repoRevision } = formValues;
       form.setFieldsValue(formValues);
       if (vcsId) {
         fetchRepoOptions({ vcsId });
@@ -44,11 +44,11 @@ export default () => {
         fetchRepoBranchOptions({ vcsId, repoId });
         fetchRepoTagOptions({ vcsId, repoId });
       }
-      if (vcsId && repoId && branch) {
+      if (vcsId && repoId && repoRevision) {
         fetchReadmeText({
           vcsId, 
           repoId, 
-          branch
+          repoRevision
         });
       }
     }
@@ -145,22 +145,22 @@ export default () => {
     run: fetchReadmeText,
     mutate: mutateReadmeText
   } = useRequest(
-    ({ vcsId, repoId, branch }) => requestWrapper(
+    ({ vcsId, repoId, repoRevision }) => requestWrapper(
       vcsAPI.readme.bind(null, {
         vcsId,
         repoId,
-        branch
+        repoRevision
       })
     ),
     {
       manual: true,
-      formatResult: data => data.content
+      formatResult: data => data.content || ''
     }
   );
 
   const onValuesChange = (changedValues, allValues) => {
     const changedKeys = Object.keys(changedValues);
-    const { vcsId, repoId, branch } = allValues || {};
+    const { vcsId, repoId, repoRevision } = allValues || {};
     if (changedKeys.includes('vcsId')) {
       // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
       !!repoOptions.lenngth && mutateRepoOptions([]);
@@ -169,7 +169,9 @@ export default () => {
       form.setFieldsValue({
         repoId: undefined,
         repoFullName: undefined,
+        repoRevision: undefined,
         branch: undefined,
+        gitTags: undefined,
         dir: undefined
       });
       if (vcsId) {
@@ -182,7 +184,9 @@ export default () => {
       !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
       form.setFieldsValue({
         repoFullName: (repoOptions.find(it => it.value === changedValues.repoId) || {}).label,
+        repoRevision: undefined,
         branch: undefined,
+        gitTags: undefined,
         dir: undefined
       });
       if (vcsId && repoId) {
@@ -193,11 +197,11 @@ export default () => {
     // readme参数依赖是否变化
     const readmeParamsChange = intersection(changedKeys, [ 'vcsId', 'repoId', 'branch' ]).length > 0;
     if (readmeParamsChange) {
-      if (changedValues.branch) {
+      if (changedValues.repoRevision) {
         fetchReadmeText({
           vcsId, 
           repoId, 
-          branch
+          repoRevision
         });
       } else {
         readmeText !== undefined && mutateReadmeText(undefined);
@@ -281,20 +285,41 @@ export default () => {
           </Form.Item>
           <Form.Item 
             label='分支/标签'
-            name='branch'
+            name='repoRevision'
             rules={[{ required: true, message: '请选择' }]}
           >
             <Select 
               placeholder='请选择分支/标签'
               loading={repoBranchLoading || repoTagLoading}
+              onChange={(value, option) => {
+                if (option.type === 'branch') {
+                  form.setFieldsValue({ branch: value, gitTags: '' });
+                } else {
+                  form.setFieldsValue({ gitTags: value, branch: '' });
+                }
+              }}
             >
               <Select.OptGroup label='分支'>
-                {repoBranchOptions.map(it => <Select.Option value={it.value}>{it.label}</Select.Option>)}
+                {repoBranchOptions.map(it => <Select.Option value={it.value} type='branch'>{it.label}</Select.Option>)}
               </Select.OptGroup>
               <Select.OptGroup label='标签'>
-                {repoTagOptions.map(it => <Select.Option value={it.value}>{it.label}</Select.Option>)}
+                {repoTagOptions.map(it => <Select.Option value={it.value} type='gitTags'>{it.label}</Select.Option>)}
               </Select.OptGroup>
             </Select>
+          </Form.Item>
+          <Form.Item 
+            label='分支'
+            name='branch'
+            hidden={true}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item 
+            label='标签'
+            name='gitTags'
+            hidden={true}
+          >
+            <Input />
           </Form.Item>
           <Form.Item 
             label='目录'

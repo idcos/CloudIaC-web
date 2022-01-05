@@ -63,15 +63,22 @@ const FormPage = ({ match = {} }) => {
 
   const paramsToformData = (params) => {
     const { 
-      source, vcsId, repoId, branch, dir,
-      name, description, label
+      source, vcsId, repoId, repoFullName, branch, gitTags, dir,
+      name, description, labels
     } = params || {};
     return {
       source: {
-        source, vcsId, repoId, branch, dir
+        source, 
+        vcsId, 
+        repoId, 
+        repoFullName, 
+        repoRevision: branch || gitTags, 
+        branch, 
+        gitTags,
+        dir
       },
       seting: {
-        name, description, label
+        name, description, labels
       }
     };
   };

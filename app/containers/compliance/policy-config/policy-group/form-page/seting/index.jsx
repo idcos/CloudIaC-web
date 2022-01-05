@@ -85,7 +85,7 @@ export default () => {
           <Input placeholder='请输入策略组描述' />
         </Form.Item>
         <Form.Item 
-          name='label' 
+          name='labels' 
           label='标签'
         >
           <Select 
