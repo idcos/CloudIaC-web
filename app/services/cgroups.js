@@ -10,8 +10,8 @@ const cgroupsAPI = {
     return post('/api/v1/policies/groups', restParams, {});
   },
   // 策略组详情
-  detail: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}`, { restParams }, {});
+  detail: ({ policyGroupId }) => {
+    return get(`/api/v1/policies/groups/${policyGroupId}`);
   },
   // 修改策略组
   update: ({ policyGroupId, ...restParams }) => {

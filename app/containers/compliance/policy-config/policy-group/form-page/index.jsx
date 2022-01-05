@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, Component } from 'react';
 import { Steps } from 'antd';
-import { connect } from "react-redux";
+import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import cgroupsAPI from 'services/cgroups';
+import history from 'utils/history';
 import Layout from "components/common/layout";
 import PageHeader from "components/pageHeader";
 import FormPageContext from './form-page-context';
@@ -20,11 +21,37 @@ const steps = [
 
 const FormPage = ({ match = {} }) => {
 
-  const { policyGroupId } = match.params || {};
+  const { orgId, policyGroupId } = match.params || {};
   const isCreate = !policyGroupId;
   const [ current, setCurrent ] = useState(0);
   const [ formData, setFormData ] = useState({});
+  const [ ready, setReady ] = useState(false);
   const stepRef = useRef();
+
+  useEffect(() => {
+    if (!isCreate) {
+      fetchDetail();
+    } else {
+      setReady(true);
+    }
+  }, []);
+
+  // 策略组详情
+  const {
+    loading: detailLoading,
+    run: fetchDetail
+  } = useRequest(
+    () => requestWrapper(
+      cgroupsAPI.detail.bind(null, { policyGroupId })
+    ), {
+      manual: true,
+      onSuccess: (data) => {
+        const formData = paramsToformData(data);
+        setFormData(formData);
+        setReady(true);
+      }
+    }
+  );
 
   const formDataToParams = (formData) => {
     let params = {};
@@ -38,7 +65,7 @@ const FormPage = ({ match = {} }) => {
     const { 
       source, vcsId, repoId, branch, dir,
       name, description, label
-    } = params;
+    } = params || {};
     return {
       source: {
         source, vcsId, repoId, branch, dir
@@ -49,6 +76,54 @@ const FormPage = ({ match = {} }) => {
     };
   };
 
+  const linkToPolicyGroupList = () => {
+    history.push(`/org/${orgId}/compliance/policy-config/policy-group`);
+  };
+
+  // 创建策略组
+  const {
+    loading: createLoading,
+    run: create
+  } = useRequest(
+    (params) => requestWrapper(
+      cgroupsAPI.create.bind(null, params), {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        linkToPolicyGroupList();
+      }
+    }
+  );
+
+  // 更新策略组
+  const {
+    loading: updateLoading,
+    run: update
+  } = useRequest(
+    (params) => requestWrapper(
+      cgroupsAPI.update.bind(null, { ...params, policyGroupId }), {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        linkToPolicyGroupList();
+      }
+    }
+  );
+
+  const changeStep = (index) => {
+    if (isCreate || !stepRef.current) {
+      return;
+    }
+    // 编辑时校验保存表单
+    if (isFunction(stepRef.current.onFinish)) {
+      stepRef.current.onFinish(index);
+    }
+  };
+
   return (
     <Layout
       extraHeader={<PageHeader title={policyGroupId ? '编辑策略组' : '新建策略组'} breadcrumb={true}/>}
@@ -56,8 +131,8 @@ const FormPage = ({ match = {} }) => {
       <div className='idcos-card'>
         <div className={styles.formPage}>
           <Steps current={current}>
-            {steps.map(item => (
-              <Step key={item.type} title={item.title} />
+            {steps.map((item, index) => (
+              <Step key={item.type} title={item.title} onClick={() => changeStep(index)}/>
             ))}
           </Steps>
           <div className='step-content'>
@@ -68,7 +143,13 @@ const FormPage = ({ match = {} }) => {
                 setCurrent,
                 type: steps[current].type,
                 formDataToParams,
+                linkToPolicyGroupList,
                 isCreate,
+                ready,
+                create,
+                createLoading,
+                update,
+                updateLoading,
                 stepRef
               }}
             >

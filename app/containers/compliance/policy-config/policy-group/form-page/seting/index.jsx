@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useState, useImperativeHandle } from 'react';
-import { Form, Row, Col, Radio, Select, Input, Button, Space } from 'antd';
-import intersection from 'lodash/intersection';
-import { useRequest } from 'ahooks';
-import { requestWrapper } from 'utils/request';
-import cgroupsAPI from 'services/cgroups';
-import Coder from "components/coder";
+import { Form, Select, Input, Button, Space } from 'antd';
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
 
@@ -15,7 +10,21 @@ const FL = {
 
 export default () => {
 
-  const { isCreate, type, formData, setFormData, setCurrent, stepRef, formDataToParams } = useContext(FormPageContext);
+  const { 
+    isCreate, 
+    type, 
+    formData, 
+    setFormData, 
+    setCurrent, 
+    stepRef, 
+    formDataToParams, 
+    linkToPolicyGroupList, 
+    create,
+    createLoading,
+    update,
+    updateLoading,
+    ready
+  } = useContext(FormPageContext);
   const [form] = Form.useForm();
   const [ tagSearchValue, setTagSearchValue ] = useState();
 
@@ -23,20 +32,6 @@ export default () => {
     const formValues = formData[type] || {};
     form.setFieldsValue(formValues);
   }, []);
-
-  // 创建策略组
-  const {
-    loading: createLoading,
-    run: create
-  } = useRequest(
-    (params) => requestWrapper(
-      cgroupsAPI.create.bind(null, params), {
-        autoSuccess: true
-      }
-    ), {
-      manual: true
-    }
-  );
 
   const changeTagSearchValue = (value) => {
     if (value && value.length > 16) {
@@ -53,10 +48,16 @@ export default () => {
     setCurrent(preValue => preValue - 1);
   };
 
-  const submit = async () => {
+  const onCreate = async () => {
     const formValues = await form.validateFields();
     const params = formDataToParams({ ...formData, [type]: formValues });
     create(params);
+  };
+
+  const onUpdate = async () => {
+    const formValues = await form.validateFields();
+    const params = formDataToParams({ ...formData, [type]: formValues });
+    update(params);
   };
 
   useImperativeHandle(stepRef, () => ({
@@ -83,7 +84,7 @@ export default () => {
         >
           <Input placeholder='请输入策略组描述' />
         </Form.Item>
-        {/* <Form.Item 
+        <Form.Item 
           name='label' 
           label='标签'
         >
@@ -93,17 +94,25 @@ export default () => {
             allowClear={true}
             notFoundContent='输入标签并回车'
             searchValue={tagSearchValue}
+            open={false}
             onSearch={changeTagSearchValue}
             onChange={changeTagsValue}
           />
-        </Form.Item> */}
+        </Form.Item>
         <Form.Item 
           wrapperCol={{ span: 19, offset: 5 }}
         >
-          <Space>
-            <Button onClick={prev}>上一步</Button>
-            <Button type='primary' onClick={submit}>提交</Button>
-          </Space>
+          {isCreate ? (
+            <Space>
+              <Button onClick={prev}>上一步</Button>
+              <Button type='primary' onClick={onCreate} loading={createLoading}>提交</Button>
+            </Space>
+          ) : (
+            <Space>
+              <Button onClick={linkToPolicyGroupList}>取消</Button>     
+              <Button type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
+            </Space>
+          )}
         </Form.Item>
       </Form>
     </div>

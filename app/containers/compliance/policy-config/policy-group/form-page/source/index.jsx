@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useImperativeHandle } from 'react';
-import { Form, Row, Col, Radio, Select, Input, Button, Spin } from 'antd';
+import { Form, Row, Col, Radio, Select, Input, Button, Spin, Space } from 'antd';
 import intersection from 'lodash/intersection';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import vcsAPI from 'services/vcs';
-import cgroupsAPI from 'services/cgroups';
 import Coder from "components/coder";
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
@@ -16,21 +15,44 @@ const FL = {
 
 export default () => {
 
-  const { isCreate, type, formData, setFormData, setCurrent, stepRef, formDataToParams } = useContext(FormPageContext);
+  const { 
+    isCreate, 
+    type, 
+    formData, 
+    setFormData, 
+    setCurrent, 
+    stepRef, 
+    formDataToParams, 
+    linkToPolicyGroupList, 
+    create,
+    createLoading,
+    update,
+    updateLoading,
+    ready
+  } = useContext(FormPageContext);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    const formValues = formData[type] || {};
-    const { vcsId, repoId } = formValues;
-    form.setFieldsValue(formValues);
-    if (vcsId) {
-      fetchRepoOptions({ vcsId });
+    if (ready) {
+      const formValues = formData[type] || {};
+      const { vcsId, repoId, branch } = formValues;
+      form.setFieldsValue(formValues);
+      if (vcsId) {
+        fetchRepoOptions({ vcsId });
+      }
+      if (vcsId && repoId) {
+        fetchRepoBranchOptions({ vcsId, repoId });
+        fetchRepoTagOptions({ vcsId, repoId });
+      }
+      if (vcsId && repoId && branch) {
+        fetchReadmeText({
+          vcsId, 
+          repoId, 
+          branch
+        });
+      }
     }
-    if (vcsId && repoId) {
-      fetchRepoBranchOptions({ vcsId, repoId });
-      fetchRepoTagOptions({ vcsId, repoId });
-    }
-  }, []);
+  }, [ready]);
 
   // vcs选项
   const {
@@ -194,6 +216,12 @@ export default () => {
     setCurrent(preValue => preValue + 1);
   };
 
+  const onUpdate = async () => {
+    const formValues = await form.validateFields();
+    const params = formDataToParams({ ...formData, [type]: formValues });
+    update(params);
+  };
+
   useImperativeHandle(stepRef, () => ({
     onFinish: async (index) => {
       const formValues = await form.validateFields();
@@ -277,7 +305,16 @@ export default () => {
           <Form.Item 
             wrapperCol={{ span: 19, offset: 5 }}
           >
-            <Button type='primary' onClick={next}>下一步</Button>
+            {isCreate ? (
+              <Space>
+                <Button type='primary' onClick={next}>下一步</Button>
+              </Space>
+            ) : (
+              <Space>
+                <Button onClick={linkToPolicyGroupList}>取消</Button>     
+                <Button type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
+              </Space>
+            )}
           </Form.Item>
         </Form>
       </Col>
