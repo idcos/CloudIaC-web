@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useImperativeHandle } from 'react';
 import { Form, Row, Col, Radio, Select, Input, Button, Spin } from 'antd';
 import intersection from 'lodash/intersection';
-import filter from 'lodash/filter';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import vcsAPI from 'services/vcs';
+import cgroupsAPI from 'services/cgroups';
 import Coder from "components/coder";
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
@@ -16,19 +16,26 @@ const FL = {
 
 export default () => {
 
-  const { isCreate, type, formData, setFormData, setCurrent } = useContext(FormPageContext);
+  const { isCreate, type, formData, setFormData, setCurrent, stepRef, formDataToParams } = useContext(FormPageContext);
   const [form] = Form.useForm();
 
   useEffect(() => {
-    const formValues = formData[type];
+    const formValues = formData[type] || {};
+    const { vcsId, repoId } = formValues;
     form.setFieldsValue(formValues);
+    if (vcsId) {
+      fetchRepoOptions({ vcsId });
+    }
+    if (vcsId && repoId) {
+      fetchRepoBranchOptions({ vcsId, repoId });
+      fetchRepoTagOptions({ vcsId, repoId });
+    }
   }, []);
 
   // vcs选项
   const {
     data: vcsOptions = [],
-    loading: vcsLoading,
-    mutate: mutateVcsOptions
+    loading: vcsLoading
   } = useRequest(
     () => requestWrapper(
       vcsAPI.searchVcs.bind(null, { 
@@ -116,11 +123,11 @@ export default () => {
     run: fetchReadmeText,
     mutate: mutateReadmeText
   } = useRequest(
-    ({ vcsId, repoId, repoRevision }) => requestWrapper(
+    ({ vcsId, repoId, branch }) => requestWrapper(
       vcsAPI.readme.bind(null, {
         vcsId,
         repoId,
-        branch: repoRevision
+        branch
       })
     ),
     {
@@ -131,7 +138,7 @@ export default () => {
 
   const onValuesChange = (changedValues, allValues) => {
     const changedKeys = Object.keys(changedValues);
-    const { vcsId, repoId, repoRevision } = allValues || {};
+    const { vcsId, repoId, branch } = allValues || {};
     if (changedKeys.includes('vcsId')) {
       // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
       !!repoOptions.lenngth && mutateRepoOptions([]);
@@ -139,8 +146,9 @@ export default () => {
       !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
       form.setFieldsValue({
         repoId: undefined,
-        repoRevision: undefined,
-        workdir: undefined
+        repoFullName: undefined,
+        branch: undefined,
+        dir: undefined
       });
       if (vcsId) {
         fetchRepoOptions({ vcsId });
@@ -152,9 +160,8 @@ export default () => {
       !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
       form.setFieldsValue({
         repoFullName: (repoOptions.find(it => it.value === changedValues.repoId) || {}).label,
-        repoRevision: undefined,
-        workdir: undefined,
-        tfVersion: undefined
+        branch: undefined,
+        dir: undefined
       });
       if (vcsId && repoId) {
         fetchRepoBranchOptions({ vcsId, repoId });
@@ -162,18 +169,23 @@ export default () => {
       }
     }
     // readme参数依赖是否变化
-    const readmeParamsChange = intersection(changedKeys, [ 'vcsId', 'repoId', 'repoRevision' ]).length > 0;
+    const readmeParamsChange = intersection(changedKeys, [ 'vcsId', 'repoId', 'branch' ]).length > 0;
     if (readmeParamsChange) {
-      if (changedValues.repoRevision) {
+      if (changedValues.branch) {
         fetchReadmeText({
           vcsId, 
           repoId, 
-          repoRevision
+          branch
         });
       } else {
         readmeText !== undefined && mutateReadmeText(undefined);
       }
     }
+  };
+
+  const onSearchRepos = (value) => {
+    const vcsId = form.getFieldValue('vcsId');
+    vcsId && fetchRepoOptions({ vcsId, q: value });
   };
 
   const next = async () => {
@@ -182,12 +194,20 @@ export default () => {
     setCurrent(preValue => preValue + 1);
   };
 
+  useImperativeHandle(stepRef, () => ({
+    onFinish: async (index) => {
+      const formValues = await form.validateFields();
+      setFormData(preValue => ({ ...preValue, [type]: formValues }));
+      setCurrent(index);
+    }
+  }));
+
   return (
     <Row gutter={16} className={styles.sourceForm}>
       <Col span={11}>
         <Form form={form} {...FL} onValuesChange={onValuesChange}>
           <Form.Item 
-            name='type' 
+            name='source' 
             wrapperCol={{ offset: 5, span: 19 }}
             initialValue='vcs'
           >
@@ -215,11 +235,14 @@ export default () => {
             rules={[{ required: true, message: '请选择' }]}
           >
             <Select 
-              placeholder='请选择代码仓库'
               loading={repoLoading}
               optionFilterProp='label'
-              showSearch={true}
               options={repoOptions}
+              showSearch={true}
+              filterOption={false}
+              onDropdownVisibleChange={(open) => open && onSearchRepos()}
+              onSearch={onSearchRepos}
+              placeholder='请输入仓库名称搜索'
             />
           </Form.Item>
           <Form.Item
@@ -230,7 +253,7 @@ export default () => {
           </Form.Item>
           <Form.Item 
             label='分支/标签'
-            name='repoRevision'
+            name='branch'
             rules={[{ required: true, message: '请选择' }]}
           >
             <Select 
@@ -247,7 +270,7 @@ export default () => {
           </Form.Item>
           <Form.Item 
             label='目录'
-            name='workdir'
+            name='dir'
           >
             <Input placeholder='请填写目录' />
           </Form.Item>

@@ -24,6 +24,30 @@ const FormPage = ({ match = {} }) => {
   const isCreate = !policyGroupId;
   const [ current, setCurrent ] = useState(0);
   const [ formData, setFormData ] = useState({});
+  const stepRef = useRef();
+
+  const formDataToParams = (formData) => {
+    let params = {};
+    steps.forEach(({ type }) => {
+      params = { ...params, ...formData[type] };
+    });
+    return params;
+  };
+
+  const paramsToformData = (params) => {
+    const { 
+      source, vcsId, repoId, branch, dir,
+      name, description, label
+    } = params;
+    return {
+      source: {
+        source, vcsId, repoId, branch, dir
+      },
+      seting: {
+        name, description, label
+      }
+    };
+  };
 
   return (
     <Layout
@@ -43,7 +67,9 @@ const FormPage = ({ match = {} }) => {
                 setFormData,
                 setCurrent,
                 type: steps[current].type,
-                isCreate
+                formDataToParams,
+                isCreate,
+                stepRef
               }}
             >
               {steps[current].content}
