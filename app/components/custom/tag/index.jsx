@@ -15,6 +15,11 @@ const CustomTag = ({ type, icon, text }) => {
         bgColor: '#FDD4CD',
         textColor: '#DD2B0E',
         icon: <MinusCircleFilled style={{ color: '#DD2B0E' }}/>
+      },
+      default: {
+        bgColor: '#D7DADE',
+        textColor: '#57606A',
+        icon: <span style={{ width: '1em', height: '1em', border: '2px solid #57606A', borderRadius: '50%' }}/>
       }
     };
     return tagEnum[type];

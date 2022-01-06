@@ -11,7 +11,7 @@ import tplAPI from 'services/tpl';
 import { VerticalAlignBottomOutlined, ImportOutlined } from '@ant-design/icons';
 import { downloadImportTemplate } from 'utils/util';
 import { UploadtIcon } from 'components/iconfont';
-import cloneDeep from 'lodash/cloneDeep';
+import { CustomTag } from 'components/custom';
 import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
@@ -23,6 +23,7 @@ const CTList = ({ match = {} }) => {
       total: 0
     }),
     [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
+    [ selectedRows, setSelectedRows ] = useState([]),
     [ query, setQuery ] = useState({
       pageNo: 1,
       pageSize: 10
@@ -32,19 +33,19 @@ const CTList = ({ match = {} }) => {
     {
       dataIndex: 'name',
       title: '云模板名称',
-      width: 154,
+      width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'description',
       title: '云模板描述',
-      width: 213,
+      width: 190,
       ellipsis: true
     },
     {
       dataIndex: 'activeEnvironment',
       title: '活跃环境',
-      width: 102,
+      width: 78,
       ellipsis: true
     },
     {
@@ -55,30 +56,43 @@ const CTList = ({ match = {} }) => {
       render: (text) => <a href={text} target='_blank'><EllipsisText>{text}</EllipsisText></a>
     },
     {
+      dataIndex: '',
+      title: '合规状态',
+      width: 100,
+      ellipsis: true,
+      render: (text) => {
+        const map = {
+          success: <CustomTag type='success' text='合规' />,
+          error: <CustomTag type='error' text='不合规' />,
+          default: <CustomTag type='default' text='未开启' />
+        };
+        return map['default'];
+      }
+    },
+    {
       dataIndex: 'creator',
       title: '创建人',
-      width: 100,
+      width: 70,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
-      width: 160,
+      width: 148,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
-      width: 169,
+      width: 100,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
         return (
-          <span className='inlineOp'>
+          <Space>
             <a type='link' onClick={() => updateCT(record.id)}>编辑</a>
-            <Divider type='vertical' />
             <a type='link' onClick={() => onDel(record.id)}>删除</a>
-          </span>
+          </Space>
         );
       }
     }
@@ -173,10 +187,10 @@ const CTList = ({ match = {} }) => {
     <div className='idcos-card'>
       <div>
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
-          <Button 
-            type='primary'
-            onClick={createCT}
-          >新建云模板</Button>
+          <Space>
+            <Button type='primary' onClick={createCT}>新建云模板</Button>
+            <Button disabled={selectedRowKeys.length === 0}>合规检测</Button>
+          </Space>
           <span>
             <Button disabled={selectedRowKeys.length === 0} icon={<VerticalAlignBottomOutlined />} style={{ marginRight: 8 }} onClick={() => download()}>导出</Button>
             <Button icon={<UploadtIcon />} onClick={() => setVisible(true)}>导入</Button>
@@ -209,6 +223,7 @@ const CTList = ({ match = {} }) => {
               selectedRowKeys,
               onChange: (keys, rows) => {
                 setSelectedRowKeys(keys);
+                setSelectedRows(rows);
               },
               getCheckboxProps: (R) => ({
                 disabled: R.internal
