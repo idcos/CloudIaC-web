@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Select, Form, Input, Button, Row, Col, Spin, notification } from "antd";
-import { connect } from "react-redux";
+import { Select, Input, Button, Row, Col, Spin, notification, Space } from "antd";
+import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
@@ -11,14 +11,8 @@ import CoderCard from 'components/coder/coder-card';
 import policiesAPI from 'services/policies';
 import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
-import cgroupsAPI from 'services/cgroups';
 import AffixBtnWrapper from 'components/common/affix-btn-wrapper';
-import styles from './styles.less';
-
-const FL = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
+import { CustomTag } from 'components/custom';
   
 const OnlineTest = ({ match = {} }) => {
 
@@ -216,7 +210,18 @@ const OnlineTest = ({ match = {} }) => {
                 }
               />
               <CoderCard
-                title='测试输出'
+                title={
+                  <Space>
+                    <span>测试输出</span>
+                    {!isEmpty(outputInfo) && (
+                      outputInfo.isError ? (
+                        <CustomTag type='error' text='未通过'/>
+                      ) : (
+                        <CustomTag type='success' text='通过'/>
+                      )
+                    )}
+                  </Space>
+                }
                 height={337}
                 value={outputInfo.value}
                 options={{ mode: outputInfo.isError ? 'error-message' : 'application/json' }}
