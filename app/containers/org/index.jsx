@@ -186,13 +186,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                     </div>
                   ) : (
                     menus.length > 1 && ( 
-                      collapsed ? (
-                        <div className='menu-title'>
-                          <div className='divider'></div> 
-                        </div>
-                      ) : (
-                        <Divider style={{ margin: '12px 0' }} />
-                      )
+                      <Divider style={{ margin: '12px 0' }} />
                     )
                   )}
                   <div className='menu-list'>
