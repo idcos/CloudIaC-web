@@ -252,87 +252,132 @@ export default () => {
           >
             <Radio.Group>
               <Radio value='vcs'>VCS</Radio>
-              <Radio value='registry' disabled={true}>Registry</Radio>
+              <Radio value='registry'>Registry</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item 
-            label='VCS'
-            name='vcsId' 
-            rules={[{ required: true, message: '请选择' }]}
-          >
-            <Select 
-              placeholder='请选择VCS'
-              optionFilterProp='label'
-              showSearch={true}
-              loading={vcsLoading}
-              options={vcsOptions}
-            />
-          </Form.Item>
-          <Form.Item 
-            label='代码仓库'
-            name='repoId'
-            rules={[{ required: true, message: '请选择' }]}
-          >
-            <Select 
-              loading={repoLoading}
-              optionFilterProp='label'
-              options={repoOptions}
-              showSearch={true}
-              filterOption={false}
-              onDropdownVisibleChange={(open) => open && onSearchRepos()}
-              onSearch={onSearchRepos}
-              placeholder='请输入仓库名称搜索'
-            />
-          </Form.Item>
-          <Form.Item
-            name='repoFullName'
-            hidden={true}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item 
-            label='分支/标签'
-            name='repoRevision'
-            rules={[{ required: true, message: '请选择' }]}
-          >
-            <Select 
-              placeholder='请选择分支/标签'
-              loading={repoBranchLoading || repoTagLoading}
-              onChange={(value, option) => {
-                if (option.type === 'branch') {
-                  form.setFieldsValue({ branch: value, gitTags: '' });
-                } else {
-                  form.setFieldsValue({ gitTags: value, branch: '' });
-                }
-              }}
-            >
-              <Select.OptGroup label='分支'>
-                {repoBranchOptions.map(it => <Select.Option value={it.value} type='branch'>{it.label}</Select.Option>)}
-              </Select.OptGroup>
-              <Select.OptGroup label='标签'>
-                {repoTagOptions.map(it => <Select.Option value={it.value} type='gitTags'>{it.label}</Select.Option>)}
-              </Select.OptGroup>
-            </Select>
-          </Form.Item>
-          <Form.Item 
-            label='分支'
-            name='branch'
-            hidden={true}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item 
-            label='标签'
-            name='gitTags'
-            hidden={true}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item 
-            label='目录'
-            name='dir'
-          >
-            <Input placeholder='请填写目录' />
+          <Form.Item noStyle={true} shouldUpdate={true}>
+            {({ getFieldValue }) => {
+              const source = getFieldValue('source');
+              switch (source) {
+              case 'vcs':
+                return (
+                  <>
+                    <Form.Item 
+                      label='VCS'
+                      name='vcsId' 
+                      rules={[{ required: true, message: '请选择' }]}
+                    >
+                      <Select 
+                        placeholder='请选择VCS'
+                        optionFilterProp='label'
+                        showSearch={true}
+                        loading={vcsLoading}
+                        options={vcsOptions}
+                      />
+                    </Form.Item>
+                    <Form.Item 
+                      label='代码仓库'
+                      name='repoId'
+                      rules={[{ required: true, message: '请选择' }]}
+                    >
+                      <Select 
+                        loading={repoLoading}
+                        optionFilterProp='label'
+                        options={repoOptions}
+                        showSearch={true}
+                        filterOption={false}
+                        onDropdownVisibleChange={(open) => open && onSearchRepos()}
+                        onSearch={onSearchRepos}
+                        placeholder='请输入仓库名称搜索'
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      name='repoFullName'
+                      hidden={true}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item 
+                      label='分支/标签'
+                      name='repoRevision'
+                      rules={[{ required: true, message: '请选择' }]}
+                    >
+                      <Select 
+                        placeholder='请选择分支/标签'
+                        loading={repoBranchLoading || repoTagLoading}
+                        onChange={(value, option) => {
+                          if (option.type === 'branch') {
+                            form.setFieldsValue({ branch: value, gitTags: '' });
+                          } else {
+                            form.setFieldsValue({ gitTags: value, branch: '' });
+                          }
+                        }}
+                      >
+                        <Select.OptGroup label='分支'>
+                          {repoBranchOptions.map(it => <Select.Option value={it.value} type='branch'>{it.label}</Select.Option>)}
+                        </Select.OptGroup>
+                        <Select.OptGroup label='标签'>
+                          {repoTagOptions.map(it => <Select.Option value={it.value} type='gitTags'>{it.label}</Select.Option>)}
+                        </Select.OptGroup>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item 
+                      label='分支'
+                      name='branch'
+                      hidden={true}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item 
+                      label='标签'
+                      name='gitTags'
+                      hidden={true}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item 
+                      label='目录'
+                      name='dir'
+                    >
+                      <Input placeholder='请填写目录' />
+                    </Form.Item>
+                  </>
+                );
+              case 'registry':
+                return (
+                  <>
+                    <Form.Item 
+                      label='策略组'
+                      name=''
+                      rules={[{ required: true, message: '请选择' }]}
+                    >
+                      <Select 
+                        placeholder='请选择策略组'
+                        optionFilterProp='label'
+                        showSearch={true}
+                        loading={false}
+                        options={[]}
+                      />
+                    </Form.Item>
+                    <Form.Item 
+                      label='版本'
+                      name=''
+                      rules={[{ required: true, message: '请选择' }]}
+                    >
+                      <Select 
+                        placeholder='请选择版本'
+                        optionFilterProp='label'
+                        showSearch={true}
+                        loading={false}
+                        options={[]}
+                      />
+                    </Form.Item>
+                  </>
+                );
+              default:
+                return;
+              }
+            }}
           </Form.Item>
           <Form.Item 
             wrapperCol={{ span: 19, offset: 5 }}
