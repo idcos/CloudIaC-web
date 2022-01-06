@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Table, Input, notification, Space, Popover, Tag, Popconfirm, Row, Col } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Button, Table, Input, notification, Space, Popover, Tag, Popconfirm, Row, Col, Modal } from 'antd';
+import { InfoCircleFilled, SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -83,6 +83,22 @@ const PolicyGroupList = ({ match }) => {
         description: e.message
       });
     }
+  };
+
+  const onDel = ({ id, policyCount, relCount }) => {
+    Modal.confirm({
+      width: 480,
+      title: `删除（此操作不可逆）`,
+      content: (
+        <>
+          该策略组关联了“<b>{policyCount}</b>”条策略，并被绑定到了“<b>{relCount}</b>”个云模板或环境，删除策略组时将连同该策略组下的策略一并删除，确定要删除吗？
+        </>
+      ),
+      icon: <InfoCircleFilled style={{ color: '#DD2B0E' }} />,
+      okText: '确认删除',
+      cancelText: '取消',
+      onOk: () => deleteGroup(id)
+    });
   };
 
   const goFormPage = (id) => {
@@ -177,15 +193,9 @@ const PolicyGroupList = ({ match }) => {
                 {record.enabled ? '禁用' : '启用'}
               </Button>
             </Popconfirm>
-            <Popconfirm 
-              title={`确认删除策略组?`} 
-              onConfirm={() => deleteGroup(record.id)} 
-              placement='bottomLeft'
-            >
-              <Button type='link' style={{ padding: 0, fontSize: 12 }}>
-                删除
-              </Button>
-            </Popconfirm>
+            <Button onClick={() => onDel(record)} type='link' style={{ padding: 0, fontSize: 12 }}>
+              删除
+            </Button>
           </Space>
         );
       }
