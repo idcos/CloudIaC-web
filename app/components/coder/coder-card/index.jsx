@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Row, Spin, Col, Input, Button } from "antd";
-import { CopyOutlined, ExpandOutlined } from "@ant-design/icons";
 import noop from 'lodash/noop';
 import classnames from 'classnames';
 import Coder from "components/coder";
+import { DuplicateIcon, ScreenFullIcon } from 'components/iconfont';
 import copy from 'utils/copy';
 import styles from './styles.less';
 
@@ -60,8 +60,8 @@ export default ({
           </Col>
           <Col flex='0 0 auto'>
             <Input.Group compact={true}>
-              <Button icon={<CopyOutlined />} onClick={() => copy(value)} />
-              <Button type='primary' icon={<ExpandOutlined />} onClick={() => setFullScreen(!fullScreen)}/>
+              <Button icon={<DuplicateIcon />} onClick={() => copy(value)} />
+              <Button type='primary' icon={<ScreenFullIcon />} onClick={() => setFullScreen(!fullScreen)}/>
             </Input.Group>
           </Col>
         </Row>
