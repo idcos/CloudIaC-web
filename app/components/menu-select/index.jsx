@@ -8,6 +8,7 @@ export default (props) => {
 
   const {
     style = {},
+    overlayWidth,
     selectionStyle = {},
     options = [],
     lablePropsNames = {
@@ -98,12 +99,11 @@ export default (props) => {
         overlay={menu} 
         trigger={['click']} 
         visible={visible} 
-        overlayStyle={{ width: '100%' }}
+        overlayStyle={{ width: overlayWidth || '100%' }}
         onVisibleChange={(e) => {
           setVisible(e); 
           setActive(e); 
         }}
-        getPopupContainer={triggerNode => triggerNode.parentNode}
       >
         <div className='selection' style={selectionStyle}>
           <div className={`label fn-ellipsis ${visible ? 'selecting' : ''}`}>

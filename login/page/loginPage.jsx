@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Form, Input, Button, notification, Row, Col } from 'antd';
 import queryString from 'query-string';
-
 import { authAPI } from "../services/auth";
 import styles from './styles.less';
 

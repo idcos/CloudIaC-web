@@ -1,9 +1,12 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { EyeOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { EyeOutlined, PlusSquareOutlined, MenuOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
+import { useSessionStorageState } from 'ahooks';
+import classNames from 'classnames';
 import { Divider, notification } from 'antd';
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
+import versionCfg from 'assets/version.json';
 import history from "utils/history";
 import ProjectModal from 'components/project-modal';
 import projectAPI from 'services/project';
@@ -13,6 +16,8 @@ import styles from './styles.less';
 const KEY = 'global';
 
 const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}, dispatch }) => {
+
+  const [ collapsed, setCollapsed ] = useSessionStorageState('execute_menu_collapsed', false);
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const projectList = (projects || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
@@ -107,11 +112,11 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
           onClick={() => linkTo(scope, menuItem.key)}
         >
           <span className='icon'>{menuItem.icon}</span>
-          <span>{menuItem.name}</span>
+          {!collapsed && <span>{menuItem.name}</span>}
         </div>
       );
     });
-  }, [pjtId]);
+  }, [ pjtId, collapsed ]);
 
   const menus = getMenus(userInfo || {}, {
     projectList
@@ -119,11 +124,12 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
  
   return (
     <div className={styles.orgWrapper}>
-      <div className='left-nav'>
+      <div className={classNames('left-nav', { collapsed })}>
         {
           projectList.length ? (
             <>
               <MenuSelect
+                overlayWidth='200px'
                 options={projectList}
                 onChange={changeProject}
                 setActive={setPjtSelectActive}
@@ -174,15 +180,21 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
             menus.map(subMenu => {
               return (
                 <div className='sub-menu'>
-                  {
-                    subMenu.subName ? (
-                      <div className='menu-title'>{subMenu.subName}</div>
-                    ) : (
-                      menus.length > 1 && (
+                  {subMenu.subName ? (
+                    <div className='menu-title'>
+                      {collapsed ? <div className='divider'></div> : subMenu.subName}
+                    </div>
+                  ) : (
+                    menus.length > 1 && ( 
+                      collapsed ? (
+                        <div className='menu-title'>
+                          <div className='divider'></div> 
+                        </div>
+                      ) : (
                         <Divider style={{ margin: '12px 0' }} />
                       )
                     )
-                  }
+                  )}
                   <div className='menu-list'>
                     { renderMenus(subMenu) }
                   </div>
@@ -190,6 +202,12 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
               );
             })
           }
+        </div>
+        <div className='nav-footer'>
+          <span className='icon' onClick={() => setCollapsed(!collapsed)}>
+            <MenuOutlined />
+          </span>
+          <span className='text'>v{versionCfg.version || ''}</span>
         </div>
       </div>
       <div className='right-content'>

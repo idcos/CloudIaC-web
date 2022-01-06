@@ -1,15 +1,20 @@
 import React, { useCallback } from 'react';
+import { MenuOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
+import { useSessionStorageState } from 'ahooks';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
+import versionCfg from 'assets/version.json';
 import { getComplianceMenus } from './menus';
 import styles from './styles.less';
+import classNames from 'classnames';
 
 const KEY = 'global';
 
 const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
 
   const { orgId, typeKey } = match.params || {};
+  const [ collapsed, setCollapsed ] = useSessionStorageState('compliance_menu_collapsed', false);
 
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
@@ -43,15 +48,15 @@ const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
           onClick={() => linkTo(scope, menuItem.key)}
         >
           <span className='icon'>{menuItem.icon}</span>
-          <span>{menuItem.name}</span>
+          {!collapsed && <span>{menuItem.name}</span>}
         </div>
       );
     });
-  }, []);
+  }, [collapsed]);
  
   return (
     <div className={styles.complianceWrapper}>
-      <div className='left-nav'>
+      <div className={classNames('left-nav', { collapsed })}>
         <div className='menu-wrapper'>
           {
             getComplianceMenus().map(subMenu => {
@@ -60,7 +65,11 @@ const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
               }
               return (
                 <div className='sub-menu'>
-                  {subMenu.subName === 'none' ? null : <div className='menu-title'>{subMenu.subName}</div>}
+                  {subMenu.subName === 'none' ? null : (
+                    <div className='menu-title'>
+                      {collapsed ? <div className='divider'></div> : subMenu.subName}
+                    </div>
+                  )}
                   <div className='menu-list'>
                     { renderMenus(subMenu) }
                   </div>
@@ -68,6 +77,12 @@ const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
               );
             })
           }
+        </div>
+        <div className='nav-footer'>
+          <span className='icon' onClick={() => setCollapsed(!collapsed)}>
+            <MenuOutlined />
+          </span>
+          <span className='text'>v{versionCfg.version || ''}</span>
         </div>
       </div>
       <div className='right-content'>
