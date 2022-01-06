@@ -1,9 +1,10 @@
-import React, { useState, useRef, useMemo } from "react";
-import { Card, Space, Spin, Button } from "antd";
-import { FullscreenExitOutlined, FullscreenOutlined } from "@ant-design/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { Row, Spin, Col, Input, Button } from "antd";
+import { CopyOutlined, ExpandOutlined } from "@ant-design/icons";
 import noop from 'lodash/noop';
 import classnames from 'classnames';
 import Coder from "components/coder";
+import copy from 'utils/copy';
 import styles from './styles.less';
 
 export default ({ 
@@ -15,8 +16,7 @@ export default ({
   onChange = noop,
   title,
   spinning = false,
-  tools=['fullScreen'],
-  bodyPrefix,
+  headerMiddleContent
 }) => {
   const [ fullScreen, setFullScreen ] = useState(false);
   const coderRef = useRef();
@@ -27,37 +27,16 @@ export default ({
     }
   };
 
-  const toolsEnum = {
-    fullScreen: (
-      <span 
-        className={styles.tool} 
-        onClick={() => setFullScreen(!fullScreen)} 
-        onKeyDown={(e) => setFullScreenClose(e)}
-      >
-        {
-          fullScreen ? (
-            <>
-              <FullscreenExitOutlined className={styles.tool_icon}/>
-              <span className={styles.tool_text}>退出全屏</span> 
-            </>
-          ) : (
-            <>
-              <FullscreenOutlined className={styles.tool_icon}/>
-              <span className={styles.tool_text}>全屏显示</span>
-            </>
-          )
-        }
-      </span>
-    )
-  };
-
-  const Tools = useMemo(() => {
-    return (
-      <Space>
-        {tools.map(tool => toolsEnum[tool])}
-      </Space>
-    );
-  });
+  useEffect(() => {
+    if (fullScreen) {
+      document.addEventListener('keyup', setFullScreenClose);
+    } else {
+      document.removeEventListener('keyup', setFullScreenClose);
+    }
+    return () => {
+      document.removeEventListener('keyup', setFullScreenClose);
+    };
+  }, [fullScreen]);
 
   return (
     <div
@@ -70,21 +49,25 @@ export default ({
       style={{ height, ...style }}
     >
       <div className={styles.code_card_head}>
-        <div className={styles.code_card_head_title}>
-          <Space>
-            <div className={styles.code_card_head_title_content}>{title}</div>
-            {!fullScreen && Tools}
-          </Space>
-        </div>
-        <div className={styles.code_card_head_extra}>
-          {fullScreen && Tools}
-        </div>
+        <Row wrap={false} align='middle' gutter={[ 12, 0 ]}>
+          <Col flex='0 0 auto'>
+            <div className={styles.code_card_head_title}>
+              <div className={styles.code_card_head_title_content}>{title}</div>
+            </div>
+          </Col>
+          <Col flex='1'>
+            {headerMiddleContent}
+          </Col>
+          <Col flex='0 0 auto'>
+            <Input.Group compact={true}>
+              <Button icon={<CopyOutlined />} onClick={() => copy(value)} />
+              <Button type='primary' icon={<ExpandOutlined />} onClick={() => setFullScreen(!fullScreen)}/>
+            </Input.Group>
+          </Col>
+        </Row>
       </div>
       <div className={styles.code_card_body}>
         <Spin spinning={spinning}>
-          <div className={styles.code_card_body_prefix}>
-            {bodyPrefix}
-          </div>
           <div className={styles.code_wrapper}>
             <Coder
               childRef={coderRef}

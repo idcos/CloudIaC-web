@@ -20,16 +20,13 @@ const FL = {
   wrapperCol: { span: 24 }
 };
   
-const OnlineTest = ({ orgs, match = {} }) => {
+const OnlineTest = ({ match = {} }) => {
 
-  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
   const { policyId, orgId } = match.params || {};
-  const [rego, setRego] = useState();
-  const [tagSearchValue, setTagSearchValue] = useState();
-  const [input, mutateInput] = useState();
-  const [parseOrgId, setParseOrgId] = useState();
-  const [parseType, setParseType] = useState('template');
-  const [parseParams, setParseParams] = useState({
+  const [ rego, setRego ] = useState();
+  const [ input, mutateInput ] = useState();
+  const [ parseType, setParseType ] = useState('template');
+  const [ parseParams, setParseParams ] = useState({
     envId: undefined,
     tplId: undefined
   });
@@ -46,14 +43,14 @@ const OnlineTest = ({ orgs, match = {} }) => {
       tplId: undefined
     });
     switch (parseType) {
-      case 'template':
-        fetchCtOptions();
-        break;
-      case 'env':
-        fetchEnvOptions();
-        break;
-      default:
-        break;
+    case 'template':
+      fetchCtOptions();
+      break;
+    case 'env':
+      fetchEnvOptions();
+      break;
+    default:
+      break;
     }
   }, [parseType]);
 
@@ -64,7 +61,7 @@ const OnlineTest = ({ orgs, match = {} }) => {
     ),
     {
       manual: true,
-      formatResult: (res) => safeJsonStringify([res.template, null, 2]),
+      formatResult: (res) => safeJsonStringify([ res.template, null, 2 ]),
       onSuccess: (data) => {
         mutateInput(data);
       },
@@ -77,7 +74,7 @@ const OnlineTest = ({ orgs, match = {} }) => {
   // 云模版选项查询
   const { data: ctOptions, run: fetchCtOptions } = useRequest(
     () => requestWrapper(
-      ctplAPI.list.bind(null, { pageSize: 0, orgId: parseOrgId }),
+      ctplAPI.list.bind(null, { pageSize: 0 }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
       }
@@ -90,7 +87,7 @@ const OnlineTest = ({ orgs, match = {} }) => {
   // 环境选项查询
   const { data: envOptions, run: fetchEnvOptions } = useRequest(
     () => requestWrapper(
-      cenvAPI.list.bind(null, { pageSize: 0, orgId: parseOrgId }),
+      cenvAPI.list.bind(null, { pageSize: 0 }),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id, tplId: it.tplId }))
       }
@@ -108,7 +105,7 @@ const OnlineTest = ({ orgs, match = {} }) => {
     {
       manual: true,
       formatResult: (res) => ({
-        value: res.error || safeJsonStringify([res.data, null, 2]),
+        value: res.error || safeJsonStringify([ res.data, null, 2 ]),
         isError: !!res.error
       })
     }
@@ -151,10 +148,10 @@ const OnlineTest = ({ orgs, match = {} }) => {
     >
       <div className='idcos-card'>
         <Spin spinning={pageLoading}>
-          <Row gutter={[24, 0]}>
+          <Row gutter={[ 24, 0 ]}>
             <Col span={12}>
               <CoderCard 
-                height={506}
+                height={680}
                 title='策略编辑' 
                 options={{ mode: 'rego' }} 
                 value={rego} 
@@ -165,15 +162,15 @@ const OnlineTest = ({ orgs, match = {} }) => {
             <Col span={12}>
               <CoderCard 
                 title='测试输入'
-                height={250}
+                height={337}
                 value={input} 
                 onChange={mutateInput}
                 style={{ marginBottom: 6 }}
                 tools={['fullScreen']}
                 spinning={fetchInputLoading}
-                bodyPrefix={
-                  <Row gutter={[ 8, 0 ]} className={styles.input_condition}>
-                    <Col span={24}>
+                headerMiddleContent={
+                  <Row wrap={false} justify='end'> 
+                    <Col flex='0 0 280px'>
                       <Input.Group compact={true}>
                         <Select 
                           style={{ width: '31%' }} 
@@ -220,7 +217,7 @@ const OnlineTest = ({ orgs, match = {} }) => {
               />
               <CoderCard
                 title='测试输出'
-                height={250}
+                height={337}
                 value={outputInfo.value}
                 options={{ mode: outputInfo.isError ? 'error-message' : 'application/json' }}
                 tools={['fullScreen']}
@@ -228,8 +225,8 @@ const OnlineTest = ({ orgs, match = {} }) => {
             </Col>
           </Row>
           <AffixBtnWrapper align='right'>
-            <Button onClick={test} loading={testLoading}>在线测试</Button>
             <Button onClick={goPolicyListPage}>取消</Button>
+            <Button onClick={test} type='primary' loading={testLoading}>在线测试</Button>
           </AffixBtnWrapper>
         </Spin>
       </div>
@@ -237,8 +234,4 @@ const OnlineTest = ({ orgs, match = {} }) => {
   );
 };
 
-export default connect((state) => {
-  return {
-    orgs: state.global.get('orgs').toJS()
-  };
-})(OnlineTest);
+export default OnlineTest;
