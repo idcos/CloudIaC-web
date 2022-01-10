@@ -12,11 +12,6 @@ export default ({  visible, onClose, id  }) => {
       visible={visible}
       onClose={onClose}
       width={800}
-      bodyStyle={{
-        padding: 0,
-        flex: 1,
-        minHeight: 0
-      }}
     >
       <DetectionCard canFullHeight={true} requestFn={ctplAPI.result.bind(null, { tplId: id, pageSize: 0 })} />
     </Drawer>

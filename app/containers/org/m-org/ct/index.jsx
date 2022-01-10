@@ -61,12 +61,18 @@ const CTList = ({ match = {} }) => {
       width: 100,
       ellipsis: true,
       render: (text) => {
+        const clickProps = {
+          style: { cursor: 'pointer' },
+          onClick: () => {
+            
+          }
+        };
         const map = {
-          success: <CustomTag type='success' text='合规' />,
-          error: <CustomTag type='error' text='不合规' />,
+          success: <CustomTag type='success' text='合规' {...clickProps} />,
+          error: <CustomTag type='error' text='不合规' {...clickProps} />,
           default: <CustomTag type='default' text='未开启' />
         };
-        return map['default'];
+        return map['success'];
       }
     },
     {
@@ -78,7 +84,7 @@ const CTList = ({ match = {} }) => {
     {
       dataIndex: 'createdAt',
       title: '创建时间',
-      width: 148,
+      width: 152,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },

@@ -1,10 +1,9 @@
-import React from 'react';
-import { Empty, Card, Space, Tag } from "antd";
+import React, { useCallback } from 'react';
+import { Empty, Space, Row, Col, Button } from "antd";
 import moment from 'moment';
-import classnames from 'classnames';
+import { CustomTag } from 'components/custom';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR_TAG } from 'constants/types';
 import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
@@ -49,64 +48,85 @@ export default ({ requestFn, canFullHeight = false, failLogParams }) => {
   );
 
   const formatList = (list) => {
-    if (list.length) {
-      let typeList = [...new Set(list.map(d => (d.policyGroupId)))];
-      let ll = [];
-      typeList.forEach(d => {
-        let obj = {};
-        let children = list.filter(t => t.policyGroupId === d).map(it => {
-          return it || [];
-        });
-        obj.policyGroupName = (children.find(item => item.id === d.id) || {}).policyGroupName || '-';
-        obj.children = children;
-        ll.push(obj);
-      });
-      return ll || [];
-    } else {
-      return [];
-    }
+    list = list || [];
+    const policyGroupIdList = [...new Set(list.map(d => (d.policyGroupId)))];
+    return policyGroupIdList.map(policyGroupId => {
+      const children = list.filter(it => it.policyGroupId === policyGroupId);
+      const failedList = [ 'violated', 'failed' ];
+      let status = failedList.includes(children[0].status) ? 'failed' : children[0].status;
+      for (let index = 1; index < children.length; index++) {
+        if (status !== 'failed') {
+          // 非失败状态如有不同状态则为混合状态
+          if (status !== children[index].status) {
+            status = '';
+            break;
+          }
+        } else {
+          // 失败状态如有非失败状态列表的状态则为混合状态
+          if (!failedList.includes(children[index].status)) {
+            status = '';
+            break;
+          }
+        }
+      }
+      const { policyGroupName } = children[0];
+      return {
+        children,
+        policyGroupName,
+        status // passed合规 suppressed屏蔽 failed不合规（'violated', 'failed'统一） 
+      };
+    });
   };
 
+  const renderComplianceStatusTag = useCallback((status) => {
+    switch (status) {
+    case 'pending':
+      return 'loading';
+    case 'passed':
+      return <CustomTag type='success' text='合规' />;
+    case 'violated':
+    case 'failed':
+      return <CustomTag type='error' text='不合规' />;
+    default:
+      return '';
+    }
+  });
+
   return (
-    <Card 
-      className={classnames('idcos-full-body-card', styles.detectionCard, {
-        // 失败日志高度要固定
-        [styles.fixedHeight]: policyStatus === 'failed', 
-        // failLogNeedFullHeight为true则高度铺满
-        [styles.fullFixedHeight]: canFullHeight
-      })}
-      headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} 
-      bodyStyle={{ padding: 6 }} 
-      type={'inner'} 
-      title={
-        <Space>
-          <span>合规状态</span>
-          {policyStatus && <Tag color={POLICIES_DETECTION_COLOR_TAG[policyStatus]}>{POLICIES_DETECTION[policyStatus]}</Tag>}
-        </Space>
-      }
-      extra={
-        <div className={'UbuntuMonoOblique'}>
-          {startAt && moment(startAt).format('YYYY-MM-DD HH:mm:ss') || '-'}
-        </div>
-      }
-    >
-      {
-        policyStatus === 'failed' ? (
-          <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
-        ) : (
-          list.length == 0 ? (
-            <Empty description='暂无策略检测则默认显示通过' image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+    <div className={styles.detectionDetail}>
+      <Row className='detection-header' wrap={false} justify='space-between' align='middle'>
+        <Col>
+          <Space>
+            <span>合规状态</span>
+            {renderComplianceStatusTag(policyStatus)}
+            <Button>立即检测</Button>
+          </Space>
+        </Col>
+        <Col>
+          <div className={'UbuntuMonoOblique'}>
+            {startAt && moment(startAt).format('YYYY-MM-DD HH:mm:ss') || '-'}
+          </div>
+        </Col>
+      </Row>
+      <div className='detection-body'>
+        {
+          policyStatus === 'failed' ? (
+            <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
           ) : (
-            <>
-              {
-                list.map(info => {
-                  return (<DetectionPolicyGroup info={info} />);
-                })
-              }
-            </>
+            list.length == 0 ? (
+              <Empty description='暂无策略检测则默认显示通过' image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+            ) : (
+              <Space direction='vertical' size={24} style={{ width: '100%' }}>
+                {
+                  list.map(info => {
+                    return (<DetectionPolicyGroup info={info} />);
+                  })
+                }
+              </Space>
+            )
           )
-        )
-      }
-    </Card>
+        }
+      </div>
+    </div>
   );
-}
+};

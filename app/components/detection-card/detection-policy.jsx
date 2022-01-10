@@ -29,8 +29,8 @@ export default ({ value = {} }) => {
             <Descriptions.Item 
               style={{ padding: 0 }} 
               label={name}
-              labelStyle={{ color: 'rgba(0, 0, 0, 0.46)' }}
-              contentStyle={{ color: 'rgba(0, 0, 0, 0.66)' }}
+              labelStyle={{ color: 'rgba(0, 0, 0, 0.86)' }}
+              contentStyle={{ color: 'rgba(0, 0, 0, 0.46)' }}
             >
               {isFunction(format) ? format(value[code]) : value[code]}
             </Descriptions.Item>

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Tag } from 'antd';
 import { CheckCircleFilled, MinusCircleFilled } from "@ant-design/icons";
 
-const CustomTag = ({ type, icon, text }) => {
+const CustomTag = ({ type, icon, text, ...restProps }) => {
 
   const tagCfg = useMemo(() => {
     const tagEnum = {
@@ -26,7 +26,7 @@ const CustomTag = ({ type, icon, text }) => {
   }, [type]);
   
   return (
-    <Tag color={tagCfg.bgColor}>
+    <Tag color={tagCfg.bgColor} {...restProps}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         {icon || tagCfg.icon}
         <span style={{ color: tagCfg.textColor }}>{text}</span>
