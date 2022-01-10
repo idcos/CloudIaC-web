@@ -191,16 +191,16 @@ const CCTList = () => {
       render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
     },
     {
-      dataIndex: 'enabled',
+      dataIndex: 'policyEnable',
       title: '开启检测',
       width: 88,
       ellipsis: true,
       fixed: 'right',
-      render: (enabled, record) => {
+      render: (policyEnable, record) => {
         const { id, name, policyGroups } = record;
         return (
           <Switch 
-            checked={enabled} 
+            checked={policyEnable} 
             size='small' 
             onChange={(checked) => switchEnabled({ enabled: checked, id, policyGroups, name })} 
           />

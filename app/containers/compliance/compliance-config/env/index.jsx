@@ -220,16 +220,16 @@ const CenvList = () => {
       ellipsis: true
     },
     {
-      dataIndex: 'enabled',
+      dataIndex: 'policyEnable',
       title: '开启检测',
       width: 75,
       ellipsis: true,
       fixed: 'right',
-      render: (enabled, record) => {
+      render: (policyEnable, record) => {
         const { id, name, tplId, policyGroups } = record;
         return (
           <Switch 
-            checked={enabled} 
+            checked={policyEnable} 
             size='small' 
             onChange={(checked) => switchEnabled({ enabled: checked, id, tplId, policyGroups, name })} 
           />
