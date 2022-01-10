@@ -13,7 +13,7 @@ export default ({ visible, onClose, id }) => {
       onClose={onClose}
       width={800}
     >
-      <DetectionCard canFullHeight={true} requestFn={cenvAPI.result.bind(null, { envId: id, pageSize: 0 })} />
+      <DetectionCard requestFn={cenvAPI.result.bind(null, { envId: id, pageSize: 0 })} />
     </Drawer>
   );
 };

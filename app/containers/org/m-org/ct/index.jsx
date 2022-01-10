@@ -1,20 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Table, notification, Divider, Space } from 'antd';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { Button, Table, notification, Space, Spin } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import ImportModal from './components/importModal';
+import DetectionDrawer from './components/detection-drawer';
 import tplAPI from 'services/tpl';
-import { VerticalAlignBottomOutlined, ImportOutlined } from '@ant-design/icons';
+import ctplAPI from 'services/ctpl';
+import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 import { downloadImportTemplate } from 'utils/util';
 import { UploadtIcon } from 'components/iconfont';
 import { CustomTag } from 'components/custom';
 import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
+
+  const time = useRef();
   const { orgId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
@@ -28,6 +34,51 @@ const CTList = ({ match = {} }) => {
       pageNo: 1,
       pageSize: 10
     });
+  const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
+    visible: false,
+    id: null
+  });
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(time.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchList();
+  }, [query]);
+
+  const openDetectionDrawer = ({ id }) => {
+    setDetectionDrawerProps({
+      id,
+      visible: true
+    });
+  };
+
+  // 关闭检测详情刷新下列表的检测状态字段
+  const closeDetectionDrawer = () => {
+    setDetectionDrawerProps({
+      id: null,
+      visible: false
+    });
+  };
+
+  // 批量扫描合规检测
+  const {
+    run: batchScan
+  } = useRequest(
+    () => requestWrapper(
+      ctplAPI.runBatchScan.bind(null, { ids: selectedRows.map(it => it.id) }), {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        fetchList();
+      }
+    }
+  );
 
   const columns = [
     {
@@ -56,23 +107,23 @@ const CTList = ({ match = {} }) => {
       render: (text) => <a href={text} target='_blank'><EllipsisText>{text}</EllipsisText></a>
     },
     {
-      dataIndex: '',
+      dataIndex: 'policyStatus',
       title: '合规状态',
       width: 100,
       ellipsis: true,
-      render: (text) => {
+      render: (policyStatus, record) => {
         const clickProps = {
           style: { cursor: 'pointer' },
-          onClick: () => {
-            
-          }
+          onClick: () => openDetectionDrawer(record)
         };
         const map = {
-          success: <CustomTag type='success' text='合规' {...clickProps} />,
-          error: <CustomTag type='error' text='不合规' {...clickProps} />,
-          default: <CustomTag type='default' text='未开启' />
+          disable: <CustomTag type='default' text='未开启' {...clickProps}/>,
+          enable: <CustomTag type='default' text='未检测' />,
+          pending: <Spin />,
+          passed: <CustomTag type='success' text='合规' {...clickProps} />,
+          violated: <CustomTag type='error' text='不合规' {...clickProps} />
         };
-        return map['success'];
+        return map[policyStatus];
       }
     },
     {
@@ -136,10 +187,6 @@ const CTList = ({ match = {} }) => {
     }
   };
 
-  useEffect(() => {
-    fetchList();
-  }, [query]);
-
   const fetchList = async () => {
     try {
       setLoading(true);
@@ -156,6 +203,16 @@ const CTList = ({ match = {} }) => {
         list: res.result.list || [],
         total: res.result.total || 0
       });
+      const hasPendingItem = !!(res.result.list || []).find(it => it.policyStatus === 'pending');
+      // 有检测中的数据需要轮询
+      if (hasPendingItem) {
+        clearTimeout(time.current);
+        time.current = setTimeout(() => {
+          fetchList();
+        }, 3000);
+      } else {
+        clearTimeout(time.current);
+      }
     } catch (e) {
       setLoading(false);
       notification.error({
@@ -184,6 +241,10 @@ const CTList = ({ match = {} }) => {
     downloadImportTemplate(url, { orgId });
   };
 
+  const batchScanDisabled = useMemo(() => {
+    return !selectedRows.length || selectedRows.find(it => it.policyStatus === 'disable');
+  });
+
   return <Layout
     extraHeader={<PageHeader
       title='云模板'
@@ -195,7 +256,11 @@ const CTList = ({ match = {} }) => {
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
             <Button type='primary' onClick={createCT}>新建云模板</Button>
-            <Button disabled={selectedRowKeys.length === 0}>合规检测</Button>
+            <Button disabled={batchScanDisabled} onClick={batchScan}>合规检测</Button>
+            {detectionDrawerProps.visible && <DetectionDrawer 
+              {...detectionDrawerProps}
+              onClose={closeDetectionDrawer}
+            />} 
           </Space>
           <span>
             <Button disabled={selectedRowKeys.length === 0} icon={<VerticalAlignBottomOutlined />} style={{ marginRight: 8 }} onClick={() => download()}>导出</Button>

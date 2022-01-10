@@ -8,7 +8,7 @@ import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
 
-export default ({ requestFn, canFullHeight = false, failLogParams }) => {
+export default ({ requestFn, failLogParams }) => {
 
   // 合规结果查询
   const { 
