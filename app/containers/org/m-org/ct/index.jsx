@@ -117,7 +117,7 @@ const CTList = ({ match = {} }) => {
           onClick: () => openDetectionDrawer(record)
         };
         const map = {
-          disable: <CustomTag type='default' text='未开启' {...clickProps}/>,
+          disable: <CustomTag type='default' text='未开启' />,
           enable: <CustomTag type='default' text='未检测' />,
           pending: <Spin />,
           passed: <CustomTag type='success' text='合规' {...clickProps} />,
