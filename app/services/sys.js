@@ -19,6 +19,12 @@ const sysAPI = {
   },
   paramsUpdate: (params) => {
     return put(`/api/v1/systems`, params);
+  },
+  getRegistryAddr: () => {
+    return get('/api/v1/system_config/registry/addr');
+  },
+  updateRegistryAddr: (params) => {
+    return post('/api/v1/system_config/registry/addr', params);
   }
 };
 

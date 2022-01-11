@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
 import { Form, Button, InputNumber, Select, Space, notification } from 'antd';
-
 import sysAPI from 'services/sys';
 
 const layout = {
