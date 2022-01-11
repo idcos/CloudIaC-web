@@ -65,8 +65,8 @@ const CTList = ({ userInfo, match = {} }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'activeEnvironment',
-      title: '活跃环境',
+      dataIndex: 'relationEnvironment',
+      title: '关联环境',
       width: 78,
       ellipsis: true,
       render: (text, record) => (
