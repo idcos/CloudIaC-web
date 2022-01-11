@@ -118,13 +118,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         throw new Error(res.message);
       }
       const {
-        name, description,
+        name, description, policyEnable, policyGroup, tplTriggers,
         vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
         tfVarsFile, playbook,
         projectId
       } = res.result || {};
       setCtData({
-        basic: { name, description },
+        basic: { name, description, policyEnable, policyGroup, tplTriggers },
         repo: { vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion },
         variable: { tfVarsFile, playbook },
         relation: { projectId }

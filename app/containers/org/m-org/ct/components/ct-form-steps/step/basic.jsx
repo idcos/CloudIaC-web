@@ -110,7 +110,7 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
                 />
               </Form.Item>
               <Form.Item
-                name='triggers'
+                name='tplTriggers'
                 wrapperCol={{ offset: 5, span: 14 }}
               >
                 <Checkbox.Group>
