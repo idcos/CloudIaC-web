@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Table, notification, Space, Spin } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
@@ -14,13 +14,14 @@ import tplAPI from 'services/tpl';
 import ctplAPI from 'services/ctpl';
 import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 import { downloadImportTemplate } from 'utils/util';
+import { useLoopPolicyStatus } from 'utils/hooks';
 import { UploadtIcon } from 'components/iconfont';
 import { CustomTag } from 'components/custom';
 import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
 
-  const time = useRef();
+  const { check } = useLoopPolicyStatus();
   const { orgId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
@@ -38,12 +39,6 @@ const CTList = ({ match = {} }) => {
     visible: false,
     id: null
   });
-
-  useEffect(() => {
-    return () => {
-      clearTimeout(time.current);
-    };
-  }, []);
 
   useEffect(() => {
     fetchList();
@@ -84,13 +79,13 @@ const CTList = ({ match = {} }) => {
     {
       dataIndex: 'name',
       title: '云模板名称',
-      width: 200,
+      width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'description',
       title: '云模板描述',
-      width: 190,
+      width: 180,
       ellipsis: true
     },
     {
@@ -203,16 +198,10 @@ const CTList = ({ match = {} }) => {
         list: res.result.list || [],
         total: res.result.total || 0
       });
-      const hasPendingItem = !!(res.result.list || []).find(it => it.policyStatus === 'pending');
-      // 有检测中的数据需要轮询
-      if (hasPendingItem) {
-        clearTimeout(time.current);
-        time.current = setTimeout(() => {
-          fetchList();
-        }, 3000);
-      } else {
-        clearTimeout(time.current);
-      }
+      check({ 
+        list: res.result.list || [],
+        loopFn: () => fetchList()
+      });
     } catch (e) {
       setLoading(false);
       notification.error({
@@ -257,10 +246,6 @@ const CTList = ({ match = {} }) => {
           <Space>
             <Button type='primary' onClick={createCT}>新建云模板</Button>
             <Button disabled={batchScanDisabled} onClick={batchScan}>合规检测</Button>
-            {detectionDrawerProps.visible && <DetectionDrawer 
-              {...detectionDrawerProps}
-              onClose={closeDetectionDrawer}
-            />} 
           </Space>
           <span>
             <Button disabled={selectedRowKeys.length === 0} icon={<VerticalAlignBottomOutlined />} style={{ marginRight: 8 }} onClick={() => download()}>导出</Button>
@@ -303,6 +288,10 @@ const CTList = ({ match = {} }) => {
           }
         />
       </div>
+      {detectionDrawerProps.visible && <DetectionDrawer 
+        {...detectionDrawerProps}
+        onClose={closeDetectionDrawer}
+      />} 
       {visible && <ImportModal orgId={orgId} reload={() => fetchList()} toggleVisible={() => setVisible(false)}/>}
     </div>
   </Layout>;

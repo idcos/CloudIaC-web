@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Radio, Input, notification, Divider, Menu } from 'antd';
+import { Table, notification, Spin } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -9,9 +9,13 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import tplAPI from 'services/tpl';
 import getPermission from "utils/permission";
+import { useLoopPolicyStatus } from 'utils/hooks';
+import { CustomTag } from 'components/custom';
+import DetectionDrawer from '../../m-org/ct/components/detection-drawer';
 
 const CTList = ({ userInfo, match = {} }) => {
 
+  const { check } = useLoopPolicyStatus();
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { orgId, projectId } = match.params || {};
   const [ loading, setLoading ] = useState(false),
@@ -23,25 +27,58 @@ const CTList = ({ userInfo, match = {} }) => {
       pageNo: 1,
       pageSize: 10
     });
+  const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
+    visible: false,
+    id: null
+  });
+
+  useEffect(() => {
+    fetchList();
+  }, [query]);
+
+  const openDetectionDrawer = ({ id }) => {
+    setDetectionDrawerProps({
+      id,
+      visible: true
+    });
+  };
+
+  // 关闭检测详情刷新下列表的检测状态字段
+  const closeDetectionDrawer = () => {
+    setDetectionDrawerProps({
+      id: null,
+      visible: false
+    });
+  };
 
   const columns = [
     {
       dataIndex: 'name',
       title: '云模板名称',
-      width: 154,
+      width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'description',
       title: '云模板描述',
-      width: 213,
+      width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'activeEnvironment',
       title: '活跃环境',
-      width: 100,
-      ellipsis: true
+      width: 78,
+      ellipsis: true,
+      render: (text, record) => (
+        <a 
+          onClick={() => history.push({
+            pathname: `/org/${orgId}/project/${projectId}/m-project-env`,
+            state: {
+              tplName: record.name
+            }
+          })}
+        >{text}</a>
+      )
     },
     {
       dataIndex: 'repoAddr',
@@ -53,21 +90,41 @@ const CTList = ({ userInfo, match = {} }) => {
       )
     },
     {
+      dataIndex: 'policyStatus',
+      title: '合规状态',
+      width: 100,
+      ellipsis: true,
+      render: (policyStatus, record) => {
+        const clickProps = {
+          style: { cursor: 'pointer' },
+          onClick: () => openDetectionDrawer(record)
+        };
+        const map = {
+          disable: <CustomTag type='default' text='未开启' />,
+          enable: <CustomTag type='default' text='未检测' />,
+          pending: <Spin />,
+          passed: <CustomTag type='success' text='合规' {...clickProps} />,
+          violated: <CustomTag type='error' text='不合规' {...clickProps} />
+        };
+        return map[policyStatus];
+      }
+    },
+    {
       dataIndex: 'creator',
       title: '创建人',
-      width: 100,
+      width: 70,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
       title: '创建时间',
-      width: 167,
+      width: 152,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       title: '操作',
-      width: 169,
+      width: 100,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
@@ -87,10 +144,6 @@ const CTList = ({ userInfo, match = {} }) => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${tplId}`);
   };
 
-  useEffect(() => {
-    fetchList();
-  }, [query]);
-
   const fetchList = async () => {
     try {
       setLoading(true);
@@ -107,6 +160,10 @@ const CTList = ({ userInfo, match = {} }) => {
       setResultMap({
         list: res.result.list || [],
         total: res.result.total || 0
+      });
+      check({ 
+        list: res.result.list || [],
+        loopFn: () => fetchList()
       });
     } catch (e) {
       setLoading(false);
@@ -152,6 +209,10 @@ const CTList = ({ userInfo, match = {} }) => {
             }
           }}
         />
+        {detectionDrawerProps.visible && <DetectionDrawer 
+          {...detectionDrawerProps}
+          onClose={closeDetectionDrawer}
+        />} 
       </div>
     </div>
   </Layout>;

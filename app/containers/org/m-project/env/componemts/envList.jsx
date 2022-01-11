@@ -12,7 +12,7 @@ import envAPI from 'services/env';
 
 const EnvList = (props) => {
 
-  const { match, panel } = props;
+  const { match, panel, query } = props;
   const { params: { orgId, projectId } } = match;
 
   const { 
@@ -26,9 +26,12 @@ const EnvList = (props) => {
       envAPI.envsList.bind(null, {
         status: panel,
         orgId,
-        projectId
+        projectId,
+        ...query
       })
-    )
+    ), {
+      refreshDeps: [query]
+    }
   );
 
   const EnvCard = ({ data = {} }) => {
