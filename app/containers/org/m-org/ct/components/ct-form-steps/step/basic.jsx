@@ -1,5 +1,8 @@
 import React, { useImperativeHandle, useEffect } from 'react';
-import { Space, Form, Input, Button } from "antd";
+import { Space, Form, Input, Button, Switch, Alert, Select, Checkbox } from "antd";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import cgroupsAPI from 'services/cgroups';
 
 const FL = {
   labelCol: { span: 5 },
@@ -21,6 +24,16 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
       stepHelper.go(index);
     }
   }));
+
+  // 策略组选项列表查询
+  const { data: policiesGroupOptions = [] } = useRequest(
+    () => requestWrapper(
+      cgroupsAPI.list.bind(null, { pageSize: 0 }),
+      {
+        formatDataFn: (res) => ((res.result || {}).list || []).map(({ name, id }) => ({ label: name, value: id }))
+      }
+    )
+  );
 
   const onFinish = async (values) => {
     await onlineCheckForm(values);
@@ -61,6 +74,52 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
         name='description'
       >
         <Input.TextArea placeholder='请输入模板描述' rows={7} />
+      </Form.Item>
+      <Form.Item
+        label='开启合规检测'
+        name='policyEnable'
+        valuePropName='checked'
+      >
+        <Switch />
+      </Form.Item>
+      <Form.Item
+        noStyle={true}
+        shouldUpdate={true}
+      >
+        {({ getFieldValue }) => {
+          const policyEnable = getFieldValue('policyEnable');
+          return policyEnable ? (
+            <>
+              <Alert
+                message='云模板开启合规检测后，该云模板部署的新环境默认将开启合规检测，并应用绑定的策略组环境创建后如需修改策略组可在『合规中心』或『环境详情』-『设置』中进行配置'
+                type='info'
+                showIcon={true}
+                style={{ margin: '-16px 0 16px' }}
+              />
+              <Form.Item
+                label='绑定合规策略组'
+                name='policyGroup'
+                rules={[{ required: true, message: '请选择' }]}
+              >
+                <Select 
+                  mode='multiple'
+                  optionFilterProp='label'
+                  showSearch={true}
+                  options={policiesGroupOptions}
+                  placeholder='请选择策略组'
+                />
+              </Form.Item>
+              <Form.Item
+                name='triggers'
+                wrapperCol={{ offset: 5, span: 14 }}
+              >
+                <Checkbox.Group>
+                  <Checkbox value='commit' style={{ lineHeight: '32px' }}>分支推送时自动检测合规</Checkbox>                  
+                </Checkbox.Group>
+              </Form.Item>
+            </>
+          ) : null;
+        }}
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
         <Space size={24}>

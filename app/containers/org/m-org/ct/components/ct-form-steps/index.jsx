@@ -20,9 +20,9 @@ const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'basic', title: '基础设置', Component: Basic },
-  { type: 'repo', title: '选择仓库', Component: Repo },
-  { type: 'variable', title: '变量设置', Component: Variable },
+  { type: 'repo', title: '仓库', Component: Repo },
+  { type: 'variable', title: '变量', Component: Variable },
+  { type: 'basic', title: '设置', Component: Basic },
   { type: 'relation', title: '关联项目', Component: Relation }
 ];
 

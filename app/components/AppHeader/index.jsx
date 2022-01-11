@@ -115,7 +115,7 @@ const AppHeader = (props) => {
         className='logo' 
         onClick={() => {
           history.push('/'); 
-          setMenuType('compliance');
+          setMenuType('execute');
         }}
       >
         <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
