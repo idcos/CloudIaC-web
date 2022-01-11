@@ -8,7 +8,9 @@ import history from 'utils/history';
 import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { timeUtils } from "utils/time";
 import { Eb_WP } from 'components/error-boundary';
+import PolicyStatus from 'components/policy-status';
 import envAPI from 'services/env';
+import styles from './styles.less';
 
 const EnvList = (props) => {
 
@@ -83,18 +85,36 @@ const EnvList = (props) => {
           )}
           className='common-show-content'
           header={
-            <Space>
-              <a onClick={() => {
-                const tabKey = data.status === 'approving' ? 'deployJournal' : 'resource';
-                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
-              }}
-              >{data.name || '-'}</a>
-              <span style={{ color: 'rgba(0, 0, 0, 0.26)', fontSize: 12 }}>ID：{data.id}</span>
-              <span>{ENV_STATUS[data.status] && <Tag color={ENV_STATUS_COLOR[data.status] || 'default'}>{ENV_STATUS[data.status]}</Tag>}</span>
-              {data.isDrift && <span>{<Tooltip context={'检测到该环境存在漂移资源'}><Tag onClick={() => {
-                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=resource`); 
-              }} color={'orange'}
-              >漂移</Tag></Tooltip>}</span>}
+            <Space className={styles.header} align='center'>
+              <div className={styles.status}>
+                {ENV_STATUS[data.status] && <Tag color={ENV_STATUS_COLOR[data.status] || 'default'}>{ENV_STATUS[data.status]}</Tag>}
+              </div>
+              <div className={styles.title}>
+                <div 
+                  className={styles.name} 
+                  onClick={() => {
+                    const tabKey = data.status === 'approving' ? 'deployJournal' : 'resource';
+                    history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
+                  }}
+                >
+                  {data.name || '-'}
+                </div>
+                <div className={styles.id}>ID：{data.id}</div>
+              </div>
+              <div className={styles.tags}>
+                {data.isDrift && (
+                  <Tooltip context={'检测到该环境存在漂移资源'}>
+                    <Tag 
+                      onClick={() => {
+                        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=resource`); 
+                      }} 
+                      color='#E7AF5F'
+                      style={{ color: '#1F1F1F' }}
+                    >漂移</Tag>
+                  </Tooltip>
+                )}
+                <PolicyStatus policyStatus={data.policyStatus} />
+              </div>
             </Space>
           }
         >

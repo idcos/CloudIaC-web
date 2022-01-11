@@ -12,7 +12,7 @@ import Layout from 'components/common/layout';
 import ctplAPI from 'services/ctpl';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
+import PolicyStatus from 'components/policy-status';
 
 const CCTList = () => {
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
@@ -188,7 +188,15 @@ const CCTList = () => {
       title: '状态',
       width: 94,
       ellipsis: true,
-      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
+      render: (policyStatus, record) => {
+        const clickProps = {
+          style: { cursor: 'pointer' },
+          onClick: () => openDetectionDrawer(record)
+        };
+        return (
+          <PolicyStatus policyStatus={policyStatus} clickProps={clickProps}/>
+        );
+      }
     },
     {
       dataIndex: 'policyEnable',
@@ -213,7 +221,7 @@ const CCTList = () => {
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
-        const { id, enabled, policyStatus } = record;
+        const { id, policyEnable, policyStatus } = record;
         const { loading: scanLoading } = scanFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
@@ -222,12 +230,12 @@ const CCTList = () => {
               style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => runScan({ id })}
               loading={scanLoading}
-              disabled={!enabled || policyStatus === 'pending'}
+              disabled={[ 'disable', 'pending' ].includes(policyStatus)}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              disabled={!policyStatus || policyStatus === 'pending'}
+              disabled={[ 'disable', 'enable' ].includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>

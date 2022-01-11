@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Empty, Space, Row, Col, Button } from "antd";
 import moment from 'moment';
-import { CustomTag } from 'components/custom';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import PolicyStatus from 'components/policy-status';
 import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
@@ -14,7 +14,7 @@ export default ({ requestFn, failLogParams }) => {
   const { 
     data: { 
       list, 
-      task: { id, orgId, projectId, startAt, policyStatus } 
+      task: { id, orgId, status, projectId, startAt, policyStatus } 
     } = {
       list: [],
       task: {}
@@ -78,28 +78,14 @@ export default ({ requestFn, failLogParams }) => {
     });
   };
 
-  const renderComplianceStatusTag = useCallback((status) => {
-    switch (status) {
-    case 'pending':
-      return 'loading';
-    case 'passed':
-      return <CustomTag type='success' text='合规' />;
-    case 'violated':
-    case 'failed':
-      return <CustomTag type='error' text='不合规' />;
-    default:
-      return '';
-    }
-  });
-
   return (
     <div className={styles.detectionDetail}>
       <Row className='detection-header' wrap={false} justify='space-between' align='middle'>
         <Col>
           <Space>
             <span>合规状态</span>
-            {renderComplianceStatusTag(policyStatus)}
-            <Button>立即检测</Button>
+            <PolicyStatus policyStatus={policyStatus}/>
+            {/* <Button>立即检测</Button> */}
           </Space>
         </Col>
         <Col>
@@ -110,7 +96,7 @@ export default ({ requestFn, failLogParams }) => {
       </Row>
       <div className='detection-body'>
         {
-          policyStatus === 'failed' ? (
+          status === 'failed' ? (
             <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
           ) : (
             list.length == 0 ? (

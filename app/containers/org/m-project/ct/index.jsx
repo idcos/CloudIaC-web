@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, notification, Spin } from 'antd';
+import { Table, notification } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
@@ -10,7 +10,7 @@ import Layout from 'components/common/layout';
 import tplAPI from 'services/tpl';
 import getPermission from "utils/permission";
 import { useLoopPolicyStatus } from 'utils/hooks';
-import { CustomTag } from 'components/custom';
+import PolicyStatus from 'components/policy-status';
 import DetectionDrawer from '../../m-org/ct/components/detection-drawer';
 
 const CTList = ({ userInfo, match = {} }) => {
@@ -99,14 +99,7 @@ const CTList = ({ userInfo, match = {} }) => {
           style: { cursor: 'pointer' },
           onClick: () => openDetectionDrawer(record)
         };
-        const map = {
-          disable: <CustomTag type='default' text='未开启' />,
-          enable: <CustomTag type='default' text='未检测' />,
-          pending: <Spin />,
-          passed: <CustomTag type='success' text='合规' {...clickProps} />,
-          violated: <CustomTag type='error' text='不合规' {...clickProps} />
-        };
-        return map[policyStatus];
+        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} />;
       }
     },
     {

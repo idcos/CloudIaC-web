@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Table, notification, Space, Spin } from 'antd';
+import { Button, Table, notification, Space } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -16,7 +16,7 @@ import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 import { downloadImportTemplate } from 'utils/util';
 import { useLoopPolicyStatus } from 'utils/hooks';
 import { UploadtIcon } from 'components/iconfont';
-import { CustomTag } from 'components/custom';
+import PolicyStatus from 'components/policy-status';
 import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
@@ -111,14 +111,7 @@ const CTList = ({ match = {} }) => {
           style: { cursor: 'pointer' },
           onClick: () => openDetectionDrawer(record)
         };
-        const map = {
-          disable: <CustomTag type='default' text='未开启' />,
-          enable: <CustomTag type='default' text='未检测' />,
-          pending: <Spin />,
-          passed: <CustomTag type='success' text='合规' {...clickProps} />,
-          violated: <CustomTag type='error' text='不合规' {...clickProps} />
-        };
-        return map[policyStatus];
+        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} />;
       }
     },
     {
@@ -231,7 +224,7 @@ const CTList = ({ match = {} }) => {
   };
 
   const batchScanDisabled = useMemo(() => {
-    return !selectedRows.length || selectedRows.find(it => it.policyStatus === 'disable');
+    return !selectedRows.length || selectedRows.find(it => [ 'disable', 'pending' ].includes(it.policyStatus));
   });
 
   return <Layout
