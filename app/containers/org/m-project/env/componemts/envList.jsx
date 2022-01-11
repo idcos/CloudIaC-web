@@ -101,8 +101,8 @@ const EnvList = (props) => {
           <Descriptions 
             column={4} 
             style={{ marginBottom: -16 }}
-            labelStyle={{ color: 'rgba(0, 0, 0, 0.46)' }}
-            contentStyle={{ color: 'rgba(0, 0, 0, 0.86)' }}
+            labelStyle={{ color: '#24292F' }}
+            contentStyle={{ color: '#57606A' }}
           >
             <Descriptions.Item label='存活时间'>{formatTTL(data)}</Descriptions.Item>
             <Descriptions.Item label='云模板'>{data.templateName || '-'}</Descriptions.Item>
