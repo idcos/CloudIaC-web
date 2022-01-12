@@ -9,6 +9,7 @@ export default ({ policyStatus, clickProps }) => {
     enable: <CustomTag type='default' text='未检测' />,
     pending: <Spin />,
     passed: <CustomTag type='success' text='合规' {...clickProps} />,
+    failed: <CustomTag type='error' text='不合规' {...clickProps} />,
     violated: <CustomTag type='error' text='不合规' {...clickProps} />
   };
 

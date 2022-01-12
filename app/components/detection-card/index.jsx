@@ -96,7 +96,7 @@ export default ({ requestFn, failLogParams }) => {
       </Row>
       <div className='detection-body'>
         {
-          status === 'failed' ? (
+          policyStatus === 'failed' ? (
             <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
           ) : (
             list.length == 0 ? (
