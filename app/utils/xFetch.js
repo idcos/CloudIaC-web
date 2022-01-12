@@ -34,7 +34,7 @@ async function xFetch(url, options) {
   } else if (jsonResponse.httpCode == 403) {
     // 使用window.location.href不用location.push跳转 防止后续代码执行导致的报错等问题
     const callbackUrl = window.location.href;
-    // window.location.href = `/no-access?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+    window.location.href = `/no-access?callbackUrl=${encodeURIComponent(callbackUrl)}`;
     return;
   } else {
     return jsonResponse.jsonResult;
