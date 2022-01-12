@@ -388,6 +388,8 @@ const Setting = () => {
                               mode='multiple'
                               optionFilterProp='label'
                               showSearch={true}
+                              allowClear={true}
+                              showArrow={true}
                               options={policiesGroupOptions}
                               placeholder='请选择策略组'
                             />

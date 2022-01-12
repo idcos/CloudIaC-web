@@ -180,8 +180,7 @@ const CenvList = () => {
     {
       dataIndex: 'policyStatus',
       title: '状态',
-      width: 90,
-      ellipsis: true,
+      width: 94,
       render: (policyStatus, record) => {
         const clickProps = {
           style: { cursor: 'pointer' },

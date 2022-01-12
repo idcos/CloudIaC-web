@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Select, Input, Button, Row, Col, Spin, notification, Space } from "antd";
-import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
@@ -102,7 +101,8 @@ const OnlineTest = ({ match = {} }) => {
       manual: true,
       formatResult: (res) => ({
         value: res.error || safeJsonStringify([ res.data, null, 2 ]),
-        isError: !!res.error
+        isError: !!res.error,
+        status: res.status
       })
     }
   );
@@ -137,6 +137,15 @@ const OnlineTest = ({ match = {} }) => {
     }
     runTest();
   };
+
+  const TestStatus = useMemo(() => {
+    const map = {
+      passed: <CustomTag type='success' text='通过'/>,
+      violated: <CustomTag type='error' text='不通过'/>,
+      failed: <CustomTag type='error' text='错误'/>
+    };
+    return map[outputInfo.status];
+  });
   
   return (
     <Layout
@@ -215,13 +224,7 @@ const OnlineTest = ({ match = {} }) => {
                 title={
                   <Space>
                     <span>测试输出</span>
-                    {!isEmpty(outputInfo) && (
-                      outputInfo.isError ? (
-                        <CustomTag type='error' text='未通过'/>
-                      ) : (
-                        <CustomTag type='success' text='通过'/>
-                      )
-                    )}
+                    {TestStatus}
                   </Space>
                 }
                 height={337}
