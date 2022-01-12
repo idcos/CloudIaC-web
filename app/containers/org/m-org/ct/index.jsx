@@ -13,6 +13,7 @@ import DetectionDrawer from './components/detection-drawer';
 import tplAPI from 'services/tpl';
 import ctplAPI from 'services/ctpl';
 import { VerticalAlignBottomOutlined } from '@ant-design/icons';
+import { SCAN_DISABLE_STATUS } from 'constants/types';
 import { downloadImportTemplate } from 'utils/util';
 import { useLoopPolicyStatus } from 'utils/hooks';
 import { UploadtIcon } from 'components/iconfont';
@@ -224,7 +225,7 @@ const CTList = ({ match = {} }) => {
   };
 
   const batchScanDisabled = useMemo(() => {
-    return !selectedRows.length || selectedRows.find(it => [ 'disable', 'pending' ].includes(it.policyStatus));
+    return !selectedRows.length || selectedRows.find(it => SCAN_DISABLE_STATUS.includes(it.policyStatus));
   });
 
   return <Layout

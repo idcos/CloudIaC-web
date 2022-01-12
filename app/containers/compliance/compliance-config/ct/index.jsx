@@ -10,6 +10,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import ctplAPI from 'services/ctpl';
+import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
@@ -230,12 +231,12 @@ const CCTList = () => {
               style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => runScan({ id })}
               loading={scanLoading}
-              disabled={[ 'disable', 'pending' ].includes(policyStatus)}
+              disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              disabled={[ 'disable', 'enable' ].includes(policyStatus)}
+              disabled={SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>

@@ -68,11 +68,11 @@ export const ENV_STATUS = {
 };
 
 export const ENV_STATUS_COLOR = {
-  'active': 'success', 
-  'failed': 'error', 
-  'inactive': 'gold',
-  'running': 'cyan',
-  'approving': 'processing'
+  'active': '#008C5A', 
+  'failed': '#DD2B0E', 
+  'inactive': '#faad14',
+  'running': '#08979c',
+  'approving': '#548BC5'
 };
 
 export const SCOPE_ENUM = {
@@ -192,3 +192,7 @@ export const DIMENSION_ENUM = {
   provider: 'Provider',
   type: '资源类型'
 };
+// 禁止扫描的合规状态
+export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
+// 禁止查看扫描详情的状态
+export const SCAN_DETAIL_DISABLE_STATUS = [ 'disable', 'enable' ];

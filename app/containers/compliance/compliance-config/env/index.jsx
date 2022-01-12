@@ -13,6 +13,7 @@ import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
+import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
 
 const CenvList = () => {
 
@@ -259,12 +260,12 @@ const CenvList = () => {
               style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => runScan({ id })}
               loading={scanLoading}
-              disabled={[ 'disable', 'pending' ].includes(policyStatus)}
+              disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              disabled={[ 'disable', 'enable' ].includes(policyStatus)}
+              disabled={SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>
