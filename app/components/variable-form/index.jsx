@@ -88,7 +88,7 @@ const VariableForm = ({
     if (!defaultData) {
       return;
     }
-    const { variables = [], tfVarsFile, playbook } = defaultData;
+    const { variables = [], tfVarsFile, playbook, keyId } = defaultData;
     const defaultTerraformVars = variables.filter(it => it.type === 'terraform').map(it => {
       if (defaultScope !== it.scope) {
         it.overwrites = { ...it };
@@ -106,7 +106,7 @@ const VariableForm = ({
     setTerraformVarList(defaultTerraformVars);
     setEnvVarList(defaultEnvVars);
     if (showOtherVars) {
-      otherVarForm.setFieldsValue({ tfVarsFile: tfVarsFile || undefined, playbook: playbook || undefined });
+      otherVarForm.setFieldsValue({ tfVarsFile: tfVarsFile || undefined, playbook: playbook || undefined, keyId: keyId || undefined });
     }
   }, [defaultData]);
 
@@ -133,6 +133,7 @@ const VariableForm = ({
             if (otherVars) {
               otherVars.tfVarsFile = otherVars.tfVarsFile || '';
               otherVars.playbook = otherVars.playbook || '';
+              otherVars.keyId = otherVars.keyId || '';
             }
             const startVarGroupList = defalutEnvVarGroupList.filter(it => it.objectType === defaultScope);
             const endVarGroupList = envVarGroupList.filter(it => it.objectType === defaultScope);

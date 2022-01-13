@@ -120,13 +120,13 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       const {
         name, description, policyEnable, policyGroup, tplTriggers,
         vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
-        tfVarsFile, playbook,
+        tfVarsFile, playbook, keyId,
         projectId
       } = res.result || {};
       setCtData({
         basic: { name, description, policyEnable, policyGroup, tplTriggers },
         repo: { vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion },
-        variable: { tfVarsFile, playbook },
+        variable: { tfVarsFile, playbook, keyId },
         relation: { projectId }
       });
       getVars(); // 变量单独查询
