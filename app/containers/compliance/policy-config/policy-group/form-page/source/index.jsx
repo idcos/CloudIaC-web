@@ -4,6 +4,7 @@ import intersection from 'lodash/intersection';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import vcsAPI from 'services/vcs';
+import registryAPI from 'services/registry';
 import Coder from "components/coder";
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
@@ -37,25 +38,11 @@ export default () => {
   useEffect(() => {
     if (ready) {
       const formValues = formData[type] || {};
-      const { vcsId, repoId, repoRevision } = formValues;
       form.setFieldsValue(formValues);
-      if (vcsId) {
-        fetchRepoOptions({ vcsId });
-      }
-      if (vcsId && repoId) {
-        fetchRepoBranchOptions({ vcsId, repoId });
-        fetchRepoTagOptions({ vcsId, repoId });
-      }
-      if (vcsId && repoId && repoRevision) {
-        fetchReadmeText({
-          vcsId, 
-          repoId, 
-          repoRevision
-        });
-      }
+      initFetchInfo(formValues);
     }
   }, [ready]);
-
+  
   // vcs选项
   const {
     data: vcsOptions = [],
@@ -140,6 +127,43 @@ export default () => {
     }
   );
 
+  // registry策略组列表
+  const {
+    data: policyGroupOptions = [],
+    loading: policyGroupLoading,
+    run: fetchPolicyGroupOptions
+  } = useRequest(
+    () => requestWrapper(
+      registryAPI.policyGroups.bind(null, { 
+        pageSize: 0
+      })
+    ), {
+      manual: true,
+      formatResult: res => (res.list || []).map(
+        ({ groupName, repoId, namespace, vcsId }) => ({ 
+          vcsId,
+          namespace,
+          label: groupName, 
+          value: repoId
+        })
+      )
+    }
+  );
+
+  // registry策略组版本列表
+  const {
+    data: policyGroupVersionOptions = [],
+    loading: policyGroupVersionLoading,
+    run: fetchPolicyGroupVersionOptions
+  } = useRequest(
+    (params) => requestWrapper(
+      registryAPI.policyGroupVersions.bind(null, params)
+    ), {
+      manual: true,
+      formatResult: res => (res.gitTags || []).map(it => ({ label: it, value: it }))
+    }
+  );
+
   // 查询readme信息
   const {
     data: readmeText = undefined,
@@ -160,54 +184,117 @@ export default () => {
     }
   );
 
-  const onValuesChange = (changedValues, allValues) => {
-    const changedKeys = Object.keys(changedValues);
-    const { vcsId, repoId, repoRevision } = allValues || {};
-    if (changedKeys.includes('vcsId')) {
-      // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
-      !!repoOptions.lenngth && mutateRepoOptions([]);
-      !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
-      !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
-      form.setFieldsValue({
-        repoId: undefined,
-        repoFullName: undefined,
-        repoRevision: undefined,
-        branch: undefined,
-        gitTags: undefined,
-        dir: undefined
-      });
+  const initFetchInfo = (formValues) => {
+    const { source, vcsId, repoId, repoRevision, gitTag } = formValues;
+    switch (source) {
+    case 'vcs':
       if (vcsId) {
         fetchRepoOptions({ vcsId });
       }
-    }
-    if (changedKeys.includes('repoId')) {
-      // 切换仓库需要将关联的数据源【分支、标签】清空 ，再重新查询数据源
-      !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
-      !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
-      form.setFieldsValue({
-        repoFullName: (repoOptions.find(it => it.value === changedValues.repoId) || {}).label,
-        repoRevision: undefined,
-        branch: undefined,
-        gitTags: undefined,
-        dir: undefined
-      });
       if (vcsId && repoId) {
         fetchRepoBranchOptions({ vcsId, repoId });
         fetchRepoTagOptions({ vcsId, repoId });
       }
-    }
-    // readme参数依赖是否变化
-    const readmeParamsChange = intersection(changedKeys, [ 'vcsId', 'repoId', 'branch' ]).length > 0;
-    if (readmeParamsChange) {
-      if (changedValues.repoRevision) {
+      if (vcsId && repoId && repoRevision) {
         fetchReadmeText({
           vcsId, 
           repoId, 
           repoRevision
         });
-      } else {
-        readmeText !== undefined && mutateReadmeText(undefined);
       }
+      break;
+    case 'registry':
+      fetchPolicyGroupOptions().then((data) => {
+        if (repoId) {
+          const { namespace, label: groupName } = data.find(it => it.value === repoId) || {};
+          fetchPolicyGroupVersionOptions({
+            gn: groupName,
+            ns: namespace
+          });
+        }
+      });
+      if (vcsId && repoId && gitTag) {
+        fetchReadmeText({
+          vcsId, 
+          repoId, 
+          repoRevision: gitTag
+        });
+      }
+      break;
+    default:
+      break;
+    }
+  };
+
+  const onValuesChange = (changedValues, allValues) => {
+    const changedKeys = Object.keys(changedValues);
+    const { source, vcsId, repoId, repoRevision, gitTag } = allValues || {};
+    switch (source) {
+    case 'vcs':
+      if (changedKeys.includes('vcsId')) {
+        // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
+        !!repoOptions.lenngth && mutateRepoOptions([]);
+        !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
+        !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
+        form.setFieldsValue({
+          repoId: undefined,
+          repoFullName: undefined,
+          repoRevision: undefined,
+          branch: undefined,
+          gitTags: undefined,
+          dir: undefined
+        });
+        if (vcsId) {
+          fetchRepoOptions({ vcsId });
+        }
+      }
+      if (changedKeys.includes('repoId')) {
+        // 切换仓库需要将关联的数据源【分支、标签】清空 ，再重新查询数据源
+        !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
+        !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
+        form.setFieldsValue({
+          repoFullName: (repoOptions.find(it => it.value === changedValues.repoId) || {}).label,
+          repoRevision: undefined,
+          branch: undefined,
+          gitTags: undefined,
+          dir: undefined
+        });
+        if (vcsId && repoId) {
+          fetchRepoBranchOptions({ vcsId, repoId });
+          fetchRepoTagOptions({ vcsId, repoId });
+        }
+      }
+      // readme参数依赖是否变化
+      const readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'branch' ]).length > 0;
+      if (readmeParamsChange) {
+        if (changedValues.repoRevision) {
+          fetchReadmeText({
+            vcsId, 
+            repoId, 
+            repoRevision
+          });
+        } else {
+          readmeText !== undefined && mutateReadmeText(undefined);
+        }
+      }
+      break;
+    case 'registry':
+      // readme参数依赖是否变化
+      const _readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'gitTag' ]).length > 0;
+      if (_readmeParamsChange) {
+        if (changedValues.gitTag) {
+          fetchReadmeText({
+            vcsId, 
+            repoId, 
+            repoRevision: gitTag
+          });
+        } else {
+          readmeText !== undefined && mutateReadmeText(undefined);
+        }
+      }
+      break;
+    default:
+      break;
     }
   };
 
@@ -219,7 +306,7 @@ export default () => {
   const next = async () => {
     const formValues = await form.validateFields();
     const params = formDataToParams({ ...formData, [type]: formValues });
-    await check(params);
+    params.source === 'vcs' && await check(params);
     setFormData(preValue => ({ ...preValue, [type]: formValues }));
     setCurrent(preValue => preValue + 1);
   };
@@ -227,7 +314,7 @@ export default () => {
   const onUpdate = async () => {
     const formValues = await form.validateFields();
     const params = formDataToParams({ ...formData, [type]: formValues });
-    await check(params);
+    params.source === 'vcs' && await check(params);
     update(params);
   };
 
@@ -235,22 +322,33 @@ export default () => {
     onFinish: async (index) => {
       const formValues = await form.validateFields();
       const params = formDataToParams({ ...formData, [type]: formValues });
-      await check(params);
+      params.source === 'vcs' && await check(params);
       setFormData(preValue => ({ ...preValue, [type]: formValues }));
       setCurrent(index);
     }
   }));
 
   return (
-    <Row gutter={16} className={styles.sourceForm}>
-      <Col span={11}>
-        <Form form={form} {...FL} onValuesChange={onValuesChange}>
+    <Form form={form} {...FL} onValuesChange={onValuesChange}>
+      <Row gutter={16} className={styles.sourceForm}>
+        <Col span={11}>
           <Form.Item 
             name='source' 
             wrapperCol={{ offset: 5, span: 19 }}
             initialValue='vcs'
           >
-            <Radio.Group>
+            <Radio.Group 
+              onChange={(e) => {
+                const source = e.target.value;
+                form.resetFields();
+                form.setFieldsValue({
+                  source
+                });
+                if (source === 'registry') {
+                  fetchPolicyGroupOptions();
+                }
+              }}
+            >
               <Radio value='vcs'>VCS</Radio>
               <Radio value='registry'>Registry</Radio>
             </Radio.Group>
@@ -348,28 +446,45 @@ export default () => {
                   <>
                     <Form.Item 
                       label='策略组'
-                      name=''
+                      name='repoId'
                       rules={[{ required: true, message: '请选择' }]}
                     >
                       <Select 
                         placeholder='请选择策略组'
                         optionFilterProp='label'
                         showSearch={true}
-                        loading={false}
-                        options={[]}
+                        loading={policyGroupLoading}
+                        options={policyGroupOptions}
+                        onChange={(value, option) => {
+                          const { vcsId, label: groupName, namespace } = option;
+                          form.setFieldsValue({
+                            vcsId: vcsId,
+                            gitTag: undefined
+                          });
+                          fetchPolicyGroupVersionOptions({
+                            gn: groupName,
+                            ns: namespace
+                          });
+                        }}
                       />
                     </Form.Item>
                     <Form.Item 
+                      label='vcs'
+                      name='vcsId'
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item 
                       label='版本'
-                      name=''
+                      name='gitTag'
                       rules={[{ required: true, message: '请选择' }]}
                     >
                       <Select 
                         placeholder='请选择版本'
                         optionFilterProp='label'
                         showSearch={true}
-                        loading={false}
-                        options={[]}
+                        loading={policyGroupVersionLoading}
+                        options={policyGroupVersionOptions}
                       />
                     </Form.Item>
                   </>
@@ -393,26 +508,39 @@ export default () => {
               </Space>
             )}
           </Form.Item>
-        </Form>
-      </Col>
-      <Col span={13} className='readme-info'>
-        <div className='title'>Readme</div>
-        <div className='code-wrapper'>
-          {readmeTextLoading ? <Spin /> : (
-            readmeText ? (
-              <Coder value={readmeText} style={{ height: '100%' }} />
-            ) : (
-              <div className='empty-text'>
-                {readmeText === undefined ? (
-                  <span>选择VCS、仓库、分支/标签查看策略组说明</span>
-                ) : (
-                  <span>未获取重复组说明</span>
-                )}
-              </div>
-            )
-          )}
-        </div>
-      </Col>
-    </Row>
+        </Col>
+        <Col span={13} className='readme-info'>
+          <Form.Item noStyle={true} shouldUpdate={true}>
+            {({ getFieldValue }) => {
+              const source = getFieldValue('source');
+              return (
+                <>
+                  <div className='title'>Readme</div>
+                  <div className='code-wrapper'>
+                    {readmeTextLoading ? <Spin /> : (
+                      readmeText ? (
+                        <Coder value={readmeText} style={{ height: '100%' }} />
+                      ) : (
+                        <div className='empty-text'>
+                          {readmeText === undefined ? (
+                            source === 'vcs' ? (
+                              <span>选择VCS、仓库、分支/标签查看策略组说明</span>
+                            ) : (
+                              <span>选择策略组、版本查看策略组说明</span>
+                            )
+                          ) : (
+                            <span>未获取策略组说明</span>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </>
+              );
+            }}
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
   );
 };
