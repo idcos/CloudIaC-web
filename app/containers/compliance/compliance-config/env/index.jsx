@@ -13,10 +13,12 @@ import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
+import { useLoopPolicyStatus } from 'utils/hooks';
 import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
 
 const CenvList = () => {
 
+  const { check } = useLoopPolicyStatus();
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -82,7 +84,13 @@ const CenvList = () => {
     (params) => requestWrapper(
       cenvAPI.list.bind(null, params)
     ), {
-      manual: true
+      manual: true,
+      onSuccess: (data) => {
+        check({ 
+          list: data.list || [],
+          loopFn: () => refreshList()
+        });
+      }
     }
   );
 

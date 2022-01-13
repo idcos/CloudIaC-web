@@ -1,5 +1,5 @@
 import React from 'react';
-import { Empty, Space, Row, Col, Button } from "antd";
+import { Empty, Space, Row, Col } from "antd";
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -14,7 +14,7 @@ export default ({ requestFn, failLogParams }) => {
   const { 
     data: { 
       list, 
-      task: { id, orgId, status, projectId, startAt, policyStatus } 
+      task: { id, orgId, projectId, startAt, policyStatus } 
     } = {
       list: [],
       task: {}

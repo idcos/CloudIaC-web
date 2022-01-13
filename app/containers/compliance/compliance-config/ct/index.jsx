@@ -11,11 +11,14 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import ctplAPI from 'services/ctpl';
 import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
+import { useLoopPolicyStatus } from 'utils/hooks';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
 
 const CCTList = () => {
+
+  const { check } = useLoopPolicyStatus();
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -59,7 +62,7 @@ const CCTList = () => {
     }
   );
 
-  // 环境列表查询
+  // 云模版列表查询
   const {
     loading: tableLoading,
     data: tableData,
@@ -69,7 +72,13 @@ const CCTList = () => {
     (params) => requestWrapper(
       ctplAPI.list.bind(null, params)
     ), {
-      manual: true
+      manual: true,
+      onSuccess: (data) => {
+        check({ 
+          list: data.list || [],
+          loopFn: () => refreshList()
+        });
+      }
     }
   );
 
