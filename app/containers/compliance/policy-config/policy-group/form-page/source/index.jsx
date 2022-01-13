@@ -471,6 +471,7 @@ export default () => {
                     <Form.Item 
                       label='vcs'
                       name='vcsId'
+                      hidden={true}
                     >
                       <Input />
                     </Form.Item>
