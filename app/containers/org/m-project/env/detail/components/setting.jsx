@@ -2,6 +2,7 @@ import React, { useState, useEffect, memo, useContext } from 'react';
 import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, Popover, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
 import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import queryString from 'query-string';
 import isEmpty from 'lodash/isEmpty';
 import omit from 'lodash/omit';
 import { useRequest } from 'ahooks';
@@ -26,10 +27,12 @@ const Setting = () => {
   
   const [form] = Form.useForm();
   const { userInfo, envInfo, reload, orgId, projectId, envId } = useContext(DetailPageContext);
+  // 此处需要用window.location获取最新的参数, 因为环境详情的location只做参数切换并不会刷新location值不刷新
+  const { formTab } = queryString.parse(window.location.search); 
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ fileLoading, setFileLoading ] = useState(false);
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ panel, setPanel ] = useState('execute');
+  const [ panel, setPanel ] = useState(formTab || 'execute');
 
   useEffect(() => {
     envInfo && setFormValues(envInfo);

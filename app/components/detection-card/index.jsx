@@ -1,6 +1,7 @@
 import React from 'react';
 import { Empty, Space, Row, Col } from "antd";
 import moment from 'moment';
+import noop from 'lodash/noop';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import PolicyStatus from 'components/policy-status';
@@ -8,7 +9,7 @@ import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
 
-export default ({ requestFn, failLogParams }) => {
+export default ({ requestFn, disableEmptyDescription, renderHeaderSubContent = noop, failLogParams }) => {
 
   // 合规结果查询
   const { 
@@ -20,6 +21,7 @@ export default ({ requestFn, failLogParams }) => {
       groups: [],
       task: {}
     },
+    refresh,
     cancel
   } = useRequest(
     () => requestWrapper(
@@ -53,13 +55,15 @@ export default ({ requestFn, failLogParams }) => {
         <Col>
           <Space>
             <span>合规状态</span>
-            <PolicyStatus policyStatus={policyStatus}/>
-            {/* <Button>立即检测</Button> */}
+            <PolicyStatus policyStatus={policyStatus} style={{ margin: 0 }} />
+            {policyStatus === 'disable' ? disableEmptyDescription : (
+              renderHeaderSubContent({ policyStatus, refresh })
+            )}
           </Space>
         </Col>
         <Col>
           <div className={'UbuntuMonoOblique'}>
-            {startAt && moment(startAt).format('YYYY-MM-DD HH:mm:ss') || '-'}
+            {startAt && moment(startAt).format('YYYY-MM-DD HH:mm:ss')}
           </div>
         </Col>
       </Row>
@@ -69,7 +73,12 @@ export default ({ requestFn, failLogParams }) => {
             <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
           ) : (
             groups.length == 0 ? (
-              <Empty description='暂无策略检测则默认显示通过' image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+              <Empty 
+                description={policyStatus === 'disable' ? (
+                  '未开启合规检测'
+                ) : '暂无策略检测则默认显示通过'} 
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
             ) : (
               <Space direction='vertical' size={24} style={{ width: '100%' }}>
                 {

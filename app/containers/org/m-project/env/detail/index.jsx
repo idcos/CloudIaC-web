@@ -169,7 +169,8 @@ const EnvDetail = (props) => {
         taskId,
         orgId, 
         projectId,
-        type: 'env'
+        type: 'env',
+        changeTabPage: setPanel
       }}
     >
       <Layout
@@ -178,8 +179,12 @@ const EnvDetail = (props) => {
             title={(
               <Space size={8} align='center'>
                 <span>{envInfo.name || ''}</span>
-                <div style={{ display: 'flex' }}>
-                  {ENV_STATUS[envInfo.status] && <Tag color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>{ENV_STATUS[envInfo.status]}</Tag> || '-'}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {ENV_STATUS[envInfo.status] && (
+                    <Tag style={{ margin: 0 }} color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>
+                      {ENV_STATUS[envInfo.status]}
+                    </Tag>
+                  )}
                   {
                     envInfo.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
                       <Tooltip title={taskInfo.message}>
@@ -187,8 +192,8 @@ const EnvDetail = (props) => {
                       </Tooltip>
                     ) : null
                   }
-                  {envInfo.isDrift && <Tag color={'orange'}>漂移</Tag>}
-                  <PolicyStatus policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
+                  {envInfo.isDrift && <Tag style={{ margin: 0 }} color={'orange'}>漂移</Tag>}
+                  <PolicyStatus style={{ margin: 0 }} policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
                 </div>
               </Space>
             )}
