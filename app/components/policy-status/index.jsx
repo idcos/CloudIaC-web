@@ -3,11 +3,16 @@ import { Spin } from 'antd';
 import { CustomTag } from 'components/custom';
 import { SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
 
-export default ({ policyStatus, clickProps }) => {
+export default ({ policyStatus, onlyShowResultStatus = false, clickProps }) => {
 
   clickProps = SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus) ? {} : clickProps;
   
   const Status = useMemo(() => {
+    const resultStatus = [ 'passed', 'failed', 'violated' ];
+    // 仅展示结果状态时 非合规检测结果状态不返回
+    if (onlyShowResultStatus && !resultStatus.includes(policyStatus)) {
+      return;
+    }
     const map = {
       disable: (props) => <CustomTag type='default' text='未开启' {...props}/>,
       enable: (props) => <CustomTag type='default' text='未检测' {...props}/>,
@@ -21,7 +26,7 @@ export default ({ policyStatus, clickProps }) => {
 
   return (
     <>
-      {Status && <Status {...clickProps} />}
+      {Status ? <Status {...clickProps} /> : null}
     </>
   );
 };

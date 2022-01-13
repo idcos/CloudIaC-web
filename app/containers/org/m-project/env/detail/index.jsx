@@ -188,7 +188,7 @@ const EnvDetail = (props) => {
                     ) : null
                   }
                   {envInfo.isDrift && <Tag color={'orange'}>漂移</Tag>}
-                  <PolicyStatus policyStatus={envInfo.policyStatus} />
+                  <PolicyStatus policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
                 </div>
               </Space>
             )}

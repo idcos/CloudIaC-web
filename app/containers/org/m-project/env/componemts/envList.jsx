@@ -113,7 +113,7 @@ const EnvList = (props) => {
                     >漂移</Tag>
                   </Tooltip>
                 )}
-                <PolicyStatus policyStatus={data.policyStatus} />
+                <PolicyStatus policyStatus={data.policyStatus} onlyShowResultStatus={true} />
               </div>
             </Space>
           }
