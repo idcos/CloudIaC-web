@@ -13,31 +13,31 @@ export default ({ requestFn, failLogParams }) => {
   // 合规结果查询
   const { 
     data: { 
-      list, 
-      task: { id, orgId, projectId, startAt, policyStatus } 
+      groups, 
+      policyStatus,
+      task: { id, orgId, projectId, startAt } 
     } = {
-      list: [],
+      groups: [],
       task: {}
     },
     cancel
   } = useRequest(
     () => requestWrapper(
-      requestFn,
-      {
-        formatDataFn: (res) => {
-          const { list, task } = res.result || {};
-          return {
-            list: formatList(list || []),
-            task: task || {}
-          };
-        }
-      }
+      requestFn
     ),
     {
       pollingInterval: 3000,
       pollingWhenHidden: false,
+      formatResult: (data) => {
+        const { groups, task, policyStatus } = data || {};
+        return {
+          groups: groups || [],
+          task: task || {},
+          policyStatus
+        };
+      },
       onSuccess: (data) => {
-        if (data.task.policyStatus !== 'pending') {
+        if (data.policyStatus !== 'pending') {
           cancel();
         } 
       },
@@ -46,37 +46,6 @@ export default ({ requestFn, failLogParams }) => {
       }
     }
   );
-
-  const formatList = (list) => {
-    list = list || [];
-    const policyGroupIdList = [...new Set(list.map(d => (d.policyGroupId)))];
-    return policyGroupIdList.map(policyGroupId => {
-      const children = list.filter(it => it.policyGroupId === policyGroupId);
-      const failedList = [ 'violated', 'failed' ];
-      let status = failedList.includes(children[0].status) ? 'failed' : children[0].status;
-      for (let index = 1; index < children.length; index++) {
-        if (status !== 'failed') {
-          // 非失败状态如有不同状态则为混合状态
-          if (status !== children[index].status) {
-            status = '';
-            break;
-          }
-        } else {
-          // 失败状态如有非失败状态列表的状态则为混合状态
-          if (!failedList.includes(children[index].status)) {
-            status = '';
-            break;
-          }
-        }
-      }
-      const { policyGroupName } = children[0];
-      return {
-        children,
-        policyGroupName,
-        status // passed合规 suppressed屏蔽 failed不合规（'violated', 'failed'统一） 
-      };
-    });
-  };
 
   return (
     <div className={styles.detectionDetail}>
@@ -99,12 +68,12 @@ export default ({ requestFn, failLogParams }) => {
           policyStatus === 'failed' ? (
             <FailLog id={id} orgId={orgId} projectId={projectId} failLogParams={failLogParams} />
           ) : (
-            list.length == 0 ? (
+            groups.length == 0 ? (
               <Empty description='暂无策略检测则默认显示通过' image={Empty.PRESENTED_IMAGE_SIMPLE}/>
             ) : (
               <Space direction='vertical' size={24} style={{ width: '100%' }}>
                 {
-                  list.map(info => {
+                  groups.map(info => {
                     return (<DetectionPolicyGroup info={info} />);
                   })
                 }

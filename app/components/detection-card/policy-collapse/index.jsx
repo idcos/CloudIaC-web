@@ -17,13 +17,13 @@ export default ({ data }) => {
     { 
       label: '策略内容', 
       layout: 'vertical',
-      code: '', 
+      code: 'rego', 
       format: (text, record) => (
         <Coder
           style={{ height: 350, border: '1px solid #ebebeb' }}
           selfClassName='form-coder-cotent'
           options={{ mode: 'rego' }}
-          value={'rego'}
+          value={text}
         />
       )
     }
@@ -35,19 +35,6 @@ export default ({ data }) => {
     { label: '文件', code: 'file' },
     { label: '行数', code: 'line' },
     { 
-      label: '策略内容', 
-      layout: 'vertical',
-      code: '', 
-      format: (text, record) => (
-        <Coder
-          style={{ height: 350, border: '1px solid #ebebeb' }}
-          selfClassName='form-coder-cotent'
-          options={{ mode: 'rego' }}
-          value={'rego'}
-        />
-      )
-    },
-    { 
       label: '错误资源类型所在的tf代码段', 
       layout: 'vertical',
       code: '', 
@@ -56,7 +43,20 @@ export default ({ data }) => {
           style={{ height: 350, border: '1px solid #ebebeb' }}
           selfClassName='form-coder-cotent'
           options={{ mode: 'tf' }}
-          value={'tf'}
+          value={''}
+        />
+      )
+    },
+    { 
+      label: '策略内容', 
+      layout: 'vertical',
+      code: 'rego', 
+      format: (text, record) => (
+        <Coder
+          style={{ height: 350, border: '1px solid #ebebeb' }}
+          selfClassName='form-coder-cotent'
+          options={{ mode: 'rego' }}
+          value={text}
         />
       )
     }

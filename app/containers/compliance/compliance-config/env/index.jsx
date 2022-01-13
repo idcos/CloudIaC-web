@@ -114,9 +114,8 @@ const CenvList = () => {
     });
   };
 
-  // 关闭检测详情刷新下列表的检测状态字段
+  // 关闭检测详情
   const closeDetectionDrawer = () => {
-    refreshList();
     setDetectionDrawerProps({
       id: null,
       visible: false
