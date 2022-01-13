@@ -9,7 +9,7 @@ import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
 
-export default ({ requestFn, disableEmptyDescription, renderHeaderSubContent = noop, failLogParams }) => {
+export default ({ requestFn, targetId, disableEmptyDescription, renderHeaderSubContent = noop, failLogParams }) => {
 
   // 合规结果查询
   const { 
@@ -83,7 +83,7 @@ export default ({ requestFn, disableEmptyDescription, renderHeaderSubContent = n
               <Space direction='vertical' size={24} style={{ width: '100%' }}>
                 {
                   groups.map(info => {
-                    return (<DetectionPolicyGroup info={info} />);
+                    return (<DetectionPolicyGroup info={info} refresh={refresh} targetId={targetId} />);
                   })
                 }
               </Space>

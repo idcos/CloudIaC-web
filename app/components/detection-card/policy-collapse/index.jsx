@@ -1,16 +1,41 @@
 import React, { useState } from 'react';
-import { Space, Row, Col, Descriptions } from 'antd';
+import { Space, Row, Col, Descriptions, Button } from 'antd';
 import { RightOutlined, DownOutlined } from '@ant-design/icons';
 import isFunction from 'lodash/isFunction';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import policiesAPI from 'services/policies';
 import Coder from "components/coder";
 import { POLICIES_SEVERITY_ENUM } from 'constants/types';
 import StatusIcon from '../components/status-icon';
 import styles from './styles.less';
 
-export default ({ data }) => {
+export default ({ data, refresh, targetId }) => {
 
   const isError = data.status === 'violated' || data.status === 'failed';
   const [ collapsed, setCollapsed ] = useState(true);
+
+  // 更新策略屏蔽
+  const {
+    loading: updateSuppressLoading,
+    run: updateSuppress
+  } = useRequest(
+    () => requestWrapper(
+      policiesAPI.updateSuppress.bind(null, {
+        policyId: data.policyId,
+        addTargetIds: [targetId]
+      }),
+      {
+        autoSuccess: true
+      }
+    ),
+    {
+      manual: true,
+      onSuccess: () => {
+        refresh();
+      }
+    }
+  );
 
   const passedList = [
     { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_ENUM[text] || text },
@@ -69,7 +94,7 @@ export default ({ data }) => {
           <Space>
             <StatusIcon type={data.status} />
             <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{data.policyName}</span>
-            {/* <Button>屏蔽此策略</Button> */}
+            <Button size='small' onClick={updateSuppress} loading={updateSuppressLoading}>屏蔽此策略</Button>
           </Space>
         </Col>
         <Col className={styles.collapse_header_extra}>

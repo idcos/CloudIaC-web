@@ -52,6 +52,7 @@ const ComplianceInfo = () => {
     <div style={{ padding: 24 }}>
       <DetectionCard 
         failLogParams={{ stepType: 'tfscan' }} 
+        targetId={envId}
         requestFn={envAPI.result.bind(null, { orgId, projectId, envId, pageSize: 0 })} 
         renderHeaderSubContent={renderHeaderSubContent}
         disableEmptyDescription={
