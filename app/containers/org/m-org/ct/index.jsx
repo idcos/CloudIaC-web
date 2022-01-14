@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Table, notification, Space } from 'antd';
+import { Button, Table, notification, Space, Popconfirm } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -45,6 +45,11 @@ const CTList = ({ match = {} }) => {
     fetchList();
   }, [query]);
 
+  const clearSelected = () => {
+    setSelectedRowKeys([]);
+    setSelectedRows([]);
+  };
+
   const openDetectionDrawer = ({ id }) => {
     setDetectionDrawerProps({
       id,
@@ -72,6 +77,7 @@ const CTList = ({ match = {} }) => {
       manual: true,
       onSuccess: () => {
         fetchList();
+        clearSelected();
       }
     }
   );
@@ -137,7 +143,12 @@ const CTList = ({ match = {} }) => {
         return (
           <Space>
             <a type='link' onClick={() => updateCT(record.id)}>编辑</a>
-            <a type='link' onClick={() => onDel(record.id)}>删除</a>
+            <Popconfirm
+              title='确定要删除该云模版？'
+              onConfirm={() => onDel(record.id)}
+            >
+              <a type='link'>删除</a>
+            </Popconfirm>
           </Space>
         );
       }
@@ -212,7 +223,7 @@ const CTList = ({ match = {} }) => {
     });
   };
 
-  const download = () => {
+  const download = async () => {
     const ids = selectedRowKeys;
     let keys;
     if (selectedRowKeys && !isEmpty(selectedRowKeys)) {
@@ -221,7 +232,8 @@ const CTList = ({ match = {} }) => {
       }).join('&');
     }
     let url = `/api/v1/templates/export?download=true${!isEmpty(ids) && ('&' + keys) || ''}`;
-    downloadImportTemplate(url, { orgId });
+    await downloadImportTemplate(url, { orgId });
+    clearSelected();
   };
 
   const batchScanDisabled = useMemo(() => {
