@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, notification } from 'antd';
+import { Table } from 'antd';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -18,15 +20,10 @@ const CTList = ({ userInfo, match = {} }) => {
   const { check } = useLoopPolicyStatus();
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { orgId, projectId } = match.params || {};
-  const [ loading, setLoading ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
-    [ query, setQuery ] = useState({
-      pageNo: 1,
-      pageSize: 10
-    });
+  const [ query, setQuery ] = useState({
+    pageNo: 1,
+    pageSize: 10
+  });
   const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
     visible: false,
     id: null
@@ -35,6 +32,37 @@ const CTList = ({ userInfo, match = {} }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+
+  // 列表查询
+  const {
+    data: resultMap = {
+      list: [],
+      total: 0
+    },
+    run: fetchList,
+    loading
+  } = useRequest(
+    () => requestWrapper(
+      tplAPI.list.bind(null, { 
+        currentPage: query.pageNo,
+        pageSize: query.pageSize,
+        orgId,
+        projectId
+      })
+    ), {
+      manual: true,
+      formatResult: (data) => ({
+        list: data.list || [],
+        total: data.total || 0
+      }),
+      onSuccess: (data) => {
+        check({ 
+          list: data.list,
+          loopFn: () => fetchList()
+        });
+      }
+    }
+  );
 
   const openDetectionDrawer = ({ id }) => {
     setDetectionDrawerProps({
@@ -135,36 +163,6 @@ const CTList = ({ userInfo, match = {} }) => {
 
   const deployEnv = (tplId) => {
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${tplId}`);
-  };
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const res = await tplAPI.list({
-        currentPage: query.pageNo,
-        pageSize: query.pageSize,
-        orgId,
-        projectId
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-      check({ 
-        list: res.result.list || [],
-        loopFn: () => fetchList()
-      });
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
-        description: e.message
-      });
-    }
   };
 
   const changeQuery = (payload) => {

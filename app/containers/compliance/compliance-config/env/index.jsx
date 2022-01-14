@@ -70,6 +70,7 @@ const CenvList = () => {
       onSuccess: (data, params) => {
         const { id } = params[0] || {};
         openDetectionDrawer({ id });
+        refreshList();
       }
     }
   );

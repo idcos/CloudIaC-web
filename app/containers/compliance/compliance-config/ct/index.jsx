@@ -58,6 +58,7 @@ const CCTList = () => {
       onSuccess: (data, params) => {
         const { id } = params[0] || {};
         openDetectionDrawer({ id });
+        refreshList();
       }
     }
   );

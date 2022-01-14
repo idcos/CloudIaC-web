@@ -17,7 +17,7 @@ export const useLoopPolicyStatus = () => {
       clearTimeout(time.current);
       time.current = setTimeout(() => {
         loopFn();
-      }, 3000);
+      }, 5000);
     } else {
       clearTimeout(time.current);
     }

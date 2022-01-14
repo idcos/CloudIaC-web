@@ -24,12 +24,7 @@ const CTList = ({ match = {} }) => {
 
   const { check } = useLoopPolicyStatus();
   const { orgId } = match.params || {};
-  const [ loading, setLoading ] = useState(false),
-    [ visible, setVisible ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
-      list: [],
-      total: 0
-    }),
+  const [ visible, setVisible ] = useState(false),
     [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
     [ selectedRows, setSelectedRows ] = useState([]),
     [ query, setQuery ] = useState({
@@ -44,6 +39,53 @@ const CTList = ({ match = {} }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+
+  // 列表查询
+  const {
+    data: resultMap = {
+      list: [],
+      total: 0
+    },
+    run: fetchList,
+    loading
+  } = useRequest(
+    () => requestWrapper(
+      tplAPI.list.bind(null, { 
+        currentPage: query.pageNo,
+        pageSize: query.pageSize,
+        orgId
+      })
+    ), {
+      manual: true,
+      formatResult: (data) => ({
+        list: data.list || [],
+        total: data.total || 0
+      }),
+      onSuccess: (data) => {
+        check({ 
+          list: data.list,
+          loopFn: () => fetchList()
+        });
+      }
+    }
+  );
+
+  // 批量扫描合规检测
+  const {
+    run: batchScan
+  } = useRequest(
+    () => requestWrapper(
+      ctplAPI.runBatchScan.bind(null, { ids: selectedRows.map(it => it.id) }), {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        fetchList();
+        clearSelected();
+      }
+    }
+  );
 
   const clearSelected = () => {
     setSelectedRowKeys([]);
@@ -64,23 +106,6 @@ const CTList = ({ match = {} }) => {
       visible: false
     });
   };
-
-  // 批量扫描合规检测
-  const {
-    run: batchScan
-  } = useRequest(
-    () => requestWrapper(
-      ctplAPI.runBatchScan.bind(null, { ids: selectedRows.map(it => it.id) }), {
-        autoSuccess: true
-      }
-    ), {
-      manual: true,
-      onSuccess: () => {
-        fetchList();
-        clearSelected();
-      }
-    }
-  );
 
   const columns = [
     {
@@ -165,7 +190,6 @@ const CTList = ({ match = {} }) => {
 
   const onDel = async (tplId) => {
     try {
-      setLoading(true);
       const res = await tplAPI.del({
         tplId,
         orgId
@@ -173,44 +197,13 @@ const CTList = ({ match = {} }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setLoading(false);
       notification.success({
         message: '删除成功'
       });
       fetchList();
     } catch (e) {
-      setLoading(false);
       notification.error({
         message: '删除失败',
-        description: e.message
-      });
-    }
-  };
-
-  const fetchList = async () => {
-    try {
-      setLoading(true);
-      const res = await tplAPI.list({
-        currentPage: query.pageNo,
-        pageSize: query.pageSize,
-        orgId
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      setLoading(false);
-      setResultMap({
-        list: res.result.list || [],
-        total: res.result.total || 0
-      });
-      check({ 
-        list: res.result.list || [],
-        loopFn: () => fetchList()
-      });
-    } catch (e) {
-      setLoading(false);
-      notification.error({
-        message: '获取失败',
         description: e.message
       });
     }
