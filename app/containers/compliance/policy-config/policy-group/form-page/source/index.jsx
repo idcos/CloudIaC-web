@@ -185,7 +185,7 @@ export default () => {
   );
 
   const initFetchInfo = (formValues) => {
-    const { source, vcsId, repoId, repoRevision, gitTag } = formValues;
+    const { source, vcsId, repoId, repoRevision, gitTags } = formValues;
     switch (source) {
     case 'vcs':
       if (vcsId) {
@@ -213,11 +213,11 @@ export default () => {
           });
         }
       });
-      if (vcsId && repoId && gitTag) {
+      if (vcsId && repoId && gitTags) {
         fetchReadmeText({
           vcsId, 
           repoId, 
-          repoRevision: gitTag
+          repoRevision: gitTags
         });
       }
       break;
@@ -228,7 +228,7 @@ export default () => {
 
   const onValuesChange = (changedValues, allValues) => {
     const changedKeys = Object.keys(changedValues);
-    const { source, vcsId, repoId, repoRevision, gitTag } = allValues || {};
+    const { source, vcsId, repoId, repoRevision, gitTags } = allValues || {};
     switch (source) {
     case 'vcs':
       if (changedKeys.includes('vcsId')) {
@@ -280,13 +280,13 @@ export default () => {
       break;
     case 'registry':
       // readme参数依赖是否变化
-      const _readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'gitTag' ]).length > 0;
+      const _readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'gitTags' ]).length > 0;
       if (_readmeParamsChange) {
-        if (changedValues.gitTag) {
+        if (changedValues.gitTags) {
           fetchReadmeText({
             vcsId, 
             repoId, 
-            repoRevision: gitTag
+            repoRevision: changedValues.gitTags
           });
         } else {
           readmeText !== undefined && mutateReadmeText(undefined);
@@ -459,7 +459,7 @@ export default () => {
                           const { vcsId, label: groupName, namespace } = option;
                           form.setFieldsValue({
                             vcsId: vcsId,
-                            gitTag: undefined
+                            gitTags: undefined
                           });
                           fetchPolicyGroupVersionOptions({
                             gn: groupName,
@@ -477,7 +477,7 @@ export default () => {
                     </Form.Item>
                     <Form.Item 
                       label='版本'
-                      name='gitTag'
+                      name='gitTags'
                       rules={[{ required: true, message: '请选择' }]}
                     >
                       <Select 
