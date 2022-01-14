@@ -20,7 +20,7 @@ async function xFetch(url, options) {
     ...opts.headers,
     'Authorization': token,
     'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
-    'IaC-Project-Id': opts['IaC-Project-Id'] || projectId || ''
+    'IaC-Project-Id': opts['IaC-Project-Id'] || ''
   };
   if (opts.isEncode && !opts.isEncodeParams) {
     url = encodeURI(url);
