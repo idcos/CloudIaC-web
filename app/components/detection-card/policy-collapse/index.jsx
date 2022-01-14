@@ -94,7 +94,9 @@ export default ({ data, refresh, targetId }) => {
           <Space>
             <StatusIcon type={data.status} />
             <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{data.policyName}</span>
-            <Button size='small' onClick={updateSuppress} loading={updateSuppressLoading}>屏蔽此策略</Button>
+            {data.status === 'violated' && (
+              <Button size='small' onClick={updateSuppress} loading={updateSuppressLoading}>屏蔽此策略</Button>
+            )}
           </Space>
         </Col>
         <Col className={styles.collapse_header_extra}>
