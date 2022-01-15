@@ -131,6 +131,11 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
               <MenuSelect
                 overlayWidth='200px'
                 options={projectList}
+                actionContent={collapsed ? (
+                  <div className={styles.projectActionContent}>
+                    <span>P</span>
+                  </div>
+                ) : null}
                 onChange={changeProject}
                 setActive={setPjtSelectActive}
                 selectionStyle={{ padding: '13px 20px 13px 24px' }}
@@ -169,7 +174,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                   </div>
                 )}
               />
-              {!pjtSelectActive && <div style={{ padding: '0 19px' }}>
+              {!pjtSelectActive && !collapsed && <div style={{ padding: '0 19px' }}>
                 <Divider style={{ margin: '0' }} />
               </div>}
             </>

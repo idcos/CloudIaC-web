@@ -25,7 +25,8 @@ export default (props) => {
     searchPlaceholder='请输入关键词搜索',
     searchKey=lablePropsNames.name,
     maxLen,
-    selectRef
+    selectRef,
+    actionContent
   } = props || {};
 
   const [ visible, setVisible ] = useState(false);
@@ -105,13 +106,17 @@ export default (props) => {
           setActive(e); 
         }}
       >
-        <div className='selection' style={selectionStyle}>
-          <div className={`label fn-ellipsis ${visible ? 'selecting' : ''}`}>
-            {name}
-          </div>
-          <div className='icon'>
-            { visible ? <DownOutlined /> : <RightOutlined /> }
-          </div>
+        <div>
+          {!!actionContent ? actionContent : (
+            <div className='selection' style={selectionStyle}>
+              <div className={`label fn-ellipsis ${visible ? 'selecting' : ''}`}>
+                {name}
+              </div>
+              <div className='icon'>
+                { visible ? <DownOutlined /> : <RightOutlined /> }
+              </div>
+            </div>
+          )}
         </div>
       </Dropdown>
     </div>
