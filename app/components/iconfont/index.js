@@ -25,6 +25,9 @@ const DownPoint = () => (
 const upload = () => (
   <svg t='1637910653815' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1084' width='16' height='16'><path d='M266.624 888.32v-53.76a7.744 7.744 0 0 0-7.68-7.744H197.12v-629.76h629.76v629.824h-61.76a7.744 7.744 0 0 0-7.68 7.68v53.824c0 4.224 3.328 7.68 7.68 7.68h100.16c17.024 0 30.72-13.632 30.72-30.72V158.72a30.656 30.656 0 0 0-30.72-30.72H158.72a30.656 30.656 0 0 0-30.72 30.72v706.56c0 17.024 13.696 30.72 30.72 30.72h100.16a7.68 7.68 0 0 0 7.68-7.68z m281.344 13.696V588.032H624a8 8 0 0 0 6.272-13.056l-112-141.888a8 8 0 0 0-12.544 0l-112 141.888a8 8 0 0 0 6.272 13.056h76.032v313.984c0 4.416 3.584 8 7.936 8h56a8 8 0 0 0 8.064-8z' fill='currentColor' p-id='1085'></path></svg>
 );
+const shield = () => (
+  <svg t='1642262482121' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1762' width='1em' height='1em'><path d='M525.469538 506.407385m-393.373538 0a393.373538 393.373538 0 1 0 786.747077 0 393.373538 393.373538 0 1 0-786.747077 0Z' fill='#FFFFFF' p-id='1763'></path><path d='M525.469538 33.792a472.615385 472.615385 0 1 1 0 945.230769A472.615385 472.615385 0 0 1 525.469538 33.792z m98.619077 512.078769H348.238769a59.076923 59.076923 0 0 0 0 118.153846h275.849846a59.076923 59.076923 0 0 0 0-118.153846z m78.611693-197.080615h-354.461539a59.076923 59.076923 0 0 0 0 118.153846h354.461539a59.076923 59.076923 0 0 0 0-118.153846z' fill='currentColor' p-id='1764'></path></svg>
+);
 
 export const QuitIcon = props => <Icon component={Quit} {...props} />;
 export const DuplicateIcon = props => <Icon component={Duplicate} {...props} />;
@@ -32,4 +35,5 @@ export const ScreenFullIcon = props => <Icon component={ScreenFull} {...props} /
 export const UpPointIcon = props => <Icon component={UpPoint} {...props} />;
 export const DownPointIcon = props => <Icon component={DownPoint} {...props} />;
 export const UploadtIcon = props => <Icon component={upload} {...props} />;
+export const ShieldIcon = props => <Icon component={shield} {...props} />;
 

@@ -15,16 +15,11 @@ const Index = ({ info, refresh, targetId }) => {
   violated = violated || 0;
 
   const status = useMemo(() => {
-    if (passed && !suppressed && !failed && !violated) {
+    if (failed || violated) {
+      return 'violated';
+    } else {
       return 'passed';
     }
-    if (suppressed && !passed && !failed && !violated) {
-      return 'suppressed';
-    }
-    if ((failed || violated) && !suppressed && !passed) {
-      return 'violated';
-    }
-    return undefined;
   });
 
   return (

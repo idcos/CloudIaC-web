@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { InfoCircleFilled, CheckCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+import { ShieldIcon } from 'components/iconfont';
 import styles from './styles.less';
 
 export default ({ type = 'mix', hasWrapper = false }) => {
@@ -18,8 +19,11 @@ export default ({ type = 'mix', hasWrapper = false }) => {
         icon: <MinusCircleFilled style={{ color: '#DD2E12' }} />,
         wrapperBgColor: '#FDD4CD'
       };
-    // case 'suppressed':
-    //   return;
+    case 'suppressed':
+      return {
+        icon: <ShieldIcon style={{ color: '#868686' }} />,
+        wrapperBgColor: '#DADBDA'
+      };
     default: 
       return {
         icon: <InfoCircleFilled style={{ color: '#AB6100' }} />,
