@@ -28,7 +28,8 @@ const breadcrumbNameMap = {
   'env': { text: '环境' },
   'env-detail': { text: '环境详情' },
   'policy-config': { text: '策略管理', disabled: true },
-  'policy-group': { text: '策略组', disabled: true },
+  'policy-group': { text: '策略组' },
+  'policy-group-form': { getText: ({ policyGroupId }) => policyGroupId ? '编辑策略组' : '新建策略组' },
   'policy': { text: '策略' },
   'online-test': { text: '在线测试' }
 };

@@ -43,7 +43,7 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/compliance/policy-config/policy-group/form-page/:policyGroupId?',
+          path: '/org/:orgId/compliance/policy-config/policy-group/policy-group-form/:policyGroupId?',
           name: '策略组创建/编辑页',
           component: loadable(() => import('containers/compliance/policy-config/policy-group/form-page'), asyncLoadFallback),
           exact: true

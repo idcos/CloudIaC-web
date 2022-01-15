@@ -102,7 +102,7 @@ const PolicyGroupList = ({ match }) => {
   };
 
   const goFormPage = (id) => {
-    history.push(`/org/${orgId}/compliance/policy-config/policy-group/form-page/${id || ''}`);
+    history.push(`/org/${orgId}/compliance/policy-config/policy-group/policy-group-form/${id || ''}`);
   };
 
   const EllipsisTag = useCallback(({ children }) => (
