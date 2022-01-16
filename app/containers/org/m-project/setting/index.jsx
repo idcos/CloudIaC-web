@@ -40,7 +40,7 @@ const ProjectSetting = ({ match, dispatch }) => {
         breadcrumb={true}
         renderFooter={() => (
           <Tabs
-            tabBarStyle={{ backgroundColor: '#fff', paddingLeft: 16 }}
+            tabBarStyle={{ backgroundColor: '#fff' }}
             animated={false}
             renderTabBar={(props, DefaultTabBar) => {
               return (
