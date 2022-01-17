@@ -143,7 +143,8 @@ export default () => {
         ({ groupName, repoId, namespace, vcsId }) => ({ 
           vcsId,
           namespace,
-          label: groupName, 
+          groupName,
+          label: namespace + '/' + groupName, 
           value: repoId
         })
       )
@@ -206,7 +207,7 @@ export default () => {
     case 'registry':
       fetchPolicyGroupOptions().then((data) => {
         if (repoId) {
-          const { namespace, label: groupName } = data.find(it => it.value === repoId) || {};
+          const { namespace, groupName } = data.find(it => it.value === repoId) || {};
           fetchPolicyGroupVersionOptions({
             gn: groupName,
             ns: namespace
@@ -456,7 +457,7 @@ export default () => {
                         loading={policyGroupLoading}
                         options={policyGroupOptions}
                         onChange={(value, option) => {
-                          const { vcsId, label: groupName, namespace } = option;
+                          const { vcsId, groupName, namespace } = option;
                           form.setFieldsValue({
                             vcsId: vcsId,
                             gitTags: undefined
