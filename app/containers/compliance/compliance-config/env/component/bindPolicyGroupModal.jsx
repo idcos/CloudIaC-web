@@ -83,22 +83,11 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
         form={form}
       >
         <Form.Item
-          label='云模版绑定策略组'
-        >
-          <EllipsisText style={{ display: 'block' }}>
-            {
-              ctPoliciesGroups.length > 0 ? (
-                ctPoliciesGroups.map(({ groupName }) => groupName).join('、')
-              ) : '-'
-            }
-          </EllipsisText>
-        </Form.Item>
-        <Form.Item
           label='环境绑定策略组'
           name='policyGroupIds'
           rules={[
             {
-              required: ctPoliciesGroups.length === 0,
+              required: true,
               message: '请绑定策略组'
             }
           ]}
