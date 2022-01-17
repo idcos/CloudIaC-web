@@ -172,11 +172,12 @@ export default () => {
     run: fetchReadmeText,
     mutate: mutateReadmeText
   } = useRequest(
-    ({ vcsId, repoId, repoRevision }) => requestWrapper(
+    ({ vcsId, repoId, repoRevision, dir }) => requestWrapper(
       vcsAPI.readme.bind(null, {
         vcsId,
         repoId,
-        repoRevision
+        repoRevision,
+        dir
       })
     ),
     {
@@ -186,7 +187,7 @@ export default () => {
   );
 
   const initFetchInfo = (formValues) => {
-    const { source, vcsId, repoId, repoRevision, gitTags } = formValues;
+    const { source, vcsId, repoId, repoRevision, gitTags, dir } = formValues;
     switch (source) {
     case 'vcs':
       if (vcsId) {
@@ -200,7 +201,8 @@ export default () => {
         fetchReadmeText({
           vcsId, 
           repoId, 
-          repoRevision
+          repoRevision,
+          dir
         });
       }
       break;
@@ -229,7 +231,7 @@ export default () => {
 
   const onValuesChange = (changedValues, allValues) => {
     const changedKeys = Object.keys(changedValues);
-    const { source, vcsId, repoId, repoRevision, gitTags } = allValues || {};
+    const { source, vcsId, repoId, repoRevision, dir } = allValues || {};
     switch (source) {
     case 'vcs':
       if (changedKeys.includes('vcsId')) {
@@ -266,13 +268,14 @@ export default () => {
         }
       }
       // readme参数依赖是否变化
-      const readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'repoRevision' ]).length > 0;
+      const readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'repoRevision', 'dir' ]).length > 0;
       if (readmeParamsChange) {
-        if (changedValues.repoRevision) {
+        if (intersection(changedKeys, [ 'repoRevision', 'dir' ]).length > 0 && repoRevision) {
           fetchReadmeText({
             vcsId, 
             repoId, 
-            repoRevision
+            repoRevision,
+            dir
           });
         } else {
           readmeText !== undefined && mutateReadmeText(undefined);
