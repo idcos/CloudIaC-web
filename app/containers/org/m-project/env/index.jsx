@@ -63,7 +63,7 @@ const Envs = (props) => {
               allowClear={true}
               placeholder='请输入环境名称或云模板名称搜索'
               prefix={<SearchOutlined />}
-              value={query.q}
+              defaultValue={query.q}
               onPressEnter={(e) => {
                 setQuery(preValue => ({ ...preValue, q: e.target.value }));
               }}
