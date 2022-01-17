@@ -266,7 +266,7 @@ export default () => {
         }
       }
       // readme参数依赖是否变化
-      const readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'branch' ]).length > 0;
+      const readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'repoRevision' ]).length > 0;
       if (readmeParamsChange) {
         if (changedValues.repoRevision) {
           fetchReadmeText({
