@@ -196,3 +196,12 @@ export const DIMENSION_ENUM = {
 export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
 // 禁止查看扫描详情的状态
 export const SCAN_DETAIL_DISABLE_STATUS = [ 'disable', 'enable' ];
+
+export const DEPLOY_HISTORY_SOURCE_ENUM = {
+  manual: '手动执行',
+  driftPlan: '漂移检测',
+  driftApply: '自动纠漂',
+  webhookPlan: 'PR/MR',
+  webhookApply: '分支推送',
+  autoDestroy: '分支推送'
+};

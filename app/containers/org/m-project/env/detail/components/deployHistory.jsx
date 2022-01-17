@@ -7,7 +7,7 @@ import { requestWrapper } from 'utils/request';
 import history from 'utils/history';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
-import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
+import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE, DEPLOY_HISTORY_SOURCE_ENUM } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import taskAPI from 'services/task';
 import DetailPageContext from '../detail-page-context';
@@ -78,7 +78,7 @@ const DeployHistory = () => {
     {
       dataIndex: 'result',
       title: '资源变更',
-      width: 153,
+      width: 120,
       ellipsis: true,
       render: (t, r) => {
         return <ChangeInfo {...r.result} />;
@@ -87,27 +87,33 @@ const DeployHistory = () => {
     {
       dataIndex: 'createdAt',
       title: '开始执行时间',
-      width: 180,
+      width: 178,
       ellipsis: true,
       render: (t) => timeUtils.format(t)
     },
     {
       dataIndex: 'startAt',
       title: '执行时长',
-      width: 180,
+      width: 178,
       ellipsis: true,
       render: (t, r) => timeUtils.diff(r.endAt, t)
     },
     {
+      dataIndex: 'source',
+      title: '触发类型',
+      width: 120,
+      render: (t) => DEPLOY_HISTORY_SOURCE_ENUM[t]
+    },
+    {
       dataIndex: 'creator',
       title: '执行人',
-      width: 130,
+      width: 120,
       ellipsis: true
     },
     {
       dataIndex: 'action',
       title: '操作',
-      width: 169,
+      width: 90,
       ellipsis: true,
       fixed: 'right',
       render: (t, r) => {

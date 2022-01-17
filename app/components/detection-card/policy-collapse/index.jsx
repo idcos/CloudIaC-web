@@ -95,7 +95,7 @@ export default ({ data, refresh, targetId }) => {
             <StatusIcon type={data.status} />
             <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{data.policyName}</span>
             {data.status === 'violated' && (
-              <Button size='small' onClick={updateSuppress} loading={updateSuppressLoading}>屏蔽此策略</Button>
+              <Button disabled={data.policy_suppress} size='small' onClick={updateSuppress} loading={updateSuppressLoading}>屏蔽此策略</Button>
             )}
           </Space>
         </Col>
