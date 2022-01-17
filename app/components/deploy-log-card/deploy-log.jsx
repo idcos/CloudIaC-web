@@ -11,7 +11,7 @@ import styles from './styles.less';
 
 const ansi_up = new AnsiUp();
 
-export default ({ taskInfo, stepId, stepStatus, isFullscreen }) => {
+export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscreen }) => {
 
   const { orgId, projectId, id: taskId } = taskInfo || {};
   const ansiCoderWrapperRef = useRef();
@@ -53,9 +53,11 @@ export default ({ taskInfo, stepId, stepStatus, isFullscreen }) => {
         `;
       }).join('');
       setHtml(_html);
-      setTimeout(() => {
-        go('bottom');
-      });
+      if (autoScroll) {
+        setTimeout(() => {
+          goBottom();
+        });
+      }
     },
     [taskStepLog],
     {
@@ -102,28 +104,28 @@ export default ({ taskInfo, stepId, stepStatus, isFullscreen }) => {
     );
   };
  
-  const go = (type) => {
-    try {
-      const scrollDom = ansiCoderWrapperRef.current;
-      let top;
-      switch (type) {
-      case 'top':
-        top = 0;
-        break;
-      case 'bottom':
-        top = scrollDom.scrollHeight;
-        break;
-      default:
-        break;
-      }
-      scrollDom.scrollTo({
-        top,
-        behavior: 'smooth'
-      });
-    } catch (error) {
-      console.log('滚动定位失败');
-    }
-  };
+  // const go = (type) => {
+  //   try {
+  //     const scrollDom = ansiCoderWrapperRef.current;
+  //     let top;
+  //     switch (type) {
+  //     case 'top':
+  //       top = 0;
+  //       break;
+  //     case 'bottom':
+  //       top = scrollDom.scrollHeight;
+  //       break;
+  //     default:
+  //       break;
+  //     }
+  //     scrollDom.scrollTo({
+  //       top,
+  //       behavior: 'smooth'
+  //     });
+  //   } catch (error) {
+  //     console.log('滚动定位失败');
+  //   }
+  // };
 
   return (
     <div className={classnames(styles.deployLog, { [styles.isFullscreen]: isFullscreen })} ref={ansiCoderWrapperRef} >

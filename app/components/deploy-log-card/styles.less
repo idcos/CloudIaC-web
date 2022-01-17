@@ -43,27 +43,40 @@
       &>.ant-card-body {
         flex: 1;
         min-height: 0;
-        &>.deploy-log-collapse {
-          height: 100%;
-          overflow-y: auto;
-          .ant-collapse-item {
-            .ant-collapse-header {
-              background: none;
-              color: rgba(255, 255, 255, .86);
-            }
-            &.ant-collapse-item-disabled {
+        &>.card-body-scroll {
+          height: 500px;
+          overflow-y: scroll;
+          &.isFullscreen {
+            height: calc(100vh - 76px);
+          }
+          &>.deploy-log-collapse {
+            .ant-collapse-item {
+              position: sticky; 
+              top: 0;
               .ant-collapse-header {
-                color: rgba(255, 255, 255, .46);
+                background: rgba(36, 38, 35);
+                color: rgba(255, 255, 255, .86);
+                position: sticky; 
+                top: 0;
+                z-index: 2;
               }
-            }
-            &.ant-collapse-item-active {
-              .ant-collapse-header {
-                background-color: rgba(255, 255, 255, 0.1);
+              &.ant-collapse-item-disabled {
+                .ant-collapse-header {
+                  color: rgba(255, 255, 255, .46);
+                }
               }
-              .ant-collapse-content {
-                color: rgba(255, 255, 255, .66);
-                .ant-collapse-content-box {
-                  padding: 0 36px;
+              &.ant-collapse-item-active {
+                position: relative; 
+                top: 0;
+                z-index: 1;
+                .ant-collapse-header {
+                  z-index: 2;
+                }
+                .ant-collapse-content {
+                  color: rgba(255, 255, 255, .66);
+                  .ant-collapse-content-box {
+                    padding: 0 36px;
+                  }
                 }
               }
             }
@@ -74,17 +87,15 @@
   }
 }
 
-
-
+  
 .deployLog {
   color: #EEFFFF;
   font-family: inherit;
-  max-height: 350px;
-  min-height: 22px;
-  overflow: auto;
+  height: auto;
+  min-height: 50px;
 
   &.isFullscreen {
-    max-height: 600px;
+    // min-height: calc(100vh - 76px);
   }
 
   :global {
