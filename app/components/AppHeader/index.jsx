@@ -121,7 +121,7 @@ const AppHeader = (props) => {
         <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
       </div>
       <div className='change-menu-wrapper'>
-        {(pathname !== '/') && (
+        {!!orgId && (
           <>
             {
               menuType === 'execute' ? (
@@ -135,7 +135,7 @@ const AppHeader = (props) => {
       </div>
       <div className='rParts'>
         {
-          (pathname !== '/') ? (
+          !!orgId ? (
             <>
               <SeniorSelect
                 style={{ width: 250 }}
