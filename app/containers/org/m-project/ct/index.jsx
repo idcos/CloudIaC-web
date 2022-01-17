@@ -127,7 +127,7 @@ const CTList = ({ userInfo, match = {} }) => {
           style: { cursor: 'pointer' },
           onClick: () => openDetectionDrawer(record)
         };
-        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} />;
+        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} empty='-' />;
       }
     },
     {

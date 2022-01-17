@@ -70,6 +70,7 @@ const CTList = ({ match = {} }) => {
     }
   );
 
+
   // 批量扫描合规检测
   const {
     run: batchScan
@@ -143,7 +144,7 @@ const CTList = ({ match = {} }) => {
           style: { cursor: 'pointer' },
           onClick: () => openDetectionDrawer(record)
         };
-        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} />;
+        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} empty='-' />;
       }
     },
     {

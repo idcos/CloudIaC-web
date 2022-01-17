@@ -3,7 +3,7 @@ import { LoadingIcon } from 'components/lottie-icon';
 import { CustomTag } from 'components/custom';
 import { SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
 
-export default ({ policyStatus, onlyShowResultStatus = false, clickProps, style, ...restProps }) => {
+export default ({ policyStatus, onlyShowResultStatus = false, clickProps, style, empty, ...restProps }) => {
 
   const { style: clickPropsStyle, ...restClickProps } = SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus) ? {} : (clickProps || {});
   const props = {
@@ -23,7 +23,7 @@ export default ({ policyStatus, onlyShowResultStatus = false, clickProps, style,
     }
     const map = {
       disable: (props) => <CustomTag type='default' text='未开启' {...props}/>,
-      enable: (props) => <CustomTag type='default' text='未检测' {...props}/>,
+      // enable: (props) => <CustomTag type='default' text='未检测' {...props}/>,
       pending: (props) => <LoadingIcon size={22} {...props}/>,
       passed: (props) => <CustomTag type='success' text='合规' {...props} />,
       failed: (props) => <CustomTag type='error' text='不合规' {...props} />,
@@ -34,7 +34,7 @@ export default ({ policyStatus, onlyShowResultStatus = false, clickProps, style,
 
   return (
     <>
-      {Status ? <Status {...props} /> : null}
+      {Status ? <Status {...props} /> : empty}
     </>
   );
 };

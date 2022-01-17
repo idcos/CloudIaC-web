@@ -205,7 +205,7 @@ const CCTList = () => {
           onClick: () => openDetectionDrawer(record)
         };
         return (
-          <PolicyStatus policyStatus={policyStatus} clickProps={clickProps}/>
+          <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} empty='-' />
         );
       }
     },
