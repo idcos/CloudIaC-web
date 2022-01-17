@@ -403,7 +403,7 @@ const Setting = () => {
                             valuePropName='checked'
                             initialValue={false}
                           >
-                            <Checkbox>分支推送时自动检测合规</Checkbox>                  
+                            <Checkbox>合规不通过时中止部署</Checkbox>                  
                           </Form.Item>
                         </>
                       ) : null;
