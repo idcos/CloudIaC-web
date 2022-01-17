@@ -108,6 +108,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
             placeholder='绑定策略组'
             showArrow={true}
             optionFilterProp='label'
+            allowClear={true}
             mode={'multiple'}
             options={policiesGroupOptions}
           />

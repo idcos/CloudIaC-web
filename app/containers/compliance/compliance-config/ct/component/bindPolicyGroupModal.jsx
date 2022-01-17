@@ -18,9 +18,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
 
   useEffect(() => {
     fetchList();
-    if (!isEmpty(policyGroupIds)) {
-      form.setFieldsValue({ policyGroupIds });
-    }
+    form.setFieldsValue({ policyGroupIds: policyGroupIds || [] });
   }, []);
 
   const fetchList = async () => {
@@ -80,17 +78,14 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
         <Form.Item
           label='绑定策略组'
           name='policyGroupIds'
-          rules={[
-            {
-              required: true,
-              message: '请绑定策略组'
-            }
-          ]}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='绑定策略组'
             mode={'multiple'}
+            allowClear={true}
+            showArrow={true}
+            optionFilterProp='children'
           >
             {list.map(it => <Option value={it.id}>{it.name}</Option>)}
           </Select>
