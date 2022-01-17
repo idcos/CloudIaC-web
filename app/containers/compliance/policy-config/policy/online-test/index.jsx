@@ -102,7 +102,7 @@ const OnlineTest = ({ match = {} }) => {
       formatResult: (res) => ({
         value: res.error || safeJsonStringify([ res.data, null, 2 ]),
         isError: !!res.error,
-        status: res.status
+        policyStatus: res.policyStatus
       })
     }
   );
@@ -144,7 +144,7 @@ const OnlineTest = ({ match = {} }) => {
       violated: <CustomTag type='error' text='不通过'/>,
       failed: <CustomTag type='error' text='错误'/>
     };
-    return map[outputInfo.status];
+    return map[outputInfo.policyStatus];
   });
   
   return (
