@@ -111,8 +111,10 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
       pollingInterval: 3000,
       pollingWhenHidden: false,
       onSuccess: (data) => {
-        const activeKey = getAutoActiveKey(data);
-        setActiveKey(activeKey);
+        if (autoScroll) {
+          const activeKey = getAutoActiveKey(data);
+          setActiveKey(activeKey);
+        }
         if (stopLoopRef.current) {
           cancelLoop();
         }
