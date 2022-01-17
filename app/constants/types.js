@@ -12,7 +12,8 @@ export const TFVERSION_AUTO_MATCH = 'tfversion_auto_match';
 export const ORG_USER = {
   role: {
     member: '成员',
-    admin: '管理员'
+    admin: '管理员',
+    compliancemanager: '合规管理员'
   },
   eventType: {
     'task.failed': '部署失败',
