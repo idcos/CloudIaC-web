@@ -43,12 +43,11 @@ export default ({ data, refresh, targetId }) => {
       label: '策略内容', 
       layout: 'vertical',
       code: 'rego', 
-      format: (text, record) => (
+      format: (text) => (
         <Coder
           style={{ height: 350, border: '1px solid #ebebeb' }}
-          selfClassName='form-coder-cotent'
           options={{ mode: 'rego' }}
-          value={text}
+          value={text || ''}
         />
       )
     }
@@ -62,13 +61,12 @@ export default ({ data, refresh, targetId }) => {
     { 
       label: '错误资源类型所在的tf代码段', 
       layout: 'vertical',
-      code: '', 
-      format: (text, record) => (
+      code: 'source', 
+      format: (text) => (
         <Coder
           style={{ height: 350, border: '1px solid #ebebeb' }}
-          selfClassName='form-coder-cotent'
-          options={{ mode: 'tf' }}
-          value={''}
+          options={{ mode: 'text/webassembly' }}
+          value={text || ''}
         />
       )
     },
@@ -76,12 +74,11 @@ export default ({ data, refresh, targetId }) => {
       label: '策略内容', 
       layout: 'vertical',
       code: 'rego', 
-      format: (text, record) => (
+      format: (text) => (
         <Coder
           style={{ height: 350, border: '1px solid #ebebeb' }}
-          selfClassName='form-coder-cotent'
           options={{ mode: 'rego' }}
-          value={text}
+          value={text || ''}
         />
       )
     }
