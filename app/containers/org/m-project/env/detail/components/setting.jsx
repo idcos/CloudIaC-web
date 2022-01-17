@@ -477,7 +477,7 @@ const Setting = () => {
                             valuePropName='checked'
                             initialValue={false}
                           >
-                            <Checkbox>自动纠漂</Checkbox>                  
+                            <Checkbox onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
                           </Form.Item>
                         </>
                       ) : null;

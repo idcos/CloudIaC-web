@@ -286,7 +286,6 @@ const Index = ({ match = {} }) => {
           colon={true}
           form={form}
           {...FL}
-          layout={'vertical'}
           initialValues={info}
         >
           <Row justify='space-between' style={{ marginBottom: 24 }}>
