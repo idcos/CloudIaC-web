@@ -121,18 +121,6 @@ const FormPage = ({ match = {} }) => {
     }
   );
 
-  // 校验策略组表单
-  const {
-    loading: checkLoading,
-    run: check
-  } = useRequest(
-    (params) => requestWrapper(
-      cgroupsAPI.checks.bind(null, params)
-    ), {
-      manual: true
-    }
-  );
-
   const changeStep = (index) => {
     if (isCreate || !stepRef.current) {
       return;
@@ -169,8 +157,6 @@ const FormPage = ({ match = {} }) => {
                 createLoading,
                 update,
                 updateLoading,
-                check,
-                checkLoading,
                 stepRef
               }}
             >

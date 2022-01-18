@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useImperativeHandle } from 'react';
+import React, { useState, useContext, useEffect, useImperativeHandle } from 'react';
 import { Form, Row, Col, Radio, Select, Input, Button, Spin, Space } from 'antd';
 import intersection from 'lodash/intersection';
-import { useRequest } from 'ahooks';
+import { useRequest, useUpdateEffect } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { useRegistryCfg } from 'utils/hooks';
 import vcsAPI from 'services/vcs';
+import cgroupsAPI from 'services/cgroups';
 import registryAPI from 'services/registry';
 import Coder from "components/coder";
 import FormPageContext from '../form-page-context';
@@ -29,20 +31,47 @@ export default () => {
     createLoading,
     update,
     updateLoading,
-    check,
-    checkLoading,
     ready
   } = useContext(FormPageContext);
   const [form] = Form.useForm();
+  const { flag: registryFlag } = useRegistryCfg();
+  const [ checkErrMsg, setCheckErrMsg ] = useState();
 
   useEffect(() => {
     if (ready) {
       const formValues = formData[type] || {};
       form.setFieldsValue(formValues);
       initFetchInfo(formValues);
+      form.validateFields(['source']);
     }
-  }, [ready]);
-  
+  }, [ ready, registryFlag ]);
+
+  // useUpdateEffect(() => {
+  //   console.log('checkErrMsg', checkErrMsg);
+  //   form.validateFields([ 'repoRevision', 'dir' ]);
+  // }, [checkErrMsg]);
+
+  // 校验策略组表单
+  const {
+    run: check
+  } = useRequest(
+    (params) => requestWrapper(
+      cgroupsAPI.checks.bind(null, params), {
+        autoError: false
+      }
+    ), {
+      manual: true, 
+      onSuccess: () => {
+        setCheckErrMsg();
+        form.validateFields([ 'repoRevision', 'dir' ]);
+      },
+      onError: (err) => {
+        setCheckErrMsg(err.message || '字段在线校验不通过');
+        form.validateFields([ 'repoRevision', 'dir' ]);
+      }
+    }
+  );
+
   // vcs选项
   const {
     data: vcsOptions = [],
@@ -207,21 +236,23 @@ export default () => {
       }
       break;
     case 'registry':
-      fetchPolicyGroupOptions().then((data) => {
-        if (repoId) {
-          const { namespace, groupName } = data.find(it => it.value === repoId) || {};
-          fetchPolicyGroupVersionOptions({
-            gn: groupName,
-            ns: namespace
+      if (registryFlag) {
+        fetchPolicyGroupOptions().then((data) => {
+          if (repoId) {
+            const { namespace, groupName } = data.find(it => it.value === repoId) || {};
+            fetchPolicyGroupVersionOptions({
+              gn: groupName,
+              ns: namespace
+            });
+          }
+        });
+        if (vcsId && repoId && gitTags) {
+          fetchReadmeText({
+            vcsId, 
+            repoId, 
+            repoRevision: gitTags
           });
         }
-      });
-      if (vcsId && repoId && gitTags) {
-        fetchReadmeText({
-          vcsId, 
-          repoId, 
-          repoRevision: gitTags
-        });
       }
       break;
     default:
@@ -281,19 +312,27 @@ export default () => {
           readmeText !== undefined && mutateReadmeText(undefined);
         }
       }
+      // 触发check接口的依赖
+      const checkParamsChange = intersection(changedKeys, [ 'repoRevision', 'dir' ]).length > 0;
+      if (checkParamsChange) {
+        const params = formDataToParams({ ...formData, [type]: allValues });
+        check(params);
+      }
       break;
     case 'registry':
-      // readme参数依赖是否变化
-      const _readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'gitTags' ]).length > 0;
-      if (_readmeParamsChange) {
-        if (changedValues.gitTags) {
-          fetchReadmeText({
-            vcsId, 
-            repoId, 
-            repoRevision: changedValues.gitTags
-          });
-        } else {
-          readmeText !== undefined && mutateReadmeText(undefined);
+      if (registryFlag) {
+        // readme参数依赖是否变化
+        const _readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'gitTags' ]).length > 0;
+        if (_readmeParamsChange) {
+          if (changedValues.gitTags) {
+            fetchReadmeText({
+              vcsId, 
+              repoId, 
+              repoRevision: changedValues.gitTags
+            });
+          } else {
+            readmeText !== undefined && mutateReadmeText(undefined);
+          }
         }
       }
       break;
@@ -310,7 +349,6 @@ export default () => {
   const next = async () => {
     const formValues = await form.validateFields();
     const params = formDataToParams({ ...formData, [type]: formValues });
-    params.source === 'vcs' && await check(params);
     setFormData(preValue => ({ ...preValue, [type]: formValues }));
     setCurrent(preValue => preValue + 1);
   };
@@ -318,7 +356,6 @@ export default () => {
   const onUpdate = async () => {
     const formValues = await form.validateFields();
     const params = formDataToParams({ ...formData, [type]: formValues });
-    params.source === 'vcs' && await check(params);
     update(params);
   };
 
@@ -326,7 +363,6 @@ export default () => {
     onFinish: async (index) => {
       const formValues = await form.validateFields();
       const params = formDataToParams({ ...formData, [type]: formValues });
-      params.source === 'vcs' && await check(params);
       setFormData(preValue => ({ ...preValue, [type]: formValues }));
       setCurrent(index);
     }
@@ -340,6 +376,17 @@ export default () => {
             name='source' 
             wrapperCol={{ offset: 5, span: 19 }}
             initialValue='vcs'
+            shouldUpdate={true}
+            rules={[
+              {
+                validator(_, value) {
+                  if (!registryFlag && value === 'registry') {
+                    return Promise.reject(new Error('未查询到registry地址配置，请切换其他来源'));
+                  }
+                  return Promise.resolve();
+                }
+              }
+            ]}
           >
             <Radio.Group 
               onChange={(e) => {
@@ -348,7 +395,8 @@ export default () => {
                 form.setFieldsValue({
                   source
                 });
-                if (source === 'registry') {
+                form.validateFields(['source']);
+                if (source === 'registry' && registryFlag) {
                   fetchPolicyGroupOptions();
                 }
               }}
@@ -402,7 +450,19 @@ export default () => {
                     <Form.Item 
                       label='分支/标签'
                       name='repoRevision'
-                      rules={[{ required: true, message: '请选择' }]}
+                      dependencies={['dir']}
+                      rules={[
+                        { required: true, message: '请选择' },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            const dir = getFieldValue('dir');
+                            if (value && !dir && checkErrMsg) {
+                              return Promise.reject(new Error(checkErrMsg));
+                            }
+                            return Promise.resolve();
+                          }
+                        })
+                      ]}
                     >
                       <Select 
                         placeholder='请选择分支/标签'
@@ -440,6 +500,16 @@ export default () => {
                     <Form.Item 
                       label='目录'
                       name='dir'
+                      rules={[
+                        {
+                          validator(_, value) {
+                            if (value && checkErrMsg) {
+                              return Promise.reject(new Error(checkErrMsg));
+                            }
+                            return Promise.resolve();
+                          }
+                        }
+                      ]}
                     >
                       <Input placeholder='请填写目录' />
                     </Form.Item>
@@ -465,7 +535,7 @@ export default () => {
                             vcsId: vcsId,
                             gitTags: undefined
                           });
-                          fetchPolicyGroupVersionOptions({
+                          registryFlag && fetchPolicyGroupVersionOptions({
                             gn: groupName,
                             ns: namespace
                           });
