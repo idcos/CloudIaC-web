@@ -144,7 +144,6 @@
     "less": "^3.12.2",
     "less-loader": "^7.1.0",
     "lint-staged": "9.4.3",
-    "ngrok": "3.2.5",
     "node-plop": "0.26.2",
     "null-loader": "3.0.0",
     "plop": "2.7.4",
