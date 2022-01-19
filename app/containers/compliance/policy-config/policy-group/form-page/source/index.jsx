@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useImperativeHandle } from 'react';
 import { Form, Row, Col, Radio, Select, Input, Button, Spin, Space } from 'antd';
 import intersection from 'lodash/intersection';
-import { useRequest, useUpdateEffect } from 'ahooks';
+import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useRegistryCfg } from 'utils/hooks';
 import vcsAPI from 'services/vcs';
@@ -45,11 +45,6 @@ export default () => {
       form.validateFields(['source']);
     }
   }, [ ready, registryFlag ]);
-
-  // useUpdateEffect(() => {
-  //   console.log('checkErrMsg', checkErrMsg);
-  //   form.validateFields([ 'repoRevision', 'dir' ]);
-  // }, [checkErrMsg]);
 
   // 校验策略组表单
   const {

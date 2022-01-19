@@ -139,7 +139,7 @@ const FormPage = ({ match = {} }) => {
         <div className={styles.formPage}>
           <Steps current={current}>
             {steps.map((item, index) => (
-              <Step key={item.type} title={item.title} onClick={() => changeStep(index)}/>
+              <Step style={{ cursor: policyGroupId ? 'pointer' : 'default' }} key={item.type} title={item.title} onClick={() => changeStep(index)}/>
             ))}
           </Steps>
           <div className='step-content'>
