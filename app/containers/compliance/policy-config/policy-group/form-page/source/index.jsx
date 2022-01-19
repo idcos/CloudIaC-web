@@ -56,6 +56,7 @@ export default () => {
       }
     ), {
       manual: true, 
+      debounceInterval: 500,
       onSuccess: () => {
         setCheckErrMsg();
         form.validateFields([ 'repoRevision', 'dir' ]);
@@ -206,6 +207,7 @@ export default () => {
     ),
     {
       manual: true,
+      debounceInterval: 500,
       formatResult: data => data.content || ''
     }
   );
