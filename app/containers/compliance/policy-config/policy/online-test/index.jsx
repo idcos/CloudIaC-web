@@ -235,7 +235,7 @@ const OnlineTest = ({ match = {} }) => {
             </Col>
           </Row>
           <AffixBtnWrapper align='right'>
-            <Button onClick={goPolicyListPage}>取消</Button>
+            <Button onClick={goPolicyListPage}>关闭</Button>
             <Button onClick={test} type='primary' loading={testLoading}>在线测试</Button>
           </AffixBtnWrapper>
         </Spin>
