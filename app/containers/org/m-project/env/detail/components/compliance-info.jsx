@@ -11,7 +11,7 @@ import DetailPageContext from '../detail-page-context';
 
 const ComplianceInfo = () => {
 
-  const { orgId, projectId, envId, changeTabPage } = useContext(DetailPageContext);
+  const { orgId, projectId, envId, changeTabPage, reload } = useContext(DetailPageContext);
 
   // 合规检测
   const {
@@ -53,8 +53,10 @@ const ComplianceInfo = () => {
       <DetectionCard 
         failLogParams={{ stepType: 'tfscan' }} 
         targetId={envId}
+        targetType='env'
         requestFn={envAPI.result.bind(null, { orgId, projectId, envId, pageSize: 0 })} 
         renderHeaderSubContent={renderHeaderSubContent}
+        onSuccessCallback={reload}
         disableEmptyDescription={
           <span>
             <span>未开启合规检测，</span><a onClick={openComplianceScan}>去开启</a>

@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Space, Row, Col, Descriptions, Button } from 'antd';
-import { RightOutlined, DownOutlined } from '@ant-design/icons';
+import { Space, Row, Col, Descriptions, Button, Modal } from 'antd';
+import { RightOutlined, DownOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
 import Coder from "components/coder";
-import { POLICIES_SEVERITY_ENUM } from 'constants/types';
+import { POLICIES_SEVERITY_ENUM, TARGET_TYPE_ENUM } from 'constants/types';
 import StatusIcon from '../components/status-icon';
 import styles from './styles.less';
 
-export default ({ data, refresh, targetId }) => {
+export default ({ data, refresh, targetId, targetType }) => {
 
   const isError = data.status === 'violated' || data.status === 'failed';
   const [ collapsed, setCollapsed ] = useState(true);
@@ -84,20 +84,44 @@ export default ({ data, refresh, targetId }) => {
     }
   ];
 
+  const onSuppress = (e) => {
+    e.stopPropagation();
+    Modal.confirm({
+      width: 480,
+      title: `屏蔽策略`,
+      content: (
+        <div style={{ wordBreak: 'break-all' }}>
+          <span>该操作将在当前{TARGET_TYPE_ENUM[targetType]}中屏蔽</span>
+          “<b>{data.policyName || '-'}</b>” 
+          <span>策略，请谨慎操作</span> 
+        </div>
+      ),
+      icon: <ExclamationCircleFilled />,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => updateSuppress()
+    });
+  };
+
   return (
     <div className={styles.collapse}>
-      <Row className={styles.collapse_header} justify='space-between' align='middle'>
+      <Row 
+        className={styles.collapse_header} 
+        justify='space-between' 
+        align='middle'
+        onClick={() => setCollapsed(!collapsed)}
+      >
         <Col className={styles.collapse_header_title}>
           <Space>
             <StatusIcon type={data.status} />
             <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{data.policyName}</span>
             {data.status === 'violated' && (
-              <Button disabled={data.policySuppress} size='small' onClick={updateSuppress} loading={updateSuppressLoading}>屏蔽此策略</Button>
+              <Button disabled={data.policySuppress} size='small' onClick={onSuppress}>屏蔽此策略</Button>
             )}
           </Space>
         </Col>
         <Col className={styles.collapse_header_extra}>
-          <span className={styles.collapse_header_extra_collapse} onClick={() => setCollapsed(!collapsed)}>
+          <span className={styles.collapse_header_extra_collapse}>
             {collapsed ? <RightOutlined /> : <DownOutlined />}
           </span>
         </Col>

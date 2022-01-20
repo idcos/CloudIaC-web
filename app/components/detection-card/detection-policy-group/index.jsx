@@ -5,7 +5,7 @@ import StatusIcon from '../components/status-icon';
 import PolicyCollapse from '../policy-collapse';
 import styles from './styles.less';
 
-const Index = ({ info, refresh, targetId }) => {
+const Index = ({ info, refresh, targetId, targetType }) => {
 
   const { name, summary, list } = info || {};
   let { passed, suppressed, failed, violated } = summary || {};
@@ -41,7 +41,7 @@ const Index = ({ info, refresh, targetId }) => {
     >
       <div className={styles.content}> 
         <Space direction='vertical' size={0} style={{ width: '100%' }} split={<Divider style={{ margin: 0 }} />}> 
-          {(list || []).map((it) => <PolicyCollapse data={it} refresh={refresh} targetId={targetId} />)} 
+          {(list || []).map((it) => <PolicyCollapse data={it} refresh={refresh} targetId={targetId} targetType={targetType} />)} 
         </Space>
       </div>
     </Card>

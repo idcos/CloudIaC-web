@@ -10,7 +10,15 @@ import DetectionPolicyGroup from './detection-policy-group';
 import FailLog from './fail-log';
 import styles from './styles.less';
 
-export default ({ requestFn, targetId, disableEmptyDescription, renderHeaderSubContent = noop, failLogParams }) => {
+export default ({ 
+  targetId, 
+  disableEmptyDescription, 
+  failLogParams,
+  targetType,
+  requestFn = noop, 
+  renderHeaderSubContent = noop, 
+  onSuccessCallback = noop
+}) => {
 
   // 合规结果查询
   const { 
@@ -43,6 +51,7 @@ export default ({ requestFn, targetId, disableEmptyDescription, renderHeaderSubC
         if (data.policyStatus !== 'pending') {
           cancel();
         } 
+        onSuccessCallback();
       },
       onError: () => {
         cancel();
@@ -92,7 +101,7 @@ export default ({ requestFn, targetId, disableEmptyDescription, renderHeaderSubC
                 <Space direction='vertical' size={24} style={{ width: '100%' }}>
                   {
                     groups.map(info => {
-                      return (<DetectionPolicyGroup info={info} refresh={refresh} targetId={targetId} />);
+                      return (<DetectionPolicyGroup info={info} refresh={refresh} targetType={targetType} targetId={targetId} />);
                     })
                   }
                 </Space>
