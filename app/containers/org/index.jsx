@@ -3,7 +3,7 @@ import { EyeOutlined, PlusSquareOutlined, MenuOutlined } from '@ant-design/icons
 import { connect } from 'react-redux';
 import { useSessionStorageState } from 'ahooks';
 import classNames from 'classnames';
-import { Divider, notification } from 'antd';
+import { Divider, notification, Tooltip } from 'antd';
 import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import versionCfg from 'assets/version.json';
@@ -111,7 +111,9 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
           className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
           onClick={() => linkTo(scope, menuItem.key)}
         >
-          <span className='icon'>{menuItem.icon}</span>
+          <Tooltip title={collapsed && menuItem.name} placement='right'>
+            <span className='icon'>{menuItem.icon}</span>
+          </Tooltip>
           {!collapsed && <span>{menuItem.name}</span>}
         </div>
       );
@@ -132,9 +134,11 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 overlayWidth='200px'
                 options={projectList}
                 actionContent={collapsed ? (
-                  <div className={styles.projectActionContent}>
-                    <span>P</span>
-                  </div>
+                  <Tooltip title='切换项目' placement='right'>
+                    <div className={styles.projectActionContent}>
+                      <span>P</span>
+                    </div>
+                  </Tooltip>
                 ) : null}
                 onChange={changeProject}
                 setActive={setPjtSelectActive}

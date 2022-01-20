@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { MenuOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 import { connect } from 'react-redux';
 import { useSessionStorageState } from 'ahooks';
 import RoutesList from 'components/routes-list';
@@ -47,7 +48,9 @@ const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
           className={`menu-item ${typeKey === menuItem.key ? 'checked' : ''}`} 
           onClick={() => linkTo(scope, menuItem.key)}
         >
-          <span className='icon'>{menuItem.icon}</span>
+          <Tooltip title={collapsed && menuItem.name} placement='right'>
+            <span className='icon'>{menuItem.icon}</span>
+          </Tooltip>
           {!collapsed && <span>{menuItem.name}</span>}
         </div>
       );
