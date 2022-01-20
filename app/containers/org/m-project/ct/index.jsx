@@ -17,7 +17,7 @@ import DetectionDrawer from '../../m-org/ct/components/detection-drawer';
 
 const CTList = ({ userInfo, match = {} }) => {
 
-  const { check } = useLoopPolicyStatus();
+  const { check, loopRequesting } = useLoopPolicyStatus();
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { orgId, projectId } = match.params || {};
   const [ query, setQuery ] = useState({
@@ -183,7 +183,7 @@ const CTList = ({ userInfo, match = {} }) => {
         <Table
           columns={columns}
           dataSource={resultMap.list}
-          loading={loading}
+          loading={loading && !loopRequesting}
           scroll={{ x: 'min-content', y: 570 }}
           pagination={{
             current: query.pageNo,

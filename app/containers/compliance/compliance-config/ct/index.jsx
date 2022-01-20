@@ -18,7 +18,7 @@ import PolicyStatus from 'components/policy-status';
 
 const CCTList = () => {
 
-  const { check } = useLoopPolicyStatus();
+  const { check, loopRequesting } = useLoopPolicyStatus();
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -282,7 +282,7 @@ const CCTList = () => {
         <Table
           columns={columns}
           scroll={{ x: 'min-content', y: 570 }}
-          loading={tableLoading}
+          loading={tableLoading && !loopRequesting}
           {...tableProps}
         />
       </Space>

@@ -18,7 +18,7 @@ import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types
 
 const CenvList = () => {
 
-  const { check } = useLoopPolicyStatus();
+  const { check, loopRequesting } = useLoopPolicyStatus();
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -319,7 +319,7 @@ const CenvList = () => {
         <Table
           columns={columns}
           scroll={{ x: 'min-content', y: 570 }}
-          loading={tableLoading}
+          loading={tableLoading && !loopRequesting}
           {...tableProps}
         />
       </Space>

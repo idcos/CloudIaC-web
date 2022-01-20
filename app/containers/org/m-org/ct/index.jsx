@@ -22,7 +22,7 @@ import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
 
-  const { check } = useLoopPolicyStatus();
+  const { check, loopRequesting } = useLoopPolicyStatus();
   const { orgId } = match.params || {};
   const [ visible, setVisible ] = useState(false),
     [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
@@ -256,7 +256,7 @@ const CTList = ({ match = {} }) => {
           rowKey={'id'}
           columns={columns}
           dataSource={resultMap.list}
-          loading={loading}
+          loading={loading && !loopRequesting}
           scroll={{ x: 'min-content', y: 570 }}
           pagination={{
             current: query.pageNo,
