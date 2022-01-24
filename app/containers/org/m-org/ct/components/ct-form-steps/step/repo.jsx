@@ -389,7 +389,6 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           {
             opType === 'add' ? (
               <>
-                <Button onClick={() => stepHelper.prev()}>上一步</Button>
                 <Button type='primary' htmlType={'submit'}>下一步</Button>
               </>
             ) : (

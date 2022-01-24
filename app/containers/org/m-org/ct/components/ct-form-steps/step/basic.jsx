@@ -125,7 +125,10 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
         <Space size={24}>
           {
             opType === 'add' ? (
-              <Button type='primary' htmlType={'submit'}>下一步</Button>
+              <>
+                <Button onClick={() => stepHelper.prev()}>上一步</Button>
+                <Button type='primary' htmlType={'submit'}>下一步</Button>
+              </>
             ) : (
               <>
                 <Button onClick={goCTlist}>取消</Button>
