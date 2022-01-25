@@ -12,11 +12,10 @@ import ImportModal from './components/importModal';
 import DetectionDrawer from './components/detection-drawer';
 import tplAPI from 'services/tpl';
 import ctplAPI from 'services/ctpl';
-import { VerticalAlignBottomOutlined } from '@ant-design/icons';
 import { SCAN_DISABLE_STATUS } from 'constants/types';
 import { downloadImportTemplate } from 'utils/util';
 import { useLoopPolicyStatus } from 'utils/hooks';
-import { UploadtIcon } from 'components/iconfont';
+import { UploadIcon, DownIcon } from 'components/iconfont';
 import PolicyStatus from 'components/policy-status';
 import isEmpty from 'lodash/isEmpty';
 
@@ -247,10 +246,10 @@ const CTList = ({ match = {} }) => {
             <Button type='primary' onClick={createCT}>新建云模板</Button>
             <Button disabled={batchScanDisabled} onClick={batchScan}>合规检测</Button>
           </Space>
-          <span>
-            <Button disabled={selectedRowKeys.length === 0} icon={<VerticalAlignBottomOutlined />} style={{ marginRight: 8 }} onClick={() => download()}>导出</Button>
-            <Button icon={<UploadtIcon />} onClick={() => setVisible(true)}>导入</Button>
-          </span>
+          <Space>
+            <Button icon={<DownIcon />} onClick={() => setVisible(true)}>导入</Button>
+            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>导出</Button>
+          </Space>
         </Space>
         <Table
           rowKey={'id'}

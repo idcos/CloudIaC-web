@@ -9,4 +9,17 @@
   .ant-tag {
     border-radius: 11px;
   }
+  .ant-btn-tertiary {
+    background-color: rgba(225, 228, 232, 0.7);
+    border-color: rgba(225, 228, 232, 0.7);
+    color: #24292F;
+
+    &[disabled] {
+      &, &:hover, &:focus, &:active {
+        background-color: #F2F3F5;
+        border-color: #F2F3F5;
+        color: #24292F;
+      }
+    }
+  }
 }

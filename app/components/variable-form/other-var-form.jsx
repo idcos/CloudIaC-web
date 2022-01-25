@@ -71,8 +71,8 @@ const OtherVarForm = (props) => {
   return (
     <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'}>
       <Collapse.Panel key='open' header='其它变量' forceRender={true}>
-        <Form form={otherVarForm}>
-          <Row gutter={8}>
+        <Form form={otherVarForm} style={{ margin: '0 8px' }}>
+          <Row gutter={24}>
             <Col span={8}>
               <Form.Item
                 name='tfVarsFile'

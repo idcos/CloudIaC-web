@@ -123,7 +123,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
   const menus = getMenus(userInfo || {}, {
     projectList
   });
- 
+
   return (
     <div className={styles.orgWrapper}>
       <div className={classNames('left-nav', { collapsed })}>
@@ -136,7 +136,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 actionContent={collapsed ? (
                   <Tooltip title='切换项目' placement='right'>
                     <div className={styles.projectActionContent}>
-                      <span>P</span>
+                      <span>{((curProject || {}).name || '')[0]}</span>
                     </div>
                   </Tooltip>
                 ) : null}

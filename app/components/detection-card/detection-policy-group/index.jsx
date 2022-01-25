@@ -37,7 +37,8 @@ const Index = ({ info, refresh, targetId, targetType }) => {
           </div>
         </Space>
       )}
-      bodyStyle={{ padding: '0 24px' }}
+      style={{ border: '2px solid #E1E4E8' }}
+      bodyStyle={{ padding: '0 24px', backgroundColor: '#FAFAFA', marginTop: 1 }}
     >
       <div className={styles.content}> 
         <Space direction='vertical' size={0} style={{ width: '100%' }} split={<Divider style={{ margin: 0 }} />}> 

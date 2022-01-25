@@ -33,7 +33,7 @@ export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, o
       return null;
     }
     return {
-     ...ctData.repo, orgId, tplId, objectType: opType === 'add' ? 'org' : 'template'
+      ...ctData.repo, orgId, tplId, objectType: opType === 'add' ? 'org' : 'template'
     };
   }, [ ctData.repo, orgId ]);
 

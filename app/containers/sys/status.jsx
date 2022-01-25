@@ -67,12 +67,11 @@ const SysStatus = () => {
 
   return <Layout
     extraHeader={<PageHeader
-      className='container-inner-width'
       title='系统状态'
       breadcrumb={false}
     />}
   >
-    <div className='container-inner-width'>
+    <div className='idcos-card'>
       {
         loading ? <Spin/> : <div className={styles.status}>
           {

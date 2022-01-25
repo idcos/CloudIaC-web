@@ -67,7 +67,7 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
           }
         ]}
       >
-        <Input placeholder='请输入模板名称' />
+        <Input style={{ width: 254 }} placeholder='请输入模板名称' />
       </Form.Item>
       <Form.Item
         label='模板描述'
@@ -104,6 +104,7 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
                 <Select 
                   mode='multiple'
                   optionFilterProp='label'
+                  showArrow={true}
                   showSearch={true}
                   options={policiesGroupOptions}
                   placeholder='请选择策略组'

@@ -1,5 +1,6 @@
-
+import { Space } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon } from 'components/iconfont';
 
 /**
  * 全局滚动dom id
@@ -147,10 +148,25 @@ export const END_ENV_STATUS_LIST = [
 ];
 
 /** 策略严重等级 */
-export const POLICIES_SEVERITY_ENUM = {
-  high: '高',
-  medium: '中',
-  low: '低'
+export const POLICIES_SEVERITY_STATUS_ENUM = {
+  high: (
+    <Space size={4}>
+      <SeverityHighIcon />
+      <span>高</span>
+    </Space>
+  ),
+  medium: (
+    <Space size={4}>
+      <SeverityMediumIcon />
+      <span>中</span>
+    </Space>
+  ),
+  low: (
+    <Space size={4}>
+      <SeverityLowIcon />
+      <span>低</span>
+    </Space>
+  )
 };
 
 export const POLICIES_DETECTION = {
@@ -166,20 +182,6 @@ export const POLICIES_DETECTION_COLOR = {
   failed: '#A7282A',
   violated: '#FF3B30',
   suppressed: '#B3CDFF'
-};
-export const POLICIES_DETECTION_COLOR_COLLAPSE = {
-  pending: '#FFBF00',
-  passed: '#00AB9D',
-  failed: '#FF3B30',
-  violated: '#FF3B30',
-  suppressed: '#c1c1c1'
-};
-export const POLICIES_DETECTION_COLOR_TAG = {
-  pending: 'gold',
-  passed: 'green',
-  failed: 'volcano',
-  violated: 'red',
-  suppressed: 'purple'
 };
 export const POLICIES_DETECTION_ICON_COLLAPSE = {
   pending: <SyncOutlined />,

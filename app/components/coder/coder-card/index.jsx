@@ -13,6 +13,7 @@ export default ({
   autoScrollToBottom = false, 
   options, 
   value,
+  className,
   onChange = noop,
   title,
   spinning = false,
@@ -43,6 +44,7 @@ export default ({
       className={
         classnames(
           styles.code_card,
+          className,
           { [styles.full_screen_card]: fullScreen }
         )
       }

@@ -22,11 +22,44 @@ const DownPoint = () => (
   <svg t='1631268310407' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1047' width='12' height='12'><path d='M564.337778 984.405333l295.594666-844.231111A56.888889 56.888889 0 0 0 778.808889 71.68L538.168889 203.889778a56.888889 56.888889 0 0 1-54.840889 0L242.688 71.566222a56.888889 56.888889 0 0 0-81.123556 68.608l295.480889 844.231111a56.888889 56.888889 0 0 0 107.406223 0z' fill='#52CCA3' p-id='1048'></path></svg>
 );
 
-const upload = () => (
-  <svg t='1637910653815' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1084' width='16' height='16'><path d='M266.624 888.32v-53.76a7.744 7.744 0 0 0-7.68-7.744H197.12v-629.76h629.76v629.824h-61.76a7.744 7.744 0 0 0-7.68 7.68v53.824c0 4.224 3.328 7.68 7.68 7.68h100.16c17.024 0 30.72-13.632 30.72-30.72V158.72a30.656 30.656 0 0 0-30.72-30.72H158.72a30.656 30.656 0 0 0-30.72 30.72v706.56c0 17.024 13.696 30.72 30.72 30.72h100.16a7.68 7.68 0 0 0 7.68-7.68z m281.344 13.696V588.032H624a8 8 0 0 0 6.272-13.056l-112-141.888a8 8 0 0 0-12.544 0l-112 141.888a8 8 0 0 0 6.272 13.056h76.032v313.984c0 4.416 3.584 8 7.936 8h56a8 8 0 0 0 8.064-8z' fill='currentColor' p-id='1085'></path></svg>
+const Upload = () => (
+  <svg t='1643075797609' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1745' width='1em' height='1em'><path d='M213.504 444.269714l275.309714-275.236571v627.931428h73.142857V169.033143l275.236572 275.236571 51.712-51.712L551.204571 54.857143a36.571429 36.571429 0 0 0-51.712 0L161.792 392.557714l51.712 51.712z' fill='currentColor' p-id='1746'></path><path d='M86.381714 760.393143v146.285714a73.142857 73.142857 0 0 0 73.142857 73.142857h731.428572a73.142857 73.142857 0 0 0 73.142857-73.142857v-146.285714h-73.142857v146.285714h-731.428572v-146.285714h-73.142857z' fill='currentColor' p-id='1747'></path></svg>
 );
-const shield = () => (
+
+const Down = () => (
+  <svg t='1643076044702' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1887' width='1em' height='1em'><path d='M837.12 406.966857L561.737143 682.203429V18.285714h-73.142857v663.917715L213.430857 406.966857l-51.712 51.712 337.700572 337.700572a36.571429 36.571429 0 0 0 51.712 0l337.700571-337.700572-51.712-51.712z' fill='currentColor' p-id='1888'></path><path d='M86.381714 786.285714v146.285715a73.142857 73.142857 0 0 0 73.142857 73.142857h731.428572a73.142857 73.142857 0 0 0 73.142857-73.142857v-146.285715h-73.142857v146.285715h-731.428572v-146.285715h-73.142857z' fill='currentColor' p-id='1889'></path></svg>
+);
+
+const Shield = () => (
   <svg t='1642262482121' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1762' width='1em' height='1em'><path d='M525.469538 506.407385m-393.373538 0a393.373538 393.373538 0 1 0 786.747077 0 393.373538 393.373538 0 1 0-786.747077 0Z' fill='#FFFFFF' p-id='1763'></path><path d='M525.469538 33.792a472.615385 472.615385 0 1 1 0 945.230769A472.615385 472.615385 0 0 1 525.469538 33.792z m98.619077 512.078769H348.238769a59.076923 59.076923 0 0 0 0 118.153846h275.849846a59.076923 59.076923 0 0 0 0-118.153846z m78.611693-197.080615h-354.461539a59.076923 59.076923 0 0 0 0 118.153846h354.461539a59.076923 59.076923 0 0 0 0-118.153846z' fill='currentColor' p-id='1764'></path></svg>
+);
+
+const Error = () => (
+  <svg t='1643082413291' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='3245' width='1em' height='1em'><path d='M478.129231 523.027692m-393.373539 0a393.373538 393.373538 0 1 0 786.747077 0 393.373538 393.373538 0 1 0-786.747077 0Z' fill='#FFFFFF' p-id='3246'></path><path d='M478.129231 50.412308a472.615385 472.615385 0 1 1 0 945.230769A472.615385 472.615385 0 0 1 478.129231 50.412308z m236.307692 393.846154H241.821538a78.769231 78.769231 0 1 0 0 157.538461h472.615385a78.769231 78.769231 0 1 0 0-157.538461z' fill='#DD2B0E' p-id='3247'></path></svg>
+);
+
+const Success = () => (
+  <svg t='1643082425290' className='icon' viewBox='0 0 1109 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='3387' width='1em' height='1em'><path d='M560.213333 512m-426.154666 0a426.154667 426.154667 0 1 0 852.309333 0 426.154667 426.154667 0 1 0-852.309333 0Z' fill='#FFFFFF' p-id='3388'></path><path d='M560.213333 0a512 512 0 1 1 0 1024A512 512 0 0 1 560.213333 0z m215.893334 334.08a64.512 64.512 0 0 0-90.88 8.021333L514.304 545.536 431.36 462.506667A64.512 64.512 0 1 0 340.224 553.813333l132.266667 132.266667a64.512 64.512 0 0 0 91.221333 0l0.170667-0.170667a64.853333 64.853333 0 0 0 7.509333-7.509333l212.650667-253.44a64.512 64.512 0 0 0-7.936-90.88z' fill='#108548' p-id='3389'></path></svg>
+);
+
+const SeverityLow = () => (
+  <svg t='1643079587886' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2257' width='1em' height='1em'><path d='M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z' fill='#D99530' p-id='2258'></path></svg>
+);
+
+const SeverityMedium = () => (
+  <svg t='1643079559871' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2116' width='1em' height='1em'><path d='M616.390827 911.189333a120.490667 120.490667 0 0 1-208.725334 0L16.326827 233.386667A120.490667 120.490667 0 0 1 120.689493 52.565333h782.677334a120.490667 120.490667 0 0 1 104.362666 180.821334l-391.338666 677.802666z' fill='#E17223' p-id='2117'></path></svg>
+);
+
+const SeverityHigh = () => (
+  <svg t='1643079479709' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='1975' width='1em' height='1em'><path d='M451.413333 16.213333c37.546667-21.589333 83.626667-21.589333 121.173334 0l338.517333 195.413334c37.461333 21.674667 60.586667 61.610667 60.586667 104.96v390.826666c0 43.349333-23.125333 83.285333-60.586667 104.96l-338.602667 195.413334c-37.461333 21.589333-83.626667 21.589333-121.002666 0L112.896 812.373333a121.002667 121.002667 0 0 1-60.586667-104.96V316.586667c0-43.349333 23.125333-83.285333 60.586667-104.96L451.498667 16.213333z' fill='#8D1300' p-id='1976'></path></svg>
+);
+
+const DropRight = () => (
+  <svg t='1643082319536' className='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2821' width='1em' height='1em'><path d='M763.107556 609.166222a113.777778 113.777778 0 0 0 0-160.881778l-341.333334-341.333333A113.777778 113.777778 0 1 0 260.892444 267.832889l260.892445 260.892444L260.892444 789.617778a113.777778 113.777778 0 1 0 160.881778 160.881778l341.333334-341.333334z' fill='currentColor' p-id='2822'></path></svg>
+);
+
+const DropDown = () => (
+  <svg t='1643082331639' className='icon' viewBox='0 0 1373 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2962' width='1em' height='1em'><path d='M565.84192 940.544a170.666667 170.666667 0 0 0 241.322667 0l512-512a170.666667 170.666667 0 1 0-241.322667-241.322667L686.503253 578.56 295.164587 187.221333A170.666667 170.666667 0 1 0 53.84192 428.373333l512 512z' fill='currentColor' p-id='2963'></path></svg>
 );
 
 export const QuitIcon = props => <Icon component={Quit} {...props} />;
@@ -34,6 +67,14 @@ export const DuplicateIcon = props => <Icon component={Duplicate} {...props} />;
 export const ScreenFullIcon = props => <Icon component={ScreenFull} {...props} />;
 export const UpPointIcon = props => <Icon component={UpPoint} {...props} />;
 export const DownPointIcon = props => <Icon component={DownPoint} {...props} />;
-export const UploadtIcon = props => <Icon component={upload} {...props} />;
-export const ShieldIcon = props => <Icon component={shield} {...props} />;
+export const UploadIcon = props => <Icon component={Upload} {...props} />;
+export const DownIcon = props => <Icon component={Down} {...props} />;
+export const ShieldIcon = props => <Icon component={Shield} {...props} />;
+export const ErrorIcon = props => <Icon component={Error} {...props} />;
+export const SuccessIcon = props => <Icon component={Success} {...props} />;
+export const SeverityLowIcon = props => <Icon component={SeverityLow} {...props} />;
+export const SeverityMediumIcon = props => <Icon component={SeverityMedium} {...props} />;
+export const SeverityHighIcon = props => <Icon component={SeverityHigh} {...props} />;
+export const DropRightIcon = props => <Icon component={DropRight} {...props} />;
+export const DropDownIcon = props => <Icon component={DropDown} {...props} />;
 

@@ -41,9 +41,11 @@ const PageHeader = (props) => {
           <p className='subDes reset-styles'>{subDes}</p>
         </Col>
       </Row>
-      <div style={{ padding: '0 24px' }}>
-        {Function.prototype.isPrototypeOf(renderFooter) && renderFooter()}
-      </div>
+      {Function.prototype.isPrototypeOf(renderFooter) && (
+        <div style={{ padding: '24px 24px 0' }}>
+          {renderFooter()}
+        </div>
+      )}
     </div>
   </div>;
 };

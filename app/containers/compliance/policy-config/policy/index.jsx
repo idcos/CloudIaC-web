@@ -11,7 +11,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
 import { useSearchFormAndTable } from 'utils/hooks';
-import { POLICIES_SEVERITY_ENUM } from 'constants/types';
+import { POLICIES_SEVERITY_STATUS_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
 import cgroupsAPI from 'services/cgroups';
 import DetailDrawer from './detail-drawer';
@@ -96,7 +96,7 @@ const Policy = ({ location, match }) => {
     {
       dataIndex: 'name',
       title: '策略名称',
-      width: 138,
+      width: 220,
       ellipsis: true,
       render: (text, record) => (
         <a onClick={() => onOpenDetailsDrawer(record.id)}>
@@ -107,7 +107,7 @@ const Policy = ({ location, match }) => {
     {
       dataIndex: 'tags',
       title: '标签',
-      width: 166,
+      width: 230,
       render: (text) => {
         const tags = text ? text.split(',') : [];
         return (
@@ -137,7 +137,7 @@ const Policy = ({ location, match }) => {
     {
       dataIndex: 'groupName',
       title: '策略组',
-      width: 166,
+      width: 170,
       ellipsis: true
     },
     {
@@ -145,24 +145,24 @@ const Policy = ({ location, match }) => {
       title: '严重性',
       width: 70,
       ellipsis: true,
-      render: (text) => POLICIES_SEVERITY_ENUM[text]
+      render: (text) => POLICIES_SEVERITY_STATUS_ENUM[text] || '-'
     },
     {
       dataIndex: 'passed',
       title: '通过',
-      width: 66,
+      width: 48,
       ellipsis: true
     },
     {
       dataIndex: 'violated',
       title: '不通过',
-      width: 69,
+      width: 64,
       ellipsis: true
     },
     {
       dataIndex: 'failed',
       title: '失败',
-      width: 56,
+      width: 48,
       ellipsis: true
     },
     {
@@ -209,8 +209,6 @@ const Policy = ({ location, match }) => {
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
         <Row justify='space-between' wrap={false}>
           <Col>
-          </Col>
-          <Col>
             <Space>
               <Select
                 style={{ width: 264 }}
@@ -225,10 +223,14 @@ const Policy = ({ location, match }) => {
               <Select
                 style={{ width: 264 }}
                 allowClear={true}
-                options={Object.keys(POLICIES_SEVERITY_ENUM).map(it => ({ label: POLICIES_SEVERITY_ENUM[it], value: it }))}
+                options={Object.keys(POLICIES_SEVERITY_STATUS_ENUM).map(it => ({ label: POLICIES_SEVERITY_STATUS_ENUM[it], value: it }))}
                 placeholder='请选择严重性'
                 onChange={(severity) => onChangeFormParams({ severity })}
               />
+            </Space>
+          </Col>
+          <Col>
+            <Space>
               <Input
                 style={{ width: 320 }}
                 allowClear={true}

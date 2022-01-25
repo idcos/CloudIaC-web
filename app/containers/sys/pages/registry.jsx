@@ -67,9 +67,9 @@ export default () => {
       >
         <Input placeholder='未设置时默认使用SaaS版Registry' />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+      <Form.Item wrapperCol={{ offset: 6, span: 16 }} style={{ paddingTop: 24 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
-          更改信息
+          保存
         </Button>
       </Form.Item>
     </Form>

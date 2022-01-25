@@ -367,7 +367,7 @@ export default () => {
 
   return (
     <Form form={form} {...FL} onValuesChange={onValuesChange}>
-      <Row gutter={16} className={styles.sourceForm}>
+      <Row gutter={36} className={styles.sourceForm}>
         <Col span={11}>
           <Form.Item 
             name='source' 
@@ -568,17 +568,24 @@ export default () => {
           </Form.Item>
           <Form.Item 
             wrapperCol={{ span: 19, offset: 5 }}
+            shouldUpdate={true}
+            style={{ paddingTop: 24 }}
           >
-            {isCreate ? (
-              <Space>
-                <Button type='primary' onClick={next}>下一步</Button>
-              </Space>
-            ) : (
-              <Space>
-                <Button onClick={linkToPolicyGroupList}>取消</Button>     
-                <Button type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
-              </Space>
-            )}
+            {({ getFieldsError }) => {
+              const hasErr = !!(getFieldsError().find((it) => {
+                return it.errors && it.errors.length > 0;
+              }));
+              return isCreate ? (
+                <Space>
+                  <Button disabled={hasErr} type='primary' onClick={next}>下一步</Button>
+                </Space>
+              ) : (
+                <Space>
+                  <Button onClick={linkToPolicyGroupList}>取消</Button>     
+                  <Button disabled={hasErr} type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
+                </Space>
+              );
+            }}
           </Form.Item>
         </Col>
         <Col span={13} className='readme-info'>

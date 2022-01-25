@@ -227,6 +227,7 @@ const OnlineTest = ({ match = {} }) => {
                     {TestStatus}
                   </Space>
                 }
+                className='idcos-common-light-background-coder'
                 height={337}
                 value={outputInfo.value}
                 options={{ mode: outputInfo.isError ? 'error-message' : 'application/json' }}

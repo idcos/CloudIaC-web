@@ -13,7 +13,12 @@ export default ({ visible, onClose, id }) => {
       onClose={onClose}
       width={800}
     >
-      <DetectionCard targetType='template' targetId={id} requestFn={ctplAPI.result.bind(null, { tplId: id, pageSize: 0 })} />
+      <DetectionCard 
+        targetType='template' 
+        targetId={id}
+        requestFn={ctplAPI.result.bind(null, { tplId: id, pageSize: 0 })} 
+        runScanRequestFn={ctplAPI.runScan.bind(null, { tplId: id })}
+      />
     </Drawer>
   );
 };

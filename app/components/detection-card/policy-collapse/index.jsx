@@ -6,7 +6,8 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
 import Coder from "components/coder";
-import { POLICIES_SEVERITY_ENUM, TARGET_TYPE_ENUM } from 'constants/types';
+import { POLICIES_SEVERITY_STATUS_ENUM, TARGET_TYPE_ENUM } from 'constants/types';
+import { DropRightIcon, DropDownIcon } from 'components/iconfont';
 import StatusIcon from '../components/status-icon';
 import styles from './styles.less';
 
@@ -38,14 +39,14 @@ export default ({ data, refresh, targetId, targetType }) => {
   );
 
   const passedList = [
-    { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_ENUM[text] || text },
+    { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
     { 
-      label: '策略内容', 
       layout: 'vertical',
       code: 'rego', 
       format: (text) => (
         <Coder
-          style={{ height: 350, border: '1px solid #ebebeb' }}
+          style={{ height: 350 }}
+          selfClassName='idcos-common-gray-background-coder'
           options={{ mode: 'rego' }}
           value={text || ''}
         />
@@ -54,29 +55,31 @@ export default ({ data, refresh, targetId, targetType }) => {
   ];
 
   const failedList = [
-    { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_ENUM[text] || text },
-    { label: '资源类型', code: 'resource_type' },
     { label: '文件', code: 'file' },
     { label: '行数', code: 'line' },
     { 
-      label: '错误资源类型所在的tf代码段', 
+      // label: '错误资源类型所在的tf代码段', 
       layout: 'vertical',
       code: 'source', 
       format: (text) => (
         <Coder
-          style={{ height: 350, border: '1px solid #ebebeb' }}
+          style={{ height: 350 }}
+          selfClassName='idcos-common-gray-background-coder'
           options={{ mode: 'text/webassembly' }}
           value={text || ''}
         />
       )
     },
+    { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
+    { label: '错误资源类型', code: 'resource_type' },
     { 
-      label: '策略内容', 
+      // label: '策略内容', 
       layout: 'vertical',
       code: 'rego', 
       format: (text) => (
         <Coder
-          style={{ height: 350, border: '1px solid #ebebeb' }}
+          style={{ height: 350 }}
+          selfClassName='idcos-common-gray-background-coder'
           options={{ mode: 'rego' }}
           value={text || ''}
         />
@@ -116,13 +119,13 @@ export default ({ data, refresh, targetId, targetType }) => {
             <StatusIcon type={data.status} />
             <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{data.policyName}</span>
             {data.status === 'violated' && (
-              <Button disabled={data.policySuppress} size='small' onClick={onSuppress}>屏蔽此策略</Button>
+              <Button className='ant-btn-tertiary' disabled={data.policySuppress} onClick={onSuppress}>屏蔽此策略</Button>
             )}
           </Space>
         </Col>
         <Col className={styles.collapse_header_extra}>
           <span className={styles.collapse_header_extra_collapse}>
-            {collapsed ? <RightOutlined /> : <DownOutlined />}
+            {collapsed ? <DropRightIcon /> : <DropDownIcon />}
           </span>
         </Col>
       </Row>
@@ -143,7 +146,7 @@ export default ({ data, refresh, targetId, targetType }) => {
                   labelStyle={{ color: 'rgba(0, 0, 0, 0.86)' }}
                   contentStyle={{ color: 'rgba(0, 0, 0, 0.46)' }}
                 >
-                  {isFunction(format) ? format(data[code], data) : data[code]}
+                  {(isFunction(format) ? format(data[code], data) : data[code]) || '-'}
                 </Descriptions.Item>
               </Descriptions>
             ))}

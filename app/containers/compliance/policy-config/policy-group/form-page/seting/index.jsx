@@ -76,13 +76,13 @@ export default () => {
           label='策略组名称'
           rules={[{ required: true, message: '请输入' }]}
         >
-          <Input placeholder='请输入策略组名称' />
+          <Input style={{ width: 254 }} placeholder='请输入策略组名称' />
         </Form.Item>
         <Form.Item 
           name='description' 
           label='策略组描述'
         >
-          <Input placeholder='请输入策略组描述' />
+          <Input.TextArea placeholder='请输入策略组描述' rows={7} />
         </Form.Item>
         <Form.Item 
           name='labels' 
@@ -101,6 +101,7 @@ export default () => {
         </Form.Item>
         <Form.Item 
           wrapperCol={{ span: 19, offset: 5 }}
+          style={{ paddingTop: 24 }}
         >
           {isCreate ? (
             <Space>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Modal, Radio, Space, Upload, notification, Select } from 'antd';
-import { VerticalAlignBottomOutlined } from '@ant-design/icons';
-import { UploadtIcon } from 'components/iconfont';
+import { DownIcon } from 'components/iconfont';
 import classNames from 'classnames';
 import styles from './index.less';
 import tplAPI from 'services/tpl';
@@ -27,7 +26,6 @@ const Index = ({ reload, toggleVisible, orgId }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ importStatus, setImportStatus ] = useState('init');
   const [ importInfo, setImportInfo ] = useState({});
-  const [ isImportSkipped, setIsImportSkipped ] = useState(false);
   const [ fileList, setFileList ] = useState([]);
   const [ type, setType ] = useState();
   const [ projectList, setProjectList ] = useState([]);
@@ -194,7 +192,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
                 {...props} 
               >
                 <Button
-                  icon={<>{fileList[0] && fileList[0] ? <UploadtIcon/> : <VerticalAlignBottomOutlined/>}</>}
+                  icon={<DownIcon/>}
                   style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
                 >
                   {fileList[0] && fileList[0] ? '重新选择' : '选择文件'}
