@@ -168,13 +168,13 @@ const CenvList = () => {
     {
       dataIndex: 'name',
       title: '环境名称',
-      width: 152,
+      width: 220,
       ellipsis: true
     },
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      width: 200,
+      width: 220,
       ellipsis: true,
       render: (text, record) => {
         const policyGroups = text || [];
@@ -204,26 +204,22 @@ const CenvList = () => {
     {
       dataIndex: 'passed',
       title: '通过',
-      width: 64,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'violated',
       title: '不通过',
-      width: 67,
-      ellipsis: true
+      width: 64
     },
     {
       dataIndex: 'suppressed',
       title: '屏蔽',
-      width: 62,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'failed',
       title: '失败',
-      width: 70,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'projectName',

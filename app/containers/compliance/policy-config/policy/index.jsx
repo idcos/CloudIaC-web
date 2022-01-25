@@ -150,20 +150,17 @@ const Policy = ({ location, match }) => {
     {
       dataIndex: 'passed',
       title: '通过',
-      width: 48,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'violated',
       title: '不通过',
-      width: 64,
-      ellipsis: true
+      width: 64
     },
     {
       dataIndex: 'failed',
       title: '失败',
-      width: 48,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'creator',

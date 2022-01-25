@@ -153,13 +153,13 @@ const CCTList = () => {
     {
       dataIndex: 'name',
       title: '云模板名称',
-      width: 175,
+      width: 220,
       ellipsis: true
     },
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      width: 200,
+      width: 220,
       ellipsis: true,
       render: (policyGroups, record) => {
         return (
@@ -174,26 +174,22 @@ const CCTList = () => {
     {
       dataIndex: 'passed',
       title: '通过',
-      width: 64,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'violated',
       title: '不通过',
-      width: 68,
-      ellipsis: true
+      width: 64
     },
     {
       dataIndex: 'suppressed',
       title: '屏蔽',
-      width: 61,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'failed',
       title: '失败',
-      width: 72,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'policyStatus',
