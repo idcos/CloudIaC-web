@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Space, Row, Col, Descriptions, Button, Modal } from 'antd';
-import { RightOutlined, DownOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';

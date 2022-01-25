@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Tag } from 'antd';
-import { CheckCircleFilled, MinusCircleFilled } from "@ant-design/icons";
+import { SuccessIcon, ErrorIcon } from "components/iconfont";
 
 const CustomTag = ({ type, icon, text, ...restProps }) => {
 
@@ -9,12 +9,12 @@ const CustomTag = ({ type, icon, text, ...restProps }) => {
       success: {
         bgColor: '#C3E6CD',
         textColor: '#108548',
-        icon: <CheckCircleFilled style={{ color: '#108548' }}/>
+        icon: <SuccessIcon style={{ color: '#108548' }}/>
       },
       error: {
         bgColor: '#FDD4CD',
         textColor: '#DD2B0E',
-        icon: <MinusCircleFilled style={{ color: '#DD2B0E' }}/>
+        icon: <ErrorIcon style={{ color: '#DD2B0E' }}/>
       },
       default: {
         bgColor: '#D7DADE',

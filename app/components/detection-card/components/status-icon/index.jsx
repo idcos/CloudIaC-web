@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { InfoCircleFilled, CheckCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+import { SuccessIcon, ErrorIcon } from "components/iconfont";
 import { ShieldIcon } from 'components/iconfont';
 import styles from './styles.less';
 
@@ -10,13 +10,13 @@ export default ({ type = 'mix', hasWrapper = false }) => {
     switch (type) {
     case 'passed': 
       return {
-        icon: <CheckCircleFilled style={{ color: '#108548' }} />,
+        icon: <SuccessIcon style={{ color: '#108548' }} />,
         wrapperBgColor: '#C3E6CD'
       };
     case 'failed': 
     case 'violated': 
       return {
-        icon: <MinusCircleFilled style={{ color: '#DD2E12' }} />,
+        icon: <ErrorIcon style={{ color: '#DD2E12' }} />,
         wrapperBgColor: '#FDD4CD'
       };
     case 'suppressed':
@@ -25,10 +25,7 @@ export default ({ type = 'mix', hasWrapper = false }) => {
         wrapperBgColor: '#DADBDA'
       };
     default: 
-      return {
-        icon: <InfoCircleFilled style={{ color: '#AB6100' }} />,
-        wrapperBgColor: '#F5D9A8'
-      };
+      return;
     }
  
   });
