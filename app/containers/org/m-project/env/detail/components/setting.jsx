@@ -387,7 +387,7 @@ const Setting = () => {
                         {policyEnable ? (
                           <>
                             <Form.Item
-                              label='绑定合规策略组'
+                              label='绑定策略组'
                               name='policyGroup'
                               rules={[{ required: true, message: '请选择' }]}
                               labelCol={{ span: 8 }}
@@ -408,6 +408,7 @@ const Setting = () => {
                               wrapperCol={{ offset: 8, span: 16 }}
                               valuePropName='checked'
                               initialValue={false}
+                              className='ant-form-item-no-min-height'
                             >
                               <Checkbox>合规不通过时中止部署</Checkbox>                  
                             </Form.Item>
@@ -474,6 +475,7 @@ const Setting = () => {
                               wrapperCol={{ offset: 8, span: 16 }}
                               valuePropName='checked'
                               initialValue={false}
+                              className='ant-form-item-no-min-height'
                             >
                               <Checkbox onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
                             </Form.Item>

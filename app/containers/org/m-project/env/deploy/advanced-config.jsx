@@ -469,9 +469,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           return policyEnable ? (
                             <>
                               <Form.Item
-                                label='绑定合规策略组'
+                                label='绑定策略组'
                                 name='policyGroup'
-                                rules={[{ required: true, message: '请绑定合规策略组' }]}
+                                rules={[{ required: true, message: '请绑定策略组' }]}
                                 labelCol={{ span: 6 }}
                                 wrapperCol={{ span: 16 }}
                               >
@@ -490,6 +490,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 wrapperCol={{ offset: 6, span: 16 }}
                                 valuePropName='checked'
                                 initialValue={false}
+                                className='ant-form-item-no-min-height'
                               >
                                 <Checkbox>合规不通过时中止部署</Checkbox>                  
                               </Form.Item>
@@ -564,6 +565,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 wrapperCol={{ offset: 6, span: 16 }}
                                 valuePropName='checked'
                                 initialValue={false}
+                                className='ant-form-item-no-min-height'
                               >
                                 <Checkbox onChange={e => checkedChange(e, '自动纠正漂移')}>自动纠漂</Checkbox>                  
                               </Form.Item>

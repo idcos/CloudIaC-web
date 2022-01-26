@@ -1,5 +1,6 @@
 import React, { useImperativeHandle, useEffect } from 'react';
 import { Space, Form, Input, Button, Switch, Alert, Select, Checkbox } from "antd";
+import { InfoCircleOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import cgroupsAPI from 'services/cgroups';
@@ -94,10 +95,11 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
                 message='云模板开启合规检测后，该云模板部署的新环境默认将开启合规检测，并应用绑定的策略组环境创建后如需修改策略组可在『合规中心』或『环境详情』-『设置』中进行配置'
                 type='info'
                 showIcon={true}
-                style={{ margin: '-16px 0 16px' }}
+                icon={<InfoCircleOutlined style={{ color: '#166CC1' }} />}
+                style={{ margin: '-16px 0 16px', backgroundColor: '#e9f3fc', borderColor: '#e9f3fc' }}
               />
               <Form.Item
-                label='绑定合规策略组'
+                label='绑定策略组'
                 name='policyGroup'
                 rules={[{ required: true, message: '请选择' }]}
               >
@@ -113,9 +115,10 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
               <Form.Item
                 name='tplTriggers'
                 wrapperCol={{ offset: 5, span: 14 }}
+                className='ant-form-item-no-min-height'
               >
                 <Checkbox.Group>
-                  <Checkbox value='commit' style={{ lineHeight: '32px' }}>分支推送时自动检测合规</Checkbox>                  
+                  <Checkbox value='commit'>分支推送时自动检测合规</Checkbox>                  
                 </Checkbox.Group>
               </Form.Item>
             </>
