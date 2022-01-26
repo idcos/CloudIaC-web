@@ -191,7 +191,8 @@ const Setting = () => {
 
 
   return <div className={styles.depolySettingDetail}>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'设置'}>
+    <div>
+      <div style={{ margin: '22px 0 12px 20px', fontSize: 16 }}>设置</div>
       <Form
         scrollToFirstError={true}
         colon={true}
@@ -201,9 +202,11 @@ const Setting = () => {
       >
         <div>
           <Tabs
+            className='setting-tabs'
             tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
             animated={false}
             activeKey={panel}
+            type='card'
             onChange={(k) => {
               setPanel(k); 
             }}
@@ -213,8 +216,8 @@ const Setting = () => {
               key={'execute'}
               forceRender={true}
             >
-              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={7}>
+              <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={8}>
                   <Form.Item 
                     style={{ marginBottom: 0 }}
                     label='存活时间：'
@@ -266,7 +269,7 @@ const Setting = () => {
                     </Row>
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                <Col span={8}>
                   <Form.Item label={' '}>
                     <Space style={{ minWidth: 340 }}>
                       <Form.Item 
@@ -297,7 +300,7 @@ const Setting = () => {
                     </Space>
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                <Col span={8}>
                 </Col>
               </Row>
             </Tabs.TabPane>
@@ -306,8 +309,8 @@ const Setting = () => {
               key={'deploy'}
               forceRender={true}
             >
-              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={7}>
+              <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={8}>
                   <Form.Item 
                     shouldUpdate={true}
                   >
@@ -329,7 +332,7 @@ const Setting = () => {
                     )}
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                <Col span={8}>
                   <Form.Item 
                     shouldUpdate={true}
                   >
@@ -351,7 +354,7 @@ const Setting = () => {
                     )}
                   </Form.Item>
                 </Col>
-                <Col span={7}>
+                <Col span={8}>
                 </Col>
               </Row>
             </Tabs.TabPane>
@@ -360,139 +363,136 @@ const Setting = () => {
               key={'compliance'}
               forceRender={true}
             >
-              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={12}>
-                  <Form.Item
-                    label='开启合规检测'
-                    name='policyEnable'
-                    valuePropName='checked'
-                    initialValue={false}
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 16 }}
-                  >
-                    <Switch />
-                  </Form.Item>
-                  <Form.Item
-                    noStyle={true}
-                    shouldUpdate={true}
-                  >
-                    {({ getFieldValue }) => {
-                      const policyEnable = getFieldValue('policyEnable');
-                      return policyEnable ? (
-                        <>
-                          <Form.Item
-                            label='绑定合规策略组'
-                            name='policyGroup'
-                            rules={[{ required: true, message: '请选择' }]}
-                            labelCol={{ span: 6 }}
-                            wrapperCol={{ span: 16 }}
-                          >
-                            <Select 
-                              mode='multiple'
-                              optionFilterProp='label'
-                              showSearch={true}
-                              allowClear={true}
-                              showArrow={true}
-                              options={policiesGroupOptions}
-                              placeholder='请选择策略组'
-                            />
-                          </Form.Item>
-                          <Form.Item
-                            name='stopOnViolation'
-                            wrapperCol={{ offset: 6, span: 16 }}
-                            valuePropName='checked'
-                            initialValue={false}
-                          >
-                            <Checkbox>合规不通过时中止部署</Checkbox>                  
-                          </Form.Item>
-                        </>
-                      ) : null;
-                    }}
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item
-                    label='开启漂移检测'
-                    name='openCronDrift'
-                    valuePropName='checked'
-                    initialValue={false}
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 16 }}
-                  >
-                    <Switch />
-                  </Form.Item>
-                  <Form.Item 
-                    noStyle={true}
-                    shouldUpdate={true}
-                  >
-                    {({ getFieldValue }) => {
-                      const openCronDrift = getFieldValue('openCronDrift');
-                      return openCronDrift ? (
-                        <>
-                          <Form.Item 
-                            label='定时检测' 
-                            required={true} 
-                            labelCol={{ span: 6 }}
-                            wrapperCol={{ span: 18 }}
-                          >
-                            <Row>
-                              <Col flex={16}>
-                                <Form.Item 
-                                  noStyle={true}
-                                  name='cronDriftExpress'
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: '请输入crontab表达式'
-                                    }
-                                  ]}
-                                >
-                                  <Input placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
-                                </Form.Item>
-                              </Col>
-                              <Col flex={2}>
-                                <Popover
-                                  placement='topRight'
-                                  content={(
-                                    <>
-                                      <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
-                                      <div style={{ fontWeight: 500 }}>举例：</div>
-                                      <div>
-                                        1.每隔1 分钟执行一次 */1 * * * *<br/>
-                                        2.每天 23点 执行一次 0 23 * * *<br/>
-                                        3.每个月1号23 点执行一次 0 23 1 * *<br/>
-                                        4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
-                                      </div>
-                                    </>
-                                  )}
-                                >
-                                  <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
-                                </Popover>
-                              </Col>
-                            </Row>
-                          </Form.Item>
-                          <Form.Item
-                            name='autoRepairDrift'
-                            wrapperCol={{ offset: 6, span: 16 }}
-                            valuePropName='checked'
-                            initialValue={false}
-                          >
-                            <Checkbox onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
-                          </Form.Item>
-                        </>
-                      ) : null;
-                    }}
-                  </Form.Item>
-                </Col>
-              </Row>
+              <Form.Item
+                noStyle={true}
+                shouldUpdate={true}
+              >
+                {({ getFieldsValue }) => {
+                  const { policyEnable, openCronDrift } = getFieldsValue();
+                  const isOpen = policyEnable || openCronDrift;
+                  const colSpan = isOpen ? 12 : 8; 
+                  return (
+                    <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                      <Col span={colSpan}>
+                        <Form.Item
+                          label='开启合规检测'
+                          name='policyEnable'
+                          valuePropName='checked'
+                          initialValue={false}
+                          labelCol={{ span: 8 }}
+                          wrapperCol={{ span: 16 }}
+                        >
+                          <Switch />
+                        </Form.Item>
+                        {policyEnable ? (
+                          <>
+                            <Form.Item
+                              label='绑定合规策略组'
+                              name='policyGroup'
+                              rules={[{ required: true, message: '请选择' }]}
+                              labelCol={{ span: 8 }}
+                              wrapperCol={{ span: 16 }}
+                            >
+                              <Select 
+                                mode='multiple'
+                                optionFilterProp='label'
+                                showSearch={true}
+                                allowClear={true}
+                                showArrow={true}
+                                options={policiesGroupOptions}
+                                placeholder='请选择策略组'
+                              />
+                            </Form.Item>
+                            <Form.Item
+                              name='stopOnViolation'
+                              wrapperCol={{ offset: 8, span: 16 }}
+                              valuePropName='checked'
+                              initialValue={false}
+                            >
+                              <Checkbox>合规不通过时中止部署</Checkbox>                  
+                            </Form.Item>
+                          </>
+                        ) : null}
+                      </Col>
+                      <Col span={colSpan}>
+                        <Form.Item
+                          label='开启漂移检测'
+                          name='openCronDrift'
+                          valuePropName='checked'
+                          initialValue={false}
+                          labelCol={{ span: 8 }}
+                          wrapperCol={{ span: 16 }}
+                        >
+                          <Switch />
+                        </Form.Item>
+                        {openCronDrift ? (
+                          <>
+                            <Form.Item 
+                              label='定时检测' 
+                              required={true} 
+                              labelCol={{ span: 8 }}
+                              wrapperCol={{ span: 16 }}
+                            >
+                              <Row wrap={false}>
+                                <Col flex={16}>
+                                  <Form.Item 
+                                    noStyle={true}
+                                    name='cronDriftExpress'
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: '请输入crontab表达式'
+                                      }
+                                    ]}
+                                  >
+                                    <Input placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
+                                  </Form.Item>
+                                </Col>
+                                <Col flex={2}>
+                                  <Popover
+                                    placement='topRight'
+                                    content={(
+                                      <>
+                                        <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
+                                        <div style={{ fontWeight: 500 }}>举例：</div>
+                                        <div>
+                                          1.每隔1 分钟执行一次 */1 * * * *<br/>
+                                          2.每天 23点 执行一次 0 23 * * *<br/>
+                                          3.每个月1号23 点执行一次 0 23 1 * *<br/>
+                                          4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
+                                        </div>
+                                      </>
+                                    )}
+                                  >
+                                    <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+                                  </Popover>
+                                </Col>
+                              </Row>
+                            </Form.Item>
+                            <Form.Item
+                              name='autoRepairDrift'
+                              wrapperCol={{ offset: 8, span: 16 }}
+                              valuePropName='checked'
+                              initialValue={false}
+                            >
+                              <Checkbox onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
+                            </Form.Item>
+                          </>
+                        ) : null}
+                      </Col>
+                      <Col span={colSpan}></Col>
+                    </Row>
+                  );
+                }}
+              </Form.Item>
             </Tabs.TabPane>
             <Tabs.TabPane
               tab={'审批'}
               key={'approval'}
               forceRender={true}
             >
-              <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={7}>
+              <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                <Col span={8}>
                   <Form.Item 
                     name='autoApproval'
                     valuePropName='checked'
@@ -514,7 +514,7 @@ const Setting = () => {
           ) : null
         }
       </Form>
-    </Card>
+    </div>
   </div>;
 };
 

@@ -4,7 +4,6 @@ import userAPI from 'services/user';
 import notificationsAPI from 'services/notifications';
 import { ORG_USER } from 'constants/types';
 import TableTransfer from 'components/table-transfer';
-import styles from './style.less';
 
 const { Option } = Select;
 

@@ -20,16 +20,23 @@
 .depolySettingDetail {
   :global {
 
-    .ant-tabs-top>.ant-tabs-nav::before,
-    .ant-tabs-bottom>.ant-tabs-nav::before,
-    .ant-tabs-top>div>.ant-tabs-nav::before,
-    .ant-tabs-bottom>div>.ant-tabs-nav::before {
-      border-bottom: 1px solid #ebebeb;
-    }
+    .setting-tabs {
+      border: 2px solid #E1E4E8;
 
-    .ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab-active,
-    .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab-active {
-      border-bottom-color: #ebebeb;
+      .ant-tabs-tab {
+        border-radius: 0 !important;
+        margin: 0 !important;
+        width: 166px !important;
+        display: flex;
+        justify-content: center;
+        border-width: 0 1px 1px 0;
+        &.ant-tabs-tab-active {
+          border-bottom-color: transparent !important;
+        }
+      }
+      .ant-tabs-content {
+        padding: 0 19px;
+      }
     }
   }
 }

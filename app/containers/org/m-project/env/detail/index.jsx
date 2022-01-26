@@ -214,9 +214,9 @@ const EnvDetail = (props) => {
           <EnvInfo envInfo={envInfo} taskInfo={taskInfo} />
         </div>
         <div style={{ marginTop: 20 }} className='idcos-card'>
-          <div className={styles.depolyDetail}>
+          <div>
             <Tabs
-              type={'card'}
+              // type={'card'}
               tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
               animated={false}
               renderTabBar={(props, DefaultTabBar) => {
