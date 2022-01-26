@@ -125,17 +125,17 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
           ) : null;
         }}
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ marginBottom: 0 }}>
+      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ paddingTop: 24, marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (
               <>
-                <Button onClick={() => stepHelper.prev()}>上一步</Button>
+                <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>上一步</Button>
                 <Button type='primary' htmlType={'submit'}>下一步</Button>
               </>
             ) : (
               <>
-                <Button onClick={goCTlist}>取消</Button>
+                <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
                 <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
               </>
             )

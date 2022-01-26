@@ -581,7 +581,7 @@ export default () => {
                 </Space>
               ) : (
                 <Space>
-                  <Button onClick={linkToPolicyGroupList}>取消</Button>     
+                  <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>取消</Button>     
                   <Button disabled={hasErr} type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
                 </Space>
               );

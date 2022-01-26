@@ -105,12 +105,12 @@ export default () => {
         >
           {isCreate ? (
             <Space>
-              <Button onClick={prev}>上一步</Button>
+              <Button className='ant-btn-tertiary' onClick={prev}>上一步</Button>
               <Button type='primary' onClick={onCreate} loading={createLoading}>提交</Button>
             </Space>
           ) : (
             <Space>
-              <Button onClick={linkToPolicyGroupList}>取消</Button>     
+              <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>取消</Button>     
               <Button type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
             </Space>
           )}

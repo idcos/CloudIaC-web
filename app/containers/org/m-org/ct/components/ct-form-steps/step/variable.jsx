@@ -51,12 +51,12 @@ export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, o
         {
           opType === 'add' ? (
             <>
-              <Button onClick={() => stepHelper.prev()}>上一步</Button>
+              <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>上一步</Button>
               <Button type='primary' onClick={onFinish}>下一步</Button>
             </>
           ) : (
             <>
-              <Button onClick={goCTlist}>取消</Button>
+              <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
               <Button type='primary' onClick={onFinish} loading={saveLoading}>提交</Button>
             </>
           )

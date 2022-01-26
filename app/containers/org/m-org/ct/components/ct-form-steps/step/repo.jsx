@@ -384,7 +384,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 6, span: 14 }} style={{ marginBottom: 0 }}>
+      <Form.Item wrapperCol={{ offset: 6, span: 14 }} style={{ paddingTop: 24, marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (
@@ -393,7 +393,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
               </>
             ) : (
               <>
-                <Button onClick={goCTlist}>取消</Button>
+                <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
                 <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
               </>
             )
