@@ -20,7 +20,7 @@ const ComplianceInfo = () => {
   return (
     <div style={{ padding: 24 }}>
       <DetectionCard 
-        failLogParams={{ stepType: 'tfscan' }} 
+        // failLogParams={{ stepType: 'tfscan' }} 
         targetId={envId}
         targetType='env'
         requestFn={envAPI.result.bind(null, { orgId, projectId, envId, pageSize: 0 })} 
