@@ -94,7 +94,8 @@ const FormPage = ({ match = {} }) => {
   } = useRequest(
     (params) => requestWrapper(
       cgroupsAPI.create.bind(null, params), {
-        autoSuccess: true
+        autoSuccess: true,
+        showErrMsgDescription: true
       }
     ), {
       manual: true,
@@ -111,7 +112,8 @@ const FormPage = ({ match = {} }) => {
   } = useRequest(
     (params) => requestWrapper(
       cgroupsAPI.update.bind(null, { ...params, policyGroupId }), {
-        autoSuccess: true
+        autoSuccess: true,
+        showErrMsgDescription: true
       }
     ), {
       manual: true,
