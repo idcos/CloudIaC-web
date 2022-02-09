@@ -93,7 +93,7 @@ const EnvList = (props) => {
                 <div 
                   className={styles.name} 
                   onClick={() => {
-                    const tabKey = data.status === 'approving' ? 'deployJournal' : 'resource';
+                    const tabKey = data.status === 'failed' ? 'deployJournal' : 'resource';
                     history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
                   }}
                 >
