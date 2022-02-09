@@ -81,7 +81,7 @@ export default () => {
           </div>
           <div className='describe'>引领云原生运维</div>
         </div>
-        <div className='foot'>Copyright © 2021 杭州云霁科技有限公司</div>
+        <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
       </Col>
       <Col span={10} className='right'>
         <div className='loginFormWrapper'>
