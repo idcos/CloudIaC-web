@@ -146,7 +146,7 @@ export default ({ match }) => {
           >
             <Table
               columns={columns}
-              scroll={{ x: 'min-content', y: 430 }}
+              scroll={{ x: 'min-content', y: 570 }}
               loading={tableLoading}
               {...tableProps}
             />
