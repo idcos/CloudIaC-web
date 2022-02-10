@@ -201,10 +201,11 @@ export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
 export const SCAN_DETAIL_DISABLE_STATUS = [ 'disable', 'enable' ];
 
 export const DEPLOY_HISTORY_SOURCE_ENUM = {
-  manual: '手动执行',
+  manual: '手动',
   driftPlan: '漂移检测',
-  driftApply: '自动纠漂',
+  driftApply: '纠正漂移',
   webhookPlan: 'PR/MR',
   webhookApply: '分支推送',
-  autoDestroy: '分支推送'
+  autoDestroy: '定时销毁',
+  api: 'API触发(三方系统标识)'
 };
