@@ -14,5 +14,8 @@ export const authAPI = {
     return put('/api/v1/users/self', {
       name, phone, oldPassword, newPassword, newbieGuide
     });
+  },
+  getSsoToken: () => {
+    return post('/api/v1/sso/tokens', {});
   }
 };

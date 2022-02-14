@@ -14,6 +14,9 @@ const tailLayout = {
 };
 
 export default () => {
+
+  const { callbackUrl, redirectToRegistry } = queryString.parse(window.location.search);
+  
   const onFinish = async (values) => {
     try {
       const res = await authAPI.login(values);
@@ -36,7 +39,11 @@ export default () => {
         throw new Error(updateUserInfoRes.message);
       }
       setUserConfig(updateUserInfoRes.result || {});
-      redirectToPage();
+      if (redirectToRegistry === 'y') {
+        redirectToRegistryPage();
+      } else {
+        redirectToPage();
+      }
     } catch (e) {
       notification.error({
         message: e.message
@@ -51,12 +58,29 @@ export default () => {
 
   useEffect(() => {
     if (localStorage.accessToken) {
-      redirectToIndex();
+      if (redirectToRegistry === 'y') {
+        redirectToRegistryPage();
+      } else {
+        redirectToIndex();
+      }
     }
   }, []);
 
+  const redirectToRegistryPage = async () => {
+    const { url, query } = queryString.parseUrl(decodeURIComponent(callbackUrl));
+    const res = await authAPI.getSsoToken();
+    const { token } = res && res.result || {};
+    const redirectToUrl = queryString.stringifyUrl({
+      url,
+      query: {
+        ...query,
+        accessToken: token
+      }
+    });
+    window.location.href = redirectToUrl;
+  };
+
   const redirectToPage = () => {
-    const { callbackUrl } = queryString.parse(window.location.search);
     if (callbackUrl) {
       window.location.href = decodeURIComponent(callbackUrl);
     } else {
