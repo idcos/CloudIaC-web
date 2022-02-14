@@ -173,7 +173,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
         <Table
           columns={columns}
           loading={tableLoading}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           {...tableProps}
         />
       </Space>

@@ -256,7 +256,7 @@ const CTList = ({ match = {} }) => {
           columns={columns}
           dataSource={resultMap.list}
           loading={loading && !loopRequesting}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           pagination={{
             current: query.pageNo,
             pageSize: query.pageSize,
