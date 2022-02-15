@@ -16,6 +16,7 @@ export default ({
   disableEmptyDescription, 
   failLogParams,
   targetType,
+  canScan = true,
   requestFn = noop, 
   runScanRequestFn = noop,
   onSuccessCallback = noop
@@ -90,12 +91,14 @@ export default ({
               <span>合规状态</span>
               <PolicyStatus policyStatus={policyStatus} style={{ margin: 0 }} />
               {policyStatus === 'disable' ? disableEmptyDescription : (
-                <Button 
-                  disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
-                  onClick={runScan}
-                >
-                  立即检测
-                </Button>
+                canScan && (
+                  <Button 
+                    disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
+                    onClick={runScan}
+                  >
+                    立即检测
+                  </Button>
+                )
               )}
             </Space>
           </Col>
