@@ -102,7 +102,11 @@ const DeployHistory = () => {
       dataIndex: 'source',
       title: '触发类型',
       width: 120,
-      render: (t) => DEPLOY_HISTORY_SOURCE_ENUM[t]
+      render: (t, { sourceSys }) => (
+        <>
+          {DEPLOY_HISTORY_SOURCE_ENUM[t]}{sourceSys ? `（${sourceSys.toLocaleUpperCase()}）` : null}
+        </>
+      )
     },
     {
       dataIndex: 'creator',

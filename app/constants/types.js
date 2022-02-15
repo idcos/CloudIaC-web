@@ -207,5 +207,5 @@ export const DEPLOY_HISTORY_SOURCE_ENUM = {
   webhookPlan: 'PR/MR',
   webhookApply: '分支推送',
   autoDestroy: '定时销毁',
-  api: 'API触发(三方系统标识)'
+  api: 'API触发'
 };
