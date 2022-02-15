@@ -262,7 +262,11 @@ const Index = ({ match = {} }) => {
         message: '保存成功'
       });
       const envInfo = res.result || {};
-      history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`); 
+      if (envId) { // 重新部署环境，跳部署历史详情
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`); 
+      } else { // 创建部署环境，跳环境详情
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`); 
+      }
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
     } catch (err) {

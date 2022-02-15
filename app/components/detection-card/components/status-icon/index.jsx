@@ -4,7 +4,7 @@ import { SuccessIcon, ErrorIcon } from "components/iconfont";
 import { ShieldIcon } from 'components/iconfont';
 import styles from './styles.less';
 
-export default ({ type = 'mix', hasWrapper = false }) => {
+export default ({ type = '', hasWrapper = false }) => {
 
   const cfg = useMemo(() => {
     switch (type) {
@@ -25,7 +25,7 @@ export default ({ type = 'mix', hasWrapper = false }) => {
         wrapperBgColor: '#DADBDA'
       };
     default: 
-      return;
+      return {};
     }
  
   });
