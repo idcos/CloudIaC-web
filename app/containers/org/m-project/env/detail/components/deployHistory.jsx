@@ -102,7 +102,11 @@ const DeployHistory = () => {
       dataIndex: 'source',
       title: '触发类型',
       width: 120,
-      render: (t) => DEPLOY_HISTORY_SOURCE_ENUM[t]
+      render: (t, { sourceSys }) => (
+        <>
+          {DEPLOY_HISTORY_SOURCE_ENUM[t]}{sourceSys ? `（${sourceSys.toLocaleUpperCase()}）` : null}
+        </>
+      )
     },
     {
       dataIndex: 'creator',
@@ -130,7 +134,7 @@ const DeployHistory = () => {
     <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
       <Table
         columns={columns}
-        scroll={{ x: 'min-content', y: 570 }}
+        scroll={{ x: 'min-content' }}
         loading={tableLoading}
         {...tableProps}
       />

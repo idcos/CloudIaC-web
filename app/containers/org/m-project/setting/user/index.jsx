@@ -200,7 +200,7 @@ const User = ({ orgId, projectId }) => {
       columns={columns}
       dataSource={resultMap.list}
       loading={loading}
-      scroll={{ x: 'min-content', y: 570 }}
+      scroll={{ x: 'min-content' }}
       pagination={{
         current: query.pageNo,
         pageSize: query.pageSize,

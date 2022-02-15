@@ -149,7 +149,7 @@ const TableLayout = ({ setMode }) => {
           columns={columns}
           dataSource={resourceData}
           rowKey='provider'
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           loading={loading}
           pagination={false}
           expandedRowKeys={expandedRowKeys}

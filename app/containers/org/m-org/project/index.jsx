@@ -221,7 +221,7 @@ const Index = (props) => {
           columns={columns}
           dataSource={resultMap.list}
           loading={loading}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           onChange={(pagination, filters, sorter, { action }) => {
             if (action == 'filter') {
               const statusFilter = filters[tableFilterFieldName];
