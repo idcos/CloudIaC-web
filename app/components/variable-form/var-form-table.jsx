@@ -63,8 +63,8 @@ const VarFormTable = (props) => {
   }, [fetchParams, canImportVar]);
 
   const fetchImportVars = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await tplAPI.listImportVars(params);
       if (res.code !== 200) {

@@ -35,8 +35,8 @@ const OtherVarForm = (props) => {
   );
 
   const fetchTfvars = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listTfvars(params);
       if (res.code !== 200) {
@@ -52,8 +52,8 @@ const OtherVarForm = (props) => {
   };
 
   const fetchPlaybooks = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listPlaybook(params);
       if (res.code !== 200) {
