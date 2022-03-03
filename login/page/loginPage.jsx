@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, Input, Button, notification, Row, Col } from 'antd';
 import queryString from 'query-string';
 import { authAPI } from "../services/auth";
@@ -16,6 +16,7 @@ const tailLayout = {
 export default () => {
 
   const { callbackUrl, redirectToRegistry } = queryString.parse(window.location.search);
+  const inputRef = useRef();
   
   const onFinish = async (values) => {
     try {
@@ -130,6 +131,7 @@ export default () => {
                   { required: true, message: '请输入邮箱地址' }, 
                   { type: 'email', message: '邮箱格式有误' }
                 ]}
+                getValueFromEvent={(e) => e.target.value.replace(/(^\s*)|(\s*$)/g, '')}
               >
                 <Input placeholder='请输入邮箱地址' />
               </Form.Item>
@@ -141,6 +143,7 @@ export default () => {
               label='密码'
               name='password'
               rules={[{ required: true, message: '请输入登录密码!' }]}
+              getValueFromEvent={(e) => e.target.value.replace(/(^\s*)|(\s*$)/g, '')}
             >
               <Input.Password placeholder='请输入登录密码' />
             </Form.Item>
