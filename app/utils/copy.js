@@ -1,6 +1,7 @@
 import { notification } from "antd";
 
 const copy = (text) => {
+  text = text || '';
   const copyEle = document.createElement('div');
   copyEle.innerText = text;
   document.body.appendChild(copyEle);

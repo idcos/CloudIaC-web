@@ -114,7 +114,7 @@ export default ({ policyId }) => {
       <Card title='错误列表' type='inner' bodyStyle={{ minHeight: 300 }}>
         <Table
           columns={columns}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           loading={tableLoading}
           {...tableProps}
         />

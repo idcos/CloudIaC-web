@@ -75,8 +75,8 @@ const deployJournal = () => {
   return (
     <div className={styles.deployJournal}>
       <DeployLogCard taskInfo={taskInfo} reload={reload}/>
-      <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={['1']} forceRender={true}>
-        <Panel header='评论' key='1'>
+      <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={[]} forceRender={true}>
+        <Panel header={<span>评论（{comments.length}）</span>} key='1'>
           <List
             loading={loading}
             itemLayout='horizontal'

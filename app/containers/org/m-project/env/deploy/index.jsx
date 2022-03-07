@@ -48,7 +48,7 @@ const Index = ({ match = {} }) => {
       return null;
     }
     return {
-      ...tplInfo, orgId, projectId, envId, tplId, objectType: envId ? 'env' : 'template'
+      ...tplInfo, orgId, projectId, tplId, envId, objectType: 'env'
     };
   }, [tplInfo]);
 
@@ -192,8 +192,8 @@ const Index = ({ match = {} }) => {
 
   // 获取Tfvars文件
   const fetchTfvars = async (fetchParams) => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listTfvars(params);
       if (res.code !== 200) {
@@ -210,8 +210,8 @@ const Index = ({ match = {} }) => {
 
   // 获取Playbook文件
   const fetchPlaybooks = async (fetchParams) => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listPlaybook(params);
       if (res.code !== 200) {
@@ -286,7 +286,6 @@ const Index = ({ match = {} }) => {
           colon={true}
           form={form}
           {...FL}
-          layout={'vertical'}
           initialValues={info}
         >
           <Row justify='space-between' style={{ marginBottom: 24 }}>

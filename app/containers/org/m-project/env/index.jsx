@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Tabs } from "antd";
+import { Button, Tabs, Input } from "antd";
+import { SearchOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EnvList from './componemts/envList';
 import history from 'utils/history';
 import getPermission from "utils/permission";
-import './styles.less';
 
 const envNavs = {
   '': '全部',
@@ -18,31 +18,31 @@ const envNavs = {
 
 const Envs = (props) => {
 
-  const { match, userInfo } = props;
+  const { match, userInfo, location } = props;
+  const { tplName } = location.state || {};
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { params: { orgId, projectId } } = match; 
   const [ panel, setPanel ] = useState('');
+  const [ query, setQuery ] = useState({ q: tplName });
 
   return (
     <Layout
       extraHeader={<PageHeader
         title='环境'
         breadcrumb={true}
+        subDes={(
+          PROJECT_OPERATOR ? (
+            <Button 
+              onClick={() => {
+                history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
+              }} 
+              type='primary'
+            >部署新环境</Button>
+          ) : null
+        )}
       />}
     >
       <div className='idcos-card'>
-        {
-          PROJECT_OPERATOR ? (
-            <div className='btnsTop'>
-              <Button 
-                onClick={() => {
-                  history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
-                }} 
-                type='primary'
-              >部署新环境</Button>
-            </div>
-          ) : null
-        }
         <Tabs
           className='common-card-tabs'
           type={'card'}
@@ -57,13 +57,25 @@ const Envs = (props) => {
           activeKey={panel}
           onChange={(k) => setPanel(k)}
           destroyInactiveTabPane={true}
+          tabBarExtraContent={
+            <Input
+              style={{ width: 400 }}
+              allowClear={true}
+              placeholder='请输入环境名称或云模板名称搜索'
+              prefix={<SearchOutlined />}
+              defaultValue={query.q}
+              onPressEnter={(e) => {
+                setQuery(preValue => ({ ...preValue, q: e.target.value }));
+              }}
+            />
+          }
         >
           {Object.keys(envNavs).map((it) => (
             <Tabs.TabPane
               tab={envNavs[it]}
               key={it}
             > 
-              <EnvList {...props} panel={panel} />
+              <EnvList {...props} panel={panel} query={query} />
             </Tabs.TabPane>
           ))}
         </Tabs>

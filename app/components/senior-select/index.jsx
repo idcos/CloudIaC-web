@@ -55,7 +55,6 @@ export default (props) => {
       placeholder={placeholder}
       showArrow={false} 
       showSearch={false}
-     
       onChange={(value) => {
         setSearchValue('');
         onChange(value);
@@ -70,7 +69,7 @@ export default (props) => {
             {
               showSearch && (
                 <div className='senior-select-header'>
-                  <Input value={searchValue} placeholder={searchPlaceholder} suffix={<SearchOutlined style={{ color: '#AAACAB' }}/>} onChange={onSearch} />
+                  <Input value={searchValue} placeholder={searchPlaceholder} suffix={<SearchOutlined />} onChange={onSearch} />
                 </div>
               )
             }

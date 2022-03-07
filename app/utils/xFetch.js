@@ -7,15 +7,19 @@ function parseJSON(res) {
 }
 
 import { logout } from 'services/logout';
-import history from 'utils/history';
+import { matchPath } from 'react-router-dom';
 
 async function xFetch(url, options) {
+
   const opts = { isEncode: true, ...options, credentials: 'include' };
   const token = localStorage['accessToken'];
+  const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
+  const { orgId, projectId } = match.params || {};
+
   opts.headers = {
     ...opts.headers,
     'Authorization': token,
-    'IaC-Org-Id': opts['IaC-Org-Id'] || '',
+    'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
     'IaC-Project-Id': opts['IaC-Project-Id'] || ''
   };
   if (opts.isEncode && !opts.isEncodeParams) {

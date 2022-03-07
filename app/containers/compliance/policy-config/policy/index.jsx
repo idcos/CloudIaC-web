@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Button, Table, Space, Input, Select, Divider, Tag, Popover } from 'antd';
+import { Button, Table, Space, Input, Select, Divider, Tag, Popover, Row, Col } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import pick from 'lodash/pick';
 import queryString from 'query-string';
@@ -10,12 +11,14 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
 import { useSearchFormAndTable } from 'utils/hooks';
-import { POLICIES_SEVERITY_ENUM } from 'constants/types';
+import { POLICIES_SEVERITY_STATUS_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
 import cgroupsAPI from 'services/cgroups';
 import DetailDrawer from './detail-drawer';
 
-const Policy = () => {
+const Policy = ({ location, match }) => {
+
+  const { orgId } = match.params || {};
   const searchQuery = queryString.parse(location.search) || {};
   const [ detailDrawerState, setDetailsDrawerState ] = useState({
     visible: false,
@@ -62,14 +65,9 @@ const Policy = () => {
     }
   });
 
-  // 访问编辑策略页面
-  const goEditPage = (id) => {
-    history.push(`/compliance/policy-config/policy/policy-form/${id}`);
-  };
-
-  // 访问创建策略页面
-  const goCreatePage = () => {
-    history.push('/compliance/policy-config/policy/policy-form');
+  // 访问在线测试页面
+  const goOnlineTestPage = (id) => {
+    history.push(`/org/${orgId}/compliance/policy-config/policy/online-test/${id || ''}`);
   };
 
   // 打开详情抽屉
@@ -98,18 +96,18 @@ const Policy = () => {
     {
       dataIndex: 'name',
       title: '策略名称',
-      width: 138,
+      width: 220,
       ellipsis: true,
       render: (text, record) => (
         <a onClick={() => onOpenDetailsDrawer(record.id)}>
-          <EllipsisText>{text}</EllipsisText>
+          {text}
         </a>
       )
     },
     {
       dataIndex: 'tags',
       title: '标签',
-      width: 166,
+      width: 230,
       render: (text) => {
         const tags = text ? text.split(',') : [];
         return (
@@ -133,40 +131,36 @@ const Policy = () => {
               )
             }
           </div>
-        )
+        );
       }
     },
     {
       dataIndex: 'groupName',
       title: '策略组',
-      width: 166,
-      ellipsis: true,
-      render: (text) => <EllipsisText>{text}</EllipsisText>
+      width: 170,
+      ellipsis: true
     },
     {
       dataIndex: 'severity',
       title: '严重性',
       width: 70,
       ellipsis: true,
-      render: (text) => POLICIES_SEVERITY_ENUM[text]
+      render: (text) => POLICIES_SEVERITY_STATUS_ENUM[text] || '-'
     },
     {
       dataIndex: 'passed',
       title: '通过',
-      width: 66,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'violated',
       title: '不通过',
-      width: 69,
-      ellipsis: true
+      width: 64
     },
     {
       dataIndex: 'failed',
       title: '失败',
-      width: 56,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'creator',
@@ -183,7 +177,7 @@ const Policy = () => {
     },
     {
       title: '操作',
-      width: 120,
+      width: 80,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
@@ -193,8 +187,8 @@ const Policy = () => {
             <Button 
               style={{ padding: 0, fontSize: '12px' }} 
               type='link' 
-              onClick={() => goEditPage(id)}
-            >编辑</Button>
+              onClick={() => goOnlineTestPage(id)}
+            >在线测试</Button>
           </Space>
         );
       }
@@ -205,41 +199,51 @@ const Policy = () => {
     extraHeader={<PageHeader
       title='策略'
       breadcrumb={true}
+      subDes={<Button onClick={() => goOnlineTestPage()}>在线测试</Button>}
     />}
   >
     <div className='idcos-card'>
-      <Space size={16} direction='vertical' style={{ width: '100%'}}>
-        <Space>
-          <Button type={'primary'} onClick={goCreatePage}>
-            新建策略
-          </Button>
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            placeholder='请选择策略组'
-            options={policyGroupOptions}
-            optionFilterProp='label'
-            showSearch={true}
-            value={form.groupId}
-            onChange={(groupId) => onChangeFormParams({ groupId })}
-          />
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            options={Object.keys(POLICIES_SEVERITY_ENUM).map(it => ({ label: POLICIES_SEVERITY_ENUM[it], value: it }))}
-            placeholder='请选择严重性'
-            onChange={(severity) => onChangeFormParams({ severity })}
-          />
-          <Input.Search
-            style={{ width: 240 }}
-            allowClear={true}
-            placeholder='请输入策略名称搜索'
-            onSearch={(q) => onChangeFormParams({ q })}
-          />
-        </Space>
+      <Space size={16} direction='vertical' style={{ width: '100%' }}>
+        <Row justify='space-between' wrap={false}>
+          <Col>
+            <Space>
+              <Select
+                style={{ width: 264 }}
+                allowClear={true}
+                placeholder='请选择策略组'
+                options={policyGroupOptions}
+                optionFilterProp='label'
+                showSearch={true}
+                value={form.groupId}
+                onChange={(groupId) => onChangeFormParams({ groupId })}
+              />
+              <Select
+                style={{ width: 264 }}
+                allowClear={true}
+                options={Object.keys(POLICIES_SEVERITY_STATUS_ENUM).map(it => ({ label: POLICIES_SEVERITY_STATUS_ENUM[it], value: it }))}
+                placeholder='请选择严重性'
+                onChange={(severity) => onChangeFormParams({ severity })}
+              />
+            </Space>
+          </Col>
+          <Col>
+            <Space>
+              <Input
+                style={{ width: 320 }}
+                allowClear={true}
+                placeholder='请输入策略名称或标签搜索'
+                prefix={<SearchOutlined />}
+                onPressEnter={(e) => {
+                  const q = e.target.value;
+                  onChangeFormParams({ q });
+                }}
+              />
+            </Space>
+          </Col>
+        </Row>
         <Table
           columns={columns}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           loading={tableLoading}
           {...tableProps}
         />

@@ -1,5 +1,6 @@
-
+import { Space } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutlined } from '@ant-design/icons';
+import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon } from 'components/iconfont';
 
 /**
  * 全局滚动dom id
@@ -12,7 +13,8 @@ export const TFVERSION_AUTO_MATCH = 'tfversion_auto_match';
 export const ORG_USER = {
   role: {
     member: '成员',
-    admin: '管理员'
+    admin: '管理员',
+    complianceManager: '合规管理员'
   },
   eventType: {
     'task.failed': '部署失败',
@@ -68,11 +70,11 @@ export const ENV_STATUS = {
 };
 
 export const ENV_STATUS_COLOR = {
-  'active': 'success', 
-  'failed': 'error', 
-  'inactive': 'gold',
-  'running': 'cyan',
-  'approving': 'processing'
+  'active': '#008C5A', 
+  'failed': '#DD2B0E', 
+  'inactive': '#faad14',
+  'running': '#08979c',
+  'approving': '#548BC5'
 };
 
 export const SCOPE_ENUM = {
@@ -146,10 +148,25 @@ export const END_ENV_STATUS_LIST = [
 ];
 
 /** 策略严重等级 */
-export const POLICIES_SEVERITY_ENUM = {
-  high: '高',
-  medium: '中',
-  low: '低'
+export const POLICIES_SEVERITY_STATUS_ENUM = {
+  high: (
+    <Space size={4}>
+      <SeverityHighIcon />
+      <span>高</span>
+    </Space>
+  ),
+  medium: (
+    <Space size={4}>
+      <SeverityMediumIcon />
+      <span>中</span>
+    </Space>
+  ),
+  low: (
+    <Space size={4}>
+      <SeverityLowIcon />
+      <span>低</span>
+    </Space>
+  )
 };
 
 export const POLICIES_DETECTION = {
@@ -166,20 +183,6 @@ export const POLICIES_DETECTION_COLOR = {
   violated: '#FF3B30',
   suppressed: '#B3CDFF'
 };
-export const POLICIES_DETECTION_COLOR_COLLAPSE = {
-  pending: '#FFBF00',
-  passed: '#00AB9D',
-  failed: '#FF3B30',
-  violated: '#FF3B30',
-  suppressed: '#c1c1c1'
-};
-export const POLICIES_DETECTION_COLOR_TAG = {
-  pending: 'gold',
-  passed: 'green',
-  failed: 'volcano',
-  violated: 'red',
-  suppressed: 'purple'
-};
 export const POLICIES_DETECTION_ICON_COLLAPSE = {
   pending: <SyncOutlined />,
   passed: <CheckCircleOutlined />,
@@ -191,4 +194,18 @@ export const DIMENSION_ENUM = {
   module: '所属模块',
   provider: 'Provider',
   type: '资源类型'
+};
+// 禁止扫描的合规状态
+export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
+// 禁止查看扫描详情的状态
+export const SCAN_DETAIL_DISABLE_STATUS = [ 'disable', 'enable' ];
+
+export const DEPLOY_HISTORY_SOURCE_ENUM = {
+  manual: '手动',
+  driftPlan: '漂移检测',
+  driftApply: '纠正漂移',
+  webhookPlan: 'PR/MR',
+  webhookApply: '分支推送',
+  autoDestroy: '定时销毁',
+  api: 'API触发'
 };

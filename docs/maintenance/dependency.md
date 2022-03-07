@@ -122,7 +122,6 @@ import TestPage from 'containers/TestPage/Loadable';
  html-loader                             0.4.4  →    0.4.5
  imports-loader                          0.7.0  →    0.7.1
  lint-staged                             3.3.0  →    3.3.2
- ngrok                                   2.2.6  →    2.2.9
  offline-plugin                          4.6.1  →    4.6.2
  shelljs                                 0.7.6  →    0.7.7
  sinon                             2.0.0-pre.5  →    2.0.0

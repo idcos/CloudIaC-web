@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Collapse, Form, Select, notification } from 'antd';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import vcsAPI from 'services/vcs';
+import keysAPI from 'services/keys';
 
 const { Option } = Select;
 
@@ -17,9 +20,23 @@ const OtherVarForm = (props) => {
     }
   }, [fetchParams]);
 
+  // ssh key选项列表
+  const {
+    data: keyOptions = []
+  } = useRequest(
+    () => requestWrapper(
+      keysAPI.list.bind(null, {
+        pageSize: 0
+      })
+    ),
+    {
+      formatResult: data => (data.list || []).map(it => ({ label: it.name, value: it.id }))
+    }
+  );
+
   const fetchTfvars = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listTfvars(params);
       if (res.code !== 200) {
@@ -35,8 +52,8 @@ const OtherVarForm = (props) => {
   };
 
   const fetchPlaybooks = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    const params = { orgId, repoRevision, repoId, repoType, vcsId };
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listPlaybook(params);
       if (res.code !== 200) {
@@ -54,9 +71,9 @@ const OtherVarForm = (props) => {
   return (
     <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'}>
       <Collapse.Panel key='open' header='其它变量' forceRender={true}>
-        <Form form={otherVarForm}>
-          <Row gutter={8}>
-            <Col span={11}>
+        <Form form={otherVarForm} style={{ margin: '0 8px' }}>
+          <Row gutter={24}>
+            <Col span={8}>
               <Form.Item
                 name='tfVarsFile'
                 label='tfvars文件'
@@ -76,7 +93,7 @@ const OtherVarForm = (props) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={11} offset={2}>
+            <Col span={8}>
               <Form.Item
                 name='playbook'
                 label='playbook文件'
@@ -94,6 +111,26 @@ const OtherVarForm = (props) => {
                 >
                   {playbooks.map(it => <Option value={it}>{it}</Option>)}
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name='keyId'
+                label='ssh密钥'
+                rules={[
+                  {
+                    required: false,
+                    message: '请选择'
+                  }
+                ]}
+              >
+                <Select 
+                  allowClear={true} 
+                  placeholder='请选择ssh密钥'
+                  options={keyOptions}
+                  optionFilterProp='label'
+                  showSearch={true}
+                />
               </Form.Item>
             </Col>
           </Row>

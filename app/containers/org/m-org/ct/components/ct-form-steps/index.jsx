@@ -20,9 +20,9 @@ const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'basic', title: '基础设置', Component: Basic },
-  { type: 'repo', title: '选择仓库', Component: Repo },
-  { type: 'variable', title: '变量设置', Component: Variable },
+  { type: 'repo', title: '仓库', Component: Repo },
+  { type: 'variable', title: '变量', Component: Variable },
+  { type: 'basic', title: '设置', Component: Basic },
   { type: 'relation', title: '关联项目', Component: Relation }
 ];
 
@@ -118,15 +118,15 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         throw new Error(res.message);
       }
       const {
-        name, description,
+        name, description, policyEnable, policyGroup, tplTriggers,
         vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
-        tfVarsFile, playbook,
+        tfVarsFile, playbook, keyId,
         projectId
       } = res.result || {};
       setCtData({
-        basic: { name, description },
+        basic: { name, description, policyEnable, policyGroup, tplTriggers },
         repo: { vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion },
-        variable: { tfVarsFile, playbook },
+        variable: { tfVarsFile, playbook, keyId },
         relation: { projectId }
       });
       getVars(); // 变量单独查询

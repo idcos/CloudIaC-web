@@ -48,7 +48,7 @@ export default ({ id, orgId, projectId, failLogParams }) => {
   return (
     <AnsiCoderCard  
       value={taskLog} 
-      style={{ height: '100%' }}
+      style={{ height: 600, width: '100%' }}
     />
   );
-}
+};

@@ -159,12 +159,12 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
           {
             opType === 'add' ? (
               <>
-                <Button onClick={() => stepHelper.prev()} >上一步</Button>
+                <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()} >上一步</Button>
                 <Button type='primary' htmlType={'submit'} loading={saveLoading}>完成</Button>
               </>
             ) : (
               <>
-                <Button onClick={goCTlist}>取消</Button>
+                <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
                 <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
               </>
             )

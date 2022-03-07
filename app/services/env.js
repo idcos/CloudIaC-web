@@ -2,7 +2,7 @@ import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 
 const envAPI = {
   // 环境列表
-  envsList: ({ orgId, projectId, status }) => {
+  envsList: ({ orgId, projectId, status, ...restParams }) => {
     let values = { 
       pageSize: 0
     };
@@ -12,7 +12,8 @@ const envAPI = {
       values.status = status;
     }
     return getWithArgs('/api/v1/envs', {
-      ...values
+      ...values,
+      ...restParams
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境详情

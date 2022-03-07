@@ -10,25 +10,43 @@
 
     .left-nav {
       flex: 0 0 200px;
+      background: #F6F8F8;
       height: 100%;
       overflow: hidden;
       padding: 10px 0;
       display: flex;
       flex-direction: column;
 
+      &.collapsed {
+        flex: 0 0 50px;
+        .menu-wrapper {
+          padding: 0 10px;
+        }
+        .nav-footer {
+          padding: 0 9px;
+        }
+      }
+
       .menu-wrapper {
         flex: 1;
-        padding: 0 24px;
+        padding: 0 16px;
         overflow-y: auto;
 
         .sub-menu {
           margin-bottom: 12px;
-
+          padding: 0 8px;
           .menu-title {
             font-size: 12px;
             height: 48px;
             line-height: 48px;
             color: @gray-7;
+            display: flex;
+            align-items: center;
+            .divider {
+              width: 24px;
+              height: 1px;
+              background-color: #E1E4E8;
+            } 
           }
 
           .menu-list {
@@ -50,6 +68,28 @@
           }
         }
       }
+      .nav-footer {
+        padding: 0 16px;
+        line-height: 32px;
+        display: flex;
+        align-items: center;
+        .icon {
+          flex: 0 0 32px;
+          height: 32px;
+          margin-right: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          &:hover {
+            background-color: #E8F1F1;
+          }
+        }
+        .text {
+          font-size: 12px;
+          color: #57606A;
+        }
+      }
     }
 
     .right-content {
@@ -59,6 +99,19 @@
       background-color: @backGroundIac;
     }
   }
+}
+
+.projectActionContent {
+  width: 34px;
+  height: 34px;
+  background: #E9F3FC;
+  border: 2px solid #D7E0E7;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  cursor: pointer;
 }
 
 .menuSelectfooterContent {

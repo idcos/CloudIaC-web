@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Table, Space, Select, Divider, Input, notification, Badge, Button, Modal, Switch } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Table, Space, Select, Divider, Input, Badge, Button, Modal, Switch, Row, Col } from 'antd';
+import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
@@ -9,15 +9,16 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import EllipsisText from 'components/EllipsisText';
 import cenvAPI from 'services/cenv';
 import projectAPI from 'services/project';
 import DetectionDrawer from './component/detection-drawer';
-import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
+import PolicyStatus from 'components/policy-status';
+import { useLoopPolicyStatus } from 'utils/hooks';
+import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
 
-const CenvList = ({ orgs }) => {
+const CenvList = () => {
 
-  const orgOptions = ((orgs || {}).list || []).map(it => ({ label: it.name, value: it.id }));
+  const { check, loopRequesting } = useLoopPolicyStatus();
   const [ bindPolicyGroupModalProps, setBindPolicyGroupModalProps ] = useState({
     visible: false,
     id: null,
@@ -32,16 +33,13 @@ const CenvList = ({ orgs }) => {
   });
 
   // 项目选项查询
-  const { data: projectOptions = [], run: fetchProjectOptions, mutate: mutateProjectOptions } = useRequest(
-    (orgId) => requestWrapper(
-      projectAPI.allEnableProjects.bind(null, { orgId }),
+  const { data: projectOptions = [] } = useRequest(
+    () => requestWrapper(
+      projectAPI.allEnableProjects.bind(null, {}),
       {
         formatDataFn: (res) => ((res.result || {}).list || []).map((it) => ({ label: it.name, value: it.id }))
       }
-    ),
-    {
-      manual: true
-    }
+    )
   );
 
   // 启用/禁用云模版扫描
@@ -72,6 +70,7 @@ const CenvList = ({ orgs }) => {
       onSuccess: (data, params) => {
         const { id } = params[0] || {};
         openDetectionDrawer({ id });
+        refreshList();
       }
     }
   );
@@ -86,7 +85,13 @@ const CenvList = ({ orgs }) => {
     (params) => requestWrapper(
       cenvAPI.list.bind(null, params)
     ), {
-      manual: true
+      manual: true,
+      onSuccess: (data) => {
+        check({ 
+          list: data.list || [],
+          loopFn: () => refreshList()
+        });
+      }
     }
   );
 
@@ -103,15 +108,6 @@ const CenvList = ({ orgs }) => {
     }
   });
 
-  const changeOrg = (orgId) => {
-    onChangeFormParams({ orgId, projectId: undefined });
-    if (orgId) {
-      fetchProjectOptions(orgId);
-    } else {
-      mutateProjectOptions([]);
-    }
-  };
-
   const openDetectionDrawer = ({ id }) => {
     setDetectionDrawerProps({
       id,
@@ -119,9 +115,8 @@ const CenvList = ({ orgs }) => {
     });
   };
 
-  // 关闭检测详情刷新下列表的检测状态字段
+  // 关闭检测详情
   const closeDetectionDrawer = () => {
-    refreshList();
     setDetectionDrawerProps({
       id: null,
       visible: false
@@ -147,7 +142,7 @@ const CenvList = ({ orgs }) => {
       title: '',
       tplId: null,
       onSuccess: noop
-    })
+    });
   };
 
   // 开启/关闭合规检测
@@ -173,89 +168,82 @@ const CenvList = ({ orgs }) => {
     {
       dataIndex: 'name',
       title: '环境名称',
-      width: 152,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      width: 220,
+      ellipsis: true
     },
     {
       dataIndex: 'policyGroups',
       title: '绑定策略组',
-      width: 200,
+      width: 220,
       ellipsis: true,
       render: (text, record) => {
         const policyGroups = text || [];
-        return policyGroups.length > 0 ? (
+        return (
           <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
-            <EllipsisText>
-              {policyGroups.map(it => it.name).join('、')}
-            </EllipsisText>
+            {policyGroups.length > 0 ? (
+              policyGroups.map(it => it.name).join('、')
+            ) : '-'}
           </a>
-        ) : '-'; 
+        ); 
       }
     },
     {
       dataIndex: 'policyStatus',
       title: '状态',
-      width: 90,
-      ellipsis: true,
-      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
+      width: 94,
+      render: (policyStatus, record) => {
+        const clickProps = {
+          style: { cursor: 'pointer' },
+          onClick: () => openDetectionDrawer(record)
+        };
+        return (
+          <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} empty='-' />
+        );
+      }
     },
     {
       dataIndex: 'passed',
       title: '通过',
-      width: 64,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'violated',
       title: '不通过',
-      width: 67,
-      ellipsis: true
+      width: 64
     },
     {
       dataIndex: 'suppressed',
       title: '屏蔽',
-      width: 62,
-      ellipsis: true
+      width: 48
     },
     {
       dataIndex: 'failed',
       title: '失败',
-      width: 70,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'orgName',
-      title: '组织名称',
-      width: 132,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      width: 48
     },
     {
       dataIndex: 'projectName',
       title: '项目名称',
       width: 132,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      ellipsis: true
     },
     {
       dataIndex: 'templateName',
       title: '云模板名称',
       width: 132,
-      ellipsis: true,
-      render: (text) => <EllipsisText maxWidth={180}>{text}</EllipsisText>
+      ellipsis: true
     },
     {
-      dataIndex: 'enabled',
+      dataIndex: 'policyEnable',
       title: '开启检测',
       width: 75,
       ellipsis: true,
       fixed: 'right',
-      render: (enabled, record) => {
+      render: (policyEnable, record) => {
         const { id, name, tplId, policyGroups } = record;
         return (
           <Switch 
-            checked={enabled} 
+            checked={policyEnable} 
             size='small' 
             onChange={(checked) => switchEnabled({ enabled: checked, id, tplId, policyGroups, name })} 
           />
@@ -268,7 +256,7 @@ const CenvList = ({ orgs }) => {
       ellipsis: true,
       fixed: 'right',
       render: (text, record) => {
-        const { id, enabled, policyStatus } = record;
+        const { id, policyEnable, policyStatus } = record;
         const { loading: scanLoading } = scanFetches[id] || {};
         return (
           <Space split={<Divider type='vertical'/>}>
@@ -277,12 +265,12 @@ const CenvList = ({ orgs }) => {
               style={{ padding: 0, fontSize: '12px' }} 
               onClick={() => runScan({ id })}
               loading={scanLoading}
-              disabled={!enabled || policyStatus === 'pending'}
+              disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
             >检测</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
-              disabled={!policyStatus || policyStatus === 'pending'}
+              disabled={SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
             >查看结果</Button>
           </Space>
@@ -299,35 +287,35 @@ const CenvList = ({ orgs }) => {
   >
     <div className='idcos-card'>
       <Space size={16} direction='vertical' style={{ width: '100%' }}>
-        <Space>
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            placeholder='请选择组织'
-            options={orgOptions}
-            optionFilterProp='label'
-            showSearch={true}
-            onChange={changeOrg}
-          />
-          <Select
-            style={{ width: 282 }}
-            allowClear={true}
-            options={projectOptions}
-            placeholder='请选择项目'
-            value={form.projectId}
-            onChange={(projectId) => onChangeFormParams({ projectId })}
-          />
-          <Input.Search
-            style={{ width: 240 }}
-            allowClear={true}
-            placeholder='请输入环境名称搜索'
-            onSearch={(q) => onChangeFormParams({ q })}
-          />
-        </Space>
+        <Row justify='space-between' wrap={false}>
+          <Col></Col>
+          <Col>
+            <Space>
+              <Select
+                style={{ width: 282 }}
+                allowClear={true}
+                options={projectOptions}
+                placeholder='请选择项目'
+                value={form.projectId}
+                onChange={(projectId) => onChangeFormParams({ projectId })}
+              />
+              <Input
+                style={{ width: 320 }}
+                allowClear={true}
+                placeholder='请输入环境名称搜索'
+                prefix={<SearchOutlined />}
+                onPressEnter={(e) => {
+                  const q = e.target.value;
+                  onChangeFormParams({ q });
+                }}
+              />
+            </Space>
+          </Col>
+        </Row>
         <Table
           columns={columns}
-          scroll={{ x: 'min-content', y: 570 }}
-          loading={tableLoading}
+          scroll={{ x: 'min-content' }}
+          loading={tableLoading && !loopRequesting}
           {...tableProps}
         />
       </Space>

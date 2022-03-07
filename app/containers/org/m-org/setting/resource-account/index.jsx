@@ -113,11 +113,11 @@ export default ({ orgId }) => {
       <Button type='primary' onClick={() => event$.emit({ type: 'open-resource-account-form-modal' })}>添加资源账号</Button>
       <Table
         columns={columns}
-        scroll={{ x: 'min-content', y: 430 }}
+        scroll={{ x: 'min-content' }}
         loading={tableLoading}
         {...tableProps}
       />
-     <FormModal orgId={orgId} event$={event$}/>
+      <FormModal orgId={orgId} event$={event$}/>
     </Space>
   );
 };

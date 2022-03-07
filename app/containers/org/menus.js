@@ -1,12 +1,13 @@
 import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
 import getPermission from "utils/permission";
 
-const getMenus = (userInfo) => {
+const getMenus = (userInfo, { projectList }) => {
   const { ORG_SET, PROJECT_SET } = getPermission(userInfo);
   return [
     {
       subName: '项目信息',
       subKey: 'project',
+      isHide: !PROJECT_SET && projectList.length === 0,
       emptyMenuList: [
         {
           name: '创建项目',
@@ -78,7 +79,7 @@ const getMenus = (userInfo) => {
         }
       ]
     }
-  ];
+  ].filter(it => !it.isHide);
 };
 
 export default getMenus;

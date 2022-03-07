@@ -8,6 +8,7 @@ import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
+import PolicyStatus from 'components/policy-status';
 import { END_TASK_STATUS_LIST, ENV_STATUS, ENV_STATUS_COLOR } from "constants/types";
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
@@ -168,18 +169,22 @@ const EnvDetail = (props) => {
         taskId,
         orgId, 
         projectId,
-        type: 'env'
+        type: 'env',
+        changeTabPage: setPanel
       }}
     >
       <Layout
         extraHeader={
           <PageHeader
             title={(
-              <Space size={8}>
+              <Space size={8} align='center'>
                 <span>{envInfo.name || ''}</span>
-                <span>
-                  {ENV_STATUS[envInfo.status] && <Tag color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>{ENV_STATUS[envInfo.status]}</Tag> || '-'}
-                  {envInfo.isDrift && <Tag color={'orange'}>漂移</Tag>}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {ENV_STATUS[envInfo.status] && (
+                    <Tag style={{ margin: 0 }} color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>
+                      {ENV_STATUS[envInfo.status]}
+                    </Tag>
+                  )}
                   {
                     envInfo.status === 'failed' && taskInfo.status === 'failed' && taskInfo.message ? (
                       <Tooltip title={taskInfo.message}>
@@ -187,7 +192,9 @@ const EnvDetail = (props) => {
                       </Tooltip>
                     ) : null
                   }
-                </span>
+                  {envInfo.isDrift && <Tag style={{ margin: 0 }} color={'orange'}>漂移</Tag>}
+                  <PolicyStatus style={{ margin: 0 }} policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
+                </div>
               </Space>
             )}
             
@@ -207,9 +214,9 @@ const EnvDetail = (props) => {
           <EnvInfo envInfo={envInfo} taskInfo={taskInfo} />
         </div>
         <div style={{ marginTop: 20 }} className='idcos-card'>
-          <div className={styles.depolyDetail}>
+          <div>
             <Tabs
-              type={'card'}
+              // type={'card'}
               tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
               animated={false}
               renderTabBar={(props, DefaultTabBar) => {

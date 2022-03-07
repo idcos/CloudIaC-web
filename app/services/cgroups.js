@@ -10,8 +10,8 @@ const cgroupsAPI = {
     return post('/api/v1/policies/groups', restParams, {});
   },
   // 策略组详情
-  detail: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}`, { restParams }, {});
+  detail: ({ policyGroupId }) => {
+    return get(`/api/v1/policies/groups/${policyGroupId}`);
   },
   // 修改策略组
   update: ({ policyGroupId, ...restParams }) => {
@@ -36,8 +36,11 @@ const cgroupsAPI = {
   // 查询策略组关联的策略或未关联策略组的策略
   isBind: ({ policyGroupId, ...restParams }) => {
     return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/policies`, restParams, {});
+  },
+  // 校验策略组表单
+  checks: (params) => {
+    return post(`/api/v1/policies/groups/checks`, params, {});
   }
-
 };
 
 export default cgroupsAPI;

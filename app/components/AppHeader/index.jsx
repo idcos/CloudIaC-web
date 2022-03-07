@@ -8,13 +8,14 @@ import { QuitIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
-import envAPI from 'services/env';
+import getPermission from "utils/permission";
 import styles from './styles.less';
 
 const KEY = 'global';
 
 const AppHeader = (props) => {
   const { theme, locationPathName, orgs, curOrg, projects, curProject, dispatch, userInfo } = props;
+  const { ORG_SET } = getPermission(userInfo);
   const { pathname } = window.location;
   const orgList = (orgs || {}).list || [];
   const projectList = (projects || {}).list || [];
@@ -23,8 +24,7 @@ const AppHeader = (props) => {
   const orgId = (curOrg || {}).id;
   const preStateRef = useRef({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
-  const [ menuType, setMenuType ] = useState(pathname.indexOf('compliance') !== -1 ? 'execute' : 'compliance');
-  const [ locationHref, setLocationHref ] = useState('/');
+  const [ menuType, setMenuType ] = useState(pathname.indexOf('compliance') !== -1 ? 'compliance' : 'execute');
 
   useEffect(() => {
    
@@ -80,7 +80,7 @@ const AppHeader = (props) => {
   }, [locationPathName]);
 
   const changeCurOrg = (value, needJump = true) => {
-    changeOrg({ orgId: value, dispatch, needJump });
+    changeOrg({ orgId: value, dispatch, needJump, menuType });
   };
 
   const onCloseDevManualTooltip = () => {
@@ -88,13 +88,25 @@ const AppHeader = (props) => {
     localStorage.newbieGuide_devManual = false;
   };
 
-  const changeMenu = (value) => {
-    setMenuType(value);
-    localStorage.setItem('menuType', value);
-    if (value === 'execute') {
-      setLocationHref(pathname);
+  const jumpExecute = () => {
+    if (!ORG_SET && !projectList.length) {
+      history.push(`/org/${orgId}/m-other-resource`);
+      return;
     }
-    value === 'execute' ? history.push(`/compliance/dashboard`) : history.push(locationHref || '/');
+    if (ORG_SET) {
+      history.push(`/org/${orgId}/m-org-ct`);
+    } else {
+      history.push(`/org/${orgId}/project/${projectList[0].id}/m-project-env`);
+    }
+  };
+
+  const changeMenu = (value) => {
+    if (value === 'execute') {
+      jumpExecute();
+    } else {
+      history.push(`/org/${orgId}/compliance/dashboard`);
+    }
+    setMenuType(value);
   };
 
   return <div className={`idcos-app-header ${theme || ''}`}>
@@ -103,19 +115,19 @@ const AppHeader = (props) => {
         className='logo' 
         onClick={() => {
           history.push('/'); 
-          setMenuType('compliance');
+          setMenuType('execute');
         }}
       >
         <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
       </div>
       <div className='change-menu-wrapper'>
-        {(pathname !== '/') && userInfo.isAdmin && (
+        {!!orgId && (
           <>
             {
-              menuType === 'compliance' ? (
-                <div className='changeMenu' onClick={() => changeMenu('execute')}>进入合规</div>
+              menuType === 'execute' ? (
+                <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入合规</div>
               ) : (
-                <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入执行界面</div>
+                <div className='changeMenu' onClick={() => changeMenu('execute')}>进入执行</div>
               )
             }
           </>
@@ -123,7 +135,7 @@ const AppHeader = (props) => {
       </div>
       <div className='rParts'>
         {
-          (pathname !== '/' && pathname.indexOf('compliance') === -1) ? (
+          !!orgId ? (
             <>
               <SeniorSelect
                 style={{ width: 250 }}
@@ -180,8 +192,8 @@ const AppHeader = (props) => {
                   {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
-                          <span className='icon'><SettingFilled /></span>
-                          <span className='text'>系统设置</span>
+                        <span className='icon'><SettingFilled /></span>
+                        <span className='text'>系统设置</span>
                       </div>
                     ) : null
                   }

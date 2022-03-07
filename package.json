@@ -1,6 +1,6 @@
 {
   "name": "cloudiac-web",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "cloudiac-web",
   "repository": {
     "type": "git",
@@ -78,6 +78,7 @@
     "ip": "1.1.5",
     "js-cookie": "^2.2.1",
     "lodash": "4.17.20",
+    "lottie-react": "^2.1.0",
     "minimist": "1.2.5",
     "moment": "^2.24.0",
     "offline-plugin": "5.0.7",
@@ -143,7 +144,6 @@
     "less": "^3.12.2",
     "less-loader": "^7.1.0",
     "lint-staged": "9.4.3",
-    "ngrok": "3.2.5",
     "node-plop": "0.26.2",
     "null-loader": "3.0.0",
     "plop": "2.7.4",

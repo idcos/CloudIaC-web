@@ -1,23 +1,32 @@
 import React, { useCallback } from 'react';
+import { MenuOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
 import { connect } from 'react-redux';
+import { useSessionStorageState } from 'ahooks';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
+import versionCfg from 'assets/version.json';
 import { getComplianceMenus } from './menus';
 import styles from './styles.less';
+import classNames from 'classnames';
 
 const KEY = 'global';
 
-const ComplianceWrapper = ({ routes, curOrg }) => {
+const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
+
+  const { orgId, typeKey } = match.params || {};
+  const [ collapsed, setCollapsed ] = useSessionStorageState('compliance_menu_collapsed', false);
+
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
     case 'dashboard':
-      history.push(`/compliance/dashboard`);
+      history.push(`/org/${orgId}/compliance/dashboard`);
       break;
     case 'compliance-config':
-      history.push(`/compliance/compliance-config/${menuItemKey}`);
+      history.push(`/org/${orgId}/compliance/compliance-config/${menuItemKey}`);
       break;
     case 'policy-config':
-      history.push(`/compliance/policy-config/${menuItemKey}`);
+      history.push(`/org/${orgId}/compliance/policy-config/${menuItemKey}`);
       break;
     default:
       break;
@@ -26,15 +35,9 @@ const ComplianceWrapper = ({ routes, curOrg }) => {
 
   const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
     let scope = subKey, menuKey, isEmptyData = false;
-    let pathList = window.location.pathname.split('/');
     if (subKey === 'none') {
       menuKey = 'dashboard';
       scope = 'dashboard';
-    }
-    if (pathList.length > 4) {
-      menuKey = pathList[pathList.length - 2];
-    } else {
-      menuKey = pathList[pathList.length - 1];
     }
     return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
       if (menuItem.isHide) {
@@ -42,19 +45,21 @@ const ComplianceWrapper = ({ routes, curOrg }) => {
       }
       return (
         <div 
-          className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
+          className={`menu-item ${typeKey === menuItem.key ? 'checked' : ''}`} 
           onClick={() => linkTo(scope, menuItem.key)}
         >
-          <span className='icon'>{menuItem.icon}</span>
-          <span>{menuItem.name}</span>
+          <Tooltip title={collapsed && menuItem.name} placement='right'>
+            <span className='icon'>{menuItem.icon}</span>
+          </Tooltip>
+          {!collapsed && <span>{menuItem.name}</span>}
         </div>
       );
     });
-  }, []);
+  }, [collapsed]);
  
   return (
     <div className={styles.complianceWrapper}>
-      <div className='left-nav'>
+      <div className={classNames('left-nav', { collapsed })}>
         <div className='menu-wrapper'>
           {
             getComplianceMenus().map(subMenu => {
@@ -63,7 +68,11 @@ const ComplianceWrapper = ({ routes, curOrg }) => {
               }
               return (
                 <div className='sub-menu'>
-                  {subMenu.subName === 'none' ? null : <div className='menu-title'>{subMenu.subName}</div>}
+                  {subMenu.subName === 'none' ? null : (
+                    <div className='menu-title'>
+                      {collapsed ? <div className='divider'></div> : subMenu.subName}
+                    </div>
+                  )}
                   <div className='menu-list'>
                     { renderMenus(subMenu) }
                   </div>
@@ -71,6 +80,12 @@ const ComplianceWrapper = ({ routes, curOrg }) => {
               );
             })
           }
+        </div>
+        <div className='nav-footer'>
+          <span className='icon' onClick={() => setCollapsed(!collapsed)}>
+            <MenuOutlined />
+          </span>
+          <span className='text'>v{versionCfg.version || ''}</span>
         </div>
       </div>
       <div className='right-content'>

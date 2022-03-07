@@ -8,6 +8,7 @@ export default (props) => {
 
   const {
     style = {},
+    overlayWidth,
     selectionStyle = {},
     options = [],
     lablePropsNames = {
@@ -24,7 +25,8 @@ export default (props) => {
     searchPlaceholder='请输入关键词搜索',
     searchKey=lablePropsNames.name,
     maxLen,
-    selectRef
+    selectRef,
+    actionContent
   } = props || {};
 
   const [ visible, setVisible ] = useState(false);
@@ -48,7 +50,7 @@ export default (props) => {
         {
           showSearch && (
             <div className='menu-select-header'>
-              <Input placeholder={searchPlaceholder} suffix={<SearchOutlined style={{ color: '#AAACAB' }}/>} onChange={onSearch} />
+              <Input placeholder={searchPlaceholder} suffix={<SearchOutlined/>} onChange={onSearch} />
             </div>
           )
         }
@@ -98,20 +100,23 @@ export default (props) => {
         overlay={menu} 
         trigger={['click']} 
         visible={visible} 
-        overlayStyle={{ width: '100%' }}
+        overlayStyle={{ width: overlayWidth || '100%' }}
         onVisibleChange={(e) => {
           setVisible(e); 
           setActive(e); 
         }}
-        getPopupContainer={triggerNode => triggerNode.parentNode}
       >
-        <div className='selection' style={selectionStyle}>
-          <div className={`label fn-ellipsis ${visible ? 'selecting' : ''}`}>
-            {name}
-          </div>
-          <div className='icon'>
-            { visible ? <DownOutlined /> : <RightOutlined /> }
-          </div>
+        <div>
+          {!!actionContent ? actionContent : (
+            <div className='selection' style={selectionStyle}>
+              <div className={`label fn-ellipsis ${visible ? 'selecting' : ''}`}>
+                {name}
+              </div>
+              <div className='icon'>
+                { visible ? <DownOutlined /> : <RightOutlined /> }
+              </div>
+            </div>
+          )}
         </div>
       </Dropdown>
     </div>

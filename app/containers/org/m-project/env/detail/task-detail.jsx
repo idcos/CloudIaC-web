@@ -14,12 +14,14 @@ import Output from './components/output';
 import DeployJournal from './components/deployJournal';
 import Variable from './components/variable';
 import TaskInfo from './components/taskInfo';
+import ComplianceInfo from './components/compliance-info';
 import DetailPageContext from './detail-page-context';
 import styles from './styles.less';
 
 const subNavs = {
   deployJournal: '部署日志',
   resource: '资源',
+  compInfo: '合规状态',
   output: 'Output',
   variable: '变量'
 };
@@ -70,6 +72,7 @@ const TaskDetail = (props) => {
     const PAGES = {
       resource: () => <Resource />,
       output: () => <Output />,
+      compInfo: () => <ComplianceInfo/>,
       deployJournal: () => <DeployJournal />,
       variable: () => <Variable />
     };
@@ -104,9 +107,9 @@ const TaskDetail = (props) => {
           <TaskInfo taskInfo={taskInfo} />
         </div>
         <div style={{ marginTop: 20 }} className='idcos-card'>
-          <div className={styles.depolyDetail}>
+          <div>
             <Tabs
-              type={'card'}
+              // type={'card'}
               tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
               animated={false}
               renderTabBar={(props, DefaultTabBar) => {

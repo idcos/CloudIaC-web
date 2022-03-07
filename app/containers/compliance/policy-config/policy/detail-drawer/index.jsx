@@ -3,7 +3,7 @@ import { Descriptions, Tabs, Drawer } from "antd";
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
-import { POLICIES_SEVERITY_ENUM } from 'constants/types';
+import { POLICIES_SEVERITY_STATUS_ENUM } from 'constants/types';
 import FixSuggestion from './component/fix-suggestion';
 import Report from './component/report';
 import Suppress from './component/suppress';
@@ -22,7 +22,7 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
   const reloadPolicyDetailAndList = () => {
     refresh();
     reloadPolicyList();
-  }
+  };
 
   const TabPaneMap = [
     { key: 'report', tab: '报表', children: <Report policyId={id}/> },
@@ -32,7 +32,7 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
 
   return (
     <Drawer
-      title={detailInfo.name}
+      title={detailInfo.name || '-'}
       visible={visible}
       onClose={onClose}
       width={1000}
@@ -42,7 +42,7 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
         column={3}
         labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
       >
-        <Descriptions.Item label='严重性'>{POLICIES_SEVERITY_ENUM[detailInfo.severity] || '-'}</Descriptions.Item>
+        <Descriptions.Item label='严重性'>{POLICIES_SEVERITY_STATUS_ENUM[detailInfo.severity] || '-'}</Descriptions.Item>
         <Descriptions.Item label='策略ID'>{detailInfo.id}</Descriptions.Item>
       </Descriptions>
       <Tabs

@@ -20,7 +20,44 @@ const breadcrumbNameMap = {
   'm-other-resource': { text: '资源查询' },
   'createCT': { text: '新建云模板' },
   'updateCT': { text: '编辑云模板' },
-  'deploy': { getText: ({ envId }) => envId ? '重新部署' : '部署新环境' },
+  'deploy': { 
+    render: ({ params, isLastOne, url, index }) => {
+      const { envId, orgId, projectId } = params;
+      if (!envId) {
+        return (
+          <Breadcrumb.Item key={url}>
+            <Link
+              to={index == 0 ? '/' : url}
+              disabled={isLastOne}
+            >
+              部署新环境
+            </Link>
+          </Breadcrumb.Item>
+        );
+      } else {
+        const envDetailUrl = `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}`;
+        return (
+          <>
+            <Breadcrumb.Item key={envDetailUrl}>
+              <Link
+                to={envDetailUrl}
+              >
+                环境详情
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item key={url}>
+              <Link
+                to={index == 0 ? '/' : url}
+                disabled={isLastOne}
+              >
+                重新部署
+              </Link>
+            </Breadcrumb.Item>
+          </>
+        );
+      }
+    }
+  },
   'task': { text: '部署历史' },
   'detail': { text: '环境详情', indexDiff: 1, search: '?tabKey=deployHistory' },
   'compliance-config': { text: '合规配置', disabled: true },
@@ -28,9 +65,10 @@ const breadcrumbNameMap = {
   'env': { text: '环境' },
   'env-detail': { text: '环境详情' },
   'policy-config': { text: '策略管理', disabled: true },
-  'policy-group': { text: '策略组', disabled: true },
+  'policy-group': { text: '策略组' },
+  'policy-group-form': { getText: ({ policyGroupId }) => policyGroupId ? '编辑策略组' : '新建策略组' },
   'policy': { text: '策略' },
-  'policy-form': { getText: ({ policyId }) => policyId ? '编辑策略' : '新建策略' },
+  'online-test': { text: '在线测试' }
 };
 
 const BreadcrumbWrapper = ({ location, params }) => {
@@ -44,10 +82,10 @@ const BreadcrumbWrapper = ({ location, params }) => {
       if (!link) {
         return null;
       }
-      const { indexDiff, getText, text, disabled, search = '' } = link;
+      const { indexDiff, getText, text, disabled, render, search = '' } = link;
       const url = `/${pathSnippets.slice(0, index + 1 + (indexDiff || 0)).join('/')}${search}`;
       const isLastOne = snippet === lastOne;
-      return (
+      return render ? render({ index, params, isLastOne, url }) : (
         <Breadcrumb.Item key={url}>
           <Link
             to={index == 0 ? '/' : url}

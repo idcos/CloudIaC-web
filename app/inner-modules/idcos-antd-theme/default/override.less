@@ -1,1 +1,53 @@
-:global {}
+:global :root {
+  // antd覆盖样式
+  .ant-input-suffix {
+    color: #AAACAB;
+  }
+  .ant-popover {
+    max-width: 600px;
+  }
+  .ant-tag {
+    border-radius: 11px;
+  }
+  .ant-btn-tertiary {
+    background-color: #EAECEE;
+    border-color: #EAECEE;
+    color: #24292F;
+
+    &[disabled] {
+      &, &:hover, &:focus, &:active {
+        background-color: #F2F3F5;
+        border-color: #F2F3F5;
+        color: #7C7F83;
+      }
+    }
+  }
+
+  .ant-tabs {
+    .ant-tabs-top>.ant-tabs-nav::before,
+    .ant-tabs-bottom>.ant-tabs-nav::before,
+    .ant-tabs-top>div>.ant-tabs-nav::before,
+    .ant-tabs-bottom>div>.ant-tabs-nav::before {
+      border-bottom: 1px solid #ebebeb;
+    }
+
+    .ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab-active,
+    .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab-active {
+      border-bottom-color: #ebebeb;
+    }
+  }
+
+  .ant-alert {
+    align-items: flex-start;
+    .ant-alert-icon {
+      font-size: 16px;
+      margin-top: 4px;
+    }
+  }
+
+  .ant-form-item.ant-form-item-no-min-height {
+    &>.ant-form-item-control>.ant-form-item-control-input {
+      min-height: auto;
+    }
+  }
+}

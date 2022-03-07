@@ -32,8 +32,8 @@ const tplAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  listImportVars: ({ orgId, ...restParams }) => {
-    return getWithArgs('/api/v1/templates/variables', restParams, {
+  listImportVars: ({ orgId, vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/repos/variables`, restParams, {
       'IaC-Org-Id': orgId
     });
   },

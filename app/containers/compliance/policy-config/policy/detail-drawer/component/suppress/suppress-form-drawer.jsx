@@ -121,7 +121,7 @@ export default ({ policyId, visible, onClose, reload }) => {
           pagination={{
             showTotal: (total) => `共${total}条`
           }}
-          scroll={{ x: 'min-content', y: 570 }}
+          scroll={{ x: 'min-content' }}
           rowSelection={{
             columnWidth: 26,
             onChange: setAddTargetIds,

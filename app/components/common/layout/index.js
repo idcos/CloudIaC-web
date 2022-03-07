@@ -5,8 +5,8 @@ import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 const LayoutWrapper = styled.div`
   height: 100%;
   overflow: auto;
-  padding: 24px;
-  background-color: #E6F0F0;
+  padding: 24px 0;
+  background-color: #ffffff;
 `;
  
 const Container = styled.div`
@@ -22,8 +22,7 @@ const Content = styled.div`
    flex: 1;
    position: relative;
    overflow-y: auto;
-   background-color: #E6F0F0;
-   margin-top: 24px;
+   background-color: #ffffff;
    .ant-form-item-control-input-content {
      word-break: break-all;
    }
