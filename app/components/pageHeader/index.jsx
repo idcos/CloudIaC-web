@@ -31,13 +31,13 @@ const PageHeader = (props) => {
         }}
       />}
       <Row className='header-wrapper' style={{ background: !showIcon && `#fff`, ...headerStyle }} type='flex' align='middle' justify='space-around'>
-        <Col span={14}>
+        <Col span={18}>
           <h2 className='title reset-styles'>
-            {title}
+            <span className='text'>{title}</span>
             <span className='des'>{des}</span>
           </h2>
         </Col>
-        <Col span={10}>
+        <Col span={6}>
           <p className='subDes reset-styles'>{subDes}</p>
         </Col>
       </Row>

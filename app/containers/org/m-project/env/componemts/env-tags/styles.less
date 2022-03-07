@@ -1,0 +1,55 @@
+.tags {
+
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  :global {
+    .add-tag-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+    .ant-tag:not(.add-tag-btn) {
+      height: 22px;
+      margin: 0;
+      background-color: rgba(241, 248, 255, 1);
+      border: none;
+      border-radius: 11px;
+      color: #0969DA;
+      line-height: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .tag-content {
+        max-width: 120px;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .ant-tag-close-icon {
+        display: none;
+        color: #fff;
+      }
+
+      &:hover {
+        background-color: #0969DA;
+        color: #fff;
+        .ant-tag-close-icon {
+          display: inline-flex;
+        }
+      }
+    }
+  }
+  .tagInput {
+    width: 120px;
+  }
+  
+}

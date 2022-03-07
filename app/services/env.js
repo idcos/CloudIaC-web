@@ -90,8 +90,10 @@ const envAPI = {
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
     });
+  },
+  updateTag: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/tags`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
-  
 };
 
 export default envAPI;

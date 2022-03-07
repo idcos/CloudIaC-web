@@ -13,6 +13,7 @@ import { END_TASK_STATUS_LIST, ENV_STATUS, ENV_STATUS_COLOR } from "constants/ty
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import history from 'utils/history';
+import { safeJsonParse } from 'utils/util';
 import getPermission from "utils/permission";
 import EnvInfo from './components/envInfo';
 import ComplianceInfo from './components/compliance-info';
@@ -22,6 +23,7 @@ import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
+import EnvTags from '../componemts/env-tags';
 import styles from './styles.less';
 import { createBrowserHistory } from 'history';
 import DetailPageContext from './detail-page-context';
@@ -59,6 +61,26 @@ const EnvDetail = (props) => {
         if (!taskId) {
           setTaskId(data.lastTaskId);
         }
+      }
+    }
+  );
+
+  // 更新tag
+  const { run: updateTag } = useRequest(
+    (tags) => requestWrapper(
+      envAPI.updateTag.bind(null, {
+        tags,
+        orgId, 
+        projectId,
+        envId
+      }), {
+        autoSuccess: true
+      }
+    ), 
+    {
+      manual: true,
+      onSuccess: () => {
+        fetchEnvInfo();
       }
     }
   );
@@ -195,6 +217,13 @@ const EnvDetail = (props) => {
                   {envInfo.isDrift && <Tag style={{ margin: 0 }} color={'orange'}>漂移</Tag>}
                   <PolicyStatus style={{ margin: 0 }} policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
                 </div>
+                <EnvTags 
+                  tags={envInfo.tags} 
+                  canEdit={PROJECT_OPERATOR} 
+                  update={(data) => {
+                    updateTag(data.join(','));
+                  }} 
+                />
               </Space>
             )}
             

@@ -9,6 +9,7 @@ import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { timeUtils } from "utils/time";
 import { Eb_WP } from 'components/error-boundary';
 import PolicyStatus from 'components/policy-status';
+import EnvTags from '../env-tags';
 import envAPI from 'services/env';
 import styles from './styles.less';
 
@@ -114,6 +115,7 @@ const EnvList = (props) => {
                   </Tooltip>
                 )}
                 <PolicyStatus policyStatus={data.policyStatus} onlyShowResultStatus={true} />
+                <EnvTags tags={data.tags} />
               </div>
             </Space>
           }
