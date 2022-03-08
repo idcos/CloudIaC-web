@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Tag, Input, Tooltip } from 'antd';
+import { Tag, Input, Tooltip, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import cloneDeep from 'lodash/cloneDeep';
 import noop from 'lodash/noop';
@@ -71,7 +71,9 @@ export default ({
           />
         ) : (
           <Tag className='add-tag-btn' onClick={showEditInput}>
-            <PlusOutlined />添加标签
+            <Space size={4}>
+              <PlusOutlined />添加标签
+            </Space>
           </Tag>
         )
       )}
