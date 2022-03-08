@@ -5,6 +5,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import cloneDeep from 'lodash/cloneDeep';
 import noop from 'lodash/noop';
 import styles from './styles.less';
+import classNames from 'classnames';
 
 export default ({
   tags,
@@ -109,6 +110,7 @@ export const EditTag = ({ canEdit, tag, delTag, saveTag }) => {
     />
   ) : (
     <Tag
+      className={classNames({ 'can-edit': canEdit })}
       closable={canEdit}
       onClose={(e) => {
         e.preventDefault();

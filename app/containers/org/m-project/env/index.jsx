@@ -61,7 +61,7 @@ const Envs = (props) => {
             <Input
               style={{ width: 400 }}
               allowClear={true}
-              placeholder='请输入环境名称或云模板名称搜索'
+              placeholder='请输入环境名称、标签或云模板名称搜索'
               prefix={<SearchOutlined />}
               defaultValue={query.q}
               onPressEnter={(e) => {
