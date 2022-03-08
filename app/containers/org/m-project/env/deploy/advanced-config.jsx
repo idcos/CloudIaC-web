@@ -44,7 +44,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
 
   const { run: fetchFile } = useRequest(
     (fileName) => requestWrapper(
-      vcsAPI.file.bind(null, { orgId, vcsId, repoId, branch: repoRevision, fileName })
+      vcsAPI.file.bind(null, { orgId, vcsId, repoId, branch: repoRevision, fileName, workdir: tplInfo.workdir })
     ),
     {
       manual: true,
