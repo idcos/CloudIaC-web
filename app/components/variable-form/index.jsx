@@ -29,7 +29,7 @@ const VariableForm = ({
   showVarGroupList = true,
   event$
 }) => {
-  
+  fetchParams = isEmpty(fetchParams) ? null : fetchParams;
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
@@ -66,7 +66,7 @@ const VariableForm = ({
       );
     },
     {
-      ready: !isEmpty(fetchParams) && showVarGroupList,
+      ready: !!fetchParams && showVarGroupList,
       onSuccess: (data) => {
         data = data || [];
         setDefalutEnvVarGroupList(data);
