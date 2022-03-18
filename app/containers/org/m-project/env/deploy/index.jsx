@@ -37,20 +37,13 @@ const Index = ({ match = {} }) => {
   const [ tplInfo, setTplInfo ] = useState({});
   const [ tfvars, setTfvars ] = useState([]);
   const [ playbooks, setPlaybooks ] = useState([]);
+  const [ fetchParams, setFetchParams ] = useState({});
   
   useEffect(() => {
     fetchInfo();
     getVars();
   }, []);
 
-  const varFetchParams = useMemo(() => {
-    if (isEmpty(tplInfo)) {
-      return null;
-    }
-    return {
-      ...tplInfo, orgId, projectId, tplId, envId, objectType: 'env'
-    };
-  }, [tplInfo]);
 
   const getVars = async () => {
     try {
@@ -70,6 +63,12 @@ const Index = ({ match = {} }) => {
   // 获取Info
   const fetchInfo = async () => {
     try {
+      const res = await tplAPI.detail({
+        orgId, tplId
+      });
+      const tplInfoRes = res.result || {};
+      setTplInfo(tplInfoRes);
+      let fetchParams = { ...tplInfoRes, orgId, projectId, tplId, envId, objectType: 'env' };
       if (envId) {
         const infores = await envAPI.envsInfo({
           orgId, projectId, envId
@@ -77,18 +76,15 @@ const Index = ({ match = {} }) => {
         let data = infores.result || {};
         form.setFieldsValue(data);
         setInfo(data);
+        fetchParams.repoRevision = data.revision;
       }
-      const res = await tplAPI.detail({
-        orgId, tplId
-      });
-      const tplInfoRes = res.result || {};
-      setTplInfo(tplInfoRes);
-      fetchTfvars(tplInfoRes);
-      fetchPlaybooks(tplInfoRes);
-      fetchKeys(tplInfoRes);
+      setFetchParams(fetchParams);
+      fetchTfvars(fetchParams);
+      fetchPlaybooks(fetchParams);
+      fetchKeys(fetchParams);
       fetchRunner();
-      fetchRepoTag(tplInfoRes);
-      fetchRepoBranch(tplInfoRes);
+      fetchRepoTag(fetchParams);
+      fetchRepoBranch(fetchParams);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -98,8 +94,8 @@ const Index = ({ match = {} }) => {
   };
 
   // 获取分支数据
-  const fetchRepoBranch = async (tplInfoRes) => {
-    const { vcsId, repoId, repoRevision } = tplInfoRes;
+  const fetchRepoBranch = async (fetchParams) => {
+    const { vcsId, repoId, repoRevision } = fetchParams;
     !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
     try { 
       const res = await vcsAPI.listRepoBranch({
@@ -123,8 +119,8 @@ const Index = ({ match = {} }) => {
   };
 
   // 获取标签数据
-  const fetchRepoTag = async (tplInfoRes) => {
-    const { vcsId, repoId } = tplInfoRes;
+  const fetchRepoTag = async (fetchParams) => {
+    const { vcsId, repoId } = fetchParams;
     try { 
       const res = await vcsAPI.listRepoTag({
         orgId, 
@@ -200,6 +196,7 @@ const Index = ({ match = {} }) => {
         throw new Error(res.message);
       }
       setTfvars(res.result || []);
+      configRef.current && configRef.current.validateFields([['tfVarsFile']]);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -218,6 +215,7 @@ const Index = ({ match = {} }) => {
         throw new Error(res.message);
       }
       setPlaybooks(res.result || []);
+      configRef.current && configRef.current.validateFields([['playbook']]);
     } catch (e) {
       notification.error({
         message: '获取失败',
@@ -316,10 +314,15 @@ const Index = ({ match = {} }) => {
                 ]}
               >
                 <Select 
-                  allowClear={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder='请选择分支/标签'
                   style={{ width: '100%' }}
+                  onChange={(value) => {
+                    const newFetchParams = { ...fetchParams, repoRevision: value };
+                    setFetchParams(newFetchParams);
+                    fetchTfvars(newFetchParams);
+                    fetchPlaybooks(newFetchParams);
+                  }}
                 >
                   <OptGroup label='分支'>
                     {branch.map(it => <Option value={it.name}>{it.name}</Option>)}
@@ -347,7 +350,7 @@ const Index = ({ match = {} }) => {
             varRef={varRef} 
             defaultScope={defaultScope}
             defaultData={{ variables: vars }} 
-            fetchParams={varFetchParams}
+            fetchParams={fetchParams}
             canImportTerraformVar={true}
             defaultExpandCollapse={false}
           />

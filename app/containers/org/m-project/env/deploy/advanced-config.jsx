@@ -138,6 +138,19 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
 
   useImperativeHandle(configRef, () => ({
     onfinish,
+    validateFields: (nameList) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          await form.validateFields(nameList).catch((err) => {
+            setActiveKey(['open']); // 表单报错展开折叠面板
+            reject(err);
+          });
+          resolve();
+        } catch (error) {
+          reject();
+        }
+      });
+    },
     setRunnerValue
   }), [ onfinish, setRunnerValue ]);
 
@@ -211,49 +224,85 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                 >
                   <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={7}>
-                      <Form.Item
-                        label={
-                          <>
-                            tfvars文件：
-                            <EyeOutlined 
-                              style={{ cursor: 'pointer' }} 
-                              onClick={() => viewFile('tfVarsFile')}
-                            />
-                          </>
-                        }
-                        name='tfVarsFile'
-                      >
-                        <Select
-                          getPopupContainer={triggerNode => triggerNode.parentNode} 
-                          allowClear={true} 
-                          placeholder='请选择tfvars文件'
-                          style={{ width: '100%' }}
-                        >
-                          {tfvars.map(it => <Option value={it}>{it}</Option>)}
-                        </Select>
+                      <Form.Item noStyle={true} dependencies={['tfVarsFile']}>
+                        {(form) => {
+                          const tfVarsFile = form.getFieldValue('tfVarsFile');
+                          const noOption = tfVarsFile && !tfvars.find(it => it === tfVarsFile);
+                          return (
+                            <Form.Item
+                              rules={[
+                                {
+                                  validator(_, value) {
+                                    if (noOption) {
+                                      return Promise.reject(new Error('分支下未找到该tfvars文件'));
+                                    }
+                                    return Promise.resolve();
+                                  }
+                                }
+                              ]}
+                              label={
+                                <>
+                                  tfvars文件：
+                                  <EyeOutlined 
+                                    style={{ cursor: 'pointer' }} 
+                                    onClick={() => !noOption && viewFile('tfVarsFile')}
+                                  />
+                                </>
+                              }
+                              name='tfVarsFile'
+                            >
+                              <Select
+                                getPopupContainer={triggerNode => triggerNode.parentNode} 
+                                allowClear={true} 
+                                placeholder='请选择tfvars文件'
+                                style={{ width: '100%' }}
+                              >
+                                {tfvars.map(it => <Option value={it}>{it}</Option>)}
+                              </Select>
+                            </Form.Item>
+                          );
+                        }}
                       </Form.Item>
                     </Col>
                     <Col span={7}>
-                      <Form.Item
-                        label={
-                          <>
-                            playbook文件：
-                            <EyeOutlined
-                              style={{ cursor: 'pointer' }} 
-                              onClick={() => viewFile('playbook')}
-                            />
-                          </>
-                        }
-                        name='playbook'
-                      >
-                        <Select 
-                          allowClear={true}
-                          getPopupContainer={triggerNode => triggerNode.parentNode}
-                          placeholder='请选择playbook文件'
-                          style={{ width: '100%' }}
-                        >
-                          {playbooks.map(it => <Option value={it}>{it}</Option>)}
-                        </Select>
+                      <Form.Item noStyle={true} dependencies={['playbook']}>
+                        {(form) => {
+                          const playbook = form.getFieldValue('playbook');
+                          const noOption = playbook && !playbooks.find(it => it === playbook);
+                          return (
+                            <Form.Item
+                              rules={[
+                                {
+                                  validator(_, value) {
+                                    if (noOption) {
+                                      return Promise.reject(new Error('分支下未找到该playbook文件'));
+                                    }
+                                    return Promise.resolve();
+                                  }
+                                }
+                              ]}
+                              label={
+                                <>
+                                  playbook文件：
+                                  <EyeOutlined
+                                    style={{ cursor: 'pointer' }} 
+                                    onClick={() => !noOption && viewFile('playbook')}
+                                  />
+                                </>
+                              }
+                              name='playbook'
+                            >
+                              <Select 
+                                allowClear={true}
+                                getPopupContainer={triggerNode => triggerNode.parentNode}
+                                placeholder='请选择playbook文件'
+                                style={{ width: '100%' }}
+                              >
+                                {playbooks.map(it => <Option value={it}>{it}</Option>)}
+                              </Select>
+                            </Form.Item>
+                          );
+                        }}
                       </Form.Item>
                     </Col>
                     <Col span={7}>
