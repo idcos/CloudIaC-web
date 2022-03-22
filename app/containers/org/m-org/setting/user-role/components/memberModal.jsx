@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Modal, Select, Tooltip, Space } from 'antd';
+import { Form, Input, Modal, Select, Tooltip, Space, Checkbox } from 'antd';
 import { ORG_USER } from 'constants/types';
 import { InfoCircleOutlined } from '@ant-design/icons';
 
@@ -12,13 +12,18 @@ const FL = {
 export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
+  const [ isBatch, setIsBatch ] = useState(false);
+  
   const [form] = Form.useForm();
   
   const onOk = async () => {
     const values = await form.validateFields();
+    if (isBatch) {
+      values.email = values.batchEmail.split('\n');
+    }
     setSubmitLoading(true);
     operation({
-      doWhat: opt,
+      doWhat: isBatch ? 'batchAdd' : opt,
       payload: {
         ...values,
         id: curRecord && curRecord.id
@@ -27,6 +32,19 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       setSubmitLoading(false);
       !hasError && toggleVisible();
     });
+  };
+
+  const rulesConfig = (form) => {
+    let ruleList = [
+      {
+        required: true,
+        message: '请输入'
+      }
+    ];
+    if (!isBatch) {
+      ruleList.push({ type: 'email', message: '邮箱格式有误' });
+    }
+    return ruleList;
   };
 
   return <Modal
@@ -47,24 +65,25 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
         label='邮箱'
         required={true}
       >
-        <Space>
-          <Form.Item
-            name='email'
-            rules={[
-              {
-                required: true,
-                message: '请输入'
-              },
-              { type: 'email', message: '邮箱格式有误' }
-            ]}
+        <Space align={isBatch ? 'start' : 'center'}>
+          {isBatch ? (<Form.Item
+            name='batchEmail'
+            rules={rulesConfig()}
             noStyle={true}
           >
-            <Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
-          </Form.Item>
+            <Input.TextArea rows={8} style={{ width: opt == 'add' ? 220 : 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+          </Form.Item>) : (<Form.Item
+            name='email'
+            rules={rulesConfig()}
+            noStyle={true}
+          >
+            <Input style={{ width: opt == 'add' ? 220 : 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+          </Form.Item>)}
           <Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip>
+          {opt == 'add' && <Checkbox onChange={e => setIsBatch(e.target.checked)}>批量</Checkbox>}
         </Space>
       </Form.Item>
-      <Form.Item
+      {!isBatch && <Form.Item
         label='姓名'
         name='name'
         rules={[
@@ -75,14 +94,14 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
         ]}
       >
         <Input placeholder='请输入姓名' />
-      </Form.Item>
-      <Form.Item
+      </Form.Item>}
+      {!isBatch && <Form.Item
         label='手机号'
         name='phone'
         rules={[{ pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }]}
       >
         <Input placeholder='请输入手机号' />
-      </Form.Item>
+      </Form.Item>}
       <Form.Item
         label='角色'
         name='role'

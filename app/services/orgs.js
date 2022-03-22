@@ -44,6 +44,13 @@ const orgsAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  batchInviteUser: ({ orgId, name, email, phone, role }) => {
+    return post(`/api/v1/orgs/${orgId}/users/batch_invite`, {
+      email, role
+    }, {
+      'IaC-Org-Id': orgId
+    });
+  },
   updateUser: ({ orgId, id: userId, name, phone, role }) => {
     return put(`/api/v1/orgs/${orgId}/users/${userId}`, { name, phone, role }, {
       'IaC-Org-Id': orgId
@@ -65,7 +72,7 @@ const orgsAPI = {
     return getWithArgs(`/api/v1/orgs/resources`, restParams, {
       'IaC-Org-Id': orgId
     });
-  },
+  }
 };
 
 export default orgsAPI;
