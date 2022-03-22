@@ -15,10 +15,13 @@ const taskAPI = {
     });
   },
   // 获取环境资源列表
-  envsTaskList: ({ envId, orgId, projectId, q }) => {
+  envsTaskList: ({ envId, orgId, projectId, q, taskType, user, source }) => {
     return getWithArgs(`/api/v1/envs/${envId}/tasks`, {
       pageSize: 0,
-      q
+      q,
+      taskType,
+      user,
+      source
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源图形列表

@@ -91,6 +91,29 @@ const Params = () => {
           </Form.Item>
         </Space>
       </Form.Item>
+      {/* <Form.Item label='任务超时时间' required={true}>
+        <Space>
+          <Form.Item
+            name='Task_STEP_TIMEOUt'
+            rules={[
+              {
+                required: true,
+                message: '请输入'
+              }
+            ]}
+            style={{ display: 'inline-block' }}
+            noStyle={true}
+          >
+            <InputNumber min={0} precision={0} placeholder='请输入' />
+          </Form.Item>
+          <Form.Item
+            style={{ display: 'inline-block' }}
+            noStyle={true}
+          >
+            分钟
+          </Form.Item>
+        </Space>
+      </Form.Item> */}
       <Form.Item
         label='日志保存周期'
         name='PERIOD_OF_LOG_SAVE'

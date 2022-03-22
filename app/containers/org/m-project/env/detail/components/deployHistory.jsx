@@ -1,5 +1,5 @@
-import React, { memo, useContext } from 'react';
-import { Card, Table, Tag, Tooltip } from 'antd';
+import React, { memo, useContext, useEffect } from 'react';
+import { Card, Table, Tag, Tooltip, Select, Input } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { useSearchFormAndTable } from 'utils/hooks';
@@ -11,11 +11,13 @@ import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE, DEPLOY_HISTORY_SOURCE_ENUM }
 import { Eb_WP } from 'components/error-boundary';
 import taskAPI from 'services/task';
 import DetailPageContext from '../detail-page-context';
+const { Search } = Input;
+
+const searchParams = {}
 
 const DeployHistory = () => {
 
   const { orgId, projectId, envId } = useContext(DetailPageContext);
-
   // 列表查询
   const {
     loading: tableLoading,
@@ -130,8 +132,53 @@ const DeployHistory = () => {
     }
   ];
 
+  const triggerTypeArr = () => {
+    let tempArr = []
+    for (const key in DEPLOY_HISTORY_SOURCE_ENUM) {
+      tempArr.push({value: key, label: DEPLOY_HISTORY_SOURCE_ENUM[key]})
+    }
+    return tempArr;
+  }
+  const taskTypeArr = () => {
+    let tempArr = []
+    for (const key in TASK_TYPE) {
+      tempArr.push({value: key, label: TASK_TYPE[key]})
+    }
+    return tempArr;
+  }
+
+  const searchParamsChange = ({type, value}) => {
+    searchParams[type] = value
+    fetchList(searchParams);
+  }
+
+  const title = <div>
+    <span>部署历史</span>
+    <span style={{float: "right"}}>
+      <Select 
+        allowClear={true}
+        style={{ width: 200 }}
+        placeholder="请选择触发类型"
+        options={triggerTypeArr()}
+        onChange={(value) => searchParamsChange({type:"source", value})}
+      ></Select>
+      <Select 
+        allowClear={true}
+        style={{ width: 200 }}
+        placeholder="请选择任务类型"
+        options={taskTypeArr()}
+        onChange={(value) => searchParamsChange({type:"taskType", value})}
+      ></Select>
+      <Search 
+        placeholder="请输入执行人姓名" 
+        onSearch={(value) => searchParamsChange({type:"user", value})} 
+        style={{ width: 200 }} 
+      />
+    </span>
+  </div>
+
   return <div>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={'部署历史'}>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={title}>
       <Table
         columns={columns}
         scroll={{ x: 'min-content' }}
