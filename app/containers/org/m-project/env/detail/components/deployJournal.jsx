@@ -12,7 +12,7 @@ const { Panel } = Collapse;
 
 const deployJournal = () => {
 
-  const { userInfo, taskInfo, taskId, reload, orgId, projectId } = useContext(DetailPageContext);
+  const { userInfo, taskInfo, taskId, reload, orgId, projectId, envInfo } = useContext(DetailPageContext);
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const [ comments, setComments ] = useState([]);
   const [ loading, setLoading ] = useState(false);
@@ -74,7 +74,7 @@ const deployJournal = () => {
 
   return (
     <div className={styles.deployJournal}>
-      <DeployLogCard taskInfo={taskInfo} reload={reload}/>
+      <DeployLogCard taskInfo={taskInfo} envInfo={envInfo} reload={reload}/>
       <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={[]} forceRender={true}>
         <Panel header={<span>评论（{comments.length}）</span>} key='1'>
           <List

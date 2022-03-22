@@ -12,6 +12,8 @@ import taskAPI from 'services/task';
 import history from 'utils/history';
 import { timeUtils } from "utils/time";
 import SearchByKeyWord from 'components/coder/ansi-coder-card/dom-event';
+
+import SuspendModel from './components/suspendModel';
 import DeployLog from './deploy-log';
 import styles from './styles.less';
 
@@ -24,7 +26,7 @@ const searchService = new SearchByKeyWord({
 });
 const enableStatusList = [ 'complete', 'failed', 'timeout', 'running' ];
 
-const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
+const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
 
   const searchRef = useRef();
   const ref = useRef();
@@ -32,11 +34,12 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
   const stopLoopRef = useRef(false);
   const scrollRef = useRef(null);
   const { top: scrollRefTop } = useScroll(scrollRef);
-  const [ isFullscreen, { toggleFull } ] = useFullscreen(ref);
+  const [ isFullscreen, { toggleFull }] = useFullscreen(ref);
   const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status } = taskInfo || {};
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ activeKey, setActiveKey ] = useState([]);
   const [ canAutoScroll, setCanAutoScroll ] = useState(true);
+  const [ suspendView, setSuspendView ] = useState(false);
   const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
   const autoScroll = !taskHasEnd && canAutoScroll;
 
@@ -162,7 +165,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
     run: passOrRejecy,
     fetches: {
       approved: { loading: approvedLoading = false } = {},
-      rejected: { loading: rejectedLoading = false } = {},
+      rejected: { loading: rejectedLoading = false } = {}
     } 
   } = useRequest(
     (action) => requestWrapper(
@@ -184,6 +187,8 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
   const manualChangeActiveKey = (keys) => {
     setActiveKey(keys);
   };
+
+  console.log(taskInfo, 'taskInfo');
 
   return (
     <div ref={ref} className={styles.deploy_log_card_wrapper}>
@@ -243,6 +248,16 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
                       </Button>
                     ) : null
                   }
+                  {
+                    (
+                      <Button 
+                        type='danger'
+                        onClick={() => setSuspendView(true)}
+                      >
+                        中止
+                      </Button>
+                    )
+                  }
                 </Space>
               )
             }
@@ -288,7 +303,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
               taskSteps.map(({ name, id, startAt, type, endAt, status }, index) => (
                 <Panel 
                   className={'log-panel-' + index}
-                  collapsible={!['complete', 'failed', 'timeout', 'running'].includes(status) && 'disabled'}
+                  collapsible={![ 'complete', 'failed', 'timeout', 'running' ].includes(status) && 'disabled'}
                   header={
                     <Space>
                       <span>{name || type || '-'}</span>
@@ -307,6 +322,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload }) => {
           </Collapse>
         </div>
       </Card>
+      {
+        suspendView && <SuspendModel 
+          toggleVisible={() => setSuspendView(false)}
+          envInfo={envInfo}
+          taskInfo={taskInfo}
+        />
+      }
     </div>
   );
 };

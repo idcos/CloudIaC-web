@@ -63,6 +63,7 @@ export default ({ title, orgId }) => {
       const method = {
         edit: (param) => orgsAPI.updateUser(param),
         add: (param) => orgsAPI.inviteUser(param),
+        batchAdd: (param) => orgsAPI.batchInviteUser(param),
         resetUserPwd: ({ orgId, id }) => userAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
       };
@@ -155,7 +156,8 @@ export default ({ title, orgId }) => {
               setOpt('edit');
               setCurRecord(record);
               toggleVisible();
-            }}>编辑</Button>
+            }}
+            >编辑</Button>
             <Popconfirm
               title='确定要重置密码？'
               onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
