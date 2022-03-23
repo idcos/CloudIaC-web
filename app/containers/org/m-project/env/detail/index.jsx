@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
-import { ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons';
+import { ExclamationCircleFilled, InfoCircleFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -24,6 +24,7 @@ import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
 import EnvTags from '../componemts/env-tags';
+import Lock from './components/lock';
 import styles from './styles.less';
 import { createBrowserHistory } from 'history';
 import DetailPageContext from './detail-page-context';
@@ -46,6 +47,8 @@ const EnvDetail = (props) => {
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ taskId, setTaskId ] = useState();
+  const [ lockVisible, setLockVisible ] = useState(false);
+  const [ lockType, setLockType ] = useState(false);
 
   // 获取环境详情
   const { data: envInfo = {}, run: fetchEnvInfo } = useRequest(
@@ -162,6 +165,12 @@ const EnvDetail = (props) => {
     });
   };
 
+
+  const onLock = (type) => {
+    setLockVisible(true);
+    setLockType(type);
+  };
+
   const reload = () => {
     fetchEnvInfo();
     fetchTaskInfo();
@@ -229,10 +238,12 @@ const EnvDetail = (props) => {
             
             subDes={
               PROJECT_OPERATOR ? (
-                <div>
+                <Space>
                   <Button onClick={redeploy}>重新部署</Button>
-                  <Button onClick={destroy} style={{ marginLeft: 8 }} type={'primary'}>销毁资源</Button>
-                </div>
+                  <Button onClick={destroy} type={'primary'}>销毁资源</Button>
+                  <Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>
+                  <Tooltip title='解锁当前环境'><UnlockOutlined onClick={() => onLock('unlock')} style={{ fontSize: 20 }}/></Tooltip>
+                </Space>
               ) : null
             }
             breadcrumb={true}
@@ -276,6 +287,10 @@ const EnvDetail = (props) => {
             {renderByPanel()}
           </div>
         </div>
+        {lockVisible && <Lock
+          toggleVisible={() => setLockVisible(false)}
+          lockType={lockType}
+        />}
       </Layout>
     </DetailPageContext.Provider>
   );
