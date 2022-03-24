@@ -93,6 +93,22 @@ const envAPI = {
   },
   updateTag: ({ orgId, projectId, envId, ...resetParams }) => {
     return post(`/api/v1/envs/${envId}/tags`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+
+  // 锁定
+  envLocked: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/locked`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 解锁
+  envUnLocked: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/unlocked`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 环境解锁确认
+  unlockedConfirm: ({ envId, orgId, projectId }) => {
+    return get(`/api/v1/envs/${envId}/unlocked/confirm`, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
   }
 };
 

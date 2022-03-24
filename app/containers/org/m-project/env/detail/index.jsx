@@ -166,9 +166,31 @@ const EnvDetail = (props) => {
   };
 
 
-  const onLock = (type) => {
-    setLockVisible(true);
-    setLockType(type);
+  const onLock = async(type) => {
+    if (type === 'unlock') {
+      let confirmRes = await envAPI.unlockedConfirm({ orgId, projectId, envId });
+      if (confirmRes.code !== 200) {
+        return notification.error({ message: confirmRes.message });
+      }
+
+      if (!confirmRes.result.autoDestroyPass) {
+        let res = await envAPI.envUnLocked({ orgId, projectId, envId });
+  
+        if (res.code !== 200) {
+          return notification.error({ message: res.message });
+        }
+
+        notification.success({ message: '操作成功' });
+        fetchEnvInfo();
+      } else {
+        setLockVisible(true);
+        setLockType(type);
+      }
+
+    } else {
+      setLockVisible(true);
+      setLockType(type);
+    }
   };
 
   const reload = () => {
@@ -240,9 +262,9 @@ const EnvDetail = (props) => {
               PROJECT_OPERATOR ? (
                 <Space>
                   <Button onClick={redeploy}>重新部署</Button>
-                  <Button onClick={destroy} type={'primary'}>销毁资源</Button>
-                  <Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>
-                  <Tooltip title='解锁当前环境'><UnlockOutlined onClick={() => onLock('unlock')} style={{ fontSize: 20 }}/></Tooltip>
+                  <Button disabled={envInfo.lockedStatus} onClick={destroy} type={'primary'}>销毁资源</Button>
+                  {!envInfo.lockedStatus ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
+                    (<Tooltip title='解锁当前环境'><UnlockOutlined onClick={() => onLock('unlock')} style={{ fontSize: 20 }}/></Tooltip>)}
                 </Space>
               ) : null
             }
@@ -290,6 +312,11 @@ const EnvDetail = (props) => {
         {lockVisible && <Lock
           toggleVisible={() => setLockVisible(false)}
           lockType={lockType}
+          reload={fetchEnvInfo}
+          envInfo={envInfo}
+          orgId={orgId}
+          projectId={projectId}
+          envId={envId}
         />}
       </Layout>
     </DetailPageContext.Provider>

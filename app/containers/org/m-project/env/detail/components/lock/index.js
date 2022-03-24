@@ -1,27 +1,52 @@
 
 import React, { useState } from 'react';
-import { Button, Modal, Select } from 'antd'; 
+import { Button, Modal, notification } from 'antd'; 
+import envAPI from 'services/env';
 
 const FL = {
   labelCol: { span: 8 },
   wrapperCol: { span: 14 }
 };
 
-export default ({ toggleVisible, lockType }) => {
+export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, envId }) => {
 
   const [ loading, setLoading ] = useState(false);
   const [ clearLoading, setClearLoading ] = useState(false);
   
   const onOk = async () => {
     setLoading(true);
+    let res = await envAPI.envLocked({ orgId, projectId, envId });
+    setLoading(false);
+
+    if (res.code !== 200) {
+      return notification.error({ message: res.message });
+    }
+
+    toggleVisible();
+    reload();
   };
 
-  const onClear = async () => {
+  const onClear = async (value) => {
     setClearLoading(true);
+    let params = {
+      orgId, projectId, envId
+    };
+    if (value) {
+      params.clearDestroyAt = true;
+    }
+    let res = await envAPI.envUnLocked({ ...params });
+    setClearLoading(false);
+  
+    if (res.code !== 200) {
+      return notification.error({ message: res.message });
+    }
+  
+    toggleVisible();
+    reload();
   };
 
   return <Modal
-    title={`警告`}
+    title={`锁定环境 “${envInfo.name}”`}
     visible={true}
     onCancel={toggleVisible}
     okButtonProps={{
@@ -32,14 +57,20 @@ export default ({ toggleVisible, lockType }) => {
       <Button key='back' onClick={toggleVisible}>
         取消
       </Button>
-      {lockType !== 'lock' && <Button key='submit' type='primary' loading={clearLoading} onClick={onClear}>
+      {lockType !== 'lock' && <Button key='submit' type='primary' loading={clearLoading} onClick={() => onClear(true)}>
         清除定时销毁并解锁
       </Button>}
       <Button
         key='link'
         type='danger'
         loading={loading}
-        onClick={onOk}
+        onClick={() => {
+          if (lockType === 'unlock') {
+            onClear();
+          } else {
+            onOk(); 
+          }
+        }}
       >
         确定
       </Button>

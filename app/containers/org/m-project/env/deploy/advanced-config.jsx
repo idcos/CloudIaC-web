@@ -24,6 +24,7 @@ const { Option } = Select;
 
 const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, playbooks }) => {
   const { vcsId, repoId, repoRevision } = tplInfo;
+  const { lockedStatus } = data;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
   const [ activeKey, setActiveKey ] = useState([]);
@@ -367,6 +368,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           getPopupContainer={triggerNode => triggerNode.parentNode}
                           placeholder='请选择部署通道'
                           style={{ width: '100%' }}
+                          disabled={lockedStatus}
                         >
                           {runnner.map(it => <Option value={it.ID}>{it.ID}</Option>)}
                         </Select>
@@ -385,7 +387,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               name='type'
                               initialValue={'infinite'}
                             >
-                              <Select style={{ width: '100%' }}>
+                              <Select disabled={lockedStatus} style={{ width: '100%' }}>
                                 {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                               </Select>
                             </Form.Item>
@@ -406,7 +408,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                     noStyle={true}
                                     shouldUpdate={true}
                                   >
-                                    <Select style={{ width: '100%' }}>
+                                    <Select disabled={lockedStatus} style={{ width: '100%' }}>
                                       {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                                     </Select>
                                   </Form.Item>;
@@ -417,7 +419,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                     noStyle={true}
                                     shouldUpdate={true}
                                   >
-                                    <DatePicker style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                                    <DatePicker disabled={lockedStatus} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                                   </Form.Item>;
                                 }
                               }}
@@ -437,7 +439,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                             initialValue={false}
                             noStyle={true}
                           >
-                            <Checkbox/>
+                            <Checkbox disabled={lockedStatus}/>
                           </Form.Item>
                           <span>执行失败时，间隔</span>
                           <Form.Item 
@@ -445,7 +447,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                             initialValue={0}
                             noStyle={true}
                           >
-                            <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+                            <InputNumber disabled={lockedStatus} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
                           </Form.Item>
                           <span>秒自动重试</span>
                           <Form.Item
@@ -453,7 +455,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                             initialValue={0}
                             name='retryNumber'
                           >
-                            <InputNumber className='no-step' min={0} precision={0} style={{ width: 40 }} />
+                            <InputNumber disabled={lockedStatus} className='no-step' min={0} precision={0} style={{ width: 40 }} />
                           </Form.Item>
                           <span>次</span> 
                         </Space>
@@ -475,7 +477,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox onChange={e => checkedChange(e, '推送到分支时重新部署')}>推送到分支时重新部署</Checkbox> 
+                          <Checkbox disabled={lockedStatus} onChange={e => checkedChange(e, '推送到分支时重新部署')}>推送到分支时重新部署</Checkbox> 
                         </Form.Item>
                         <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
@@ -488,7 +490,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           initialValue={false}
                           noStyle={true}
                         >
-                          <Checkbox>PR/MR时执行PLAN</Checkbox> 
+                          <Checkbox disabled={lockedStatus}>PR/MR时执行PLAN</Checkbox> 
                         </Form.Item>
                         <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
@@ -512,7 +514,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         labelCol={{ span: 6 }}
                         wrapperCol={{ span: 16 }}
                       >
-                        <Switch />
+                        <Switch disabled={lockedStatus}/>
                       </Form.Item>
                       <Form.Item
                         noStyle={true}
@@ -537,6 +539,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                   showArrow={true}
                                   options={policiesGroupOptions}
                                   placeholder='请选择策略组'
+                                  disabled={lockedStatus}
                                 />
                               </Form.Item>
                               <Form.Item
@@ -546,7 +549,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox>合规不通过时中止部署</Checkbox>                  
+                                <Checkbox disabled={lockedStatus}>合规不通过时中止部署</Checkbox>                  
                               </Form.Item>
                             </>
                           ) : null;
@@ -562,7 +565,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         labelCol={{ span: 6 }}
                         wrapperCol={{ span: 16 }}
                       >
-                        <Switch />
+                        <Switch disabled={lockedStatus} />
                       </Form.Item>
                       <Form.Item 
                         noStyle={true}
@@ -590,7 +593,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                         }
                                       ]}
                                     >
-                                      <Input placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
+                                      <Input disabled={lockedStatus} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
                                     </Form.Item>
                                   </Col>
                                   <Col flex={2}>
@@ -621,7 +624,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox onChange={e => checkedChange(e, '自动纠正漂移')}>自动纠漂</Checkbox>                  
+                                <Checkbox disabled={lockedStatus} onChange={e => checkedChange(e, '自动纠正漂移')}>自动纠漂</Checkbox>                  
                               </Form.Item>
                             </>
                           ) : null;
@@ -643,7 +646,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
+                        <Checkbox disabled={lockedStatus} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
                       </Form.Item>
                     </Col>
                   </Row>

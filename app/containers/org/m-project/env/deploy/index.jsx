@@ -299,7 +299,7 @@ const Index = ({ match = {} }) => {
                 ]}
                 initialValue={info.name || undefined}
               >
-                <Input value={info.name} placeholder={'请输入环境名称'} style={{ width: '100%' }} />
+                <Input disabled={info.lockedStatus} value={info.name} placeholder={'请输入环境名称'} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={7}>
@@ -323,6 +323,7 @@ const Index = ({ match = {} }) => {
                     fetchTfvars(newFetchParams);
                     fetchPlaybooks(newFetchParams);
                   }}
+                  disabled={info.lockedStatus}
                 >
                   <OptGroup label='分支'>
                     {branch.map(it => <Option value={it.name}>{it.name}</Option>)}
@@ -356,7 +357,7 @@ const Index = ({ match = {} }) => {
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
             <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
-            <Button htmlType='submit' disabled={planLoading} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
+            <Button htmlType='submit' disabled={planLoading || info.lockedStatus} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
           </Row>
         </Form>
       </div>
