@@ -154,7 +154,12 @@ const Setting = () => {
     let checked = e.target ? e.target.checked : e;
     if (checked && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
-        title: `开启『${str}』功能需要同时开启『自动通过审批』，否则${str}功能无法自动进行，是否继续？`,
+        title: <div style={{ display: 'inline-grid' }}>
+          <span style={{ marginBottom: 16 }} className={'dangerText'} >{`自动纠正漂移将自动发起apply任务来进行资源状态纠正并无需审批，
+          该操作有可能带来一些不可预知的风险，
+          请确保在完全可控的场景中使用该功能。`}</span><br />
+          <span>{`开启『${str}』功能需要同时开启『自动通过审批』，否则${str}功能无法自动进行，是否继续？`}</span>
+        </div>,
         okText: '继续',
         cancelText: '取消',
         onOk() {
