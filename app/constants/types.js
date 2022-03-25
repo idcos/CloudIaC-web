@@ -126,7 +126,8 @@ export const TASK_STATUS_COLOR = {
   "approving": 'processing',
   "failed": 'error',
   "complete": 'success',
-  "rejected": "warning"
+  "rejected": "warning",
+  "aborted": 'error'
 };
 
 export const TASK_TYPE = {

@@ -255,7 +255,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
           <div className='card-title'>
             <div className='card-title-top'>
               <span className='title'>部署日志</span> 
-              <Tag className='status' color={TASK_STATUS_COLOR[status]}>{TASK_STATUS[status]}</Tag>
+              {aborting ? <Tag className='status' color={'error'}>{'中止执行中'}</Tag> : <Tag className='status' color={TASK_STATUS_COLOR[status]}>{TASK_STATUS[status]}</Tag>}
               {
                 taskInfo.status === 'failed' && taskInfo.message ? (
                   <Tooltip title={taskInfo.message}>
