@@ -309,7 +309,8 @@ const EnvDetail = (props) => {
             {renderByPanel()}
           </div>
         </div>
-        {lockVisible && <Lock
+        
+        {lockVisible && <div className={'lockModal'}> <Lock
           toggleVisible={() => setLockVisible(false)}
           lockType={lockType}
           reload={fetchEnvInfo}
@@ -317,7 +318,7 @@ const EnvDetail = (props) => {
           orgId={orgId}
           projectId={projectId}
           envId={envId}
-        />}
+        /></div>}
       </Layout>
     </DetailPageContext.Provider>
   );
