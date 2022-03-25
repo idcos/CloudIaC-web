@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { Button, Modal, notification } from 'antd'; 
+import { Button, Modal, notification, Space } from 'antd'; 
+import { InfoCircleFilled } from '@ant-design/icons';
 import envAPI from 'services/env';
 
 const FL = {
@@ -9,7 +10,6 @@ const FL = {
 };
 
 export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, envId }) => {
-
   const [ loading, setLoading ] = useState(false);
   const [ clearLoading, setClearLoading ] = useState(false);
   
@@ -46,23 +46,38 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
   };
 
   return <Modal
-    title={`锁定环境 “${envInfo.name}”`}
+    title={<span><InfoCircleFilled style={{ color: '#f00', marginRight: 10 }} /><span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`锁定环境 “${envInfo.name}”`}</span></span>}
     visible={true}
     onCancel={toggleVisible}
     okButtonProps={{
       loading: loading
     }}
+    getContainer={false}
     onOk={onOk}
-    footer={<div>
-      <Button key='back' onClick={toggleVisible}>
+    footer={null}
+  >
+    {lockType === 'lock' ? <>
+      <div style={{ color: 'rgba(87, 96, 106, 100)' }}> 
+        环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、<br />
+        『定时销毁』、API触发的部署等任务，<br />
+        但漂移检测等plan类型任务可以照常执行。
+      </div>
+    </> :
+      (<div style={{ color: 'rgba(87, 96, 106, 100)' }}>
+        <div >当前环境设置了定时销毁，并已过了定时销毁时间，解锁后将立即<br />
+          触发定时销毁任务，如不想销毁该环境，请选择<br />
+          『清除定时销毁并解锁』</div>
+      </div>)}
+    <Space style={{ marginTop: 16, width: '100%', justifyContent: 'end' }}>
+      <Button key='back' type={'link'} style={{ color: 'rgba(0, 0, 0, 0.9)' }} onClick={toggleVisible}>
         取消
       </Button>
-      {lockType !== 'lock' && <Button key='submit' type='primary' loading={clearLoading} onClick={() => onClear(true)}>
+      {lockType !== 'lock' && <Button key='submit' loading={clearLoading} onClick={() => onClear(true)}>
         清除定时销毁并解锁
       </Button>}
       <Button
         key='link'
-        type='danger'
+        type='primary'
         loading={loading}
         onClick={() => {
           if (lockType === 'unlock') {
@@ -72,19 +87,8 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
           }
         }}
       >
-        确定
+        确认锁定
       </Button>
-    </div>}
-  >
-    {lockType === 'lock' ? <>
-      <div >环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、</div><br />
-      <div>『定时销毁』、API触发的部署等任务，</div><br />
-      <div>但漂移检测等plan类型任务可以照常执行。</div>
-    </> :
-      (<div className='dangerText'>
-        <div >当前环境设置了定时销毁，并已过了定时销毁时间，解锁后将立即</div><br />
-        <div>触发定时销毁任务，如不想销毁该环境，请选择</div><br />
-        <div>『清除定时销毁并解锁』</div>
-      </div>)}
+    </Space>
   </Modal>;
 };

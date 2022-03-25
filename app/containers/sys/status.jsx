@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { List, notification, Collapse, Spin, Alert } from 'antd';
 import { CheckCircleFilled, GlobalOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
-
+import { connect } from "react-redux";
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
@@ -9,7 +9,7 @@ import sysAPI from 'services/sys';
 import Tags from 'components/tags';
 import { SYS } from 'constants/types';
 import { statusTextCls } from 'utils/util';
-
+import getPermission from "utils/permission";
 import styles from './styles.less';
 
 const { Panel } = Collapse;
@@ -20,9 +20,11 @@ const MsgEnums = {
   passing: 'success'
 };
 
-const SysStatus = () => {
-  const [ loading, setLoading ] = useState(false),
-    [ resultList, setResultList ] = useState([]);
+const SysStatus = ({ userInfo }) => {
+
+  const { SYS_OPERATOR } = getPermission(userInfo);
+  const [ loading, setLoading ] = useState(false);
+  const [ resultList, setResultList ] = useState([]);
 
   useEffect(() => {
     fetchList();
@@ -93,7 +95,9 @@ const SysStatus = () => {
                           description={
                             <>
                               <p className='tags reset-styles'>
-                                <Tags data={item.tags} canEdit={it.service === 'CT-Runner'} 
+                                <Tags 
+                                  data={item.tags} 
+                                  canEdit={SYS_OPERATOR && it.service === 'CT-Runner'} 
                                   update={(newTags) => {
                                     updateTag({ tags: newTags, serviceId: item.ID });
                                   }}
@@ -146,4 +150,8 @@ AlertMsg.defaultProps = {
   message: '-'
 };
 
-export default Eb_WP()(SysStatus);
+export default Eb_WP()(connect((state) => {
+  return {
+    userInfo: state['global'].get('userInfo').toJS()
+  };
+})(SysStatus));

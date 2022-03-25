@@ -99,7 +99,7 @@ const EnvDetail = (props) => {
       pollingInterval: 3000,
       pollingWhenHidden: false,
       onSuccess: (data) => {
-        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1 && !data.aborting) {
           cancelLoop();
           fetchEnvInfo();
         }
@@ -210,7 +210,7 @@ const EnvDetail = (props) => {
     };
     return PAGES[panel]();
   }, [panel]);
-  
+
   return (
     <DetailPageContext.Provider
       value={{
@@ -309,7 +309,8 @@ const EnvDetail = (props) => {
             {renderByPanel()}
           </div>
         </div>
-        {lockVisible && <Lock
+        
+        {lockVisible && <div className={'lockModal'}> <Lock
           toggleVisible={() => setLockVisible(false)}
           lockType={lockType}
           reload={fetchEnvInfo}
@@ -317,7 +318,7 @@ const EnvDetail = (props) => {
           orgId={orgId}
           projectId={projectId}
           envId={envId}
-        />}
+        /></div>}
       </Layout>
     </DetailPageContext.Provider>
   );

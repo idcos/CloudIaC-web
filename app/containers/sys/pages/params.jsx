@@ -144,7 +144,7 @@ const Params = () => {
   </div>;
 };
 
-const formatToFormData = (list) => {
+export const formatToFormData = (list) => {
   let formData = {};
   (list || []).forEach(({ name, value } = {}) => {
     formData[name] = value;
@@ -152,7 +152,7 @@ const formatToFormData = (list) => {
   return formData;
 };
 
-const formatToParams = (formData) => {
+export const formatToParams = (formData) => {
   const params = Object.keys(formData).map(name => {
     return {
       name,

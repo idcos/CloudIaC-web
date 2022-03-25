@@ -54,7 +54,7 @@ const TaskDetail = (props) => {
       pollingInterval: 3000,
       pollingWhenHidden: false,
       onSuccess: (data) => {
-        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1 && !data.aborting) {
           cancelLoop();
         }
       },
@@ -85,6 +85,7 @@ const TaskDetail = (props) => {
   return (
     <DetailPageContext.Provider
       value={{
+        envInfo,
         userInfo,
         taskInfo,
         reload,

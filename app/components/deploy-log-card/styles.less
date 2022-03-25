@@ -6,22 +6,25 @@
       height: 100%;
       display: flex;
       flex-direction: column;
+
       &>.ant-card-head {
         flex: 0 0 auto;
+
         .card-title {
           .card-title-top {
             display: flex;
             align-items: center;
-        
+
             .title {
               line-height: 24px;
               margin-right: 8px;
             }
-            
+
             .status {
               line-height: 22px;
             }
           }
+
           .card-title-bottom {
             line-height: 20px;
             color: @gray-8;
@@ -29,51 +32,52 @@
             font-weight: normal;
           }
         }
-        .tool {
-          cursor: pointer;
-          .tool-icon {
-            margin-right: 7px;
-            color: @primary-color;
-          }
-          .tool-text {
-            color: #575757;
-          }
-        }
+
       }
+
       &>.ant-card-body {
         flex: 1;
         min-height: 0;
+
         &>.card-body-scroll {
           height: 500px;
           overflow-y: scroll;
+
           &.isFullscreen {
             height: calc(100vh - 76px);
           }
+
           &>.deploy-log-collapse {
             .ant-collapse-item {
-              position: sticky; 
+              position: sticky;
               top: 0;
+
               .ant-collapse-header {
                 background: rgba(36, 38, 35);
                 color: rgba(255, 255, 255, .86);
-                position: sticky; 
+                position: sticky;
                 top: 0;
                 z-index: 2;
               }
+
               &.ant-collapse-item-disabled {
                 .ant-collapse-header {
                   color: rgba(255, 255, 255, .46);
                 }
               }
+
               &.ant-collapse-item-active {
-                position: relative; 
+                position: relative;
                 top: 0;
                 z-index: 1;
+
                 .ant-collapse-header {
                   z-index: 2;
                 }
+
                 .ant-collapse-content {
                   color: rgba(255, 255, 255, .66);
+
                   .ant-collapse-content-box {
                     padding: 0 36px;
                   }
@@ -87,7 +91,7 @@
   }
 }
 
-  
+
 .deployLog {
   color: #EEFFFF;
   font-family: inherit;
@@ -101,12 +105,13 @@
   :global {
     .ansi-coder-content {
       font-size: 12px;
-      word-break:break-all;
+      word-break: break-all;
+
       .ansi-line {
         min-height: 22px;
         line-height: 22px;
         position: relative;
-        
+
         .line-index {
           position: absolute;
           top: 0;
@@ -117,13 +122,75 @@
           color: #546E7A;
           white-space: nowrap;
         }
-  
+
         .line-text {
           word-wrap: break-word;
           white-space: pre-wrap;
           word-break: break-all;
         }
-  
+
+      }
+    }
+  }
+}
+
+:global {
+  .tool {
+    cursor: pointer;
+
+    .tool-icon {
+      margin-right: 7px;
+    }
+
+    .tool-text {
+      color: #fff;
+    }
+  }
+
+  .hoverSuspend {
+    color: rgba(0, 0, 0, 1);
+
+    &:hover {
+      border-radius: 3px;
+      background-color: rgba(225, 228, 232, 0.5);
+      color: rgba(0, 0, 0, 1);
+    }
+  }
+
+  .configHeader {
+    background: rgba(36, 38, 35);
+    color: rgb(255, 255, 255);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 42px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-bottom: 1px solid rgba(225, 228, 232, 1);
+  }
+
+  .blackInput {
+    :global {
+      .ant-input {
+        background-color: rgba(52, 59, 67, 1);
+        color: rgba(189, 191, 193, 100);
+      }
+
+      .anticon .anticon-search {
+        color: rgba(189, 191, 193, 100) !important;
+      }
+
+      .ant-input-affix-wrapper {
+        border-radius: 4px;
+        background-color: rgba(52, 59, 67, 1);
+        border: 1px solid rgba(106, 113, 122, 1);
+        width: 240px;
+      }
+
+      .ant-input-affix-wrapper:focus,
+      .ant-input-affix-wrapper-focused {
+        box-shadow: none !important;
       }
     }
   }

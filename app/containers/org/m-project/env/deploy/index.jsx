@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { notification, Select, Form, Input, Button, Row, Col } from "antd";
+import { notification, Select, Form, Input, Button, Row, Col, Space } from "antd";
+import { LayoutOutlined } from '@ant-design/icons';
 import get from 'lodash/get';
 import PageHeader from "components/pageHeader";
 import history from 'utils/history';
@@ -145,13 +146,12 @@ const Index = ({ match = {} }) => {
   // 获取通道数据
   const fetchRunner = async () => {
     try { 
-      const res = await sysAPI.listCTRunner({
+      const res = await sysAPI.listCTRunnerTag({
         orgId
       });
-      let runnerList = res.result || [];
+      let runnerTags = res.result.tags || [];
       if (res.code === 200) {
-        setRunnner(runnerList);
-        !envId && runnerList.length && configRef.current.setRunnerValue(runnerList[0].ID);
+        setRunnner(runnerTags);
       }
       if (res.code != 200) {
         throw new Error(res.message);
@@ -274,9 +274,29 @@ const Index = ({ match = {} }) => {
     }
   };
 
+  const changeVcsFetchParams = (params) => {
+    const newFetchParams = { ...fetchParams, ...params };
+    setFetchParams(newFetchParams);
+    fetchTfvars(newFetchParams);
+    fetchPlaybooks(newFetchParams);
+  };
+
   return (
     <Layout
-      extraHeader={<PageHeader title={!!envId ? '重新部署' : '部署新环境'} breadcrumb={true} />}
+      extraHeader={
+        <PageHeader 
+          title={
+            <Space size='middle' align='center'>
+              <span>{!!envId ? '重新部署' : '部署新环境'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <LayoutOutlined style={{ color: '#000', fontSize: 16 }}/>
+                <span style={{ color: '#57606A', fontSize: 12, fontWeight: 'normal' }}>{tplInfo.name}</span>
+              </div>
+            </Space>
+          } 
+          breadcrumb={true} 
+        />
+      }
     >
       <div className='idcos-card'>
         <Form
@@ -318,10 +338,7 @@ const Index = ({ match = {} }) => {
                   placeholder='请选择分支/标签'
                   style={{ width: '100%' }}
                   onChange={(value) => {
-                    const newFetchParams = { ...fetchParams, repoRevision: value };
-                    setFetchParams(newFetchParams);
-                    fetchTfvars(newFetchParams);
-                    fetchPlaybooks(newFetchParams);
+                    changeVcsFetchParams({ repoRevision: value });
                   }}
                   disabled={info.lockedStatus}
                 >
@@ -334,7 +351,19 @@ const Index = ({ match = {} }) => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={7}></Col>
+            <Col span={7}>
+              <Form.Item
+                label='工作目录'
+                name='workdir'
+              >
+                <Input 
+                  placeholder='请输入工作目录' 
+                  onBlur={(e) => {
+                    changeVcsFetchParams({ workdir: e.target.value });
+                  }}
+                />
+              </Form.Item>
+            </Col>
           </Row>
           <AdvancedConfig
             configRef={configRef}

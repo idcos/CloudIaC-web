@@ -14,6 +14,11 @@ const sysAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  listCTRunnerTag: ({ orgId }) => {
+    return get('/api/v1/runners/tags', {
+      'IaC-Org-Id': orgId
+    });
+  },
   paramsSearch: () => {
     return get('/api/v1/systems');
   },

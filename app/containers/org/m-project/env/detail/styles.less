@@ -30,10 +30,12 @@
         display: flex;
         justify-content: center;
         border-width: 0 1px 1px 0;
+
         &.ant-tabs-tab-active {
           border-bottom-color: transparent !important;
         }
       }
+
       .ant-tabs-content {
         padding: 0 19px;
       }
@@ -44,7 +46,7 @@
 .survivalTimeRight {
   :global {
     .ant-select:not(.ant-select-customize-input) .ant-select-selector {
-      border-radius:  2px 0 0 2px!important;
+      border-radius: 2px 0 0 2px !important;
     }
   }
 }
@@ -55,6 +57,7 @@
       border-radius: 0 2px 2px 0 !important;
       border-left: none !important;
     }
+
     .ant-picker {
       border-radius: 0 2px 2px 0 !important;
       border-left: none !important;
@@ -89,5 +92,22 @@
     color: #00AB9D;
     cursor: pointer;
     text-decoration: underline;
+  }
+}
+
+:global {
+  .lockModal {
+    .ant-modal-header {
+      padding: 28px 0 0 34px;
+      border-bottom: none !important;
+    }
+    .ant-modal-body {
+      padding-left: 64px;
+    }
+    .ant-modal-close-x {
+      // line-height: normal;
+      // margin-top: 20px;
+      // font-size: 12px;
+    }
   }
 }
