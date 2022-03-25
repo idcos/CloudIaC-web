@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle, useCallback } from "react";
-import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Switch, Modal, Popover } from "antd";
+import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Switch, Modal, Popover, notification } from "antd";
 import { InfoCircleOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -9,7 +9,9 @@ import vcsAPI from 'services/vcs';
 import cgroupsAPI from 'services/cgroups';
 import ViewFileModal from 'components/view-file-modal';
 import isEmpty from "lodash/isEmpty";
+import sysAPI from 'services/sys';
 import omit from "lodash/omit";
+import { formatToFormData } from 'containers/sys/pages/params';
 import styles from '../detail/styles.less';
 
 const FL = {
@@ -36,12 +38,36 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   const [ panel, setPanel ] = useState('tpl');
 
   useEffect(() => {
+    if (!envId) {
+      fetchSysInfo();
+    }
+  }, [envId]);
+
+  useEffect(() => {
     if (envId) {
       setFormValues(data);
     } else {
       setFormValues(tplInfo);
     }
   }, [ envId, data, tplInfo ]);
+
+  const fetchSysInfo = async () => {
+    try {
+      const res = await sysAPI.paramsSearch();
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      const { TASK_STEP_TIMEOUT } = formatToFormData(res.result);
+      form.setFieldsValue({
+        stepTimeout: TASK_STEP_TIMEOUT
+      });
+    } catch (e) {
+      notification.error({
+        message: '获取失败',
+        description: e.message
+      });
+    }
+  };
 
   const { run: fetchFile } = useRequest(
     (fileName) => requestWrapper(
@@ -353,13 +379,12 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         rules={[
                           {
                             required: true,
-                            message: '请选择部署通道'
+                            message: '请选择部署通道标签'
                           }
                         ]}
                       >
                         <Select 
                           allowClear={true}
-                          // getPopupContainer={triggerNode => triggerNode.parentNode}
                           placeholder='请选择部署通道标签'
                           mode='multiple'
                           style={{ width: '100%' }}
@@ -369,8 +394,6 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         </Select>
                       </Form.Item>
                     </Col>
-        
-        
                     <Col span={7}>
                       <Form.Item 
                         style={{ marginBottom: 0 }}
@@ -425,8 +448,25 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label={' '}
+                        label='步骤超时时间'
                       >
+                        <Row align='middle' gutter={[ 8, 0 ]}>
+                          <Col flex='1'>
+                            <Form.Item
+                              name='stepTimeout'
+                              noStyle={true}
+                            >
+                              <InputNumber style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
+                            </Form.Item>
+                          </Col>
+                          <Col flex='0 0 auto'>
+                            <span style={{ color: '#24292F' }}>分钟</span>
+                          </Col>
+                        </Row>
+                      </Form.Item>
+                    </Col>
+                    <Col span={7}>
+                      <Form.Item>
                         <Space style={{ minWidth: 340 }}>
                           <Form.Item 
                             name='retryAble'

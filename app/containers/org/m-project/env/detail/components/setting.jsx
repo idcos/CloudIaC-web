@@ -275,6 +275,25 @@ const Setting = () => {
                     </Row>
                   </Form.Item>
                 </Col>
+                <Col span={7}>
+                  <Form.Item
+                    label='步骤超时时间'
+                  >
+                    <Row align='middle' gutter={[ 8, 0 ]}>
+                      <Col flex='1'>
+                        <Form.Item
+                          name='stepTimeout'
+                          noStyle={true}
+                        >
+                          <InputNumber style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
+                        </Form.Item>
+                      </Col>
+                      <Col flex='0 0 auto'>
+                        <span style={{ color: '#24292F' }}>分钟</span>
+                      </Col>
+                    </Row>
+                  </Form.Item>
+                </Col>
                 <Col span={8}>
                   <Form.Item label={' '}>
                     <Space style={{ minWidth: 340 }}>
