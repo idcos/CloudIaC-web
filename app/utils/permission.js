@@ -4,6 +4,8 @@ const getPermission = (userInfo) => {
   const { isAdmin, role: orgRole, projectRole } = userInfo || {};
 
   return {
+    // 系统操作权限
+    SYS_OPERATOR: isAdmin,
     // 组织设置权限
     ORG_SET: isAdmin || orgRole === 'admin',
     // 项目设置权限
