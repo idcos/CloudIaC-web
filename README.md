@@ -10,14 +10,18 @@
 </div>
 
 ## 特性
+
 - webpack
-  - 将部分公用且不易变动的模块抽取为vendor.js文件
+
+  - 将部分公用且不易变动的模块抽取为 vendor.js 文件。
 
 - ESNext
-  - 支持ES最新语法特性，包括但不限于模板字符串、对象解构、箭头函数等。
+
+  - 支持 ES 最新语法特性，包括但不限于模板字符串、对象解构、箭头函数等。
 
 - CSS Modules
-  - 默认使用Less和模块化CSS，规避了全局选择器的命名冲突，便于高质量CSS代码的编写和维护。
+
+  - 默认使用 Less 和模块化 CSS，规避了全局选择器的命名冲突，便于高质量 CSS 代码的编写和维护。
 
 - Ant-Design
   - 不再以`<script>`和`<link>`方式引入，使用官方推荐的按需加载的方式引入
@@ -42,5 +46,3 @@
 ## 贡献者
 
 > [https://github.com/idcos/CloudIaC-web/graphs/contributors](https://github.com/idcos/CloudIaC-web/graphs/contributors)
-
-
