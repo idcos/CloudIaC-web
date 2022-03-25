@@ -97,15 +97,15 @@ const envAPI = {
 
   // 锁定
   envLocked: ({ orgId, projectId, envId, ...resetParams }) => {
-    return post(`/api/v1/envs/${envId}/locked`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/lock`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 解锁
   envUnLocked: ({ orgId, projectId, envId, ...resetParams }) => {
-    return post(`/api/v1/envs/${envId}/unlocked`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/unlock`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境解锁确认
   unlockedConfirm: ({ envId, orgId, projectId }) => {
-    return get(`/api/v1/envs/${envId}/unlocked/confirm`, { 
+    return get(`/api/v1/envs/${envId}/unlock/confirm`, { 
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
     });
