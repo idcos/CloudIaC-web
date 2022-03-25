@@ -8,15 +8,18 @@
       color: #57606A;
       font-size: 12px;
       font-family: PingFangSC-Medium;
-      .left_item {
-        color: rgba(51, 51, 51, 100);
-        font-size: 14px;
-        font-family: PingFangSC-Regular;
-        width: 100%;
-        margin-left: 0;
-        margin-bottom: 24px;
-        &:first-child {
-          margin-top: 22px;
+      .checbox {
+        :global {
+          .ant-checkbox-group-item {
+            display: block;
+            margin-bottom: 24px;
+            color: rgba(51, 51, 51, 100);
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            &:first-child {
+              margin-top: 20px;
+            }
+          }
         }
       }
     }

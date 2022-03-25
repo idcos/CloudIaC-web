@@ -22,9 +22,10 @@ const Params = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = async ({ MAX_JOBS_PER_RUNNER, ...restFormData }) => {
+  const onFinish = async ({ MAX_JOBS_PER_RUNNER, TASK_STEP_TIMEOUT, ...restFormData }) => {
     const systemCfg = formatToParams({
       MAX_JOBS_PER_RUNNER: MAX_JOBS_PER_RUNNER + '',
+      TASK_STEP_TIMEOUT: TASK_STEP_TIMEOUT + '',
       ...restFormData
     });
     console.log(systemCfg);
@@ -95,7 +96,7 @@ const Params = () => {
       <Form.Item label='任务步骤超时' required={true}>
         <Space>
           <Form.Item
-            name='Task_STEP_TIMEOUt'
+            name='TASK_STEP_TIMEOUT'
             rules={[
               {
                 required: true,

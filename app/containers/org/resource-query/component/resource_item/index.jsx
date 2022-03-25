@@ -1,6 +1,8 @@
-import React from 'react'
+import React from 'react';
 import styles from './styles.less';
-export default () => {
+import { safeJsonStringify } from 'utils/util';
+import Coder from 'components/coder';
+export default ({ data }) => {
   return (
     <div className={styles.resource_item}>
       <div className={styles.header}>
@@ -10,7 +12,7 @@ export default () => {
         </div>
         <div className={styles.item}>
           <span className={styles.label}>环境</span>
-          <span className={styles.value}><a href="#">测试环境</a></span>
+          <span className={styles.value}><a href='#'>测试环境</a></span>
         </div>
         <div className={styles.item}>
           <span className={styles.label}>资源类型</span>
@@ -22,8 +24,8 @@ export default () => {
         </div>
       </div>
       <div className={styles.json}>
-
+        <Coder value={safeJsonStringify([ data, null, 1 ])} style={{ height: 'auto' }} />
       </div>
     </div>
-  )
-}
+  );
+};

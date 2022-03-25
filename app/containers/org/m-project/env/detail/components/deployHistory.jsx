@@ -13,7 +13,7 @@ import taskAPI from 'services/task';
 import DetailPageContext from '../detail-page-context';
 const { Search } = Input;
 
-const searchParams = {}
+const searchParams = {};
 
 const DeployHistory = () => {
 
@@ -22,7 +22,7 @@ const DeployHistory = () => {
   const {
     loading: tableLoading,
     data: tableData,
-    run: fetchList,
+    run: fetchList
   } = useRequest(
     (params) => requestWrapper(
       taskAPI.envsTaskList.bind(null, {
@@ -133,55 +133,55 @@ const DeployHistory = () => {
   ];
 
   const triggerTypeArr = () => {
-    let tempArr = []
+    let tempArr = [];
     for (const key in DEPLOY_HISTORY_SOURCE_ENUM) {
-      tempArr.push({value: key, label: DEPLOY_HISTORY_SOURCE_ENUM[key]})
+      tempArr.push({ value: key, label: DEPLOY_HISTORY_SOURCE_ENUM[key] });
     }
     return tempArr;
-  }
+  };
   const taskTypeArr = () => {
-    let tempArr = []
+    let tempArr = [];
     for (const key in TASK_TYPE) {
-      tempArr.push({value: key, label: TASK_TYPE[key]})
+      tempArr.push({ value: key, label: TASK_TYPE[key] });
     }
     return tempArr;
-  }
+  };
 
-  const searchParamsChange = ({type, value}) => {
-    searchParams[type] = value
+  const searchParamsChange = ({ type, value }) => {
+    searchParams[type] = value;
     fetchList(searchParams);
-  }
+  };
 
   const title = <div>
-    <span style={{lineHeight: "32px"}}>部署历史</span>
-    <span style={{float: "right"}}>
+    <span style={{ lineHeight: "32px" }}>部署历史</span>
+    <span style={{ float: "right" }}>
       <Space>
         <Select 
           allowClear={true}
           style={{ width: 258 }}
-          placeholder="请选择触发类型"
+          placeholder='请选择触发类型'
           options={triggerTypeArr()}
-          onChange={(value) => searchParamsChange({type:"source", value})}
+          onChange={(value) => searchParamsChange({ type: "source", value })}
         ></Select>
         <Select 
           allowClear={true}
           style={{ width: 258 }}
-          placeholder="请选择任务类型"
+          placeholder='请选择任务类型'
           options={taskTypeArr()}
-          onChange={(value) => searchParamsChange({type:"taskType", value})}
+          onChange={(value) => searchParamsChange({ type: "taskType", value })}
         ></Select>
         <Search 
           allowClear={true}
-          placeholder="请输入执行人姓名" 
-          onSearch={(value) => searchParamsChange({type:"user", value})} 
+          placeholder='请输入执行人姓名' 
+          onSearch={(value) => searchParamsChange({ type: "user", value })} 
           style={{ width: 296 }} 
         />
       </Space>
     </span>
-  </div>
+  </div>;
 
-  return <div className= "deploy_history_title">
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)'}} bodyStyle={{ padding: 5 }} type={'inner'} title={title}>
+  return <div className='deploy_history_title'>
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={title}>
       <Table
         columns={columns}
         scroll={{ x: 'min-content' }}

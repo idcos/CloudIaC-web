@@ -1,34 +1,57 @@
-import { Link } from 'react-router-dom';
-import { Space, Table, ConfigProvider, Empty, Select, Checkbox, Input, Col } from 'antd';
+import { Pagination, Checkbox, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { useRequest, useEventEmitter } from 'ahooks';
+import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
-import { useSearchFormAndTable } from 'utils/hooks';
 import PageHeader from 'components/pageHeader';
-import ResourceViewModal from 'components/resource-view-modal';
 import Layout from 'components/common/layout';
-import EllipsisText from 'components/EllipsisText';
 import classNames from 'classnames';
-import PageSearch from 'components/PageSearch';
 import orgsAPI from 'services/orgs';
-import styles from './styles.less'
+import envAPI from 'services/env';
+import styles from './styles.less';
 import ResourceItem from './component/resource_item';
 
-const cateList = [
+const env = [
   {
-    description: '资源名称',
-    code: 'name'
+    label: 'env1',
+    value: 'env1'
   },
   {
-    description: '资源类型',
-    code: 'type'
+    label: 'env2',
+    value: 'env2'
+  },
+  {
+    label: 'env3',
+    value: 'env3'
+  },
+  {
+    label: 'env4',
+    value: 'env4'
+  }
+];
+
+const provider = [
+  {
+    label: 'alicloud',
+    value: 'alicloud'
+  },
+  {
+    label: 'alicloud1',
+    value: 'alicloud1'
+  },
+  {
+    label: 'alicloud2',
+    value: 'alicloud2'
+  },
+  {
+    label: 'alicloud3',
+    value: 'alicloud3'
   }
 ];
 
 export default ({ match }) => {
 
   const { orgId } = match.params || {};
-  const event$ = useEventEmitter();
+
   // 列表查询
   const {
     loading: tableLoading,
@@ -39,127 +62,37 @@ export default ({ match }) => {
       orgsAPI.listResources.bind(null, { orgId, ...params })
     ), {
       throttleInterval: 1000, // 节流
-      manual: true,
-      onSuccess: () => {
-        console.log( pjtId );
-      }
+      manual: true
     }
   );
 
-  // const { 
-  //   data: resultMap = {
-  //     list: [],
-  //     total: 0
-  //   },
-  //   loading
-  // } = useRequest(
-  //   () => requestWrapper(
-  //     envAPI.envsList.bind(null, {
-  //       orgId,
-  //       projectId: pjtId,
-  //     })
-  //   ),{
-  //     manual:true,
-  //     onSuccess: () => {
-  //       console.log(resultMap.list);
-  //     }
-  //   }
-  // );
-
-  // 表单搜索和table关联hooks
-  const { 
-    tableProps, 
-    setSearchParams
-  } = useSearchFormAndTable({
-    tableData,
-    onSearch: (params) => {
-      const { current: currentPage, type, keyword, ...restParams } = params;
-      fetchList({
-        currentPage,
-        module: type,
-        q: keyword,
-        ...restParams 
-      });
+  const {
+    loading,
+    data,
+    run,
+    mutate
+  } = useRequest(
+    () => requestWrapper(
+      envAPI.getResources.bind(null, { envId: "env-c8acft3n6m8da397gnrg", orgId: "org-c8a738rn6m8fge3vg06g", projectId: "p-c8a73obn6m8fv9d3p1g0", resourceId: "r-c8ack1jn6m8da397gou0" })
+    ), {
+      // manual: true
     }
-  });
-
-  const onSearch = (type, keyword) => {
-    setSearchParams((preSearchParams) => ({ 
-      ...preSearchParams,
-      form: { type, keyword },
-      paginate: { ...preSearchParams.paginate, current: 1 }
-    }));
-  };
-
-  const columns = [
-    {
-      dataIndex: 'projectName',
-      title: '项目',
-      width: 180,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'envName',
-      title: '环境',
-      width: 180,
-      render: (text, record) => {
-        const { projectId, envId } = record;
-        const url = `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}?tabKey=resource`;
-        return (
-          <Link to={url}>
-            <EllipsisText>{text}</EllipsisText>
-          </Link>
-        );
-      }
-    },
-    {
-      dataIndex: 'provider',
-      title: 'Provider',
-      width: 170,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'type',
-      title: '类型',
-      width: 220,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'resourceName',
-      title: '名称',
-      width: 200,
-      render: (text, record) => {
-        const { resourceName, resourceId, projectId, envId } = record;
-        const params = { resourceName, orgId, projectId, envId, resourceId };
-        return (
-          <a onClick={() => event$.emit({ type: 'open-resource-view-modal', data: { params } })}>
-            <EllipsisText>{text}</EllipsisText>
-          </a>
-        );
-      }
-    },
-    {
-      dataIndex: 'module',
-      title: '模块',
-      width: 190,
-      ellipsis: true
-    }
-  ];
+  );
 
   return (
     <Layout
       extraHeader={
         <PageHeader
           title={
-          <div className={styles.search}>
-            <span style={{fontSize: "20px"}}>资源查询</span>
-            <Input
-              allowClear={true}
-              style={{ width:"400px", marginLeft:"135px", height: "32px" }}
-              placeholder='请输入关键字搜索'
-              prefix={<SearchOutlined />}
-            />
-          </div>}
+            <div className={styles.search}>
+              <span style={{ fontSize: "20px" }}>资源查询</span>
+              <Input
+                allowClear={true}
+                style={{ width: "400px", marginLeft: "135px", height: "32px" }}
+                placeholder='请输入关键字搜索'
+                prefix={<SearchOutlined />}
+              />
+            </div>}
           breadcrumb={true}
         />
       }
@@ -168,29 +101,37 @@ export default ({ match }) => {
         <div className={styles.left}>
           <div className={styles.env_list}>
             <span>环境</span>
-            <Checkbox.Group style={{ width: '100%' }} onChange={(v) => {console.log(v)}}>
-              <Checkbox className={styles.left_item} value="a">A121212</Checkbox>
-              <Checkbox className={styles.left_item} value="b">b212323</Checkbox>
-              <Checkbox className={styles.left_item} value="c">A32121321</Checkbox>
-              <Checkbox className={styles.left_item} value="d">A32121321</Checkbox>
+            <Checkbox.Group 
+              className={styles.checbox}
+              style={{ width: '100%' }} 
+              options={env}
+              onChange={(v) => {
+                console.log(v); 
+              }}
+            >
             </Checkbox.Group>
           </div>
           <div className={styles.provider_list}>
             <span>Provider</span>
-            <Checkbox.Group style={{ width: '100%' }} onChange={(v) => {console.log(v)}}>
-              <Checkbox className={styles.left_item} value="a">A121212</Checkbox>
-              <Checkbox className={styles.left_item} value="b">b212323</Checkbox>
-              <Checkbox className={styles.left_item} value="c">A32121321</Checkbox>
-              <Checkbox className={styles.left_item} value="d">A32121321</Checkbox>
+            <Checkbox.Group 
+              className={styles.checbox}
+              style={{ width: '100%' }} 
+              options={provider}
+              onChange={(v) => {
+                console.log(v); 
+              }}
+            >
             </Checkbox.Group>
           </div>
         </div>
         <div className={styles.right}>
-          <ResourceItem />
-          <ResourceItem />
+          <ResourceItem data={data} />
+          <ResourceItem data={data} />
+          <ResourceItem data={data} />
+          <ResourceItem data={data} />
+          <Pagination defaultCurrent={1} total={50} />
         </div>
       </div>
-      <ResourceViewModal event$={event$}/>
     </Layout>
   );
 };
