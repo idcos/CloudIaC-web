@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Card, Space, Button, Tag, Collapse, Input, Tooltip } from "antd";
-import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined, InfoCircleFilled } from '@ant-design/icons';
+import { Card, Space, Button, Tag, Collapse, Input, Tooltip, Modal, Form, notification } from "antd";
+import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined, InfoCircleFilled, PauseOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import classNames from 'classnames';
 import { useRequest, useFullscreen, useScroll } from 'ahooks';
@@ -25,21 +25,24 @@ const searchService = new SearchByKeyWord({
   ]
 });
 const enableStatusList = [ 'complete', 'failed', 'timeout', 'running' ];
+const suspendStatusList = new Set([ 'rejected', 'failed', 'aborted', 'complete' ]); // 中止按钮隐藏的状态
 
-const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
+const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
+  
+  const [form] = Form.useForm();
 
   const searchRef = useRef();
   const ref = useRef();
   const timeRef = useRef();
   const stopLoopRef = useRef(false);
   const scrollRef = useRef(null);
+
   const { top: scrollRefTop } = useScroll(scrollRef);
   const [ isFullscreen, { toggleFull }] = useFullscreen(ref);
-  const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status } = taskInfo || {};
+  const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status, aborting } = taskInfo || {};
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ activeKey, setActiveKey ] = useState([]);
   const [ canAutoScroll, setCanAutoScroll ] = useState(true);
-  const [ suspendView, setSuspendView ] = useState(false);
   const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
   const autoScroll = !taskHasEnd && canAutoScroll;
 
@@ -188,7 +191,61 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
     setActiveKey(keys);
   };
 
-  console.log(taskInfo, 'taskInfo');
+  // 中止
+  const suspend = () => {
+    Modal.error({
+      width: 480,
+      title: `中止“${envInfo.name}”`,
+      icon: <ExclamationCircleFilled />,
+      content: (
+        <>
+          <div style={{ marginBottom: 16 }}>
+            在apply动作开始后中止任务，环境状态将标记为『失败』，<br/>
+            并有可能损坏环境的状态文件，导致该环境损坏，<br/>
+            请在了解可能带来的风险前提下执行该动作。<br/>
+          </div>
+          <Form requiredMark='optional' form={form}>
+            <Form.Item
+              label='确认中止'
+              style={{ fontWeight: 600, marginBottom: 0 }}
+              name='name'
+              rules={[{
+                required: true,
+                message: '请确认环境名称'
+              }, {
+                validator: async (rule, value) => {
+                  if (value && value !== envInfo.name) {
+                    throw new Error('当前环境输入不一致');
+                  }
+                }
+              }]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </>
+      ),
+      okText: '确认',
+    	cancelText: '取消',
+      onOk: async () => {
+        await form.validateFields();
+        const res = await taskAPI.abortTask({ orgId, projectId, taskId });
+        if (res.code != 200) {
+          notification.error({
+            message: '操作失败',
+            description: res.message
+          });
+          return;
+        }
+        notification.success({
+          message: '操作成功'
+        });
+        reload && reload();
+        form.resetFields();
+      },
+      onCancel: () => form.resetFields()
+    });
+  };
 
   return (
     <div ref={ref} className={styles.deploy_log_card_wrapper}>
@@ -208,7 +265,6 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
                 ) : null
               }
             </div>
-            <div className='card-title-bottom'>执行总耗时：{timeUtils.diff(endAt, startAt, '-')}</div>
           </div>
         }
         extra={
@@ -238,6 +294,19 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
                     )
                   }
                   {
+                    !suspendStatusList.has(status) && (
+                      <Button 
+                        type='link'
+                        onClick={() => suspend()}
+                        disabled={aborting}
+                        icon={<PauseOutlined />}
+                        className='hoverSuspend'
+                      >
+                        中止
+                      </Button>
+                    )
+                  }
+                  {
                     type === 'plan' && status === 'complete' ? (
                       <Button 
                         type='primary'
@@ -248,50 +317,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
                       </Button>
                     ) : null
                   }
-                  {
-                    (
-                      <Button 
-                        type='danger'
-                        onClick={() => setSuspendView(true)}
-                      >
-                        中止
-                      </Button>
-                    )
-                  }
                 </Space>
               )
             }
-            <Input
-              prefix={<SearchOutlined />}
-              ref={searchRef}
-              placeholder='搜索日志'
-              onPressEnter={(e) => {
-                searchService.search(e.target.value);
-                searchRef.current.focus();
-              }}
-              style={{ width: 240 }}
-            />
-            <span 
-              className='tool'
-              onClick={toggleFull} 
-            >
-              {
-                isFullscreen ? (
-                  <>
-                    <FullscreenExitOutlined className='tool-icon'/>
-                    <span className='tool-text'>退出全屏</span> 
-                  </>
-                ) : (
-                  <>
-                    <FullscreenOutlined className='tool-icon'/>
-                    <span className='tool-text'>全屏显示</span>
-                  </>
-                )
-              }
-            </span>
           </Space>
         }
       >
+        
         <div className={classNames('card-body-scroll', { isFullscreen })} ref={scrollRef} >
           <Collapse 
             activeKey={activeKey} 
@@ -299,6 +331,42 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
             ghost={true} 
             className='deploy-log-collapse'
           >
+            <div className='configHeader'>
+              <Space>
+                <div className='card-title-bottom'>执行时间：{timeUtils.diff(endAt, startAt, '-')}</div>
+              </Space>
+              <Space>
+                <div className={'blackInput'} >
+                  <Input
+                    prefix={<SearchOutlined />}
+                    ref={searchRef}
+                    placeholder='搜索日志'
+                    onPressEnter={(e) => {
+                      searchService.search(e.target.value);
+                      searchRef.current.focus();
+                    }}
+                  />
+                </div>
+                <span 
+                  className='tool'
+                  onClick={toggleFull} 
+                >
+                  {
+                    isFullscreen ? (
+                      <>
+                        <FullscreenExitOutlined className='tool-icon'/>
+                        <span className='tool-text'>退出全屏</span> 
+                      </>
+                    ) : (
+                      <>
+                        <FullscreenOutlined className='tool-icon'/>
+                        <span className='tool-text'>全屏显示</span>
+                      </>
+                    )
+                  }
+                </span>
+              </Space>
+            </div>
             {
               taskSteps.map(({ name, id, startAt, type, endAt, status }, index) => (
                 <Panel 
@@ -322,13 +390,6 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo }) => {
           </Collapse>
         </div>
       </Card>
-      {
-        suspendView && <SuspendModel 
-          toggleVisible={() => setSuspendView(false)}
-          envInfo={envInfo}
-          taskInfo={taskInfo}
-        />
-      }
     </div>
   );
 };

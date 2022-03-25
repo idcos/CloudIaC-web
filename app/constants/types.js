@@ -116,7 +116,8 @@ export const TASK_STATUS = {
   "approving": '待审批',
   "failed": '失败',
   "complete": '成功',
-  "rejected": '驳回'
+  "rejected": '驳回',
+  "aborted": '中止'
 };
 
 export const TASK_STATUS_COLOR = {
@@ -139,7 +140,8 @@ export const END_TASK_STATUS_LIST = [
   'failed',
   'approving',
   'complete',
-  'rejected'
+  'rejected',
+  'aborted'
 ];
 
 export const END_ENV_STATUS_LIST = [

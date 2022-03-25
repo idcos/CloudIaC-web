@@ -99,7 +99,7 @@ const EnvDetail = (props) => {
       pollingInterval: 3000,
       pollingWhenHidden: false,
       onSuccess: (data) => {
-        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1) {
+        if (END_TASK_STATUS_LIST.indexOf(data.status) !== -1 && !data.aborting) {
           cancelLoop();
           fetchEnvInfo();
         }
@@ -210,7 +210,7 @@ const EnvDetail = (props) => {
     };
     return PAGES[panel]();
   }, [panel]);
-  
+
   return (
     <DetailPageContext.Provider
       value={{

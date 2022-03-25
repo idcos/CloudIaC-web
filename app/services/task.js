@@ -69,6 +69,13 @@ const taskAPI = {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
+  },
+  // 任务中止
+  abortTask: ({ orgId, projectId, taskId }) => {
+    return post(`/api/v1/tasks/${taskId}/abort`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
   }
 };
 
