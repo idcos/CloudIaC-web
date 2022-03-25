@@ -145,13 +145,12 @@ const Index = ({ match = {} }) => {
   // 获取通道数据
   const fetchRunner = async () => {
     try { 
-      const res = await sysAPI.listCTRunner({
+      const res = await sysAPI.listCTRunnerTag({
         orgId
       });
-      let runnerList = res.result || [];
+      let runnerTags = res.result.tags || [];
       if (res.code === 200) {
-        setRunnner(runnerList);
-        !envId && runnerList.length && configRef.current.setRunnerValue(runnerList[0].ID);
+        setRunnner(runnerTags);
       }
       if (res.code != 200) {
         throw new Error(res.message);

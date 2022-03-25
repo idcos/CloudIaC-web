@@ -132,11 +132,6 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     });
   };
 
-  // 新建时给runnerId赋值
-  const setRunnerValue = (v) => {
-    form.setFieldsValue({ runnerId: v });
-  };
-
   useImperativeHandle(configRef, () => ({
     onfinish,
     validateFields: (nameList) => {
@@ -151,9 +146,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
           reject();
         }
       });
-    },
-    setRunnerValue
-  }), [ onfinish, setRunnerValue ]);
+    }
+  }), [onfinish]);
 
   const checkedChange = (e, str) => {
     let checked = e.target ? e.target.checked : e;
@@ -201,7 +195,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   return (
     <Form
       scrollToFirstError={true}
-      colon={true}
+      colon={false}
       form={form}
       {...FL}
     >
@@ -248,7 +242,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               ]}
                               label={
                                 <>
-                                  tfvars文件：
+                                  tfvars文件
                                   <EyeOutlined 
                                     style={{ cursor: 'pointer' }} 
                                     onClick={() => !noOption && viewFile('tfVarsFile')}
@@ -289,7 +283,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               ]}
                               label={
                                 <>
-                                  playbook文件：
+                                  playbook文件
                                   <EyeOutlined
                                     style={{ cursor: 'pointer' }} 
                                     onClick={() => !noOption && viewFile('playbook')}
@@ -313,7 +307,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label='密钥：'
+                        label='密钥'
                         name='keyId'
                         dependencies={['playbook']}
                         rules={[
@@ -338,7 +332,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label={<span>target：<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
+                        label={<span>target<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
                         name='targets'
                       >
                         <Input placeholder={'请输入target'} style={{ width: '100%' }} />
@@ -354,8 +348,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                   <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={7}>
                       <Form.Item
-                        label='部署通道：'
-                        name='runnerId'
+                        label='部署通道标签'
+                        name='runnerTags'
                         rules={[
                           {
                             required: true,
@@ -365,12 +359,13 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                       >
                         <Select 
                           allowClear={true}
-                          getPopupContainer={triggerNode => triggerNode.parentNode}
-                          placeholder='请选择部署通道'
+                          // getPopupContainer={triggerNode => triggerNode.parentNode}
+                          placeholder='请选择部署通道标签'
+                          mode='multiple'
                           style={{ width: '100%' }}
                           disabled={lockedStatus}
                         >
-                          {runnner.map(it => <Option value={it.ID}>{it.ID}</Option>)}
+                          {runnner.map(it => <Option value={it}>{it}</Option>)}
                         </Select>
                       </Form.Item>
                     </Col>
@@ -379,7 +374,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     <Col span={7}>
                       <Form.Item 
                         style={{ marginBottom: 0 }}
-                        label='存活时间：'
+                        label='存活时间'
                       >
                         <Row>
                           <Col span={8} className={styles.survivalTimeRight}>
