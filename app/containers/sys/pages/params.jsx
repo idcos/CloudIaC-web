@@ -27,6 +27,7 @@ const Params = () => {
       MAX_JOBS_PER_RUNNER: MAX_JOBS_PER_RUNNER + '',
       ...restFormData
     });
+    console.log(systemCfg);
     try {
       setSubmitLoading(true);
       const res = await sysAPI.paramsUpdate({ systemCfg });
@@ -91,7 +92,7 @@ const Params = () => {
           </Form.Item>
         </Space>
       </Form.Item>
-      {/* <Form.Item label='任务超时时间' required={true}>
+      <Form.Item label='任务步骤超时' required={true}>
         <Space>
           <Form.Item
             name='Task_STEP_TIMEOUt'
@@ -113,7 +114,7 @@ const Params = () => {
             分钟
           </Form.Item>
         </Space>
-      </Form.Item> */}
+      </Form.Item>
       <Form.Item 
         label='日志保存周期'
         name='PERIOD_OF_LOG_SAVE'

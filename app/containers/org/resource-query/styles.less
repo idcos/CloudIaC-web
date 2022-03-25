@@ -1,0 +1,36 @@
+.res_query{
+  display: flex;
+  min-height: 700px;
+  .left {
+    width: 176px;
+    border-right: 1px solid rgba(225, 228, 232, 1);
+    .env_list, .provider_list {
+      color: #57606A;
+      font-size: 12px;
+      font-family: PingFangSC-Medium;
+      .left_item {
+        color: rgba(51, 51, 51, 100);
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 24px;
+        &:first-child {
+          margin-top: 22px;
+        }
+      }
+    }
+    .provider_list {
+      margin-top: 13px;
+    }
+
+  }
+  .right {
+    flex: 1;
+    margin-left: 37px;
+    .search{
+      position: relative;
+
+    }
+  }
+}

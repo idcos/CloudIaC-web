@@ -1,5 +1,5 @@
-import React, { memo, useContext, useEffect } from 'react';
-import { Card, Table, Tag, Tooltip, Select, Input } from 'antd';
+import React, { memo, useContext } from 'react';
+import { Card, Table, Tag, Tooltip, Select, Input, Space } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { useSearchFormAndTable } from 'utils/hooks';
@@ -153,32 +153,35 @@ const DeployHistory = () => {
   }
 
   const title = <div>
-    <span>部署历史</span>
+    <span style={{lineHeight: "32px"}}>部署历史</span>
     <span style={{float: "right"}}>
-      <Select 
-        allowClear={true}
-        style={{ width: 200 }}
-        placeholder="请选择触发类型"
-        options={triggerTypeArr()}
-        onChange={(value) => searchParamsChange({type:"source", value})}
-      ></Select>
-      <Select 
-        allowClear={true}
-        style={{ width: 200 }}
-        placeholder="请选择任务类型"
-        options={taskTypeArr()}
-        onChange={(value) => searchParamsChange({type:"taskType", value})}
-      ></Select>
-      <Search 
-        placeholder="请输入执行人姓名" 
-        onSearch={(value) => searchParamsChange({type:"user", value})} 
-        style={{ width: 200 }} 
-      />
+      <Space>
+        <Select 
+          allowClear={true}
+          style={{ width: 258 }}
+          placeholder="请选择触发类型"
+          options={triggerTypeArr()}
+          onChange={(value) => searchParamsChange({type:"source", value})}
+        ></Select>
+        <Select 
+          allowClear={true}
+          style={{ width: 258 }}
+          placeholder="请选择任务类型"
+          options={taskTypeArr()}
+          onChange={(value) => searchParamsChange({type:"taskType", value})}
+        ></Select>
+        <Search 
+          allowClear={true}
+          placeholder="请输入执行人姓名" 
+          onSearch={(value) => searchParamsChange({type:"user", value})} 
+          style={{ width: 296 }} 
+        />
+      </Space>
     </span>
   </div>
 
-  return <div>
-    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} bodyStyle={{ padding: 5 }} type={'inner'} title={title}>
+  return <div className= "deploy_history_title">
+    <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)'}} bodyStyle={{ padding: 5 }} type={'inner'} title={title}>
       <Table
         columns={columns}
         scroll={{ x: 'min-content' }}

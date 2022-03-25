@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Space, Table, ConfigProvider, Empty, Select, Checkbox, Input, Col } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Space, Table, ConfigProvider, Empty } from 'antd';
 import { useRequest, useEventEmitter } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { useSearchFormAndTable } from 'utils/hooks';
@@ -8,11 +7,8 @@ import PageHeader from 'components/pageHeader';
 import ResourceViewModal from 'components/resource-view-modal';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
-import classNames from 'classnames';
 import PageSearch from 'components/PageSearch';
 import orgsAPI from 'services/orgs';
-import styles from './styles.less'
-import ResourceItem from './component/resource_item';
 
 const cateList = [
   {
@@ -29,6 +25,7 @@ export default ({ match }) => {
 
   const { orgId } = match.params || {};
   const event$ = useEventEmitter();
+
   // 列表查询
   const {
     loading: tableLoading,
@@ -39,32 +36,9 @@ export default ({ match }) => {
       orgsAPI.listResources.bind(null, { orgId, ...params })
     ), {
       throttleInterval: 1000, // 节流
-      manual: true,
-      onSuccess: () => {
-        console.log( pjtId );
-      }
+      manual: true
     }
   );
-
-  // const { 
-  //   data: resultMap = {
-  //     list: [],
-  //     total: 0
-  //   },
-  //   loading
-  // } = useRequest(
-  //   () => requestWrapper(
-  //     envAPI.envsList.bind(null, {
-  //       orgId,
-  //       projectId: pjtId,
-  //     })
-  //   ),{
-  //     manual:true,
-  //     onSuccess: () => {
-  //       console.log(resultMap.list);
-  //     }
-  //   }
-  // );
 
   // 表单搜索和table关联hooks
   const { 
@@ -74,7 +48,7 @@ export default ({ match }) => {
     tableData,
     onSearch: (params) => {
       const { current: currentPage, type, keyword, ...restParams } = params;
-      fetchList({
+      fetchList({ 
         currentPage,
         module: type,
         q: keyword,
@@ -150,45 +124,34 @@ export default ({ match }) => {
     <Layout
       extraHeader={
         <PageHeader
-          title={
-          <div className={styles.search}>
-            <span style={{fontSize: "20px"}}>资源查询</span>
-            <Input
-              allowClear={true}
-              style={{ width:"400px", marginLeft:"135px", height: "32px" }}
-              placeholder='请输入关键字搜索'
-              prefix={<SearchOutlined />}
-            />
-          </div>}
+          title='资源查询'
           breadcrumb={true}
         />
       }
     >
-      <div className={classNames(styles.res_query, 'idcos-card')}>
-        <div className={styles.left}>
-          <div className={styles.env_list}>
-            <span>环境</span>
-            <Checkbox.Group style={{ width: '100%' }} onChange={(v) => {console.log(v)}}>
-              <Checkbox className={styles.left_item} value="a">A121212</Checkbox>
-              <Checkbox className={styles.left_item} value="b">b212323</Checkbox>
-              <Checkbox className={styles.left_item} value="c">A32121321</Checkbox>
-              <Checkbox className={styles.left_item} value="d">A32121321</Checkbox>
-            </Checkbox.Group>
+      <div className='idcos-card'>
+        <Space size='middle' direction='vertical' style={{ width: '100%', display: 'flex' }}>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Space size='middle'>
+              <PageSearch 
+                cateList={cateList} 
+                onSearch={onSearch} 
+              />
+            </Space>
           </div>
-          <div className={styles.provider_list}>
-            <span>Provider</span>
-            <Checkbox.Group style={{ width: '100%' }} onChange={(v) => {console.log(v)}}>
-              <Checkbox className={styles.left_item} value="a">A121212</Checkbox>
-              <Checkbox className={styles.left_item} value="b">b212323</Checkbox>
-              <Checkbox className={styles.left_item} value="c">A32121321</Checkbox>
-              <Checkbox className={styles.left_item} value="d">A32121321</Checkbox>
-            </Checkbox.Group>
-          </div>
-        </div>
-        <div className={styles.right}>
-          <ResourceItem />
-          <ResourceItem />
-        </div>
+          <ConfigProvider 
+            renderEmpty={
+              () => <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='暂无相应资源'/>
+            }
+          >
+            <Table
+              columns={columns}
+              scroll={{ x: 'min-content' }}
+              loading={tableLoading}
+              {...tableProps}
+            />
+          </ConfigProvider>
+        </Space>
       </div>
       <ResourceViewModal event$={event$}/>
     </Layout>
