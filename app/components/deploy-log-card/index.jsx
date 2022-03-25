@@ -13,7 +13,6 @@ import history from 'utils/history';
 import { timeUtils } from "utils/time";
 import SearchByKeyWord from 'components/coder/ansi-coder-card/dom-event';
 
-import SuspendModel from './components/suspendModel';
 import DeployLog from './deploy-log';
 import styles from './styles.less';
 
