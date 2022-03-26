@@ -264,6 +264,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                 ) : null
               }
             </div>
+            <div className='card-title-bottom'>执行总耗时：{timeUtils.diff(endAt, startAt, '-')}</div>
           </div>
         }
         extra={
@@ -319,6 +320,34 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                 </Space>
               )
             }
+            <Input
+              prefix={<SearchOutlined />}
+              ref={searchRef}
+              placeholder='搜索日志'
+              onPressEnter={(e) => {
+                searchService.search(e.target.value);
+                searchRef.current.focus();
+              }}
+              style={{ width: 240 }}
+            />
+            <span 
+              className='tool'
+              onClick={toggleFull} 
+            >
+              {
+                isFullscreen ? (
+                  <>
+                    <FullscreenExitOutlined className='tool-icon'/>
+                    <span className='tool-text'>退出全屏</span> 
+                  </>
+                ) : (
+                  <>
+                    <FullscreenOutlined className='tool-icon'/>
+                    <span className='tool-text'>全屏显示</span>
+                  </>
+                )
+              }
+            </span>
           </Space>
         }
       >
@@ -330,42 +359,6 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
             ghost={true} 
             className='deploy-log-collapse'
           >
-            <div className='configHeader'>
-              <Space>
-                <div className='card-title-bottom'>执行时间：{timeUtils.diff(endAt, startAt, '-')}</div>
-              </Space>
-              <Space>
-                <div className={'blackInput'} >
-                  <Input
-                    prefix={<SearchOutlined />}
-                    ref={searchRef}
-                    placeholder='搜索日志'
-                    onPressEnter={(e) => {
-                      searchService.search(e.target.value);
-                      searchRef.current.focus();
-                    }}
-                  />
-                </div>
-                <span 
-                  className='tool'
-                  onClick={toggleFull} 
-                >
-                  {
-                    isFullscreen ? (
-                      <>
-                        <FullscreenExitOutlined className='tool-icon'/>
-                        <span className='tool-text'>退出全屏</span> 
-                      </>
-                    ) : (
-                      <>
-                        <FullscreenOutlined className='tool-icon'/>
-                        <span className='tool-text'>全屏显示</span>
-                      </>
-                    )
-                  }
-                </span>
-              </Space>
-            </div>
             {
               taskSteps.map(({ name, id, startAt, type, endAt, status }, index) => (
                 <Panel 
