@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Card, Space, Button, Tag, Collapse, Input, Tooltip, Modal, Form, notification } from "antd";
-import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined, InfoCircleFilled, PauseOutlined, ExclamationCircleFilled } from '@ant-design/icons';
+import { Card, Space, Button, Tag, Collapse, Input, Tooltip, Modal, Form, notification, Alert } from "antd";
+import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined, InfoCircleFilled, PauseOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 import classNames from 'classnames';
 import { useRequest, useFullscreen, useScroll } from 'ahooks';
@@ -192,12 +192,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
 
   // 中止
   const suspend = () => {
-    Modal.error({
+    Modal.confirm({
       width: 480,
       title: `中止“${envInfo.name}”`,
-      icon: <ExclamationCircleFilled />,
+      icon: <InfoCircleOutlined style={{ color: 'red' }} />,
       content: (
-        <>
+        <div className={'suspendAlter'}>
+          <Alert style={{ padding: '3px 31px', margin: 0 }} message='中止执行中的任务存在如下风险' type='error' />
           <div style={{ marginBottom: 16 }}>
             在apply动作开始后中止任务，环境状态将标记为『失败』，<br/>
             并有可能损坏环境的状态文件，导致该环境损坏，<br/>
@@ -222,9 +223,9 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
               <Input />
             </Form.Item>
           </Form>
-        </>
+        </div>
       ),
-      okText: '确认',
+      okText: '确认中止',
     	cancelText: '取消',
       onOk: async () => {
         await form.validateFields();

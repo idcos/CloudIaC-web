@@ -5,21 +5,24 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 const FL = {
-  labelCol: { span: 6 },
+  labelCol: { span: 3 },
   wrapperCol: { span: 16 }
 };
+const FLItem = {
+  labelCol: { span: 0 },
+  wrapperCol: { span: 24 }
+};
 
-export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
+export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ isBatch, setIsBatch ] = useState(false);
   
   const [form] = Form.useForm();
   
   const onOk = async () => {
     const values = await form.validateFields();
     if (isBatch) {
-      values.email = values.batchEmail.split('\n');
+      values.email = values.email.split('\n');
     }
     setSubmitLoading(true);
     operation({
@@ -61,28 +64,36 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       form={form}
       initialValues={curRecord}
     >
-      <Form.Item
-        label='邮箱'
+      {isBatch ? (<Form.Item
         required={true}
       >
-        <Space align={isBatch ? 'start' : 'center'}>
-          {isBatch ? (<Form.Item
-            name='batchEmail'
-            rules={rulesConfig()}
-            noStyle={true}
-          >
-            <Input.TextArea rows={8} style={{ width: opt == 'add' ? 220 : 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
-          </Form.Item>) : (<Form.Item
+        <Space size={0} align={'start'} direction={'vertical'} className={'text-area-dotted'}>
+          <div className='itemRequired'>邮箱</div>
+          <Form.Item
             name='email'
             rules={rulesConfig()}
-            noStyle={true}
+            {...FLItem}
           >
-            <Input style={{ width: opt == 'add' ? 220 : 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
-          </Form.Item>)}
-          <Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip>
-          {opt == 'add' && <Checkbox onChange={e => setIsBatch(e.target.checked)}>批量</Checkbox>}
+            <Input.TextArea rows={8} style={{ width: 472, border: '1px dashed #C9CCD1', borderRadius: 0 }} placeholder='邮箱一行一个' disabled={opt === 'edit'} />
+          </Form.Item>
         </Space>
-      </Form.Item>
+      </Form.Item>) :
+        (<Form.Item
+          label='邮箱'
+          required={true}
+        >
+          <Space align={'center'}>
+          
+            <Form.Item
+              name='email'
+              rules={rulesConfig()}
+              noStyle={true}
+            >
+              <Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+            </Form.Item>
+            <Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip>
+          </Space>
+        </Form.Item>)}
       {!isBatch && <Form.Item
         label='姓名'
         name='name'

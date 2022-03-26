@@ -11,6 +11,7 @@ import OpModal from './components/memberModal';
 export default ({ title, orgId }) => {
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
+    [ isBatch, setIsBatch ] = useState(false),
     [ opt, setOpt ] = useState(null),
     [ curRecord, setCurRecord ] = useState(null),
     [ resultMap, setResultMap ] = useState({
@@ -178,8 +179,17 @@ export default ({ title, orgId }) => {
         onClick={() => {
           setOpt('add');
           toggleVisible();
+          setIsBatch(false);
         }}
       >邀请成员</Button>
+      <Button 
+        style={{ marginLeft: 8 }}
+        onClick={() => {
+          setOpt('add');
+          toggleVisible();
+          setIsBatch(true);
+        }}
+      >批量邀请</Button>
     </div>
     <Table
       columns={columns}
@@ -208,6 +218,7 @@ export default ({ title, orgId }) => {
         opt={opt}
         curRecord={curRecord}
         operation={operation}
+        isBatch={isBatch}
       />
     }
   </div>;
