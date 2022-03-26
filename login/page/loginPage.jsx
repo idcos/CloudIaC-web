@@ -131,7 +131,7 @@ export default () => {
                   { required: true, message: '请输入邮箱地址' }, 
                   { type: 'email', message: '邮箱格式有误' }
                 ]}
-                getValueFromEvent={(e) => e.target.value.replace(/(^\s*)|(\s*$)/g, '')}
+                getValueFromEvent={(e) => e.target.value.trim()}
               >
                 <Input placeholder='请输入邮箱地址' />
               </Form.Item>
@@ -143,7 +143,7 @@ export default () => {
               label='密码'
               name='password'
               rules={[{ required: true, message: '请输入登录密码!' }]}
-              getValueFromEvent={(e) => e.target.value.replace(/(^\s*)|(\s*$)/g, '')}
+              getValueFromEvent={(e) => e.target.value.trim()}
             >
               <Input.Password placeholder='请输入登录密码' />
             </Form.Item>

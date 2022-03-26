@@ -64,6 +64,7 @@ export default () => {
       <Form.Item
         label='Registry地址'
         name='registryAddr'
+        getValueFromEvent={(e) => e.target.value.trim()}
       >
         <Input placeholder='未设置时默认使用SaaS版Registry' />
       </Form.Item>
