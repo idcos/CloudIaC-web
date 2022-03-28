@@ -59,7 +59,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       }
       const { TASK_STEP_TIMEOUT } = formatToFormData(res.result);
       form.setFieldsValue({
-        stepTimeout: TASK_STEP_TIMEOUT
+        stepTimeout: TASK_STEP_TIMEOUT ? (TASK_STEP_TIMEOUT - 0) : 0
       });
     } catch (e) {
       notification.error({
