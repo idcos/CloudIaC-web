@@ -2,7 +2,7 @@ import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, Pro
 import getPermission from "utils/permission";
 
 const getMenus = (userInfo, { projectList }) => {
-  const { ORG_SET, PROJECT_SET } = getPermission(userInfo);
+  const { ORG_SET, PROJECT_SET, PROJECT_OPERATOR } = getPermission(userInfo);
   return [
     {
       subName: '项目信息',
@@ -43,27 +43,31 @@ const getMenus = (userInfo, { projectList }) => {
       subName: '组织设置',
       subKey: 'org',
       emptyMenuList: [],
-      isHide: !ORG_SET,
+      isHide: !ORG_SET && !PROJECT_OPERATOR,
       menuList: [
         {
           name: '项目',
           key: 'm-org-project',
-          icon: <ProjectOutlined />
+          icon: <ProjectOutlined />,
+          isHide: !ORG_SET
         },
         {
           name: '云模板',
           key: 'm-org-ct',
-          icon: <LayoutOutlined />
+          icon: <LayoutOutlined />,
+          isHide: !ORG_SET
         },
         {
           name: '变量',
           key: 'm-org-variable',
-          icon: <InteractionOutlined />
+          icon: <InteractionOutlined />,
+          isHide: !ORG_SET
         },
         {
           name: '设定',
           key: 'm-org-setting',
-          icon: <FormOutlined />
+          icon: <FormOutlined />,
+          isHide: !ORG_SET && !PROJECT_OPERATOR
         }
       ]
     },
