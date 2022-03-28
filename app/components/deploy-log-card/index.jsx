@@ -204,23 +204,23 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
             并有可能损坏环境的状态文件，导致该环境损坏，<br/>
             请在了解可能带来的风险前提下执行该动作。<br/>
           </div>
-          <Form requiredMark='optional' form={form}>
+          <Form layout='vertical' requiredMark='optional' form={form}>
             <Form.Item
-              label='确认中止'
-              style={{ fontWeight: 600, marginBottom: 0 }}
+              label='输入环境名称以确认'
               name='name'
-              rules={[{
-                required: true,
-                message: '请确认环境名称'
-              }, {
-                validator: async (rule, value) => {
-                  if (value && value !== envInfo.name) {
-                    throw new Error('当前环境输入不一致');
+              rules={[
+                { required: true, message: '请输入环境名称' },
+                () => ({
+                  validator(_, value) {
+                    if (!value || envInfo.name === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('环境名称不一致!'));
                   }
-                }
-              }]}
+                })
+              ]}
             >
-              <Input />
+              <Input placeholder='请输入环境名称' />
             </Form.Item>
           </Form>
         </div>
