@@ -60,6 +60,16 @@
           }
 
           &>.deploy-log-collapse {
+            :global {
+              .line-index {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+              }
+            }
             .ant-collapse-item {
               position: sticky;
               top: 0;

@@ -86,17 +86,20 @@ const EnvList = (props) => {
           )}
           className='common-show-content'
           header={
-            <Space className={styles.header} align='center'>
+            <Space 
+              className={styles.header}
+              align='center'
+              onClick={() => {
+                const tabKey = [ 'failed', 'approving', 'running' ].includes(data.status) ? 'deployJournal' : 'resource';
+                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
+              }}
+            >
               <div className={styles.status}>
                 {ENV_STATUS[data.status] && <Tag color={ENV_STATUS_COLOR[data.status] || 'default'}>{ENV_STATUS[data.status]}</Tag>}
               </div>
               <div className={styles.title}>
                 <div 
                   className={styles.name} 
-                  onClick={() => {
-                    const tabKey = [ 'failed', 'approving', 'running' ].includes(data.status) ? 'deployJournal' : 'resource';
-                    history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
-                  }}
                 >
                   {data.name || '-'}
                 </div>

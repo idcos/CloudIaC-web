@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Pagination, Checkbox, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
@@ -10,43 +11,9 @@ import envAPI from 'services/env';
 import styles from './styles.less';
 import ResourceItem from './component/resource_item';
 
-const env = [
-  {
-    label: 'env1',
-    value: 'env1'
-  },
-  {
-    label: 'env2',
-    value: 'env2'
-  },
-  {
-    label: 'env3',
-    value: 'env3'
-  },
-  {
-    label: 'env4',
-    value: 'env4'
-  }
-];
-
-const provider = [
-  {
-    label: 'alicloud',
-    value: 'alicloud'
-  },
-  {
-    label: 'alicloud1',
-    value: 'alicloud1'
-  },
-  {
-    label: 'alicloud2',
-    value: 'alicloud2'
-  },
-  {
-    label: 'alicloud3',
-    value: 'alicloud3'
-  }
-];
+const reqParams = {
+  pageSize: 10
+};
 
 export default ({ match }) => {
 
@@ -55,16 +22,47 @@ export default ({ match }) => {
   // 列表查询
   const {
     loading: tableLoading,
-    data: tableData,
-    run: fetchList
+    data: resourcesList = {},
+    run: getResourcesList
   } = useRequest(
     (params) => requestWrapper(
       orgsAPI.listResources.bind(null, { orgId, ...params })
     ), {
       throttleInterval: 1000, // 节流
-      manual: true
+      defaultParams: [reqParams],
+      // manual: true,
+      onSuccess: () => {
+        console.log(resourcesList);
+      }
     }
   );
+
+  //获取环境和provider列表
+  const {
+    data: providerAndEnvlist = {},
+    run: getProvidersAndEnvs
+  } = useRequest(
+    (params) => requestWrapper(
+      orgsAPI.filters.bind(null, { orgId })
+    ), {
+      throttleInterval: 1000, // 节流
+      // manual: true，
+      formatResult: (data) => {
+        let tempData = {};
+        tempData.envs = (data || {}).envs.map((val) => {
+          return { label: val.envName, value: val.envId };
+        });
+        tempData.providers = (data || {}).Providers.map((val) => {
+          return { label: "aliclound", value: val };
+        });
+        return tempData;
+      },
+      onSuccess: () => {
+        console.log(providerAndEnvlist);
+      }
+    }
+  );
+
 
   const {
     loading,
@@ -91,6 +89,10 @@ export default ({ match }) => {
                 style={{ width: "400px", marginLeft: "135px", height: "32px" }}
                 placeholder='请输入关键字搜索'
                 prefix={<SearchOutlined />}
+                onChange={(e) => {
+                  reqParams.q = e.target.value || '';
+                  getResourcesList(reqParams); 
+                }}
               />
             </div>}
           breadcrumb={true}
@@ -104,9 +106,10 @@ export default ({ match }) => {
             <Checkbox.Group 
               className={styles.checbox}
               style={{ width: '100%' }} 
-              options={env}
+              options={providerAndEnvlist.envs}
               onChange={(v) => {
-                console.log(v); 
+                reqParams.envIds = v.length > 0 ? v : undefined;
+                getResourcesList(reqParams); 
               }}
             >
             </Checkbox.Group>
@@ -116,20 +119,33 @@ export default ({ match }) => {
             <Checkbox.Group 
               className={styles.checbox}
               style={{ width: '100%' }} 
-              options={provider}
+              options={providerAndEnvlist.providers}
               onChange={(v) => {
-                console.log(v); 
+                reqParams.providers = v.length > 0 ? v : undefined;
+                getResourcesList(reqParams); 
               }}
             >
             </Checkbox.Group>
           </div>
         </div>
         <div className={styles.right}>
-          <ResourceItem data={data} />
-          <ResourceItem data={data} />
-          <ResourceItem data={data} />
-          <ResourceItem data={data} />
-          <Pagination defaultCurrent={1} total={50} />
+          {resourcesList.list ? resourcesList.list.map((val) => {
+            return <ResourceItem {...val} />;
+          }) : null}
+          <div className={styles.pagination}>
+            { resourcesList.list ? 
+              <Pagination 
+                defaultCurrent={1} 
+                defaultPageSize={resourcesList.pageSize} 
+                total={resourcesList.total} 
+                onChange={(page, pageSize) => {
+                  reqParams.currentPage = page;
+                  reqParams.pageSize = pageSize;
+                  getResourcesList(reqParams); 
+                }}
+              /> : null
+            }
+          </div>
         </div>
       </div>
     </Layout>

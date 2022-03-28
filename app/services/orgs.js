@@ -72,6 +72,11 @@ const orgsAPI = {
     return getWithArgs(`/api/v1/orgs/resources`, restParams, {
       'IaC-Org-Id': orgId
     });
+  },
+  filters: ({ orgId }) => {
+    return getWithArgs(`/api/v1/orgs/resources/filters`, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 
