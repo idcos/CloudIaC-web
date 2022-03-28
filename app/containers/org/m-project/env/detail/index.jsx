@@ -262,8 +262,8 @@ const EnvDetail = (props) => {
               PROJECT_OPERATOR ? (
                 <Space>
                   <Button onClick={redeploy}>重新部署</Button>
-                  <Button disabled={envInfo.lockedStatus} onClick={destroy} type={'primary'}>销毁资源</Button>
-                  {!envInfo.lockedStatus ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
+                  <Button disabled={envInfo.locked} onClick={destroy} type={'primary'}>销毁资源</Button>
+                  {!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
                     (<Tooltip title='解锁当前环境'><UnlockOutlined onClick={() => onLock('unlock')} style={{ fontSize: 20 }}/></Tooltip>)}
                 </Space>
               ) : null

@@ -27,7 +27,7 @@ const Setting = () => {
   
   const [form] = Form.useForm();
   const { userInfo, envInfo, reload, orgId, projectId, envId } = useContext(DetailPageContext);
-  const { lockedStatus } = envInfo;
+  const { locked } = envInfo;
   // 此处需要用window.location获取最新的参数, 因为环境详情的location只做参数切换并不会刷新location值不刷新
   const { formTab } = queryString.parse(window.location.search); 
   const { PROJECT_OPERATOR } = getPermission(userInfo);
@@ -234,7 +234,7 @@ const Setting = () => {
                           name='type'
                           initialValue={'infinite'}
                         >
-                          <Select disabled={lockedStatus} style={{ width: '100%' }}>
+                          <Select disabled={locked} style={{ width: '100%' }}>
                             {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                           </Select>
                         </Form.Item>
@@ -255,7 +255,7 @@ const Setting = () => {
                                 noStyle={true}
                                 shouldUpdate={true}
                               >
-                                <Select disabled={lockedStatus} style={{ width: '100%' }}>
+                                <Select disabled={locked} style={{ width: '100%' }}>
                                   {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                                 </Select>
                               </Form.Item>;
@@ -266,7 +266,7 @@ const Setting = () => {
                                 noStyle={true}
                                 shouldUpdate={true}
                               >
-                                <DatePicker disabled={lockedStatus} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                                <DatePicker disabled={locked} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                               </Form.Item>;
                             }
                           }}
@@ -303,7 +303,7 @@ const Setting = () => {
                         initialValue={false}
                         noStyle={true}
                       >
-                        <Checkbox disabled={lockedStatus}/>
+                        <Checkbox disabled={locked}/>
                       </Form.Item>
                       <span>执行失败时，间隔</span>
                       <Form.Item 
@@ -311,7 +311,7 @@ const Setting = () => {
                         initialValue={0}
                         noStyle={true}
                       >
-                        <InputNumber disabled={lockedStatus} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+                        <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
                       </Form.Item>
                       <span>秒自动重试</span>
                       <Form.Item
@@ -319,7 +319,7 @@ const Setting = () => {
                         initialValue={0}
                         name='retryNumber'
                       >
-                        <InputNumber disabled={lockedStatus} className='no-step' min={0} precision={0} style={{ width: 40 }} />
+                        <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }} />
                       </Form.Item>
                       <span>次</span> 
                     </Space>
@@ -347,7 +347,7 @@ const Setting = () => {
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox disabled={lockedStatus} onChange={e => checkedChange(e, '推送到分支时重新部署', 'commit')}>推送到分支时重新部署</Checkbox> 
+                          <Checkbox disabled={locked} onChange={e => checkedChange(e, '推送到分支时重新部署', 'commit')}>推送到分支时重新部署</Checkbox> 
                         </Form.Item>
                         <Space size={8}>
                           <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
@@ -369,7 +369,7 @@ const Setting = () => {
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox disabled={lockedStatus}>PR/MR时执行PLAN</Checkbox> 
+                          <Checkbox disabled={locked}>PR/MR时执行PLAN</Checkbox> 
                         </Form.Item>
                         <Space size={8}>
                           <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
@@ -407,7 +407,7 @@ const Setting = () => {
                           labelCol={{ span: 8 }}
                           wrapperCol={{ span: 16 }}
                         >
-                          <Switch disabled={lockedStatus} />
+                          <Switch disabled={locked} />
                         </Form.Item>
                         {policyEnable ? (
                           <>
@@ -426,7 +426,7 @@ const Setting = () => {
                                 showArrow={true}
                                 options={policiesGroupOptions}
                                 placeholder='请选择策略组'
-                                disabled={lockedStatus}
+                                disabled={locked}
                               />
                             </Form.Item>
                             <Form.Item
@@ -436,7 +436,7 @@ const Setting = () => {
                               initialValue={false}
                               className='ant-form-item-no-min-height'
                             >
-                              <Checkbox disabled={lockedStatus}>合规不通过时中止部署</Checkbox>                  
+                              <Checkbox disabled={locked}>合规不通过时中止部署</Checkbox>                  
                             </Form.Item>
                           </>
                         ) : null}
@@ -450,7 +450,7 @@ const Setting = () => {
                           labelCol={{ span: 8 }}
                           wrapperCol={{ span: 16 }}
                         >
-                          <Switch disabled={lockedStatus} />
+                          <Switch disabled={locked} />
                         </Form.Item>
                         {openCronDrift ? (
                           <>
@@ -472,7 +472,7 @@ const Setting = () => {
                                       }
                                     ]}
                                   >
-                                    <Input disabled={lockedStatus} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
+                                    <Input disabled={locked} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
                                   </Form.Item>
                                 </Col>
                                 <Col flex={2}>
@@ -503,7 +503,7 @@ const Setting = () => {
                               initialValue={false}
                               className='ant-form-item-no-min-height'
                             >
-                              <Checkbox disabled={lockedStatus} onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
+                              <Checkbox disabled={locked} onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
                             </Form.Item>
                           </>
                         ) : null}
@@ -526,7 +526,7 @@ const Setting = () => {
                     valuePropName='checked'
                     initialValue={false}
                   >
-                    <Checkbox disabled={lockedStatus} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
+                    <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
                   </Form.Item>
                 </Col>
               </Row>
@@ -537,7 +537,7 @@ const Setting = () => {
           PROJECT_OPERATOR ? (
             <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
               <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档</Button>
-              <Button loading={submitLoading} disabled={lockedStatus} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
+              <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
             </Row>
           ) : null
         }
