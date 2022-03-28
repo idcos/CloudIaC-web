@@ -81,6 +81,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder='请选择用户'
             mode={'multiple'}
+            optionFilterProp='children'
           >
             {userOptions.map(it => <Option value={it.id}>{it.name}</Option>)}
           </Select>
