@@ -1,4 +1,4 @@
-.res_query{
+.res_query {
   display: flex;
   min-height: 700px;
   .left {
@@ -11,6 +11,9 @@
       .checbox {
         :global {
           .ant-checkbox-group-item {
+            width: 160px;
+            white-space: nowrap;
+            overflow: hidden;
             display: block;
             margin-bottom: 24px;
             color: rgba(51, 51, 51, 100);
@@ -18,6 +21,9 @@
             font-family: PingFangSC-Regular;
             &:first-child {
               margin-top: 20px;
+            }
+            &>span:last-child {
+              width: 80px;
             }
           }
         }

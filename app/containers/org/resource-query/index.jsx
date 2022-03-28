@@ -53,7 +53,7 @@ export default ({ match }) => {
           return { label: val.envName, value: val.envId };
         });
         tempData.providers = (data || {}).Providers.map((val) => {
-          return { label: "aliclound", value: val };
+          return { label: val, value: val };
         });
         return tempData;
       },
@@ -110,7 +110,7 @@ export default ({ match }) => {
               onChange={(v) => {
                 reqParams.envIds = v.length > 0 ? v : undefined;
                 getResourcesList(reqParams); 
-              }}
+              }}  
             >
             </Checkbox.Group>
           </div>
