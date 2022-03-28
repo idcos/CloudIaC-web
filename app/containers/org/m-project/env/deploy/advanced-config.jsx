@@ -456,7 +456,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               name='stepTimeout'
                               noStyle={true}
                             >
-                              <InputNumber style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
+                              <InputNumber disabled={lockedStatus} style={{ width: '100%' }} min={0} precision={0} placeholder='请输入步骤超时时间' />
                             </Form.Item>
                           </Col>
                           <Col flex='0 0 auto'>
