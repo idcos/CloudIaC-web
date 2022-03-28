@@ -285,7 +285,7 @@ const Setting = () => {
                           name='stepTimeout'
                           noStyle={true}
                         >
-                          <InputNumber style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
+                          <InputNumber disabled={locked} style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
                         </Form.Item>
                       </Col>
                       <Col flex='0 0 auto'>

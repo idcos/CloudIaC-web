@@ -43,15 +43,16 @@ const EnvDetail = (props) => {
 
   const { userInfo, location, match: { params: { orgId, projectId, envId } } } = props;
   const { tabKey } = queryString.parse(location.search);
-  const { PROJECT_OPERATOR } = getPermission(userInfo);
+  const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ panel, setPanel ] = useState(tabKey || 'resource');
   const [form] = Form.useForm();
   const [ taskId, setTaskId ] = useState();
   const [ lockVisible, setLockVisible ] = useState(false);
+  const [ lockLoading, setLockLoading ] = useState(false);
   const [ lockType, setLockType ] = useState(false);
 
   // 获取环境详情
-  const { data: envInfo = {}, run: fetchEnvInfo } = useRequest(
+  const { loading: envDetailLoading, data: envInfo = {}, run: fetchEnvInfo } = useRequest(
     () => requestWrapper(
       envAPI.envsInfo.bind(null, {
         orgId, projectId, envId
@@ -174,7 +175,9 @@ const EnvDetail = (props) => {
       }
 
       if (!confirmRes.result.autoDestroyPass) {
+        setLockLoading(true);
         let res = await envAPI.envUnLocked({ orgId, projectId, envId });
+        setLockLoading(false);
   
         if (res.code !== 200) {
           return notification.error({ message: res.message });
@@ -263,8 +266,17 @@ const EnvDetail = (props) => {
                 <Space>
                   <Button onClick={redeploy}>重新部署</Button>
                   <Button disabled={envInfo.locked} onClick={destroy} type={'primary'}>销毁资源</Button>
-                  {!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
-                    (<Tooltip title='解锁当前环境'><UnlockOutlined onClick={() => onLock('unlock')} style={{ fontSize: 20 }}/></Tooltip>)}
+                  {PROJECT_APPROVER && <div>{!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
+                    (<Tooltip title='解锁当前环境'>
+                      <UnlockOutlined onClick={() => {
+                        if (lockLoading || envDetailLoading) {
+                          return;
+                        } else {
+                          setLockLoading(true);
+                          onLock('unlock'); 
+                        }
+                      }} style={{ fontSize: 20 }}
+                      /></Tooltip>)}</div>}
                 </Space>
               ) : null
             }
