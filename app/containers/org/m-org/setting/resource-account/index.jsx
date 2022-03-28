@@ -8,7 +8,6 @@ import FormModal from './form-modal';
 import moment from 'moment';
 
 export default ({ orgId }) => {
-
   // 列表查询
   const {
     loading: tableLoading,
@@ -59,25 +58,50 @@ export default ({ orgId }) => {
     {
       dataIndex: 'name',
       title: '账号描述',
-      width: 370,
+      width: 207,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'eventType',
+      title: '关联项目',
+      width: 286,
+      ellipsis: true,
+      render: (text) => (text || []).map(it => text).join('、')
+    },
+    {
+      dataIndex: 'provider',
+      title: 'Provider',
+      width: 80,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'expense1',
+      title: '费用统计',
+      width: 80,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'expense2',
+      title: '费用预估',
+      width: 80,
       ellipsis: true
     },
     {
       dataIndex: 'creator',
       title: '创建人',
-      width: 270,
+      width: 100,
       ellipsis: true
     },
     {
       dataIndex: 'updatedAt',
       title: '更新时间',
-      width: 340,
+      width: 120,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD hh:mm')
     },
     {
       title: '操作',
-      width: 170,
+      width: 80,
       fixed: 'right',
       render: (_text, record) => {
         const { id } = record;
@@ -100,11 +124,11 @@ export default ({ orgId }) => {
   const event$ = useEventEmitter();
   event$.useSubscription(({ type }) => {
     switch (type) {
-      case 'refresh':
-        refresh();
-        break;
-      default:
-        break;
+    case 'refresh':
+      refresh();
+      break;
+    default:
+      break;
     }
   });
 

@@ -1,11 +1,14 @@
 
-import { useState } from 'react';
-import { Modal, Form, Input, Button, Space, Checkbox, Spin } from 'antd';
+import { useState, useEffect } from 'react';
+import { Modal, Form, Input, Button, Space, Checkbox, Spin, Select } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
+import projectAPI from 'services/project';
+
+const { Option } = Select;
 
 const FL = {
   labelCol: { span: 4 },
@@ -17,6 +20,11 @@ export default ({ orgId, event$ }) => {
   const [form] = Form.useForm();
   const [ visible, setVisible ] = useState(false);
   const [ id, setId ] = useState();
+  const [ objectList, setObjectList ] = useState([]);
+
+  useEffect(() => {
+    fetchList();
+  }, []);
 
   // 查询详情
   const {
@@ -71,6 +79,18 @@ export default ({ orgId, event$ }) => {
     }
   );
 
+  const fetchList = async () => {
+    const res = await projectAPI.projectList({
+      orgId,
+      pageSize: 0,
+      pageNo: 1
+    });
+    if (res.code != 200) {
+      throw new Error(res.message);
+    }
+    setObjectList(res.result.list || []);
+  };
+
   const onOpen = (id) => {
     setVisible(true);
     if (id) {
@@ -96,11 +116,11 @@ export default ({ orgId, event$ }) => {
 
   event$.useSubscription(({ type, data = {} }) => {
     switch (type) {
-      case 'open-resource-account-form-modal':
-        onOpen(data.id);
-        break;
-      default:
-        break;
+    case 'open-resource-account-form-modal':
+      onOpen(data.id);
+      break;
+    default:
+      break;
     }
   });
 
@@ -137,8 +157,8 @@ export default ({ orgId, event$ }) => {
                   {fields.map(({ key, name, fieldKey }) => (
                     <>
                       <Form.Item
-                        name={[name, 'id']}
-                        fieldKey={[fieldKey, 'id']}
+                        name={[ name, 'id' ]}
+                        fieldKey={[ fieldKey, 'id' ]}
                         style={{ display: 'none' }}
                       >
                         <Input />
@@ -160,23 +180,23 @@ export default ({ orgId, event$ }) => {
                               }
                             })
                           ]}
-                          name={[name, 'name']}
-                          fieldKey={[fieldKey, 'name']}
+                          name={[ name, 'name' ]}
+                          fieldKey={[ fieldKey, 'name' ]}
                         >
                           <Input style={{ width: 188 }} placeholder='请输入key' />
                         </Form.Item>
                         <Form.Item
-                          noStyle
-                          dependencies={[['variables', name, 'sensitive']]}
+                          noStyle={true}
+                          dependencies={[[ 'variables', name, 'sensitive' ]]}
                         >
                           {
                             ({ getFieldValue }) => {
-                              const { id, sensitive } = getFieldValue(['variables', name]) || {};
+                              const { id, sensitive } = getFieldValue([ 'variables', name ]) || {};
                               return (
                                 sensitive ? (
                                   <Form.Item
-                                    name={[name, 'value']}
-                                    fieldKey={[fieldKey, 'value']}
+                                    name={[ name, 'value' ]}
+                                    fieldKey={[ fieldKey, 'value' ]}
                                   >
                                     <Input.Password
                                       style={{ width: 194 }}
@@ -188,8 +208,8 @@ export default ({ orgId, event$ }) => {
                                 ) : (
                                   <Form.Item
                                     rules={[{ required: true, message: '请输入value' }]}
-                                    name={[name, 'value']}
-                                    fieldKey={[fieldKey, 'value']}
+                                    name={[ name, 'value' ]}
+                                    fieldKey={[ fieldKey, 'value' ]}
                                   >
                                     <Input style={{ width: 194 }} placeholder='请输入value' />
                                   </Form.Item>
@@ -199,8 +219,8 @@ export default ({ orgId, event$ }) => {
                           }
                         </Form.Item>
                         <Form.Item
-                          name={[name, 'sensitive']}
-                          fieldKey={[fieldKey, 'sensitive']}
+                          name={[ name, 'sensitive' ]}
+                          fieldKey={[ fieldKey, 'sensitive' ]}
                           initialValue={false}
                           valuePropName='checked'
                         >
@@ -225,6 +245,40 @@ export default ({ orgId, event$ }) => {
                 </>
               )}
             </Form.List>
+          </Form.Item>
+          <Form.Item
+            name={'object'}
+            label={'绑定项目'}
+          >
+            <Select
+              getPopupContainer={triggerNode => triggerNode.parentNode} 
+              allowClear={true} 
+              placeholder='请选择'
+              style={{ width: 254 }}
+            >
+              {objectList.map(it => <Option value={it.id}>{it.name}</Option>)}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name={'provider'}
+            label={'Provider'}
+          >
+            <Select
+              getPopupContainer={triggerNode => triggerNode.parentNode} 
+              allowClear={true} 
+              placeholder='请选择'
+              style={{ width: 254 }}
+            >
+              {['alicloud'].map(it => <Option value={it}>{it}</Option>)}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name={'is'}
+            initialValue={false}
+            valuePropName='checked'
+            wrapperCol={{ offset: 4 }}
+          >
+            <Checkbox>费用统计/预估</Checkbox>
           </Form.Item>
         </Form>
       </Spin>
