@@ -274,7 +274,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
               PROJECT_OPERATOR && (
                 <Space size={8}>
                   {
-                    taskInfo.status === 'approving' && (
+                    taskInfo.status === 'approving' && !aborting && (
                       <>
                         <Button 
                           disabled={!PROJECT_APPROVER || approvedLoading}
