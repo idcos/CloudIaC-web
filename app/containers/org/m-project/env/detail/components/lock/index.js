@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Button, Modal, notification, Space } from 'antd'; 
+import { Button, Modal, notification, Space } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import envAPI from 'services/env';
 
@@ -12,7 +12,7 @@ const FL = {
 export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, envId }) => {
   const [ loading, setLoading ] = useState(false);
   const [ clearLoading, setClearLoading ] = useState(false);
-  
+
   const onOk = async () => {
     setLoading(true);
     let res = await envAPI.envLocked({ orgId, projectId, envId });
@@ -36,11 +36,11 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
     }
     let res = await envAPI.envUnLocked({ ...params });
     setClearLoading(false);
-  
+
     if (res.code !== 200) {
       return notification.error({ message: res.message });
     }
-  
+
     toggleVisible();
     reload();
   };
@@ -57,7 +57,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
     footer={null}
   >
     {lockType === 'lock' ? <>
-      <div style={{ color: 'rgba(87, 96, 106, 100)' }}> 
+      <div style={{ color: 'rgba(87, 96, 106, 100)' }}>
         环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、<br />
         『定时销毁』、API触发的部署等任务，<br />
         但漂移检测等plan类型任务可以照常执行。
@@ -83,7 +83,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
           if (lockType === 'unlock') {
             onClear();
           } else {
-            onOk(); 
+            onOk();
           }
         }}
       >

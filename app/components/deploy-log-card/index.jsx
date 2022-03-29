@@ -1,6 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Card, Space, Button, Tag, Collapse, Input, Tooltip, Modal, Form, notification, Alert } from "antd";
-import { CloseCircleFilled, CheckCircleFilled, SyncOutlined, FullscreenExitOutlined, FullscreenOutlined, SearchOutlined, InfoCircleFilled, PauseOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import {
+  CloseCircleFilled,
+  CheckCircleFilled,
+  SyncOutlined,
+  FullscreenExitOutlined,
+  FullscreenOutlined,
+  SearchOutlined,
+  InfoCircleFilled,
+  PauseOutlined,
+  InfoCircleOutlined,
+  CopyOutlined
+} from '@ant-design/icons';
 import { connect } from "react-redux";
 import classNames from 'classnames';
 import { useRequest, useFullscreen, useScroll } from 'ahooks';
@@ -15,9 +26,10 @@ import SearchByKeyWord from 'components/coder/ansi-coder-card/dom-event';
 
 import DeployLog from './deploy-log';
 import styles from './styles.less';
+import AuditModal from './auditModal';
 
 const { Panel } = Collapse;
-const searchService = new SearchByKeyWord({ 
+const searchService = new SearchByKeyWord({
   searchWrapperSelect: '.ansi-coder-content',
   excludeSearchClassNameList: [
     'line-index'
@@ -27,7 +39,7 @@ const enableStatusList = [ 'complete', 'failed', 'timeout', 'running' ];
 const suspendStatusList = new Set([ 'rejected', 'failed', 'aborted', 'complete' ]); // 中止按钮隐藏的状态
 
 const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
-  
+
   const [form] = Form.useForm();
 
   const searchRef = useRef();
@@ -42,6 +54,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ activeKey, setActiveKey ] = useState([]);
   const [ canAutoScroll, setCanAutoScroll ] = useState(true);
+  const [ auditModalVisible, setAuditModalVisible ] = useState(false);
   const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
   const autoScroll = !taskHasEnd && canAutoScroll;
 
@@ -65,7 +78,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
   }, [taskHasEnd]);
 
   useEffect(() => {
-    // 给页面绑定鼠标滚轮事件,针对火狐的非标准事件 
+    // 给页面绑定鼠标滚轮事件,针对火狐的非标准事件
     scrollRef.current.addEventListener("DOMMouseScroll", scrollFunc);
     // 给页面绑定鼠标滚轮事件，针对Google，mousewheel非标准事件已被弃用，请使用 wheel事件代替
     scrollRef.current.addEventListener("wheel", scrollFunc);
@@ -90,8 +103,8 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
 
   const scrollFunc = (e) => {
     e = e || window.event;
-    if (e.wheelDelta) {   
-      if (e.wheelDelta > 0) {    
+    if (e.wheelDelta) {
+      if (e.wheelDelta > 0) {
         setCanAutoScroll(false);
       }
     } else if (e.detail) {
@@ -157,10 +170,10 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
       manual: true,
       onSuccess: (data) => {
         const { taskId } = data;
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${taskId}`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${taskId}`);
       }
     }
-  ); 
+  );
 
   // 审批操作
   const {
@@ -168,7 +181,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
     fetches: {
       approved: { loading: approvedLoading = false } = {},
       rejected: { loading: rejectedLoading = false } = {}
-    } 
+    }
   } = useRequest(
     (action) => requestWrapper(
       taskAPI.approve.bind(null, { orgId, taskId, projectId, action }),
@@ -204,23 +217,23 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
             并有可能损坏环境的状态文件，导致该环境损坏，<br/>
             请在了解可能带来的风险前提下执行该动作。<br/>
           </div>
-          <Form layout='vertical' requiredMark='optional' form={form}>
+          <Form requiredMark='optional' form={form}>
             <Form.Item
-              label='输入环境名称以确认'
+              label='确认中止'
+              style={{ fontWeight: 600, marginBottom: 0 }}
               name='name'
-              rules={[
-                { required: true, message: '请输入环境名称' },
-                () => ({
-                  validator(_, value) {
-                    if (!value || envInfo.name === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('环境名称不一致!'));
+              rules={[{
+                required: true,
+                message: '请确认环境名称'
+              }, {
+                validator: async (rule, value) => {
+                  if (value && value !== envInfo.name) {
+                    throw new Error('当前环境输入不一致');
                   }
-                })
-              ]}
+                }
+              }]}
             >
-              <Input placeholder='请输入环境名称' />
+              <Input />
             </Form.Item>
           </Form>
         </div>
@@ -255,7 +268,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
         title={
           <div className='card-title'>
             <div className='card-title-top'>
-              <span className='title'>部署日志</span> 
+              <span className='title'>部署日志</span>
               {aborting ? <Tag className='status' color={'error'}>{'中止执行中'}</Tag> : <Tag className='status' color={TASK_STATUS_COLOR[status]}>{TASK_STATUS[status]}</Tag>}
               {
                 taskInfo.status === 'failed' && taskInfo.message ? (
@@ -274,19 +287,19 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
               PROJECT_OPERATOR && (
                 <Space size={8}>
                   {
-                    taskInfo.status === 'approving' && !aborting && (
+                    taskInfo.status === 'approving' && (
                       <>
-                        <Button 
+                        <Button
                           disabled={!PROJECT_APPROVER || approvedLoading}
                           onClick={() => passOrRejecy('rejected')}
-                          loading={rejectedLoading} 
+                          loading={rejectedLoading}
                         >
                           驳回
                         </Button>
-                        <Button 
+                        <Button
                           disabled={!PROJECT_APPROVER || rejectedLoading}
-                          onClick={() => passOrRejecy('approved')} 
-                          loading={approvedLoading} 
+                          onClick={() => passOrRejecy('approved')}
+                          loading={approvedLoading}
                           type='primary'
                         >
                           通过
@@ -296,7 +309,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                   }
                   {
                     !suspendStatusList.has(status) && (
-                      <Button 
+                      <Button
                         type='link'
                         onClick={() => suspend()}
                         disabled={aborting}
@@ -309,7 +322,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                   }
                   {
                     type === 'plan' && status === 'complete' ? (
-                      <Button 
+                      <Button
                         type='primary'
                         onClick={applyTask}
                         loading={applyTaskLoading}
@@ -331,15 +344,15 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
               }}
               style={{ width: 240 }}
             />
-            <span 
+            <span
               className='tool'
-              onClick={toggleFull} 
+              onClick={toggleFull}
             >
               {
                 isFullscreen ? (
                   <>
                     <FullscreenExitOutlined className='tool-icon'/>
-                    <span className='tool-text'>退出全屏</span> 
+                    <span className='tool-text'>退出全屏</span>
                   </>
                 ) : (
                   <>
@@ -349,20 +362,22 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                 )
               }
             </span>
+
+            <Button icon={<CopyOutlined />} type={"text"} onClick={() => setAuditModalVisible(true)}>审核</Button>
           </Space>
         }
       >
-        
+
         <div className={classNames('card-body-scroll', { isFullscreen })} ref={scrollRef} >
-          <Collapse 
-            activeKey={activeKey} 
+          <Collapse
+            activeKey={activeKey}
             onChange={manualChangeActiveKey}
-            ghost={true} 
+            ghost={true}
             className='deploy-log-collapse'
           >
             {
               taskSteps.map(({ name, id, startAt, type, endAt, status }, index) => (
-                <Panel 
+                <Panel
                   className={'log-panel-' + index}
                   collapsible={![ 'complete', 'failed', 'timeout', 'running' ].includes(status) && 'disabled'}
                   header={
@@ -372,7 +387,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                       {(status === 'failed' || status === 'timeout') && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
                       {status === 'running' && <SyncOutlined spin={true} style={{ color: '#ffffff' }}/>}
                     </Space>
-                  } 
+                  }
                   key={id}
                   extra={timeUtils.diff(endAt, startAt)}
                 >
@@ -383,6 +398,8 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
           </Collapse>
         </div>
       </Card>
+
+      <AuditModal visible={auditModalVisible} setVisible={setAuditModalVisible} passOrReject={passOrRejecy}/>
     </div>
   );
 };

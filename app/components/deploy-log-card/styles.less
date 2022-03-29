@@ -7,7 +7,7 @@
       display: flex;
       flex-direction: column;
 
-      &>.ant-card-head {
+      & > .ant-card-head {
         flex: 0 0 auto;
 
         .card-title {
@@ -47,11 +47,11 @@
         }
       }
 
-      &>.ant-card-body {
+      & > .ant-card-body {
         flex: 1;
         min-height: 0;
 
-        &>.card-body-scroll {
+        & > .card-body-scroll {
           height: 500px;
           overflow-y: scroll;
 
@@ -59,17 +59,7 @@
             height: calc(100vh - 76px);
           }
 
-          &>.deploy-log-collapse {
-            :global {
-              .line-index {
-                -webkit-touch-callout: none;
-                -webkit-user-select: none;
-                -khtml-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-              }
-            }
+          & > .deploy-log-collapse {
             .ant-collapse-item {
               position: sticky;
               top: 0;
@@ -172,3 +162,71 @@
     }
   }
 }
+
+.modalTitle {
+  font-weight: bold;
+  font-size: 16px;
+  height: 26px;
+  line-height: 26px;
+}
+
+.changedTip {
+  font-size: 12px;
+  color: #57606A;
+  margin-bottom: 23px;
+}
+
+.cost {
+  margin-top: 20px;
+  color: #24292F;
+  font-size: 14px;
+}
+
+.tip {
+  color: #878F99;
+  font-size: 12px;
+  margin-top: 60px;
+  margin-bottom: 35px;
+}
+
+.detailTable {
+  width: 497px;
+  display: grid;
+  grid-template-rows: 43px 43px;
+  text-align: center;
+  line-height: 43px;
+
+  .header {
+    border: 1px solid #D4D7DB;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .row {
+    border: 1px dashed #E2E3E6;
+    border-top: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .audit-modal {
+    :global {
+      //调整弹窗样式
+      .ant-modal-header {
+        border: none;
+        padding: 27px 32px 15px 32px;
+      }
+
+      .ant-modal-footer {
+        border: none;
+        padding-bottom: 28px;
+      }
+
+      .ant-modal-body {
+        padding: 0 31px;
+      }
+    }
+  }
+}
+
+
