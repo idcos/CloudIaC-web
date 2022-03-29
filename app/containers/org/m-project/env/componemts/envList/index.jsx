@@ -18,7 +18,7 @@ const EnvList = (props) => {
   const { match, panel, query } = props;
   const { params: { orgId, projectId } } = match;
 
-  const { 
+  const {
     data: resultMap = {
       list: [],
       total: 0
@@ -41,7 +41,7 @@ const EnvList = (props) => {
 
     const [ open, setOpen ] = useState(false);
     const [ now, setNow ] = useState(moment());
-  
+
     useEffect(() => {
       const t = setInterval(() => {
         setNow(moment());
@@ -71,35 +71,39 @@ const EnvList = (props) => {
 
     return (
       <Collapse
-        style={{ marginTop: 20 }} 
+        style={{ marginTop: 20 }}
         forceRender={true}
         activeKey='1'
         onChange={() => setOpen(!open)}
       >
-        <Collapse.Panel 
+        <Collapse.Panel
           key='1'
           showArrow={false}
           extra={(
-            <div style={{ fontSize: 12 }}>
-              {open ? <DownOutlined /> : <RightOutlined />}
+            <div className={styles.extra}>
+              {/*TODO 接口字段待定*/}
+              <div className={styles.cost}>240.00元/当月费用</div>
+              <div style={{ fontSize: 12 }}>
+                {open ? <DownOutlined /> : <RightOutlined />}
+              </div>
             </div>
           )}
           className='common-show-content'
           header={
-            <Space 
+            <Space
               className={styles.header}
               align='center'
               onClick={() => {
                 const tabKey = [ 'failed', 'approving', 'running' ].includes(data.status) ? 'deployJournal' : 'resource';
-                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`); 
+                history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`);
               }}
             >
               <div className={styles.status}>
                 {ENV_STATUS[data.status] && <Tag color={ENV_STATUS_COLOR[data.status] || 'default'}>{ENV_STATUS[data.status]}</Tag>}
               </div>
               <div className={styles.title}>
-                <div 
-                  className={styles.name} 
+                <div
+                  className={styles.name}
                 >
                   {data.name || '-'}
                 </div>
@@ -108,10 +112,10 @@ const EnvList = (props) => {
               <div className={styles.tags}>
                 {data.isDrift && (
                   <Tooltip context={'检测到该环境存在漂移资源'}>
-                    <Tag 
+                    <Tag
                       onClick={() => {
-                        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=resource`); 
-                      }} 
+                        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=resource`);
+                      }}
                       color='#E7AF5F'
                       style={{ color: '#1F1F1F' }}
                     >漂移</Tag>
@@ -123,8 +127,8 @@ const EnvList = (props) => {
             </Space>
           }
         >
-          <Descriptions 
-            column={4} 
+          <Descriptions
+            column={4}
             style={{ marginBottom: -16 }}
             labelStyle={{ color: '#24292F' }}
             contentStyle={{ color: '#57606A' }}

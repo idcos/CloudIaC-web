@@ -57,7 +57,7 @@ const EnvDetail = (props) => {
       envAPI.envsInfo.bind(null, {
         orgId, projectId, envId
       })
-    ), 
+    ),
     {
       ready: !!envId,
       formatResult: data => data || {},
@@ -74,13 +74,13 @@ const EnvDetail = (props) => {
     (tags) => requestWrapper(
       envAPI.updateTag.bind(null, {
         tags,
-        orgId, 
+        orgId,
         projectId,
         envId
       }), {
         autoSuccess: true
       }
-    ), 
+    ),
     {
       manual: true,
       onSuccess: () => {
@@ -94,7 +94,7 @@ const EnvDetail = (props) => {
       taskAPI.detail.bind(null, {
         orgId, projectId, taskId
       })
-    ), 
+    ),
     {
       ready: !!taskId,
       pollingInterval: 3000,
@@ -110,9 +110,9 @@ const EnvDetail = (props) => {
       }
     }
   );
-  
+
   const redeploy = async() => {
-    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${envInfo.tplId}/${envId}`); 
+    history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${envInfo.tplId}/${envId}`);
   };
 
   const destroy = () => {
@@ -124,9 +124,9 @@ const EnvDetail = (props) => {
         <>
           <div style={{ marginBottom: 29 }}>销毁资源将删除环境所有资源</div>
           <Form layout='vertical' requiredMark='optional' form={form}>
-            <Form.Item 
-              name='name' 
-              label='输入环境名称以确认' 
+            <Form.Item
+              name='name'
+              label='输入环境名称以确认'
               rules={[
                 { required: true, message: '请输入环境名称' },
                 () => ({
@@ -178,7 +178,7 @@ const EnvDetail = (props) => {
         setLockLoading(true);
         let res = await envAPI.envUnLocked({ orgId, projectId, envId });
         setLockLoading(false);
-  
+
         if (res.code !== 200) {
           return notification.error({ message: res.message });
         }
@@ -223,7 +223,7 @@ const EnvDetail = (props) => {
         reload,
         envId,
         taskId,
-        orgId, 
+        orgId,
         projectId,
         type: 'env',
         changeTabPage: setPanel
@@ -251,19 +251,21 @@ const EnvDetail = (props) => {
                   {envInfo.isDrift && <Tag style={{ margin: 0 }} color={'orange'}>漂移</Tag>}
                   <PolicyStatus style={{ margin: 0 }} policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
                 </div>
-                <EnvTags 
-                  tags={envInfo.tags} 
-                  canEdit={PROJECT_OPERATOR} 
+                <EnvTags
+                  tags={envInfo.tags}
+                  canEdit={PROJECT_OPERATOR}
                   update={(data) => {
                     updateTag(data.join(','));
-                  }} 
+                  }}
                 />
               </Space>
             )}
-            
+
             subDes={
               PROJECT_OPERATOR ? (
                 <Space>
+                  {/*TODO 接口字段待定*/}
+                  <div className={styles.cost}>240.00/当月费用</div>
                   <Button onClick={redeploy}>重新部署</Button>
                   <Button disabled={envInfo.locked} onClick={destroy} type={'primary'}>销毁资源</Button>
                   {PROJECT_APPROVER && <div>{!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
@@ -273,7 +275,7 @@ const EnvDetail = (props) => {
                           return;
                         } else {
                           setLockLoading(true);
-                          onLock('unlock'); 
+                          onLock('unlock');
                         }
                       }} style={{ fontSize: 20 }}
                       /></Tooltip>)}</div>}
@@ -306,7 +308,7 @@ const EnvDetail = (props) => {
                 history.replace({
                   search: `?tabKey=${k}`
                 });
-                setPanel(k); 
+                setPanel(k);
               }}
             >
               {Object.keys(subNavs).map((it) => {
@@ -321,7 +323,7 @@ const EnvDetail = (props) => {
             {renderByPanel()}
           </div>
         </div>
-        
+
         {lockVisible && <div className={'lockModal'}> <Lock
           toggleVisible={() => setLockVisible(false)}
           lockType={lockType}
