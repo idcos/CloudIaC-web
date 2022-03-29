@@ -157,6 +157,7 @@ export default ({ title, orgId }) => {
               setOpt('edit');
               setCurRecord(record);
               toggleVisible();
+              setIsBatch(false);
             }}
             >编辑</Button>
             <Popconfirm
