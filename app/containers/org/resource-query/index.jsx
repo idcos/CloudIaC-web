@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import orgsAPI from 'services/orgs';
 import styles from './styles.less';
 import ResourceItem from './component/resource_item';
+import Item from 'antd/lib/list/Item';
 
 export default ({ match }) => {
 
@@ -29,7 +30,7 @@ export default ({ match }) => {
     () => requestWrapper(
       orgsAPI.listResources.bind(null, { orgId, ...page, ...searchParams })
     ), {
-      throttleInterval: 1000, // 节流
+      debounceInterval: 1000, // 防抖
       refreshDeps: [searchCount]
     }
   );
@@ -47,8 +48,8 @@ export default ({ match }) => {
       formatResult: (data) => {
         const { envs, Providers } = data || {};
         return {
-          envs: envs.map((val) => ({ label: val.envName, value: val.envId })),
-          providers: Providers.map((val) => ({ label: val, value: val }))
+          envs: (envs || []).map((val) => ({ label: val.envName, value: val.envId })),
+          providers: (Providers || []).map((val) => ({ label: val, value: val }))
         };
       }
     }
@@ -91,9 +92,11 @@ export default ({ match }) => {
             <Checkbox.Group 
               className={styles.checbox}
               style={{ width: '100%' }} 
-              options={envs}
               onChange={(v) => onParamsSearch({ envIds: v.length > 0 ? v : undefined })}  
             >
+              {envs.map((item) => {
+                return <span title={item.label}><Checkbox value={item.value}>{item.label}</Checkbox></span>;
+              })}
             </Checkbox.Group>
           </div>
           <div className={styles.provider_list}>
@@ -101,9 +104,11 @@ export default ({ match }) => {
             <Checkbox.Group 
               className={styles.checbox}
               style={{ width: '100%' }} 
-              options={providers}
               onChange={(v) => onParamsSearch({ providers: v.length > 0 ? v : undefined })}  
             >
+              {providers.map((item) => {
+                return <span title={item.label}><Checkbox value={item.value}>{item.label}</Checkbox></span>;
+              })}
             </Checkbox.Group>
           </div>
         </div>

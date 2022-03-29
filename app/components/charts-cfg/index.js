@@ -401,6 +401,202 @@ export const chartOptions = {
         }
       ]
     };
+  },
+  overview_envs_state: ({ active, failed, destroyed, running, approving } = {}) => {
+    return {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)',
+        extraCssText: 'z-index: 2'
+      },
+      series: [
+        {
+          name: '环境状态占比',
+          type: 'pie',
+          // left: '50%',
+          radius: [ '50%', '70%' ],
+          data: [
+            { name: "活跃", value: active || 0 },
+            { name: "失败", value: failed || 0 },
+            { name: "已销毁", value: destroyed || 0 },
+            { name: "执行中", value: running || 0 },
+            { name: "待审批", value: approving || 0 }
+          ],
+          label: { 
+            show: true, 
+            formatter: ' {b}\n{d}%',
+            overflow: 'break'
+          },
+          labelLine: {
+            smooth: true
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+  },
+  overview_resouces_type: ({ eip, slb, vpc, running, approving } = {}) => {
+    return {
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)',
+        extraCssText: 'z-index: 2'
+      },
+      series: [
+        {
+          name: '资源类型占比',
+          type: 'pie',
+          // left: '50%',
+          radius: [ '50%', '70%' ],
+          data: [
+            { name: "eip", value: eip || 0 },
+            { name: "slb", value: slb || 0 },
+            { name: "vpc", value: vpc || 0 },
+            { name: "执行中", value: running || 0 },
+            { name: "待审批", value: approving || 0 }
+          ],
+          label: { 
+            show: true, 
+            formatter: ' {b}\n{d}%',
+            overflow: 'break'
+          },
+          labelLine: {
+            smooth: true
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+  },
+  overview_obj_resource: ({ last_month, this_month } = {}) => {
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        itemHeight: 6,
+        itemWidth: 6,
+        left: 11,
+        top: 14
+      },
+      grid: {
+        left: 23,
+        right: 20,
+        top: 52,
+        bottom: 31,
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+          splitLine: {
+            show: false
+          }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: '上个月',
+          barWidth: '8%',
+          barGap: '0%',
+          type: 'bar',
+          data: last_month
+        },
+        {
+          name: '当月',
+          barWidth: '8%',
+          barGap: '0%',
+          type: 'bar',
+          data: this_month
+        }
+      ]
+    };
+  },
+  overview_resource_tendency: ({ last_month, this_month } = {}) => {
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross'
+        }
+      },
+      legend: {
+        itemHeight: 6,
+        itemWidth: 6,
+        icon: "rect",
+        left: 11,
+        top: 14
+      },
+      grid: {
+        left: 23,
+        right: 20,
+        top: 52,
+        bottom: 31,
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+          splitLine: {
+            show: false
+          }
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: '上个月',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          smooth: false,
+          showSymbol: false,
+          emphasis: {
+            focus: 'series'
+          },
+          data: last_month
+        },
+        {
+          name: '当月',
+          type: 'line',
+          stack: 'Total',
+          smooth: false,
+          showSymbol: false,
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: this_month
+        }
+      ]
+    };
   }
 };
 

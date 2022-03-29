@@ -122,6 +122,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/m-other-overview',
+          name: '概览',
+          component: loadable(() => import('containers/org/overview'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/m-org-project',
           name: '组织设置：项目',
           component: loadable(() => import('containers/org/m-org/project'), asyncLoadFallback),

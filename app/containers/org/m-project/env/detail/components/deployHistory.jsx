@@ -1,4 +1,4 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useState, useEffect } from 'react';
 import { Card, Table, Tag, Tooltip, Select, Input, Space, Row } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
@@ -13,25 +13,26 @@ import taskAPI from 'services/task';
 import DetailPageContext from '../detail-page-context';
 const { Search } = Input;
 
-const searchParams = {};
-
 const DeployHistory = () => {
 
   const { orgId, projectId, envId } = useContext(DetailPageContext);
+  const [ searchParams, setSearchParams ] = useState({});
+  const [ searchCount, setSearchCount ] = useState(1);
   // 列表查询
   const {
     loading: tableLoading,
     data: tableData,
     run: fetchList
   } = useRequest(
-    (params) => requestWrapper(
+    () => requestWrapper(
       taskAPI.envsTaskList.bind(null, {
         orgId, 
         projectId, 
         envId,
-        ...params
+        ...searchParams
       })
     ), {
+      debounceInterval: 500, // 防抖
       manual: true
     }
   );
@@ -43,7 +44,7 @@ const DeployHistory = () => {
     tableData,
     onSearch: (params) => {
       const { current: currentPage, ...restParams } = params;
-      fetchList({ currentPage, ...restParams });
+      // fetchList({ currentPage, ...restParams });
     }
   });
 
@@ -147,10 +148,14 @@ const DeployHistory = () => {
     return tempArr;
   };
 
-  const searchParamsChange = ({ type, value }) => {
-    searchParams[type] = value;
-    fetchList(searchParams);
+  const searchParamsChange = (params) => {
+    setSearchParams(preValue => ({ ...preValue, ...params }));
+    setSearchCount(preValue => preValue + 1);
   };
+
+  useEffect(() => {
+    fetchList();
+  }, [searchCount]);
 
   const title = <div>
     <span style={{ lineHeight: "32px" }}>部署历史</span>
@@ -161,19 +166,19 @@ const DeployHistory = () => {
           style={{ width: 258 }}
           placeholder='请选择触发类型'
           options={triggerTypeArr()}
-          onChange={(value) => searchParamsChange({ type: "source", value })}
+          onChange={(value) => searchParamsChange({ source: value })}
         ></Select>
         <Select 
           allowClear={true}
           style={{ width: 258 }}
           placeholder='请选择任务类型'
           options={taskTypeArr()}
-          onChange={(value) => searchParamsChange({ type: "taskType", value })}
+          onChange={(value) => searchParamsChange({ taskType: value })}
         ></Select>
         <Search 
           allowClear={true}
           placeholder='请输入执行人姓名' 
-          onSearch={(value) => searchParamsChange({ type: "user", value })} 
+          onSearch={(value) => searchParamsChange({ user: value })} 
           style={{ width: 296 }} 
         />
       </Space>
