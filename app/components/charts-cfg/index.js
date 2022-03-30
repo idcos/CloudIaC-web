@@ -480,7 +480,7 @@ export const chartOptions = {
       ]
     };
   },
-  overview_obj_resource: ({ last_month, this_month } = {}) => {
+  overview_pro_resource: ({ last_month, this_month } = {}) => {
     return {
       tooltip: {
         trigger: 'axis',
