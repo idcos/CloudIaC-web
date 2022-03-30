@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Divider, notification, Space, Table } from 'antd';
+import { Button, Divider, notification, Space, Table, Modal } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import keysAPI from 'services/keys';
+import getPermission from "utils/permission";
 import OpModal from './components/op-modal';
 
-export default ({ orgId }) => {
+export default ({ orgId, userInfo }) => {
+
+  const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
@@ -69,6 +73,12 @@ export default ({ orgId }) => {
       ellipsis: true
     },
     {
+      dataIndex: 'creator',
+      title: '创建人',
+      width: 169,
+      ellipsis: true
+    },
+    {
       dataIndex: 'createdAt',
       title: '创建时间',
       width: 169,
@@ -81,16 +91,29 @@ export default ({ orgId }) => {
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
-        return <Space split={<Divider type='vertical' />}>
-          <a onClick={() => del(record)}>删除</a>
-        </Space>;
+        const creatorIsSelf = record.creatorId === userInfo.id;
+        return (
+          <Space split={<Divider type='vertical' />}>
+            <a 
+              disabled={!ORG_SET && !creatorIsSelf}
+              onClick={() => del(record)}
+            >删除</a>
+          </Space>
+        );
       }
     }
   ];
 
   const del = (record) => {
-    const { id } = record;
-    operation({ doWhat: 'del', payload: { id } });
+    const { id, name } = record;
+    Modal.confirm({
+      title: `删除（此操作不可逆）`,
+      content: `确定要删除 “${name}” 吗？`,
+      icon: <InfoCircleFilled style={{ color: '#DD2B0E' }} />,
+      okText: '确认删除',
+      cancelText: '取消',
+      onOk: () => operation({ doWhat: 'del', payload: { id } })
+    });
   };
 
   const operation = async ({ doWhat, payload }, cb) => {
