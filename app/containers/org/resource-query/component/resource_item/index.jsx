@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './styles.less';
 import { safeJsonStringify } from 'utils/util';
 import { connect } from "react-redux";
 import history from 'utils/history';
+import classNames from 'classnames';
 import {
   ArrowRightOutlined
 } from "@ant-design/icons";
@@ -13,9 +14,14 @@ const KEY = 'global';
 const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg, projectId, envId }) => {
 
   const data = JSON.parse(attrs);
+  const [ isUnfold, setIsUnfold ] = useState(false);
   return (
     <div className={styles.resource_item}>
-      <div className={styles.header}>
+      <div className={styles.header} 
+        onClick={() => {
+          setIsUnfold(!isUnfold);
+        }}
+      >
         <div className={styles.item}>
           <span className={styles.label}>项目</span>
           <span className={styles.value}>{projectName}</span>
@@ -40,7 +46,7 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
           <span className={styles.value}>{resourceName}</span>
         </div>
       </div>
-      <div className={styles.json}>
+      <div className={classNames(styles.json, isUnfold ? styles.unfold : undefined)}>
         <Coder value={safeJsonStringify([ data, null, 2 ])} style={{ height: 'auto' }} />
       </div>
     </div>

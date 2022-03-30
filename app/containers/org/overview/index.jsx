@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import orgsAPI from 'services/orgs';
 import { connect } from 'react-redux';
 import styles from './styles.less';
+import { EnvStat, ProjectStat, ResGrowTrend, ResStat } from './components/dataDetail';
 
 const KEY = 'global';
 
@@ -84,6 +85,7 @@ const overview = ({ curOrg, projects, curProject }) => {
     <div className={styles.overview}>
       <Layout
         style={{ flex: 1, minWidth: "0" }}
+        className='idcos-no-scrollbar'
         extraHeader={
           <PageHeader
             title={
@@ -205,7 +207,10 @@ const overview = ({ curOrg, projects, curProject }) => {
         </div>
       </Layout>
       <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
-        {selectedModule}
+        { selectedModule === 'envStat' ? <EnvStat/> : undefined }
+        { selectedModule === 'resStat' ? <ResStat/> : undefined }
+        { selectedModule === 'projectStat' ? <ProjectStat/> : undefined }
+        { selectedModule === 'resGrowTrend' ? <ResGrowTrend/> : undefined }
       </div>
     </div>
     

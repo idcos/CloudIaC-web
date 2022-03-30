@@ -34,8 +34,11 @@
     }
   }
   .json {
-    min-height: 300px;
+    // height: auto;
+    // max-height: 432px;
+    height: 432px;
     background-color: #E1E4E8;
+    overflow: hidden;
     :global {
       .CodeMirror {
         background-color: #E1E4E8;
@@ -47,5 +50,9 @@
         color: #ccc;
       }
     }
+  }
+  .unfold {
+    // max-height: inherit;
+    height: auto;
   }
 }
