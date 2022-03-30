@@ -30,6 +30,7 @@ import { createBrowserHistory } from 'history';
 import DetailPageContext from './detail-page-context';
 
 const subNavs = {
+  overview: '概览',
   resource: '资源',
   output: 'Output',
   deployJournal: '部署日志',
@@ -203,6 +204,7 @@ const EnvDetail = (props) => {
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
+      overview: () => <EnvInfo />,
       resource: () => <Resource />,
       output: () => <Output />,
       deployJournal: () => <DeployJournal />,
@@ -286,9 +288,6 @@ const EnvDetail = (props) => {
           />
         }
       >
-        <div className='idcos-card'>
-          <EnvInfo envInfo={envInfo} taskInfo={taskInfo} />
-        </div>
         <div style={{ marginTop: 20 }} className='idcos-card'>
           <div>
             <Tabs

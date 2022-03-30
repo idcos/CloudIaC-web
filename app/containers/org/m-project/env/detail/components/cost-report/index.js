@@ -8,16 +8,16 @@ import { chartUtils } from 'components/charts-cfg';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 
 export default ({ policyId }) => {
-  const proportion_of_results = useRef();
+  const cost_pie = useRef();
   const source_has_been_executed = useRef();
-  const policy_running_trend = useRef();
-  const detect_pass_rate = useRef();
+  // const policy_running_trend = useRef();
+  // const detect_pass_rate = useRef();
 
   let CHART = useRef([
-    { key: 'proportion_of_results', domRef: proportion_of_results, ins: null },
-    { key: 'source_has_been_executed', domRef: source_has_been_executed, ins: null },
-    { key: 'policy_running_trend', domRef: policy_running_trend, ins: null },
-    { key: 'detect_pass_rate', domRef: detect_pass_rate, ins: null }
+    { key: 'cost_pie', domRef: cost_pie, ins: null, title: '费用类型' },
+    { key: 'source_has_been_executed', domRef: source_has_been_executed, ins: null, title: '费用趋势' }
+    // { key: 'policy_running_trend', domRef: policy_running_trend, ins: null },
+    // { key: 'detect_pass_rate', domRef: detect_pass_rate, ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
 
@@ -71,54 +71,61 @@ export default ({ policyId }) => {
   const columns = [
     {
       dataIndex: 'templateName',
-      title: '云模板名称',
+      title: '资源类型',
       width: 280,
       ellipsis: true
     },
     {
       dataIndex: 'envName',
-      title: '环境名称',
+      title: '资源属性',
       width: 280,
       ellipsis: true,
       render: (text) => text || '-'
     },
     {
-      dataIndex: 'status',
-      title: '状态',
-      width: 120,
+      dataIndex: 'envName',
+      title: '实例ID',
+      width: 280,
       ellipsis: true,
-      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
+      render: (text) => text || '-'
+    },
+    {
+      dataIndex: 'envName',
+      title: '当月费用（元）',
+      width: 280,
+      ellipsis: true,
+      render: (text) => text || '-'
+    },
+    {
+      dataIndex: 'envName',
+      title: '总费用（元）',
+      width: 280,
+      ellipsis: true,
+      render: (text) => text || '-'
     }
   ];
 
   return (
     <Space direction='vertical' size='middle' style={{ width: '100%', display: 'flex' }}>
-      <Card 
-        title='报表内容' 
-        type='inner' 
-        headStyle={{ borderBottom: 'none', marginBottom: 0 }} 
-        bodyStyle={{ minHeight: 300, backgroundColor: 'rgba(230, 240, 240, 0.7)', padding: '0 16px' }}
-      >
-        <Spin spinning={reportLoading}>
-          <Row gutter={[ 16, 16 ]}>
-            {CHART.current.map(chart => 
-              <Col span={12}>
-                <Card bordered={false}>
-                  <div ref={chart.domRef} style={{ width: '100%', height: 300 }}></div>
-                </Card>
-              </Col>
-            )}
-          </Row>
-        </Spin>
-      </Card>
-      <Card title='错误列表' type='inner' bodyStyle={{ minHeight: 300 }}>
-        <Table
-          columns={columns}
-          scroll={{ x: 'min-content' }}
-          loading={tableLoading}
-          {...tableProps}
-        />
-      </Card>
+      <Spin spinning={reportLoading}>
+        
+        <Row gutter={[ 16, 16 ]}>
+          {CHART.current.map(chart => 
+            <Col span={12}>
+              <div className='title'>{chart.title}</div>
+              <Card style={{ borderRadius: 4 }}>
+                <div ref={chart.domRef} style={{ width: '100%', height: 300 }}></div>
+              </Card>
+            </Col>
+          )}
+        </Row>
+      </Spin>
+      <Table
+        columns={columns}
+        scroll={{ x: 'min-content' }}
+        loading={tableLoading}
+        {...tableProps}
+      />
     </Space>
   );
 };
