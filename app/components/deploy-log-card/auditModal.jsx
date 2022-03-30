@@ -3,8 +3,19 @@ import { Button, Modal } from "antd";
 import styles from "./styles.less";
 import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
 
+
+/**
+ * 审核弹窗
+ * @param {Object} props
+ * @param {boolean} props.visible - 弹窗显隐state
+ * @param {React.SetStateAction} props.setVisible - 弹窗显隐setState方法
+ * @param {function} props.passOrReject - 驳回或通过
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function AuditModal(props) {
   const { visible, setVisible, passOrReject } = props;
+
   return (
     <div className={styles.auditModal}>
       {/*审核弹窗*/}
@@ -36,17 +47,17 @@ function AuditModal(props) {
           </div>
         </div>
 
-        <div className={styles.cost}>
-          <CheckCircleFilled style={{ color: "#00A870" }} />{" "}
-          新增资源预估月费用：￥200
-        </div>
-        <div className={styles.cost}>
-          <ExclamationCircleFilled style={{ color: "#E34D59" }} />{" "}
-          删除资源预估月费用：￥-200
-        </div>
-        <div className={styles.tip}>
-          注：资源的月费用为预估值，仅供参考，最终费用以云平台结算为准
-        </div>
+        {/*<div className={styles.cost}>*/}
+        {/*  <CheckCircleFilled style={{ color: "#00A870" }} />{" "}*/}
+        {/*  新增资源预估月费用：￥200*/}
+        {/*</div>*/}
+        {/*<div className={styles.cost}>*/}
+        {/*  <ExclamationCircleFilled style={{ color: "#E34D59" }} />{" "}*/}
+        {/*  删除资源预估月费用：￥-200*/}
+        {/*</div>*/}
+        {/*<div className={styles.tip}>*/}
+        {/*  注：资源的月费用为预估值，仅供参考，最终费用以云平台结算为准*/}
+        {/*</div>*/}
       </Modal>
     </div>
   );

@@ -40,13 +40,13 @@ const EnvInfo = () => {
       return it.name;
     }
   };
-  
+
   return (
     <div className={'envInfoBox'}>
       <div className='info'>
         <div className='title'>环境属性</div>
         <div className='info-border'>
-          <Descriptions 
+          <Descriptions
             labelStyle={{ color: '#24292F' }}
             contentStyle={{ color: '#57606A' }}
           >
@@ -55,7 +55,7 @@ const EnvInfo = () => {
             <Descriptions.Item span={3} label='资源数'>{envInfo.resourceCount}</Descriptions.Item>
             <Descriptions.Item span={3} label='更新时间'>{timeUtils.format(envInfo.updatedAt) || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label='Commit_ID'><span onClick={() => {
-              window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
+              window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`);
             }} className={styles.linkToCommit}
             >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
             <Descriptions.Item span={3} label='分支/标签'>{envInfo.revision || '-'}</Descriptions.Item>

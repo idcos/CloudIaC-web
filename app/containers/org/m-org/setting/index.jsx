@@ -16,9 +16,9 @@ const OrgSetting = ({ match, userInfo }) => {
   const { orgId } = match.params;
   const [ panel, setPanel ] = useState();
   const [ subNavs, setSubNavs ] = useState({});
+  const { ORG_SET, PROJECT_OPERATOR, PROJECT_SET } = getPermission(userInfo);
 
   useEffect(() => {
-    const { ORG_SET, PROJECT_OPERATOR, PROJECT_SET } = getPermission(userInfo);
     if (ORG_SET) {
       setSubNavs({
         userRole: '用户角色',
@@ -32,12 +32,12 @@ const OrgSetting = ({ match, userInfo }) => {
     } else if (PROJECT_SET) {
       setSubNavs({
         userRole: '用户角色',
-        apiToken: 'API Token'
+        ssh: 'ssh密钥'
       });
       setPanel('userRole');
     } else if (PROJECT_OPERATOR) {
       setSubNavs({
-        apiToken: 'API Token'
+        ssh: 'ssh密钥'
       });
       setPanel('apiToken');
     }
@@ -57,7 +57,8 @@ const OrgSetting = ({ match, userInfo }) => {
     };
     return PAGES[panel]({
       title: subNavs[panel],
-      orgId
+      orgId,
+      userInfo
     });
   }, [panel]);
 

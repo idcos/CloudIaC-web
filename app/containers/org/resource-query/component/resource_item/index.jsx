@@ -41,7 +41,7 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
         </div>
       </div>
       <div className={styles.json}>
-        <Coder value={safeJsonStringify([ data, null, 1 ])} style={{ height: 'auto' }} />
+        <Coder value={safeJsonStringify([ data, null, 2 ])} style={{ height: 'auto' }} />
       </div>
     </div>
   );

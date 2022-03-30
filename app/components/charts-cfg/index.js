@@ -1,7 +1,7 @@
 import isArray from 'lodash/isArray';
 
 // eslint-disable-next-line no-undef
-let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{ 
+let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
   offset: 0,
   color: '#f1f6ff'
 }, {
@@ -21,7 +21,7 @@ const formatPercent = (value) => {
 };
 
 export const chartOptions = {
-  
+
   project_statistics: ({ envActive, envFailed, envInactive } = {}) => {
     return {
       tooltip: {
@@ -52,8 +52,8 @@ export const chartOptions = {
             { name: "不活跃环境数量", value: envInactive || 0 },
             { name: "失败环境数量", value: envFailed || 0 }
           ],
-          label: { 
-            show: true, 
+          label: {
+            show: true,
             formatter: ' {b}\n{d}%',
             overflow: 'break'
           },
@@ -155,7 +155,7 @@ export const chartOptions = {
       colors.push(color);
       data.push({ name: nameCN, value });
     });
-    return { 
+    return {
       title: {
         text: '检测结果比例',
         subtext: `${names.join('/')}比例`,
@@ -191,7 +191,7 @@ export const chartOptions = {
           name: '检测结果比例',
           type: 'pie', //设为饼图
           radius: [ '30%', '50%' ], //可调整大小
-          center: [ "30%", "50%" ], 
+          center: [ "30%", "50%" ],
           clockWise: true, //默认逆时针
           hoverAnimation: true, //移入放大
           avoidLabelOverlap: false, //避免标注重叠
@@ -200,7 +200,7 @@ export const chartOptions = {
         }
       ]
     };
-  }, 
+  },
   source_has_been_executed: ({ column = [], value = [] } = {}) => {
     return {
       grid: {
@@ -326,8 +326,8 @@ export const chartOptions = {
           }
         }
       },
-      label: { 
-        show: true, 
+      label: {
+        show: true,
         formatter: (params) => {
           return (params.value * 100).toFixed(1) + '%';
         },
@@ -376,7 +376,7 @@ export const chartOptions = {
       legend: {
         x: 'right', //可设定图例在左、右、居中
         y: 'center', //可设定图例在上、下、居中
-        padding: [ 0, 20, 0, 0 ], 
+        padding: [ 0, 20, 0, 0 ],
         data: [ '高', '中', '低' ],
         width: 50,
         icon: "circle",
@@ -394,7 +394,7 @@ export const chartOptions = {
           type: 'pie',
           center: [ '40%', '50%' ],
           roseType: 'area',
-          label: { 
+          label: {
             show: false
           },
           data: datas
@@ -422,8 +422,8 @@ export const chartOptions = {
             { name: "执行中", value: running || 0 },
             { name: "待审批", value: approving || 0 }
           ],
-          label: { 
-            show: true, 
+          label: {
+            show: true,
             formatter: ' {b}\n{d}%',
             overflow: 'break'
           },
@@ -461,8 +461,8 @@ export const chartOptions = {
             { name: "执行中", value: running || 0 },
             { name: "待审批", value: approving || 0 }
           ],
-          label: { 
-            show: true, 
+          label: {
+            show: true,
             formatter: ' {b}\n{d}%',
             overflow: 'break'
           },
@@ -640,8 +640,8 @@ export const chartOptions = {
             { value: 484, name: 'Union Ads' },
             { value: 300, name: 'Video Ads' }
           ],
-          label: { 
-            show: true, 
+          label: {
+            show: true,
             formatter: ' {b}\n{d}%',
             overflow: 'break'
           },
@@ -655,6 +655,65 @@ export const chartOptions = {
               shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
           }
+        }
+      ]
+    };
+  },
+  cost_stacked_area: () => {
+    return {
+      title: {
+        text: '当月费用趋势',
+        textStyle: {
+          fontSize: 12
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: 'Email',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 120, 132, 101, 134, 90, 230, 210 ]
+        },
+        {
+          name: 'Union Ads',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 220, 182, 191, 234, 290, 330, 310 ]
         }
       ]
     };

@@ -15,7 +15,7 @@ export default ({ policyId }) => {
 
   let CHART = useRef([
     { key: 'cost_pie', domRef: cost_pie, ins: null, title: '费用类型' },
-    { key: 'source_has_been_executed', domRef: source_has_been_executed, ins: null, title: '费用趋势' }
+    { key: 'cost_stacked_area', domRef: source_has_been_executed, ins: null, title: '费用趋势' }
     // { key: 'policy_running_trend', domRef: policy_running_trend, ins: null },
     // { key: 'detect_pass_rate', domRef: detect_pass_rate, ins: null }
   ]);
@@ -49,7 +49,7 @@ export default ({ policyId }) => {
   );
 
   // 表单搜索和table关联hooks
-  const { 
+  const {
     tableProps
   } = useSearchFormAndTable({
     tableData,
@@ -108,13 +108,13 @@ export default ({ policyId }) => {
   return (
     <Space direction='vertical' size='middle' style={{ width: '100%', display: 'flex' }}>
       <Spin spinning={reportLoading}>
-        
+
         <Row gutter={[ 16, 16 ]}>
-          {CHART.current.map(chart => 
+          {CHART.current.map(chart =>
             <Col span={12}>
               <div className='title'>{chart.title}</div>
               <Card style={{ borderRadius: 4 }}>
-                <div ref={chart.domRef} style={{ width: '100%', height: 300 }}></div>
+                <div ref={chart.domRef} style={{ width: '100%', height: 300 }}/>
               </Card>
             </Col>
           )}
