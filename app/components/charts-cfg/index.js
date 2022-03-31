@@ -620,19 +620,8 @@ export const chartOptions = {
         {
           name: 'Access From',
           type: 'pie',
-          radius: [ '40%', '70%' ],
+          radius: [ '50%', '70%' ],
           avoidLabelOverlap: false,
-          // label: {
-          //   show: false,
-          //   position: 'center'
-          // },
-          // emphasis: {
-          //   label: {
-          //     show: true,
-          //     fontSize: '40',
-          //     fontWeight: 'bold'
-          //   }
-          // },
           data: [
             { value: 1048, name: 'Search Engine' },
             { value: 735, name: 'Direct' },
@@ -661,11 +650,11 @@ export const chartOptions = {
   },
   cost_stacked_area: () => {
     return {
-      title: {
-        text: '当月费用趋势',
-        textStyle: {
-          fontSize: 12
-        }
+      legend: {
+        itemHeight: 6,
+        itemWidth: 6,
+        icon: "rect",
+        left: 11
       },
       tooltip: {
         trigger: 'axis',
@@ -686,7 +675,10 @@ export const chartOptions = {
         {
           type: 'category',
           boundaryGap: false,
-          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+          splitLine: {
+            show: false
+          }
         }
       ],
       yAxis: [
@@ -696,19 +688,23 @@ export const chartOptions = {
       ],
       series: [
         {
-          name: 'Email',
+          name: '上个月',
           type: 'line',
           stack: 'Total',
           areaStyle: {},
+          smooth: false,
+          showSymbol: false,
           emphasis: {
             focus: 'series'
           },
           data: [ 120, 132, 101, 134, 90, 230, 210 ]
         },
         {
-          name: 'Union Ads',
+          name: '当月',
           type: 'line',
           stack: 'Total',
+          smooth: false,
+          showSymbol: false,
           areaStyle: {},
           emphasis: {
             focus: 'series'
