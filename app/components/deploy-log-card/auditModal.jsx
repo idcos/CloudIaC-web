@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Modal } from "antd";
 import styles from "./styles.less";
-import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
-
 
 /**
  * 审核弹窗
@@ -10,11 +8,20 @@ import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
  * @param {boolean} props.visible - 弹窗显隐state
  * @param {React.SetStateAction} props.setVisible - 弹窗显隐setState方法
  * @param {function} props.passOrReject - 驳回或通过
+ * @param {Object} props.data - 数据
  * @returns {JSX.Element}
  * @constructor
  */
 function AuditModal(props) {
-  const { visible, setVisible, passOrReject } = props;
+  const { visible, setVisible, passOrReject, data } = props;
+
+  const renderNumber = (key) => {
+    if (data && data['planResult']) {
+      return Object.keys(data['planResult']).includes(key) ? data['planResult'][key] : '';
+    } else {
+      return '';
+    }
+  };
 
   return (
     <div className={styles.auditModal}>
@@ -25,13 +32,12 @@ function AuditModal(props) {
         width={560}
         title={<div className={styles.modalTitle}>审核</div>}
         footer={[
-          <Button onClick={() => passOrReject('rejected')}>驳回</Button>,
-          <Button onClick={() => passOrReject('approved')} type={"primary"}>
+          <Button onClick={() => passOrReject("rejected")}>驳回</Button>,
+          <Button onClick={() => passOrReject("approved")} type={"primary"}>
             通过
           </Button>
         ]}
       >
-
         <div className={styles.changedTip}>本次操作将发生如下资源变更:</div>
 
         <div className={styles.detailTable}>
@@ -41,9 +47,9 @@ function AuditModal(props) {
             <div>删除资源</div>
           </div>
           <div className={styles.row}>
-            <div>8</div>
-            <div>0</div>
-            <div>2</div>
+            <div>{renderNumber('resAdded')}</div>
+            <div>{renderNumber('resChanged')}</div>
+            <div>{renderNumber('resDestroyed')}</div>
           </div>
         </div>
 

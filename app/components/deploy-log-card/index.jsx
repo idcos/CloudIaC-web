@@ -37,7 +37,7 @@ const searchService = new SearchByKeyWord({
 const enableStatusList = [ 'complete', 'failed', 'timeout', 'running' ];
 const suspendStatusList = new Set([ 'rejected', 'failed', 'aborted', 'complete' ]); // 中止按钮隐藏的状态
 
-const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
+const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult }) => {
 
   const [form] = Form.useForm();
 
@@ -396,7 +396,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
         </div>
       </Card>
 
-      <AuditModal visible={auditModalVisible} setVisible={setAuditModalVisible} passOrReject={passOrRejecy}/>
+      <AuditModal visible={auditModalVisible} setVisible={setAuditModalVisible} passOrReject={passOrRejecy} data={taskInfo}/>
     </div>
   );
 };
