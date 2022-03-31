@@ -198,7 +198,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
                   {fileList[0] && fileList[0] ? '重新选择' : '选择文件'}
                 </Button>
               </Upload>
-              <span className={styles.radioText} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#00AB9D' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : '支持json文件'}</span> 
+              <span className={styles.radioText} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#08857C' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : '支持json文件'}</span> 
             </Space>
             <Space direction='vertical' size={6}>
               <div className={styles.importHeader}><span>*</span> 导入时以UUID作为是否重复导入的依据，UUID重复时的操作方式：</div>
