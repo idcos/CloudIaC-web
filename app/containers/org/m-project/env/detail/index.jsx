@@ -234,6 +234,10 @@ const EnvDetail = (props) => {
       <Layout
         extraHeader={
           <PageHeader
+            colSpan={{
+              title: 16,
+              subDes: 8
+            }}
             title={(
               <Space size={8} align='center'>
                 <span>{envInfo.name || ''}</span>
