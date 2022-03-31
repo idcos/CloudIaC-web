@@ -101,7 +101,7 @@ export default ({ orgId }) => {
     },
     {
       title: '操作',
-      width: 80,
+      width: 150,
       fixed: 'right',
       render: (_text, record) => {
         const { id } = record;

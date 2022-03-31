@@ -67,11 +67,11 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
           『清除定时销毁并解锁』</div>
       </div>)}
     <Space style={{ marginTop: 16, width: '100%', justifyContent: 'end' }}>
-      <Button key='back' type={'link'} style={{ color: 'rgba(0, 0, 0, 0.9)' }} onClick={toggleVisible}>
+      <Button key='back' className='ant-btn-tertiary' onClick={toggleVisible}>
         取消
       </Button>
       {lockType !== 'lock' && <Button key='submit' loading={clearLoading} onClick={() => onClear(true)}>
-        清除定时销毁并解锁
+        取消定时销毁且解锁
       </Button>}
       <Button
         key='link'

@@ -236,12 +236,10 @@ export default ({ orgId, event$ }) => {
                     </>
                   ))}
                   <Form.Item>
-                    <Button 
-                      type='link'
-                      icon={<PlusOutlined />} 
-                      onClick={() => add({})}
-                      style={{ paddingLeft: 0 }}
-                    >添加</Button>
+                    <Space onClick={() => add({})} style={{ cursor: 'pointer' }}>
+                      <PlusOutlined />
+                      <span>添加资源账号</span>
+                    </Space>
                   </Form.Item>
                 </>
               )}
