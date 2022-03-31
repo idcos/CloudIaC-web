@@ -132,7 +132,7 @@ export default ({ orgId, event$ }) => {
       onCancel={onClose}
       onOk={onOk}
       confirmLoading={id ? updateLoading : createLoading}
-      width={683}
+      width={700}
       okText='确认添加'
       cancelButtonProps={{ 
         className: 'ant-btn-tertiary' 
