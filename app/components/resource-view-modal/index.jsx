@@ -52,6 +52,9 @@ export default ({ event$ }) => {
       title={`资源详情-${params.resourceName}`}
       visible={visible}
       onCancel={onClose}
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
       width={600}
       footer={false}
       zIndex={1111111}

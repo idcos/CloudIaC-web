@@ -44,6 +44,9 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
     okButtonProps={{
       loading: submitLoading
     }}
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
+    }}
     onOk={onOk}
     width={550}
     zIndex={1111111}

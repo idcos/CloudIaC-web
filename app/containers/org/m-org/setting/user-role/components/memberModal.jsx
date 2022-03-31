@@ -6,7 +6,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const FL = {
   labelCol: { span: 3 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 21 }
 };
 const FLItem = {
   labelCol: { span: 0 },
@@ -51,11 +51,15 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch }) 
   };
 
   return <Modal
-    title={`${opt == 'add' ? '邀请' : '编辑'}成员`}
+    width={560}
+    title={isBatch ? '批量邀请' : `${opt == 'add' ? '邀请' : '编辑'}成员`}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
       loading: submitLoading
+    }}
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
     }}
     onOk={onOk}
   >
@@ -124,6 +128,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch }) 
         ]}
       >
         <Select 
+          style={{ width: 220 }}
           getPopupContainer={triggerNode => triggerNode.parentNode}
           placeholder='请选择角色'
         >

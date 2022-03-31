@@ -35,6 +35,9 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
     okButtonProps={{
       loading: submitLoading
     }}
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
+    }}
     onOk={onOk}
   >
     <Form

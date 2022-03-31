@@ -76,6 +76,9 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
       okButtonProps={{
         loading: submitLoading
       }}
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
       onOk={onOk}
     >
       <Form

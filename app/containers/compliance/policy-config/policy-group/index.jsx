@@ -10,13 +10,10 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
 import cgroupsAPI from 'services/cgroups';
-import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
 
 const PolicyGroupList = ({ match }) => {
 
   const { orgId } = match.params || {};
-  const [ policyGroupId, setPolicyGroupId ] = useState(null),
-    [ viewRelevance, setViewRelevance ] = useState(false);
 
   // 策略组列表查询
   const {
@@ -237,15 +234,6 @@ const PolicyGroupList = ({ match }) => {
         />
       </Space>
     </div>
-    {viewRelevance && <RelevancePolicyGroupModal 
-      reload={refreshList} 
-      visible={viewRelevance} 
-      id={policyGroupId} 
-      toggleVisible={() => {
-        setViewRelevance(false);
-        setPolicyGroupId(null); 
-      }}
-    />}
   </Layout>;
 };
 

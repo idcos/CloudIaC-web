@@ -234,15 +234,11 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     title={`${importStatus === 'success' ? '导入成功' : importStatus === 'error' ? '导入失败' : '导入云模板'}`}
     visible={true}
     onCancel={toggleVisible}
-    okButtonProps={{
-      loading: submitLoading
-    }}
     width={600}
-    onOk={importStatus === 'init' ? onOk : toggleVisible}
     footer={<>
       {importStatus === 'init' ? <Space>
-        <Button onClick={toggleVisible}>取消</Button>
-        <Button type={'primary'} onClick={onOk}>确认</Button>
+        <Button className='ant-btn-tertiary' onClick={toggleVisible}>取消</Button>
+        <Button type={'primary'} onClick={onOk} loading={submitLoading}>确认</Button>
       </Space> : <Button type={'primary'} onClick={toggleVisible}>知道了</Button>}
     </>}
   >

@@ -104,9 +104,11 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
       title='资源账号' 
       visible={visible} 
       onCancel={onCancel} 
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
       onOk={onOk}
-      width={600}
-      bodyStyle={{ padding: 0 }}
+      width={680}
     >
       <Table 
         style={{ marginBottom: 14 }}

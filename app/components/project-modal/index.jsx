@@ -71,6 +71,9 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
     okButtonProps={{
       loading: submitLoading
     }}
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
+    }}
     onOk={onOk}
     width={600}
   >

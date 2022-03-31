@@ -3,7 +3,7 @@ import { Modal } from 'antd';
 import Coder from 'components/coder';
 
 export default ({
-  width = 600,
+  width = 680,
   footer = null,
   title, 
   visible, 
@@ -19,7 +19,7 @@ export default ({
       title={title}
       visible={visible}
       onCancel={onClose}
-      bodyStyle={{ padding: 0, ...bodyStyle }}
+      bodyStyle={bodyStyle}
       {...props}
     >
       <Coder value={content} style={{ height: 350 }} />

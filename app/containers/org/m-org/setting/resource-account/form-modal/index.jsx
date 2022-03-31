@@ -133,6 +133,10 @@ export default ({ orgId, event$ }) => {
       onOk={onOk}
       confirmLoading={id ? updateLoading : createLoading}
       width={683}
+      okText='确认添加'
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
     >
       <Spin spinning={detailLoading}>
         <Form form={form} {...FL}>

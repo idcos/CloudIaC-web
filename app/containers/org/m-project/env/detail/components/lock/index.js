@@ -52,6 +52,9 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
     okButtonProps={{
       loading: loading
     }}
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
+    }}
     getContainer={false}
     onOk={onOk}
     footer={null}

@@ -74,7 +74,16 @@ export default (props) => {
   };
   
   return (
-    <Modal width={720} title='导入' visible={visible} onCancel={onCancel} onOk={onOk}>
+    <Modal 
+      width={720} 
+      title='导入' 
+      visible={visible} 
+      onCancel={onCancel} 
+      onOk={onOk}
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
+    >
       <Table 
         columns={columns} 
         dataSource={importVars}
