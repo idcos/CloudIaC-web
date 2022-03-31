@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Modal, Form, Input, Button, Space, Checkbox, Spin, Select } from 'antd';
+import { Modal, Form, Input, Button, Space, Checkbox, Spin, Select, AutoComplete } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { useRequest } from 'ahooks';
@@ -14,6 +14,7 @@ const FL = {
   labelCol: { span: 4 },
   wrapperCol: { span: 20 }
 };
+let providerOptions = [{ value: 'alicloud' }, { value: 'aws' }, { value: 'azure' }, { value: 'google' }, { value: 'tencentcloud' }, { value: 'huaweicloud' }];
 
 export default ({ orgId, event$ }) => {
 
@@ -254,7 +255,10 @@ export default ({ orgId, event$ }) => {
               getPopupContainer={triggerNode => triggerNode.parentNode} 
               allowClear={true} 
               placeholder='请选择'
-              style={{ width: 254 }}
+              style={{ width: 395 }}
+              mode={'multiple'}
+              optionFilterProp='children'
+              showSearch={true}
             >
               {objectList.map(it => <Option value={it.id}>{it.name}</Option>)}
             </Select>
@@ -263,14 +267,14 @@ export default ({ orgId, event$ }) => {
             name={'provider'}
             label={'Provider'}
           >
-            <Select
-              getPopupContainer={triggerNode => triggerNode.parentNode} 
-              allowClear={true} 
+            <AutoComplete
+              options={providerOptions}
+              filterOption={(inputValue, option) =>
+                option.value.indexOf(inputValue) !== -1
+              }
+              style={{ width: 395 }}
               placeholder='请选择'
-              style={{ width: 254 }}
-            >
-              {['alicloud'].map(it => <Option value={it}>{it}</Option>)}
-            </Select>
+            />
           </Form.Item>
           <Form.Item
             name={'is'}
@@ -278,7 +282,7 @@ export default ({ orgId, event$ }) => {
             valuePropName='checked'
             wrapperCol={{ offset: 4 }}
           >
-            <Checkbox>费用统计/预估</Checkbox>
+            <Checkbox>费用统计</Checkbox>
           </Form.Item>
         </Form>
       </Spin>

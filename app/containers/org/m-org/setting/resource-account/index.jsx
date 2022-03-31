@@ -66,7 +66,7 @@ export default ({ orgId }) => {
       title: '关联项目',
       width: 286,
       ellipsis: true,
-      render: (text) => (text || []).map(it => text).join('、')
+      render: (text) => (text || []).join('、')
     },
     {
       dataIndex: 'provider',
