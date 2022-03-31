@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table, notification, Space, Divider, Popconfirm, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
@@ -102,7 +102,7 @@ export default ({ title, orgId }) => {
       width: 480,
       title: `你确定要移除 ${name} 用户吗？`,
       content: `从组织移除用户将清除该用户在当前组织下所有项目中的项目角色权限，请确认操作`,
-      icon: <ExclamationCircleFilled style={{ color: '#FF4D4F' }}/>,
+      icon: <InfoCircleFilled />,
       okText: '移除',
       cancelText: '取消',
       okButtonProps: {

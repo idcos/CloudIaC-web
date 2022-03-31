@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useImperativeHandle, useCallback } from "react";
 import { Tooltip, Select, Form, Input, Collapse, Checkbox, DatePicker, Row, Col, InputNumber, Space, Tabs, Switch, Modal, Popover, notification } from "antd";
-import { InfoCircleOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, InfoCircleOutlined, EyeOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -179,6 +179,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     let checked = e.target ? e.target.checked : e;
     if (checked && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
+        icon: <InfoCircleFilled />,
         title: <div style={{ display: 'inline-grid' }}>
           <span style={{ marginBottom: 16 }} className={'dangerText'} >{`自动纠正漂移将自动发起apply任务来进行资源状态纠正并无需审批，
           该操作有可能带来一些不可预知的风险，
@@ -205,6 +206,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     if (!e.target.checked && form.getFieldValue('autoRepairDrift') || !e.target.checked && form.getFieldValue('commit')) {
       let title = `${!!form.getFieldValue('autoRepairDrift') && '自动纠正漂移' || ''}${(!!form.getFieldValue('autoRepairDrift') && !!form.getFieldValue('commit')) && '|' || ''}${!!form.getFieldValue('commit') && '推送到分支重新部署' || ''}`;
       Modal.confirm({
+        icon: <InfoCircleFilled />,
         title: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
         okText: '继续',
         cancelText: '取消',

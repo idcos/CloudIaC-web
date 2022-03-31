@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Button, Space, Table, Modal, Popconfirm } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -152,7 +152,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
       width: 480,
       title: '你确定要屏蔽此策略吗？',
       content: '屏蔽此策略后，所有应用该策略的云模板和环境都将在检测过程中忽略此策略',
-      icon: <ExclamationCircleFilled />,
+      icon: <InfoCircleFilled />,
       okText: '确认',
     	cancelText: '取消',
       onOk: suppressPolicy

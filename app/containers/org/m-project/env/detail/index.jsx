@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
-import { ExclamationCircleFilled, InfoCircleFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -120,7 +120,7 @@ const EnvDetail = (props) => {
     Modal.confirm({
       width: 480,
       title: `你确定要销毁环境“${envInfo.name}”吗？`,
-      icon: <ExclamationCircleFilled />,
+      icon: <InfoCircleFilled />,
       content: (
         <>
           <div style={{ marginBottom: 29 }}>销毁资源将删除环境所有资源</div>

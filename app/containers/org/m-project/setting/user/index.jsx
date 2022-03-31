@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Select, notification, Table, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -119,7 +119,7 @@ const User = ({ orgId, projectId }) => {
       width: 480,
       title: `你确定要移除 ${name} 用户吗？`,
       content: `该操作将同时把该用户从参与的项目中移除`,
-      icon: <ExclamationCircleFilled style={{ color: '#FF4D4F' }}/>,
+      icon: <InfoCircleFilled />,
       okText: '移除',
       cancelText: '取消',
       okButtonProps: {

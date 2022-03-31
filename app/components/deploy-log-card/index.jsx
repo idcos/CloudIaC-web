@@ -9,7 +9,6 @@ import {
   SearchOutlined,
   InfoCircleFilled,
   PauseOutlined,
-  InfoCircleOutlined,
   CopyOutlined
 } from '@ant-design/icons';
 import { connect } from "react-redux";
@@ -207,11 +206,11 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
   const suspend = () => {
     Modal.confirm({
       width: 480,
-      title: `中止“${envInfo.name}”`,
-      icon: <InfoCircleOutlined style={{ color: 'red' }} />,
+      title: `中止 “${envInfo.name}” `,
+      icon: <InfoCircleFilled />,
       content: (
         <div className={'suspendAlter'}>
-          <Alert style={{ padding: '3px 31px', margin: 0 }} message='中止执行中的任务存在如下风险' type='error' />
+          {/* <Alert style={{ padding: '3px 31px', margin: 0 }} message='中止执行中的任务存在如下风险' type='error' /> */}
           <div style={{ marginBottom: 16 }}>
             在apply动作开始后中止任务，环境状态将标记为『失败』，<br/>
             并有可能损坏环境的状态文件，导致该环境损坏，<br/>
@@ -233,7 +232,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {} }) => {
                 }
               }]}
             >
-              <Input />
+              <Input placeholder='输入环境名称' />
             </Form.Item>
           </Form>
         </div>

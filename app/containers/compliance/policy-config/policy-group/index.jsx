@@ -94,7 +94,7 @@ const PolicyGroupList = ({ match }) => {
           该策略组关联了“<b>{policyCount}</b>”条策略，并被绑定到了“<b>{relCount}</b>”个云模板或环境，删除策略组时将连同该策略组下的策略一并删除，确定要删除吗？
         </>
       ),
-      icon: <InfoCircleFilled style={{ color: '#DD2B0E' }} />,
+      icon: <InfoCircleFilled />,
       okText: '确认删除',
       cancelText: '取消',
       onOk: () => deleteGroup(id)

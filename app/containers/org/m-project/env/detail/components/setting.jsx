@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
 import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, Popover, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
-import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import queryString from 'query-string';
 import isEmpty from 'lodash/isEmpty';
@@ -155,6 +155,7 @@ const Setting = () => {
     let checked = e.target ? e.target.checked : e;
     if (checked && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
+        icon: <InfoCircleFilled />,
         title: <div style={{ display: 'inline-grid' }}>
           <span style={{ marginBottom: 16 }} className={'dangerText'} >{`自动纠正漂移将自动发起apply任务来进行资源状态纠正并无需审批，
           该操作有可能带来一些不可预知的风险，
@@ -182,6 +183,7 @@ const Setting = () => {
     if (!e.target.checked && form.getFieldValue('autoRepairDrift') || !e.target.checked && form.getFieldValue('commit')) {
       let title = `${!!form.getFieldValue('autoRepairDrift') && '自动纠正漂移' || ''}${(!!form.getFieldValue('autoRepairDrift') && !!form.getFieldValue('commit')) && '|' || ''}${!!form.getFieldValue('commit') && '推送到分支重新部署' || ''}`;
       Modal.confirm({
+        icon: <InfoCircleFilled />,
         title: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
         okText: '继续',
         cancelText: '取消',

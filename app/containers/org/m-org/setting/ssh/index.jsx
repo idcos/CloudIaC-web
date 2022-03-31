@@ -109,7 +109,7 @@ export default ({ orgId, userInfo }) => {
     Modal.confirm({
       title: `删除（此操作不可逆）`,
       content: `确定要删除 “${name}” 吗？`,
-      icon: <InfoCircleFilled style={{ color: '#DD2B0E' }} />,
+      icon: <InfoCircleFilled />,
       okText: '确认删除',
       cancelText: '取消',
       onOk: () => operation({ doWhat: 'del', payload: { id } })

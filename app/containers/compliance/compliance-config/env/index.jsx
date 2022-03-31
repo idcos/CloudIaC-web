@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Space, Select, Divider, Input, Badge, Button, Modal, Switch, Row, Col } from 'antd';
-import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, SearchOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import { connect } from "react-redux";
 import { useRequest } from 'ahooks';
@@ -156,7 +156,7 @@ const CenvList = () => {
         width: 480,
         title: `确认操作`,
         content: `你确定要关闭${name}的合规检测吗？`,
-        icon: <ExclamationCircleFilled />,
+        icon: <InfoCircleFilled />,
         okText: '确认',
         cancelText: '取消',
         onOk: () => changeEnabled({ id, enabled: false })

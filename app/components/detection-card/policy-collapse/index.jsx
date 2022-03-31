@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Space, Row, Col, Descriptions, Button, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { InfoCircleFilled } from '@ant-design/icons';
 import isFunction from 'lodash/isFunction';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -99,7 +99,7 @@ export default ({ data, refresh, targetId, targetType }) => {
           <span>策略，请谨慎操作</span> 
         </div>
       ),
-      icon: <ExclamationCircleFilled />,
+      icon: <InfoCircleFilled />,
       okText: '确认',
       cancelText: '取消',
       onOk: () => updateSuppress()
