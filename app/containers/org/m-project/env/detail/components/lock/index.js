@@ -58,9 +58,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
   >
     {lockType === 'lock' ? <>
       <div style={{ color: 'rgba(87, 96, 106, 100)' }}>
-        环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、<br />
-        『定时销毁』、API触发的部署等任务，<br />
-        但漂移检测等plan类型任务可以照常执行。
+        环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。
       </div>
     </> :
       (<div style={{ color: 'rgba(87, 96, 106, 100)' }}>

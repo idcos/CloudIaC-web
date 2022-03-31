@@ -156,13 +156,10 @@ const Setting = () => {
     if (checked && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
         icon: <InfoCircleFilled />,
-        title: <div style={{ display: 'inline-grid' }}>
-          <span style={{ marginBottom: 16 }} className={'dangerText'} >{`自动纠正漂移将自动发起apply任务来进行资源状态纠正并无需审批，
-          该操作有可能带来一些不可预知的风险，
-          请确保在完全可控的场景中使用该功能。`}</span><br />
-          <span>{`开启『${str}』功能需要同时开启『自动通过审批』，否则${str}功能无法自动进行，是否继续？`}</span>
-        </div>,
-        okText: '继续',
+        width: 480,
+        title: `开启『${str}』`,
+        content: `开启『${str}』时需要同时开启『自动通过审批』，否则『${str}』功能无法自动进行，操作可能存在不可预知风险`,
+        okText: '确认开启',
         cancelText: '取消',
         onOk() {
           form.setFieldsValue({ autoApproval: true });
@@ -180,12 +177,18 @@ const Setting = () => {
   };
 
   const autoApprovalClick = (e) => {
-    if (!e.target.checked && form.getFieldValue('autoRepairDrift') || !e.target.checked && form.getFieldValue('commit')) {
-      let title = `${!!form.getFieldValue('autoRepairDrift') && '自动纠正漂移' || ''}${(!!form.getFieldValue('autoRepairDrift') && !!form.getFieldValue('commit')) && '|' || ''}${!!form.getFieldValue('commit') && '推送到分支重新部署' || ''}`;
+    const { autoRepairDrift, commit } = form.getFieldsValue();
+    if (!e.target.checked && autoRepairDrift || !e.target.checked && commit) {
+      const title = [
+        !!autoRepairDrift ? '自动纠正漂移' : '',
+        !!commit ? '推送到分支重新部署' : ''
+      ].filter(it => !!it).join('|');
       Modal.confirm({
         icon: <InfoCircleFilled />,
-        title: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
-        okText: '继续',
+        width: 480,
+        title: `关闭『自动通过审批』`,
+        content: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
+        okText: '确认关闭',
         cancelText: '取消',
         onOk() {
           form.setFieldsValue({ autoRepairDrift: false, commit: false });
@@ -196,7 +199,6 @@ const Setting = () => {
       });
     }
   };
-
 
   return <div className={styles.depolySettingDetail}>
     <div>
