@@ -14,7 +14,6 @@ const { Option } = Select;
 
 const Params = () => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ sysInfo, setSysInfo ] = useState({});
 
   useEffect(() => {
     fetchInfo();
@@ -28,7 +27,6 @@ const Params = () => {
       TASK_STEP_TIMEOUT: TASK_STEP_TIMEOUT + '',
       ...restFormData
     });
-    console.log(systemCfg);
     try {
       setSubmitLoading(true);
       const res = await sysAPI.paramsUpdate({ systemCfg });
@@ -54,8 +52,10 @@ const Params = () => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      const formData = formatToFormData(res.result);
-      setSysInfo(formData);
+      let formData = formatToFormData(res.result);
+      // if (formData.TASK_STEP_TIMEOUT == 60) {
+      //   formData.TASK_STEP_TIMEOUT = undefined;
+      // }
       form.setFieldsValue(formData);
     } catch (e) {
       notification.error({
@@ -106,7 +106,7 @@ const Params = () => {
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            <InputNumber min={0} precision={0} placeholder='请输入' />
+            <InputNumber min={0} precision={0} placeholder='60' />
           </Form.Item>
           <Form.Item
             style={{ display: 'inline-block' }}
