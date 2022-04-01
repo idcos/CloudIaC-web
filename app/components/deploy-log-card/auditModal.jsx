@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Modal } from "antd";
 import styles from "./styles.less";
 
@@ -9,17 +9,22 @@ import styles from "./styles.less";
  * @param {React.SetStateAction} props.setVisible - 弹窗显隐setState方法
  * @param {function} props.passOrReject - 驳回或通过
  * @param {Object} props.data - 数据
+ * @param {{approvedLoading, rejectedLoading}} props.loading - 按钮loading
+ * @param props.PROJECT_APPROVER - 父组件里用到的disabled
  * @returns {JSX.Element}
  * @constructor
  */
 function AuditModal(props) {
-  const { visible, setVisible, passOrReject, data } = props;
+  const { visible, setVisible, passOrReject, data, loading, PROJECT_APPROVER } =
+    props;
 
   const renderNumber = (key) => {
-    if (data && data['planResult']) {
-      return Object.keys(data['planResult']).includes(key) ? data['planResult'][key] : '';
+    if (data && data["planResult"]) {
+      return Object.keys(data["planResult"]).includes(key)
+        ? data["planResult"][key]
+        : "";
     } else {
-      return '';
+      return "";
     }
   };
 
@@ -32,8 +37,19 @@ function AuditModal(props) {
         width={560}
         title={<div className={styles.modalTitle}>审核</div>}
         footer={[
-          <Button onClick={() => passOrReject("rejected")}>驳回</Button>,
-          <Button onClick={() => passOrReject("approved")} type={"primary"}>
+          <Button
+            disabled={!PROJECT_APPROVER || loading.approvedLoading}
+            onClick={() => passOrReject("rejected")}
+            loading={loading.rejectedLoading}
+          >
+            驳回
+          </Button>,
+          <Button
+            onClick={() => passOrReject("approved")}
+            type={"primary"}
+            loading={loading.approvedLoading}
+            disabled={!PROJECT_APPROVER || loading.rejectedLoading}
+          >
             通过
           </Button>
         ]}
@@ -47,9 +63,9 @@ function AuditModal(props) {
             <div>删除资源</div>
           </div>
           <div className={styles.row}>
-            <div>{renderNumber('resAdded')}</div>
-            <div>{renderNumber('resChanged')}</div>
-            <div>{renderNumber('resDestroyed')}</div>
+            <div>{renderNumber("resAdded")}</div>
+            <div>{renderNumber("resChanged")}</div>
+            <div>{renderNumber("resDestroyed")}</div>
           </div>
         </div>
 

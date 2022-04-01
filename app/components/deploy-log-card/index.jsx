@@ -1,31 +1,46 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Card, Space, Button, Tag, Collapse, Input, Tooltip, Modal, Form, notification, Alert } from "antd";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  CloseCircleFilled,
+  Button,
+  Card,
+  Collapse,
+  Form,
+  Input,
+  Modal,
+  notification,
+  Space,
+  Tag,
+  Tooltip
+} from "antd";
+import {
   CheckCircleFilled,
-  SyncOutlined,
+  CloseCircleFilled,
+  CopyOutlined,
   FullscreenExitOutlined,
   FullscreenOutlined,
-  SearchOutlined,
   InfoCircleFilled,
   PauseOutlined,
-  CopyOutlined
-} from '@ant-design/icons';
+  SearchOutlined,
+  SyncOutlined
+} from "@ant-design/icons";
 import { connect } from "react-redux";
-import classNames from 'classnames';
-import { useRequest, useFullscreen, useScroll } from 'ahooks';
-import { requestWrapper } from 'utils/request';
+import classNames from "classnames";
+import { useFullscreen, useRequest, useScroll } from "ahooks";
+import { requestWrapper } from "utils/request";
 import getPermission from "utils/permission";
-import { TASK_STATUS, TASK_STATUS_COLOR, END_TASK_STATUS_LIST } from 'constants/types';
-import envAPI from 'services/env';
-import taskAPI from 'services/task';
-import history from 'utils/history';
+import {
+  END_TASK_STATUS_LIST,
+  TASK_STATUS,
+  TASK_STATUS_COLOR
+} from "constants/types";
+import envAPI from "services/env";
+import taskAPI from "services/task";
+import history from "utils/history";
 import { timeUtils } from "utils/time";
-import SearchByKeyWord from 'components/coder/ansi-coder-card/dom-event';
+import SearchByKeyWord from "components/coder/ansi-coder-card/dom-event";
 
-import DeployLog from './deploy-log';
-import styles from './styles.less';
-import AuditModal from './auditModal';
+import DeployLog from "./deploy-log";
+import styles from "./styles.less";
+import AuditModal from "./auditModal";
 
 const { Panel } = Collapse;
 const searchService = new SearchByKeyWord({
@@ -261,76 +276,78 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
     <div ref={ref} className={styles.deploy_log_card_wrapper}>
       <Card
         className='deploy-log-card'
-        bodyStyle={{ background: 'rgba(36, 38, 35)', padding: 0 }}
+        bodyStyle={{ background: "rgba(36, 38, 35)", padding: 0 }}
         title={
           <div className='card-title'>
             <div className='card-title-top'>
               <span className='title'>部署日志</span>
-              {aborting ? <Tag className='status' color={'error'}>{'中止执行中'}</Tag> : <Tag className='status' color={TASK_STATUS_COLOR[status]}>{TASK_STATUS[status]}</Tag>}
-              {
-                taskInfo.status === 'failed' && taskInfo.message ? (
-                  <Tooltip title={taskInfo.message}>
-                    <InfoCircleFilled style={{ color: '#ff4d4f', fontSize: 14 }} />
-                  </Tooltip>
-                ) : null
-              }
+              {aborting ? (
+                <Tag className='status' color={"error"}>
+                  {"中止执行中"}
+                </Tag>
+              ) : (
+                <Tag className='status' color={TASK_STATUS_COLOR[status]}>
+                  {TASK_STATUS[status]}
+                </Tag>
+              )}
+              {taskInfo.status === "failed" && taskInfo.message ? (
+                <Tooltip title={taskInfo.message}>
+                  <InfoCircleFilled
+                    style={{ color: "#ff4d4f", fontSize: 14 }}
+                  />
+                </Tooltip>
+              ) : null}
             </div>
-            <div className='card-title-bottom'>执行总耗时：{timeUtils.diff(endAt, startAt, '-')}</div>
+            <div className='card-title-bottom'>
+              执行总耗时：{timeUtils.diff(endAt, startAt, "-")}
+            </div>
           </div>
         }
         extra={
           <Space size={24}>
-            {
-              PROJECT_OPERATOR && (
-                <Space size={8}>
-                  {
-                    taskInfo.status === 'approving' && (
-                      <>
-                        <Button
-                          disabled={!PROJECT_APPROVER || approvedLoading}
-                          onClick={() => passOrRejecy('rejected')}
-                          loading={rejectedLoading}
-                        >
-                          驳回
-                        </Button>
-                        <Button
-                          disabled={!PROJECT_APPROVER || rejectedLoading}
-                          onClick={() => passOrRejecy('approved')}
-                          loading={approvedLoading}
-                          type='primary'
-                        >
-                          通过
-                        </Button>
-                      </>
-                    )
-                  }
-                  {
-                    !suspendStatusList.has(status) && (
-                      <Button
-                        type='link'
-                        onClick={() => suspend()}
-                        disabled={aborting}
-                        icon={<PauseOutlined />}
-                        className='hoverSuspend'
-                      >
-                        中止
-                      </Button>
-                    )
-                  }
-                  {
-                    type === 'plan' && status === 'complete' ? (
-                      <Button
-                        type='primary'
-                        onClick={applyTask}
-                        loading={applyTaskLoading}
-                      >
-                        执行部署
-                      </Button>
-                    ) : null
-                  }
-                </Space>
-              )
-            }
+            {PROJECT_OPERATOR && (
+              <Space size={8}>
+                {taskInfo.status === "approving" && (
+                  <>
+                    <Button
+                      disabled={!PROJECT_APPROVER || approvedLoading}
+                      onClick={() => passOrRejecy("rejected")}
+                      loading={rejectedLoading}
+                    >
+                      驳回
+                    </Button>
+                    <Button
+                      disabled={!PROJECT_APPROVER || rejectedLoading}
+                      onClick={() => passOrRejecy("approved")}
+                      loading={approvedLoading}
+                      type='primary'
+                    >
+                      通过
+                    </Button>
+                  </>
+                )}
+                {!suspendStatusList.has(status) && (
+                  <Button
+                    type='link'
+                    onClick={() => suspend()}
+                    disabled={aborting}
+                    icon={<PauseOutlined />}
+                    className='hoverSuspend'
+                  >
+                    中止
+                  </Button>
+                )}
+                {type === "plan" && status === "complete" ? (
+                  <Button
+                    type='primary'
+                    onClick={applyTask}
+                    loading={applyTaskLoading}
+                  >
+                    执行部署
+                  </Button>
+                ) : null}
+              </Space>
+            )}
             <Input
               prefix={<SearchOutlined />}
               ref={searchRef}
@@ -341,62 +358,92 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
               }}
               style={{ width: 240 }}
             />
-            <span
-              className='tool'
-              onClick={toggleFull}
-            >
-              {
-                isFullscreen ? (
-                  <>
-                    <FullscreenExitOutlined className='tool-icon'/>
-                    <span className='tool-text'>退出全屏</span>
-                  </>
-                ) : (
-                  <>
-                    <FullscreenOutlined className='tool-icon'/>
-                    <span className='tool-text'>全屏显示</span>
-                  </>
-                )
-              }
+            <span className='tool' onClick={toggleFull}>
+              {isFullscreen ? (
+                <>
+                  <FullscreenExitOutlined className='tool-icon' />
+                  <span className='tool-text'>退出全屏</span>
+                </>
+              ) : (
+                <>
+                  <FullscreenOutlined className='tool-icon' />
+                  <span className='tool-text'>全屏显示</span>
+                </>
+              )}
             </span>
 
-            <Button icon={<CopyOutlined />} type={"text"} onClick={() => setAuditModalVisible(true)}>审核</Button>
+            <Button
+              icon={<CopyOutlined />}
+              type={"text"}
+              onClick={() => setAuditModalVisible(true)}
+            >
+              审核
+            </Button>
           </Space>
         }
       >
-
-        <div className={classNames('card-body-scroll', { isFullscreen })} ref={scrollRef} >
+        <div
+          className={classNames("card-body-scroll", { isFullscreen })}
+          ref={scrollRef}
+        >
           <Collapse
             activeKey={activeKey}
             onChange={manualChangeActiveKey}
             ghost={true}
             className='deploy-log-collapse'
           >
-            {
-              taskSteps.map(({ name, id, startAt, type, endAt, status }, index) => (
+            {taskSteps.map(
+              ({ name, id, startAt, type, endAt, status }, index) => (
                 <Panel
-                  className={'log-panel-' + index}
-                  collapsible={![ 'complete', 'failed', 'timeout', 'running' ].includes(status) && 'disabled'}
+                  className={"log-panel-" + index}
+                  collapsible={
+                    ![ "complete", "failed", "timeout", "running" ].includes(
+                      status
+                    ) && "disabled"
+                  }
                   header={
                     <Space>
-                      <span>{name || type || '-'}</span>
-                      {status === 'complete' && <CheckCircleFilled style={{ color: '#45BC13' }}/>}
-                      {(status === 'failed' || status === 'timeout') && <CloseCircleFilled style={{ color: '#F23C3C' }}/>}
-                      {status === 'running' && <SyncOutlined spin={true} style={{ color: '#ffffff' }}/>}
+                      <span>{name || type || "-"}</span>
+                      {status === "complete" && (
+                        <CheckCircleFilled style={{ color: "#45BC13" }} />
+                      )}
+                      {(status === "failed" || status === "timeout") && (
+                        <CloseCircleFilled style={{ color: "#F23C3C" }} />
+                      )}
+                      {status === "running" && (
+                        <SyncOutlined
+                          spin={true}
+                          style={{ color: "#ffffff" }}
+                        />
+                      )}
                     </Space>
                   }
                   key={id}
                   extra={timeUtils.diff(endAt, startAt)}
                 >
-                  <DeployLog autoScroll={autoScroll} goBottom={goBottom} isFullscreen={isFullscreen} taskInfo={taskInfo} stepId={id} stepStatus={status}/>
+                  <DeployLog
+                    autoScroll={autoScroll}
+                    goBottom={goBottom}
+                    isFullscreen={isFullscreen}
+                    taskInfo={taskInfo}
+                    stepId={id}
+                    stepStatus={status}
+                  />
                 </Panel>
-              ))
-            }
+              )
+            )}
           </Collapse>
         </div>
       </Card>
 
-      <AuditModal visible={auditModalVisible} setVisible={setAuditModalVisible} passOrReject={passOrRejecy} data={taskInfo}/>
+      <AuditModal
+        visible={auditModalVisible}
+        setVisible={setAuditModalVisible}
+        passOrReject={passOrRejecy}
+        data={taskInfo}
+        loading={{ approvedLoading, rejectedLoading }}
+        PROJECT_APPROVER={PROJECT_APPROVER}
+      />
     </div>
   );
 };
