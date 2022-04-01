@@ -694,6 +694,13 @@ export const chartOptions = {
           areaStyle: {},
           smooth: false,
           showSymbol: false,
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 2
+              }
+            }
+          },
           emphasis: {
             focus: 'series'
           },
@@ -706,6 +713,13 @@ export const chartOptions = {
           smooth: false,
           showSymbol: false,
           areaStyle: {},
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 2
+              }
+            }
+          },
           emphasis: {
             focus: 'series'
           },
