@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
-import { InfoCircleFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { InfoCircleFilled } from '@ant-design/icons';
 import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -282,12 +282,6 @@ const EnvDetail = (props) => {
                 <Space>
                   <Button onClick={redeploy}>重新部署</Button>
                   <Button disabled={envInfo.locked} onClick={destroy} type={'primary'}>销毁资源</Button>
-                  {PROJECT_APPROVER && <div>{!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
-                    (<Tooltip title='解锁当前环境'>
-                      <UnlockOutlined onClick={() => {
-                        clickLock();
-                      }} style={{ fontSize: 20 }}
-                      /></Tooltip>)}</div>}
                 </Space>
               ) : null
             }

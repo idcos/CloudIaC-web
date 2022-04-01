@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Select, Row, Col } from 'antd';
+import { Select, Row, Col, Empty } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -18,7 +18,7 @@ const overview = ({ curOrg, projects, curProject }) => {
   const overview_resouces_type = useRef();
   const overview_pro_resource = useRef();
   const overview_resource_tendency = useRef();
-  const [ selectedProjectId, setSelectedProjectId ] = useState();
+  const [ selectedProjectIds, setSelectedProjectIds ] = useState([]);
   const [ selProList, setSelProList ] = useState([]);
   const [ selectedModule, setSelectedModule ] = useState("envStat");
   const [ testData, setData ] = useState({
@@ -65,7 +65,7 @@ const overview = ({ curOrg, projects, curProject }) => {
         chartUtils.update(chart, testData1);
       }
     });
-  }, [testData]);
+  }, [ testData, curProject ]);
 
   useEffect(() => {
     resizeHelper.attach();
@@ -79,7 +79,8 @@ const overview = ({ curOrg, projects, curProject }) => {
   }, [projects]);
 
   useEffect(() => {
-    setSelectedProjectId(curProject.id);
+    setSelectedProjectIds([curProject.id]);
+    console.log(1111);
   }, [curProject]);
 
   return (
@@ -100,11 +101,12 @@ const overview = ({ curOrg, projects, curProject }) => {
               >
                 <span style={{ fontSize: 20 }}>概览</span>
                 <Select
-                  style={{ width: 173, marginLeft: "13px" }}
-                  value={selectedProjectId}
+                  mode='multiple'
+                  style={{ minWidth: 173, marginLeft: "13px" }}
+                  value={selectedProjectIds}
                   suffixIcon={<FileTextOutlined />}
-                  onSelect={(v) => {
-                    setSelectedProjectId(v); 
+                  onChange={(v) => {
+                    setSelectedProjectIds(v); 
                   }}
                   options={
                     selProList ? selProList.map((val) => {
@@ -118,7 +120,7 @@ const overview = ({ curOrg, projects, curProject }) => {
           />
         }
       >
-        <div className={classNames(styles.overview_left, 'idcos-card')}>
+        {curProject.id ? <div className={classNames(styles.overview_left, 'idcos-card')}>
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.env_state}>
@@ -128,23 +130,25 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("envStat"); 
                   }}
                 >
-                  <span className={styles.content_title}>环境状态占比</span>
-                  <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
-                  <div className={styles.table}>
-                    <div className={classNames(styles.table_header)}>
-                      <div>占比正序排列</div>
-                      <div>环境状态</div>
-                      <div>占比比率</div>
-                    </div>
-                    <div className={classNames(styles.table_item)}>
-                      <div>01</div>
-                      <div>活跃</div>
-                      <div>35.5%</div>
-                    </div>
-                    <div className={classNames(styles.table_item)}>
-                      <div>02</div>
-                      <div>失败</div>
-                      <div>35.5%</div>
+                  <div>
+                    <span className={styles.content_title}>环境状态占比</span>
+                    <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
+                    <div className={styles.table}>
+                      <div className={classNames(styles.table_header)}>
+                        <div>占比正序排列</div>
+                        <div>环境状态</div>
+                        <div>占比比率</div>
+                      </div>
+                      <div className={classNames(styles.table_item)}>
+                        <div>01</div>
+                        <div>活跃</div>
+                        <div>35.5%</div>
+                      </div>
+                      <div className={classNames(styles.table_item)}>
+                        <div>02</div>
+                        <div>失败</div>
+                        <div>35.5%</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -158,23 +162,25 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("resStat"); 
                   }}
                 >
-                  <span className={styles.content_title}>资源类型占比</span>
-                  <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
-                  <div className={styles.table}>
-                    <div className={classNames(styles.table_header)}>
-                      <div>占比正序排列</div>
-                      <div>环境状态</div>
-                      <div>占比比率</div>
-                    </div>
-                    <div className={classNames(styles.table_item)}>
-                      <div>01</div>
-                      <div>活跃</div>
-                      <div>35.5%</div>
-                    </div>
-                    <div className={classNames(styles.table_item)}>
-                      <div>02</div>
-                      <div>失败</div>
-                      <div>35.5%</div>
+                  <div>
+                    <span className={styles.content_title}>资源类型占比</span>
+                    <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
+                    <div className={styles.table}>
+                      <div className={classNames(styles.table_header)}>
+                        <div>占比正序排列</div>
+                        <div>环境状态</div>
+                        <div>占比比率</div>
+                      </div>
+                      <div className={classNames(styles.table_item)}>
+                        <div>01</div>
+                        <div>活跃</div>
+                        <div>35.5%</div>
+                      </div>
+                      <div className={classNames(styles.table_item)}>
+                        <div>02</div>
+                        <div>失败</div>
+                        <div>35.5%</div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -190,7 +196,9 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("projectStat"); 
                   }}
                 >
-                  <div ref={overview_pro_resource} style={{ width: '100%', height: "100%" }}></div>
+                  <div style={{ width: '100%', height: "100%" }}>
+                    <div ref={overview_pro_resource} style={{ width: '100%', height: "100%" }}></div>
+                  </div>
                 </div>
               </div>
             </Col>
@@ -202,19 +210,21 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("resGrowTrend"); 
                   }}
                 >
-                  <div ref={overview_resource_tendency} style={{ width: '100%', height: "100%" }}></div>
+                  <div style={{ width: '100%', height: "100%" }}>
+                    <div ref={overview_resource_tendency} style={{ width: '100%', height: "100%" }}></div>
+                  </div>
                 </div>
               </div>
             </Col>
           </Row>
-        </div>
+        </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       </Layout>
-      <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
+      {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat/> : undefined }
         { selectedModule === 'resStat' ? <ResStat/> : undefined }
         { selectedModule === 'projectStat' ? <ProjectStat/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend/> : undefined }
-      </div>
+      </div>}
     </div>
     
   );

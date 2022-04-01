@@ -81,13 +81,21 @@
         }
       }
       .selected {
+        box-sizing: border-box;
+        padding: 0;
+        background-color: #08857C;
         border: 1px solid #08857C;
-        background-color: rgba(8, 133, 124, 0.02);
         .table_item:last-child >div:first-child {
           color: #F5A623;
         }
         .table_item:not(:last-child) >div:first-child {
           color: #FF3B3B;
+        }
+        & > div:first-child {
+          height: 100%;
+          background-color: #FAFDFC;
+          padding: 7px 20px 0 11px;
+          border-radius: 8px;
         }
       }
     }
@@ -101,8 +109,15 @@
         }
       }
       .selected {
+        box-sizing: border-box;
+        padding: 0;
+        background-color: #08857C;
         border: 1px solid #08857C;
-        background-color: rgba(8, 133, 124, 0.02);
+        & > div:first-child {
+          height: 100%;
+          background-color: #FAFDFC;
+          border-radius: 8px;
+        }
       }
     }
   }
