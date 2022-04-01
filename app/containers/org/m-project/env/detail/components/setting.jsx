@@ -201,7 +201,7 @@ const Setting = () => {
   };
 
   return <div className={styles.depolySettingDetail}>
-    <div>
+    <div className='scroll-wrapper'>
       <Form
         scrollToFirstError={true}
         colon={true}
@@ -525,14 +525,23 @@ const Setting = () => {
           <Card
             title={'其它'}
           >
-            <div className={styles.lock_env}>
-              <span>环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。</span>
-              <div><Button>锁定环境</Button></div>
-            </div>
-            <div className={styles.file_env}>
-              <span>对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失</span>
-              <div><Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档环境</Button></div>
-            </div>
+            <Row justify='center' style={{ margin: '10px 0px 20px 0px' }}>
+              <Col span={21}>
+                <span>环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。</span>
+              </Col>
+              <Col span={3} style={{ textAlign: "right" }}>
+                <Button>锁定环境</Button>
+              </Col>
+            </Row>
+            <hr style={{ backgroundColor: "rgba(225, 228, 232, 1)", height: "2px", border: "none" }} />
+            <Row style={{ alignItems: "center", margin: '22px 0px 26px 0px' }} >
+              <Col span={21} >
+                <span>对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失。</span>
+              </Col>
+              <Col span={3} style={{ textAlign: "right" }}>
+                <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档环境</Button>
+              </Col>
+            </Row>
           </Card>
         </div>
       </Form>
