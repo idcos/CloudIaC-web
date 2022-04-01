@@ -202,7 +202,6 @@ const Setting = () => {
 
   return <div className={styles.depolySettingDetail}>
     <div>
-      <div style={{ margin: '22px 0 12px 20px', fontSize: 16 }}>设置</div>
       <Form
         scrollToFirstError={true}
         colon={true}
@@ -211,340 +210,331 @@ const Setting = () => {
         onFinish={onFinish}
       >
         <div>
-          <Tabs
-            className='setting-tabs'
-            tabBarStyle={{ backgroundColor: '#fff', marginBottom: 20 }}
-            animated={false}
-            activeKey={panel}
-            type='card'
-            onChange={(k) => {
-              setPanel(k); 
-            }}
+          <Card
+            title={'执行'}
+            key={'execute'}
+            forceRender={true}
           >
-            <Tabs.TabPane
-              tab={'执行'}
-              key={'execute'}
-              forceRender={true}
-            >
-              <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={8}>
-                  <Form.Item 
-                    style={{ marginBottom: 0 }}
-                    label='存活时间：'
-                  >
-                    <Row>
-                      <Col span={8} className={styles.survivalTimeRight}>
-                        <Form.Item 
-                          name='type'
-                          initialValue={'infinite'}
-                        >
-                          <Select disabled={locked} style={{ width: '100%' }}>
-                            {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                      <Col span={16} className={styles.survivalTimeLeft}>
-                        <Form.Item 
-                          noStyle={true}
-                          shouldUpdate={true}
-                        >
-                          {({ getFieldValue }) => {
-                            let type = getFieldValue('type'); 
-                            if (type === 'infinite') {
-                              return <></>;
-                            }
-                            if (type === 'timequantum') {
-                              return <Form.Item 
-                                name='ttl'
-                                noStyle={true}
-                                shouldUpdate={true}
-                              >
-                                <Select disabled={locked} style={{ width: '100%' }}>
-                                  {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
-                                </Select>
-                              </Form.Item>;
-                            }
-                            if (type === 'time') {
-                              return <Form.Item 
-                                name='destroyAt'
-                                noStyle={true}
-                                shouldUpdate={true}
-                              >
-                                <DatePicker disabled={locked} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
-                              </Form.Item>;
-                            }
-                          }}
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                </Col>
-                <Col span={7}>
-                  <Form.Item
-                    label='步骤超时时间'
-                  >
-                    <Row align='middle' gutter={[ 8, 0 ]}>
-                      <Col flex='1'>
-                        <Form.Item
-                          name='stepTimeout'
-                          noStyle={true}
-                        >
-                          <InputNumber disabled={locked} style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
-                        </Form.Item>
-                      </Col>
-                      <Col flex='0 0 auto'>
-                        <span style={{ color: '#24292F' }}>分钟</span>
-                      </Col>
-                    </Row>
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item label={' '}>
-                    <Space style={{ minWidth: 340 }}>
+            <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+              <Col span={8}>
+                <Form.Item 
+                  style={{ marginBottom: 0 }}
+                  label='存活时间：'
+                >
+                  <Row>
+                    <Col span={8} className={styles.survivalTimeRight}>
                       <Form.Item 
-                        name='retryAble'
+                        name='type'
+                        initialValue={'infinite'}
+                      >
+                        <Select disabled={locked} style={{ width: '100%' }}>
+                          {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={16} className={styles.survivalTimeLeft}>
+                      <Form.Item 
+                        noStyle={true}
+                        shouldUpdate={true}
+                      >
+                        {({ getFieldValue }) => {
+                          let type = getFieldValue('type'); 
+                          if (type === 'infinite') {
+                            return <></>;
+                          }
+                          if (type === 'timequantum') {
+                            return <Form.Item 
+                              name='ttl'
+                              noStyle={true}
+                              shouldUpdate={true}
+                            >
+                              <Select disabled={locked} style={{ width: '100%' }}>
+                                {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
+                              </Select>
+                            </Form.Item>;
+                          }
+                          if (type === 'time') {
+                            return <Form.Item 
+                              name='destroyAt'
+                              noStyle={true}
+                              shouldUpdate={true}
+                            >
+                              <DatePicker disabled={locked} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                            </Form.Item>;
+                          }
+                        }}
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form.Item>
+              </Col>
+              <Col span={7}>
+                <Form.Item
+                  label='步骤超时时间'
+                >
+                  <Row align='middle' gutter={[ 8, 0 ]}>
+                    <Col flex='1'>
+                      <Form.Item
+                        name='stepTimeout'
+                        noStyle={true}
+                      >
+                        <InputNumber disabled={locked} style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
+                      </Form.Item>
+                    </Col>
+                    <Col flex='0 0 auto'>
+                      <span style={{ color: '#24292F' }}>分钟</span>
+                    </Col>
+                  </Row>
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item label={' '}>
+                  <Space style={{ minWidth: 340 }}>
+                    <Form.Item 
+                      name='retryAble'
+                      valuePropName='checked'
+                      initialValue={false}
+                      noStyle={true}
+                    >
+                      <Checkbox disabled={locked}/>
+                    </Form.Item>
+                    <span>执行失败时，间隔</span>
+                    <Form.Item 
+                      name='retryDelay'
+                      initialValue={0}
+                      noStyle={true}
+                    >
+                      <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+                    </Form.Item>
+                    <span>秒自动重试</span>
+                    <Form.Item
+                      noStyle={true}
+                      initialValue={0}
+                      name='retryNumber'
+                    >
+                      <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }} />
+                    </Form.Item>
+                    <span>次</span> 
+                  </Space>
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item 
+                  name='autoApproval'
+                  valuePropName='checked'
+                  initialValue={false}
+                >
+                  <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
+                </Form.Item>
+              </Col>
+            </Row>
+          </Card>
+          <Card
+            title={'CI/CD'}
+            key={'deploy'}
+            forceRender={true}
+          >
+            <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+              <Col span={8}>
+                <Form.Item 
+                  shouldUpdate={true}
+                >
+                  {({ getFieldValue }) => (
+                    <>
+                      <Form.Item 
+                        name='commit'
+                        noStyle={true}
                         valuePropName='checked'
                         initialValue={false}
-                        noStyle={true}
                       >
-                        <Checkbox disabled={locked}/>
+                        <Checkbox disabled={locked} onChange={e => checkedChange(e, '推送到分支时重新部署', 'commit')}>推送到分支时重新部署</Checkbox> 
                       </Form.Item>
-                      <span>执行失败时，间隔</span>
+                      <Space size={8}>
+                        <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
+                        <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest()}/>
+                      </Space>
+                    </>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+                <Form.Item 
+                  shouldUpdate={true}
+                >
+                  {({ getFieldValue }) => (
+                    <>
                       <Form.Item 
-                        name='retryDelay'
-                        initialValue={0}
                         noStyle={true}
+                        name='prmr'
+                        valuePropName='checked'
+                        initialValue={false}
                       >
-                        <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
+                        <Checkbox disabled={locked}>PR/MR时执行PLAN</Checkbox> 
                       </Form.Item>
-                      <span>秒自动重试</span>
-                      <Form.Item
-                        noStyle={true}
-                        initialValue={0}
-                        name='retryNumber'
-                      >
-                        <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }} />
-                      </Form.Item>
-                      <span>次</span> 
-                    </Space>
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                </Col>
-              </Row>
-            </Tabs.TabPane>
-            <Tabs.TabPane
-              tab={'CI/CD'}
-              key={'deploy'}
-              forceRender={true}
-            >
-              <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={8}>
-                  <Form.Item 
-                    shouldUpdate={true}
-                  >
-                    {({ getFieldValue }) => (
-                      <>
-                        <Form.Item 
-                          name='commit'
-                          noStyle={true}
-                          valuePropName='checked'
-                          initialValue={false}
-                        >
-                          <Checkbox disabled={locked} onChange={e => checkedChange(e, '推送到分支时重新部署', 'commit')}>推送到分支时重新部署</Checkbox> 
-                        </Form.Item>
-                        <Space size={8}>
-                          <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
-                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest()}/>
-                        </Space>
-                      </>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                  <Form.Item 
-                    shouldUpdate={true}
-                  >
-                    {({ getFieldValue }) => (
-                      <>
-                        <Form.Item 
-                          noStyle={true}
-                          name='prmr'
-                          valuePropName='checked'
-                          initialValue={false}
-                        >
-                          <Checkbox disabled={locked}>PR/MR时执行PLAN</Checkbox> 
-                        </Form.Item>
-                        <Space size={8}>
-                          <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
-                          <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest()}/>
-                        </Space>
-                      </>
-                    )}
-                  </Form.Item>
-                </Col>
-                <Col span={8}>
-                </Col>
-              </Row>
-            </Tabs.TabPane>
-            <Tabs.TabPane
-              tab={'合规'}
-              key={'compliance'}
-              forceRender={true}
-            >
-              <Form.Item
-                noStyle={true}
-                shouldUpdate={true}
-              >
-                {({ getFieldsValue }) => {
-                  const { policyEnable, openCronDrift } = getFieldsValue();
-                  const isOpen = policyEnable || openCronDrift;
-                  const colSpan = isOpen ? 12 : 8; 
-                  return (
-                    <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                      <Col span={colSpan}>
-                        <Form.Item
-                          label='开启合规检测'
-                          name='policyEnable'
-                          valuePropName='checked'
-                          initialValue={false}
-                          labelCol={{ span: 8 }}
-                          wrapperCol={{ span: 16 }}
-                        >
-                          <Switch disabled={locked} />
-                        </Form.Item>
-                        {policyEnable ? (
-                          <>
-                            <Form.Item
-                              label='绑定策略组'
-                              name='policyGroup'
-                              rules={[{ required: true, message: '请选择' }]}
-                              labelCol={{ span: 8 }}
-                              wrapperCol={{ span: 16 }}
-                            >
-                              <Select 
-                                mode='multiple'
-                                optionFilterProp='label'
-                                showSearch={true}
-                                allowClear={true}
-                                showArrow={true}
-                                options={policiesGroupOptions}
-                                placeholder='请选择策略组'
-                                disabled={locked}
-                              />
-                            </Form.Item>
-                            <Form.Item
-                              name='stopOnViolation'
-                              wrapperCol={{ offset: 8, span: 16 }}
-                              valuePropName='checked'
-                              initialValue={false}
-                              className='ant-form-item-no-min-height'
-                            >
-                              <Checkbox disabled={locked}>合规不通过时中止部署</Checkbox>                  
-                            </Form.Item>
-                          </>
-                        ) : null}
-                      </Col>
-                      <Col span={colSpan}>
-                        <Form.Item
-                          label='开启漂移检测'
-                          name='openCronDrift'
-                          valuePropName='checked'
-                          initialValue={false}
-                          labelCol={{ span: 8 }}
-                          wrapperCol={{ span: 16 }}
-                        >
-                          <Switch disabled={locked} />
-                        </Form.Item>
-                        {openCronDrift ? (
-                          <>
-                            <Form.Item 
-                              label='定时检测' 
-                              required={true} 
-                              labelCol={{ span: 8 }}
-                              wrapperCol={{ span: 16 }}
-                            >
-                              <Row wrap={false}>
-                                <Col flex={16}>
-                                  <Form.Item 
-                                    noStyle={true}
-                                    name='cronDriftExpress'
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: '请输入crontab表达式'
-                                      }
-                                    ]}
-                                  >
-                                    <Input disabled={locked} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
-                                  </Form.Item>
-                                </Col>
-                                <Col flex={2}>
-                                  <Popover
-                                    placement='topRight'
-                                    content={(
-                                      <>
-                                        <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
-                                        <div style={{ fontWeight: 500 }}>举例：</div>
-                                        <div>
-                                          1.每隔1 分钟执行一次 */1 * * * *<br/>
-                                          2.每天 23点 执行一次 0 23 * * *<br/>
-                                          3.每个月1号23 点执行一次 0 23 1 * *<br/>
-                                          4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
-                                        </div>
-                                      </>
-                                    )}
-                                  >
-                                    <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
-                                  </Popover>
-                                </Col>
-                              </Row>
-                            </Form.Item>
-                            <Form.Item
-                              name='autoRepairDrift'
-                              wrapperCol={{ offset: 8, span: 16 }}
-                              valuePropName='checked'
-                              initialValue={false}
-                              className='ant-form-item-no-min-height'
-                            >
-                              <Checkbox disabled={locked} onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
-                            </Form.Item>
-                          </>
-                        ) : null}
-                      </Col>
-                      <Col span={colSpan}></Col>
-                    </Row>
-                  );
-                }}
-              </Form.Item>
-            </Tabs.TabPane>
-            <Tabs.TabPane
-              tab={'审批'}
-              key={'approval'}
-              forceRender={true}
-            >
-              <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                <Col span={8}>
-                  <Form.Item 
-                    name='autoApproval'
-                    valuePropName='checked'
-                    initialValue={false}
-                  >
-                    <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Tabs.TabPane>
-          </Tabs>  
-        </div>
-        {
-          PROJECT_OPERATOR ? (
-            <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
-              <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档</Button>
-              <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
+                      <Space size={8}>
+                        <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
+                        <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest()}/>
+                      </Space>
+                    </>
+                  )}
+                </Form.Item>
+              </Col>
+              <Col span={8}>
+              </Col>
             </Row>
-          ) : null
-        }
+          </Card>           
+          <Card
+            title={'合规'}
+            key={'compliance'}
+            forceRender={true}
+          >
+            <Form.Item
+              noStyle={true}
+              shouldUpdate={true}
+            >
+              {({ getFieldsValue }) => {
+                const { policyEnable, openCronDrift } = getFieldsValue();
+                const isOpen = policyEnable || openCronDrift;
+                const colSpan = isOpen ? 12 : 8; 
+                return (
+                  <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                    <Col span={colSpan}>
+                      <Form.Item
+                        label='开启合规检测'
+                        name='policyEnable'
+                        valuePropName='checked'
+                        initialValue={false}
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                      >
+                        <Switch disabled={locked} />
+                      </Form.Item>
+                      {policyEnable ? (
+                        <>
+                          <Form.Item
+                            label='绑定策略组'
+                            name='policyGroup'
+                            rules={[{ required: true, message: '请选择' }]}
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 16 }}
+                          >
+                            <Select 
+                              mode='multiple'
+                              optionFilterProp='label'
+                              showSearch={true}
+                              allowClear={true}
+                              showArrow={true}
+                              options={policiesGroupOptions}
+                              placeholder='请选择策略组'
+                              disabled={locked}
+                            />
+                          </Form.Item>
+                          <Form.Item
+                            name='stopOnViolation'
+                            wrapperCol={{ offset: 8, span: 16 }}
+                            valuePropName='checked'
+                            initialValue={false}
+                            className='ant-form-item-no-min-height'
+                          >
+                            <Checkbox disabled={locked}>合规不通过时中止部署</Checkbox>                  
+                          </Form.Item>
+                        </>
+                      ) : null}
+                    </Col>
+                    <Col span={colSpan}>
+                      <Form.Item
+                        label='开启漂移检测'
+                        name='openCronDrift'
+                        valuePropName='checked'
+                        initialValue={false}
+                        labelCol={{ span: 8 }}
+                        wrapperCol={{ span: 16 }}
+                      >
+                        <Switch disabled={locked} />
+                      </Form.Item>
+                      {openCronDrift ? (
+                        <>
+                          <Form.Item 
+                            label='定时检测' 
+                            required={true} 
+                            labelCol={{ span: 8 }}
+                            wrapperCol={{ span: 16 }}
+                          >
+                            <Row wrap={false}>
+                              <Col flex={16}>
+                                <Form.Item 
+                                  noStyle={true}
+                                  name='cronDriftExpress'
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: '请输入crontab表达式'
+                                    }
+                                  ]}
+                                >
+                                  <Input disabled={locked} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
+                                </Form.Item>
+                              </Col>
+                              <Col flex={2}>
+                                <Popover
+                                  placement='topRight'
+                                  content={(
+                                    <>
+                                      <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
+                                      <div style={{ fontWeight: 500 }}>举例：</div>
+                                      <div>
+                                        1.每隔1 分钟执行一次 */1 * * * *<br/>
+                                        2.每天 23点 执行一次 0 23 * * *<br/>
+                                        3.每个月1号23 点执行一次 0 23 1 * *<br/>
+                                        4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
+                                      </div>
+                                    </>
+                                  )}
+                                >
+                                  <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+                                </Popover>
+                              </Col>
+                            </Row>
+                          </Form.Item>
+                          <Form.Item
+                            name='autoRepairDrift'
+                            wrapperCol={{ offset: 8, span: 16 }}
+                            valuePropName='checked'
+                            initialValue={false}
+                            className='ant-form-item-no-min-height'
+                          >
+                            <Checkbox disabled={locked} onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
+                          </Form.Item>
+                        </>
+                      ) : null}
+                    </Col>
+                    <Col span={colSpan}></Col>
+                  </Row>
+                );
+              }}
+            </Form.Item>
+          </Card>
+          {
+            PROJECT_OPERATOR ? (
+              <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
+                {/* <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档</Button> */}
+                <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
+              </Row>
+            ) : null
+          }
+          <Card
+            title={'其它'}
+          >
+            <div className={styles.lock_env}>
+              <span>环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。</span>
+              <div><Button>锁定环境</Button></div>
+            </div>
+            <div className={styles.file_env}>
+              <span>对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失</span>
+              <div><Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档环境</Button></div>
+            </div>
+          </Card>
+        </div>
       </Form>
     </div>
   </div>;

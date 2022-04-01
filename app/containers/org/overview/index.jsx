@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Row, Col } from 'antd';
+import { FileTextOutlined } from '@ant-design/icons';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { chartUtils } from 'components/charts-cfg';
@@ -94,12 +95,14 @@ const overview = ({ curOrg, projects, curProject }) => {
                 style={{ 
                   height: "56px",
                   lineHeight: "56px",
-                  marginBottom: "16px" }}
+                  marginBottom: "0"
+                }}
               >
                 <span style={{ fontSize: 20 }}>概览</span>
                 <Select
                   style={{ width: 173, marginLeft: "13px" }}
                   value={selectedProjectId}
+                  suffixIcon={<FileTextOutlined />}
                   onSelect={(v) => {
                     setSelectedProjectId(v); 
                   }}

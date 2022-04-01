@@ -34,11 +34,24 @@
     }
   }
   .json {
-    // height: auto;
-    // max-height: 432px;
-    height: 432px;
+    position: relative;
+    height: auto;
+    max-height: 432px;
+    min-height: 100px;
     background-color: #E1E4E8;
     overflow: hidden;
+    .code_btn {
+      z-index: 5;
+      position: absolute;
+      right: 12px;
+      top: 14px;
+      background-color: rgba(225, 228, 232, 0.2);
+      border: 1px solid rgba(201, 204, 209, 1);
+      color: rgba(36, 41, 47, 100);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      box-shadow: none;
+    }
     :global {
       .CodeMirror {
         background-color: #E1E4E8;
@@ -52,7 +65,6 @@
     }
   }
   .unfold {
-    // max-height: inherit;
-    height: auto;
+    max-height: inherit;
   }
 }
