@@ -50,6 +50,7 @@ const EnvInfo = () => {
             labelStyle={{ color: '#24292F' }}
             contentStyle={{ color: '#57606A' }}
           >
+            <Descriptions.Item span={3} label='当前费用'>{'240元'}</Descriptions.Item>
             <Descriptions.Item span={3} label='存活时间'>{formatTTL(envInfo)}</Descriptions.Item>
             <Descriptions.Item span={3} label='云模板'>{envInfo.templateName || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label='资源数'>{envInfo.resourceCount}</Descriptions.Item>

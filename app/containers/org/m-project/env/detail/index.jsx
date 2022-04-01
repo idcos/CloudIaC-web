@@ -280,14 +280,12 @@ const EnvDetail = (props) => {
             subDes={
               PROJECT_OPERATOR ? (
                 <Space>
-                  {/*TODO 接口字段待定*/}
-                  <div className={styles.cost}>240.00/当月费用</div>
                   <Button onClick={redeploy}>重新部署</Button>
                   <Button disabled={envInfo.locked} onClick={destroy} type={'primary'}>销毁资源</Button>
                   {PROJECT_APPROVER && <div>{!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
                     (<Tooltip title='解锁当前环境'>
                       <UnlockOutlined onClick={() => {
-                        clickLock(); 
+                        clickLock();
                       }} style={{ fontSize: 20 }}
                       /></Tooltip>)}</div>}
                 </Space>
