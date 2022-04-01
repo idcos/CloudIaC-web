@@ -53,21 +53,27 @@
     }
   }
   .ant-modal:not(.ant-modal-confirm) {
+    // 表单类型
+    &.antd-modal-type-form {
+      .ant-modal-body {
+        padding: 20px 32px 0;
+      }
+    }
     .ant-modal-header {
-      padding: 27px 32px;
+      padding: 28px 32px 12px;
       border-bottom: none;
     }
     .ant-modal-body {
-      padding: 7px 32px;
+      padding: 0px 32px;
     }
     .ant-modal-footer {
       border-top: none;
-      padding: 28px 25px 28px 32px;
+      padding: 24px 32px 28px 32px;
     }
   }
   .ant-modal-confirm {
     .ant-modal-body {
-      padding: 28px 34px 32px;
+      padding: 28px 32px 28px;
       .anticon {
         color: #DA1E28;
       }

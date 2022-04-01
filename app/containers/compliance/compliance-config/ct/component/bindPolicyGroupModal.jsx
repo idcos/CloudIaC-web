@@ -72,6 +72,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
       cancelButtonProps={{ 
         className: 'ant-btn-tertiary' 
       }}
+      className='antd-modal-type-form'
       onOk={onOk}
     >
       <Form

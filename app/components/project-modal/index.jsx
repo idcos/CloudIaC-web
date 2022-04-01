@@ -71,6 +71,7 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
     okButtonProps={{
       loading: submitLoading
     }}
+    className='antd-modal-type-form'
     cancelButtonProps={{ 
       className: 'ant-btn-tertiary' 
     }}

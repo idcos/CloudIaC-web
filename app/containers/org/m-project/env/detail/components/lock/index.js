@@ -46,50 +46,46 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
   };
 
   return <Modal
+    closable={false}
     title={<span><InfoCircleFilled style={{ color: '#f00', marginRight: 10 }} /><span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`锁定环境 “${envInfo.name}”`}</span></span>}
     visible={true}
-    onCancel={toggleVisible}
-    okButtonProps={{
-      loading: loading
-    }}
-    cancelButtonProps={{ 
-      className: 'ant-btn-tertiary' 
-    }}
     getContainer={false}
     onOk={onOk}
-    footer={null}
+    footer={
+      <Space>
+        <Button key='back' className='ant-btn-tertiary' onClick={toggleVisible}>
+          取消
+        </Button>
+        {lockType !== 'lock' && <Button key='submit' loading={clearLoading} onClick={() => onClear(true)}>
+          取消定时销毁且解锁
+        </Button>}
+        <Button
+          key='link'
+          type='primary'
+          loading={loading}
+          onClick={() => {
+            if (lockType === 'unlock') {
+              onClear();
+            } else {
+              onOk();
+            }
+          }}
+        >
+          确认锁定
+        </Button>
+      </Space>
+    }
   >
-    {lockType === 'lock' ? <>
+    {lockType === 'lock' ? (
       <div style={{ color: 'rgba(87, 96, 106, 100)' }}>
         环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。
       </div>
-    </> :
-      (<div style={{ color: 'rgba(87, 96, 106, 100)' }}>
+    ) : (
+      <div style={{ color: 'rgba(87, 96, 106, 100)' }}>
         <div >当前环境设置了定时销毁，并已过了定时销毁时间，解锁后将立即<br />
           触发定时销毁任务，如不想销毁该环境，请选择<br />
           『清除定时销毁并解锁』</div>
-      </div>)}
-    <Space style={{ marginTop: 16, width: '100%', justifyContent: 'end' }}>
-      <Button key='back' className='ant-btn-tertiary' onClick={toggleVisible}>
-        取消
-      </Button>
-      {lockType !== 'lock' && <Button key='submit' loading={clearLoading} onClick={() => onClear(true)}>
-        取消定时销毁且解锁
-      </Button>}
-      <Button
-        key='link'
-        type='primary'
-        loading={loading}
-        onClick={() => {
-          if (lockType === 'unlock') {
-            onClear();
-          } else {
-            onOk();
-          }
-        }}
-      >
-        确认锁定
-      </Button>
-    </Space>
+      </div>
+    )}
   </Modal>;
 };

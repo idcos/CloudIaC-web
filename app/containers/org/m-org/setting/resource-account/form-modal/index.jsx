@@ -134,6 +134,7 @@ export default ({ orgId, event$ }) => {
       confirmLoading={id ? updateLoading : createLoading}
       width={700}
       okText='确认添加'
+      className='antd-modal-type-form'
       cancelButtonProps={{ 
         className: 'ant-btn-tertiary' 
       }}

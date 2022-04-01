@@ -235,6 +235,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
     visible={true}
     onCancel={toggleVisible}
     width={600}
+    className='antd-modal-type-form'
     footer={<>
       {importStatus === 'init' ? <Space>
         <Button className='ant-btn-tertiary' onClick={toggleVisible}>取消</Button>

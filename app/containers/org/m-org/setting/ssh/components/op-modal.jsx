@@ -36,6 +36,7 @@ export default ({ visible, toggleVisible, operation }) => {
       cancelButtonProps={{ 
         className: 'ant-btn-tertiary' 
       }}
+      className='antd-modal-type-form'
       onOk={onOk}
     >
       <Form
