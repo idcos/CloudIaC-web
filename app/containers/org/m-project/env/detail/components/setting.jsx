@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
 import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, Popover, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
-import { InfoCircleFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, InfoCircleOutlined, QuestionCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import queryString from 'query-string';
 import isEmpty from 'lodash/isEmpty';
@@ -17,6 +17,8 @@ import Copy from 'components/copy';
 import DetailPageContext from '../detail-page-context';
 import styles from '../styles.less';
 
+const { confirm } = Modal;
+
 const FL = {
   labelCol: { span: 24 },
   wrapperCol: { span: 24 }
@@ -26,11 +28,11 @@ const { Option } = Select;
 const Setting = () => {
   
   const [form] = Form.useForm();
-  const { userInfo, envInfo, reload, orgId, projectId, envId } = useContext(DetailPageContext);
+  const { userInfo, envInfo, reload, orgId, projectId, envId, clickLock, onLock } = useContext(DetailPageContext);
   const { locked } = envInfo;
   // 此处需要用window.location获取最新的参数, 因为环境详情的location只做参数切换并不会刷新location值不刷新
   const { formTab } = queryString.parse(window.location.search); 
-  const { PROJECT_OPERATOR } = getPermission(userInfo);
+  const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
   const [ fileLoading, setFileLoading ] = useState(false);
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ panel, setPanel ] = useState(formTab || 'execute');
@@ -200,6 +202,20 @@ const Setting = () => {
     }
   };
 
+  const showConfirm = () => {
+    confirm({
+      title: '确认要归档环境?',
+      icon: <ExclamationCircleOutlined />,
+      content: '对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失。',
+      onOk() {
+        return archive();
+      },
+      onCancel() {
+        console.log('Cancel');
+      }
+    });
+  };
+
   return <div className={styles.depolySettingDetail}>
     <div className='scroll-wrapper'>
       <Form
@@ -215,7 +231,7 @@ const Setting = () => {
             key={'execute'}
             forceRender={true}
           >
-            <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+            <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
               <Col span={8}>
                 <Form.Item 
                   style={{ marginBottom: 0 }}
@@ -334,7 +350,7 @@ const Setting = () => {
             key={'deploy'}
             forceRender={true}
           >
-            <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+            <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
               <Col span={8}>
                 <Form.Item 
                   shouldUpdate={true}
@@ -397,7 +413,7 @@ const Setting = () => {
                 const isOpen = policyEnable || openCronDrift;
                 const colSpan = isOpen ? 12 : 8; 
                 return (
-                  <Row gutter={48} style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
+                  <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={colSpan}>
                       <Form.Item
                         label='开启合规检测'
@@ -517,8 +533,7 @@ const Setting = () => {
           {
             PROJECT_OPERATOR ? (
               <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
-                {/* <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档</Button> */}
-                <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} style={{ marginLeft: 20 }} >保存</Button>
+                <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} >保存</Button>
               </Row>
             ) : null
           }
@@ -530,7 +545,16 @@ const Setting = () => {
                 <span>环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。</span>
               </Col>
               <Col span={3} style={{ textAlign: "right" }}>
-                <Button>锁定环境</Button>
+                {PROJECT_APPROVER && <div>{
+                  !envInfo.locked ? (
+                    <Tooltip title='锁定当前环境'><Button onClick={() => onLock('lock')} >锁定环境</Button></Tooltip>
+                  ) :
+                    (<Tooltip title='解锁当前环境'>
+                      <Button onClick={() => {
+                        clickLock();
+                        console.log(envInfo.locked);
+                      }}
+                      >解锁环境</Button></Tooltip>)}</div>}
               </Col>
             </Row>
             <hr style={{ backgroundColor: "rgba(225, 228, 232, 1)", height: "2px", border: "none" }} />
@@ -539,7 +563,7 @@ const Setting = () => {
                 <span>对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失。</span>
               </Col>
               <Col span={3} style={{ textAlign: "right" }}>
-                <Button loading={fileLoading} onClick={archive} disabled={envInfo.status !== 'inactive'} >归档环境</Button>
+                <Button loading={fileLoading} onClick={showConfirm} disabled={envInfo.status !== 'inactive'} >归档环境</Button>
               </Col>
             </Row>
           </Card>

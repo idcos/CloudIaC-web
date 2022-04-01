@@ -216,6 +216,14 @@ const EnvDetail = (props) => {
     return PAGES[panel]();
   }, [panel]);
 
+  const clickLock = () => {
+    if (lockLoading || envDetailLoading) {
+      return;
+    } else {
+      setLockLoading(true);
+      onLock('unlock');
+    }
+  };
   return (
     <DetailPageContext.Provider
       value={{
@@ -228,7 +236,9 @@ const EnvDetail = (props) => {
         orgId,
         projectId,
         type: 'env',
-        changeTabPage: setPanel
+        changeTabPage: setPanel,
+        clickLock,
+        onLock
       }}
     >
       <Layout
@@ -277,12 +287,7 @@ const EnvDetail = (props) => {
                   {PROJECT_APPROVER && <div>{!envInfo.locked ? (<Tooltip title='锁定当前环境'><LockOutlined onClick={() => onLock('lock')} style={{ fontSize: 20 }} /></Tooltip>) :
                     (<Tooltip title='解锁当前环境'>
                       <UnlockOutlined onClick={() => {
-                        if (lockLoading || envDetailLoading) {
-                          return;
-                        } else {
-                          setLockLoading(true);
-                          onLock('unlock');
-                        }
+                        clickLock(); 
                       }} style={{ fontSize: 20 }}
                       /></Tooltip>)}</div>}
                 </Space>
