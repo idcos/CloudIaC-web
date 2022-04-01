@@ -107,10 +107,13 @@ export default ({ orgId, event$ }) => {
   };
 
   const onOk = async () => {
-    const { name, variables } = await form.validateFields();
+    const { name, variables, projectIds, provider, constCounted } = await form.validateFields();
     const params = {
       name,
-      variables: variables.filter((it) => !!it).map(({ id, ...variable }) => ({ ...variable, id: id || uuidv4(), description: name }))
+      variables: variables.filter((it) => !!it).map(({ id, ...variable }) => ({ ...variable, id: id || uuidv4(), description: name })),
+      projectIds,
+      provider, 
+      constCounted
     };
     id ? updateResourceAccount(params) : createResourceAccount(params);
   };
@@ -251,7 +254,7 @@ export default ({ orgId, event$ }) => {
             </Form.List>
           </Form.Item>
           <Form.Item
-            name={'object'}
+            name={'projectIds'}
             label={'绑定项目'}
           >
             <Select
@@ -279,13 +282,24 @@ export default ({ orgId, event$ }) => {
               placeholder='请选择'
             />
           </Form.Item>
-          <Form.Item
-            name={'is'}
-            initialValue={false}
-            valuePropName='checked'
-            wrapperCol={{ offset: 4 }}
-          >
-            <Checkbox>费用统计</Checkbox>
+
+          <Form.Item noStyle={true} shouldUpdate={true}>
+            {
+              ({ getFieldValue }) => {
+                const providerValue = getFieldValue('provider') || {};
+                if (providerValue === 'alicloud') {
+                  return (
+                    <Form.Item
+                      name={'constCounted'}
+                      initialValue={false}
+                      valuePropName='checked'
+                      wrapperCol={{ offset: 4 }}
+                    >
+                      <Checkbox>费用统计</Checkbox>
+                    </Form.Item>
+                  );
+                }
+              }}
           </Form.Item>
         </Form>
       </Spin>
