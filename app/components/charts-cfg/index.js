@@ -634,6 +634,10 @@ export const chartOptions = {
             formatter: ' {b}\n{d}%',
             overflow: 'break'
           },
+          itemStyle: {
+            borderColor: '#fff',
+            borderWidth: 2
+          },
           labelLine: {
             smooth: true
           },
