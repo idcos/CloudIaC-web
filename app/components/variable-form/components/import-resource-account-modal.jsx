@@ -9,7 +9,7 @@ import varGroupAPI from 'services/var-group';
 
 export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
-  const { orgId } = fetchParams || {};
+  const { orgId, projectId } = fetchParams || {};
   const [ visible, setVisible ] = useState(false);
   const [ selectedRows, setSelectedRows ] = useState([]);
   const [ disabledKeys, setDisabledKeys ] = useState([]);
@@ -32,7 +32,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
     mutate: mutateDataSource
   } = useRequest(
     (params) => requestWrapper(
-      varGroupAPI.list.bind(null, { orgId, type: 'environment', ...params })
+      varGroupAPI.list.bind(null, { orgId, projectId, type: 'environment', ...params })
     ), {
       manual: true,
       formatResult: (res) => {
@@ -91,11 +91,11 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
   event$.useSubscription(({ type }) => {
     switch (type) {
-      case 'open-import-resource-account-modal':
-        onOpen();
-        break;
-      default:
-        break;
+    case 'open-import-resource-account-modal':
+      onOpen();
+      break;
+    default:
+      break;
     }
   });
 

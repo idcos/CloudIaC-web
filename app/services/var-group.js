@@ -2,9 +2,10 @@ import { post, put, del, getWithArgs } from 'utils/xFetch2';
 
 const varGroupAPI = {
   // 查询变量组列表
-  list: ({ orgId, ...restParams }) => {
+  list: ({ orgId, projectId, ...restParams }) => {
     return getWithArgs('/api/v1/var_groups', restParams, {
-      'IaC-Org-Id': orgId
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId || ''
     });
   },
   // 创建变量组
