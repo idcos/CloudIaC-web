@@ -6,9 +6,12 @@ import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
 import { ORG_USER } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
+import getPermission from "utils/permission";
 import OpModal from './components/memberModal';
 
-export default ({ title, orgId }) => {
+export default ({ userInfo, orgId }) => {
+
+  const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ isBatch, setIsBatch ] = useState(false),
@@ -153,20 +156,24 @@ export default ({ title, orgId }) => {
       render: (_, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' onClick={() => {
-              setOpt('edit');
-              setCurRecord(record);
-              toggleVisible();
-              setIsBatch(false);
-            }}
+            <Button 
+              type='link' 
+              disabled={!ORG_SET}
+              onClick={() => {
+                setOpt('edit');
+                setCurRecord(record);
+                toggleVisible();
+                setIsBatch(false);
+              }}
             >编辑</Button>
             <Popconfirm
               title='确定要重置密码？'
               onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
+              disabled={!ORG_SET}
             >
-              <Button type='link'>重置密码</Button>
+              <Button type='link' disabled={!ORG_SET}>重置密码</Button>
             </Popconfirm>
-            <Button type='link' onClick={() => remove(record)}>移除</Button>
+            <Button type='link' disabled={!ORG_SET} onClick={() => remove(record)}>移除</Button>
           </div>
         );
       }
