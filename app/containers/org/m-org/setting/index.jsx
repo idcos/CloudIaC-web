@@ -39,7 +39,7 @@ const OrgSetting = ({ match, userInfo }) => {
       setSubNavs({
         ssh: 'ssh密钥'
       });
-      setPanel('apiToken');
+      setPanel('ssh');
     }
   }, [userInfo]);
 
