@@ -109,6 +109,9 @@ const envAPI = {
       'IaC-Org-Id': orgId, 
       'IaC-Project-Id': projectId 
     });
+  },
+  deployCheck: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/deploy/check`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
 };
 

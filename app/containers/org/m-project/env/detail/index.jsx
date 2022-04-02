@@ -113,6 +113,12 @@ const EnvDetail = (props) => {
   );
 
   const redeploy = async() => {
+    const res = await envAPI.deployCheck({ orgId, projectId, envId });
+    if (res.code !== 200) {
+      return notification.error({
+        message: res.message
+      });
+    }
     history.push(`/org/${orgId}/project/${projectId}/m-project-env/deploy/${envInfo.tplId}/${envId}`);
   };
 
