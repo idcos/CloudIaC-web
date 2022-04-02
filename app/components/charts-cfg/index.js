@@ -600,12 +600,6 @@ export const chartOptions = {
   },
 
   cost_pie: ({ summary = [] }) => {
-    // const namemap = {
-    //   high: '高',
-    //   medium: '中',
-    //   low: '低'
-    // };
-    // let datas = (summary || []).map(d => ({ name: namemap[d.name], value: d.value }));
     return {
       title: {
         text: '当月费用占比',

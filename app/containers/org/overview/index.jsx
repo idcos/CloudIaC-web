@@ -6,6 +6,8 @@ import Layout from 'components/common/layout';
 import { chartUtils } from 'components/charts-cfg';
 import classNames from 'classnames';
 import orgsAPI from 'services/orgs';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { connect } from 'react-redux';
 import styles from './styles.less';
 import { EnvStat, ProjectStat, ResGrowTrend, ResStat } from './components/dataDetail';
@@ -21,6 +23,7 @@ const overview = ({ curOrg, projects, curProject }) => {
   const [ selectedProjectIds, setSelectedProjectIds ] = useState([]);
   const [ selProList, setSelProList ] = useState([]);
   const [ selectedModule, setSelectedModule ] = useState("envStat");
+  const [ statisticsCount, setStatisticsCount ] = useState(0);
   const [ testData, setData ] = useState({
     active: 1,
     failed: 2,
@@ -36,6 +39,24 @@ const overview = ({ curOrg, projects, curProject }) => {
     running: 4,
     approving: 5
   });
+
+  const {
+    data,
+    run: startStatistics
+  } = useRequest(
+    () => requestWrapper(
+      orgsAPI.orgStatistics.bind(null, { curOrg, projectIds: selectedProjectIds })
+    ), {
+      manual: true,
+      onSuccess: () => {
+        console.log(data);
+      }
+    }
+  );
+  const onChangeSelectedPrpo = (v) => {
+    setSelectedProjectIds(v);
+    setStatisticsCount(preValue => preValue + 1);
+  };
 
   const [ testData1, setData1 ] = useState({
     last_month: [ 10, 17, 26, 43, 35, 29, 19 ],
@@ -79,10 +100,12 @@ const overview = ({ curOrg, projects, curProject }) => {
   }, [projects]);
 
   useEffect(() => {
-    setSelectedProjectIds([curProject.id]);
-    console.log(1111);
+    curProject.id && onChangeSelectedPrpo([curProject.id]);
   }, [curProject]);
 
+  useEffect(() => {
+    statisticsCount > 0 && startStatistics();
+  }, [statisticsCount]);
   return (
     <div className={styles.overview}>
       <Layout
@@ -106,7 +129,7 @@ const overview = ({ curOrg, projects, curProject }) => {
                   value={selectedProjectIds}
                   suffixIcon={<FileTextOutlined />}
                   onChange={(v) => {
-                    setSelectedProjectIds(v); 
+                    onChangeSelectedPrpo(v);
                   }}
                   options={
                     selProList ? selProList.map((val) => {

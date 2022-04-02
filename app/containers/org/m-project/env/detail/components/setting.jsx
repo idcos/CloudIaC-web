@@ -532,7 +532,7 @@ const Setting = () => {
           </Card>
           {
             PROJECT_OPERATOR ? (
-              <Row style={{ display: 'flex', justifyContent: 'center', paddingTop: 20 }}>
+              <Row style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
                 <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} >保存</Button>
               </Row>
             ) : null

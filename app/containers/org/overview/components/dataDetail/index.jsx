@@ -5,22 +5,12 @@ import { TrendDownIcon, TrenDupIcon } from 'components/iconfont';
 const { TabPane } = Tabs;
 const d = [
   { name: "eip", isRise: false, proportion: "35%" }, 
-  { name: "slb1", isRise: false, proportion: "32%" }, 
+  { name: "slb1", isRise: true, proportion: "32%" }, 
   { name: "vpc12", isRise: false, proportion: "31%" }, 
-  { name: "oss123", isRise: false, proportion: "32%" }, 
+  { name: "oss123", isRise: true, proportion: "32%" }, 
   { name: "sms1234", isRise: false, proportion: "30%" }
 ];
 
-const Item = ({ i, obj }) => {
-  return (
-    <div className={styles.data_item}>
-      <div>{i}</div>
-      <div>eip</div>
-      <div> -- </div>
-      <div>35%</div>
-    </div>
-  );
-};
 const color = [ "#FF3B3B", "#F5A623", "#3D7FFF" ];
 export const EnvStat = () => {
   const columns = [
@@ -32,15 +22,11 @@ export const EnvStat = () => {
     {
       title: '名称',
       dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: '跌涨',
-      dataIndex: 'isRise',
-      key: 'isRise',
-      render: () => {
-        return <span>--</span>;
-      }
+      key: 'name',
+      render: (text, record) => <span>{record.name} <span style={{ marginLeft: '13px' }}>
+        {record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>} 
+      </span> 
+      </span>
     },
     {
       title: '占比',
@@ -64,20 +50,16 @@ export const ResStat = () => {
     {
       title: '序列号',
       key: 1,
-      render: (text, record, index) => <span style={{ color: color[index] }}>{index + 1}</span>
+      render: (text, record, index) => <span style={{ color: color[index] }}>{index + 1}</span> 
     },
     {
       title: '名称',
       dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: '跌涨',
-      dataIndex: 'isRise',
-      key: 'isRise',
-      render: () => {
-        return <span><TrendDownIcon/> </span>;
-      }
+      key: 'name',
+      render: (text, record) => <span>{record.name} <span style={{ marginLeft: '13px' }}>
+        {record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>} 
+      </span> 
+      </span>
     },
     {
       title: '占比',
@@ -107,15 +89,11 @@ export const ProjectStat = () => {
     {
       title: '名称',
       dataIndex: 'name',
-      key: 'name'
-    },
-    {
-      title: '跌涨',
-      dataIndex: 'isRise',
-      key: 'isRise',
-      render: () => {
-        return <span><TrenDupIcon/> </span>;
-      }
+      key: 'name',
+      render: (text, record) => <span>{record.name} <span style={{ marginLeft: '13px' }}>
+        {record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>} 
+      </span> 
+      </span>
     },
     {
       title: '占比',
