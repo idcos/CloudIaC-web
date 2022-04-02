@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useContext } from 'react';
 import { InputNumber, Card, DatePicker, Select, Form, Space, Tooltip, Button, Checkbox, Popover, notification, Row, Col, Tabs, Input, Switch, Modal } from "antd";
-import { InfoCircleFilled, InfoCircleOutlined, QuestionCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import queryString from 'query-string';
 import isEmpty from 'lodash/isEmpty';
@@ -205,7 +205,7 @@ const Setting = () => {
   const showConfirm = () => {
     confirm({
       title: '确认要归档环境?',
-      icon: <ExclamationCircleOutlined />,
+      icon: <InfoCircleFilled />,
       content: '对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失。',
       onOk() {
         return archive();
