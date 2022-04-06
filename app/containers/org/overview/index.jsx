@@ -36,10 +36,9 @@ const overview = ({ curOrg, projects, curProject }) => {
   const {
     data = {
       envStat: [],
-      projectStat: [],
-      resGrowTrend: [],
       resStat: [],
-      orgResSummary: []
+      projectStat: [],
+      resGrowTrend: []
     },
     run: startStatistics
   } = useRequest(
@@ -47,25 +46,33 @@ const overview = ({ curOrg, projects, curProject }) => {
       orgsAPI.orgStatistics.bind(null, { curOrg, projectIds: selectedProjectIds })
     ), {
       manual: true,
-      onSuccess: () => {
+      formatResult: data => {
+        const { envStat, resStat, projectStat, resGrowTrend } = data || {};
+        return {
+          envStat: envStat || [], 
+          resStat: resStat || [], 
+          projectStat: projectStat || [], 
+          resGrowTrend: resGrowTrend || []
+        };
+      },
+      onSuccess: ({ envStat, resStat }) => {
+        setEnvStatTopData(envStat.length > 2 ? sortBy(envStat, function(item) {
+          -item.count; 
+        }).slice(0, 2) : sortBy(envStat, function(item) {
+          -item.count; 
+        }));
+        setResStatTopData(resStat.length > 2 ? sortBy(resStat, function(item) {
+          -item.count; 
+        }).slice(0, 2) : sortBy(resStat, function(item) {
+          -item.count; 
+        }));
+        setEnvStatTotal(reduce(envStat, function(sum, item) {
+          return sum + item.count;
+        }, 0));
+        setResStatTotal(reduce(resStat, function(sum, item) {
+          return sum + item.count;
+        }, 0));
         setShowCount(preValue => preValue + 1);
-        setEnvStatTopData(data.envStat.length > 2 ? sortBy(data.envStat, function(item) {
-          -item.count; 
-        }).slice(0, 2) : sortBy(data.envStat, function(item) {
-          -item.count; 
-        }));
-        setResStatTopData(data.resStat.length > 2 ? sortBy(data.resStat, function(item) {
-          -item.count; 
-        }).slice(0, 2) : sortBy(data.resStat, function(item) {
-          -item.count; 
-        }));
-        setEnvStatTotal(reduce(data.envStat, function(sum, item) {
-          return sum + item.count;
-        }, 0));
-        setResStatTotal(reduce(data.resStat, function(sum, item) {
-          return sum + item.count;
-        }, 0));
-        
       }
     }
   );
@@ -102,7 +109,7 @@ const overview = ({ curOrg, projects, curProject }) => {
         chartUtils.update(chart, testData1);
       }
     });
-  }, [ showCount, curProject ]);
+  }, [showCount]);
 
   useEffect(() => {
     resizeHelper.attach();
@@ -140,8 +147,12 @@ const overview = ({ curOrg, projects, curProject }) => {
               >
                 <span style={{ fontSize: 20 }}>概览</span>
                 <Select
+                  placeholder='全部项目'
                   mode='multiple'
-                  style={{ minWidth: 173, marginLeft: "13px" }}
+                  maxTagCount={3}
+                  allowClear={true}
+                  maxTagTextLength={10}
+                  style={{ minWidth: 173, marginLeft: 12, fontWeight: 'normal' }}
                   value={selectedProjectIds}
                   suffixIcon={<FileTextOutlined />}
                   onChange={(v) => {
