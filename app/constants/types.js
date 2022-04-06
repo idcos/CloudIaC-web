@@ -74,7 +74,7 @@ export const ENV_STATUS_COLOR = {
   'failed': '#DD2B0E', 
   'inactive': '#faad14',
   'running': '#08979c',
-  'approving': '#548BC5'
+  'approving': '#0969DA'
 };
 
 export const SCOPE_ENUM = {
