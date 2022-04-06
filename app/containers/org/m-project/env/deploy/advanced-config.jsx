@@ -11,15 +11,12 @@ import ViewFileModal from 'components/view-file-modal';
 import isEmpty from "lodash/isEmpty";
 import sysAPI from 'services/sys';
 import omit from "lodash/omit";
+import get from "lodash/get";
 import { formatToFormData } from 'containers/sys/pages/params';
 import styles from '../detail/styles.less';
 
 const FL = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
-};
-
-const PL = {
   wrapperCol: { span: 24 }
 };
 const { Option } = Select;
@@ -127,12 +124,51 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     form.setFieldsValue(data);
   };
 
+  // 根据表单错误切换tab
+  const changeTabByFormError = (err) => {
+    const firstErrName = get(err, 'errorFields[0].name[0]');
+    switch (firstErrName) {
+    case 'tfVarsFile':
+    case 'playbook':
+    case 'keyId':
+    case 'targets':
+      setPanel('tpl');
+      break;
+    case 'runnerTags':
+    case 'type':
+    case 'ttl':
+    case 'destroyAt':
+    case 'stepTimeout':
+    case 'retryAble':
+    case 'retryDelay':
+    case 'retryNumber':
+    case 'approval':
+      setPanel('execute');
+      break;
+    case 'commit':
+    case 'prmr':
+      setPanel('deploy');
+      break;
+    case 'policyEnable':
+    case 'policyGroup':
+    case 'stopOnViolation':
+    case 'openCronDrift':
+    case 'cronDriftExpress':
+    case 'autoRepairDrift':
+      setPanel('compliance');
+      break;
+    default:
+      break;
+    }
+  };
+
   const onfinish = () => {
     return new Promise(async (resolve, reject) => {
       try {
-        let values = await form.validateFields().catch((res) => {
+        let values = await form.validateFields().catch((err) => {
           setActiveKey(['open']); // 表单报错展开折叠面板
-          reject(res);
+          changeTabByFormError(err);
+          reject(err);
         });
         values.triggers = [];
         if (values.commit) {
@@ -165,6 +201,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
         try {
           await form.validateFields(nameList).catch((err) => {
             setActiveKey(['open']); // 表单报错展开折叠面板
+            changeTabByFormError(err);
             reject(err);
           });
           resolve();
@@ -501,6 +538,16 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         </Space>
                       </Form.Item>
                     </Col>
+                    <Col span={7}>
+                      <Form.Item 
+                        name='autoApproval'
+                        valuePropName='checked'
+                        initialValue={false}
+                      >
+                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
+                      </Form.Item>
+                    </Col>
+                    <Col span={7}></Col>
                   </Row>
                 </Tabs.TabPane>
                 <Tabs.TabPane
@@ -669,24 +716,6 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                             </>
                           ) : null;
                         }}
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Tabs.TabPane>
-
-                <Tabs.TabPane
-                  tab={'审批'}
-                  key={'approval'}
-                  forceRender={true}
-                >
-                  <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
-                    <Col span={7}>
-                      <Form.Item 
-                        name='autoApproval'
-                        valuePropName='checked'
-                        initialValue={false}
-                      >
-                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
                       </Form.Item>
                     </Col>
                   </Row>

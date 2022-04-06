@@ -235,7 +235,7 @@ const Setting = () => {
               <Col span={8}>
                 <Form.Item 
                   style={{ marginBottom: 0 }}
-                  label='存活时间：'
+                  label='存活时间'
                 >
                   <Row>
                     <Col span={8} className={styles.survivalTimeRight}>
@@ -304,7 +304,7 @@ const Setting = () => {
                 </Form.Item>
               </Col>
               <Col span={8}>
-                <Form.Item label={' '}>
+                <Form.Item label={<span></span>}>
                   <Space style={{ minWidth: 340 }}>
                     <Form.Item 
                       name='retryAble'
