@@ -1,5 +1,5 @@
 import isArray from 'lodash/isArray';
-
+import { ENV_STATUS } from 'constants/types';
 // eslint-disable-next-line no-undef
 let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
   offset: 0,
@@ -402,26 +402,33 @@ export const chartOptions = {
       ]
     };
   },
-  overview_envs_state: ({ active, failed, destroyed, running, approving } = {}) => {
+  overview_envs_state: (envStat = []) => {
+    const nameMap = {
+      active: '#85C836',
+      failed: '#FC4E66',
+      approving: '#357DFA',
+      inactive: '#24292F',
+      running: '#26D880'
+    };
+    const colors = [];
+    const showData = envStat.map((val => {
+      colors.push(nameMap[val.status]);
+      return { name: ENV_STATUS[val.status], value: val.count };
+    }));
     return {
       tooltip: {
         trigger: 'item',
         formatter: '{a} <br/>{b}: {c} ({d}%)',
         extraCssText: 'z-index: 2'
       },
+      color: colors,
       series: [
         {
           name: '环境状态占比',
           type: 'pie',
           // left: '50%',
           radius: [ '50%', '70%' ],
-          data: [
-            { name: "活跃", value: active || 0 },
-            { name: "失败", value: failed || 0 },
-            { name: "已销毁", value: destroyed || 0 },
-            { name: "执行中", value: running || 0 },
-            { name: "待审批", value: approving || 0 }
-          ],
+          data: showData,
           label: {
             show: true,
             formatter: ' {b}\n{d}%',
@@ -441,7 +448,10 @@ export const chartOptions = {
       ]
     };
   },
-  overview_resouces_type: ({ eip, slb, vpc, running, approving } = {}) => {
+  overview_resouces_type: (resStat = []) => {
+    const showData = resStat.map((val) => {
+      return { name: val.resType, value: val.count };
+    });
     return {
       tooltip: {
         trigger: 'item',
@@ -454,13 +464,7 @@ export const chartOptions = {
           type: 'pie',
           // left: '50%',
           radius: [ '50%', '70%' ],
-          data: [
-            { name: "eip", value: eip || 0 },
-            { name: "slb", value: slb || 0 },
-            { name: "vpc", value: vpc || 0 },
-            { name: "执行中", value: running || 0 },
-            { name: "待审批", value: approving || 0 }
-          ],
+          data: showData,
           label: {
             show: true,
             formatter: ' {b}\n{d}%',

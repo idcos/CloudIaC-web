@@ -12,26 +12,26 @@ const d = [
 ];
 
 const color = [ "#FF3B3B", "#F5A623", "#3D7FFF" ];
-export const EnvStat = () => {
+export const EnvStat = ({ showData = [], total }) => {
   const columns = [
     {
       title: '序列号',
-      key: 1,
       render: (text, record, index) => <span style={{ color: color[index] }}>{index + 1}</span>
     },
     {
       title: '名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => <span>{record.name} <span style={{ marginLeft: '13px' }}>
+      dataIndex: 'status',
+      key: 'status',
+      render: (text, record) => <span>{record.status} <span style={{ marginLeft: '13px' }}>
         {record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>} 
       </span> 
       </span>
     },
     {
       title: '占比',
-      dataIndex: 'proportion',
-      key: 'proportion'
+      dataIndex: 'count',
+      key: 'count',
+      render: (text, record) => <span>{(record.count * 100 / total).toFixed(1) + '%'}</span>
     }
   ];
   return (
@@ -39,13 +39,13 @@ export const EnvStat = () => {
       <h2>概览详情</h2>
       <h3>资源类型占比</h3>
       <div className={styles.data_table}>
-        <Table pagination={false} noStyle={true} showHeader={false} dataSource={d} columns={columns} />
+        <Table pagination={false} noStyle={true} showHeader={false} dataSource={showData} columns={columns} />
       </div>
     </div>
   );
 };
 
-export const ResStat = () => {
+export const ResStat = ({ showData = [] }) => {
   const columns = [
     {
       title: '序列号',
@@ -54,17 +54,17 @@ export const ResStat = () => {
     },
     {
       title: '名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => <span>{record.name} <span style={{ marginLeft: '13px' }}>
+      dataIndex: 'resType',
+      key: 'resType',
+      render: (text, record) => <span>{record.resType} <span style={{ marginLeft: '13px' }}>
         {record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>} 
       </span> 
       </span>
     },
     {
       title: '占比',
-      dataIndex: 'proportion',
-      key: 'proportion'
+      dataIndex: 'count',
+      key: 'count'
     }
   ];
   return (
@@ -72,7 +72,7 @@ export const ResStat = () => {
       <h2>概览详情</h2>
       <h3>资源类型占比</h3>
       <div className={styles.data_table}>
-        <Table pagination={false} noStyle={true} showHeader={false} dataSource={d} columns={columns} />
+        <Table pagination={false} noStyle={true} showHeader={false} dataSource={showData} columns={columns} />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Select, Row, Col, Empty } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
+import sortBy from 'lodash/sortBy';
+import reduce from 'lodash/reduce';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { chartUtils } from 'components/charts-cfg';
@@ -10,6 +12,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { connect } from 'react-redux';
 import styles from './styles.less';
+import { ENV_STATUS } from 'constants/types';
 import { EnvStat, ProjectStat, ResGrowTrend, ResStat } from './components/dataDetail';
 
 const KEY = 'global';
@@ -24,24 +27,20 @@ const overview = ({ curOrg, projects, curProject }) => {
   const [ selProList, setSelProList ] = useState([]);
   const [ selectedModule, setSelectedModule ] = useState("envStat");
   const [ statisticsCount, setStatisticsCount ] = useState(0);
-  const [ testData, setData ] = useState({
-    active: 1,
-    failed: 2,
-    destroyed: 3,
-    running: 4,
-    approving: 5
-  });
-
-  const [ testData2, setData2 ] = useState({
-    eip: 1,
-    slb: 2,
-    vpc: 3,
-    running: 4,
-    approving: 5
-  });
+  const [ showCount, setShowCount ] = useState(0);
+  const [ envStatTopData, setEnvStatTopData ] = useState([]);
+  const [ resStatTopData, setResStatTopData ] = useState([]);
+  const [ resStatTotal, setResStatTotal ] = useState(1);
+  const [ envStatTotal, setEnvStatTotal ] = useState(1);
 
   const {
-    data,
+    data = {
+      envStat: [],
+      projectStat: [],
+      resGrowTrend: [],
+      resStat: [],
+      orgResSummary: []
+    },
     run: startStatistics
   } = useRequest(
     () => requestWrapper(
@@ -49,7 +48,24 @@ const overview = ({ curOrg, projects, curProject }) => {
     ), {
       manual: true,
       onSuccess: () => {
-        console.log(data);
+        setShowCount(preValue => preValue + 1);
+        setEnvStatTopData(data.envStat.length > 2 ? sortBy(data.envStat, function(item) {
+          -item.count; 
+        }).slice(0, 2) : sortBy(data.envStat, function(item) {
+          -item.count; 
+        }));
+        setResStatTopData(data.resStat.length > 2 ? sortBy(data.resStat, function(item) {
+          -item.count; 
+        }).slice(0, 2) : sortBy(data.resStat, function(item) {
+          -item.count; 
+        }));
+        setEnvStatTotal(reduce(data.envStat, function(sum, item) {
+          return sum + item.count;
+        }, 0));
+        setResStatTotal(reduce(data.resStat, function(sum, item) {
+          return sum + item.count;
+        }, 0));
+        
       }
     }
   );
@@ -74,10 +90,10 @@ const overview = ({ curOrg, projects, curProject }) => {
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'overview_envs_state') {
-        chartUtils.update(chart, testData);
+        chartUtils.update(chart, data.envStat);
       }
       if (chart.key === 'overview_resouces_type') {
-        chartUtils.update(chart, testData2);
+        chartUtils.update(chart, data.resStat);
       }
       if (chart.key === 'overview_pro_resource') {
         chartUtils.update(chart, testData1);
@@ -86,7 +102,7 @@ const overview = ({ curOrg, projects, curProject }) => {
         chartUtils.update(chart, testData1);
       }
     });
-  }, [ testData, curProject ]);
+  }, [ showCount, curProject ]);
 
   useEffect(() => {
     resizeHelper.attach();
@@ -162,16 +178,13 @@ const overview = ({ curOrg, projects, curProject }) => {
                         <div>环境状态</div>
                         <div>占比比率</div>
                       </div>
-                      <div className={classNames(styles.table_item)}>
-                        <div>01</div>
-                        <div>活跃</div>
-                        <div>35.5%</div>
-                      </div>
-                      <div className={classNames(styles.table_item)}>
-                        <div>02</div>
-                        <div>失败</div>
-                        <div>35.5%</div>
-                      </div>
+                      {envStatTopData.map((val, i) => {
+                        return <div className={classNames(styles.table_item)}>
+                          <div>0{i + 1}</div>
+                          <div>{ENV_STATUS[val.status]}</div>
+                          <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
+                        </div>;
+                      })}
                     </div>
                   </div>
                 </div>
@@ -191,19 +204,16 @@ const overview = ({ curOrg, projects, curProject }) => {
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
                         <div>占比正序排列</div>
-                        <div>环境状态</div>
+                        <div>资源类型</div>
                         <div>占比比率</div>
                       </div>
-                      <div className={classNames(styles.table_item)}>
-                        <div>01</div>
-                        <div>活跃</div>
-                        <div>35.5%</div>
-                      </div>
-                      <div className={classNames(styles.table_item)}>
-                        <div>02</div>
-                        <div>失败</div>
-                        <div>35.5%</div>
-                      </div>
+                      {resStatTopData.map((val, i) => {
+                        return <div className={classNames(styles.table_item)}>
+                          <div>0{i + 1}</div>
+                          <div>{val.resType}</div>
+                          <div>{(val.count * 100 / resStatTotal).toFixed(1) + '%'}</div>
+                        </div>;
+                      })}
                     </div>
                   </div>
                 </div>
@@ -243,8 +253,8 @@ const overview = ({ curOrg, projects, curProject }) => {
         </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
       </Layout>
       {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
-        { selectedModule === 'envStat' ? <EnvStat/> : undefined }
-        { selectedModule === 'resStat' ? <ResStat/> : undefined }
+        { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
+        { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
         { selectedModule === 'projectStat' ? <ProjectStat/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend/> : undefined }
       </div>}
