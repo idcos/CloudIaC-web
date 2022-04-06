@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import styles from './styles.less';
 
@@ -25,7 +26,7 @@ const PageHeader = (props) => {
       subDes: 6
     }
   } = props;
-  return <div style={{ background: !!showIcon && `#fff url(/assets/backgroundIcon/${showIcon}.svg) no-repeat 10px -36px` }} className={`${styles.pageHeader} ${className}`}>
+  return <div style={{ background: !!showIcon && `#fff url(/assets/backgroundIcon/${showIcon}.svg) no-repeat 10px -36px` }} className={classNames(styles.pageHeader, className)}>
     <div>
       { breadcrumb && <BreadcrumbWrapper
         location={location}
