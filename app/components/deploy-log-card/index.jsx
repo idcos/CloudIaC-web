@@ -307,37 +307,16 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
           <Space size={24}>
             {PROJECT_OPERATOR && (
               <Space size={8}>
-                {taskInfo.status === "approving" && (
-                  <>
-                    <Button
-                      disabled={!PROJECT_APPROVER || approvedLoading}
-                      onClick={() => passOrRejecy("rejected")}
-                      loading={rejectedLoading}
-                    >
-                      驳回
-                    </Button>
-                    <Button
-                      disabled={!PROJECT_APPROVER || rejectedLoading}
-                      onClick={() => passOrRejecy("approved")}
-                      loading={approvedLoading}
-                      type='primary'
-                    >
-                      通过
-                    </Button>
-                  </>
-                )}
                 {!suspendStatusList.has(status) && (
                   <Button
-                    type='link'
                     onClick={() => suspend()}
                     disabled={aborting}
                     icon={<PauseOutlined />}
-                    className='hoverSuspend'
                   >
                     中止
                   </Button>
                 )}
-                {type === "plan" && status === "complete" ? (
+                {(type === "plan" && status === "complete") && (
                   <Button
                     type='primary'
                     onClick={applyTask}
@@ -345,7 +324,15 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                   >
                     执行部署
                   </Button>
-                ) : null}
+                )}
+                {taskInfo.status === "approving" && (
+                  <Button
+                    icon={<CopyOutlined />}
+                    onClick={() => setAuditModalVisible(true)}
+                  >
+                    审核
+                  </Button>
+                )}
               </Space>
             )}
             <Input
@@ -371,14 +358,6 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                 </>
               )}
             </span>
-
-            <Button
-              icon={<CopyOutlined />}
-              type={"text"}
-              onClick={() => setAuditModalVisible(true)}
-            >
-              审核
-            </Button>
           </Space>
         }
       >
