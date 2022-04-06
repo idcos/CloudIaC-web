@@ -10,7 +10,7 @@ import CostReport from './cost-report';
 
 const EnvInfo = () => {
 
-  const { envInfo = {}, taskInfo = {} } = useContext(DetailPageContext);
+  const { envInfo = {}, taskInfo = {}, orgId, projectId, envId } = useContext(DetailPageContext);
 
   const [ now, setNow ] = useState(moment());
 
@@ -74,7 +74,7 @@ const EnvInfo = () => {
       </div>
       <div className='cost-report'>
         <div className='cost-report-border'>
-          <CostReport />
+          <CostReport orgId={orgId} projectId={projectId} envId={envId} />
         </div>
       </div>
     </div>

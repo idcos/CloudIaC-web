@@ -599,7 +599,19 @@ export const chartOptions = {
     };
   },
 
-  cost_pie: ({ summary = [] }) => {
+  cost_type_pie: ({ costTypeStat = [] }) => {
+    if (costTypeStat.length === 0) {
+      return {
+        title: {
+          text: '暂无数据',
+          x: 'center',
+          y: 'center',
+          textStyle: {
+            fontSize: 12
+          }
+        }
+      };
+    }
     return {
       title: {
         text: '当月费用占比',
@@ -616,21 +628,11 @@ export const chartOptions = {
           type: 'pie',
           radius: [ '50%', '70%' ],
           avoidLabelOverlap: false,
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ],
+          data: costTypeStat.map(d => ({ name: d.resType, value: d.amount })),
           label: {
             show: true,
             formatter: ' {b}\n{d}%',
             overflow: 'break'
-          },
-          itemStyle: {
-            borderColor: '#fff',
-            borderWidth: 2
           },
           labelLine: {
             smooth: true
@@ -646,7 +648,19 @@ export const chartOptions = {
       ]
     };
   },
-  cost_stacked_area: () => {
+  cost_stacked_area: ({ costTrendStat = [] }) => {
+    if (costTrendStat.length === 0) {
+      return {
+        title: {
+          text: '暂无数据',
+          x: 'center',
+          y: 'center',
+          textStyle: {
+            fontSize: 12
+          }
+        }
+      };
+    }
     return {
       legend: {
         itemHeight: 6,
@@ -673,7 +687,7 @@ export const chartOptions = {
         {
           type: 'category',
           boundaryGap: false,
-          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+          data: costTrendStat.map(d => d.date),
           splitLine: {
             show: false
           }
@@ -685,25 +699,6 @@ export const chartOptions = {
         }
       ],
       series: [
-        {
-          name: '上个月',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          smooth: false,
-          showSymbol: false,
-          itemStyle: {
-            normal: {
-              lineStyle: {
-                width: 2
-              }
-            }
-          },
-          emphasis: {
-            focus: 'series'
-          },
-          data: [ 120, 132, 101, 134, 90, 230, 210 ]
-        },
         {
           name: '当月',
           type: 'line',
@@ -721,7 +716,7 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
-          data: [ 220, 182, 191, 234, 290, 330, 310 ]
+          data: costTrendStat.map(d => d.amount)
         }
       ]
     };

@@ -62,7 +62,7 @@ export default ({ orgId }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'eventType',
+      dataIndex: 'projectIds',
       title: '关联项目',
       width: 286,
       ellipsis: true,
@@ -75,16 +75,12 @@ export default ({ orgId }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'expense1',
+      dataIndex: 'costCounted',
       title: '费用统计',
       width: 80,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'expense2',
-      title: '费用预估',
-      width: 80,
-      ellipsis: true
+      ellipsis: true,
+      render: (text) => text ? '是' : '否'
+
     },
     {
       dataIndex: 'creator',
@@ -95,7 +91,7 @@ export default ({ orgId }) => {
     {
       dataIndex: 'updatedAt',
       title: '更新时间',
-      width: 120,
+      width: 150,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD hh:mm')
     },
