@@ -107,13 +107,13 @@ export default ({ orgId, event$ }) => {
   };
 
   const onOk = async () => {
-    const { name, variables, projectIds, provider, constCounted } = await form.validateFields();
+    const { name, variables, projectIds, provider, costCounted } = await form.validateFields();
     const params = {
       name,
       variables: variables.filter((it) => !!it).map(({ id, ...variable }) => ({ ...variable, id: id || uuidv4(), description: name })),
       projectIds,
       provider, 
-      constCounted
+      costCounted
     };
     id ? updateResourceAccount(params) : createResourceAccount(params);
   };
@@ -290,7 +290,7 @@ export default ({ orgId, event$ }) => {
                 if (providerValue === 'alicloud') {
                   return (
                     <Form.Item
-                      name={'constCounted'}
+                      name={'costCounted'}
                       initialValue={false}
                       valuePropName='checked'
                       wrapperCol={{ offset: 4 }}
