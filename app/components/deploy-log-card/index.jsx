@@ -37,7 +37,7 @@ import taskAPI from "services/task";
 import history from "utils/history";
 import { timeUtils } from "utils/time";
 import SearchByKeyWord from "components/coder/ansi-coder-card/dom-event";
-
+import { LoadingIcon } from 'components/lottie-icon';
 import DeployLog from "./deploy-log";
 import styles from "./styles.less";
 import AuditModal from "./auditModal";
@@ -275,33 +275,32 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
 
   return (
     <div ref={ref} className={styles.deploy_log_card_wrapper}>
+      <div className='header-content'>
+        <span className='title'>部署日志</span>
+        {aborting ? (
+          <Space className='aborting-status' align='center' size={6}>
+            <LoadingIcon size={14} />
+            <span>正在中止，请稍等几分钟</span>
+          </Space>
+        ) : (
+          <Tag className='status' color={TASK_STATUS_COLOR[status]}>
+            {TASK_STATUS[status]}
+          </Tag>
+        )}
+        {taskInfo.status === "failed" && taskInfo.message ? (
+          <Tooltip title={taskInfo.message}>
+            <InfoCircleFilled
+              style={{ color: "#ff4d4f", fontSize: 14 }}
+            />
+          </Tooltip>
+        ) : null}
+      </div>
       <Card
         className='deploy-log-card'
-        bodyStyle={{ background: "rgba(36, 38, 35)", padding: 0 }}
+        bodyStyle={{ background: "#24292F", padding: 0 }}
         title={
           <div className='card-title'>
-            <div className='card-title-top'>
-              <span className='title'>部署日志</span>
-              {aborting ? (
-                <Tag className='status' color={"error"}>
-                  {"中止执行中"}
-                </Tag>
-              ) : (
-                <Tag className='status' color={TASK_STATUS_COLOR[status]}>
-                  {TASK_STATUS[status]}
-                </Tag>
-              )}
-              {taskInfo.status === "failed" && taskInfo.message ? (
-                <Tooltip title={taskInfo.message}>
-                  <InfoCircleFilled
-                    style={{ color: "#ff4d4f", fontSize: 14 }}
-                  />
-                </Tooltip>
-              ) : null}
-            </div>
-            <div className='card-title-bottom'>
-              执行总耗时：{timeUtils.diff(endAt, startAt, "-")}
-            </div>
+            执行总耗时：{timeUtils.diff(endAt, startAt, "-")}
           </div>
         }
         extra={
