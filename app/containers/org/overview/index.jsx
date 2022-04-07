@@ -7,7 +7,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { chartUtils } from 'components/charts-cfg';
 import classNames from 'classnames';
-import orgsAPI from 'services/orgs';
+import projectAPI from 'services/project';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { connect } from 'react-redux';
@@ -17,16 +17,13 @@ import { EnvStat, ProjectStat, ResGrowTrend, ResStat } from './components/dataDe
 
 const KEY = 'global';
 
-const overview = ({ curOrg, projects, curProject }) => {
+const overview = ({ curOrg, curProject }) => {
 
   const overview_envs_state = useRef();
   const overview_resouces_type = useRef();
   const overview_pro_resource = useRef();
   const overview_resource_tendency = useRef();
-  const [ selectedProjectIds, setSelectedProjectIds ] = useState([]);
-  const [ selProList, setSelProList ] = useState([]);
   const [ selectedModule, setSelectedModule ] = useState("envStat");
-  const [ statisticsCount, setStatisticsCount ] = useState(0);
   const [ fetchCount, setFetchCount ] = useState(0);
   const [ envStatTopData, setEnvStatTopData ] = useState([]);
   const [ resStatTopData, setResStatTopData ] = useState([]);
@@ -45,13 +42,12 @@ const overview = ({ curOrg, projects, curProject }) => {
         last_month: [],
         this_month: []
       }
-    },
-    run: startStatistics
+    }
   } = useRequest(
     () => requestWrapper(
-      orgsAPI.orgStatistics.bind(null, { curOrg, projectIds: selectedProjectIds })
+      projectAPI.statistics.bind(null, { orgId: curOrg.id, projectId: curProject.id })
     ), {
-      manual: true,
+      ready: !!curProject.id,
       formatResult: data => {
         const { envStat, resStat, projectStat, resGrowTrend } = data || {};
         return {
@@ -84,10 +80,6 @@ const overview = ({ curOrg, projects, curProject }) => {
       }
     }
   );
-  const onChangeSelectedPrpo = (v) => {
-    setSelectedProjectIds(v);
-    setStatisticsCount(preValue => preValue + 1);
-  };
 
   let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, des: '环境状态占比', ins: null },
@@ -121,17 +113,6 @@ const overview = ({ curOrg, projects, curProject }) => {
     };
   }, []);
 
-  useEffect(() => {
-    setSelProList(projects.list);
-  }, [projects]);
-
-  useEffect(() => {
-    curProject.id && onChangeSelectedPrpo([curProject.id]);
-  }, [curProject]);
-
-  useEffect(() => {
-    statisticsCount > 0 && startStatistics();
-  }, [statisticsCount]);
   return (
     <div className={styles.overview}>
       <Layout
@@ -149,26 +130,8 @@ const overview = ({ curOrg, projects, curProject }) => {
                 }}
               >
                 <span style={{ fontSize: 20 }}>概览</span>
-                <Select
-                  placeholder='全部项目'
-                  mode='multiple'
-                  maxTagCount={3}
-                  allowClear={true}
-                  maxTagTextLength={10}
-                  style={{ minWidth: 173, marginLeft: 12, fontWeight: 'normal' }}
-                  value={selectedProjectIds}
-                  suffixIcon={<FileTextOutlined />}
-                  onChange={(v) => {
-                    onChangeSelectedPrpo(v);
-                  }}
-                  options={
-                    selProList ? selProList.map((val) => {
-                      return { label: val.name, value: val.id };
-                    }) : undefined
-                  }
-                >
-                </Select>
-              </div>}
+              </div>
+            }
             breadcrumb={true}
           />
         }

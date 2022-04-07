@@ -51,6 +51,12 @@ const projectAPI = {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
+  },
+  statistics: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs(`/api/v1/projects/${projectId}/statistics`, restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
   }
 };
 
