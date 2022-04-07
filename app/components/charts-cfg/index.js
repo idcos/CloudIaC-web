@@ -484,7 +484,8 @@ export const chartOptions = {
       ]
     };
   },
-  overview_pro_resource: ({ last_month, this_month } = {}) => {
+  overview_pro_resource: ({ last_month = [], this_month = [] } = {}) => {
+    const xData = last_month.map((it) => it.resType);
     return {
       tooltip: {
         trigger: 'axis',
@@ -508,7 +509,7 @@ export const chartOptions = {
       xAxis: [
         {
           type: 'category',
-          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+          data: xData,
           splitLine: {
             show: false
           }
@@ -525,19 +526,20 @@ export const chartOptions = {
           barWidth: '8%',
           barGap: '0%',
           type: 'bar',
-          data: last_month
+          data: last_month.map(it => it.count)
         },
         {
           name: '当月',
           barWidth: '8%',
           barGap: '0%',
           type: 'bar',
-          data: this_month
+          data: this_month.map(it => it.count)
         }
       ]
     };
   },
-  overview_resource_tendency: ({ last_month, this_month } = {}) => {
+  overview_resource_tendency: ({ last_month = [], this_month = [] } = {}) => {
+    const xData = this_month.map(it => it.date);
     return {
       tooltip: {
         trigger: 'axis',
@@ -563,7 +565,7 @@ export const chartOptions = {
         {
           type: 'category',
           boundaryGap: false,
-          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+          data: xData,
           splitLine: {
             show: false
           }
@@ -585,7 +587,7 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
-          data: last_month
+          data: last_month.map(it => it.count)
         },
         {
           name: '当月',
@@ -597,7 +599,7 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
-          data: this_month
+          data: this_month.map(it => it.count)
         }
       ]
     };

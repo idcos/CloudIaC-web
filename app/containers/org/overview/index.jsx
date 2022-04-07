@@ -27,7 +27,7 @@ const overview = ({ curOrg, projects, curProject }) => {
   const [ selProList, setSelProList ] = useState([]);
   const [ selectedModule, setSelectedModule ] = useState("envStat");
   const [ statisticsCount, setStatisticsCount ] = useState(0);
-  const [ showCount, setShowCount ] = useState(0);
+  const [ fetchCount, setFetchCount ] = useState(0);
   const [ envStatTopData, setEnvStatTopData ] = useState([]);
   const [ resStatTopData, setResStatTopData ] = useState([]);
   const [ resStatTotal, setResStatTotal ] = useState(1);
@@ -37,8 +37,14 @@ const overview = ({ curOrg, projects, curProject }) => {
     data = {
       envStat: [],
       resStat: [],
-      projectStat: [],
-      resGrowTrend: []
+      projectStat: {
+        last_month: [],
+        this_month: []
+      },
+      resGrowTrend: {
+        last_month: [],
+        this_month: []
+      }
     },
     run: startStatistics
   } = useRequest(
@@ -51,28 +57,30 @@ const overview = ({ curOrg, projects, curProject }) => {
         return {
           envStat: envStat || [], 
           resStat: resStat || [], 
-          projectStat: projectStat || [], 
-          resGrowTrend: resGrowTrend || []
+          projectStat: {
+            last_month: [projectStat[0]].filter(it => it), 
+            this_month: [projectStat[1]].filter(it => it)
+          }, 
+          resGrowTrend: {
+            last_month: resGrowTrend.slice(0, 7), 
+            this_month: resGrowTrend.slice(-8, -1)
+          }
         };
       },
       onSuccess: ({ envStat, resStat }) => {
-        setEnvStatTopData(envStat.length > 2 ? sortBy(envStat, function(item) {
+        setEnvStatTopData(sortBy(envStat, function(item) {
           -item.count; 
-        }).slice(0, 2) : sortBy(envStat, function(item) {
+        }).slice(0, 2));
+        setResStatTopData(sortBy(resStat, function(item) {
           -item.count; 
-        }));
-        setResStatTopData(resStat.length > 2 ? sortBy(resStat, function(item) {
-          -item.count; 
-        }).slice(0, 2) : sortBy(resStat, function(item) {
-          -item.count; 
-        }));
+        }).slice(0, 2));
         setEnvStatTotal(reduce(envStat, function(sum, item) {
           return sum + item.count;
         }, 0));
         setResStatTotal(reduce(resStat, function(sum, item) {
           return sum + item.count;
         }, 0));
-        setShowCount(preValue => preValue + 1);
+        setFetchCount(preValue => preValue + 1);
       }
     }
   );
@@ -81,11 +89,6 @@ const overview = ({ curOrg, projects, curProject }) => {
     setStatisticsCount(preValue => preValue + 1);
   };
 
-  const [ testData1, setData1 ] = useState({
-    last_month: [ 10, 17, 26, 43, 35, 29, 19 ],
-    this_month: [ 21, 20, 52, 10, 42, 25, 80 ]
-  });
-  
   let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, des: '环境状态占比', ins: null },
     { key: 'overview_resouces_type', domRef: overview_resouces_type, des: '资源类型占比', ins: null },
@@ -103,13 +106,13 @@ const overview = ({ curOrg, projects, curProject }) => {
         chartUtils.update(chart, data.resStat);
       }
       if (chart.key === 'overview_pro_resource') {
-        chartUtils.update(chart, testData1);
+        chartUtils.update(chart, data.projectStat);
       }
       if (chart.key === 'overview_resource_tendency') {
-        chartUtils.update(chart, testData1);
+        chartUtils.update(chart, data.resGrowTrend);
       }
     });
-  }, [showCount]);
+  }, [fetchCount]);
 
   useEffect(() => {
     resizeHelper.attach();
@@ -132,7 +135,7 @@ const overview = ({ curOrg, projects, curProject }) => {
   return (
     <div className={styles.overview}>
       <Layout
-        style={{ flex: 1, minWidth: "0" }}
+        style={{ flex: 1, minWidth: 0 }}
         className='idcos-no-scrollbar'
         extraHeader={
           <PageHeader
@@ -266,11 +269,10 @@ const overview = ({ curOrg, projects, curProject }) => {
       {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
-        { selectedModule === 'projectStat' ? <ProjectStat/> : undefined }
-        { selectedModule === 'resGrowTrend' ? <ResGrowTrend/> : undefined }
+        { selectedModule === 'projectStat' ? <ProjectStat showData={data.projectStat}/> : undefined }
+        { selectedModule === 'resGrowTrend' ? <ResGrowTrend showData={data.resGrowTrend}/> : undefined }
       </div>}
     </div>
-    
   );
 };
 

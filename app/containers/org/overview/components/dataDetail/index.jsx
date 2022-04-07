@@ -3,16 +3,11 @@ import styles from './styles.less';
 import { Tabs, Table, Space } from 'antd';
 import { TrendDownIcon, TrenDupIcon } from 'components/iconfont';
 import { ENV_STATUS } from 'constants/types';
-const { TabPane } = Tabs;
-const d = [
-  { name: "eip", isRise: false, proportion: "35%" }, 
-  { name: "slb1", isRise: true, proportion: "32%" }, 
-  { name: "vpc12", isRise: false, proportion: "31%" }, 
-  { name: "oss123", isRise: true, proportion: "32%" }, 
-  { name: "sms1234", isRise: false, proportion: "30%" }
-];
+import sortBy from 'lodash/sortBy';
 
+const { TabPane } = Tabs;
 const color = [ "#FF3B3B", "#F5A623", "#3D7FFF" ];
+
 export const EnvStat = ({ showData = [], total = 0 }) => {
   const columns = [
     {
@@ -73,12 +68,13 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
           pagination={false} 
           noStyle={true} 
           showHeader={false} 
-          dataSource={showData} 
+          dataSource={sortBy(showData, it => -it.count)} 
           columns={columns} 
           expandable={{ 
             expandedRowRender,
             expandRowByClick: true,
-            columnWidth: 20
+            columnWidth: 20,
+            rowExpandable: ({ projects }) => projects && projects.length > 0
           }}
         />
       </div>
@@ -150,7 +146,8 @@ export const ResStat = ({ showData = [], total = 0 }) => {
           expandable={{ 
             expandedRowRender,
             expandRowByClick: true,
-            columnWidth: 20
+            columnWidth: 20,
+            rowExpandable: ({ projects }) => projects && projects.length > 0
           }}
         />
       </div>
@@ -158,7 +155,10 @@ export const ResStat = ({ showData = [], total = 0 }) => {
   );
 };
 
-export const ProjectStat = () => {
+export const ProjectStat = ({ showData }) => {
+
+  const { last_month = [], this_month = [] } = showData || {};
+  const [ tabKey, setTabKey ] = useState('last');
 
   const columns = [
     {
@@ -167,32 +167,81 @@ export const ProjectStat = () => {
       render: (text, record, index) => <span style={{ color: color[index] }}>{index + 1}</span>
     },
     {
-      title: '名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text, record) => <span>{record.name} <span style={{ marginLeft: '13px' }}>
-        {record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>} 
-      </span> 
-      </span>
+      title: '类型',
+      dataIndex: 'resType',
+      key: 'resType',
+      render: (text, record) => (
+        <Space>
+          <span>{record.resType}</span>
+          {tabKey === 'this' && (
+            record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>
+          )}
+        </Space>
+      )
     },
     {
-      title: '占比',
-      dataIndex: 'proportion',
-      key: 'proportion'
+      title: '数量',
+      dataIndex: 'count',
+      key: 'count'
     }
   ];
+
+  const expandedRowRender = ({ projects }) => {
+    const columns = [
+      { 
+        title: '项目名称', 
+        dataIndex: 'name', 
+        key: 'name' 
+      },
+      { 
+        title: '数量', 
+        width: 60,
+        dataIndex: 'count', 
+        key: 'count'
+      }
+    ];
+    return (
+      <Table 
+        columns={columns} 
+        dataSource={projects} 
+        pagination={false} 
+        showHeader={false}
+        noStyle={true} 
+      />
+    );
+  };
+
+  const commonTableProps = {
+    pagination: false,
+    noStyle: true, 
+    showHeader: false,
+    columns,
+    expandable: { 
+      expandedRowRender,
+      expandRowByClick: true,
+      columnWidth: 20,
+      rowExpandable: ({ projects }) => projects && projects.length > 0
+    }
+  };
+
   return (
     <div className={styles.projectStat}>
       <h2>环境资源数量</h2>
-      <Tabs defaultActiveKey='1' onChange={(v) => console.log(v)}>
-        <TabPane tab='上月' key='1'>
+      <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
+        <TabPane tab='上月' key='last'>
           <div className={styles.data_table}>
-            <Table pagination={false} noStyle={true} showHeader={false} dataSource={d} columns={columns} />
+            <Table 
+              {...commonTableProps}
+              dataSource={sortBy(last_month, it => -it.count)} 
+            />
           </div>
         </TabPane>
-        <TabPane tab='本月' key='2'>
+        <TabPane tab='本月' key='this'>
           <div className={styles.data_table}>
-            <Table pagination={false} noStyle={true} showHeader={false} dataSource={d} columns={columns} />
+            <Table 
+              {...commonTableProps}
+              dataSource={sortBy(this_month, it => -it.count)} 
+            />
           </div>
         </TabPane>
       </Tabs>
@@ -200,10 +249,98 @@ export const ProjectStat = () => {
   );
 };
 
-export const ResGrowTrend = () => {
+export const ResGrowTrend = ({ showData }) => {
+
+  const { last_month = [], this_month = [] } = showData || {};
+  console.log(1, showData);
+  const [ tabKey, setTabKey ] = useState('last');
+
+  const columns = [
+    {
+      title: '序列号',
+      key: 1,
+      render: (text, record, index) => <span style={{ color: color[index] }}>{index + 1}</span>
+    },
+    {
+      title: '日期',
+      dataIndex: 'date',
+      key: 'date',
+      render: (text, record) => (
+        <Space>
+          <span>{record.date}</span>
+          {tabKey === 'this' && (
+            record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>
+          )}
+        </Space>
+      )
+    },
+    {
+      title: '数量',
+      dataIndex: 'count',
+      key: 'count'
+    }
+  ];
+
+  const expandedRowRender = (record) => {
+    const { projects } = record || {};
+    const columns = [
+      { 
+        title: '项目名称', 
+        dataIndex: 'name', 
+        key: 'name' 
+      },
+      { 
+        title: '数量', 
+        width: 60,
+        dataIndex: 'count', 
+        key: 'count'
+      }
+    ];
+    return (
+      <Table 
+        columns={columns} 
+        dataSource={projects} 
+        pagination={false} 
+        showHeader={false}
+        noStyle={true} 
+      />
+    );
+  };
+
+  const commonTableProps = {
+    pagination: false,
+    noStyle: true, 
+    showHeader: false,
+    columns,
+    expandable: { 
+      expandedRowRender,
+      expandRowByClick: true,
+      columnWidth: 20,
+      rowExpandable: ({ projects }) => projects && projects.length > 0
+    }
+  };
+
   return (
-    <div>
-      
+    <div className={styles.projectStat}>
+      <h2>环境资源数量</h2>
+      <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
+        <TabPane tab='上月' key='last'>
+          <div className={styles.data_table}>
+            <Table 
+              {...commonTableProps}
+              dataSource={sortBy(last_month, it => -it.count)} 
+            />
+          </div>
+        </TabPane>
+        <TabPane tab='本月' key='this'>
+          <div className={styles.data_table}>
+            <Table 
+              {...commonTableProps}
+              dataSource={sortBy(this_month, it => -it.count)} 
+            />
+          </div>
+        </TabPane>
+      </Tabs>
     </div>
   );
 };
