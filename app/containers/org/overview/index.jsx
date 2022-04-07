@@ -3,6 +3,7 @@ import { Select, Row, Col, Empty } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 import sortBy from 'lodash/sortBy';
 import reduce from 'lodash/reduce';
+import get from 'lodash/get';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { chartUtils } from 'components/charts-cfg';
@@ -54,12 +55,12 @@ const overview = ({ curOrg, curProject }) => {
           envStat: envStat || [], 
           resStat: resStat || [], 
           projectStat: {
-            last_month: [projectStat[0]].filter(it => it), 
-            this_month: [projectStat[1]].filter(it => it)
+            last_month: get(projectStat, '[0].ResTypes', []), 
+            this_month: get(projectStat, '[1].ResTypes', [])
           }, 
           resGrowTrend: {
-            last_month: resGrowTrend.slice(0, 7), 
-            this_month: resGrowTrend.slice(-8, -1)
+            last_month: resGrowTrend[0], 
+            this_month: resGrowTrend[1]
           }
         };
       },

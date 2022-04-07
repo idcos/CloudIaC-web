@@ -1,54 +1,4 @@
-.data_item {
-  display: flex;
-  height: 28px;
-  >div {
-    color: rgba(36, 41, 47, 100);
-    line-height: 28px;
-    &:first-child {
-      width: 10px;
-      font-size: 12px;
-      text-align: left;
-      font-family: PingFangSC-Regular;
-    }
-    &:nth-child(2) {
-      width: 100px;
-      font-size: 12px;
-      text-align: left;
-      font-family: PingFangSC-Regular;
-      margin-left: 7px;
-      margin-right: 13px;
-    }
-    &:last-child {
-      flex: 1;
-      font-size: 14px;
-      text-align: right;
-      font-family: UbuntuMono-Regular;
-    }
-  }
-}
-.envStat_content {
-  h2 {
-    height: 26px;
-    line-height: 26px;
-    color: rgba(36, 41, 47, 100);
-    font-size: 20px;
-    font-family: PingFangSC-Medium;
-    margin-bottom: 22px;
-  }
-  h3 {
-    height: 16px;
-    line-height: 16px;
-    color: rgba(17, 17, 17, 100);
-    font-size: 14px;
-    font-family: PingFangSC-Regular;
-    margin-left: 3px;
-    margin-bottom: 9px;
-    & + div {
-      margin-left: 5px;
-    }
-  }
-}
-.resStat_content {
+.tableWrapper {
   h2 {
     height: 26px;
     line-height: 26px;
@@ -66,9 +16,8 @@
     margin-left: 3px;
     margin-bottom: 9px;
   }
-  
 }
-.projectStat {
+.tabsWrapper {
   h2 {
     color: rgba(36, 41, 47, 100);
     font-size: 20px;
@@ -89,11 +38,6 @@
         font-family: PingFangSC-Regular;
       }
     }
-    .ant-table-cell:last-child {
-      padding-right: 12px;
-      font-weight: 700;
-      font-family: PingFangSC-Medium;
-    }
   }
 }
 
@@ -104,29 +48,53 @@
       & > tr > td {
         border: none;
         padding: 4px;
+        .ant-table-wrapper:only-child .ant-table {
+          margin: 0;
+          tr > td {
+            padding: 8px 4px;
+            &.tree-split {
+              position: relative;
+              &::before {
+                left: 12px;
+                top: -18px;
+                position: absolute;
+                content: '';
+                width: 1px;
+                height: 37px;
+                background: #E7E7E7;
+              }
+              &::after {
+                left: 12px;
+                top: 19px;
+                position: absolute;
+                content: '';
+                width: 12px;
+                height: 1px;
+                background: #E7E7E7;
+              }
+            }
+          }
+          tr:nth-of-type(1) > td {
+            &.tree-split {
+              &::before {
+                height: 19px;
+                top: 0px;
+              }
+            }
+          }
+        }
+      }
+      .ant-table-expanded-row>td {
+        padding: 4px 0 0;
       }
       .ant-table-row {
-        height: 28px;
-        line-height: 28px;
-        .ant-table-cell {
-          &:first-child {
-            color: #999999;
-            font-size: 12px;
-            text-align: left;
-            font-family: PingFangSC-Regular;
-          }
-          &:nth-child(2) {
-            color: #24292F;
-            font-size: 12px;
-            text-align: left;
-            font-family: PingFangSC-Regular;
-          }
-          &:last-child {
-            color: #24292F;
-            font-size: 14px;
-            text-align: right;
-            font-family: UbuntuMono-Regular;
-          }
+        height: 20px;
+        line-height: 20px;
+        font-size: 12px;
+        color: #24292F;
+        .up {
+          color: #666666;
+          font-size: 14px;
         }
       }
     }
