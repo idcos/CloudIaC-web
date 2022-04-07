@@ -38,9 +38,9 @@ export const chartOptions = {
         textStyle: {
           width: 60
         },
-        data: [ "活跃环境数量", "失败环境数量", "不活跃环境数量" ],
+        data: [ "活跃环境数量", "失败环境数量", "已销毁环境数量" ],
         icon: 'circle',
-        selected: [{ "活跃环境数量": true }, { "不活跃环境数量": true }, { "失败环境数量": true }]
+        selected: [{ "活跃环境数量": true }, { "已销毁环境数量": true }, { "失败环境数量": true }]
       },
       series: [
         {
@@ -50,7 +50,7 @@ export const chartOptions = {
           radius: [ '40%', '70%' ],
           data: [
             { name: "活跃环境数量", value: envActive || 0 },
-            { name: "不活跃环境数量", value: envInactive || 0 },
+            { name: "已销毁环境数量", value: envInactive || 0 },
             { name: "失败环境数量", value: envFailed || 0 }
           ],
           label: {

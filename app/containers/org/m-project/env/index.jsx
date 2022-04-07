@@ -12,7 +12,7 @@ const envNavs = {
   '': '全部',
   active: '活跃',
   approving: '待审批',
-  inactive: '不活跃',
+  inactive: '已销毁',
   failed: '失败'
 };
 
