@@ -128,6 +128,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/m-org-overview',
+          name: '组织设置：概览',
+          component: loadable(() => import('containers/org/m-org/overview'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/m-org-project',
           name: '组织设置：项目',
           component: loadable(() => import('containers/org/m-org/project'), asyncLoadFallback),

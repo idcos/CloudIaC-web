@@ -46,6 +46,11 @@ const getMenus = (userInfo, { projectList }) => {
       isHide: !ORG_SET && !PROJECT_OPERATOR,
       menuList: [
         {
+          name: '概览',
+          key: 'm-org-overview',
+          icon: <ControlOutlined />
+        },
+        {
           name: '项目',
           key: 'm-org-project',
           icon: <ProjectOutlined />,

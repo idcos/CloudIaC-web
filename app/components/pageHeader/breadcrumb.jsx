@@ -18,7 +18,8 @@ const breadcrumbNameMap = {
   'm-project-variable': { text: '项目信息：变量' },
   'm-project-setting': { text: '项目信息：设置' },
   'm-other-resource': { text: '资源查询' },
-  'm-other-overview': { text: '概览' },
+  'm-other-overview': { text: '项目概览' },
+  'm-org-overview': { text: '组织概览' },
   'createCT': { text: '新建云模板' },
   'updateCT': { text: '编辑云模板' },
   'deploy': { 
