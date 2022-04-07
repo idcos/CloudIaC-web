@@ -53,7 +53,7 @@ const ProjectSelectPage = ({ projects, dispatch }) => {
         />
       }
     >
-      <div className='container-inner-width'>
+      <div className='container-inner-width' style={{ marginTop: 24 }}>
         <Row gutter={[24, 24]}>
           {
             showProjectList.map(({ id, name, description, createdAt }) => (
