@@ -14,7 +14,7 @@ import { requestWrapper } from 'utils/request';
 import { connect } from 'react-redux';
 import styles from './styles.less';
 import { ENV_STATUS } from 'constants/types';
-import { EnvStat, ProjectStat, ResGrowTrend, ResStat } from './components/dataDetail';
+import { EnvStat, EnvResStat, ResGrowTrend, ResStat } from './components/dataDetail';
 
 const KEY = 'global';
 
@@ -35,7 +35,7 @@ const overview = ({ curOrg, curProject }) => {
     data = {
       envStat: [],
       resStat: [],
-      projectStat: {
+      envResStat: {
         last_month: [],
         this_month: []
       },
@@ -50,13 +50,13 @@ const overview = ({ curOrg, curProject }) => {
     ), {
       ready: !!curProject.id,
       formatResult: data => {
-        const { envStat, resStat, projectStat, resGrowTrend } = data || {};
+        const { envStat, resStat, envResStat, resGrowTrend } = data || {};
         return {
           envStat: envStat || [], 
           resStat: resStat || [], 
-          projectStat: {
-            last_month: get(projectStat, '[0].ResTypes', []), 
-            this_month: get(projectStat, '[1].ResTypes', [])
+          envResStat: {
+            last_month: get(envResStat, '[0].ResTypes', []), 
+            this_month: get(envResStat, '[1].ResTypes', [])
           }, 
           resGrowTrend: {
             last_month: resGrowTrend[0], 
@@ -99,7 +99,7 @@ const overview = ({ curOrg, curProject }) => {
         chartUtils.update(chart, data.resStat);
       }
       if (chart.key === 'overview_pro_resource') {
-        chartUtils.update(chart, data.projectStat);
+        chartUtils.update(chart, data.envResStat);
       }
       if (chart.key === 'overview_resource_tendency') {
         chartUtils.update(chart, data.resGrowTrend);
@@ -202,9 +202,9 @@ const overview = ({ curOrg, curProject }) => {
             <Col span={12}>
               <div className={styles.pro_resource}>
                 <h3>环境资源数量</h3>
-                <div className={classNames(styles.content, selectedModule === 'projectStat' ? styles.selected : undefined)}
+                <div className={classNames(styles.content, selectedModule === 'envResStat' ? styles.selected : undefined)}
                   onClick={() => {
-                    setSelectedModule("projectStat"); 
+                    setSelectedModule("envResStat"); 
                   }}
                 >
                   <div style={{ width: '100%', height: "100%" }}>
@@ -233,7 +233,7 @@ const overview = ({ curOrg, curProject }) => {
       {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
-        { selectedModule === 'projectStat' ? <ProjectStat showData={data.projectStat}/> : undefined }
+        { selectedModule === 'envResStat' ? <EnvResStat showData={data.envResStat}/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend showData={data.resGrowTrend}/> : undefined }
       </div>}
     </div>

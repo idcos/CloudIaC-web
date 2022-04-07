@@ -57,11 +57,11 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
         render: (text, record) => <span>{(record.count * 100 / total).toFixed(1)}%</span>
       }
     ];
-    const { projects } = record || {};
+    const { details } = record || {};
     return (
       <Table 
         columns={columns} 
-        dataSource={projects} 
+        dataSource={details} 
         pagination={false} 
         showHeader={false}
         noStyle={true} 
@@ -85,7 +85,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
             expandedRowRender,
             expandRowByClick: true,
             columnWidth: 16,
-            // rowExpandable: ({ projects }) => projects && projects.length > 0,
+            // rowExpandable: ({ details }) => details && details.length > 0,
             expandIcon: ({ expanded, onExpand, record }) => (
               expanded ? (
                 <CaretDownOutlined onClick={e => onExpand(record, e)} style={{ padding: 2, backgroundColor: '#DAE4E6', color: '#08857C', borderRadius: 2 }}/>
@@ -147,11 +147,11 @@ export const ResStat = ({ showData = [], total = 0 }) => {
         render: (text, record) => <span>{(record.count * 100 / total).toFixed(1)}%</span>
       }
     ];
-    const { projects } = record || {};
+    const { details } = record || {};
     return (
       <Table 
         columns={columns} 
-        dataSource={projects} 
+        dataSource={details} 
         pagination={false} 
         showHeader={false}
         noStyle={true} 
@@ -174,7 +174,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
             expandedRowRender,
             expandRowByClick: true,
             columnWidth: 16,
-            // rowExpandable: ({ projects }) => projects && projects.length > 0,
+            // rowExpandable: ({ details }) => details && details.length > 0,
             expandIcon: ({ expanded, onExpand, record }) => (
               expanded ? (
                 <CaretDownOutlined onClick={e => onExpand(record, e)} style={{ padding: 2, backgroundColor: '#DAE4E6', color: '#08857C', borderRadius: 2 }}/>
@@ -236,7 +236,7 @@ export const ProjectStat = ({ showData }) => {
     }
   ].filter(it => !it.hide);
 
-  const expandedRowRender = ({ projects }) => {
+  const expandedRowRender = ({ details }) => {
     const columns = [
       {
         title: '树状分割线', 
@@ -258,7 +258,7 @@ export const ProjectStat = ({ showData }) => {
     return (
       <Table 
         columns={columns} 
-        dataSource={projects} 
+        dataSource={details} 
         pagination={false} 
         showHeader={false}
         noStyle={true} 
@@ -276,7 +276,7 @@ export const ProjectStat = ({ showData }) => {
       expandedRowRender,
       expandRowByClick: true,
       columnWidth: 20,
-      // rowExpandable: ({ projects }) => projects && projects.length > 0,
+      // rowExpandable: ({ details }) => details && details.length > 0,
       expandIcon: ({ expanded, onExpand, record }) => (
         expanded ? (
           <CaretDownOutlined onClick={e => onExpand(record, e)} style={{ padding: 2, backgroundColor: '#DAE4E6', color: '#08857C', borderRadius: 2 }}/>
@@ -358,7 +358,7 @@ export const ResGrowTrend = ({ showData }) => {
   ].filter(it => !it.hide);
 
   const expandedRowRender = (record) => {
-    const { projects } = record || {};
+    const { details } = record || {};
     const columns = [
       {
         title: '树状分割线', 
@@ -380,7 +380,7 @@ export const ResGrowTrend = ({ showData }) => {
     return (
       <Table 
         columns={columns} 
-        dataSource={projects} 
+        dataSource={details} 
         pagination={false} 
         showHeader={false}
         noStyle={true} 
@@ -398,7 +398,7 @@ export const ResGrowTrend = ({ showData }) => {
       expandedRowRender,
       expandRowByClick: true,
       columnWidth: 20,
-      // rowExpandable: ({ projects }) => projects && projects.length > 0,
+      // rowExpandable: ({ details }) => details && details.length > 0,
       expandIcon: ({ expanded, onExpand, record }) => (
         expanded ? (
           <CaretDownOutlined onClick={e => onExpand(record, e)} style={{ padding: 2, backgroundColor: '#DAE4E6', color: '#08857C', borderRadius: 2 }}/>

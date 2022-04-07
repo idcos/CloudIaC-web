@@ -37,7 +37,7 @@ const overview = ({ curOrg, projects, curProject }) => {
     data = {
       envStat: [],
       resStat: [],
-      projectStat: {
+      projectResStat: {
         last_month: [],
         this_month: [],
         stackList: projects.list || []
@@ -54,13 +54,13 @@ const overview = ({ curOrg, projects, curProject }) => {
     ), {
       manual: true,
       formatResult: data => {
-        const { envStat, resStat, projectStat, resGrowTrend } = data || {};
+        const { envStat, resStat, projectResStat, resGrowTrend } = data || {};
         return {
           envStat: envStat || [], 
           resStat: resStat || [], 
-          projectStat: {
-            last_month: get(projectStat, '[0].ResTypes', []), 
-            this_month: get(projectStat, '[1].ResTypes', []), 
+          projectResStat: {
+            last_month: get(projectResStat, '[0].ResTypes', []), 
+            this_month: get(projectResStat, '[1].ResTypes', []), 
             stackList: projects.list || []
           }, 
           resGrowTrend: {
@@ -108,7 +108,7 @@ const overview = ({ curOrg, projects, curProject }) => {
         chartUtils.update(chart, data.resStat);
       }
       if (chart.key === 'overview_pro_resource') {
-        chartUtils.update(chart, data.projectStat);
+        chartUtils.update(chart, data.projectResStat);
       }
       if (chart.key === 'overview_resource_tendency') {
         chartUtils.update(chart, data.resGrowTrend);
@@ -236,9 +236,9 @@ const overview = ({ curOrg, projects, curProject }) => {
             <Col span={12}>
               <div className={styles.pro_resource}>
                 <h3>项目资源数量</h3>
-                <div className={classNames(styles.content, selectedModule === 'projectStat' ? styles.selected : undefined)}
+                <div className={classNames(styles.content, selectedModule === 'projectResStat' ? styles.selected : undefined)}
                   onClick={() => {
-                    setSelectedModule("projectStat"); 
+                    setSelectedModule("projectResStat"); 
                   }}
                 >
                   <div style={{ width: '100%', height: "100%" }}>
@@ -267,7 +267,7 @@ const overview = ({ curOrg, projects, curProject }) => {
       {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
-        { selectedModule === 'projectStat' ? <ProjectStat showData={data.projectStat}/> : undefined }
+        { selectedModule === 'projectResStat' ? <ProjectStat showData={data.projectResStat}/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend showData={data.resGrowTrend}/> : undefined }
       </div>}
     </div>
