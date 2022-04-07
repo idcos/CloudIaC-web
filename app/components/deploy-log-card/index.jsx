@@ -224,6 +224,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
       width: 480,
       title: `中止 “${envInfo.name}” `,
       icon: <InfoCircleFilled />,
+      getContainer: () => ref.current,
       content: (
         <div className={'suspendAlter'}>
           {/* <Alert style={{ padding: '3px 31px', margin: 0 }} message='中止执行中的任务存在如下风险' type='error' /> */}
@@ -253,6 +254,9 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
       ),
       okText: '确认中止',
     	cancelText: '取消',
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: async () => {
         await form.validateFields();
         const res = await taskAPI.abortTask({ orgId, projectId, taskId });

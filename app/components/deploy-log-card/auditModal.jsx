@@ -36,6 +36,7 @@ function AuditModal(props) {
         visible={visible}
         width={560}
         title={<div className={styles.modalTitle}>审核</div>}
+        getContainer={false}
         footer={[
           <Button
             disabled={!PROJECT_APPROVER || loading.approvedLoading}
