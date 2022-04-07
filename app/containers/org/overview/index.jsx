@@ -65,12 +65,8 @@ const overview = ({ curOrg, curProject }) => {
         };
       },
       onSuccess: ({ envStat, resStat }) => {
-        setEnvStatTopData(sortBy(envStat, function(item) {
-          -item.count; 
-        }).slice(0, 2));
-        setResStatTopData(sortBy(resStat, function(item) {
-          -item.count; 
-        }).slice(0, 2));
+        setEnvStatTopData(sortBy(envStat, item => -item.count).slice(0, 2));
+        setResStatTopData(sortBy(resStat, item => -item.count).slice(0, 2));
         setEnvStatTotal(reduce(envStat, function(sum, item) {
           return sum + item.count;
         }, 0));
