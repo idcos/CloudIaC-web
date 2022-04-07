@@ -4,6 +4,7 @@ import { Tabs, Table, Space } from 'antd';
 import { TrendDownIcon, TrenDupIcon } from 'components/iconfont';
 import { ENV_STATUS } from 'constants/types';
 import sortBy from 'lodash/sortBy';
+import moment from 'moment';
 
 const { TabPane } = Tabs;
 const color = [ "#FF3B3B", "#F5A623", "#3D7FFF" ];
@@ -266,7 +267,7 @@ export const ResGrowTrend = ({ showData }) => {
       key: 'date',
       render: (text, record) => (
         <Space>
-          <span>{record.date}</span>
+          <span>{moment(record.date).format('MM/DD')}</span>
           {tabKey === 'this' && (
             record.isRise ? <TrenDupIcon/> : <TrendDownIcon/>
           )}

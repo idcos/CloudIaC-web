@@ -485,7 +485,7 @@ export const chartOptions = {
       ]
     };
   },
-  overview_pro_resource: ({ last_month = [], this_month = [] } = {}) => {
+  overview_pro_resource: ({ last_month = [], this_month = [], stackList = [] } = {}) => {
     const xData = last_month.map((it) => it.resType);
     return {
       tooltip: {
@@ -542,7 +542,7 @@ export const chartOptions = {
     };
   },
   overview_resource_tendency: ({ last_month = [], this_month = [] } = {}) => {
-    const xData = this_month.map(it => moment(it.date).format('MM-DD'));
+    const xData = this_month.map(it => moment(it.date).format('MM/DD'));
     return {
       tooltip: {
         trigger: 'axis',
