@@ -302,7 +302,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 {
                                   validator(_, value) {
                                     if (noOption) {
-                                      return Promise.reject(new Error('分支下未找到该tfvars文件'));
+                                      return Promise.reject(new Error('未找到该tfvars文件'));
                                     }
                                     return Promise.resolve();
                                   }
@@ -343,7 +343,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 {
                                   validator(_, value) {
                                     if (noOption) {
-                                      return Promise.reject(new Error('分支下未找到该playbook文件'));
+                                      return Promise.reject(new Error('未找到该playbook文件'));
                                     }
                                     return Promise.resolve();
                                   }
