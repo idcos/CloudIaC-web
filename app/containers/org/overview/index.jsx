@@ -147,7 +147,7 @@ const overview = ({ curOrg, curProject }) => {
                   }}
                 >
                   <div>
-                    <span className={styles.content_title}>环境状态占比</span>
+                    <span className={styles.content_title}>最近更新</span>
                     <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
@@ -176,7 +176,7 @@ const overview = ({ curOrg, curProject }) => {
                   }}
                 >
                   <div>
-                    <span className={styles.content_title}>资源类型占比</span>
+                    <span className={styles.content_title}>最近更新</span>
                     <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
@@ -200,7 +200,7 @@ const overview = ({ curOrg, curProject }) => {
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.pro_resource}>
-                <h3>项目资源数量</h3>
+                <h3>环境资源数量</h3>
                 <div className={classNames(styles.content, selectedModule === 'projectStat' ? styles.selected : undefined)}
                   onClick={() => {
                     setSelectedModule("projectStat"); 
@@ -214,7 +214,7 @@ const overview = ({ curOrg, curProject }) => {
             </Col>
             <Col span={12}>
               <div className={styles.resource_tendency}>
-                <h3>最近七天资源新增趋势</h3>
+                <h3>最近七天资源及费用趋势</h3>
                 <div className={classNames(styles.content, selectedModule === 'resGrowTrend' ? styles.selected : undefined)}
                   onClick={() => {
                     setSelectedModule("resGrowTrend"); 

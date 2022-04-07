@@ -61,7 +61,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
   return (
     <div className={styles.resStat_content}>
       <h2>概览详情</h2>
-      <h3>资源类型占比</h3>
+      <h3>环境状态占比</h3>
       <div className={styles.data_table}>
         <Table 
           rowKey='status'
@@ -226,7 +226,7 @@ export const ProjectStat = ({ showData }) => {
 
   return (
     <div className={styles.projectStat}>
-      <h2>环境资源数量</h2>
+      <h2>项目资源数量</h2>
       <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
         <TabPane tab='上月' key='last'>
           <div className={styles.data_table}>
@@ -321,7 +321,7 @@ export const ResGrowTrend = ({ showData }) => {
 
   return (
     <div className={styles.projectStat}>
-      <h2>环境资源数量</h2>
+      <h2>最近七天资源新增趋势</h2>
       <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
         <TabPane tab='上月' key='last'>
           <div className={styles.data_table}>

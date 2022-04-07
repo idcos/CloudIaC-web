@@ -184,7 +184,7 @@ const overview = ({ curOrg, projects, curProject }) => {
                   }}
                 >
                   <div>
-                    <span className={styles.content_title}>环境状态占比</span>
+                    <span className={styles.content_title}>最近更新</span>
                     <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
@@ -213,7 +213,7 @@ const overview = ({ curOrg, projects, curProject }) => {
                   }}
                 >
                   <div>
-                    <span className={styles.content_title}>资源类型占比</span>
+                    <span className={styles.content_title}>最近更新</span>
                     <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
