@@ -209,6 +209,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
       onSuccess: () => {
         reload && reload();
         setCanAutoScroll(true);
+        setAuditModalVisible(false);
       }
     }
   );
