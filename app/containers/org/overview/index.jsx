@@ -55,8 +55,8 @@ const overview = ({ curOrg, curProject }) => {
           envStat: envStat || [], 
           resStat: resStat || [], 
           envResStat: {
-            last_month: get(envResStat, '[0].ResTypes', []), 
-            this_month: get(envResStat, '[1].ResTypes', [])
+            last_month: get(envResStat, '[0].resTypes', []), 
+            this_month: get(envResStat, '[1].resTypes', [])
           }, 
           resGrowTrend: {
             last_month: resGrowTrend[0], 

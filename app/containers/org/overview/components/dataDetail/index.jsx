@@ -182,7 +182,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
           pagination={false} 
           noStyle={true} 
           showHeader={false} 
-          dataSource={showData} 
+          dataSource={sortBy(showData, it => -it.count)} 
           columns={columns} 
           expandable={{ 
             expandedRowRender,
@@ -264,7 +264,7 @@ export const EnvResStat = ({ showData }) => {
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
-          <div className='idcos-text-ellipsis title' style={{ maxWidth: 150 }} title={record.name}>
+          <div className='idcos-text-ellipsis title' style={{ maxWidth: 140 }} title={record.name}>
             <span>{record.name}</span>
           </div>
         )
@@ -274,7 +274,7 @@ export const EnvResStat = ({ showData }) => {
         dataIndex: 'count', 
         align: 'right',
         key: 'count',
-        width: 80
+        width: 60
       }
     ];
     return (
@@ -377,7 +377,7 @@ export const ResGrowTrend = ({ showData }) => {
       dataIndex: 'count',
       align: 'right',
       key: 'count',
-      width: 70
+      width: 60
     }
   ].filter(it => !it.hide);
 
@@ -394,7 +394,7 @@ export const ResGrowTrend = ({ showData }) => {
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
-          <div className='idcos-text-ellipsis title' style={{ maxWidth: 150 }} title={record.name}>
+          <div className='idcos-text-ellipsis title' style={{ maxWidth: 140 }} title={record.name}>
             <span>{record.name}</span>
           </div>
         )
@@ -404,7 +404,7 @@ export const ResGrowTrend = ({ showData }) => {
         dataIndex: 'count', 
         align: 'right',
         key: 'count',
-        width: 80
+        width: 60
       }
     ];
     return (
