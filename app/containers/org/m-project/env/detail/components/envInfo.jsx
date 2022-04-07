@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useContext } from 'react';
-import { Descriptions, Collapse } from 'antd';
+import { Descriptions, Collapse, Empty } from 'antd';
 import { AUTO_DESTROY } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
@@ -50,7 +50,9 @@ const EnvInfo = () => {
             labelStyle={{ color: '#24292F' }}
             contentStyle={{ color: '#57606A' }}
           >
-            <Descriptions.Item span={3} label='当前费用'>{envInfo.monthCost}元</Descriptions.Item>
+            {envInfo.isBilling && (
+              <Descriptions.Item span={3} label='当前费用'>{envInfo.monthCost.toFixed(2)}元</Descriptions.Item>
+            )}
             <Descriptions.Item span={3} label='资源数'>{envInfo.resourceCount}</Descriptions.Item>
 
             <Descriptions.Item span={3} label='存活时间'>{formatTTL(envInfo)}</Descriptions.Item>
@@ -79,7 +81,9 @@ const EnvInfo = () => {
       </div>
       <div className='cost-report'>
         <div className='cost-report-border'>
-          <CostReport orgId={orgId} projectId={projectId} envId={envId} />
+          {envInfo.isBilling ? (
+            <CostReport orgId={orgId} projectId={projectId} envId={envId} />
+          ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='暂未开启费用统计' style={{ marginTop: 200 }} />}
         </div>
       </div>
     </div>
