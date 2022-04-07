@@ -19,7 +19,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
       render: (text, record, index) => <span style={{ color: getColor(index) }}>{index + 1}</span>
     },
     {
-      title: '名称',
+      title: '状态',
       dataIndex: 'status',
       key: 'status',
       render: (text, record) => (
@@ -33,6 +33,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
       dataIndex: 'count',
       key: 'count',
       align: 'right',
+      width: 60,
       render: (text, record) => <span>{(record.count * 100 / total).toFixed(1)}%</span>
     }
   ];
@@ -45,15 +46,21 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
         width: 32
       },
       { 
-        title: '项目名称', 
+        title: '环境名称', 
         dataIndex: 'name', 
-        key: 'name' 
+        key: 'name',
+        render: (text, record) => (
+          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+            <span>{record.name}</span>
+          </div>
+        )
       },
       { 
         title: '占比', 
         dataIndex: 'count', 
         key: 'count', 
         align: 'right',
+        width: 60,
         render: (text, record) => <span>{(record.count * 100 / total).toFixed(1)}%</span>
       }
     ];
@@ -124,6 +131,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
       dataIndex: 'count',
       key: 'count',
       align: 'right',
+      width: 60,
       render: (text, record) => <span>{(record.count * 100 / total).toFixed(1)}%</span>
     }
   ];
@@ -135,15 +143,21 @@ export const ResStat = ({ showData = [], total = 0 }) => {
         width: 32
       },
       { 
-        title: '项目名称', 
+        title: '环境名称', 
         dataIndex: 'name', 
-        key: 'name' 
+        key: 'name',
+        render: (text, record) => (
+          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+            <span>{record.name}</span>
+          </div>
+        )
       },
       { 
         title: '占比', 
         dataIndex: 'count', 
         key: 'count', 
         align: 'right',
+        width: 60,
         render: (text, record) => <span>{(record.count * 100 / total).toFixed(1)}%</span>
       }
     ];
@@ -232,7 +246,8 @@ export const EnvResStat = ({ showData }) => {
       title: '数量',
       dataIndex: 'count',
       align: 'right',
-      key: 'count'
+      key: 'count',
+      width: 80
     }
   ].filter(it => !it.hide);
 
@@ -244,15 +259,21 @@ export const EnvResStat = ({ showData }) => {
         width: 32
       },
       { 
-        title: '项目名称', 
+        title: '环境名称', 
         dataIndex: 'name', 
-        key: 'name' 
+        key: 'name',
+        render: (text, record) => (
+          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+            <span>{record.name}</span>
+          </div>
+        )
       },
       { 
         title: '数量', 
         dataIndex: 'count', 
         align: 'right',
-        key: 'count'
+        key: 'count',
+        width: 80
       }
     ];
     return (
@@ -353,7 +374,8 @@ export const ResGrowTrend = ({ showData }) => {
       title: '数量',
       dataIndex: 'count',
       align: 'right',
-      key: 'count'
+      key: 'count',
+      width: 80
     }
   ].filter(it => !it.hide);
 
@@ -366,15 +388,21 @@ export const ResGrowTrend = ({ showData }) => {
         width: 32
       },
       { 
-        title: '项目名称', 
+        title: '环境名称', 
         dataIndex: 'name', 
-        key: 'name' 
+        key: 'name',
+        render: (text, record) => (
+          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+            <span>{record.name}</span>
+          </div>
+        )
       },
       { 
         title: '数量', 
         dataIndex: 'count', 
         align: 'right',
-        key: 'count'
+        key: 'count',
+        width: 80
       }
     ];
     return (
