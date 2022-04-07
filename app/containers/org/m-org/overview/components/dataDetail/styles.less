@@ -25,6 +25,9 @@
     margin: 0 0 5px 0;
   }
   :global {
+    .ant-tabs {
+      overflow-x: inherit;
+    }
     .ant-tabs-nav {
       width: 176px;
     }
@@ -90,11 +93,13 @@
       .ant-table-row {
         height: 20px;
         line-height: 20px;
-        font-size: 12px;
+        font-size: 14px;
         color: #24292F;
         .up {
           color: #666666;
-          font-size: 14px;
+        }
+        .title {
+          font-size: 12px;
         }
       }
     }

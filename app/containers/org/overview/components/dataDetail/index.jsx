@@ -23,7 +23,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
       dataIndex: 'status',
       key: 'status',
       render: (text, record) => (
-        <div>
+        <div className='title'>
           <span>{ENV_STATUS[record.status]}</span>
         </div>
       )
@@ -50,7 +50,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
-          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+          <div className='idcos-text-ellipsis title' style={{ maxWidth: 150 }} title={record.name}>
             <span>{record.name}</span>
           </div>
         )
@@ -121,7 +121,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
       dataIndex: 'resType',
       key: 'resType',
       render: (text, record) => (
-        <div className='idcos-text-ellipsis' style={{ maxWidth: 120 }} title={record.resType}>
+        <div className='idcos-text-ellipsis title' style={{ maxWidth: 120 }} title={record.resType}>
           <span>{record.resType}</span>
         </div>
       )
@@ -147,7 +147,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
-          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+          <div className='idcos-text-ellipsis title' style={{ maxWidth: 150 }} title={record.name}>
             <span>{record.name}</span>
           </div>
         )
@@ -221,7 +221,7 @@ export const EnvResStat = ({ showData }) => {
       dataIndex: 'resType',
       key: 'resType',
       render: (text, record) => (
-        <div className='idcos-text-ellipsis' style={{ maxWidth: 120 }} title={record.resType}>
+        <div className='idcos-text-ellipsis title' style={{ maxWidth: 120 }} title={record.resType}>
           <span>{record.resType}</span>
         </div>
       )
@@ -230,6 +230,7 @@ export const EnvResStat = ({ showData }) => {
       title: '偏差',
       hide: tabKey !== 'this',
       className: 'up',
+      width: 40,
       render: (text, record) => (
         <>
           {record.up === 0 && <span>--</span>}
@@ -247,7 +248,7 @@ export const EnvResStat = ({ showData }) => {
       dataIndex: 'count',
       align: 'right',
       key: 'count',
-      width: 80
+      width: 40
     }
   ].filter(it => !it.hide);
 
@@ -263,7 +264,7 @@ export const EnvResStat = ({ showData }) => {
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
-          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+          <div className='idcos-text-ellipsis title' style={{ maxWidth: 150 }} title={record.name}>
             <span>{record.name}</span>
           </div>
         )
@@ -351,13 +352,14 @@ export const ResGrowTrend = ({ showData }) => {
       dataIndex: 'date',
       key: 'date',
       render: (text, record) => (
-        <span>{moment(record.date).format('MM/DD')}</span>
+        <span className='title'>{moment(record.date).format('MM/DD')}</span>
       )
     },
     {
       title: '偏差',
       hide: tabKey !== 'this',
       className: 'up',
+      width: 70,
       render: (text, record) => (
         <>
           {record.up === 0 && <span>--</span>}
@@ -375,7 +377,7 @@ export const ResGrowTrend = ({ showData }) => {
       dataIndex: 'count',
       align: 'right',
       key: 'count',
-      width: 80
+      width: 70
     }
   ].filter(it => !it.hide);
 
@@ -392,7 +394,7 @@ export const ResGrowTrend = ({ showData }) => {
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
-          <div className='idcos-text-ellipsis' style={{ maxWidth: 150 }} title={record.name}>
+          <div className='idcos-text-ellipsis title' style={{ maxWidth: 150 }} title={record.name}>
             <span>{record.name}</span>
           </div>
         )
