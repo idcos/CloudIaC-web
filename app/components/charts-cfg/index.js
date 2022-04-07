@@ -1,5 +1,6 @@
 import isArray from 'lodash/isArray';
 import { ENV_STATUS } from 'constants/types';
+import moment from 'moment';
 // eslint-disable-next-line no-undef
 let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
   offset: 0,
@@ -510,6 +511,7 @@ export const chartOptions = {
         {
           type: 'category',
           data: xData,
+          axisTick: { show: false },
           splitLine: {
             show: false
           }
@@ -517,6 +519,7 @@ export const chartOptions = {
       ],
       yAxis: [
         {
+          axisTick: { show: false },
           type: 'value'
         }
       ],
@@ -539,7 +542,7 @@ export const chartOptions = {
     };
   },
   overview_resource_tendency: ({ last_month = [], this_month = [] } = {}) => {
-    const xData = this_month.map(it => it.date);
+    const xData = this_month.map(it => moment(it.date).format('MM-DD'));
     return {
       tooltip: {
         trigger: 'axis',
@@ -566,6 +569,7 @@ export const chartOptions = {
           type: 'category',
           boundaryGap: false,
           data: xData,
+          axisTick: { show: false },
           splitLine: {
             show: false
           }
@@ -573,7 +577,8 @@ export const chartOptions = {
       ],
       yAxis: [
         {
-          type: 'value'
+          type: 'value',
+          axisTick: { show: false }
         }
       ],
       series: [

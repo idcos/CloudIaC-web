@@ -252,7 +252,6 @@ export const ProjectStat = ({ showData }) => {
 export const ResGrowTrend = ({ showData }) => {
 
   const { last_month = [], this_month = [] } = showData || {};
-  console.log(1, showData);
   const [ tabKey, setTabKey ] = useState('last');
 
   const columns = [
