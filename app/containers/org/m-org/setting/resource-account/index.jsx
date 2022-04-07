@@ -62,7 +62,7 @@ export default ({ orgId }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'projectIds',
+      dataIndex: 'projectNames',
       title: '关联项目',
       width: 286,
       ellipsis: true,
