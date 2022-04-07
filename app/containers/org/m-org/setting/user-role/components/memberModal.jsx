@@ -13,7 +13,7 @@ const FLItem = {
   wrapperCol: { span: 24 }
 };
 
-export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch }) => {
+export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, ORG_SET }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   
@@ -100,7 +100,11 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch }) 
               getPopupContainer={triggerNode => triggerNode.parentNode}
               placeholder='请选择角色'
             >
-              {Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)}
+              {ORG_SET ? (
+                Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)
+              ) : (
+                <Option value='member'>成员</Option>
+              )}
             </Select>
           </Form.Item>
         </Form>
@@ -176,7 +180,11 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch }) 
               getPopupContainer={triggerNode => triggerNode.parentNode}
               placeholder='请选择角色'
             >
-              {Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)}
+              {ORG_SET ? (
+                Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)
+              ) : (
+                <Option value='member'>成员</Option>
+              )}
             </Select>
           </Form.Item>
         </Form>

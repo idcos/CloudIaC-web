@@ -227,6 +227,7 @@ export default ({ userInfo, orgId }) => {
         curRecord={curRecord}
         operation={operation}
         isBatch={isBatch}
+        ORG_SET={ORG_SET}
       />
     }
   </div>;
