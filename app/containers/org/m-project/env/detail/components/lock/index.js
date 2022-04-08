@@ -47,10 +47,11 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
 
   return <Modal
     closable={false}
-    title={<span><InfoCircleFilled style={{ color: '#f00', marginRight: 10 }} /><span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`锁定环境 “${envInfo.name}”`}</span></span>}
+    title={<span><InfoCircleFilled style={{ color: '#f00', marginRight: 8 }} /><span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`锁定环境 “${envInfo.name}”`}</span></span>}
     visible={true}
     getContainer={false}
     onOk={onOk}
+    bodyStyle={{ marginLeft: 32 }}
     footer={
       <Space>
         <Button key='back' className='ant-btn-tertiary' onClick={toggleVisible}>
