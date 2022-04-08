@@ -356,23 +356,6 @@ export const ResGrowTrend = ({ showData }) => {
       )
     },
     {
-      title: '偏差',
-      hide: tabKey !== 'this',
-      className: 'up',
-      width: 70,
-      render: (text, record) => (
-        <>
-          {record.up === 0 && <span>--</span>}
-          {record.up > 0 && (
-            <Space size={2} align='center'><TrenDupIcon/>{Math.abs(record.up)}</Space>
-          )}
-          {record.up < 0 && (
-            <Space size={2} align='center'><TrendDownIcon/>{Math.abs(record.up)}</Space>
-          )}
-        </>
-      )
-    },
-    {
       title: '数量',
       dataIndex: 'count',
       align: 'right',
@@ -440,26 +423,15 @@ export const ResGrowTrend = ({ showData }) => {
   };
 
   return (
-    <div className={styles.tabsWrapper}>
-      <h2>最近七天资源新增趋势</h2>
-      <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
-        <TabPane tab='上月' key='last'>
-          <div className={styles.data_table}>
-            <Table 
-              {...commonTableProps}
-              dataSource={sortBy(last_month, it => -it.count)} 
-            />
-          </div>
-        </TabPane>
-        <TabPane tab='本月' key='this'>
-          <div className={styles.data_table}>
-            <Table 
-              {...commonTableProps}
-              dataSource={sortBy(this_month, it => -it.count)} 
-            />
-          </div>
-        </TabPane>
-      </Tabs>
+    <div className={styles.tableWrapper}>
+      <h2>概览详情</h2>
+      <h3>最近七天资源新增趋势</h3>
+      <div className={styles.data_table}>
+        <Table 
+          {...commonTableProps}
+          dataSource={sortBy(this_month, it => -it.count)} 
+        />
+      </div>
     </div>
   );
 };

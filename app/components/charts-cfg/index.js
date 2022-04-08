@@ -582,20 +582,20 @@ export const chartOptions = {
         }
       ],
       series: [
+        // {
+        //   name: '上个月',
+        //   type: 'line',
+        //   stack: 'Total',
+        //   areaStyle: {},
+        //   smooth: false,
+        //   showSymbol: false,
+        //   emphasis: {
+        //     focus: 'series'
+        //   },
+        //   data: last_month.map(it => it.count)
+        // },
         {
-          name: '上个月',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          smooth: false,
-          showSymbol: false,
-          emphasis: {
-            focus: 'series'
-          },
-          data: last_month.map(it => it.count)
-        },
-        {
-          name: '当月',
+          // name: '当月',
           type: 'line',
           stack: 'Total',
           smooth: false,

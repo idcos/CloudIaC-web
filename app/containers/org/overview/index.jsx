@@ -81,8 +81,8 @@ const overview = ({ curOrg, curProject }) => {
   let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, des: '环境状态占比', ins: null },
     { key: 'overview_resouces_type', domRef: overview_resouces_type, des: '资源类型占比', ins: null },
-    { key: 'overview_pro_resource', domRef: overview_pro_resource, des: '环境状态占比', ins: null },
-    { key: 'overview_resource_tendency', domRef: overview_resource_tendency, des: '环境状态占比', ins: null }
+    { key: 'overview_pro_resource', domRef: overview_pro_resource, des: '环境资源数量', ins: null },
+    { key: 'overview_resource_tendency', domRef: overview_resource_tendency, des: '最近七天资源及费用趋势', ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
