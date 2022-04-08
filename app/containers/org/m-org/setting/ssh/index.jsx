@@ -112,6 +112,9 @@ export default ({ orgId, userInfo }) => {
       icon: <InfoCircleFilled />,
       okText: '确认删除',
       cancelText: '取消',
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => operation({ doWhat: 'del', payload: { id } })
     });
   };

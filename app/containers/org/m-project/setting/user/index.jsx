@@ -125,6 +125,9 @@ const User = ({ orgId, projectId }) => {
       okButtonProps: {
         danger: true
       },
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => {
         return removeUser(id);
       }

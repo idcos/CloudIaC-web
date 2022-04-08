@@ -123,6 +123,9 @@ export default ({ title, orgId }) => {
       content: `禁用将导致引用该VCS仓库的云模板不可用，确定要禁用吗`,
       okText: '确认',
     	cancelText: '取消',
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => {
         operation({ doWhat: 'edit', payload: { id, status: 'disable' } });
       }
@@ -138,6 +141,9 @@ export default ({ title, orgId }) => {
       content: `删除将导致引用该VCS仓库的云模板不可用，确定要删除吗`,
       okText: '确认',
     	cancelText: '取消',
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => {
         operation({ doWhat: 'del', payload: { id } });
       }

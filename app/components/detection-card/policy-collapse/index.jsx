@@ -102,6 +102,9 @@ export default ({ data, refresh, targetId, targetType }) => {
       icon: <InfoCircleFilled />,
       okText: '确认',
       cancelText: '取消',
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => updateSuppress()
     });
   };

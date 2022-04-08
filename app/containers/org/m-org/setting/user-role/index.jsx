@@ -111,6 +111,9 @@ export default ({ userInfo, orgId }) => {
       okButtonProps: {
         danger: true
       },
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => {
         return operation({ doWhat: 'removeUser', payload: { id } });
       }

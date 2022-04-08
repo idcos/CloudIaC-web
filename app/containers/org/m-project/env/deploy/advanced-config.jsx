@@ -222,6 +222,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
         content: `开启『${str}』时需要同时开启『自动通过审批』，否则『${str}』功能无法自动进行，操作可能存在不可预知风险`,
         okText: '确认开启',
         cancelText: '取消',
+        cancelButtonProps: {
+          className: 'ant-btn-tertiary' 
+        },
         onOk() {
           form.setFieldsValue({ autoApproval: true });
         },
@@ -250,6 +253,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
         content: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
         okText: '确认关闭',
         cancelText: '取消',
+        cancelButtonProps: {
+          className: 'ant-btn-tertiary' 
+        },
         onOk() {
           form.setFieldsValue({ autoRepairDrift: false, commit: false });
         },

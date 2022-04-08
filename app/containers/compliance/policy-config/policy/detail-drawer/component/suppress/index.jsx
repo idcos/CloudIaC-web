@@ -155,6 +155,9 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
       icon: <InfoCircleFilled />,
       okText: '确认',
     	cancelText: '取消',
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: suppressPolicy
     });
   };

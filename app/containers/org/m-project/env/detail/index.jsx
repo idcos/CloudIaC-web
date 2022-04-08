@@ -127,6 +127,9 @@ const EnvDetail = (props) => {
       width: 480,
       title: `你确定要销毁环境“${envInfo.name}”吗？`,
       icon: <InfoCircleFilled />,
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       content: (
         <>
           <div style={{ marginBottom: 29 }}>销毁资源将删除环境所有资源</div>

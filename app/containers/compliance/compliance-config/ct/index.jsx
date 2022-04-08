@@ -144,6 +144,9 @@ const CCTList = () => {
         icon: <InfoCircleFilled />,
         okText: '确认',
         cancelText: '取消',
+        cancelButtonProps: {
+          className: 'ant-btn-tertiary' 
+        },
         onOk: () => changeEnabled({ id, enabled: false })
       });
     }
