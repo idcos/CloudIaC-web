@@ -41,6 +41,7 @@ import { LoadingIcon } from 'components/lottie-icon';
 import DeployLog from "./deploy-log";
 import styles from "./styles.less";
 import AuditModal from "./auditModal";
+import { ApproveIcon, SuspendIcon } from 'components/iconfont';
 
 const { Panel } = Collapse;
 const searchService = new SearchByKeyWord({
@@ -313,7 +314,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                   <Button
                     onClick={() => suspend()}
                     disabled={aborting}
-                    icon={<PauseOutlined />}
+                    icon={<SuspendIcon />}
                   >
                     中止
                   </Button>
@@ -329,7 +330,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                 )}
                 {taskInfo.status === "approving" && (
                   <Button
-                    icon={<CopyOutlined />}
+                    icon={<ApproveIcon />}
                     onClick={() => setAuditModalVisible(true)}
                   >
                     审核
