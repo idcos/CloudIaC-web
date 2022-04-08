@@ -289,8 +289,8 @@ const EnvDetail = (props) => {
             subDes={
               PROJECT_OPERATOR ? (
                 <Space>
-                  <Button onClick={redeploy}>重新部署</Button>
-                  <Button disabled={envInfo.locked} onClick={destroy} type={'primary'}>销毁资源</Button>
+                  <Button disabled={envInfo.locked} onClick={destroy}>销毁资源</Button>
+                  <Button onClick={redeploy} type='primary'>重新部署</Button>
                 </Space>
               ) : null
             }

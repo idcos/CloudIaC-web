@@ -47,11 +47,11 @@ const EnvInfo = () => {
         <div className='title'>环境属性</div>
         <div className='info-border'>
           <Descriptions
-            labelStyle={{ color: '#24292F' }}
+            labelStyle={{ color: '#24292F', fontWeight: 500 }}
             contentStyle={{ color: '#57606A' }}
           >
             {envInfo.isBilling && (
-              <Descriptions.Item span={3} label='当前费用'>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}元</Descriptions.Item>
+              <Descriptions.Item span={3} label='当月费用'>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}元</Descriptions.Item>
             )}
             <Descriptions.Item span={3} label='资源数'>{envInfo.resourceCount}</Descriptions.Item>
 
