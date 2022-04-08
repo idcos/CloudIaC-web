@@ -631,18 +631,18 @@ export const chartOptions = {
         }
       },
       tooltip: {
-        trigger: 'item'
+        trigger: 'item',
+        formatter: '{b}: {c} (元)'
       },
       series: [
         {
-          name: 'Access From',
           type: 'pie',
           radius: [ '50%', '70%' ],
           avoidLabelOverlap: false,
           data: costTypeStat.map(d => ({ name: d.resType, value: d.amount })),
           label: {
             show: true,
-            formatter: ' {b}\n{d}%',
+            formatter: ' {b}：{d}%',
             overflow: 'break'
           },
           labelLine: {
@@ -674,13 +674,11 @@ export const chartOptions = {
     }
     return {
       legend: {
-        itemHeight: 6,
-        itemWidth: 6,
-        icon: "rect",
-        left: 11
+        show: false
       },
       tooltip: {
         trigger: 'axis',
+        formatter: '{a} <br/>{b}: {c} (元)',
         axisPointer: {
           type: 'cross',
           label: {
