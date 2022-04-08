@@ -7,11 +7,11 @@ import moment from 'moment';
 import styles from '../styles.less';
 import DetailPageContext from '../detail-page-context';
 import CostReport from './cost-report';
+import classNames from 'classnames';
 
 const EnvInfo = () => {
 
   const { envInfo = {}, taskInfo = {}, orgId, projectId, envId } = useContext(DetailPageContext);
-
   const [ now, setNow ] = useState(moment());
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const EnvInfo = () => {
             contentStyle={{ color: '#57606A' }}
           >
             {envInfo.isBilling && (
-              <Descriptions.Item span={3} label='当前费用'>{envInfo.monthCost.toFixed(2)}元</Descriptions.Item>
+              <Descriptions.Item span={3} label='当前费用'>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}元</Descriptions.Item>
             )}
             <Descriptions.Item span={3} label='资源数'>{envInfo.resourceCount}</Descriptions.Item>
 
@@ -79,7 +79,7 @@ const EnvInfo = () => {
           </Descriptions>
         </div>
       </div>
-      <div className='cost-report'>
+      <div className={classNames('cost-report', { 'isBillingStyle': !envInfo.isBilling })} >
         <div className='cost-report-border'>
           {envInfo.isBilling ? (
             <CostReport orgId={orgId} projectId={projectId} envId={envId} />
