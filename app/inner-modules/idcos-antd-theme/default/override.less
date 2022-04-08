@@ -73,16 +73,19 @@
   }
   .ant-modal-confirm {
     .ant-modal-body {
-      padding: 28px 32px 28px;
-      .anticon {
-        color: #DA1E28;
-      }
-      .ant-modal-confirm-title {
-        color: #24292F;
-      }
-      .ant-modal-confirm-content {
-        color: #57606A;
-        margin-top: 12px;
+      .ant-modal-confirm-body {
+        & > .anticon {
+          color: #DA1E28;
+          margin-right: 8px;
+          & + .ant-modal-confirm-title {
+            color: #24292F;
+            & + .ant-modal-confirm-content {
+              margin-left: 32px;
+              color: #57606A;
+              margin-top: 16px;
+            }
+          }
+        }
       }
     }
   }
