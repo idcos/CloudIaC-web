@@ -48,6 +48,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       <Form.Item
         label='组织名称'
         name='name'
+        getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,

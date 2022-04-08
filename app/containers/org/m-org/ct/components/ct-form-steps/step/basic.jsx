@@ -61,6 +61,7 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
       <Form.Item
         label='模板名称'
         name='name'
+        getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,

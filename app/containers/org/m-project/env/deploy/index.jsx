@@ -311,6 +311,7 @@ const Index = ({ match = {} }) => {
               <Form.Item
                 label='环境名称：'
                 name='name'
+                getValueFromEvent={(e) => e.target.value.trim()}
                 rules={[
                   {
                     required: true,

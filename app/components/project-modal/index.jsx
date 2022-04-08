@@ -86,6 +86,7 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
       <Form.Item
         label='项目名称'
         name='name'
+        getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
