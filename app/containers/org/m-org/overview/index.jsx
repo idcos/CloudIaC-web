@@ -42,10 +42,7 @@ const overview = ({ curOrg, projects, curProject }) => {
         this_month: [],
         stackList: projects.list || []
       },
-      resGrowTrend: {
-        last_month: [],
-        this_month: []
-      }
+      resGrowTrend: []
     },
     run: startStatistics
   } = useRequest(
@@ -63,10 +60,7 @@ const overview = ({ curOrg, projects, curProject }) => {
             this_month: get(projectResStat, '[1].resTypes', []), 
             stackList: projects.list || []
           }, 
-          resGrowTrend: {
-            last_month: resGrowTrend[0], 
-            this_month: resGrowTrend[1]
-          }
+          resGrowTrend: resGrowTrend || []
         };
       },
       onSuccess: ({ envStat, resStat }) => {

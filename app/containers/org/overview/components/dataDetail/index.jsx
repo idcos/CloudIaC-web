@@ -334,10 +334,7 @@ export const EnvResStat = ({ showData }) => {
   );
 };
 
-export const ResGrowTrend = ({ showData }) => {
-
-  const { last_month = [], this_month = [] } = showData || {};
-  const [ tabKey, setTabKey ] = useState('last');
+export const ResGrowTrend = ({ showData = [] }) => {
 
   const columns = [
     {
@@ -429,7 +426,7 @@ export const ResGrowTrend = ({ showData }) => {
       <div className={styles.data_table}>
         <Table 
           {...commonTableProps}
-          dataSource={sortBy(this_month, it => -it.count)} 
+          dataSource={sortBy(showData, it => -it.count)} 
         />
       </div>
     </div>  

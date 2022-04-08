@@ -541,8 +541,8 @@ export const chartOptions = {
       ]
     };
   },
-  overview_resource_tendency: ({ last_month = [], this_month = [] } = {}) => {
-    const xData = this_month.map(it => moment(it.date).format('MM/DD'));
+  overview_resource_tendency: (data = []) => {
+    const xData = data.map(it => moment(it.date).format('MM/DD'));
     return {
       tooltip: {
         trigger: 'axis',
@@ -582,20 +582,7 @@ export const chartOptions = {
         }
       ],
       series: [
-        // {
-        //   name: '上个月',
-        //   type: 'line',
-        //   stack: 'Total',
-        //   areaStyle: {},
-        //   smooth: false,
-        //   showSymbol: false,
-        //   emphasis: {
-        //     focus: 'series'
-        //   },
-        //   data: last_month.map(it => it.count)
-        // },
         {
-          // name: '当月',
           type: 'line',
           stack: 'Total',
           smooth: false,
@@ -604,7 +591,7 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
-          data: this_month.map(it => it.count)
+          data: data.map(it => it.count)
         }
       ]
     };

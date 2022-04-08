@@ -39,10 +39,7 @@ const overview = ({ curOrg, curProject }) => {
         last_month: [],
         this_month: []
       },
-      resGrowTrend: {
-        last_month: [],
-        this_month: []
-      }
+      resGrowTrend: []
     }
   } = useRequest(
     () => requestWrapper(
@@ -58,10 +55,7 @@ const overview = ({ curOrg, curProject }) => {
             last_month: get(envResStat, '[0].resTypes', []), 
             this_month: get(envResStat, '[1].resTypes', [])
           }, 
-          resGrowTrend: {
-            last_month: resGrowTrend[0], 
-            this_month: resGrowTrend[1]
-          }
+          resGrowTrend: resGrowTrend || []
         };
       },
       onSuccess: ({ envStat, resStat }) => {
