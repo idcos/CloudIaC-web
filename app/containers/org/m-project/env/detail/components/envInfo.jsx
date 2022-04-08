@@ -3,6 +3,7 @@ import { Descriptions, Collapse, Empty } from 'antd';
 import { AUTO_DESTROY } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
+import history from "utils/history";
 import moment from 'moment';
 import styles from '../styles.less';
 import DetailPageContext from '../detail-page-context';
@@ -58,11 +59,14 @@ const EnvInfo = () => {
             <Descriptions.Item span={3} label='存活时间'>{formatTTL(envInfo)}</Descriptions.Item>
             <Descriptions.Item span={3} label='更新时间'>{timeUtils.format(envInfo.updatedAt) || '-'}</Descriptions.Item>
 
-            <Descriptions.Item span={3} label='云模板'>{envInfo.templateName || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label='云模板'><span onClick={() => {
+              history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
+            }} className={styles.linkToPage}
+            >{envInfo.templateName || '-'}</span></Descriptions.Item>
             <Descriptions.Item span={3} label='分支/标签'>{envInfo.revision || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label='Commit_ID'><span onClick={() => {
               window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`);
-            }} className={styles.linkToCommit}
+            }} className={styles.linkToPage}
             >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
 
             <Descriptions.Item span={3} label='密钥'>{envInfo.keyName || '-'}</Descriptions.Item>

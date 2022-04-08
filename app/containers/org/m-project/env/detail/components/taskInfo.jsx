@@ -36,7 +36,7 @@ const TaskInfo = (props) => {
           <Descriptions.Item label='分支/标签'>{taskInfo.revision || '-'}</Descriptions.Item>
           <Descriptions.Item label='Commit_ID'><span onClick={() => {
             window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
-          }} className={styles.linkToCommit}
+          }} className={styles.linkToPage}
           >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
           <Descriptions.Item label='更新时间'>{timeUtils.format(taskInfo.updatedAt) || '-'}</Descriptions.Item>
           <Descriptions.Item label='创建时间'>{timeUtils.format(taskInfo.createdAt) || '-'}</Descriptions.Item>
