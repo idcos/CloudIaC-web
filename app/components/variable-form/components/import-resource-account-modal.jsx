@@ -104,6 +104,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
       title='资源账号' 
       visible={visible} 
       onCancel={onCancel} 
+      className='antd-modal-type-table'
       cancelButtonProps={{ 
         className: 'ant-btn-tertiary' 
       }}

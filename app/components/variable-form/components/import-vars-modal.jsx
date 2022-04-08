@@ -80,6 +80,7 @@ export default (props) => {
       visible={visible} 
       onCancel={onCancel} 
       onOk={onOk}
+      className='antd-modal-type-table'
       cancelButtonProps={{ 
         className: 'ant-btn-tertiary' 
       }}
