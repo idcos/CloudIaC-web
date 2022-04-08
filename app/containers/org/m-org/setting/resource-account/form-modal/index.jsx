@@ -259,11 +259,12 @@ export default ({ orgId, event$ }) => {
             <Select
               getPopupContainer={triggerNode => triggerNode.parentNode} 
               allowClear={true} 
-              placeholder='请选择'
+              placeholder='所有项目'
               style={{ width: 395 }}
               mode={'multiple'}
               optionFilterProp='children'
               showSearch={true}
+              showArrow={true}
             >
               {objectList.map(it => <Option value={it.id}>{it.name}</Option>)}
             </Select>
@@ -279,6 +280,7 @@ export default ({ orgId, event$ }) => {
               }
               style={{ width: 395 }}
               placeholder='请选择'
+              showArrow={true}
             />
           </Form.Item>
 

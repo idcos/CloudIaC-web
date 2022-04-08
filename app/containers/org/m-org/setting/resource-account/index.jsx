@@ -66,7 +66,13 @@ export default ({ orgId }) => {
       title: '关联项目',
       width: 286,
       ellipsis: true,
-      render: (text) => (text || []).join('、')
+      render: (text) => {
+        if (!text) {
+          return (text || []).join('、'); 
+        } else {
+          return '所有项目';
+        }
+      }
     },
     {
       dataIndex: 'provider',

@@ -6,88 +6,107 @@
       padding: 12px;
       display: flex;
       align-items: center;
+
       .title {
         color: #57606A;
         font-size: 16px;
         margin-right: 8px;
       }
+
       .aborting-status {
         margin-right: 8px;
         color: #24292F;
       }
+
       .status {
         line-height: 22px;
       }
     }
+
     .deploy-log-card {
       height: 100%;
       display: flex;
       flex-direction: column;
-      
-      & > .ant-card-head {
+
+      &>.ant-card-head {
         background-color: #24292F;
         min-height: inherit;
         margin-bottom: inherit;
         color: #fff;
         flex: 0 0 auto;
         border-bottom: 1px solid #E1E4E8;
+
         .ant-card-head-wrapper {
           height: 46px;
+
           .card-title {
             line-height: 20px;
             font-size: 12px;
             font-weight: normal;
           }
+
           .ant-card-extra {
             color: #fff;
+
             .ant-input-affix-wrapper {
               border-color: #6A717A;
               background-color: inherit;
               color: #BDBFC1;
+
               .ant-input {
                 background-color: inherit;
                 color: #fff;
-                 // 谷歌
-                &::-webkit-input-placeholder{
+
+                // 谷歌
+                &::-webkit-input-placeholder {
                   color: #BDBFC1;
                 }
+
                 // 火狐19+版本
-                &::-moz-placeholder{   /* Mozilla Firefox 19+ */
+                &::-moz-placeholder {
+                  /* Mozilla Firefox 19+ */
                   color: #BDBFC1;
                 }
+
                 // 火狐4-18版本
-                &:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+                &:-moz-placeholder {
+                  /* Mozilla Firefox 4 to 18 */
                   color: #BDBFC1;
                 }
+
                 // IE10-11版本
-                &:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+                &:-ms-input-placeholder {
+                  /* Internet Explorer 10-11 */
                   color: #BDBFC1;
                 }
               }
             }
+
             .tool {
               cursor: pointer;
+
               .tool-icon {
                 margin-right: 4px;
               }
-    
+
             }
           }
         }
       }
 
-      & > .ant-card-body {
+      &>.ant-card-body {
         flex: 1;
         min-height: 0;
 
-        & > .card-body-scroll {
+        &>.card-body-scroll {
           height: 500px;
           overflow-y: scroll;
 
           &.isFullscreen {
             height: calc(100vh - 76px);
           }
-          & > .deploy-log-collapse {
+
+          &>.deploy-log-collapse {
             :global {
               .line-index {
                 -webkit-touch-callout: none;
@@ -98,6 +117,7 @@
                 user-select: none;
               }
             }
+
             .ant-collapse-item {
               position: sticky;
               top: 0;
@@ -108,6 +128,7 @@
                 position: sticky;
                 top: 0;
                 z-index: 2;
+
                 &:focus {
                   background: #57606A;
                   border: 1px solid #85898E;
@@ -237,6 +258,8 @@
   grid-template-rows: 43px 43px;
   text-align: center;
   line-height: 43px;
+  font-weight: 600;
+  color: #24292F;
 
   .header {
     border: 1px solid #D4D7DB;
@@ -253,6 +276,7 @@
 
   .audit-modal {
     :global {
+
       //调整弹窗样式
       .ant-modal-header {
         border: none;
@@ -270,5 +294,3 @@
     }
   }
 }
-
-
