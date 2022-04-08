@@ -77,9 +77,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
       return;
     }
     if (taskHasEnd) {
-      timeRef.current = setTimeout(() => {
-        stopLoopRef.current = true;
-      }, 30000);
+      stopLoopRef.current = true;
     } else {
       timeRef.current && clearTimeout(timeRef.current);
       stopLoopRef.current = false;
