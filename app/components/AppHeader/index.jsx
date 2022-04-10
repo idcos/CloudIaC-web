@@ -9,11 +9,14 @@ import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
 import getPermission from "utils/permission";
+import { getLanguage, setLanguage } from "utils/i18n";
 import styles from './styles.less';
 
 const KEY = 'global';
 
 const AppHeader = (props) => {
+
+  const language = getLanguage();
   const { theme, locationPathName, orgs, curOrg, projects, curProject, dispatch, userInfo } = props;
   const { ORG_SET } = getPermission(userInfo);
   const { pathname } = window.location;
@@ -161,6 +164,7 @@ const AppHeader = (props) => {
           ) : null
         }
         <div className='user'>
+          {/* <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? 'En' : 'Zh'}</span> */}
           <Tooltip 
             color='#08857C'
             visible={devManualTooltipVisible}

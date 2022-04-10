@@ -7,6 +7,7 @@ import Layout from 'components/common/layout';
 import EnvList from './componemts/envList';
 import history from 'utils/history';
 import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 
 const envNavs = {
   '': '全部',
@@ -28,7 +29,7 @@ const Envs = (props) => {
   return (
     <Layout
       extraHeader={<PageHeader
-        title='环境'
+        title={t('env')}
         breadcrumb={true}
         subDes={(
           PROJECT_OPERATOR ? (
