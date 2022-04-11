@@ -2,7 +2,7 @@ import { Table, Tag, Input, Space, Checkbox, Button } from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import classnames from 'classnames';
 import { useEventListener } from 'ahooks';
-import { SCOPE_ENUM } from './enum';
+import { SCOPE_ENUM } from 'constants/types';
 
 export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnly = false, event$ }) => {
 

@@ -102,7 +102,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
     {
       dataIndex: 'type',
       title: '屏蔽类型',
-      width: 86,
+      width: 120,
       ellipsis: true,
       render: (text) => SUPPRESS_TYPE_ENUM[text]
     },

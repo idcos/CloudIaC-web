@@ -16,7 +16,7 @@ import ImportVarsModal from './components/import-vars-modal';
 import ImportResourceAccountModal from './components/import-resource-account-modal';
 import SelectTypeValue from './components/select-type-value';
 import ResourceAccountFormTable from './resource-account-form-table';
-import { SCOPE_ENUM, VAR_TYPE_ENUM } from './enum';
+import { SCOPE_ENUM, VAR_TYPE_ENUM } from 'constants/types';
 
 const EditableTableFooter = styled.div`
   margin-top: 16px;

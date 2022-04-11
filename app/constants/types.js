@@ -18,56 +18,56 @@ export const ORG_USER = {
     complianceManager: t('org.role.complianceManager')
   },
   eventType: {
-    'task.failed': '部署失败',
-    'task.complete': '部署成功',
-    'task.approving': '等待审批',
-    'task.running': '新建部署',
-    'task.crondrift': '配置漂移'
+    'task.failed': t('org.eventType.task.failed'),
+    'task.complete': t('org.eventType.task.complete'),
+    'task.approving': t('org.eventType.task.approving'),
+    'task.running': t('org.eventType.task.running'),
+    'task.crondrift': t('org.eventType.task.crondrift')
   },
   notificationType: {
-    email: '邮件',
-    wechat: '企业微信',
-    dingtalk: '钉钉',
-    slack: 'Slack'
+    email: t('org.notificationType.email'),
+    wechat: t('org.notificationType.wechat'),
+    dingtalk: t('org.notificationType.dingtalk'),
+    slack: t('org.notificationType.slack')
   }
 };
 
 export const SYS = {
   status: {
-    passing: '正常'
+    passing: t('sys.status.normal')
   }
 };
 
 export const PROJECT_ROLE = {
-  manager: 'manager',
-  approver: 'approver',
-  operator: 'operator',
-  guest: 'guest'
+  manager: t('project.role.manager'),
+  approver: t('project.role.approver'),
+  operator: t('project.role.operator'),
+  guest: t('project.role.guest')
 };
 
 export const AUTO_DESTROY = [
-  { name: '12小时', code: '12h' },
-  { name: '一天', code: '1d' },
-  { name: '三天', code: '3d' },
-  { name: '一周', code: '1w' },
-  { name: '半个月', code: '15d' },
-  { name: '一个月', code: '30d' }
+  { name: t('define.autoDestroy.12h'), code: '12h' },
+  { name: t('define.autoDestroy.1d'), code: '1d' },
+  { name: t('define.autoDestroy.3d'), code: '3d' },
+  { name: t('define.autoDestroy.1w'), code: '1w' },
+  { name: t('define.autoDestroy.15d'), code: '15d' },
+  { name: t('define.autoDestroy.30d'), code: '30d' }
 ];
 
 export const destoryType = [{
-  name: '不限制', value: 'infinite'
+  name: t('define.destoryType.infinite'), value: 'infinite'
 }, {
-  name: '小时/天', value: 'timequantum'
+  name: t('define.destoryType.timequantum'), value: 'timequantum'
 }, {
-  name: '具体时间', value: 'time'
+  name: t('define.destoryType.time'), value: 'time'
 }];
 
 export const ENV_STATUS = {
-  'active': '活跃', 
-  'failed': '失败', 
-  'inactive': '已销毁',
-  'running': '执行中',
-  'approving': '待审批'
+  'active': t('env.status.active'), 
+  'failed': t('env.status.failed'), 
+  'inactive': t('env.status.inactive'),
+  'running': t('env.status.running'),
+  'approving': t('env.status.approving')
 };
 
 export const ENV_STATUS_COLOR = {
@@ -79,46 +79,51 @@ export const ENV_STATUS_COLOR = {
 };
 
 export const SCOPE_ENUM = {
-  org: '组织',
-  project: '项目',
-  template: '云模板',
-  env: '环境'
+  org: t('define.scope.org'),
+  project: t('define.scope.project'),
+  template: t('define.scope.template'),
+  env: t('define.scope.env')
+};
+
+export const VAR_TYPE_ENUM = {
+  terraform: t('define.varType.terraform'),
+  environment: t('define.varType.environment')
 };
 
 // 目标类型
 export const TARGET_TYPE_ENUM = {
-  template: '云模板',
-  env: '环境',
-  policy: '策略'
+  template: t('define.targetType.template'),
+  env: t('define.targetType.env'),
+  policy: t('define.targetType.policy')
 };
 
 // 屏蔽类型
 export const SUPPRESS_TYPE_ENUM = {
-  policy: '屏蔽此策略',
-  source: '按来源屏蔽'
+  policy: t('define.suppressType.policy'),
+  source: t('define.suppressType.source')
 };
 
 export const DOCS = {
-  quickstart: '快速入门',
-  developer: '开发者文档',
-  summarize: 'CloudIaC概述',
-  organization: '组织',
-  tpl: '云模板',
-  project: '项目',
-  variable: '变量',
-  env: '环境',
-  vcs: 'VCS',
-  role: '用户和角色'
+  quickstart: t('define.docs.quickstart'),
+  developer: t('define.docs.developer'),
+  summarize: t('define.docs.summarize'),
+  organization: t('define.docs.organization'),
+  tpl: t('define.docs.tpl'),
+  project: t('define.docs.project'),
+  variable: t('define.docs.variable'),
+  env: t('define.docs.env'),
+  vcs: t('define.docs.vcs'),
+  role: t('define.docs.role')
 };
 
 export const TASK_STATUS = {
-  "pending": '排队',
-  "running": '执行中',
-  "approving": '待审批',
-  "failed": '失败',
-  "complete": '成功',
-  "rejected": '驳回',
-  "aborted": '中止'
+  "pending": t('task.status.pending'),
+  "running": t('task.status.running'),
+  "approving": t('task.status.approving'),
+  "failed": t('task.status.failed'),
+  "complete": t('task.status.complete'),
+  "rejected": t('task.status.rejected'),
+  "aborted": t('task.status.aborted')
 };
 
 export const TASK_STATUS_COLOR = {
@@ -132,9 +137,9 @@ export const TASK_STATUS_COLOR = {
 };
 
 export const TASK_TYPE = {
-  'plan': 'plan作业',
-  'apply': 'apply作业',
-  'destroy': 'destroy作业'
+  'plan': t('task.type.plan'),
+  'apply': t('task.type.apply'),
+  'destroy': t('task.type.destroy')
 };
 
 /** 不需要长轮询获取任务信息的任务状态 */
@@ -156,19 +161,19 @@ export const POLICIES_SEVERITY_STATUS_ENUM = {
   high: (
     <Space size={4}>
       <SeverityHighIcon />
-      <span>高</span>
+      <span>{t('policy.severity.high')}</span>
     </Space>
   ),
   medium: (
     <Space size={4}>
       <SeverityMediumIcon />
-      <span>中</span>
+      <span>{t('policy.severity.medium')}</span>
     </Space>
   ),
   low: (
     <Space size={4}>
       <SeverityLowIcon />
-      <span>低</span>
+      <span>{t('policy.severity.low')}</span>
     </Space>
   )
 };
@@ -195,9 +200,9 @@ export const POLICIES_DETECTION_ICON_COLLAPSE = {
   suppressed: <CloseSquareOutlined />
 };
 export const DIMENSION_ENUM = {
-  module: '所属模块',
-  provider: 'Provider',
-  type: '资源类型'
+  module: t('env.resource.mode.module'),
+  provider: t('env.resource.mode.provider'),
+  type: t('env.resource.mode.type')
 };
 // 禁止扫描的合规状态
 export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
@@ -205,11 +210,11 @@ export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
 export const SCAN_DETAIL_DISABLE_STATUS = [ 'disable', 'enable' ];
 
 export const DEPLOY_HISTORY_SOURCE_ENUM = {
-  manual: '手动',
-  driftPlan: '漂移检测',
-  driftApply: '纠正漂移',
-  webhookPlan: 'PR/MR',
-  webhookApply: '分支推送',
-  autoDestroy: '定时销毁',
-  api: 'API触发'
+  manual: t('task.triggerType.manual'),
+  driftPlan: t('task.triggerType.driftPlan'),
+  driftApply: t('task.triggerType.driftApply'),
+  webhookPlan: t('task.triggerType.webhookPlan'),
+  webhookApply: t('task.triggerType.webhookApply'),
+  autoDestroy: t('task.triggerType.autoDestroy'),
+  api: t('task.triggerType.api')
 };
