@@ -1,13 +1,15 @@
+
+import { logout } from 'services/logout';
+import { matchPath } from 'react-router-dom';
+import { t } from 'utils/i18n';
+
 function parseJSON(res) {
   return res.json().then(jsonResult => {
     return { ...res, jsonResult, httpCode: res.status };
   }).catch(() => {
-    throw new Error('接口错误');
+    throw new Error(t('$static.message.interfaceFail'));
   });
 }
-
-import { logout } from 'services/logout';
-import { matchPath } from 'react-router-dom';
 
 async function xFetch(url, options) {
 

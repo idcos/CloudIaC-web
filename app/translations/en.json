@@ -29,6 +29,7 @@
   "define.destoryType.infinite": "unlimited",
   "define.destoryType.timequantum": "hours/day",
   "define.destoryType.time": "time",
+  "define.pagination.showTotal": "Total {total} items",
   "org.role.member": "member",
   "org.role.admin": "admin",
   "org.role.complianceManager": "compliance manager",
@@ -78,5 +79,17 @@
   "policy.detection.status.failed": "failed",
   "policy.detection.status.violated": "violated",
   "policy.detection.status.suppressed": "suppressed",
-  "sys.status.normal": "normal"
+  "sys.status.normal": "normal",
+  "$static.message.notFoundUserInfo": "Failed to get user information",
+  "$static.message.copySuccess": "Copy success",
+  "$static.message.copyFail": "Copy failed",
+  "$static.message.opSuccess": "Operation success",
+  "$static.message.opFail": "Operation failed",
+  "$static.message.interfaceFail": "Interface request failed",
+  "$static.time.years": "years",
+  "$static.time.months": "months",
+  "$static.time.days": "days",
+  "$static.time.hours": "hours",
+  "$static.time.minutes": "minutes",
+  "$static.time.seconds": "seconds"
 }

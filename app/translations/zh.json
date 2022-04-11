@@ -29,6 +29,7 @@
   "define.destoryType.infinite": "不限制",
   "define.destoryType.timequantum": "小时/天",
   "define.destoryType.time": "具体时间",
+  "define.pagination.showTotal": "共 {total} 条",
   "org.role.member": "成员",
   "org.role.admin": "管理员",
   "org.role.complianceManager": "合规管理员",
@@ -78,5 +79,17 @@
   "policy.detection.status.failed": "失败",
   "policy.detection.status.violated": "不通过",
   "policy.detection.status.suppressed": "已屏蔽",
-  "sys.status.normal": "正常"
+  "sys.status.normal": "正常",
+  "$static.message.notFoundUserInfo": "未能获取用户信息",
+  "$static.message.copySuccess": "复制成功",
+  "$static.message.copyFail": "复制失败",
+  "$static.message.opSuccess": "操作成功",
+  "$static.message.opFail": "操作失败",
+  "$static.message.interfaceFail": "接口请求失败",
+  "$static.time.years": "年",
+  "$static.time.months": "月",
+  "$static.time.days": "天",
+  "$static.time.hours": "时",
+  "$static.time.minutes": "分",
+  "$static.time.seconds": "秒"
 }
