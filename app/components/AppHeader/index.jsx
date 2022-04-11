@@ -177,7 +177,7 @@ const AppHeader = (props) => {
             }
           >
             <Badge color={devManualTooltipVisible ? '#08857C' : null} offset={[ -1, 3 ]}>
-              <span onClick={() => history.push('/devManual')}><QuestionCircleFilled/></span>
+              <span onClick={() => window.open('https://idcos.github.io/cloudiac')}><QuestionCircleFilled/></span>
             </Badge>
           </Tooltip>
           <span onClick={() => history.push('/sys/status')}><FundFilled/></span>

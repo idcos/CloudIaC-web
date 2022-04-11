@@ -202,12 +202,6 @@ export default function createRoutes() {
       exact: true
     },
     {
-      path: '/devManual',
-      name: '帮助文档',
-      component: loadable(() => import('containers/devManual'), asyncLoadFallback),
-      exact: true
-    },
-    {
       path: '/no-access',
       name: 'NoAccessPage',
       component: loadable(() => import('containers/no-access'), asyncLoadFallback)
