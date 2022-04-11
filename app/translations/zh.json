@@ -73,5 +73,10 @@
   "policy.severity.high": "高",
   "policy.severity.medium": "中",
   "policy.severity.low": "低",
+  "policy.detection.status.pending": "检测中",
+  "policy.detection.status.passed": "通过",
+  "policy.detection.status.failed": "失败",
+  "policy.detection.status.violated": "不通过",
+  "policy.detection.status.suppressed": "已屏蔽",
   "sys.status.normal": "正常"
 }

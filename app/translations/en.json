@@ -73,5 +73,10 @@
   "policy.severity.high": "high",
   "policy.severity.medium": "medium",
   "policy.severity.low": "low",
+  "policy.detection.status.pending": "pending",
+  "policy.detection.status.passed": "passed",
+  "policy.detection.status.failed": "failed",
+  "policy.detection.status.violated": "violated",
+  "policy.detection.status.suppressed": "suppressed",
   "sys.status.normal": "normal"
 }

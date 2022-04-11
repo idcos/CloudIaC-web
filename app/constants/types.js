@@ -179,11 +179,11 @@ export const POLICIES_SEVERITY_STATUS_ENUM = {
 };
 
 export const POLICIES_DETECTION = {
-  pending: '检测中',
-  passed: '通过',
-  failed: '失败',
-  violated: '不通过',
-  suppressed: '已屏蔽'
+  pending: t('policy.detection.status.pending'),
+  passed: t('policy.detection.status.passed'),
+  failed: t('policy.detection.status.failed'),
+  violated: t('policy.detection.status.violated'),
+  suppressed: t('policy.detection.status.suppressed')
 };
 export const POLICIES_DETECTION_COLOR = {
   pending: '#FFBF00',
