@@ -66,9 +66,9 @@ export default ({ orgId }) => {
       title: '关联项目',
       width: 286,
       ellipsis: true,
-      render: (text) => {
-        if (!text) {
-          return (text || []).join('、'); 
+      render: (projectNames) => {
+        if (projectNames && projectNames.length > 0) {
+          return (projectNames || []).join('、'); 
         } else {
           return '所有项目';
         }
