@@ -29,7 +29,7 @@ const Envs = (props) => {
   return (
     <Layout
       extraHeader={<PageHeader
-        title={t('env')}
+        title={t('define.env')}
         breadcrumb={true}
         subDes={(
           PROJECT_OPERATOR ? (

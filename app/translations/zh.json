@@ -1,3 +1,6 @@
 {
-  "env": "环境"
+  "define.env": "环境",
+  "org.role.member": "成员",
+  "org.role.admin": "管理员",
+  "org.role.complianceManager": "合规管理员"
 }

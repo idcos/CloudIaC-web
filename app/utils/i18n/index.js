@@ -1,11 +1,14 @@
 import { FormattedMessage } from 'react-intl';
 import zhCN from 'antd/es/locale/zh_CN';
 import enUS from 'antd/es/locale/en_US';
+import dynamicZh from './dynamic-lib/zh.json';
+import dynamicEn from './dynamic-lib/en.json';
+import get from 'lodash/get';
 import messages from './messages';
 
 export const t = (path) => {
   return (
-    <FormattedMessage {...messages[path]} />
+    <FormattedMessage {...get(messages, path)} />
   );
 };
 
@@ -24,4 +27,13 @@ export const getAntdLocale = () => {
     zh: zhCN,
     en: enUS
   }[language] || zhCN;
+};
+
+export const dynamicText = (path) => {
+  const language = getLanguage();
+  const dynamicLib = {
+    zh: dynamicZh,
+    en: dynamicEn
+  }[language] || dynamicZh;
+  return get(dynamicLib, path, '');
 };

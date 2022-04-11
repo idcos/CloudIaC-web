@@ -1,3 +1,6 @@
 {
-  "env": "env"
+  "define.env": "environment",
+  "org.role.member": "member",
+  "org.role.admin": "admin",
+  "org.role.complianceManager": "compliance manager"
 }

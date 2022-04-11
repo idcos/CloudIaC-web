@@ -1,13 +1,12 @@
-/*
- * Footer Messages
- *
- * This contains all the text for the Footer component.
- */
 import { defineMessages } from 'react-intl';
+import mapValues from 'lodash/mapValues';
+import zhJson from 'translations/zh.json';
 
-export default defineMessages({
-  env: {
-    id: `env`,
-    defaultMessage: 'env'
-  }
+const messageProps = mapValues(zhJson, (value, key) => {
+  return {
+    id: key,
+    defaultMessage: value
+  };
 });
+
+export default defineMessages(messageProps);

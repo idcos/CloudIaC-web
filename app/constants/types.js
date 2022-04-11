@@ -1,6 +1,7 @@
 import { Space } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutlined } from '@ant-design/icons';
 import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon } from 'components/iconfont';
+import { t } from 'utils/i18n';
 
 /**
  * 全局滚动dom id
@@ -12,9 +13,9 @@ export const TFVERSION_AUTO_MATCH = 'tfversion_auto_match';
 
 export const ORG_USER = {
   role: {
-    member: '成员',
-    admin: '管理员',
-    complianceManager: '合规管理员'
+    member: t('org.role.member'),
+    admin: t('org.role.admin'),
+    complianceManager: t('org.role.complianceManager')
   },
   eventType: {
     'task.failed': '部署失败',

@@ -164,7 +164,7 @@ const AppHeader = (props) => {
           ) : null
         }
         <div className='user'>
-          {/* <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? 'En' : 'Zh'}</span> */}
+          <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? 'En' : 'Zh'}</span>
           <Tooltip 
             color='#08857C'
             visible={devManualTooltipVisible}
