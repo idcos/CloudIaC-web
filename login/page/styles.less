@@ -36,6 +36,21 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+      .change-language {
+        position: absolute;
+        top: 27px;
+        right: 30px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        .change-language-btn {
+          color: #0B847C;
+          font-size: 16px;
+          text-decoration: underline; 
+          cursor: pointer;
+        }
+      }
       .loginFormWrapper {
         width: 402px;
         background-color: @gray-1;

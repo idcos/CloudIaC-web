@@ -91,5 +91,11 @@
   "$static.time.days": "days",
   "$static.time.hours": "hours",
   "$static.time.minutes": "minutes",
-  "$static.time.seconds": "seconds"
+  "$static.time.seconds": "seconds",
+  "$static.loginPage.login": "Sign in",
+  "$static.loginPage.email": "Email",
+  "$static.loginPage.password": "Password",
+  "$static.loginPage.email.placeholder": "Please enter email address",
+  "$static.loginPage.email.formatError": "Incorrect email format",
+  "$static.loginPage.password.placeholder": "Please input a password"
 }

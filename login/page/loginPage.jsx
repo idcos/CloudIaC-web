@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { Form, Input, Button, notification, Row, Col } from 'antd';
 import queryString from 'query-string';
+import { t, getLanguage, setLanguage } from 'utils/i18n';
 import { authAPI } from "../services/auth";
 import styles from './styles.less';
 
-
 const layout = {
-  labelCol: { span: 3 },
-  wrapperCol: { span: 21 }
+  labelCol: { span: 5 },
+  wrapperCol: { span: 19 }
 };
 const tailLayout = {
   wrapperCol: { span: 24 }
@@ -15,8 +15,8 @@ const tailLayout = {
 
 export default () => {
 
+  const language = getLanguage();
   const { callbackUrl, redirectToRegistry } = queryString.parse(window.location.search);
-  const inputRef = useRef();
   
   const onFinish = async (values) => {
     try {
@@ -109,8 +109,19 @@ export default () => {
         <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
       </Col>
       <Col span={10} className='right'>
+        {language === 'zh' ? (
+          <div className='change-language'>
+            <span>产品使用语言</span> 
+            <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
+          </div>
+        ) : (
+          <div className='change-language'>
+            <span>View this page in</span>
+            <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
+          </div>
+        )}
         <div className='loginFormWrapper'>
-          <div className='title'>登录</div>
+          <div className='title'>{t('$static.loginPage.login')}</div>
           <Form
             {...layout}
             name='basic'
@@ -123,34 +134,34 @@ export default () => {
                 className='format-form-item'
                 label={
                   <>
-                    <span>邮箱</span>
+                    <span>{t('$static.loginPage.email')}</span>
                   </>
                 }
                 name='email'
                 rules={[
-                  { required: true, message: '请输入邮箱地址' }, 
-                  { type: 'email', message: '邮箱格式有误' }
+                  { required: true, message: t('$static.loginPage.email.placeholder') }, 
+                  { type: 'email', message: t('$static.loginPage.email.formatError') }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >
-                <Input placeholder='请输入邮箱地址' />
+                <Input placeholder={t('$static.loginPage.email.placeholder')} />
               </Form.Item>
             </div>
           
 
             <Form.Item
               className='format-form-item'
-              label='密码'
+              label={t('$static.loginPage.password')}
               name='password'
-              rules={[{ required: true, message: '请输入登录密码!' }]}
+              rules={[{ required: true, message: t('$static.loginPage.password.placeholder') }]}
               getValueFromEvent={(e) => e.target.value.trim()}
             >
-              <Input.Password placeholder='请输入登录密码' />
+              <Input.Password placeholder={t('$static.loginPage.password.placeholder')} />
             </Form.Item>
 
             <Form.Item {...tailLayout} style={{ paddingTop: 8 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
-                登录
+                {t('$static.loginPage.login')}
               </Button>
             </Form.Item>
           </Form>

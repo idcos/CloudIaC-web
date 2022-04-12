@@ -91,5 +91,11 @@
   "$static.time.days": "天",
   "$static.time.hours": "时",
   "$static.time.minutes": "分",
-  "$static.time.seconds": "秒"
+  "$static.time.seconds": "秒",
+  "$static.loginPage.login": "登录",
+  "$static.loginPage.email": "邮箱",
+  "$static.loginPage.password": "密码",
+  "$static.loginPage.email.placeholder": "请输入邮箱地址",
+  "$static.loginPage.email.formatError": "邮箱格式有误",
+  "$static.loginPage.password.placeholder": "请输入登录密码"
 }
