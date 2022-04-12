@@ -2,7 +2,6 @@ import React, { useState, useContext, useMemo, memo } from 'react';
 import { Collapse } from 'antd';
 import { useEventEmitter } from 'ahooks';
 import { Eb_WP } from 'components/error-boundary';
-import ResourceViewModal from 'components/resource-view-modal';
 import GraphLayout from './graph-layout';
 import TableLayout from './table-layout';
 import DetailPageContext from '../../detail-page-context';
@@ -30,7 +29,6 @@ const Resource = () => {
           {content}
         </Panel>
       </Collapse>
-      <ResourceViewModal event$={event$}/>
     </>
   );
 };

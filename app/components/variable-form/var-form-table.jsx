@@ -17,6 +17,7 @@ import ImportResourceAccountModal from './components/import-resource-account-mod
 import SelectTypeValue from './components/select-type-value';
 import ResourceAccountFormTable from './resource-account-form-table';
 import { SCOPE_ENUM, VAR_TYPE_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 
 const EditableTableFooter = styled.div`
   margin-top: 16px;
@@ -73,7 +74,7 @@ const VarFormTable = (props) => {
       setImportVars(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -105,10 +106,10 @@ const VarFormTable = (props) => {
       }
     },
     {
-      title: '来自',
+      title: t('define.variable.objectType'),
       id: 'scope',
       column: {
-        width: 118,
+        width: 200,
         render: (text) => {
           return (
             <div style={{ width: 110 }}>
@@ -123,22 +124,22 @@ const VarFormTable = (props) => {
       id: 'name',
       editable: true,
       column: {
-        width: 254,
+        width: 200,
       },
       renderFormInput: (record) => {
         const { overwrites } = record;
-        return <Input placeholder='请输入key' disabled={overwrites || readOnly} />;
+        return <Input placeholder={t('define.form.input.placeholder')} disabled={overwrites || readOnly} />;
       },
       formItemProps: {
         rules: [
-          { required: true, message: '请输入key' },
+          { required: true, message: t('define.form.input.placeholder') },
           {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
                   const sameList = (varDataRef.current || []).filter(it => it.name === value);
                   if (value && sameList.length > 1) {
-                    reject(new Error('key值不允许重复!'));
+                    reject(new Error(t('define.variable.sameKeyError')));
                   }
                   resolve();
                 }, 300);
@@ -153,7 +154,7 @@ const VarFormTable = (props) => {
       id: 'value',
       editable: true,
       column: {
-        width: 258,
+        width: 210,
       },
       formItemProps: {
         dependencies: ['sensitive', 'description'],
@@ -164,7 +165,7 @@ const VarFormTable = (props) => {
                 setTimeout(() => {
                   const { sensitive, id } = form.getFieldsValue();
                   if (!(sensitive && id) && !value) {
-                    reject(new Error('请输入value'));
+                    reject(new Error(t('define.form.input.placeholder')));
                   }
                   resolve();
                 }, 300);
@@ -180,7 +181,7 @@ const VarFormTable = (props) => {
             <Input.Password
               value={readOnly ? '******' : value}
               autoComplete='new-password'
-              placeholder={id ? '空值保存时不会修改原有值' : '请输入value'}
+              placeholder={id ? t('define.emptyValueSave.placeholder') : t('define.form.input.placeholder')}
               visibilityToggle={false}
               disabled={readOnly}
             />
@@ -195,31 +196,29 @@ const VarFormTable = (props) => {
                 isSameScope={scope === defaultScope}
                 value={value}
                 onChange={onChange}
-                placeholder='请选择value'
+                placeholder={t('define.form.select.placeholder')}
               />
             ) : (
-              <Input placeholder='请输入value' disabled={readOnly}/>
+              <Input placeholder={t('define.form.input.placeholder')} disabled={readOnly}/>
             )
           );
         }
       }
     },
     {
-      title: '描述信息',
+      title: t('define.des'),
       id: 'description',
       editable: true,
       column: {
         width: 260,
       },
       formFieldProps: {
-        placeholder: '请输入描述信息',
+        placeholder: t('define.form.input.placeholder'),
         disabled: readOnly
       }
     },
     {
-      title: (
-        <>是否敏感</>
-      ),
+      title: t('define.variable.isSensitive'),
       id: 'sensitive',
       editable: true,
       column: {
@@ -237,7 +236,7 @@ const VarFormTable = (props) => {
               }
             }}
           >
-            敏感
+            {t('define.variable.sensitive')}
           </Checkbox>
         );
       }
@@ -428,19 +427,19 @@ const VarFormTable = (props) => {
                 !readOnly && (
                   <EditableTableFooter>
                     <Space>
-                      {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>导入</Button>}
+                      {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>{t('define.import')}</Button>}
                       <Dropdown 
                         overlay={
                           <Menu>
-                            <Menu.Item onClick={() => pushVar()}>添加普通变量</Menu.Item>
-                            <Menu.Item onClick={() => pushVar(true)}>添加选择型变量</Menu.Item>
+                            <Menu.Item onClick={() => pushVar()}>{t('define.variable.action.addCommonVar')}</Menu.Item>
+                            <Menu.Item onClick={() => pushVar(true)}>{t('define.variable.action.addSelectVar')}</Menu.Item>
                             {!!canImportResourceAccount && (
-                              <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>引用资源账号</Menu.Item>
+                              <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>{t('define.variable.action.importResourceAccount')}</Menu.Item>
                             )}
                           </Menu>
                         }
                       >
-                        <Button>添加变量<DownOutlined /></Button>
+                        <Button>{t('define.variable.action.addVar')}<DownOutlined /></Button>
                       </Dropdown>
                     </Space>
                   </EditableTableFooter>

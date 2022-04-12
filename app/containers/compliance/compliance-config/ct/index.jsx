@@ -197,7 +197,7 @@ const CCTList = () => {
     {
       dataIndex: 'policyStatus',
       title: '状态',
-      width: 94,
+      width: 110,
       render: (policyStatus, record) => {
         const clickProps = {
           style: { cursor: 'pointer' },

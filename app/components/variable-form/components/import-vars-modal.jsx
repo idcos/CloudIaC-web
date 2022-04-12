@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Table } from 'antd';
+import { t } from 'utils/i18n';
 
 export default (props) => {
 
@@ -23,7 +24,7 @@ export default (props) => {
       ellipsis: true
     }, 
     {
-      title: '描述信息',
+      title: t('define.des'),
       dataIndex: 'description',
       width: 180,
       ellipsis: true
@@ -76,7 +77,7 @@ export default (props) => {
   return (
     <Modal 
       width={720} 
-      title='导入' 
+      title={t('define.import')}
       visible={visible} 
       onCancel={onCancel} 
       onOk={onOk}

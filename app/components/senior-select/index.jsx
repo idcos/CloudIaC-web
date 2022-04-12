@@ -3,6 +3,7 @@ import { Input, Select } from 'antd';
 import { SearchOutlined, CheckOutlined } from '@ant-design/icons';
 import noop from 'lodash/noop';
 import intersectionWith from 'lodash/intersectionWith';
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const { Option } = Select;
@@ -10,7 +11,7 @@ const { Option } = Select;
 export default (props) => {
 
   const {
-    placeholder = '请选择',
+    placeholder = t('define.form.select.placeholder'),
     style = {},
     onChange = noop,
     lablePropsNames = {
@@ -22,7 +23,7 @@ export default (props) => {
     value,
     listHeight,
     showSearch = false,
-    searchPlaceholder = '请输入关键词搜索',
+    searchPlaceholder = '',
     maxLen,
     seniorSelectfooter = null,
     formatOptionLabel = (t) => t,

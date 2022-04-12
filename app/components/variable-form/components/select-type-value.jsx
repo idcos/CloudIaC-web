@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Select, Input, Divider, Button, Space } from 'antd';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
+import { t } from 'utils/i18n';
 
 const OptionWrapper = styled.div`
   display: flex;
@@ -68,7 +69,7 @@ const SelectTypeValue = ({
                     disabled={!inputValue || options.includes(inputValue)}
                     onClick={addOption}
                   >
-                    添加
+                    {t('define.action.add')}
                   </Button>
                 </Space>
               </>
@@ -82,7 +83,7 @@ const SelectTypeValue = ({
           <Select.Option key={item} value={item}>
             <OptionWrapper>
               <span>{item}</span>
-              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>删除</Button>}
+              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>{t('define.action.delete')}</Button>}
             </OptionWrapper>
           </Select.Option>
         ))

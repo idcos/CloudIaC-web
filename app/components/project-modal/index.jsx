@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal, notification } from "antd";
 import { connect } from "react-redux";
-
+import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 
 const FL = {
@@ -58,14 +58,14 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
       }
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
   };
  
   return <Modal
-    title={`${opt == 'add' ? '创建' : '编辑'}项目`}
+    title={opt == 'add' ? t('define.createProject') : t('define.modifyProject')}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
@@ -84,28 +84,28 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
       initialValues={curRecord}
     >
       <Form.Item
-        label='项目名称'
+        label={t('define.projectName')}
         name='name'
         getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
-            message: '请输入项目名称'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input style={{ width: 254 }} placeholder='请输入项目名称'/>
+        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} />
       </Form.Item>
       <Form.Item
-        label='项目描述'
+        label={t('define.projectDes')}
         name='description'
         rules={[
           {
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input.TextArea style={{ width: 400 }} placeholder='请输入项目描述'/>
+        <Input.TextArea style={{ width: 400 }} placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
     </Form>
   </Modal>;

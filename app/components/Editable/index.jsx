@@ -15,9 +15,8 @@ import isFunction from 'lodash/isFunction';
 import assign from 'lodash/assign';
 import isObject from 'lodash/isObject';
 import concat from 'lodash/concat';
-
 import { Table, Button, Space } from 'antd';
-
+import { t } from 'utils/i18n';
 import { EditableContext } from './context';
 import { useEditableState, useValidateObservers } from './hooks';
 import EditableRow from './EditableRow';
@@ -157,7 +156,7 @@ const EditableTable = (props) => {
     const list = fields.map(getColumnByField);
     if (!readOnly) {
       list.push({
-        title: '操作',
+        title: t('define.action'),
         width: 110,
         fixed: 'right',
         render: (_, row) => {

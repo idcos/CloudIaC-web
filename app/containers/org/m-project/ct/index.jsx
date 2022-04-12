@@ -120,7 +120,7 @@ const CTList = ({ userInfo, match = {} }) => {
     {
       dataIndex: 'policyStatus',
       title: '合规状态',
-      width: 100,
+      width: 110,
       ellipsis: true,
       render: (policyStatus, record) => {
         const clickProps = {

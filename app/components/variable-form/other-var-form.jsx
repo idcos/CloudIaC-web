@@ -4,6 +4,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import vcsAPI from 'services/vcs';
 import keysAPI from 'services/keys';
+import { t } from 'utils/i18n';
 
 const { Option } = Select;
 
@@ -45,7 +46,7 @@ const OtherVarForm = (props) => {
       setTfvars(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -62,7 +63,7 @@ const OtherVarForm = (props) => {
       setPlaybooks(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -70,24 +71,24 @@ const OtherVarForm = (props) => {
 
   return (
     <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'}>
-      <Collapse.Panel key='open' header='其它变量' forceRender={true}>
+      <Collapse.Panel key='open' header={t('define.varType.other')} forceRender={true}>
         <Form form={otherVarForm} style={{ margin: '0 8px' }}>
           <Row gutter={24}>
             <Col span={8}>
               <Form.Item
                 name='tfVarsFile'
-                label='tfvars文件'
+                label={t('define.variable.tfVarsFile')}
                 rules={[
                   {
                     required: false,
-                    message: '请选择'
+                    message: t('define.form.select.placeholder')
                   }
                 ]}
               >
                 <Select
                   getPopupContainer={triggerNode => triggerNode.parentNode} 
                   allowClear={true} 
-                  placeholder='请选择tfvars文件'
+                  placeholder={t('define.form.select.placeholder')}
                 >
                   {tfvars.map(it => <Option value={it}>{it}</Option>)}
                 </Select>
@@ -96,18 +97,18 @@ const OtherVarForm = (props) => {
             <Col span={8}>
               <Form.Item
                 name='playbook'
-                label='playbook文件'
+                label={t('define.variable.playbook')}
                 rules={[
                   {
                     required: false,
-                    message: '请选择'
+                    message: t('define.form.select.placeholder')
                   }
                 ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   allowClear={true} 
-                  placeholder='请选择playbook文件'
+                  placeholder={t('define.form.select.placeholder')}
                 >
                   {playbooks.map(it => <Option value={it}>{it}</Option>)}
                 </Select>
@@ -116,17 +117,17 @@ const OtherVarForm = (props) => {
             <Col span={8}>
               <Form.Item
                 name='keyId'
-                label='ssh密钥'
+                label={t('define.ssh')}
                 rules={[
                   {
                     required: false,
-                    message: '请选择'
+                    message: t('define.form.select.placeholder')
                   }
                 ]}
               >
                 <Select 
                   allowClear={true} 
-                  placeholder='请选择ssh密钥'
+                  placeholder={t('define.form.select.placeholder')}
                   options={keyOptions}
                   optionFilterProp='label'
                   showSearch={true}

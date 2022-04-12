@@ -22,7 +22,7 @@ export default (props) => {
     onChange = noop,
     setActive = noop,
     showSearch=false,
-    searchPlaceholder='请输入关键词搜索',
+    searchPlaceholder='',
     searchKey=lablePropsNames.name,
     maxLen,
     selectRef,

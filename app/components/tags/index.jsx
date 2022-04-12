@@ -3,6 +3,7 @@ import { Tag, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import styles from './styles.less';
 import cloneDeep from 'lodash/cloneDeep';
+import { t } from 'utils/i18n';
 
 export default ({ data, canEdit = false, update }) => {
   const [ isEdit, setIsEdit ] = useState(false);
@@ -71,7 +72,7 @@ export default ({ data, canEdit = false, update }) => {
       ) : null}
       {(canEdit && !isEdit) ? (
         <Tag className={styles.siteTagPlus} onClick={showEditInput}>
-          <PlusOutlined /> 添加标签
+          <PlusOutlined /> {t('define.addTag')}
         </Tag>
       ) : null}
     </>

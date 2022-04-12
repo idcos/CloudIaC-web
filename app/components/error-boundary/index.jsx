@@ -1,9 +1,8 @@
 import React from 'react';
 import hoistNonReactStatics from 'hoist-non-react-statics';
-import { Button, Result, Row, Space, Typography } from 'antd';
+import { Button, Result } from 'antd';
+import { t } from 'utils/i18n';
 import styles from './styles.less';
-import { CloseCircleOutlined } from '@ant-design/icons';
-
 export default class Eb extends React.Component {
   constructor(props) {
     super(props);
@@ -32,27 +31,12 @@ export default class Eb extends React.Component {
         <div className={styles.EB}>
           <Result
             status='error'
-            title='加载出现了一点问题'
-            subTitle='请刷新页面重试'
+            title={t('define.errPage.result.title')}
+            subTitle={t('define.errPage.result.subTitle')}
             extra={[
-              <Button type='primary' onClick={this.handleClick}>回到首页</Button>
+              <Button type='primary' onClick={this.handleClick}>{t('define.errPage.result.extra')}</Button>
             ]}
           >
-            {/* Error Stack Info */}
-            {/* <Row align='middle'>
-              <Typography.Paragraph>
-                <Space>
-                  {<CloseCircleOutlined className={styles.error} />}
-                  {error.toString()}
-                </Space>
-              </Typography.Paragraph>
-              <Typography.Paragraph>
-                <Space>
-                  {<CloseCircleOutlined className={styles.error} />}
-                  {errorInfo.componentStack.toString()}
-                </Space>
-              </Typography.Paragraph>
-            </Row> */}
           </Result>
         </div>
       );

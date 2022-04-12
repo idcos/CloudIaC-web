@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { LoadingIcon } from 'components/lottie-icon';
 import { CustomTag } from 'components/custom';
 import { SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
+import { t } from 'utils/i18n';
 
 export default ({ policyStatus, onlyShowResultStatus = false, clickProps, style, empty, ...restProps }) => {
 
@@ -22,12 +23,11 @@ export default ({ policyStatus, onlyShowResultStatus = false, clickProps, style,
       return;
     }
     const map = {
-      disable: (props) => <CustomTag type='default' text='未开启' {...props}/>,
-      // enable: (props) => <CustomTag type='default' text='未检测' {...props}/>,
+      disable: (props) => <CustomTag type='default' text={t('define.policyStatus.disable')} {...props}/>,
       pending: (props) => <LoadingIcon size={22} {...props}/>,
-      passed: (props) => <CustomTag type='success' text='合规' {...props} />,
-      failed: (props) => <CustomTag type='error' text='不合规' {...props} />,
-      violated: (props) => <CustomTag type='error' text='不合规' {...props} />
+      passed: (props) => <CustomTag type='success' text={t('define.policyStatus.passed')} {...props} />,
+      failed: (props) => <CustomTag type='error' text={t('define.policyStatus.failed')} {...props} />,
+      violated: (props) => <CustomTag type='error' text={t('define.policyStatus.violated')} {...props} />
     };
     return map[policyStatus];
   });

@@ -20,7 +20,6 @@ import PolicyStatus from 'components/policy-status';
 import isEmpty from 'lodash/isEmpty';
 
 const CTList = ({ match = {} }) => {
-
   const { check, loopRequesting } = useLoopPolicyStatus();
   const { orgId } = match.params || {};
   const [ visible, setVisible ] = useState(false),
@@ -136,7 +135,7 @@ const CTList = ({ match = {} }) => {
     {
       dataIndex: 'policyStatus',
       title: '合规状态',
-      width: 100,
+      width: 110,
       ellipsis: true,
       render: (policyStatus, record) => {
         const clickProps = {

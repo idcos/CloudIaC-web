@@ -2,26 +2,27 @@ import React, { useMemo } from 'react';
 import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { t } from 'utils/i18n';
 
 const KEY = 'global';
 
 const breadcrumbNameMap = {
-  'org': { text: '组织' },
-  'project': { text: '项目', disabled: true },
-  'm-org-project': { text: '组织设置：项目' },
-  'm-org-ct': { text: '组织设置：云模板' },
-  'm-org-variable': { text: '组织设置：变量' },
-  'm-org-setting': { text: '组织设置：设定' },
-  'm-project-create': { text: '项目信息：创建项目' },
-  'm-project-env': { text: '项目信息：环境' },
-  'm-project-ct': { text: '项目信息：云模板' },
-  'm-project-variable': { text: '项目信息：变量' },
-  'm-project-setting': { text: '项目信息：设置' },
-  'm-other-resource': { text: '资源查询' },
-  'm-other-overview': { text: '项目概览' },
-  'm-org-overview': { text: '组织概览' },
-  'createCT': { text: '新建云模板' },
-  'updateCT': { text: '编辑云模板' },
+  'org': { text: t('define.scope.org') },
+  'project': { text: t('define.scope.project'), disabled: true },
+  'm-org-project': { text: `${t('define.orgSet')}: ${t('define.scope.project')}` },
+  'm-org-ct': { text: `${t('define.orgSet')}: ${t('define.scope.template')}` },
+  'm-org-variable': { text: `${t('define.orgSet')}: ${t('define.variable')}` },
+  'm-org-setting': { text: `${t('define.orgSet')}: ${t('define.setting')}` },
+  'm-project-create': { text: `${t('define.projectInfo')}: ${t('define.createProject')}` },
+  'm-project-env': { text: `${t('define.projectInfo')}: ${t('define.scope.env')}` },
+  'm-project-ct': { text: `${t('define.projectInfo')}: ${t('define.scope.template')}` },
+  'm-project-variable': { text: `${t('define.projectInfo')}: ${t('define.variable')}` },
+  'm-project-setting': { text: `${t('define.projectInfo')}: ${t('define.setting')}` },
+  'm-other-resource': { text: t('define.resourceQuery') },
+  'm-other-overview': { text: t('define.projectOverview') },
+  'm-org-overview': { text: t('define.orgOverview') },
+  'createCT': { text: t('define.addTemplate') },
+  'updateCT': { text: t('define.modifyTemplate') },
   'deploy': { 
     render: ({ params, isLastOne, url, index }) => {
       const { envId, orgId, projectId } = params;
@@ -32,7 +33,7 @@ const breadcrumbNameMap = {
               to={index == 0 ? '/' : url}
               disabled={isLastOne}
             >
-              部署新环境
+              {t('define.deployEnv')}
             </Link>
           </Breadcrumb.Item>
         );
@@ -44,7 +45,7 @@ const breadcrumbNameMap = {
               <Link
                 to={envDetailUrl}
               >
-                环境详情
+                {t('define.envDetail')}
               </Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item key={url}>
@@ -52,7 +53,7 @@ const breadcrumbNameMap = {
                 to={index == 0 ? '/' : url}
                 disabled={isLastOne}
               >
-                重新部署
+                {t('define.redeployment')}
               </Link>
             </Breadcrumb.Item>
           </>
@@ -60,17 +61,17 @@ const breadcrumbNameMap = {
       }
     }
   },
-  'task': { text: '部署历史' },
-  'detail': { text: '环境详情', indexDiff: 1, search: '?tabKey=deployHistory' },
-  'compliance-config': { text: '合规配置', disabled: true },
-  'ct': { text: '云模板', disabled: true },
-  'env': { text: '环境' },
-  'env-detail': { text: '环境详情' },
-  'policy-config': { text: '策略管理', disabled: true },
-  'policy-group': { text: '策略组' },
-  'policy-group-form': { getText: ({ policyGroupId }) => policyGroupId ? '编辑策略组' : '新建策略组' },
-  'policy': { text: '策略' },
-  'online-test': { text: '在线测试' }
+  'task': { text: t('define.deployHistory') },
+  'detail': { text: t('define.envDetail'), indexDiff: 1, search: '?tabKey=deployHistory' },
+  'compliance-config': { text: t('define.complianceConfig'), disabled: true },
+  'ct': { text: t('define.scope.template'), disabled: true },
+  'env': { text: t('define.scope.env') },
+  'env-detail': { text: t('define.envDetail') },
+  'policy-config': { text: t('define.policyManagement'), disabled: true },
+  'policy-group': { text: t('define.policyGroup') },
+  'policy-group-form': { getText: ({ policyGroupId }) => policyGroupId ? t('define.modifyPolicyGroup') : t('define.addPolicyGroup') },
+  'policy': { text: t('define.policy') },
+  'online-test': { text: t('define.onlineTest') }
 };
 
 const BreadcrumbWrapper = ({ location, params }) => {

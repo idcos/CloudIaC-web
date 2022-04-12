@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-
-import { Button, Popconfirm } from 'antd';
-
+import { Button } from 'antd';
+import { t } from 'utils/i18n';
 import { EditableContext } from '../context';
 
 const OptionDelete = (props) => {
@@ -19,7 +18,7 @@ const OptionDelete = (props) => {
       disabled={!multiple && isSetting}
       onClick={() => handleDelete(id)}
       {...buttonProps}
-    >{buttonText || '删除'}</Button>
+    >{buttonText || t('define.action.delete')}</Button>
   );
 };
 

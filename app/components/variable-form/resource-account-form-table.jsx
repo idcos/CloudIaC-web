@@ -3,6 +3,7 @@ import isEmpty from 'lodash/isEmpty';
 import classnames from 'classnames';
 import { useEventListener } from 'ahooks';
 import { SCOPE_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 
 export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnly = false, event$ }) => {
 
@@ -19,26 +20,26 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnl
 
   const columns = [
     {
-      title: '来自',
-      width: 118,
+      title: t('define.variable.objectType'),
+      width: 200,
       dataIndex: 'objectType',
       render: (text) => {
         return (
           <div style={{ width: 110 }}>
-            <Tag style={{ marginTop: 5, marginRight: 0 }}>{SCOPE_ENUM[text]}-资源账号</Tag>
+            <Tag style={{ marginTop: 5, marginRight: 0 }}>{SCOPE_ENUM[text]}-{t('define.resourceAccount.title')}</Tag>
           </div>
         );
       }
     },
     {
       title: 'key',
-      width: 254,
+      width: 200,
       render: (_, record) => {
         const { variables } = record;
         return (
           <Space size={5} direction='vertical' style={{ width: '100%' }}>
             {(variables || []).map(({ name }) => (
-              <Input placeholder='请输入key' value={name} disabled={true}/>
+              <Input placeholder={t('define.form.input.placeholder')} value={name} disabled={true}/>
             ))}
           </Space>
         );
@@ -46,41 +47,41 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnl
     },
     {
       title: 'value',
-      width: 258,
+      width: 210,
       render: (_, record) => {
         const { variables } = record;
         return (
           <Space size={5} direction='vertical' style={{ width: '100%' }}>
             {(variables || []).map(({ value, sensitive }) => (
-              <Input placeholder={sensitive ? '空值保存时不会修改原有值' : '请输入value'} value={readOnly ? '******' : value} disabled={true}/>
+              <Input placeholder={sensitive ? t('define.emptyValueSave.placeholder') : t('define.form.input.placeholder')} value={readOnly ? '******' : value} disabled={true}/>
             ))}
           </Space>
         );
       }
     },
     {
-      title: '描述信息',
+      title: t('define.des'),
       width: 260,
       render: (_, record) => {
         const { variables } = record;
         return (
           <Space size={5} direction='vertical' style={{ width: '100%' }}>
             {(variables || []).map(({ description }) => (
-              <Input placeholder='请输入描述信息' value={description} disabled={true}/>
+              <Input placeholder={t('define.form.input.placeholder')} value={description} disabled={true}/>
             ))}
           </Space>
         );
       }
     },
     {
-      title: '是否敏感',
+      title: t('define.variable.isSensitive'),
       width: 116,
       render: (_, record) => {
         const { variables } = record;
         return (
           <Space size={5} direction='vertical' style={{ width: '100%' }}>
             {(variables || []).map(({ sensitive }) => (
-              <Checkbox disabled={true} checked={!!sensitive} style={{ padding: '5px 0' }}>敏感</Checkbox>
+              <Checkbox disabled={true} checked={!!sensitive} style={{ padding: '5px 0' }}>{t('define.variable.isSensitive')}</Checkbox>
             ))}
           </Space>
         );
@@ -88,7 +89,7 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnl
     },
     ...(readOnly ? [] : [
       {
-        title: '操作',
+        title: t('define.action'),
         width: 110,
         fixed: 'right',
         render: (_, record) => {
@@ -99,7 +100,7 @@ export default ({ scrollTableWrapperClassName, dataSource, defaultScope, readOnl
               type='link' 
               style={{ padding: 0 }}
               onClick={() => event$.emit({ type: 'remove-resource-account', data: { varGroupIds: [varGroupId] } })}
-            >删除</Button>
+            >{t('define.action.delete')}</Button>
           );
         }
       }

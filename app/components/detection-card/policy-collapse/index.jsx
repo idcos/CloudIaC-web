@@ -8,6 +8,7 @@ import policiesAPI from 'services/policies';
 import Coder from "components/coder";
 import { POLICIES_SEVERITY_STATUS_ENUM, TARGET_TYPE_ENUM } from 'constants/types';
 import { DropRightIcon, DropDownIcon } from 'components/iconfont';
+import { t } from 'utils/i18n';
 import StatusIcon from '../components/status-icon';
 import styles from './styles.less';
 
@@ -39,7 +40,7 @@ export default ({ data, refresh, targetId, targetType }) => {
   );
 
   const passedList = [
-    { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
+    { label: t('policy.detection.info.field.severity'), code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
     { 
       layout: 'vertical',
       code: 'rego', 
@@ -55,10 +56,9 @@ export default ({ data, refresh, targetId, targetType }) => {
   ];
 
   const failedList = [
-    { label: '文件', code: 'file' },
-    { label: '行数', code: 'line' },
+    { label: t('policy.detection.info.field.file'), code: 'file' },
+    { label: t('policy.detection.info.field.line'), code: 'line' },
     { 
-      // label: '错误资源类型所在的tf代码段', 
       layout: 'vertical',
       code: 'source', 
       format: (text) => (
@@ -70,10 +70,9 @@ export default ({ data, refresh, targetId, targetType }) => {
         />
       )
     },
-    { label: '严重等级', code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
-    { label: '错误资源类型', code: 'resource_type' },
+    { label: t('policy.detection.info.field.severity'), code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
+    { label: t('policy.detection.info.field.resource_type'), code: 'resource_type' },
     { 
-      // label: '策略内容', 
       layout: 'vertical',
       code: 'rego', 
       format: (text) => (
@@ -91,17 +90,15 @@ export default ({ data, refresh, targetId, targetType }) => {
     e.stopPropagation();
     Modal.confirm({
       width: 480,
-      title: `屏蔽策略`,
+      title: t('policy.suppress.modal.title'),
       content: (
         <div style={{ wordBreak: 'break-all' }}>
-          <span>该操作将在当前{TARGET_TYPE_ENUM[targetType]}中屏蔽</span>
+          <span>{t('policy.suppress.modal.content.prefix')}{TARGET_TYPE_ENUM[targetType]}{t('policy.suppress.modal.content.middle')}</span>
           “<b>{data.policyName || '-'}</b>” 
-          <span>策略，请谨慎操作</span> 
+          <span>{t('policy.suppress.modal.content.suffix')}</span> 
         </div>
       ),
       icon: <InfoCircleFilled />,
-      okText: '确认',
-      cancelText: '取消',
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
@@ -122,7 +119,7 @@ export default ({ data, refresh, targetId, targetType }) => {
             <StatusIcon type={data.status} />
             <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{data.policyName}</span>
             {data.status === 'violated' && (
-              <Button className='ant-btn-tertiary' disabled={data.policySuppress} onClick={onSuppress}>屏蔽此策略</Button>
+              <Button className='ant-btn-tertiary' disabled={data.policySuppress} onClick={onSuppress}>{t('policy.detection.suppress.btnText')}</Button>
             )}
           </Space>
         </Col>
