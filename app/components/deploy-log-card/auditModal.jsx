@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal } from "antd";
+import { t } from 'utils/i18n';
 import styles from "./styles.less";
 
 /**
@@ -35,7 +36,7 @@ function AuditModal(props) {
         onCancel={() => setVisible(false)}
         visible={visible}
         width={560}
-        title={<div className={styles.modalTitle}>审核</div>}
+        title='审核'
         getContainer={false}
         footer={[
           <Button

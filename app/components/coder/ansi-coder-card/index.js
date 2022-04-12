@@ -5,6 +5,7 @@ import { default as AnsiUp } from 'ansi_up';
 import { useThrottleEffect } from 'ahooks';
 import classnames from 'classnames';
 import { getNumLen } from 'utils/util';
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 import SearchByKeyWord from './dom-event';
 
@@ -88,7 +89,7 @@ export default ({ value, cardTitleAfter, showHeader, className, style }) => {
         !showHeader && <>
           <Input.Search
             ref={searchRef}
-            placeholder='请输入内容搜索'
+            placeholder={t('$static.coder.ansi.search.placeholder')}
             onSearch={(keyword) => {
               searchService.search(keyword);
               searchRef.current.focus();
@@ -104,21 +105,21 @@ export default ({ value, cardTitleAfter, showHeader, className, style }) => {
         !showHeader && <Space>
           <Button onClick={() => go('top')}>
             <VerticalAlignTopOutlined />
-            回顶部
+            {t('define.action.goTop')}
           </Button>
           <Button onClick={() => go('bottom')}>
             <VerticalAlignBottomOutlined />
-            回底部
+            {t('define.action.goBottom')}
           </Button>
           <Button onClick={() => setFullScreen(!fullScreen)} onKeyDown={(e) => setFullScreenClose(e)}>
             {
               fullScreen ? (
                 <>
-                  <FullscreenExitOutlined />&nbsp;退出全屏
+                  <FullscreenExitOutlined />&nbsp;{t('define.action.exitFullScreen')}
                 </>
               ) : (
                 <>
-                  <FullscreenOutlined />&nbsp;全屏显示
+                  <FullscreenOutlined />&nbsp;{t('define.action.fullScreen')}
                 </>
               )
             }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Space, Tooltip } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
+import { t } from 'utils/i18n';
 
 export default ({ text, disabled, copyRequest, style }) => {
 
@@ -48,14 +49,14 @@ export default ({ text, disabled, copyRequest, style }) => {
   return (
     <Button type='link' onClick={copy} disabled={disabled} style={{ padding: 0, ...style }}>
       <Space size={4}>
-        <Tooltip title='点击复制链接'>
+        <Tooltip title={t('$static.message.copyTooltip')}>
           <CopyOutlined />
         </Tooltip>
         {isCopied && (
           copySuccess ? (
-            <span>复制成功！</span>
+            <span>{t('$static.message.copySuccess')}!</span>
           ) : (
-            <span className='danger-text'>复制失败！</span>
+            <span className='danger-text'>{t('$static.message.copyFail')}!</span>
           )
         )}
       </Space>

@@ -41,6 +41,11 @@
   "define.change.add": "add",
   "define.change.delete": "delete",
   "define.change.modify": "modify",
+  "define.action.goTop": "Back to top",
+  "define.action.goBottom": "Back to bottom",
+  "define.action.fullScreen": "Full screen",
+  "define.action.exitFullScreen": "Exit full screen",
+  "define.action.copyContent": "Copy content",
   "org.role.member": "member",
   "org.role.admin": "admin",
   "org.role.complianceManager": "compliance manager",
@@ -94,6 +99,7 @@
   "$static.message.notFoundUserInfo": "Failed to get user information",
   "$static.message.copySuccess": "Copy success",
   "$static.message.copyFail": "Copy failed",
+  "$static.message.copyTooltip": "Click the copy link",
   "$static.message.opSuccess": "Operation success",
   "$static.message.opFail": "Operation failed",
   "$static.message.interfaceFail": "Interface request failed",
@@ -136,5 +142,6 @@
   "$static.loginPage.email.placeholder": "Please enter email address",
   "$static.loginPage.email.formatError": "Incorrect email format",
   "$static.loginPage.password.placeholder": "Please input a password",
-  "$static.searchOrgPlaceholder": "Search by organization name"
+  "$static.searchOrgPlaceholder": "Search by organization name",
+  "$static.coder.ansi.search.placeholder": "Search by content"
 }

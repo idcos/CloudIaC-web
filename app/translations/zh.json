@@ -41,6 +41,11 @@
   "define.change.add": "增加",
   "define.change.delete": "删除",
   "define.change.modify": "更新",
+  "define.action.goTop": "回顶部",
+  "define.action.goBottom": "回底部",
+  "define.action.fullScreen": "全屏显示",
+  "define.action.exitFullScreen": "退出全屏",
+  "define.action.copyContent": "复制内容",
   "org.role.member": "成员",
   "org.role.admin": "管理员",
   "org.role.complianceManager": "合规管理员",
@@ -94,6 +99,7 @@
   "$static.message.notFoundUserInfo": "未能获取用户信息",
   "$static.message.copySuccess": "复制成功",
   "$static.message.copyFail": "复制失败",
+  "$static.message.copyTooltip": "点击复制链接",
   "$static.message.opSuccess": "操作成功",
   "$static.message.opFail": "操作失败",
   "$static.message.interfaceFail": "接口请求失败",
@@ -136,5 +142,6 @@
   "$static.loginPage.email.placeholder": "请输入邮箱地址",
   "$static.loginPage.email.formatError": "邮箱格式有误",
   "$static.loginPage.password.placeholder": "请输入登录密码",
-  "$static.searchOrgPlaceholder": "请输入组织名称搜索"
+  "$static.searchOrgPlaceholder": "请输入组织名称搜索",
+  "$static.coder.ansi.search.placeholder": "请输入内容搜索"
 }
