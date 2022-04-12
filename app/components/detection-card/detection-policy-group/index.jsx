@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { Card, Divider, Space } from 'antd';
 import { Eb_WP } from 'components/error-boundary';
+import { t } from 'utils/i18n';
 import StatusIcon from '../components/status-icon';
 import PolicyCollapse from '../policy-collapse';
 import styles from './styles.less';
@@ -30,9 +31,9 @@ const Index = ({ info, refresh, targetId, targetType }) => {
           <div>
             <div className='policyGroupName'>{name || '-'}</div>
             <Space className='statistics' split='，'>
-              {!!(failed || violated) && <span className='failed'>{failed + violated} 不通过</span>}
-              {!!passed && <span className='passed'>{passed} 通过</span>}
-              {!!suppressed && <span className='suppressed'>{suppressed} 条屏蔽</span>}
+              {!!(failed || violated) && <span className='failed'>{failed + violated} {t('$static.charts.proportion_of_results.status.violated')}</span>}
+              {!!passed && <span className='passed'>{passed} {t('$static.charts.proportion_of_results.status.passed')}</span>}
+              {!!suppressed && <span className='suppressed'>{suppressed} {t('$static.charts.proportion_of_results.status.suppressed')}</span>}
             </Space>
           </div>
         </Space>

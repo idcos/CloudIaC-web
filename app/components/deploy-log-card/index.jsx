@@ -42,6 +42,7 @@ import DeployLog from "./deploy-log";
 import styles from "./styles.less";
 import AuditModal from "./auditModal";
 import { ApproveIcon, SuspendIcon } from 'components/iconfont';
+import { t } from 'utils/i18n';
 
 const { Panel } = Collapse;
 const searchService = new SearchByKeyWord({
@@ -221,38 +222,35 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
   const suspend = () => {
     Modal.confirm({
       width: 480,
-      title: `中止 “${envInfo.name}” `,
+      title: <>{t('$static.task.abort.name')}&nbsp;“{envInfo.name}” </>,
       icon: <InfoCircleFilled />,
       getContainer: () => ref.current,
       content: (
         <div className={'suspendAlter'}>
-          {/* <Alert style={{ padding: '3px 31px', margin: 0 }} message='中止执行中的任务存在如下风险' type='error' /> */}
           <div style={{ marginBottom: 16 }}>
-            在apply动作开始后中止任务，环境状态将标记为『失败』，并有可能损坏环境的状态文件，导致该环境损坏，请在了解可能带来的风险前提下执行该动作。
+            {t('$static.task.abort.describe')}
           </div>
           <Form requiredMark='optional' form={form}>
             <Form.Item
-              label='确认中止'
+              label={t('$static.task.abort.confirmAbort')}
               style={{ fontWeight: 600, marginBottom: 0 }}
               name='name'
               rules={[{
                 required: true,
-                message: '请确认环境名称'
+                message: t('$static.task.abort.env.placeholder')
               }, {
                 validator: async (rule, value) => {
                   if (value && value !== envInfo.name) {
-                    throw new Error('当前环境输入不一致');
+                    throw new Error(t('$static.task.abort.env.diffError'));
                   }
                 }
               }]}
             >
-              <Input placeholder='输入环境名称' />
+              <Input placeholder={t('$static.task.abort.env.placeholder')} />
             </Form.Item>
           </Form>
         </div>
       ),
-      okText: '确认中止',
-    	cancelText: '取消',
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
@@ -261,13 +259,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
         const res = await taskAPI.abortTask({ orgId, projectId, taskId });
         if (res.code != 200) {
           notification.error({
-            message: '操作失败',
+            message: t('$static.message.opFail'),
             description: res.message
           });
           return;
         }
         notification.success({
-          message: '操作成功'
+          message: t('$static.message.opSuccess')
         });
         reload && reload();
         form.resetFields();
@@ -279,11 +277,11 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
   return (
     <div ref={ref} className={styles.deploy_log_card_wrapper}>
       <div className='header-content'>
-        <span className='title'>部署日志</span>
+        <span className='title'>{t('task.deployLog.name')}</span>
         {aborting ? (
           <Space className='aborting-status' align='center' size={6}>
             <LoadingIcon size={14} />
-            <span>正在中止，请稍等几分钟</span>
+            <span>{t('task.deployLog.abortingText')}</span>
           </Space>
         ) : (
           <Tag className='status' color={TASK_STATUS_COLOR[status]}>
@@ -303,7 +301,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
         bodyStyle={{ background: "#24292F", padding: 0 }}
         title={
           <div className='card-title'>
-            执行总耗时：{timeUtils.diff(endAt, startAt, "-")}
+            {t('task.deployLog.totalTime')}{timeUtils.diff(endAt, startAt, "-")}
           </div>
         }
         extra={
@@ -316,7 +314,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                     disabled={aborting}
                     icon={<SuspendIcon />}
                   >
-                    中止
+                    {t('task.deployLog.action.abort')}
                   </Button>
                 )}
                 {(type === "plan" && status === "complete") && (
@@ -325,7 +323,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                     onClick={applyTask}
                     loading={applyTaskLoading}
                   >
-                    执行部署
+                    {t('task.deployLog.action.deploy')}
                   </Button>
                 )}
                 {taskInfo.status === "approving" && (
@@ -333,7 +331,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
                     icon={<ApproveIcon />}
                     onClick={() => setAuditModalVisible(true)}
                   >
-                    审核
+                    {t('task.deployLog.action.audit')}
                   </Button>
                 )}
               </Space>
@@ -341,7 +339,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
             <Input
               prefix={<SearchOutlined />}
               ref={searchRef}
-              placeholder='搜索日志'
+              placeholder={t('$static.coder.ansi.search.placeholder')}
               onPressEnter={(e) => {
                 searchService.search(e.target.value);
                 searchRef.current.focus();
@@ -352,12 +350,12 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
               {isFullscreen ? (
                 <>
                   <FullscreenExitOutlined className='tool-icon' />
-                  <span className='tool-text'>退出全屏</span>
+                  <span className='tool-text'>{t('define.action.exitFullScreen')}</span>
                 </>
               ) : (
                 <>
                   <FullscreenOutlined className='tool-icon' />
-                  <span className='tool-text'>全屏显示</span>
+                  <span className='tool-text'>{t('define.action.fullScreen')}</span>
                 </>
               )}
             </span>

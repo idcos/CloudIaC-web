@@ -36,7 +36,7 @@ function AuditModal(props) {
         onCancel={() => setVisible(false)}
         visible={visible}
         width={560}
-        title='审核'
+        title={t('task.audit.name')}
         getContainer={false}
         footer={[
           <Button
@@ -44,7 +44,7 @@ function AuditModal(props) {
             onClick={() => passOrReject("rejected")}
             loading={loading.rejectedLoading}
           >
-            驳回
+            {t('task.audit.rejected')}
           </Button>,
           <Button
             onClick={() => passOrReject("approved")}
@@ -52,17 +52,17 @@ function AuditModal(props) {
             loading={loading.approvedLoading}
             disabled={!PROJECT_APPROVER || loading.rejectedLoading}
           >
-            通过
+            {t('task.audit.approved')}
           </Button>
         ]}
       >
-        <div className={styles.changedTip}>本次操作将发生如下资源变更:</div>
+        <div className={styles.changedTip}>{t('task.audit.title')}</div>
 
         <div className={styles.detailTable}>
           <div className={styles.header}>
-            <div>新增资源</div>
-            <div>修改资源</div>
-            <div>删除资源</div>
+            <div>{t('task.audit.addResource')}</div>
+            <div>{t('task.audit.modifyResource')}</div>
+            <div>{t('task.audit.deleteResource')}</div>
           </div>
           <div className={styles.row}>
             <div>{renderNumber("resAdded")}</div>
@@ -70,18 +70,6 @@ function AuditModal(props) {
             <div>{renderNumber("resDestroyed")}</div>
           </div>
         </div>
-
-        {/*<div className={styles.cost}>*/}
-        {/*  <CheckCircleFilled style={{ color: "#00A870" }} />{" "}*/}
-        {/*  新增资源预估月费用：￥200*/}
-        {/*</div>*/}
-        {/*<div className={styles.cost}>*/}
-        {/*  <ExclamationCircleFilled style={{ color: "#E34D59" }} />{" "}*/}
-        {/*  删除资源预估月费用：￥-200*/}
-        {/*</div>*/}
-        {/*<div className={styles.tip}>*/}
-        {/*  注：资源的月费用为预估值，仅供参考，最终费用以云平台结算为准*/}
-        {/*</div>*/}
       </Modal>
     </div>
   );
