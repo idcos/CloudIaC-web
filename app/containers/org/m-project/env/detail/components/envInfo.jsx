@@ -33,7 +33,7 @@ const EnvInfo = () => {
       vcsAPI.getReposUrl.bind(null, {
         vcsId: tplInfo.vcsId,
         repoId: tplInfo.repoId,
-        revision: taskInfo.revision,
+        repoRevision: taskInfo.revision,
         ...params
       })
     ),
@@ -66,7 +66,7 @@ const EnvInfo = () => {
   const linkTo = (type) => {
     if (type === 'commit') {
       linkToPage({
-        CommitId: taskInfo.commitId
+        commitId: taskInfo.commitId
       });
     } else if (type === 'tfVarsFile') {
       linkToPage({
