@@ -9,7 +9,7 @@ import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
 import getPermission from "utils/permission";
-import { getLanguage, setLanguage } from "utils/i18n";
+import { t, getLanguage, setLanguage } from "utils/i18n";
 import styles from './styles.less';
 
 const KEY = 'global';
@@ -128,9 +128,9 @@ const AppHeader = (props) => {
           <>
             {
               menuType === 'execute' ? (
-                <div className='changeMenu' onClick={() => changeMenu('compliance')}>进入合规</div>
+                <div className='changeMenu' onClick={() => changeMenu('compliance')}>{t('define.enterCompliance')}</div>
               ) : (
-                <div className='changeMenu' onClick={() => changeMenu('execute')}>进入执行</div>
+                <div className='changeMenu' onClick={() => changeMenu('execute')}>{t('define.enterExecute')}</div>
               )
             }
           </>
@@ -148,14 +148,14 @@ const AppHeader = (props) => {
                 maxLen={10}
                 value={orgId}
                 showSearch={true}
-                searchPlaceholder='请输入组织名称搜索'
+                searchPlaceholder={t('$static.searchOrgPlaceholder')}
                 lablePropsNames={{ name: 'name' }}
                 valuePropName='id'
-                formatOptionLabel={(name) => `组织：${name}`}
+                formatOptionLabel={(name) => <>{t('define.scope.org')}: {name}</>}
                 seniorSelectfooter={(
                   <div className={styles.seniorSelectfooter}>
                     <div className='more' onClick={() => history.push('/')}>
-                      <EyeOutlined className='icon' />查看更多
+                      <EyeOutlined className='icon' />{t('define.viewMore')}
                     </div>
                   </div>
                 )}
@@ -167,12 +167,13 @@ const AppHeader = (props) => {
           <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? 'En' : 'Zh'}</span>
           <Tooltip 
             color='#08857C'
+            placement='bottomRight'
             visible={devManualTooltipVisible}
             overlayStyle={{ maxWidth: 'none' }}
             title={
               <div className='dev-manual-tooltip-content'>
-                IaC帮助文档，快速了解IaC玩法 
-                <Button type='primary' onClick={() => onCloseDevManualTooltip()}>知道了</Button> 
+                {t('define.HelpDocTooltip')} 
+                <Button type='primary' onClick={() => onCloseDevManualTooltip()}>{t('define.gotIt')}</Button> 
               </div>
             }
           >
@@ -191,19 +192,19 @@ const AppHeader = (props) => {
                 <div className='body'>
                   <div className='link-item' onClick={() => history.push('/user/setting')}>
                     <span className='icon'><SecurityScanFilled /></span>
-                    <span className='text'>用户设置</span>
+                    <span className='text'>{t('define.userSet')}</span>
                   </div>
                   {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
                         <span className='icon'><SettingFilled /></span>
-                        <span className='text'>系统设置</span>
+                        <span className='text'>{t('define.sysSet')}</span>
                       </div>
                     ) : null
                   }
                   <div className='link-item' onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
-                    <span className='text'>退出</span>
+                    <span className='text'>{t('define.logout')}</span>
                   </div>
                 </div>
               </div>

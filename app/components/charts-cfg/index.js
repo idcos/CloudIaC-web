@@ -1,6 +1,8 @@
 import isArray from 'lodash/isArray';
 import { ENV_STATUS } from 'constants/types';
 import moment from 'moment';
+import { t } from 'utils/i18n';
+
 // eslint-disable-next-line no-undef
 let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
   offset: 0,
@@ -38,20 +40,20 @@ export const chartOptions = {
         textStyle: {
           width: 60
         },
-        data: [ "活跃环境数量", "失败环境数量", "已销毁环境数量" ],
+        data: [ t('$static.charts.project_statistics.activeEnvNum'), t('$static.charts.project_statistics.failedEnvNum'), t('$static.charts.project_statistics.inactiveEnvNum') ],
         icon: 'circle',
-        selected: [{ "活跃环境数量": true }, { "已销毁环境数量": true }, { "失败环境数量": true }]
+        selected: [{ [t('$static.charts.project_statistics.activeEnvNum')]: true }, { [t('$static.charts.project_statistics.inactiveEnvNum')]: true }, { [t('$static.charts.project_statistics.failedEnvNum')]: true }]
       },
       series: [
         {
-          name: '环境占比',
+          name: t('$static.charts.project_statistics.envProportion'),
           type: 'pie',
           left: '50%',
           radius: [ '40%', '70%' ],
           data: [
-            { name: "活跃环境数量", value: envActive || 0 },
-            { name: "已销毁环境数量", value: envInactive || 0 },
-            { name: "失败环境数量", value: envFailed || 0 }
+            { name: t('$static.charts.project_statistics.activeEnvNum'), value: envActive || 0 },
+            { name: t('$static.charts.project_statistics.inactiveEnvNum'), value: envInactive || 0 },
+            { name: t('$static.charts.project_statistics.failedEnvNum'), value: envFailed || 0 }
           ],
           label: {
             show: true,
@@ -72,79 +74,23 @@ export const chartOptions = {
       ]
     };
   },
-  policy_group: ({ column = [], value = [] } = {}) => {
-    return {
-      grid: {
-        x: 50,
-        y: 60,
-        x2: '2%',
-        y2: 30
-      },
-      title: {
-        text: '策略组检测通过率',
-        subtext: '30天内'
-      },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: column
-      },
-      yAxis: {
-        type: 'value',
-        max: 100,
-        min: 0,
-        interval: 25,
-        axisLabel: {
-          formatter: '{value}%'
-        }
-      },
-      series: [{
-        data: value,
-        type: 'line',
-        areaStyle: {
-          normal: {
-            //颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
-            color: colorConfig
-          }
-        },
-        symbolSize: 12,
-        itemStyle: {
-          normal: {
-            label: {
-              show: true,
-              position: 'top',
-              formatter: function(params) {
-                return `${params.value}%`;
-              }
-            },
-            color: '#D6F5E9', //折线点的颜色
-            lineStyle: {
-              width: 6,
-              color: colorConfig //折线的颜色
-            }
-          }
-        },
-        smooth: true
-      }]
-    };
-  },
   proportion_of_results: (inputData) => {
     inputData = isArray(inputData) ? inputData : [];
     const nameMap = {
       passed: {
-        text: '通过',
+        text: t('$static.charts.proportion_of_results.status.passed'),
         color: '#52CCA3'
       },
       violated: {
-        text: '不通过',
+        text: t('$static.charts.proportion_of_results.status.violated'),
         color: '#FF4D4F'
       },
       suppressed: {
-        text: '屏蔽',
+        text: t('$static.charts.proportion_of_results.status.suppressed'),
         color: '#B3CDFF'
       },
       failed: {
-        text: '失败',
+        text: t('$static.charts.proportion_of_results.status.failed'),
         color: '#A7282A'
       }
     };
@@ -158,8 +104,8 @@ export const chartOptions = {
     });
     return {
       title: {
-        text: '检测结果比例',
-        subtext: `${names.join('/')}比例`,
+        text: t('$static.charts.proportion_of_results.title'),
+        subtext: `${names.join('/')}${t('$static.charts.proportion_of_results.proportion')}`,
         left: 10
       },
       color: colors,
@@ -182,14 +128,14 @@ export const chartOptions = {
             }
           }
           const p = formatPercent(total === 0 ? 0 : tarValue / total);
-          return `${name}${name !== '不通过' ? '   ' : ''}   ${p}%`;
+          return `${name}${name !== nameMap.violated.text ? '   ' : ''}   ${p}%`;
 
         },
         data: names
       },
       series: [
         {
-          name: '检测结果比例',
+          name: t('$static.charts.proportion_of_results.title'),
           type: 'pie', //设为饼图
           radius: [ '30%', '50%' ], //可调整大小
           center: [ "30%", "50%" ],
@@ -211,8 +157,8 @@ export const chartOptions = {
         y2: 100
       },
       title: {
-        text: '检测源执行次数',
-        subtext: '近5天',
+        text: t('$static.charts.source_has_been_executed.title'),
+        subtext: t('$static.charts.source_has_been_executed.subTitle'),
         left: 10
       },
       xAxis: {
@@ -258,8 +204,8 @@ export const chartOptions = {
         y2: 30
       },
       title: {
-        text: '策略运行趋势',
-        subtext: '近5天'
+        text: t('$static.charts.policy_running_trend.title'),
+        subtext: t('$static.charts.policy_running_trend.subTitle')
       },
       xAxis: {
         type: 'category',
@@ -305,8 +251,8 @@ export const chartOptions = {
         y2: 30
       },
       title: {
-        text: '检测通过率趋势',
-        subtext: '近5天'
+        text: t('$static.charts.detect_pass_rate.title'),
+        subtext: t('$static.charts.detect_pass_rate.subTitle')
       },
       xAxis: {
         type: 'category',
@@ -363,9 +309,9 @@ export const chartOptions = {
   },
   unsolved_rate: ({ summary = [] }) => {
     const namemap = {
-      high: '高',
-      medium: '中',
-      low: '低'
+      high: t('$static.charts.unsolved_rate.name.high'),
+      medium: t('$static.charts.unsolved_rate.name.medium'),
+      low: t('$static.charts.unsolved_rate.name.low')
     };
     let datas = (summary || []).map(d => ({ name: namemap[d.name], value: d.value }));
     return {
@@ -378,7 +324,7 @@ export const chartOptions = {
         x: 'right', //可设定图例在左、右、居中
         y: 'center', //可设定图例在上、下、居中
         padding: [ 0, 20, 0, 0 ],
-        data: [ '高', '中', '低' ],
+        data: [ t('$static.charts.unsolved_rate.name.high'), t('$static.charts.unsolved_rate.name.medium'), t('$static.charts.unsolved_rate.name.low') ],
         width: 50,
         icon: "circle",
         formatter: (name) => {
@@ -391,7 +337,7 @@ export const chartOptions = {
       },
       series: [
         {
-          name: '占比',
+          name: t('$static.charts.unsolved_rate.name.proportion'),
           type: 'pie',
           center: [ '40%', '50%' ],
           roseType: 'area',
@@ -425,7 +371,7 @@ export const chartOptions = {
       color: colors,
       series: [
         {
-          name: '环境状态占比',
+          name: t('$static.charts.overview_envs_state.envStateProportion'),
           type: 'pie',
           // left: '50%',
           radius: [ '50%', '70%' ],
@@ -461,7 +407,7 @@ export const chartOptions = {
       },
       series: [
         {
-          name: '资源类型占比',
+          name: t('$static.charts.overview_resouces_type.resoucesTypeProportion'),
           type: 'pie',
           // left: '50%',
           radius: [ '50%', '70%' ],
@@ -485,7 +431,7 @@ export const chartOptions = {
       ]
     };
   },
-  overview_pro_resource: ({ last_month = [], this_month = [], stackList = [] } = {}) => {
+  overview_pro_resource: ({ last_month = [], this_month = [] } = {}) => {
     const xData = last_month.map((it) => it.resType);
     return {
       tooltip: {
@@ -525,14 +471,14 @@ export const chartOptions = {
       ],
       series: [
         {
-          name: '上个月',
+          name: t('$static.lastMonth'),
           barWidth: '8%',
           barGap: '0%',
           type: 'bar',
           data: last_month.map(it => it.count)
         },
         {
-          name: '当月',
+          name: t('$static.thisMonth'),
           barWidth: '8%',
           barGap: '0%',
           type: 'bar',
@@ -601,7 +547,7 @@ export const chartOptions = {
     if (costTypeStat.length === 0) {
       return {
         title: {
-          text: '暂无数据',
+          text: t('$static.noData'),
           x: 'center',
           y: 'center',
           textStyle: {
@@ -612,14 +558,14 @@ export const chartOptions = {
     }
     return {
       title: {
-        text: '当月费用占比',
+        text: t('$static.charts.cost_type_pie.title'),
         textStyle: {
           fontSize: 12
         }
       },
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: {c} (元)'
+        formatter: `{b}: {c} (${t('$static.money.yuan')})`
       },
       series: [
         {
@@ -650,7 +596,7 @@ export const chartOptions = {
     if (costTrendStat.length === 0) {
       return {
         title: {
-          text: '暂无数据',
+          text: t('$static.noData'),
           x: 'center',
           y: 'center',
           textStyle: {
@@ -665,7 +611,7 @@ export const chartOptions = {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: '{a} <br/>{b}: {c} (元)',
+        formatter: `{a} <br/>{b}: {c} (${t('$static.money.yuan')})`,
         axisPointer: {
           type: 'cross',
           label: {
@@ -696,7 +642,7 @@ export const chartOptions = {
       ],
       series: [
         {
-          name: '当月',
+          name: t('$static.thisMonth'),
           type: 'line',
           stack: 'Total',
           smooth: false,

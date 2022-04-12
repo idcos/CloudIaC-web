@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Tooltip } from 'antd';
 import isNumber from 'lodash/isNumber';
-
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 export default ({ resAdded, resChanged, resDestroyed }) => {
@@ -21,9 +21,9 @@ export default ({ resAdded, resChanged, resDestroyed }) => {
         ),
         toolText: (
           <span>
-            <span>{resAdded}添加 <br/> </span>
-            <span>{resChanged}更新 <br/> </span>
-            <span>{resDestroyed}删除 <br/> </span>
+            <span>{resAdded}&nbsp;{t('define.change.add')} <br/> </span>
+            <span>{resChanged}&nbsp;{t('define.change.modify')} <br/> </span>
+            <span>{resDestroyed}&nbsp;{t('define.change.delete')} <br/> </span>
           </span>
         )
       };
