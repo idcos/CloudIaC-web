@@ -7,7 +7,7 @@ function parseJSON(res) {
   return res.json().then(jsonResult => {
     return { ...res, jsonResult, httpCode: res.status };
   }).catch(() => {
-    throw new Error(t('$static.message.interfaceFail'));
+    throw new Error(t('define.message.interfaceFail'));
   });
 }
 

@@ -10,7 +10,7 @@ const changeOrg = async ({ orgId, dispatch, needJump = true, menuType = 'execute
     orgId
   });
   if (userInfoRes.code !== 200) {
-    return notification.error({ message: t('$static.message.notFoundUserInfo') });
+    return notification.error({ message: t('define.message.notFoundUserInfo') });
   }
   const { ORG_SET } = getPermission(userInfoRes.result || {});
   const projectsRes = await projectAPI.allEnableProjects({ orgId });

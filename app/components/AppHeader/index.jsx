@@ -148,7 +148,7 @@ const AppHeader = (props) => {
                 maxLen={10}
                 value={orgId}
                 showSearch={true}
-                searchPlaceholder={t('$static.searchOrgPlaceholder')}
+                searchPlaceholder={t('define.searchOrgPlaceholder')}
                 lablePropsNames={{ name: 'name' }}
                 valuePropName='id'
                 formatOptionLabel={(name) => <>{t('define.scope.org')}: {name}</>}

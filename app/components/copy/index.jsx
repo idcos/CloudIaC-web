@@ -49,14 +49,14 @@ export default ({ text, disabled, copyRequest, style }) => {
   return (
     <Button type='link' onClick={copy} disabled={disabled} style={{ padding: 0, ...style }}>
       <Space size={4}>
-        <Tooltip title={t('$static.message.copyTooltip')}>
+        <Tooltip title={t('define.message.copyTooltip')}>
           <CopyOutlined />
         </Tooltip>
         {isCopied && (
           copySuccess ? (
-            <span>{t('$static.message.copySuccess')}!</span>
+            <span>{t('define.message.copySuccess')}!</span>
           ) : (
-            <span className='danger-text'>{t('$static.message.copyFail')}!</span>
+            <span className='danger-text'>{t('define.message.copyFail')}!</span>
           )
         )}
       </Space>

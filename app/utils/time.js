@@ -14,21 +14,21 @@ export const timeUtils = {
     const { years, months, days, hours, minutes, seconds } = du._data;
     let text = '';
     if (years > 0 || text) {
-      text += `${years}${t('$static.time.years')}`; 
+      text += `${years}${t('define.time.years')}`; 
     }
     if (months > 0 || text) {
-      text += `${months}${t('$static.time.months')}`; 
+      text += `${months}${t('define.time.months')}`; 
     }
     if (days > 0 || text) {
-      text += `${days}${t('$static.time.days')}`; 
+      text += `${days}${t('define.time.days')}`; 
     }
     if (hours > 0 || text) {
-      text += `${hours}${t('$static.time.hours')}`; 
+      text += `${hours}${t('define.time.hours')}`; 
     }
     if (minutes > 0 || text) {
-      text += `${minutes}${t('$static.time.minutes')}`; 
+      text += `${minutes}${t('define.time.minutes')}`; 
     }
-    text += `${seconds}${t('$static.time.seconds')}`; 
+    text += `${seconds}${t('define.time.seconds')}`; 
     return text;
   }
 };

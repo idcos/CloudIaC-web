@@ -40,20 +40,20 @@ export const chartOptions = {
         textStyle: {
           width: 60
         },
-        data: [ t('$static.charts.project_statistics.activeEnvNum'), t('$static.charts.project_statistics.failedEnvNum'), t('$static.charts.project_statistics.inactiveEnvNum') ],
+        data: [ t('define.charts.project_statistics.activeEnvNum'), t('define.charts.project_statistics.failedEnvNum'), t('define.charts.project_statistics.inactiveEnvNum') ],
         icon: 'circle',
-        selected: [{ [t('$static.charts.project_statistics.activeEnvNum')]: true }, { [t('$static.charts.project_statistics.inactiveEnvNum')]: true }, { [t('$static.charts.project_statistics.failedEnvNum')]: true }]
+        selected: [{ [t('define.charts.project_statistics.activeEnvNum')]: true }, { [t('define.charts.project_statistics.inactiveEnvNum')]: true }, { [t('define.charts.project_statistics.failedEnvNum')]: true }]
       },
       series: [
         {
-          name: t('$static.charts.project_statistics.envProportion'),
+          name: t('define.charts.project_statistics.envProportion'),
           type: 'pie',
           left: '50%',
           radius: [ '40%', '70%' ],
           data: [
-            { name: t('$static.charts.project_statistics.activeEnvNum'), value: envActive || 0 },
-            { name: t('$static.charts.project_statistics.inactiveEnvNum'), value: envInactive || 0 },
-            { name: t('$static.charts.project_statistics.failedEnvNum'), value: envFailed || 0 }
+            { name: t('define.charts.project_statistics.activeEnvNum'), value: envActive || 0 },
+            { name: t('define.charts.project_statistics.inactiveEnvNum'), value: envInactive || 0 },
+            { name: t('define.charts.project_statistics.failedEnvNum'), value: envFailed || 0 }
           ],
           label: {
             show: true,
@@ -78,19 +78,19 @@ export const chartOptions = {
     inputData = isArray(inputData) ? inputData : [];
     const nameMap = {
       passed: {
-        text: t('$static.charts.proportion_of_results.status.passed'),
+        text: t('define.charts.proportion_of_results.status.passed'),
         color: '#52CCA3'
       },
       violated: {
-        text: t('$static.charts.proportion_of_results.status.violated'),
+        text: t('define.charts.proportion_of_results.status.violated'),
         color: '#FF4D4F'
       },
       suppressed: {
-        text: t('$static.charts.proportion_of_results.status.suppressed'),
+        text: t('define.charts.proportion_of_results.status.suppressed'),
         color: '#B3CDFF'
       },
       failed: {
-        text: t('$static.charts.proportion_of_results.status.failed'),
+        text: t('define.charts.proportion_of_results.status.failed'),
         color: '#A7282A'
       }
     };
@@ -104,8 +104,8 @@ export const chartOptions = {
     });
     return {
       title: {
-        text: t('$static.charts.proportion_of_results.title'),
-        subtext: `${names.join('/')}${t('$static.charts.proportion_of_results.proportion')}`,
+        text: t('define.charts.proportion_of_results.title'),
+        subtext: `${names.join('/')}${t('define.charts.proportion_of_results.proportion')}`,
         left: 10
       },
       color: colors,
@@ -135,7 +135,7 @@ export const chartOptions = {
       },
       series: [
         {
-          name: t('$static.charts.proportion_of_results.title'),
+          name: t('define.charts.proportion_of_results.title'),
           type: 'pie', //设为饼图
           radius: [ '30%', '50%' ], //可调整大小
           center: [ "30%", "50%" ],
@@ -157,8 +157,8 @@ export const chartOptions = {
         y2: 100
       },
       title: {
-        text: t('$static.charts.source_has_been_executed.title'),
-        subtext: t('$static.charts.source_has_been_executed.subTitle'),
+        text: t('define.charts.source_has_been_executed.title'),
+        subtext: t('define.charts.source_has_been_executed.subTitle'),
         left: 10
       },
       xAxis: {
@@ -204,8 +204,8 @@ export const chartOptions = {
         y2: 30
       },
       title: {
-        text: t('$static.charts.policy_running_trend.title'),
-        subtext: t('$static.charts.policy_running_trend.subTitle')
+        text: t('define.charts.policy_running_trend.title'),
+        subtext: t('define.charts.policy_running_trend.subTitle')
       },
       xAxis: {
         type: 'category',
@@ -251,8 +251,8 @@ export const chartOptions = {
         y2: 30
       },
       title: {
-        text: t('$static.charts.detect_pass_rate.title'),
-        subtext: t('$static.charts.detect_pass_rate.subTitle')
+        text: t('define.charts.detect_pass_rate.title'),
+        subtext: t('define.charts.detect_pass_rate.subTitle')
       },
       xAxis: {
         type: 'category',
@@ -309,9 +309,9 @@ export const chartOptions = {
   },
   unsolved_rate: ({ summary = [] }) => {
     const namemap = {
-      high: t('$static.charts.unsolved_rate.name.high'),
-      medium: t('$static.charts.unsolved_rate.name.medium'),
-      low: t('$static.charts.unsolved_rate.name.low')
+      high: t('define.charts.unsolved_rate.name.high'),
+      medium: t('define.charts.unsolved_rate.name.medium'),
+      low: t('define.charts.unsolved_rate.name.low')
     };
     let datas = (summary || []).map(d => ({ name: namemap[d.name], value: d.value }));
     return {
@@ -324,7 +324,7 @@ export const chartOptions = {
         x: 'right', //可设定图例在左、右、居中
         y: 'center', //可设定图例在上、下、居中
         padding: [ 0, 20, 0, 0 ],
-        data: [ t('$static.charts.unsolved_rate.name.high'), t('$static.charts.unsolved_rate.name.medium'), t('$static.charts.unsolved_rate.name.low') ],
+        data: [ t('define.charts.unsolved_rate.name.high'), t('define.charts.unsolved_rate.name.medium'), t('define.charts.unsolved_rate.name.low') ],
         width: 50,
         icon: "circle",
         formatter: (name) => {
@@ -337,7 +337,7 @@ export const chartOptions = {
       },
       series: [
         {
-          name: t('$static.charts.unsolved_rate.name.proportion'),
+          name: t('define.charts.unsolved_rate.name.proportion'),
           type: 'pie',
           center: [ '40%', '50%' ],
           roseType: 'area',
@@ -371,7 +371,7 @@ export const chartOptions = {
       color: colors,
       series: [
         {
-          name: t('$static.charts.overview_envs_state.envStateProportion'),
+          name: t('define.charts.overview_envs_state.envStateProportion'),
           type: 'pie',
           // left: '50%',
           radius: [ '50%', '70%' ],
@@ -407,7 +407,7 @@ export const chartOptions = {
       },
       series: [
         {
-          name: t('$static.charts.overview_resouces_type.resoucesTypeProportion'),
+          name: t('define.charts.overview_resouces_type.resoucesTypeProportion'),
           type: 'pie',
           // left: '50%',
           radius: [ '50%', '70%' ],
@@ -471,14 +471,14 @@ export const chartOptions = {
       ],
       series: [
         {
-          name: t('$static.lastMonth'),
+          name: t('define.lastMonth'),
           barWidth: '8%',
           barGap: '0%',
           type: 'bar',
           data: last_month.map(it => it.count)
         },
         {
-          name: t('$static.thisMonth'),
+          name: t('define.thisMonth'),
           barWidth: '8%',
           barGap: '0%',
           type: 'bar',
@@ -547,7 +547,7 @@ export const chartOptions = {
     if (costTypeStat.length === 0) {
       return {
         title: {
-          text: t('$static.noData'),
+          text: t('define.noData'),
           x: 'center',
           y: 'center',
           textStyle: {
@@ -558,14 +558,14 @@ export const chartOptions = {
     }
     return {
       title: {
-        text: t('$static.charts.cost_type_pie.title'),
+        text: t('define.charts.cost_type_pie.title'),
         textStyle: {
           fontSize: 12
         }
       },
       tooltip: {
         trigger: 'item',
-        formatter: `{b}: {c} (${t('$static.money.yuan')})`
+        formatter: `{b}: {c} (${t('define.money.yuan')})`
       },
       series: [
         {
@@ -596,7 +596,7 @@ export const chartOptions = {
     if (costTrendStat.length === 0) {
       return {
         title: {
-          text: t('$static.noData'),
+          text: t('define.noData'),
           x: 'center',
           y: 'center',
           textStyle: {
@@ -611,7 +611,7 @@ export const chartOptions = {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: `{a} <br/>{b}: {c} (${t('$static.money.yuan')})`,
+        formatter: `{a} <br/>{b}: {c} (${t('define.money.yuan')})`,
         axisPointer: {
           type: 'cross',
           label: {
@@ -642,7 +642,7 @@ export const chartOptions = {
       ],
       series: [
         {
-          name: t('$static.thisMonth'),
+          name: t('define.thisMonth'),
           type: 'line',
           stack: 'Total',
           smooth: false,

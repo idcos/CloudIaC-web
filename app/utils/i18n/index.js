@@ -7,8 +7,7 @@ import get from 'lodash/get';
 import messages from './messages';
 
 export const t = (path, props) => {
-  const { isStatic } = props || {};
-  if (path.startsWith('$static.') || isStatic) {
+  if (!props) {
     const language = getLanguage();
     const translation = {
       zh: ZhTranslation,

@@ -89,7 +89,7 @@ export default ({ value, cardTitleAfter, showHeader, className, style }) => {
         !showHeader && <>
           <Input.Search
             ref={searchRef}
-            placeholder={t('$static.coder.ansi.search.placeholder')}
+            placeholder={t('define.coder.ansi.search.placeholder')}
             onSearch={(keyword) => {
               searchService.search(keyword);
               searchRef.current.focus();

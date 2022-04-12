@@ -222,31 +222,31 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
   const suspend = () => {
     Modal.confirm({
       width: 480,
-      title: <>{t('$static.task.abort.name')}&nbsp;“{envInfo.name}” </>,
+      title: <>{t('define.task.abort.name')}&nbsp;“{envInfo.name}” </>,
       icon: <InfoCircleFilled />,
       getContainer: () => ref.current,
       content: (
         <div className={'suspendAlter'}>
           <div style={{ marginBottom: 16 }}>
-            {t('$static.task.abort.describe')}
+            {t('define.task.abort.describe')}
           </div>
           <Form requiredMark='optional' form={form}>
             <Form.Item
-              label={t('$static.task.abort.confirmAbort')}
+              label={t('define.task.abort.confirmAbort')}
               style={{ fontWeight: 600, marginBottom: 0 }}
               name='name'
               rules={[{
                 required: true,
-                message: t('$static.task.abort.env.placeholder')
+                message: t('define.task.abort.env.placeholder')
               }, {
                 validator: async (rule, value) => {
                   if (value && value !== envInfo.name) {
-                    throw new Error(t('$static.task.abort.env.diffError'));
+                    throw new Error(t('define.task.abort.env.diffError'));
                   }
                 }
               }]}
             >
-              <Input placeholder={t('$static.task.abort.env.placeholder')} />
+              <Input placeholder={t('define.task.abort.env.placeholder')} />
             </Form.Item>
           </Form>
         </div>
@@ -259,13 +259,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
         const res = await taskAPI.abortTask({ orgId, projectId, taskId });
         if (res.code != 200) {
           notification.error({
-            message: t('$static.message.opFail'),
+            message: t('define.message.opFail'),
             description: res.message
           });
           return;
         }
         notification.success({
-          message: t('$static.message.opSuccess')
+          message: t('define.message.opSuccess')
         });
         reload && reload();
         form.resetFields();
@@ -339,7 +339,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
             <Input
               prefix={<SearchOutlined />}
               ref={searchRef}
-              placeholder={t('$static.coder.ansi.search.placeholder')}
+              placeholder={t('define.coder.ansi.search.placeholder')}
               onPressEnter={(e) => {
                 searchService.search(e.target.value);
                 searchRef.current.focus();

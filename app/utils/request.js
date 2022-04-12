@@ -25,12 +25,12 @@ export const requestWrapper = (apiFn, options) => {
       }
       const data = formatDataFn(res);
       autoSuccess && notification.success({
-        message: successMessage || res.message || t('$static.message.opSuccess')
+        message: successMessage || res.message || t('define.message.opSuccess')
       });
       resolve(data);
     } catch (err) {
       autoError && notification.error({
-        message: errorMessage || err.message || t('$static.message.opFail'),
+        message: errorMessage || err.message || t('define.message.opFail'),
         description: err.description 
       });
       reject(err);

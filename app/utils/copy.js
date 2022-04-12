@@ -13,11 +13,11 @@ const copy = (text) => {
   const copyStatus = document.execCommand("Copy"); // 执行copy操作
   if (copyStatus) {
     notification.success({
-      message: t('$static.message.copySuccess')
+      message: t('define.message.copySuccess')
     });
   } else {
     notification.error({
-      message: t('$static.message.copyFail')
+      message: t('define.message.copyFail')
     });
   }
   window.getSelection().removeAllRanges(); //清除页面中已有的selection

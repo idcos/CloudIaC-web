@@ -121,7 +121,7 @@ export default () => {
           </div>
         )}
         <div className='loginFormWrapper'>
-          <div className='title'>{t('$static.loginPage.login')}</div>
+          <div className='title'>{t('define.loginPage.login')}</div>
           <Form
             {...layout}
             name='basic'
@@ -134,34 +134,34 @@ export default () => {
                 className='format-form-item'
                 label={
                   <>
-                    <span>{t('$static.loginPage.email')}</span>
+                    <span>{t('define.loginPage.email')}</span>
                   </>
                 }
                 name='email'
                 rules={[
-                  { required: true, message: t('$static.loginPage.email.placeholder') }, 
-                  { type: 'email', message: t('$static.loginPage.email.formatError') }
+                  { required: true, message: t('define.loginPage.email.placeholder') }, 
+                  { type: 'email', message: t('define.loginPage.email.formatError') }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >
-                <Input placeholder={t('$static.loginPage.email.placeholder')} />
+                <Input placeholder={t('define.loginPage.email.placeholder')} />
               </Form.Item>
             </div>
           
 
             <Form.Item
               className='format-form-item'
-              label={t('$static.loginPage.password')}
+              label={t('define.loginPage.password')}
               name='password'
-              rules={[{ required: true, message: t('$static.loginPage.password.placeholder') }]}
+              rules={[{ required: true, message: t('define.loginPage.password.placeholder') }]}
               getValueFromEvent={(e) => e.target.value.trim()}
             >
-              <Input.Password placeholder={t('$static.loginPage.password.placeholder')} />
+              <Input.Password placeholder={t('define.loginPage.password.placeholder')} />
             </Form.Item>
 
             <Form.Item {...tailLayout} style={{ paddingTop: 8 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
-                {t('$static.loginPage.login')}
+                {t('define.loginPage.login')}
               </Button>
             </Form.Item>
           </Form>
