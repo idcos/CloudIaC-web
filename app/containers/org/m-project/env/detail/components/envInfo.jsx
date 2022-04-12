@@ -9,10 +9,13 @@ import styles from '../styles.less';
 import DetailPageContext from '../detail-page-context';
 import CostReport from './cost-report';
 import classNames from 'classnames';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import vcsAPI from 'services/vcs';
 
 const EnvInfo = () => {
 
-  const { envInfo = {}, taskInfo = {}, orgId, projectId, envId } = useContext(DetailPageContext);
+  const { tplInfo = {}, envInfo = {}, taskInfo = {}, orgId, projectId, envId } = useContext(DetailPageContext);
   const [ now, setNow ] = useState(moment());
 
   useEffect(() => {
@@ -23,6 +26,24 @@ const EnvInfo = () => {
       clearInterval(t);
     };
   }, []);
+
+  // 跳转repo页面
+  const { run: linkToPage } = useRequest(
+    (params) => requestWrapper(
+      vcsAPI.getReposUrl.bind(null, {
+        vcsId: tplInfo.vcsId,
+        repoId: tplInfo.repoId,
+        revision: taskInfo.revision,
+        ...params
+      })
+    ),
+    {
+      manual: true,
+      onSuccess: (url) => {
+        url && window.open(url);
+      }
+    }
+  );
 
   const formatTTL = ({ autoDestroyAt, ttl }) => {
     if (autoDestroyAt) {
@@ -39,6 +60,22 @@ const EnvInfo = () => {
     default:
       const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
       return it.name;
+    }
+  };
+
+  const linkTo = (type) => {
+    if (type === 'commit') {
+      linkToPage({
+        CommitId: taskInfo.commitId
+      });
+    } else if (type === 'tfVarsFile') {
+      linkToPage({
+        path: (envInfo.workdir + '/' + envInfo.tfVarsFile).replace('//', '/').replace('///', '/')
+      });
+    } else if (type === 'playbook') {
+      linkToPage({
+        path: (envInfo.workdir + '/' + envInfo.playbook).replace('//', '/').replace('///', '/')
+      });
     }
   };
 
@@ -64,14 +101,23 @@ const EnvInfo = () => {
             }} className={styles.linkToPage}
             >{envInfo.templateName || '-'}</span></Descriptions.Item>
             <Descriptions.Item span={3} label='分支/标签'>{envInfo.revision || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='Commit_ID'><span onClick={() => {
-              window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`);
-            }} className={styles.linkToPage}
-            >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
+            <Descriptions.Item span={3} label='Commit_ID'>{
+              taskInfo.commitId ? (
+                <span onClick={() => linkTo('commit')} className={styles.linkToPage}>{taskInfo.commitId.substring(0, 12)}</span>
+              ) : '-'
+            }</Descriptions.Item>
 
             <Descriptions.Item span={3} label='密钥'>{envInfo.keyName || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='tfvars文件'>{envInfo.tfVarsFile || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='playbook文件'>{envInfo.playbook || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label='tfvars文件'>{
+              envInfo.tfVarsFile ? (
+                <span onClick={() => linkTo('tfVarsFile')} className={styles.linkToPage}>{envInfo.tfVarsFile}</span>
+              ) : '-'
+            }</Descriptions.Item>
+            <Descriptions.Item span={3} label='playbook文件'>{
+              envInfo.playbook ? (
+                <span onClick={() => linkTo('playbook')} className={styles.linkToPage}>{envInfo.playbook}</span>
+              ) : '-'
+            }</Descriptions.Item>
 
             <Descriptions.Item span={3} label='部署通道'>{envInfo.runnerId || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label='target'>{envInfo.target || '-'}</Descriptions.Item>

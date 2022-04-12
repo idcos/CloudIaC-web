@@ -64,6 +64,9 @@ const vcsAPI = {
   },
   readme: ({ vcsId, ...restParams }) => {
     return getWithArgs(`/api/v1/vcs/${vcsId}/readme`, restParams);
+  },
+  getReposUrl: ({ vcsId, ...restParams }) => {
+    return getWithArgs(`/api/v1/vcs/${vcsId}/repos/url`, restParams);
   }
 };
 

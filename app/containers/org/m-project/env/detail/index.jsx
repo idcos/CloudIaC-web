@@ -12,6 +12,7 @@ import PolicyStatus from 'components/policy-status';
 import { END_TASK_STATUS_LIST, ENV_STATUS, ENV_STATUS_COLOR } from "constants/types";
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
+import tplAPI from 'services/tpl';
 import history from 'utils/history';
 import { safeJsonParse } from 'utils/util';
 import getPermission from "utils/permission";
@@ -67,6 +68,19 @@ const EnvDetail = (props) => {
           setTaskId(data.lastTaskId);
         }
       }
+    }
+  );
+
+  // 获取云模版详情
+  const { data: tplInfo = {} } = useRequest(
+    () => requestWrapper(
+      tplAPI.detail.bind(null, {
+        orgId, tplId: envInfo.tplId
+      })
+    ),
+    {
+      ready: !!envInfo.tplId,
+      formatResult: data => data || {}
     }
   );
 
@@ -239,6 +253,7 @@ const EnvDetail = (props) => {
         userInfo,
         taskInfo,
         envInfo,
+        tplInfo,
         reload,
         envId,
         taskId,
