@@ -3,13 +3,14 @@
  */
 import React from 'react';
 import { Result, Button } from 'antd';
+import { t } from 'utils/i18n';
 
 export default function NotFound() {
   return (
     <Result
       status='404'
       title='404'
-      subTitle='抱歉，您访问的页面不存在'
+      subTitle={t('define.page.NotFound.subTitle')}
       extra={(
         <Button
           onClick={() => { 
@@ -17,7 +18,7 @@ export default function NotFound() {
           }}
           type='primary'
         >
-          返回首页
+          {t('define.action.backHome')}
         </Button>
       )}
     />

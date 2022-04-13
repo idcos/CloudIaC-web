@@ -34,7 +34,7 @@ export default class Eb extends React.Component {
             title={t('define.errPage.result.title')}
             subTitle={t('define.errPage.result.subTitle')}
             extra={[
-              <Button type='primary' onClick={this.handleClick}>{t('define.errPage.result.extra')}</Button>
+              <Button type='primary' onClick={this.handleClick}>{t('define.action.backHome')}</Button>
             ]}
           >
           </Result>
