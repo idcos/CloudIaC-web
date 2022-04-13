@@ -1,38 +1,39 @@
 import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ControlOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
 import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 
 const getMenus = (userInfo, { projectList }) => {
   const { ORG_SET, PROJECT_SET, PROJECT_OPERATOR } = getPermission(userInfo);
   return [
     {
-      subName: '项目信息',
+      subName: t('define.projectInfo'),
       subKey: 'project',
       isHide: !PROJECT_SET && projectList.length === 0,
       emptyMenuList: [
         {
-          name: '创建项目',
+          name: t('define.createProject'),
           key: 'm-project-create',
           icon: <PlusSquareOutlined />
         }
       ],
       menuList: [
         {
-          name: '环境',
+          name: t('define.scope.env'),
           key: 'm-project-env',
           icon: <CodeOutlined />
         },
         {
-          name: '云模板',
+          name: t('define.scope.template'),
           key: 'm-project-ct',
           icon: <LayoutOutlined />
         },
         {
-          name: '变量',
+          name: t('define.variable'),
           key: 'm-project-variable',
           icon: <InteractionOutlined />
         },
         {
-          name: '设置',
+          name: t('define.setting'),
           isHide: !PROJECT_SET,
           key: 'm-project-setting',
           icon: <SettingOutlined />
@@ -40,36 +41,36 @@ const getMenus = (userInfo, { projectList }) => {
       ]
     },
     {
-      subName: '组织设置',
+      subName: t('define.orgSet'),
       subKey: 'org',
       emptyMenuList: [],
       isHide: !ORG_SET && !PROJECT_OPERATOR,
       menuList: [
         {
-          name: '概览',
+          name: t('define.overview'),
           key: 'm-org-overview',
           icon: <ControlOutlined />
         },
         {
-          name: '项目',
+          name: t('define.scope.project'),
           key: 'm-org-project',
           icon: <ProjectOutlined />,
           isHide: !ORG_SET
         },
         {
-          name: '云模板',
+          name: t('define.scope.template'),
           key: 'm-org-ct',
           icon: <LayoutOutlined />,
           isHide: !ORG_SET
         },
         {
-          name: '变量',
+          name: t('define.variable'),
           key: 'm-org-variable',
           icon: <InteractionOutlined />,
           isHide: !ORG_SET
         },
         {
-          name: '设定',
+          name: t('define.setting'),
           key: 'm-org-setting',
           icon: <FormOutlined />,
           isHide: !ORG_SET && !PROJECT_OPERATOR
@@ -82,12 +83,12 @@ const getMenus = (userInfo, { projectList }) => {
       emptyMenuList: [],
       menuList: [
         {
-          name: '概览',
+          name: t('define.overview'),
           key: 'm-other-overview',
           icon: <ControlOutlined />
         },
         {
-          name: '资源查询',
+          name: t('define.resourceQuery'),
           key: 'm-other-resource',
           icon: <SearchOutlined />
         }

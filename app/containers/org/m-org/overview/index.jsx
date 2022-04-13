@@ -11,6 +11,7 @@ import classNames from 'classnames';
 import orgsAPI from 'services/orgs';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { t } from 'utils/i18n';
 import { connect } from 'react-redux';
 import styles from './styles.less';
 import { ENV_STATUS } from 'constants/types';
@@ -82,10 +83,10 @@ const overview = ({ curOrg, projects, curProject }) => {
   };
 
   let CHART = useRef([
-    { key: 'overview_envs_state', domRef: overview_envs_state, des: '环境状态占比', ins: null },
-    { key: 'overview_resouces_type', domRef: overview_resouces_type, des: '资源类型占比', ins: null },
-    { key: 'overview_pro_resource', domRef: overview_pro_resource, des: '项目资源数量', ins: null },
-    { key: 'overview_resource_tendency', domRef: overview_resource_tendency, des: '最近七天资源新增趋势', ins: null }
+    { key: 'overview_envs_state', domRef: overview_envs_state, ins: null },
+    { key: 'overview_resouces_type', domRef: overview_resouces_type, ins: null },
+    { key: 'overview_pro_resource', domRef: overview_pro_resource, ins: null },
+    { key: 'overview_resource_tendency', domRef: overview_resource_tendency, ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
@@ -136,9 +137,9 @@ const overview = ({ curOrg, projects, curProject }) => {
                   marginBottom: "0"
                 }}
               >
-                <span style={{ fontSize: 20 }}>概览</span>
+                <span style={{ fontSize: 20 }}>{t('define.overview')}</span>
                 <Select
-                  placeholder='全部项目'
+                  placeholder={t('define.page.selectProject.title')}
                   mode='multiple'
                   maxTagCount={3}
                   allowClear={true}
@@ -165,20 +166,20 @@ const overview = ({ curOrg, projects, curProject }) => {
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.env_state}>
-                <h3>环境状态占比</h3>
+                <h3>{t('define.charts.overview_envs_state.envStateProportion')}</h3>
                 <div className={classNames(styles.content, selectedModule === 'envStat' ? styles.selected : undefined)} 
                   onClick={() => {
                     setSelectedModule("envStat"); 
                   }}
                 >
                   <div>
-                    <span className={styles.content_title}>最近更新</span>
+                    <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
                     <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
-                        <div>占比正序排列</div>
-                        <div>环境状态</div>
-                        <div>占比比率</div>
+                        <div>{t('define.page.overview.order')}</div>
+                        <div>{t('define.page.overview.envStatus')}</div>
+                        <div>{t('define.page.overview.ratio')}</div>
                       </div>
                       {envStatTopData.map((val, i) => {
                         return <div className={classNames(styles.table_item)}>
@@ -194,20 +195,20 @@ const overview = ({ curOrg, projects, curProject }) => {
             </Col>
             <Col span={12}>
               <div className={styles.resource_type}>
-                <h3>资源类型占比</h3>
+                <h3>{t('define.charts.overview_resouces_type.resoucesTypeProportion')}</h3>
                 <div className={classNames(styles.content, selectedModule === 'resStat' ? styles.selected : undefined)} 
                   onClick={() => {
                     setSelectedModule("resStat"); 
                   }}
                 >
                   <div>
-                    <span className={styles.content_title}>最近更新</span>
+                    <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
                     <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
                     <div className={styles.table}>
                       <div className={classNames(styles.table_header)}>
-                        <div>占比正序排列</div>
-                        <div>资源类型</div>
-                        <div>占比比率</div>
+                        <div>{t('define.page.overview.order')}</div>
+                        <div>{t('define.page.overview.resourceType')}</div>
+                        <div>{t('define.page.overview.ratio')}</div>
                       </div>
                       {resStatTopData.map((val, i) => {
                         return <div className={classNames(styles.table_item)}>
@@ -225,7 +226,7 @@ const overview = ({ curOrg, projects, curProject }) => {
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.pro_resource}>
-                <h3>项目资源数量</h3>
+                <h3>{t('define.page.overview.projectResStat')}</h3>
                 <div className={classNames(styles.content, selectedModule === 'projectResStat' ? styles.selected : undefined)}
                   onClick={() => {
                     setSelectedModule("projectResStat"); 
@@ -239,7 +240,7 @@ const overview = ({ curOrg, projects, curProject }) => {
             </Col>
             <Col span={12}>
               <div className={styles.resource_tendency}>
-                <h3>最近七天资源新增趋势</h3>
+                <h3>{t('define.page.overview.resGrowTrend')}</h3>
                 <div className={classNames(styles.content, selectedModule === 'resGrowTrend' ? styles.selected : undefined)}
                   onClick={() => {
                     setSelectedModule("resGrowTrend"); 

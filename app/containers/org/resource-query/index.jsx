@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import orgsAPI from 'services/orgs';
 import styles from './styles.less';
 import ResourceItem from './component/resource_item';
-import Item from 'antd/lib/list/Item';
+import { t } from 'utils/i18n';
 
 export default ({ match }) => {
 
@@ -72,11 +72,11 @@ export default ({ match }) => {
         <PageHeader
           title={
             <div className={styles.search}>
-              <span style={{ fontSize: 20 }}>资源查询</span>
+              <span style={{ fontSize: 20 }}>{t('define.resourceQuery')}</span>
               <Input
                 allowClear={true}
                 style={{ width: 400, marginLeft: 135, height: 32 }}
-                placeholder='请输入关键字搜索'
+                placeholder={t('define.form.input.search.placeholder.key')}
                 prefix={<SearchOutlined />}
                 onPressEnter={(e) => onParamsSearch({ q: e.target.value })}
               />
@@ -88,7 +88,7 @@ export default ({ match }) => {
       <div className={classNames(styles.res_query, 'idcos-card')}>
         <div className={styles.left}>
           <div className={styles.env_list}>
-            <span>环境</span>
+            <span>{t('define.scope.env')}</span>
             <Checkbox.Group 
               className={styles.checbox}
               style={{ width: '100%' }} 
@@ -128,7 +128,7 @@ export default ({ match }) => {
               pageSize={page.pageSize}
               current={page.currentPage}
               onChange={onPageSearch}
-              showTotal={(total) => `共${total}条`}
+              showTotal={(total) => t('define.pagination.showTotal', { values: { total } })}
             />
           </div>
         </div>

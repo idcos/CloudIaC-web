@@ -6,6 +6,7 @@ import { TrendDownIcon, TrenDupIcon } from 'components/iconfont';
 import { ENV_STATUS } from 'constants/types';
 import moment from 'moment';
 import sortBy from 'lodash/sortBy';
+import { t } from 'utils/i18n';
 
 const { TabPane } = Tabs;
 const getColor = (index) => [ "#FF3B3B", "#F5A623", "#3D7FFF" ][index] || '#999999';
@@ -78,8 +79,8 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
 
   return (
     <div className={styles.tableWrapper}>
-      <h2>概览详情</h2>
-      <h3>环境状态占比</h3>
+      <h2>{t('define.page.overview.detail')}</h2>
+      <h3>{t('define.charts.overview_envs_state.envStateProportion')}</h3>
       <div className={styles.data_table}>
         <Table 
           rowKey='status'
@@ -174,8 +175,8 @@ export const ResStat = ({ showData = [], total = 0 }) => {
   };
   return (
     <div className={styles.tableWrapper}>
-      <h2>概览详情</h2>
-      <h3>资源类型占比</h3>
+      <h2>{t('define.page.overview.detail')}</h2>
+      <h3>{t('define.charts.overview_resouces_type.resoucesTypeProportion')}</h3>
       <div className={styles.data_table}>
         <Table 
           rowKey='resType'
@@ -311,9 +312,9 @@ export const ProjectStat = ({ showData }) => {
 
   return (
     <div className={styles.tabsWrapper}>
-      <h2>项目资源数量</h2>
+      <h2>{t('define.page.overview.projectResStat')}</h2>
       <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
-        <TabPane tab='上月' key='last'>
+        <TabPane tab={t('define.lastMonth')} key='last'>
           <div className={styles.data_table}>
             <Table 
               {...commonTableProps}
@@ -321,7 +322,7 @@ export const ProjectStat = ({ showData }) => {
             />
           </div>
         </TabPane>
-        <TabPane tab='本月' key='this'>
+        <TabPane tab={t('define.thisMonth')} key='this'>
           <div className={styles.data_table}>
             <Table 
               {...commonTableProps}
@@ -421,8 +422,8 @@ export const ResGrowTrend = ({ showData = [] }) => {
 
   return (
     <div className={styles.tableWrapper}>
-      <h2>概览详情</h2>
-      <h3>最近七天资源新增趋势</h3>
+      <h2>{t('define.page.overview.detail')}</h2>
+      <h3>{t('define.page.overview.resGrowTrend')}</h3>
       <div className={styles.data_table}>
         <Table 
           {...commonTableProps}

@@ -8,6 +8,7 @@ import MenuSelect from 'components/menu-select';
 import RoutesList from 'components/routes-list';
 import versionCfg from 'assets/version.json';
 import history from "utils/history";
+import { t } from 'utils/i18n';
 import ProjectModal from 'components/project-modal';
 import projectAPI from 'services/project';
 import getMenus from './menus';
@@ -71,13 +72,13 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -134,7 +135,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 overlayWidth='200px'
                 options={projectList}
                 actionContent={collapsed ? (
-                  <Tooltip title='切换项目' placement='right'>
+                  <Tooltip title={t('define.project.change')} placement='right'>
                     <div className={styles.projectActionContent}>
                       <span>{((curProject || {}).name || '')[0]}</span>
                     </div>
@@ -148,7 +149,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                 lablePropsNames={{ name: 'name' }}
                 value={pjtId}
                 showSearch={true}
-                searchPlaceholder='请输入项目名称搜索'
+                searchPlaceholder={t('define.project.search.placeholder')}
                 selectRef={pjtSelectRef}
                 maxLen={10}
                 menuSelectfooter={(
@@ -156,14 +157,14 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
                     className={styles.menuSelectfooterContent} 
                   >
                     <div className='more' onClick={() => history.push(`/project-select-page?orgId=${orgId}`)}>
-                      <EyeOutlined className='icon' />查看更多项目
+                      <EyeOutlined className='icon' />{t('define.project.viewMore')}
                     </div>
                     <div className='create'>
                       <div className='btn' onClick={togglePjtModalVsible}>
                         <span className='icon'>
                           <PlusSquareOutlined/>
                         </span>
-                        <span>创建新的项目</span>
+                        <span>{t('define.project.create')}</span>
                       </div>
                     </div>
                     {

@@ -9,6 +9,7 @@ import {
   ArrowRightOutlined
 } from "@ant-design/icons";
 import Coder from 'components/coder';
+import { t } from 'utils/i18n';
 
 const KEY = 'global';
 
@@ -30,11 +31,11 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
     <div className={styles.resource_item}>
       <div className={styles.header}>
         <div className={styles.item}>
-          <span className={styles.label}>项目</span>
+          <span className={styles.label}>{t('define.scope.project')}</span>
           <span className={styles.value}>{projectName}</span>
         </div>
         <div className={styles.item}>
-          <span className={styles.label}>环境</span>
+          <span className={styles.label}>{t('define.scope.env')}</span>
           <span className={styles.value}>
             <a onClick={() => {
               history.push(`/org/${curOrg.id}/project/${projectId}/m-project-env/detail/${envId}`); 
@@ -45,16 +46,15 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
           </span>
         </div>
         <div className={styles.item}>
-          <span className={styles.label}>资源类型</span>
+          <span className={styles.label}>{t('define.page.overview.resourceType')}</span>
           <span className={styles.value}>{type}</span>
         </div>
         <div className={styles.item}>
-          <span className={styles.label}>资源名称</span>
+          <span className={styles.label}>{t('define.page.resource.resourceName')}</span>
           <span className={styles.value}>{resourceName}</span>
         </div>
       </div>
       <div className={classNames(styles.json, isUnfold ? styles.unfold : undefined)}>
-        {/* {whetherOverflow ? "溢出" : "未溢出"} */}
         <Button 
           onClick={() => {
             setIsUnfold(!isUnfold);
@@ -62,7 +62,7 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
           style={!whetherOverflow ? { display: "none" } : undefined} 
           className={styles.code_btn}
         >
-          {isUnfold ? "点我收起" : "点我展开"}
+          {isUnfold ? t('define.page.resource.action.stow') : t('define.page.resource.action.expand')}
         </Button>
         <Coder domRef={codeDomRef} value={safeJsonStringify([ data, null, 2 ])} style={{ height: 'auto' }} />
       </div>
