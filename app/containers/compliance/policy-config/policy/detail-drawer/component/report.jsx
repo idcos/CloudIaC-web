@@ -6,6 +6,7 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import policiesAPI from 'services/policies';
 import { chartUtils } from 'components/charts-cfg';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
+import { t } from 'utils/i18n';
 
 export default ({ policyId }) => {
   const proportion_of_results = useRef();
@@ -84,7 +85,7 @@ export default ({ policyId }) => {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('define.status'),
       width: 120,
       ellipsis: true,
       render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'

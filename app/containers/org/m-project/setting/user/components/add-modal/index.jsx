@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
-
+import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
 
@@ -31,7 +31,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
       setUserOptions(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -77,7 +77,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
           rules={[
             {
               required: true,
-              message: '请选择'
+              message: t('define.form.select.placeholder')
             }
           ]}
         >
@@ -96,7 +96,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
           rules={[
             {
               required: true,
-              message: '请选择'
+              message: t('define.form.select.placeholder')
             }
           ]}
         >

@@ -6,7 +6,7 @@ import Active from './component/active';
 import Unsolved from './component/unsolved';
 import Policy from './component/policy';
 import PolicyGroup from './component/policy-group';
-
+import { t } from 'utils/i18n';
 
 const PolicyGroupList = () => {
   const [ summaryData, setSummaryData ] = useState({});
@@ -24,7 +24,7 @@ const PolicyGroupList = () => {
       setSummaryData(res.result);
     } catch (e) {
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }

@@ -11,6 +11,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import tplAPI from 'services/tpl';
 import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 import { useLoopPolicyStatus } from 'utils/hooks';
 import PolicyStatus from 'components/policy-status';
 import DetectionDrawer from '../../m-org/ct/components/detection-drawer';
@@ -144,7 +145,7 @@ const CTList = ({ userInfo, match = {} }) => {
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 100,
       ellipsis: true,
       fixed: 'right',
@@ -191,7 +192,7 @@ const CTList = ({ userInfo, match = {} }) => {
             total: resultMap.total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
             onChange: (pageNo, pageSize) => {
               changeQuery({
                 pageNo,

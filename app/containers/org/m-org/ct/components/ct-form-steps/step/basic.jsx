@@ -4,10 +4,11 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import cgroupsAPI from 'services/cgroups';
+import { t } from 'utils/i18n';
 
 const FL = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 14 }
+  labelCol: { span: 7 },
+  wrapperCol: { span: 15 }
 };
 
 export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctData, type, saveLoading }) => {
@@ -59,26 +60,26 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
       onFinish={onFinish}
     >
       <Form.Item
-        label='模板名称'
+        label={t('define.name')}
         name='name'
         getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input style={{ width: 254 }} placeholder='请输入模板名称' />
+        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} />
       </Form.Item>
       <Form.Item
-        label='模板描述'
+        label={t('define.des')}
         name='description'
       >
-        <Input.TextArea placeholder='请输入模板描述' rows={7} />
+        <Input.TextArea placeholder={t('define.form.input.placeholder')} rows={7} />
       </Form.Item>
       <Form.Item
-        label='开启合规检测'
+        label={t('define.ct.field.policyEnable')}
         name='policyEnable'
         valuePropName='checked'
       >
@@ -93,16 +94,16 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
           return policyEnable ? (
             <>
               <Alert
-                message='云模板开启合规检测后，该云模板部署的新环境默认将开启合规检测，并应用绑定的策略组环境创建后如需修改策略组可在『合规中心』或『环境详情』-『设置』中进行配置'
+                message={t('define.ct.form.policyEnable.alert')}
                 type='info'
                 showIcon={true}
                 icon={<InfoCircleOutlined style={{ color: '#166CC1' }} />}
                 style={{ margin: '-16px 0 16px', backgroundColor: '#e9f3fc', borderColor: '#e9f3fc' }}
               />
               <Form.Item
-                label='绑定策略组'
+                label={t('define.ct.field.policyGroup')}
                 name='policyGroup'
-                rules={[{ required: true, message: '请选择' }]}
+                rules={[{ required: true, message: t('define.form.select.placeholder') }]}
               >
                 <Select 
                   mode='multiple'
@@ -110,34 +111,34 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
                   showArrow={true}
                   showSearch={true}
                   options={policiesGroupOptions}
-                  placeholder='请选择策略组'
+                  placeholder={t('define.form.select.placeholder')}
                 />
               </Form.Item>
               <Form.Item
                 name='tplTriggers'
-                wrapperCol={{ offset: 5, span: 14 }}
+                wrapperCol={{ offset: 7, span: 15 }}
                 className='ant-form-item-no-min-height'
               >
                 <Checkbox.Group>
-                  <Checkbox value='commit'>分支推送时自动检测合规</Checkbox>                  
+                  <Checkbox value='commit'>{t('define.ct.field.tplTriggers.option.commit')}</Checkbox>                  
                 </Checkbox.Group>
               </Form.Item>
             </>
           ) : null;
         }}
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 5, span: 14 }} style={{ paddingTop: 24, marginBottom: 0 }}>
+      <Form.Item wrapperCol={{ offset: 7, span: 15 }} style={{ paddingTop: 24, marginBottom: 0 }}>
         <Space size={24}>
           {
             opType === 'add' ? (
               <>
-                <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>上一步</Button>
-                <Button type='primary' htmlType={'submit'}>下一步</Button>
+                <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>{t('define.action.prev')}</Button>
+                <Button type='primary' htmlType={'submit'}>{t('define.action.next')}</Button>
               </>
             ) : (
               <>
-                <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
-                <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
+                <Button className='ant-btn-tertiary' onClick={goCTlist}>{t('define.action.cancel')}</Button>
+                <Button type='primary' htmlType={'submit'} loading={saveLoading}>{t('define.action.submit')}</Button>
               </>
             )
           }

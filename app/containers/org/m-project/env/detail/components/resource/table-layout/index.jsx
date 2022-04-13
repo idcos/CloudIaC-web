@@ -5,6 +5,7 @@ import { FundViewOutlined } from "@ant-design/icons";
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
+import { t } from 'utils/i18n';
 import DetailPageContext from '../../../detail-page-context';
 import DetailDrawer from '../components/detail-drawer';
 
@@ -93,7 +94,7 @@ const TableLayout = ({ setMode }) => {
     },
     {
       dataIndex: 'type',
-      title: '类型',
+      title: t('define.type'),
       ellipsis: true,
       width: 180
     },
@@ -105,7 +106,7 @@ const TableLayout = ({ setMode }) => {
     },
     {
       dataIndex: 'name',
-      title: '名称',
+      title: t('define.name'),
       ellipsis: true,
       width: 200,
       render: (text, record) => {

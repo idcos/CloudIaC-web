@@ -4,6 +4,7 @@ import moment from 'moment';
 import tokensAPI from 'services/tokens';
 import TokenForm from './components/add-modal';
 import Popover from 'components/Popover';
+import { t } from 'utils/i18n';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -42,7 +43,7 @@ const ApiToken = ({ orgId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -72,14 +73,14 @@ const ApiToken = ({ orgId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -93,35 +94,35 @@ const ApiToken = ({ orgId }) => {
     },
     {
       dataIndex: 'description',
-      title: '描述',
+      title: t('define.des'),
       width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'expiredAt',
-      title: '过期时间',
+      title: t('define.token.expiredAt'),
       width: 160,
       ellipsis: true,
       render: (text) => text ? moment(text).format(dateFormat) : '-'
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 160,
       ellipsis: true,
       render: (text) => moment(text).format(dateFormat)
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('define.status'),
       width: 120,
       ellipsis: true,
       render: (text) => <div className='tableRender'>
-        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
+        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? t('define.status.disabled') : t('define.status.enabled')}</span>
       </div>
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
@@ -129,22 +130,22 @@ const ApiToken = ({ orgId }) => {
         return <Space split={<Divider type='vertical' />}>
           {
             record.status == 'disable' ? <Popconfirm
-              title='确定要启用该资源账号？'
+              title={t('define.token.action.enable.confirm.title')}
               onConfirm={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}
             >
-              <a>启用</a>
+              <a>{t('define.status.enabled')}</a>
             </Popconfirm> : <Popconfirm
-              title='确定要禁用该资源账号？'
+              title={t('define.token.action.disabled.confirm.title')}
               onConfirm={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'disable' } })}
             >
-              <a>禁用</a>
+              <a>{t('define.status.disabled')}</a>
             </Popconfirm>
           }
           <Popconfirm
-            title='确定删除该资源账号？'
+            title={t('define.token.action.delete.confirm.title')}
             onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
           >
-            <a>删除</a>
+            <a>{t('define.change.delete')}</a>
           </Popconfirm>
         </Space>;
       }
@@ -173,7 +174,7 @@ const ApiToken = ({ orgId }) => {
           onClick={() => {
             toggleVisible();
           }}
-        >创建Token</Button>
+        >{t('define.token.action.add')}</Button>
       </Popover>
     </div>
     <Table
@@ -187,7 +188,7 @@ const ApiToken = ({ orgId }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             pageNo: page,

@@ -20,7 +20,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
       render: (text, record, index) => <span style={{ color: getColor(index) }}>{index + 1}</span>
     },
     {
-      title: '状态',
+      title: t('define.status'),
       dataIndex: 'status',
       key: 'status',
       render: (text, record) => (
@@ -118,7 +118,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
       render: (text, record, index) => <span style={{ color: getColor(index) }}>{index + 1}</span> 
     },
     {
-      title: '名称',
+      title: t('define.name'),
       dataIndex: 'resType',
       key: 'resType',
       render: (text, record) => (
@@ -218,7 +218,7 @@ export const ProjectStat = ({ showData }) => {
       render: (text, record, index) => <span style={{ color: getColor(index) }}>{index + 1}</span>
     },
     {
-      title: '类型',
+      title: t('define.type'),
       dataIndex: 'resType',
       key: 'resType',
       render: (text, record) => (

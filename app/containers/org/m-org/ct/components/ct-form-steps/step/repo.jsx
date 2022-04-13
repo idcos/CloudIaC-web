@@ -9,6 +9,7 @@ import tplAPI from 'services/tpl';
 import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
 import { TFVERSION_AUTO_MATCH } from 'constants/types';
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 6 },
@@ -80,7 +81,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       setVcsList(res.result.list || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -129,7 +130,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       setRepoBranches(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取仓库分支失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -148,7 +149,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       setRepoTags(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取仓库标签失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -167,14 +168,14 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchVcsList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -262,12 +263,12 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.select.placeholder')
           }
         ]}
       >
         <Select 
-          placeholder='请选择vcs'
+          placeholder={t('define.form.select.placeholder')}
           showSearch={true}
           optionFilterProp='children'
           notFoundContent={(
@@ -275,7 +276,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               imageStyle={{ height: 60 }}
               description={(
-                <span>暂无数据，&nbsp;<a onClick={opVcsModal}>创建VCS</a></span>
+                <span>{t('define.noData')}, &nbsp;<a onClick={opVcsModal}>{t('define.vcs.add')}</a></span>
               )}
             />
           )}
@@ -284,12 +285,12 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
         </Select>
       </Form.Item>
       <Form.Item
-        label='仓库名称'
+        label={t('define.repoName')}
         name='repoId'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.select.placeholder')
           }
         ]}
       >
@@ -298,7 +299,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           filterOption={false}
           onDropdownVisibleChange={(open) => open && onSearchRepos()}
           onSearch={onSearchRepos}
-          placeholder='请输入仓库名称搜索'
+          placeholder={t('define.repoName.search.placeholder')}
         >
           {repos.map(it => <Option value={it.id}>{it.fullName}</Option>)}
         </Select>
@@ -310,46 +311,46 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
         <Input />
       </Form.Item>
       <Form.Item
-        label='分支/标签'
+        label={`${t('define.branch')}/${t('define.tag')}`}
         name='repoRevision'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.select.placeholder')
           }
         ]}
       >
         <Select 
           showSearch={true}
           optionFilterProp='children'
-          placeholder='请选择分支'
+          placeholder={t('define.form.select.placeholder')}
         >
-          <OptGroup label='分支'>
+          <OptGroup label={t('define.branch')}>
             {repoBranches.map(it => <Option value={it.name}>{it.name}</Option>)}
           </OptGroup>
-          <OptGroup label='标签'>
+          <OptGroup label={t('define.tag')}>
             {repoTags.map(it => <Option value={it.name}>{it.name}</Option>)}
           </OptGroup>
         </Select>
       </Form.Item>
-      <Form.Item label='工作目录' wrapperCol={{ span: 18 }}>
+      <Form.Item label={t('define.workdir')} wrapperCol={{ span: 18 }}>
         <Row>
           <Col flex='14'>
             <Form.Item
               noStyle={true}
               name='workdir'
             >
-              <Input placeholder='请注意工作目录注意事项' />
+              <Input placeholder={t('define.form.input.placeholder')} />
             </Form.Item>
           </Col>
           <Col flex='4'>
-            <Tooltip title='Terraform执行时的工作目录，不填时默认为代码仓库的根目录，指定的工作目录必须是代码仓库中存在的目录，否则执行部署时将会失败'>
+            <Tooltip title={t('define.workdir.toolTip')}>
               <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
             </Tooltip>
           </Col>
         </Row>
       </Form.Item>
-      <Form.Item label='Terraform版本' required={true} wrapperCol={{ span: 18 }}>
+      <Form.Item label={t('define.terraformVersion')} required={true} wrapperCol={{ span: 18 }}>
         <Row>
           <Col flex='14'>
             <Form.Item
@@ -358,13 +359,13 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
               rules={[
                 {
                   required: true,
-                  message: '请选择'
+                  message: t('define.form.select.placeholder')
                 }
               ]}
             >
-              <Select placeholder='请选择Terraform版本'>
+              <Select placeholder={t('define.form.select.placeholder')}>
                 {
-                  autoMatchTfVersion && <Option value={TFVERSION_AUTO_MATCH}>自动匹配</Option>
+                  autoMatchTfVersion && <Option value={TFVERSION_AUTO_MATCH}>{t('define.autoMatching')}</Option>
                 }
                 {
                   (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
@@ -378,7 +379,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
             </Form.Item>
           </Col>
           <Col flex='4'>
-            <Tooltip title='当选择“自动检测”时，CloudIaC 会解析工作目录下的 versions.tf 文件，并根据其中的版本约束选择最佳的 terraform 版本，若匹配失败则默认使用 v0.14.0。'>
+            <Tooltip title={t('define.terraformVersion.tooltip')}>
               <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
             </Tooltip>
           </Col>
@@ -389,12 +390,12 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           {
             opType === 'add' ? (
               <>
-                <Button type='primary' htmlType={'submit'}>下一步</Button>
+                <Button type='primary' htmlType={'submit'}>{t('define.action.next')}</Button>
               </>
             ) : (
               <>
-                <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
-                <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
+                <Button className='ant-btn-tertiary' onClick={goCTlist}>{t('define.action.cancel')}</Button>
+                <Button type='primary' htmlType={'submit'} loading={saveLoading}>{t('define.action.submit')}</Button>
               </>
             )
           }

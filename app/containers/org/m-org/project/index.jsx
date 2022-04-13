@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, notification, Divider, Popconfirm } from 'antd';
 import moment from 'moment';
 import { connect } from "react-redux";
-
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import OpModal from 'components/project-modal';
 import projectAPI from 'services/project';
-
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 
@@ -34,60 +33,60 @@ const Index = (props) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '项目名称',
+      title: t('define.name'),
       width: 230,
       ellipsis: true
     },
     {
       dataIndex: 'description',
-      title: '项目描述',
+      title: t('define.des'),
       width: 264,
       ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '创建人',
+      title: t('define.creator'),
       width: 160,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 210,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('define.status'),
       width: 100,
       ellipsis: true,
       render: (text) => {
-        return <span>{text === 'enable' ? '正常' : '归档'}</span>; 
+        return <span>{text === 'enable' ? t('define.project.status.enable') : t('define.project.status.disabled')}</span>; 
       }
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
       render: (_, record) => {
         return (
           <span className='inlineOp'>
-            <a type='link' onClick={() => edit(record)}>编辑</a>
+            <a type='link' onClick={() => edit(record)}>{t('define.action.modify')}</a>
             <Divider type='vertical' />
             {record.status === 'enable' ? 
               <Popconfirm
-                title='确定要将项目归档？'
+                title={t('define.project.status.disabled.confirm.title')}
                 onConfirm={() => updateStatus(record, 'disable')}
               >
-                <a>归档</a>
+                <a>{t('define.project.status.disabled')}</a>
               </Popconfirm> : 
               <Popconfirm
-                title='确定要将项目恢复？'
+                title={t('define.project.action.recovery.confirm.title')}
                 onConfirm={() => updateStatus(record, 'enable')}
               >
-                <a>恢复</a>
+                <a>{t('define.project.action.recovery')}</a>
               </Popconfirm>
             }
           </span>
@@ -129,7 +128,7 @@ const Index = (props) => {
       });
     } else {
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       reloadGlobalProjects();
     }
@@ -156,7 +155,7 @@ const Index = (props) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -190,21 +189,21 @@ const Index = (props) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
   };
   return <Layout
     extraHeader={<PageHeader
-      title='项目'
+      title={t('define.scope.project')}
       breadcrumb={true}
     />}
   >
@@ -215,7 +214,7 @@ const Index = (props) => {
             setOpt('add');
             toggleVisible();
           }}
-          >创建项目</Button>
+          >{t('define.project.create')}</Button>
         </div>
         <Table
           columns={columns}
@@ -237,7 +236,7 @@ const Index = (props) => {
             total: resultMap.total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
             onChange: (page, pageSize) => {
               changeQuery({
                 pageNo: page,

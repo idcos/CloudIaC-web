@@ -6,6 +6,7 @@ import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
 import EllipsisText from 'components/EllipsisText';
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 6 },
@@ -61,7 +62,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }

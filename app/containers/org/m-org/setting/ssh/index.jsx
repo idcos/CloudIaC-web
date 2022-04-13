@@ -5,6 +5,7 @@ import moment from 'moment';
 import keysAPI from 'services/keys';
 import getPermission from "utils/permission";
 import OpModal from './components/op-modal';
+import { t } from 'utils/i18n';
 
 export default ({ orgId, userInfo }) => {
 
@@ -44,7 +45,7 @@ export default ({ orgId, userInfo }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -68,25 +69,25 @@ export default ({ orgId, userInfo }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '密钥名称',
+      title: t('define.name'),
       width: 300,
       ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '创建人',
+      title: t('define.creator'),
       width: 169,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 169,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
@@ -97,7 +98,7 @@ export default ({ orgId, userInfo }) => {
             <a 
               disabled={!ORG_SET && !creatorIsSelf}
               onClick={() => del(record)}
-            >删除</a>
+            >{t('define.action.delete')}</a>
           </Space>
         );
       }
@@ -107,11 +108,9 @@ export default ({ orgId, userInfo }) => {
   const del = (record) => {
     const { id, name } = record;
     Modal.confirm({
-      title: `删除（此操作不可逆）`,
-      content: `确定要删除 “${name}” 吗？`,
+      title: t('define.action.delete.confirm.title'),
+      content: `${t('define.action.delete.confirm.content.prefix')} “${name}” ${t('define.action.delete.confirm.content.suffix')}`,
       icon: <InfoCircleFilled />,
-      okText: '确认删除',
-      cancelText: '取消',
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
@@ -133,14 +132,14 @@ export default ({ orgId, userInfo }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -154,7 +153,7 @@ export default ({ orgId, userInfo }) => {
           setOpt('add');
           toggleVisible();
         }}
-      >添加密钥</Button>
+      >{t('define.ssh.action.add')}</Button>
     </div>
     <Table
       columns={columns}
@@ -167,7 +166,7 @@ export default ({ orgId, userInfo }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             currentPage: page,

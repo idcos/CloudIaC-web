@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, notification } from "antd";
 import { connect } from "react-redux";
-
+import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -41,7 +41,7 @@ const CreateProjectPage = (props) => {
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -86,7 +86,7 @@ const CreateProjectPage = (props) => {
           name='description'
           rules={[
             {
-              message: '请输入'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >

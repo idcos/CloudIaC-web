@@ -4,6 +4,7 @@ import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
 import AddModal from './components/add-modal';
@@ -64,7 +65,7 @@ const User = ({ orgId, projectId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -101,14 +102,14 @@ const User = ({ orgId, projectId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -137,19 +138,19 @@ const User = ({ orgId, projectId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '姓名',
+      title: t('define.page.userSet.basic.field.name'),
       ellipsis: true,
       width: 165
     },
     {
       dataIndex: 'email',
-      title: '邮箱',
+      title: t('define.page.userSet.basic.field.email'),
       ellipsis: true,
       width: 256
     },
     {
       dataIndex: 'phone',
-      title: '手机号',
+      title: t('define.page.userSet.basic.field.phone'),
       ellipsis: true,
       width: 180
     },
@@ -178,7 +179,7 @@ const User = ({ orgId, projectId }) => {
       }
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       render: (_text, record) => {
         return (
@@ -210,7 +211,7 @@ const User = ({ orgId, projectId }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             pageNo: page,

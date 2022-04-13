@@ -10,6 +10,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
 import cgroupsAPI from 'services/cgroups';
+import { t } from 'utils/i18n';
 
 const PolicyGroupList = ({ match }) => {
 
@@ -71,12 +72,12 @@ const PolicyGroupList = ({ match }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       refreshList();
     } catch (e) {
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -174,7 +175,7 @@ const PolicyGroupList = ({ match }) => {
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 120,
       ellipsis: true,
       fixed: 'right',
@@ -185,12 +186,12 @@ const PolicyGroupList = ({ match }) => {
               onClick={() => goFormPage(record.id)}
             >编辑</a>
             <Popconfirm 
-              title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} 
+              title={`确认${record.enabled ? t('define.status.disabled') : t('define.status.enabled')}策略组?`} 
               onConfirm={() => enabled(!record.enabled, record)} 
               placement='bottomLeft'
             >
               <Button type='link' style={{ padding: 0, fontSize: 12 }}>
-                {record.enabled ? '禁用' : '启用'}
+                {record.enabled ? t('define.status.disabled') : t('define.status.enabled')}
               </Button>
             </Popconfirm>
             <Button onClick={() => onDel(record)} type='link' style={{ padding: 0, fontSize: 12 }}>

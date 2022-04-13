@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, Spin, Radio, Input, notification, Row, Col, Button, Form } from 'antd';
-
 import { Eb_WP } from 'components/error-boundary';
 import { chartUtils } from 'components/charts-cfg';
 import projectAPI from 'services/project';
-
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const FL = {
@@ -51,7 +50,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
     } catch (e) {
       setSpinning(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -108,7 +107,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
               rules={[
                 {
                   required: true,
-                  message: '请输入'
+                  message: t('define.form.input.placeholder')
                 }
               ]}
             >
@@ -119,7 +118,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
               name='description'
               rules={[
                 {
-                  message: '请输入'
+                  message: t('define.form.input.placeholder')
                 }
               ]}
             >

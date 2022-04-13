@@ -3,6 +3,7 @@ import { Form, Modal, notification, Select } from "antd";
 import isEmpty from 'lodash/isEmpty';
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
+import { t } from 'utils/i18n';
 
 const { Option } = Select;
 const FL = {
@@ -32,7 +33,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
       setList(res.result.list || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -55,7 +56,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }

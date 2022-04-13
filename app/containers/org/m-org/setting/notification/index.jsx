@@ -3,6 +3,7 @@ import { Button, notification, Table, Divider, Popconfirm } from 'antd';
 import notificationsAPI from 'services/notifications';
 import { ORG_USER } from 'constants/types';
 import moment from 'moment';
+import { t } from 'utils/i18n';
 import AddModal from './components/notificationModal';
 
 export default ({ orgId }) => {
@@ -41,7 +42,7 @@ export default ({ orgId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.status.getFail'),
         description: e.message
       });
     }
@@ -62,39 +63,39 @@ export default ({ orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '名称',
+      title: t('define.name'),
       width: 165,
       ellipsis: true
     },
     {
       dataIndex: 'notificationType',
-      title: '类型',
+      title: t('define.type'),
       width: 149,
       ellipsis: true,
       render: (text) => ORG_USER.notificationType[text]
     },
     {
       dataIndex: 'eventType',
-      title: '事件类型',
+      title: t('define.notification.field.eventType'),
       width: 277,
       ellipsis: true,
       render: (text) => (text || []).map(it => ORG_USER.eventType[it]).join('、')
     },
     {
       dataIndex: 'creatorName',
-      title: '创建人',
+      title: t('define.creator'),
       width: 169,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 219,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
@@ -105,15 +106,15 @@ export default ({ orgId }) => {
             setNotificationId(record.id);
           }}
         >
-          编辑
+          {t('define.action.modify')}
         </a>
         <Divider type={'vertical'}/>
         <Popconfirm
-          title='确定要删除该通知？'
+          title={t('define.notification.action.delete.confirm.title')}
           onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
         >
           <a>
-            删除
+            {t('define.action.delete')}
           </a>
         </Popconfirm>
       </span> 
@@ -135,13 +136,13 @@ export default ({ orgId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -154,7 +155,7 @@ export default ({ orgId }) => {
         onClick={() => {
           setVisible(true);
         }}
-      >添加通知</Button>
+      >{t('define.notification.action.add')}</Button>
     </div>
     <Table
       columns={columns}
@@ -167,7 +168,7 @@ export default ({ orgId }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             pageNo: page,

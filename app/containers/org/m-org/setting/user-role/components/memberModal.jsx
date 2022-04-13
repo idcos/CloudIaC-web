@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Modal, Select, Tooltip, Space, Checkbox } from 'antd';
 import { ORG_USER } from 'constants/types';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { t } from 'utils/i18n';
 
 const { Option } = Select;
 const FL = {
@@ -41,11 +42,11 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, OR
     let ruleList = [
       {
         required: true,
-        message: '请输入'
+        message: t('define.form.input.placeholder')
       }
     ];
     if (!isBatch) {
-      ruleList.push({ type: 'email', message: '邮箱格式有误' });
+      ruleList.push({ type: 'email', message: t('define.loginPage.email.formatError') });
     }
     return ruleList;
   };
@@ -54,7 +55,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, OR
     return (
       <Modal
         width={560}
-        title='批量邀请'
+        title={t('define.org.user.action.batchAdd')}
         visible={visible}
         onCancel={toggleVisible}
         okButtonProps={{
@@ -75,35 +76,35 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, OR
             noStyle={true}
           >
             <Space size={0} align={'start'} direction={'vertical'} className={'text-area-dotted'}>
-              <div className='itemRequired'>邮箱</div>
+              <div className='itemRequired'>{t('define.page.userSet.basic.field.email')}</div>
               <Form.Item
                 name='email'
                 rules={rulesConfig()}
                 {...FLItem}
               >
-                <Input.TextArea rows={8} style={{ width: 472, borderStyle: 'dashed', borderRadius: 0 }} placeholder='邮箱一行一个' disabled={opt === 'edit'} />
+                <Input.TextArea rows={8} style={{ width: 472, borderStyle: 'dashed', borderRadius: 0 }} placeholder={t('define.org.user.batch.email.placeholder')} disabled={opt === 'edit'} />
               </Form.Item>
             </Space>
           </Form.Item>
           <Form.Item
-            label='角色'
+            label={t('define.org.user.role')}
             name='role'
             rules={[
               {
                 required: true,
-                message: '请选择'
+                message: t('define.form.select.placeholder')
               }
             ]}
           >
             <Select 
               style={{ width: 220 }}
               getPopupContainer={triggerNode => triggerNode.parentNode}
-              placeholder='请选择角色'
+              placeholder={t('define.form.select.placeholder')}
             >
               {ORG_SET ? (
                 Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)
               ) : (
-                <Option value='member'>成员</Option>
+                <Option value='member'>{t('org.role.member')}</Option>
               )}
             </Select>
           </Form.Item>
@@ -114,7 +115,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, OR
     return (
       <Modal
         width={560}
-        title={`${opt == 'add' ? '邀请' : '编辑'}成员`}
+        title={opt == 'add' ? t('define.org.user.action.add') : t('define.action.modify')}
         visible={visible}
         onCancel={toggleVisible}
         className='antd-modal-type-form'
@@ -132,7 +133,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, OR
           initialValues={curRecord}
         >
           <Form.Item
-            label='邮箱'
+            label={t('define.page.userSet.basic.field.email')}
             required={true}
           >
             <Space align={'center'}>
@@ -141,49 +142,49 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, isBatch, OR
                 rules={rulesConfig()}
                 noStyle={true}
               >
-                <Input style={{ width: 280 }} placeholder='请输入邮箱' disabled={opt === 'edit'} />
+                <Input style={{ width: 280 }} placeholder={t('define.form.input.placeholder')} disabled={opt === 'edit'} />
               </Form.Item>
-              <Tooltip title='邮箱全局唯一，作为登录用户名'><InfoCircleOutlined /></Tooltip>
+              <Tooltip title={t('define.page.userSet.basic.field.email.extra')}><InfoCircleOutlined /></Tooltip>
             </Space>
           </Form.Item>
           <Form.Item
-            label='姓名'
+            label={t('define.page.userSet.basic.field.name')}
             name='name'
             rules={[
               {
                 required: true,
-                message: '请输入'
+                message: t('define.form.input.placeholder')
               }
             ]}
           >
-            <Input placeholder='请输入姓名' />
+            <Input placeholder={t('define.form.input.placeholder')} />
           </Form.Item>
           <Form.Item
-            label='手机号'
+            label={t('define.page.userSet.basic.field.phone')}
             name='phone'
-            rules={[{ pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }]}
+            rules={[{ pattern: /^1[3456789]\d{9}$/, message: t('define.form.error.format') }]}
           >
-            <Input placeholder='请输入手机号' />
+            <Input placeholder={t('define.form.input.placeholder')} />
           </Form.Item>
           <Form.Item
-            label='角色'
+            label={t('define.org.user.role')}
             name='role'
             rules={[
               {
                 required: true,
-                message: '请选择'
+                message: t('define.form.select.placeholder')
               }
             ]}
           >
             <Select 
               style={{ width: 220 }}
               getPopupContainer={triggerNode => triggerNode.parentNode}
-              placeholder='请选择角色'
+              placeholder={t('define.form.select.placeholder')}
             >
               {ORG_SET ? (
                 Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)
               ) : (
-                <Option value='member'>成员</Option>
+                <Option value='member'>{t('org.role.member')}</Option>
               )}
             </Select>
           </Form.Item>

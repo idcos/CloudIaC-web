@@ -15,6 +15,7 @@ import { useLoopPolicyStatus } from 'utils/hooks';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
+import { t } from 'utils/i18n';
 
 const CCTList = () => {
 
@@ -196,7 +197,7 @@ const CCTList = () => {
     },
     {
       dataIndex: 'policyStatus',
-      title: '状态',
+      title: t('define.status'),
       width: 110,
       render: (policyStatus, record) => {
         const clickProps = {
@@ -226,7 +227,7 @@ const CCTList = () => {
       }
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Popover } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import { t } from 'utils/i18n';
 
-
-const Index = ({ formContent, title = '创建Token', close, children, style = { width: 500 }, ...restProps }) => {
+const Index = ({ formContent, title = t('define.token.action.add'), close, children, style = { width: 500 }, ...restProps }) => {
   let content = () => {
     return (<div style={style} className={'popoverform-box'}>
       <div className={'popoverform-header'}>

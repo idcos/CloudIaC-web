@@ -8,6 +8,7 @@ import { useSearchFormAndTable } from 'utils/hooks';
 import policiesAPI from 'services/policies';
 import SuppressFormDrawer from './suppress-form-drawer';
 import { TARGET_TYPE_ENUM, SUPPRESS_TYPE_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 
 export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndList }) => {
 
@@ -88,13 +89,13 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
   const columns = [
     {
       dataIndex: 'targetName',
-      title: '名称',
+      title: t('define.name'),
       width: 170,
       ellipsis: true
     },
     {
       dataIndex: 'targetType',
-      title: '类型',
+      title: t('define.type'),
       width: 75,
       ellipsis: true,
       render: (text) => TARGET_TYPE_ENUM[text]
@@ -126,7 +127,7 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm')
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 50,
       ellipsis: true,
       fixed: 'right',

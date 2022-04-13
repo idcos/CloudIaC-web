@@ -14,6 +14,7 @@ import keysAPI from 'services/keys';
 import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
 import isEmpty from "lodash/isEmpty";
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 24 },
@@ -55,7 +56,7 @@ const Index = ({ match = {} }) => {
       setVars(res.result || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -88,7 +89,7 @@ const Index = ({ match = {} }) => {
       fetchRepoBranch(fetchParams);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -113,7 +114,7 @@ const Index = ({ match = {} }) => {
       }
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -137,7 +138,7 @@ const Index = ({ match = {} }) => {
       }
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -158,7 +159,7 @@ const Index = ({ match = {} }) => {
       }
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -180,7 +181,7 @@ const Index = ({ match = {} }) => {
       }
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -199,7 +200,7 @@ const Index = ({ match = {} }) => {
       configRef.current && configRef.current.validateFields([['tfVarsFile']]);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -218,7 +219,7 @@ const Index = ({ match = {} }) => {
       configRef.current && configRef.current.validateFields([['playbook']]);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }

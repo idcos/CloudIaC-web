@@ -15,6 +15,7 @@ import { POLICIES_SEVERITY_STATUS_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
 import cgroupsAPI from 'services/cgroups';
 import DetailDrawer from './detail-drawer';
+import { t } from 'utils/i18n';
 
 const Policy = ({ location, match }) => {
 
@@ -176,7 +177,7 @@ const Policy = ({ location, match }) => {
       render: (text) => moment(text).format('YYYY-M-DD HH:mm')
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 80,
       ellipsis: true,
       fixed: 'right',

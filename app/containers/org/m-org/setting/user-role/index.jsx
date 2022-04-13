@@ -7,6 +7,7 @@ import userAPI from 'services/user';
 import { ORG_USER } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
 import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 import OpModal from './components/memberModal';
 
 export default ({ userInfo, orgId }) => {
@@ -49,7 +50,7 @@ export default ({ userInfo, orgId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -79,14 +80,14 @@ export default ({ userInfo, orgId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -103,11 +104,10 @@ export default ({ userInfo, orgId }) => {
   const remove = ({ id, name }) => {
     Modal.confirm({
       width: 480,
-      title: `你确定要移除 ${name} 用户吗？`,
-      content: `从组织移除用户将清除该用户在当前组织下所有项目中的项目角色权限，请确认操作`,
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
+      content: t('define.org.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
-      okText: '移除',
-      cancelText: '取消',
+      okText: t('define.org.user.action.remove'),
       okButtonProps: {
         danger: true
       },
@@ -123,7 +123,7 @@ export default ({ userInfo, orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '姓名',
+      title: t('define.page.userSet.basic.field.name'),
       width: 268,
       ellipsis: true,
       render: (_, record) => <div className='tableRender'>
@@ -133,26 +133,26 @@ export default ({ userInfo, orgId }) => {
     },
     {
       dataIndex: 'phone',
-      title: '手机',
+      title: t('define.page.userSet.basic.field.phone'),
       width: 178,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '加入时间',
+      title: t('define.org.user.createdAt'),
       width: 212,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       dataIndex: 'role',
-      title: '权限',
+      title: t('define.org.user.role'),
       width: 160,
       ellipsis: true,
       render: (text) => ORG_USER.role[text]
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 180,
       ellipsis: true,
       fixed: 'right',
@@ -168,15 +168,15 @@ export default ({ userInfo, orgId }) => {
                 toggleVisible();
                 setIsBatch(false);
               }}
-            >编辑</Button>
+            >{t('define.action.modify')}</Button>
             <Popconfirm
-              title='确定要重置密码？'
+              title={t('define.org.user.action.resetPwd.confirm.title')}
               onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
               disabled={!ORG_SET}
             >
-              <Button type='link' disabled={!ORG_SET}>重置密码</Button>
+              <Button type='link' disabled={!ORG_SET}>{t('define.org.user.action.resetPwd')}</Button>
             </Popconfirm>
-            <Button type='link' disabled={!ORG_SET} onClick={() => remove(record)}>移除</Button>
+            <Button type='link' disabled={!ORG_SET} onClick={() => remove(record)}>{t('define.org.user.action.remove')}</Button>
           </div>
         );
       }
@@ -192,7 +192,7 @@ export default ({ userInfo, orgId }) => {
           toggleVisible();
           setIsBatch(false);
         }}
-      >邀请成员</Button>
+      >{t('define.org.user.action.add')}</Button>
       <Button 
         style={{ marginLeft: 8 }}
         onClick={() => {
@@ -200,7 +200,7 @@ export default ({ userInfo, orgId }) => {
           toggleVisible();
           setIsBatch(true);
         }}
-      >批量邀请</Button>
+      >{t('define.org.user.action.batchAdd')}</Button>
     </div>
     <Table
       columns={columns}
@@ -213,7 +213,7 @@ export default ({ userInfo, orgId }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             pageNo: page,

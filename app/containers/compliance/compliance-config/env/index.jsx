@@ -15,6 +15,7 @@ import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
 import { useLoopPolicyStatus } from 'utils/hooks';
 import { SCAN_DISABLE_STATUS, SCAN_DETAIL_DISABLE_STATUS } from 'constants/types';
+import { t } from 'utils/i18n';
 
 const CenvList = () => {
 
@@ -192,7 +193,7 @@ const CenvList = () => {
     },
     {
       dataIndex: 'policyStatus',
-      title: '状态',
+      title: t('define.status'),
       width: 110,
       render: (policyStatus, record) => {
         const clickProps = {
@@ -254,7 +255,7 @@ const CenvList = () => {
       }
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',

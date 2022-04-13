@@ -10,6 +10,7 @@ import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import history from "utils/history";
+import { t } from 'utils/i18n';
 import Basic from './step/basic';
 import Repo from './step/repo';
 import Variable from './step/variable';
@@ -20,10 +21,10 @@ const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'repo', title: '仓库', Component: Repo },
-  { type: 'variable', title: '变量', Component: Variable },
-  { type: 'basic', title: '设置', Component: Basic },
-  { type: 'relation', title: '关联项目', Component: Relation }
+  { type: 'repo', title: t('define.repoAddr'), Component: Repo },
+  { type: 'variable', title: t('define.variable'), Component: Variable },
+  { type: 'basic', title: t('define.setting'), Component: Basic },
+  { type: 'relation', title: t('define.ct.import.init.associatedProject'), Component: Relation }
 ];
 
 const CTFormSteps = ({ orgId, tplId, opType }) => {
@@ -132,7 +133,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       getVars(); // 变量单独查询
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -147,7 +148,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       setCtData(preCtData => set(preCtData, 'variable.variables', res.result || []));
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }

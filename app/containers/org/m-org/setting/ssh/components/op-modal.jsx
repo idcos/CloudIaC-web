@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 5 },
@@ -27,7 +28,7 @@ export default ({ visible, toggleVisible, operation }) => {
 
   return (
     <Modal
-      title='添加密钥'
+      title={t('define.ssh.action.add')}
       visible={visible}
       onCancel={toggleVisible}
       okButtonProps={{
@@ -44,28 +45,28 @@ export default ({ visible, toggleVisible, operation }) => {
         form={form}
       >
         <Form.Item
-          label='密钥名称'
+          label={t('define.ssh.name')}
           name='name'
           rules={[
             {
               required: true,
-              message: '请输入'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input placeholder='请输入密钥名称'/>
+          <Input placeholder={t('define.form.input.placeholder')} />
         </Form.Item>
         <Form.Item
-          label='私钥'
+          label={t('define.ssh.privateKey')}
           name='key'
           rules={[
             {
               required: true,
-              message: '请输入'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input.TextArea placeholder='请输入私钥内容' rows={8} />
+          <Input.TextArea placeholder={t('define.form.input.placeholder')} rows={8} />
         </Form.Item>
       </Form>
     </Modal>

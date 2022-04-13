@@ -12,6 +12,7 @@ import isEmpty from "lodash/isEmpty";
 import sysAPI from 'services/sys';
 import omit from "lodash/omit";
 import get from "lodash/get";
+import { t } from 'utils/i18n';
 import { formatToFormData } from 'containers/sys/pages/params';
 import styles from '../detail/styles.less';
 
@@ -60,7 +61,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       });
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }

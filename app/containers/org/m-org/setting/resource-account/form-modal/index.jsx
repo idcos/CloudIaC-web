@@ -7,6 +7,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
 import projectAPI from 'services/project';
+import { t } from 'utils/i18n';
 
 const { Option } = Select;
 
@@ -131,7 +132,7 @@ export default ({ orgId, event$ }) => {
   return (
     <Modal 
       visible={visible} 
-      title={id ? '编辑资源账号' : '添加资源账号'}
+      title={id ? t('define.resourceAccount.action.modify') : t('define.resourceAccount.action.add')}
       onCancel={onClose}
       onOk={onOk}
       confirmLoading={id ? updateLoading : createLoading}
@@ -145,18 +146,18 @@ export default ({ orgId, event$ }) => {
         <Form form={form} {...FL}>
           <Form.Item 
             name='name'
-            label='账号描述'
+            label={t('define.des')}
             rules={[
               {
                 required: true,
-                message: '请输入账号描述'
+                message: t('define.form.input.placeholder')
               }
             ]}
           >
-            <Input style={{ width: 254 }} placeholder='请输入账号描述'/>
+            <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')}/>
           </Form.Item>
           <Form.Item
-            label='资源账号'
+            label={t('define.resourceAccount.title')}
             style={{ marginBottom: 0 }}
           >
             <Form.List name='variables' initialValue={[{}]}>
@@ -174,14 +175,14 @@ export default ({ orgId, event$ }) => {
                       <Space key={key} size={12} style={{ display: 'flex', alignItems: 'start' }}>
                         <Form.Item
                           rules={[
-                            { required: true, message: '请输入key' },
+                            { required: true, message: `${t('define.form.input.placeholder')} key` },
                             () => ({
                               validator(_, value) {
                                 return new Promise((resolve, reject) => {
                                   const { variables } = form.getFieldValue();
                                   const filterList = variables.filter(({ name }) => name === value);
                                   if (filterList.length > 1 && value) {
-                                    reject(new Error('key值不允许重复!'));
+                                    reject(new Error(t('define.variable.sameKeyError')));
                                   }
                                   resolve();
                                 });
@@ -191,7 +192,7 @@ export default ({ orgId, event$ }) => {
                           name={[ name, 'name' ]}
                           fieldKey={[ fieldKey, 'name' ]}
                         >
-                          <Input style={{ width: 188 }} placeholder='请输入key' />
+                          <Input style={{ width: 188 }} placeholder={`${t('define.form.input.placeholder')} key`} />
                         </Form.Item>
                         <Form.Item
                           noStyle={true}
@@ -209,17 +210,17 @@ export default ({ orgId, event$ }) => {
                                     <Input.Password
                                       style={{ width: 194 }}
                                       autoComplete='new-password'
-                                      placeholder={id ? '空值保存时不会修改原有值' : '请输入value'}
+                                      placeholder={id ? t('define.emptyValueSave.placeholder') : `${t('define.form.input.placeholder')} value`}
                                       visibilityToggle={false}
                                     />
                                   </Form.Item>
                                 ) : (
                                   <Form.Item
-                                    rules={[{ required: true, message: '请输入value' }]}
+                                    rules={[{ required: true, message: `${t('define.form.input.placeholder')} value` }]}
                                     name={[ name, 'value' ]}
                                     fieldKey={[ fieldKey, 'value' ]}
                                   >
-                                    <Input style={{ width: 194 }} placeholder='请输入value' />
+                                    <Input style={{ width: 194 }} placeholder={`${t('define.form.input.placeholder')} value`} />
                                   </Form.Item>
                                 )
                               );
@@ -232,11 +233,11 @@ export default ({ orgId, event$ }) => {
                           initialValue={false}
                           valuePropName='checked'
                         >
-                          <Checkbox style={{ marginLeft: 9 }}>敏感</Checkbox>
+                          <Checkbox style={{ marginLeft: 9 }}>{t('define.variable.sensitive')}</Checkbox>
                         </Form.Item>
                         {
                           fields.length > 1 && (
-                            <Button style={{ padding: '4px 0' }} type='link' onClick={() => remove(name)}>删除</Button>
+                            <Button style={{ padding: '4px 0' }} type='link' onClick={() => remove(name)}>{t('define.action.delete')}</Button>
                           )
                         }
                       </Space>
@@ -245,7 +246,7 @@ export default ({ orgId, event$ }) => {
                   <Form.Item>
                     <Space onClick={() => add({})} style={{ cursor: 'pointer' }}>
                       <PlusOutlined />
-                      <span>添加资源账号</span>
+                      <span>{t('define.resourceAccount.action.add')}</span>
                     </Space>
                   </Form.Item>
                 </>
@@ -254,12 +255,12 @@ export default ({ orgId, event$ }) => {
           </Form.Item>
           <Form.Item
             name={'projectIds'}
-            label={'绑定项目'}
+            label={t('define.bindProject')}
           >
             <Select
               getPopupContainer={triggerNode => triggerNode.parentNode} 
               allowClear={true} 
-              placeholder='所有项目'
+              placeholder={t('define.allProject')}
               style={{ width: 395 }}
               mode={'multiple'}
               optionFilterProp='children'
@@ -279,7 +280,7 @@ export default ({ orgId, event$ }) => {
                 option.value.indexOf(inputValue) !== -1
               }
               style={{ width: 395 }}
-              placeholder='请选择'
+              placeholder={t('define.form.select.placeholder')}
               showArrow={true}
             />
           </Form.Item>
@@ -296,7 +297,7 @@ export default ({ orgId, event$ }) => {
                       valuePropName='checked'
                       wrapperCol={{ offset: 4 }}
                     >
-                      <Checkbox>费用统计</Checkbox>
+                      <Checkbox>{t('define.costStatistics')}</Checkbox>
                     </Form.Item>
                   );
                 }

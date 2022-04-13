@@ -9,6 +9,7 @@ import Layout from 'components/common/layout';
 import varsAPI from 'services/variables';
 import varGroupAPI from 'services/var-group';
 import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const defaultScope = 'project';
@@ -68,7 +69,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
     const { varGroupIds, delVarGroupIds, ...params } = varData;
     await updateVars(params);
     await updateVarGroup({ varGroupIds, delVarGroupIds });
-    notification.success({ message: '操作成功' });
+    notification.success({ message: t('define.message.opSuccess') });
   };
 
   return (

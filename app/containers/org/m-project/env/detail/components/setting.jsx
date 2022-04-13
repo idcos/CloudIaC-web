@@ -14,6 +14,7 @@ import { AUTO_DESTROY, destoryType } from 'constants/types';
 import envAPI from 'services/env';
 import vcsAPI from 'services/vcs';
 import Copy from 'components/copy';
+import { t } from 'utils/i18n';
 import DetailPageContext from '../detail-page-context';
 import styles from '../styles.less';
 
@@ -120,13 +121,13 @@ const Setting = () => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       reload();
     } catch (e) {
       setFileLoading(false);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -145,7 +146,7 @@ const Setting = () => {
       } catch (e) {
         reject();
         notification.error({
-          message: '获取失败',
+          message: t('define.message.getFail'),
           description: e.message
         });
       }
@@ -436,7 +437,7 @@ const Setting = () => {
                           <Form.Item
                             label='绑定策略组'
                             name='policyGroup'
-                            rules={[{ required: true, message: '请选择' }]}
+                            rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 16 }}
                           >

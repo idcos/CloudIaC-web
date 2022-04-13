@@ -29,6 +29,7 @@ import Lock from './components/lock';
 import styles from './styles.less';
 import { createBrowserHistory } from 'history';
 import DetailPageContext from './detail-page-context';
+import { t } from 'utils/i18n';
 
 const subNavs = {
   overview: '概览',
@@ -175,13 +176,13 @@ const EnvDetail = (props) => {
         const res = await envAPI.envDestroy({ orgId, projectId, envId });
         if (res.code != 200) {
           notification.error({
-            message: '操作失败',
+            message: t('define.message.getFail'),
             description: res.message
           });
           return;
         }
         notification.success({
-          message: '操作成功'
+          message: t('define.message.opSuccess')
         });
         form.resetFields();
         history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${res.result.taskId}`);
@@ -207,7 +208,7 @@ const EnvDetail = (props) => {
           return notification.error({ message: res.message });
         }
 
-        notification.success({ message: '操作成功' });
+        notification.success({ message: t('define.message.opSuccess') });
         fetchEnvInfo();
       } else {
         setLockVisible(true);

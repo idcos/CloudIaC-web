@@ -8,6 +8,7 @@ import vcsAPI from 'services/vcs';
 import cgroupsAPI from 'services/cgroups';
 import registryAPI from 'services/registry';
 import Coder from "components/coder";
+import { t } from 'utils/i18n';
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
 
@@ -412,7 +413,7 @@ export default () => {
                     <Form.Item 
                       label='VCS'
                       name='vcsId' 
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
                         placeholder='请选择VCS'
@@ -425,7 +426,7 @@ export default () => {
                     <Form.Item 
                       label='代码仓库'
                       name='repoId'
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
                         loading={repoLoading}
@@ -449,7 +450,7 @@ export default () => {
                       name='repoRevision'
                       dependencies={['dir']}
                       rules={[
-                        { required: true, message: '请选择' },
+                        { required: true, message: t('define.form.select.placeholder') },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
                             const dir = getFieldValue('dir');
@@ -518,7 +519,7 @@ export default () => {
                     <Form.Item 
                       label='策略组'
                       name='repoId'
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
                         placeholder='请选择策略组'
@@ -549,7 +550,7 @@ export default () => {
                     <Form.Item 
                       label='版本'
                       name='gitTags'
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
                         placeholder='请选择版本'

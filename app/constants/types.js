@@ -112,7 +112,7 @@ export const DOCS = {
   project: t('define.docs.project'),
   variable: t('define.docs.variable'),
   env: t('define.docs.env'),
-  vcs: t('define.docs.vcs'),
+  vcs: t('define.vcs'),
   role: t('define.docs.role')
 };
 

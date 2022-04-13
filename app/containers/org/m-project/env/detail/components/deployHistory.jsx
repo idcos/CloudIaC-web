@@ -10,6 +10,7 @@ import { timeUtils } from "utils/time";
 import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE, DEPLOY_HISTORY_SOURCE_ENUM } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import taskAPI from 'services/task';
+import { t } from 'utils/i18n';
 import DetailPageContext from '../detail-page-context';
 const { Search } = Input;
 
@@ -58,7 +59,7 @@ const DeployHistory = () => {
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('define.status'),
       width: 134,
       ellipsis: true,
       render: (t, r) => (
@@ -119,7 +120,7 @@ const DeployHistory = () => {
     },
     {
       dataIndex: 'action',
-      title: '操作',
+      title: t('define.action'),
       width: 90,
       ellipsis: true,
       fixed: 'right',

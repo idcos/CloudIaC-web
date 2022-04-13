@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useImperativeHandle } from 'react';
 import { Form, Select, Input, Button, Space } from 'antd';
+import { t } from 'utils/i18n';
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
 
@@ -74,7 +75,7 @@ export default () => {
         <Form.Item 
           name='name' 
           label='策略组名称'
-          rules={[{ required: true, message: '请输入' }]}
+          rules={[{ required: true, message: t('define.form.input.placeholder') }]}
         >
           <Input style={{ width: 254 }} placeholder='请输入策略组名称' />
         </Form.Item>

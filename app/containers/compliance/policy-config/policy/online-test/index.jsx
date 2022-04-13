@@ -12,6 +12,7 @@ import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
 import AffixBtnWrapper from 'components/common/affix-btn-wrapper';
 import { CustomTag } from 'components/custom';
+import { t } from 'utils/i18n';
 
 const defaultRego = 'package accurics\n\n## id 为策略在策略组中的唯一标识，由大小写英文字符、数字、"."、"_"、"-" 组成\n## 建议按`组织_云商_资源名称/分类_编号`的格式进行命名\n# @id: cloudiac_alicloud_security_p001\n\n# @name: 限制实例规格\n# @description: 限制实例规格为 nano 或者 small\n\n## 策略类型，如 aws, k8s, github, alicloud, ...\n# @policy_type: alicloud\n\n## 资源类型，如 aws_ami, k8s_pod, alicloud_ecs, ...\n# @resource_type: aliyun_ami\n\n## 策略严重级别: 可选 high/medium/low\n# @severity: medium\n\n## 策略标签，多个分类使用逗号分隔\n# @label: cat1,cat2\n\n## 策略修复建议（支持多行）\n# @fix_suggestion: 修改 instance_type 为包含 nano 或者 small 的实例类型。\n\nlimitedSmallInstanceType[instance.id] {\n\tinstance := input.alicloud_instance[_]\n\tnot contains(instance.config.instance_type, "nano")\n\tnot contains(instance.config.instance_type, "small")\n}';
   
@@ -179,7 +180,7 @@ const OnlineTest = ({ match = {} }) => {
                       <Input.Group compact={true}>
                         <Select 
                           style={{ width: '31%' }} 
-                          placeholder='类型'
+                          placeholder={t('define.type')}
                           options={[
                             { label: '云模版', value: 'template' },
                             { label: '环境', value: 'env' }

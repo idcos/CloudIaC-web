@@ -3,6 +3,7 @@ import { Form, Tabs, Drawer, notification, Button, Select, Card, Input } from "a
 import userAPI from 'services/user';
 import notificationsAPI from 'services/notifications';
 import { ORG_USER } from 'constants/types';
+import { t } from 'utils/i18n';
 import TableTransfer from 'components/table-transfer';
 
 const { Option } = Select;
@@ -17,13 +18,13 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
   const leftTableColumns = [
     {
       dataIndex: 'name',
-      title: '姓名',
+      title: t('define.page.userSet.basic.field.name'),
       width: 96,
       ellipsis: true
     },
     {
       dataIndex: 'email',
-      title: '邮箱',
+      title: t('define.page.userSet.basic.field.email'),
       width: 184,
       ellipsis: true
     }
@@ -32,13 +33,13 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
   const rightTableColumns = [
     {
       dataIndex: 'name',
-      title: '姓名',
+      title: t('define.page.userSet.basic.field.name'),
       width: 96,
       ellipsis: true
     },
     {
       dataIndex: 'email',
-      title: '邮箱',
+      title: t('define.page.userSet.basic.field.email'),
       width: 184,
       ellipsis: true
     }
@@ -75,7 +76,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       setPanel(res.result.notificationType || 'email');
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -94,7 +95,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
       setList(lists || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -107,7 +108,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请选择发送人'
+            message: t('define.form.select.placeholder')
           }
         ]}
       >
@@ -115,7 +116,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
           leftTableColumns={leftTableColumns}
           rightTableColumns={rightTableColumns}
           dataScourt={list}
-          locale={{ itemUnit: '已选', itemsUnit: '未选', searchPlaceholder: '请输入姓名搜索' }}
+          locale={{ itemUnit: t('define.notification.userIds.selected'), itemsUnit: t('define.notification.userIds.unselected'), searchPlaceholder: t('define.notification.userIds.searchByFullName') }}
         />
       </Form.Item>,
       wechat: () => <Form.Item
@@ -124,11 +125,11 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请输入url'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input />
+        <Input placeholder={t('define.form.input.placeholder')} />
       </Form.Item>,
       dingtalk: () => <>
         <Form.Item
@@ -137,11 +138,11 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
           rules={[
             {
               required: true,
-              message: '请输入url'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input />
+          <Input placeholder={t('define.form.input.placeholder')} />
         </Form.Item>
         <Form.Item
           name='secret'
@@ -149,11 +150,11 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
           rules={[
             {
               required: true,
-              message: '请输入secret'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input />
+          <Input placeholder={t('define.form.input.placeholder')} />
         </Form.Item>
       </>,
       slack: () => <Form.Item
@@ -162,11 +163,11 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         rules={[
           {
             required: true,
-            message: '请输入url'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input />
+        <Input placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
     };
     return PAGES[panel]();
@@ -190,7 +191,7 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
 
   return <>
     <Drawer
-      title={notificationId ? '编辑通知' : '添加通知'}
+      title={notificationId ? t('define.notification.action.modify') : t('define.notification.action.add')}
       visible={visible}
       onClose={toggleVisible}
       width={800}
@@ -201,10 +202,10 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
           }}
         >
           <Button onClick={toggleVisible} style={{ marginRight: 8 }}>
-            取消
+            {t('define.ct.import.action.cancel')}
           </Button>
           <Button onClick={onfinsh} type='primary'>
-            确认
+            {t('define.ct.import.action.ok')}
           </Button>
         </div>
       }
@@ -214,30 +215,30 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         {...FL}
       >
         <Form.Item
-          label='名称'
+          label={t('define.name')}
           name='name'
           rules={[
             {
               required: true,
-              message: '请输入名称'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input placeholder='请输入通知名称' />
+          <Input placeholder={t('define.form.input.placeholder')} />
         </Form.Item>
         <Form.Item
-          label='事件类型'
+          label={t('define.notification.field.eventType')}
           name='eventType'
           rules={[
             {
               required: true,
-              message: '请选择事件类型'
+              message: t('define.form.select.placeholder')
             }
           ]}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='请选择事件类型'
+            placeholder={t('define.form.select.placeholder')}
             mode={'multiple'}
           >
             {Object.keys(ORG_USER.eventType).map(it => <Option value={it}>{ORG_USER.eventType[it]}</Option>)}
@@ -245,19 +246,19 @@ export default ({ orgId, operation, visible, toggleVisible, notificationId }) =>
         </Form.Item>
 
         <Form.Item
-          label='通知类型'
+          label={t('define.type')}
           name='notificationType'
           rules={[
             {
               required: true,
-              message: '请选择通知类型'
+              message: t('define.form.select.placeholder')
             }
           ]}
           initialValue={'email'}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='请选择通知类型'
+            placeholder={t('define.form.select.placeholder')}
             onChange={e => setPanel(e)}
           >
             {Object.keys(ORG_USER.notificationType).map(it => <Option value={it}>{ORG_USER.notificationType[it]}</Option>)}

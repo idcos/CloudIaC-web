@@ -5,6 +5,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
 import { TARGET_TYPE_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 5 },
@@ -52,13 +53,13 @@ export default ({ policyId, visible, onClose, reload }) => {
   const columns = [
     {
       dataIndex: 'targetName',
-      title: '名称',
+      title: t('define.name'),
       width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'targetType',
-      title: '类型',
+      title: t('define.type'),
       width: 200,
       ellipsis: true,
       render: (text) => TARGET_TYPE_ENUM[text]
@@ -105,7 +106,7 @@ export default ({ policyId, visible, onClose, reload }) => {
           rules={[
             {
               required: true,
-              message: '请输入'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
@@ -119,7 +120,7 @@ export default ({ policyId, visible, onClose, reload }) => {
           columns={columns}
           dataSource={tableData.list || []}
           pagination={{
-            showTotal: (total) => `共${total}条`
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } })
           }}
           scroll={{ x: 'min-content' }}
           rowSelection={{

@@ -3,6 +3,7 @@ import { Button, Card, Divider, notification, Space, Table, Modal } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import vcsAPI from 'services/vcs';
 import OpModal from 'components/vcs-modal';
+import { t } from 'utils/i18n';
 
 export default ({ title, orgId }) => {
   const [ loading, setLoading ] = useState(false),
@@ -40,7 +41,7 @@ export default ({ title, orgId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -64,33 +65,33 @@ export default ({ title, orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '名称',
+      title: t('define.name'),
       width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'vcsType',
-      title: '类型',
+      title: t('define.type'),
       width: 100,
       ellipsis: true
     },
     {
       dataIndex: 'status',
-      title: '状态',
+      title: t('define.status'),
       width: 100,
       ellipsis: true,
       render: (text) => <div className='tableRender'>
-        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
+        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? t('define.status.disabled') : t('define.status.enabled')}</span>
       </div>
     },
     {
       dataIndex: 'address',
-      title: '地址',
+      title: t('define.address'),
       width: 230,
       ellipsis: true
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
@@ -102,13 +103,13 @@ export default ({ title, orgId }) => {
               toggleVisible();
               setCurRecord(record);
             }}
-          >编辑</a>
+          >{t('define.action.modify')}</a>
           {
             record.status == 'disable' ? 
-              <a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>启用</a>
-           	 	: <a onClick={() => disableConfirm(record)}>禁用</a>
+              <a onClick={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}>{t('define.status.enable')}</a>
+           	 	: <a onClick={() => disableConfirm(record)}>{t('define.status.disabled')}</a>
           }
-          <a onClick={() => delConfirm(record)}>删除</a>
+          <a onClick={() => delConfirm(record)}>{t('define.action.delete')}</a>
         </Space>;
       }
     }
@@ -118,11 +119,9 @@ export default ({ title, orgId }) => {
     const { name, id } = record;
     Modal.confirm({
       width: 480,
-      title: `你确定要禁用${name}吗？`,
+      title: `${t('define.vcs.disable.confirm.title.prefix')} ${name} ${t('define.vcs.disable.confirm.title.suffix')}`,
       icon: <InfoCircleFilled />,
-      content: `禁用将导致引用该VCS仓库的云模板不可用，确定要禁用吗`,
-      okText: '确认',
-    	cancelText: '取消',
+      content: t('define.vcs.disable.confirm.content'),
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
@@ -136,11 +135,9 @@ export default ({ title, orgId }) => {
     const { name, id } = record;
     Modal.confirm({
       width: 480,
-      title: `你确定要删除${name}吗？`,
+      title: `${t('define.vcs.delete.confirm.title.prefix')} ${name} ${t('define.vcs.delete.confirm.title.suffix')}`,
       icon: <InfoCircleFilled />,
-      content: `删除将导致引用该VCS仓库的云模板不可用，确定要删除吗`,
-      okText: '确认',
-    	cancelText: '取消',
+      content: t('define.vcs.delete.confirm.content'),
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
@@ -165,14 +162,14 @@ export default ({ title, orgId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -186,7 +183,7 @@ export default ({ title, orgId }) => {
           setOpt('add');
           toggleVisible();
         }}
-      >添加VCS</Button>
+      >{t('define.vcs.add')}</Button>
     </div>
     <Table
       columns={columns}
@@ -199,7 +196,7 @@ export default ({ title, orgId }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             currentPage: page,

@@ -5,6 +5,7 @@ import { TASK_STATUS, TASK_STATUS_COLOR, TASK_TYPE } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import ChangeInfo from 'components/change-info';
 import { timeUtils } from "utils/time";
+import { t } from 'utils/i18n';
 import styles from '../styles.less';
 
 const TaskInfo = (props) => {
@@ -18,7 +19,7 @@ const TaskInfo = (props) => {
           labelStyle={{ color: '#24292F' }}
           contentStyle={{ color: '#57606A' }}
         >
-          <Descriptions.Item label='状态'>
+          <Descriptions.Item label={t('define.status')}>
             {
               TASK_STATUS[taskInfo.status] ? (
                 <Tag color={TASK_STATUS_COLOR[taskInfo.status] || 'default'}>{TASK_STATUS[taskInfo.status]}</Tag>
@@ -32,7 +33,7 @@ const TaskInfo = (props) => {
               ) : null
             }
           </Descriptions.Item>
-          <Descriptions.Item label='类型'>{TASK_TYPE[taskInfo.type] || '-'}</Descriptions.Item>
+          <Descriptions.Item label={t('define.type')}>{TASK_TYPE[taskInfo.type] || '-'}</Descriptions.Item>
           <Descriptions.Item label='分支/标签'>{taskInfo.revision || '-'}</Descriptions.Item>
           <Descriptions.Item label='Commit_ID'><span onClick={() => {
             window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, DatePicker, Space, Button, Input } from "antd";
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 24 },
@@ -34,30 +35,30 @@ export default ({ orgId, toggleVisible, operation }) => {
         form={form}
       >
         <Form.Item
-          label='描述'
+          label={t('define.des')}
           name='description'
           rules={[
             {
               required: true,
-              message: '请输入'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input placeholder='请输入描述'/>
+          <Input placeholder={t('define.form.input.placeholder')}/>
         </Form.Item>
         <Form.Item
-          label='过期时间'
+          label={t('define.token.expiredAt')}
           name='expiredAt'
         >
-          <DatePicker style={{ width: '100%' }} placeholder='请选择过期时间' format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+          <DatePicker style={{ width: '100%' }} placeholder={t('define.form.select.placeholder')} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
         </Form.Item>
       </Form>
       <Space style={{ height: 32, display: 'flex', justifyContent: 'flex-end', marginTop: 45 }} >
         <Button loading={submitLoading} onClick={() => toggleVisible()}>
-          取消
+          {t('define.ct.import.action.cancel')}
         </Button>
         <Button onClick={() => onOk()} type={'primary'}>
-          确认
+          {t('define.ct.import.action.ok')}
         </Button>
       </Space>
     </>

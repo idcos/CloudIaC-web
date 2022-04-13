@@ -4,6 +4,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import getPermission from "utils/permission";
 import { connect } from 'react-redux';
+import { t } from 'utils/i18n';
 import ApiToken from './api-token';
 import UserRole from './user-role';
 import Vcs from './vcs';
@@ -21,23 +22,23 @@ const OrgSetting = ({ match, userInfo }) => {
   useEffect(() => {
     if (ORG_SET) {
       setSubNavs({
-        userRole: '用户角色',
+        userRole: t('define.userRole'),
         apiToken: 'API Token',
         vcs: 'VCS',
-        ssh: 'ssh密钥',
-        notification: '通知',
-        resourceAccount: '资源账号'
+        ssh: t('define.ssh'),
+        notification: t('define.notification'),
+        resourceAccount: t('define.resourceAccount.title')
       });
       setPanel('userRole');
     } else if (PROJECT_SET) {
       setSubNavs({
-        userRole: '用户角色',
-        ssh: 'ssh密钥'
+        userRole: t('define.userRole'),
+        ssh: t('define.ssh')
       });
       setPanel('userRole');
     } else if (PROJECT_OPERATOR) {
       setSubNavs({
-        ssh: 'ssh密钥'
+        ssh: t('define.ssh')
       });
       setPanel('ssh');
     }
@@ -65,7 +66,7 @@ const OrgSetting = ({ match, userInfo }) => {
   return (
     <Layout
       extraHeader={<PageHeader
-        title='设定'
+        title={t('define.setting')}
         breadcrumb={true}
         renderFooter={() => (
           <Tabs

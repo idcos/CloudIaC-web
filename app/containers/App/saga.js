@@ -1,6 +1,6 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { notification } from 'antd';
-
+import { t } from 'utils/i18n';
 import orgsAPI from 'services/orgs';
 import projectAPI from 'services/project';
 import userAPI from 'services/user';
@@ -91,7 +91,7 @@ function* updateUserInfo({ payload, cb }) {
       throw new Error(res.message);
     }
     notification.success({
-      message: '操作成功'
+      message: t('define.message.opSuccess')
     });
     yield put({
       type: 'global/set-userInfo',
