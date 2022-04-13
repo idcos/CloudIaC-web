@@ -9,6 +9,7 @@ import sysAPI from 'services/sys';
 import Tags from 'components/tags';
 import { SYS } from 'constants/types';
 import { statusTextCls } from 'utils/util';
+import { t } from 'utils/i18n';
 import getPermission from "utils/permission";
 import styles from './styles.less';
 
@@ -46,7 +47,7 @@ const SysStatus = ({ userInfo }) => {
     } catch (e) {
       needLoading && setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -61,7 +62,7 @@ const SysStatus = ({ userInfo }) => {
       fetchList();
     } catch (e) {
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -69,7 +70,7 @@ const SysStatus = ({ userInfo }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='系统状态'
+      title={t('define.page.sysStatus.title')}
       breadcrumb={false}
     />}
   >

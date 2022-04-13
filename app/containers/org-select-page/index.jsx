@@ -6,6 +6,7 @@ import Layout from 'components/common/layout';
 import { connect } from "react-redux";
 import { compose } from 'redux';
 import changeOrg from "utils/changeOrg";
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const Orgs = ({ orgs, dispatch }) => {
@@ -13,8 +14,8 @@ const Orgs = ({ orgs, dispatch }) => {
   return <Layout style={{ backgroundColor: '#F5F8F8', paddingRight: 0 }} contentStyle={{ backgroundColor: '#F5F8F8' }}>
     <div className={styles.orgsList}>
       <div className='header'>
-        <div className='title'>选择您的组织</div>
-        <div className='des'>您可以选择以下任意一个组织</div>
+        <div className='title'>{t('define.page.selectOrg.title')}</div>
+        <div className='des'>{t('define.page.selectOrg.des')}</div>
       </div>
       <div className='list'>
         <List

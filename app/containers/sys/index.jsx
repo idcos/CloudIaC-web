@@ -1,20 +1,18 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Menu, Tabs } from 'antd';
-
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 import { SettingOutlined } from '@ant-design/icons';
-
-
+import { t } from 'utils/i18n';
 import Orgs from './pages/orgs';
 import Params from './pages/params';
 import Registry from './pages/registry';
 
 const subNavs = {
-  org: '组织设置',
-  params: '系统参数',
-  registry: 'Registry配置'
+  org: t('define.orgSet'),
+  params: t('define.page.sysSet.params'),
+  registry: t('define.page.sysSet.registry')
 };
 
 const Sys = () => {
@@ -35,7 +33,7 @@ const Sys = () => {
   return <Layout
     extraHeader={<PageHeader
       className='container-inner-width'
-      title='系统设置'
+      title={t('define.sysSet')}
       showIcon={'setting'}
       icons={<SettingOutlined />}
       breadcrumb={false}

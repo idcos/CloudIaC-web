@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal } from 'antd';
+import { t } from "utils/i18n";
 
 const FL = {
   labelCol: { span: 5 },
@@ -29,7 +30,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
   };
 
   return <Modal
-    title={`${opt == 'add' ? '创建' : '编辑'}组织`}
+    title={opt == 'add' ? t('define.page.sysSet.org.action.create') : t('define.page.sysSet.org.action.modify')}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
@@ -46,23 +47,23 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       form={form}
     >
       <Form.Item
-        label='组织名称'
+        label={t('define.name')}
         name='name'
         getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input placeholder='请输入组织名称'/>
+        <Input placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
       <Form.Item
-        label='组织描述'
+        label={t('define.des')}
         name='description'
       >
-        <Input.TextArea rows={8} placeholder='请输入组织描述'/>
+        <Input.TextArea rows={8} placeholder={t('define.form.input.placeholder')} />
       </Form.Item>
     </Form>
   </Modal>;

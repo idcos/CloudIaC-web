@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, InputNumber, Select, Space, notification } from 'antd';
 import sysAPI from 'services/sys';
+import { t } from "utils/i18n";
 
 const layout = {
   labelCol: {
-    span: 6
+    span: 8
   },
   wrapperCol: {
     span: 16
@@ -35,7 +36,7 @@ const Params = () => {
       }
       setSubmitLoading(false);
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchInfo();
     } catch (e) {
@@ -59,7 +60,7 @@ const Params = () => {
       form.setFieldsValue(formData);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -70,37 +71,37 @@ const Params = () => {
       onFinish={onFinish}
       form={form}
     >
-      <Form.Item label='并发作业数' required={true}>
+      <Form.Item label={t('define.page.sysSet.params.field.MAX_JOBS_PER_RUNNER')} required={true}>
         <Space>
           <Form.Item
             name='MAX_JOBS_PER_RUNNER'
             rules={[
               {
                 required: true,
-                message: '请输入'
+                message: t('define.form.input.placeholder')
               }
             ]}
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            <InputNumber min={0} precision={0} placeholder='请输入' />
+            <InputNumber min={0} precision={0} placeholder={t('define.form.input.placeholder')} />
           </Form.Item>
           <Form.Item
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            个
+            {t('define.unit.piece')}
           </Form.Item>
         </Space>
       </Form.Item>
-      <Form.Item label='任务步骤超时' required={true}>
+      <Form.Item label={t('define.page.sysSet.params.field.TASK_STEP_TIMEOUT')} required={true}>
         <Space>
           <Form.Item
             name='TASK_STEP_TIMEOUT'
             rules={[
               {
                 required: true,
-                message: '请输入'
+                message: t('define.form.input.placeholder')
               }
             ]}
             style={{ display: 'inline-block' }}
@@ -112,17 +113,17 @@ const Params = () => {
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            分钟
+            {t('define.unit.minute')}
           </Form.Item>
         </Space>
       </Form.Item>
       <Form.Item 
-        label='日志保存周期'
+        label={t('define.page.sysSet.params.field.PERIOD_OF_LOG_SAVE')}
         name='PERIOD_OF_LOG_SAVE'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.select.placeholder')
           }
         ]}
         initialValue='Permanent'
@@ -132,12 +133,12 @@ const Params = () => {
           style={{ width: 240 }}
           disabled={true}
         >
-          <Option value='Permanent'>永久保存</Option>
+          <Option value='Permanent'>{t('define.page.sysSet.params.field.PERIOD_OF_LOG_SAVE.option.permanent')}</Option>
         </Select>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
-          更改信息
+          {t('define.page.sysSet.params.action.save')}
         </Button>
       </Form.Item>
     </Form>

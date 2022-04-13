@@ -8,6 +8,7 @@ import moment from 'moment';
 import Layout from 'components/common/layout';
 import PageHeader from 'components/pageHeader';
 import history from "utils/history";
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const ProjectSelectPage = ({ projects, dispatch }) => {
@@ -43,12 +44,12 @@ const ProjectSelectPage = ({ projects, dispatch }) => {
       extraHeader={
         <PageHeader
           className='container-inner-width'
-          title='全部项目'
+          title={t('define.page.selectProject.title')}
           headerStyle={{ padding: '42px 24px' }}
           breadcrumb={false}
           showIcon='document'
           subDes={
-            <Input.Search placeholder='请输入项目名称搜索' onSearch={onSearch} style={{ width: 240 }} />
+            <Input.Search placeholder={t('define.page.selectProject.search.placeholder')} onSearch={onSearch} style={{ width: 240 }} />
           }
         />
       }
