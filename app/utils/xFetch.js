@@ -1,7 +1,7 @@
 
 import { logout } from 'services/logout';
 import { matchPath } from 'react-router-dom';
-import { t } from 'utils/i18n';
+import { t, getLanguage } from 'utils/i18n';
 
 function parseJSON(res) {
   return res.json().then(jsonResult => {
@@ -17,12 +17,17 @@ async function xFetch(url, options) {
   const token = localStorage['accessToken'];
   const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
   const { orgId, projectId } = match.params || {};
-
+  const language = getLanguage();
+  const acceptLanguageMap = {
+    zh: 'zh-CN',
+    en: 'en-US'
+  };
   opts.headers = {
     ...opts.headers,
     'Authorization': token,
     'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
-    'IaC-Project-Id': opts['IaC-Project-Id'] || ''
+    'IaC-Project-Id': opts['IaC-Project-Id'] || '',
+    'Accept-Language': acceptLanguageMap[language] || 'zh-CN'
   };
   if (opts.isEncode && !opts.isEncodeParams) {
     url = encodeURI(url);
