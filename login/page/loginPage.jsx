@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Form, Input, Button, notification, Row, Col } from 'antd';
 import queryString from 'query-string';
+import { LangIcon } from 'components/iconfont';
 import { t, getLanguage, setLanguage } from 'utils/i18n';
 import { authAPI } from "../services/auth";
 import styles from './styles.less';
@@ -111,11 +112,13 @@ export default () => {
       <Col span={10} className='right'>
         {language === 'zh' ? (
           <div className='change-language'>
+            <LangIcon className='lang-icon' />
             <span>产品使用语言</span> 
             <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
           </div>
         ) : (
           <div className='change-language'>
+            <LangIcon className='lang-icon' />
             <span>View this page in</span>
             <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
           </div>

@@ -4,7 +4,7 @@ import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFil
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
-import { QuitIcon } from 'components/iconfont';
+import { QuitIcon, EnIcon, ZhIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import SeniorSelect from 'components/senior-select';
@@ -164,7 +164,7 @@ const AppHeader = (props) => {
           ) : null
         }
         <div className='user'>
-          <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? 'En' : 'Zh'}</span>
+          <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? <EnIcon /> : <ZhIcon />}</span>
           <Tooltip 
             color='#08857C'
             placement='bottomRight'
