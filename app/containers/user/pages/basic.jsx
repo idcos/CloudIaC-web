@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-
 import { Form, Button, Input } from 'antd';
+import { t } from 'utils/i18n';
 
 const layout = {
   labelCol: {
@@ -34,40 +34,40 @@ const Basic = ({ title, userInfo, updateUserInfo }) => {
     >
       <Form.Item
         name='name'
-        label='姓名'
+        label={t('define.page.userSet.basic.field.name')}
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input placeholder='请输入姓名'/>
+        <Input placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
       <Form.Item
-        label='邮箱'
+        label={t('define.page.userSet.basic.field.email')}
         name='email'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.input.placeholder')
           },
-          { type: 'email', message: '邮箱格式有误' }
+          { type: 'email', message: t('define.form.error.format') }
         ]}
-        extra={'邮箱全局唯一，作为登录用户名'}
+        extra={t('define.page.userSet.basic.field.email.extra')}
       >
-        <Input placeholder='请输入邮箱' disabled={true}/>
+        <Input placeholder={t('define.form.input.placeholder')} disabled={true}/>
       </Form.Item>
       <Form.Item
-        label='手机号'
+        label={t('define.page.userSet.basic.field.phone')}
         name='phone'
-        rules={[{ pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }]}
+        rules={[{ pattern: /^1[3456789]\d{9}$/, message: t('define.form.error.format') }]}
       >
-        <Input placeholder='请输入手机号'/>
+        <Input placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
-          更改信息
+          {t('define.page.userSet.basic.action.save')}
         </Button>
       </Form.Item>
     </Form>

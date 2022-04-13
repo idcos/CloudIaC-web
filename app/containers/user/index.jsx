@@ -2,18 +2,16 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Menu, Tabs } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-
+import { t } from 'utils/i18n';
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
-
-
 import Basic from './pages/basic';
 import Pwd from './pages/pwd';
 
 const subNavs = {
-  basic: '基本信息',
-  pwd: '修改密码'
+  basic: t('define.page.userSet.basic'),
+  pwd: t('define.page.userSet.pwd')
 };
 
 const User = ({ userInfo, dispatch }) => {
@@ -46,7 +44,7 @@ const User = ({ userInfo, dispatch }) => {
   return <Layout
     extraHeader={<PageHeader
       className='container-inner-width'
-      title='用户设置'
+      title={t('define.page.userSet.title')}
       showIcon={'user'}
       breadcrumb={false}
       renderFooter={() => (

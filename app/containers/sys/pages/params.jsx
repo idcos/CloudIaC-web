@@ -136,7 +136,7 @@ const Params = () => {
           <Option value='Permanent'>{t('define.page.sysSet.params.field.PERIOD_OF_LOG_SAVE.option.permanent')}</Option>
         </Select>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
           {t('define.page.sysSet.params.action.save')}
         </Button>
