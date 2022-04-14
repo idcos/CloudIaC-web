@@ -83,7 +83,7 @@ const EnvList = (props) => {
           extra={(
             <div className={styles.extra}>
               {data.isBilling && (
-                <div className={styles.cost}>{data.monthCost.toFixed(2)}元/当月费用</div>
+                <div className={styles.cost}>{data.monthCost.toFixed(2)}{t('define.env.money')}</div>
               )}
               <div style={{ fontSize: 12 }}>
                 {open ? <DownOutlined /> : <RightOutlined />}
