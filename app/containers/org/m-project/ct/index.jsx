@@ -83,19 +83,19 @@ const CTList = ({ userInfo, match = {} }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模板名称',
+      title: t('define.name'),
       width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'description',
-      title: '云模板描述',
+      title: t('define.des'),
       width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'relationEnvironment',
-      title: '关联环境',
+      title: t('define.activeEnvironment'),
       width: 78,
       ellipsis: true,
       render: (text, record) => (
@@ -111,7 +111,7 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'repoAddr',
-      title: '仓库',
+      title: t('define.repoAddr'),
       width: 249,
       ellipsis: true,
       render: (text) => (
@@ -120,7 +120,7 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'policyStatus',
-      title: '合规状态',
+      title: t('policy.detection.complianceStatus'),
       width: 110,
       ellipsis: true,
       render: (policyStatus, record) => {
@@ -133,13 +133,13 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'creator',
-      title: '创建人',
+      title: t('define.creator'),
       width: 70,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 152,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
@@ -155,7 +155,7 @@ const CTList = ({ userInfo, match = {} }) => {
             <a 
               type='link' 
               onClick={() => deployEnv(record.id)}
-            >部署</a>
+            >{t('define.deploy')}</a>
           </span>
         ) : null;
       }
@@ -175,7 +175,7 @@ const CTList = ({ userInfo, match = {} }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='云模板'
+      title={t('define.scope.template')}
       breadcrumb={true}
     />}
   >

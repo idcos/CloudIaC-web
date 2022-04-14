@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import history from 'utils/history';
 import { connect } from 'react-redux';
 import { Menu, notification, Tabs } from "antd";
-
+import { t } from 'utils/i18n';
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
@@ -11,8 +11,8 @@ import Basic from './basic';
 import User from './user';
 
 const subNavs = {
-  basic: '基本信息',
-  user: '用户'
+  basic: t('define.page.userSet.basic'),
+  user: t('define.user')
 };
 
 const ProjectSetting = ({ match, dispatch }) => {
@@ -36,7 +36,7 @@ const ProjectSetting = ({ match, dispatch }) => {
   return <Layout
     extraHeader={
       <PageHeader
-        title={'设置'}
+        title={t('define.setting')}
         breadcrumb={true}
         renderFooter={() => (
           <Tabs

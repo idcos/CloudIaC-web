@@ -219,10 +219,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       Modal.confirm({
         icon: <InfoCircleFilled />,
         width: 480,
-        title: `开启『${str}』`,
-        content: `开启『${str}』时需要同时开启『自动通过审批』，否则『${str}』功能无法自动进行，操作可能存在不可预知风险`,
-        okText: '确认开启',
-        cancelText: '取消',
+        title: `${t('define.action.open')}『${str}』`,
+        content: `${t('define.action.open')}『${str}』${t('define.env.deploy.needAutoApproval.confirm.content.middle')}『${str}』${t('define.env.deploy.needAutoApproval.confirm.content.suffix')}`,
         cancelButtonProps: {
           className: 'ant-btn-tertiary' 
         },
@@ -230,7 +228,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
           form.setFieldsValue({ autoApproval: true });
         },
         onCancel() {
-          if (str === '推送到分支时重新部署') {
+          if (str === t('define.env.field.triggers.commit')) {
             form.setFieldsValue({ commit: false });
           } else {
             form.setFieldsValue({ autoRepairDrift: false });
@@ -244,16 +242,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     const { autoRepairDrift, commit } = form.getFieldsValue();
     if (!e.target.checked && autoRepairDrift || !e.target.checked && commit) {
       const title = [
-        !!autoRepairDrift ? '自动纠正漂移' : '',
-        !!commit ? '推送到分支重新部署' : ''
+        !!autoRepairDrift ? t('define.autoRepairDrift') : '',
+        !!commit ? t('define.env.field.triggers.commit') : ''
       ].filter(it => !!it).join('|');
       Modal.confirm({
         icon: <InfoCircleFilled />,
         width: 480,
-        title: `关闭『自动通过审批』`,
-        content: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
-        okText: '确认关闭',
-        cancelText: '取消',
+        title: `${t('define.action.close')}『${t('define.autoApproval')}』`,
+        content: `${t('define.env.deploy.autoApproval.confirm.content.prefix')}『${title}』${t('define.env.deploy.autoApproval.confirm.content.middle')}『${title}』${t('define.env.deploy.autoApproval.confirm.content.suffix')}`,
         cancelButtonProps: {
           className: 'ant-btn-tertiary' 
         },
@@ -280,7 +276,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
         onChange={setActiveKey}
         style={{ marginBottom: 20 }}
       >
-        <Panel header='高级设置' forceRender={true} key='open'>
+        <Panel header={t('define.env.deploy.advanced')} forceRender={true} key='open'>
           <div>
             <div className={styles.depolyDetail}>
               <Tabs
@@ -293,7 +289,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                 }}
               >
                 <Tabs.TabPane
-                  tab={'模板'}
+                  tab={t('define.env.deploy.advanced.tpl')}
                   key={'tpl'}
                   forceRender={true}
                 >
@@ -309,7 +305,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 {
                                   validator(_, value) {
                                     if (noOption) {
-                                      return Promise.reject(new Error('未找到该tfvars文件'));
+                                      return Promise.reject(new Error(t('define.env.deploy.advanced.tpl.notFound.tfvarsFile')));
                                     }
                                     return Promise.resolve();
                                   }
@@ -317,7 +313,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               ]}
                               label={
                                 <>
-                                  tfvars文件
+                                  {t('define.variable.tfVarsFile')}
                                   <EyeOutlined 
                                     style={{ cursor: 'pointer' }} 
                                     onClick={() => !noOption && viewFile('tfVarsFile')}
@@ -329,7 +325,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               <Select
                                 getPopupContainer={triggerNode => triggerNode.parentNode} 
                                 allowClear={true} 
-                                placeholder='请选择tfvars文件'
+                                placeholder={t('define.form.select.placeholder')}
                                 style={{ width: '100%' }}
                               >
                                 {tfvars.map(it => <Option value={it}>{it}</Option>)}
@@ -350,7 +346,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 {
                                   validator(_, value) {
                                     if (noOption) {
-                                      return Promise.reject(new Error('未找到该playbook文件'));
+                                      return Promise.reject(new Error(t('define.env.deploy.advanced.tpl.notFound.playbookFile')));
                                     }
                                     return Promise.resolve();
                                   }
@@ -358,7 +354,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               ]}
                               label={
                                 <>
-                                  playbook文件
+                                  {t('define.variable.playbook')}
                                   <EyeOutlined
                                     style={{ cursor: 'pointer' }} 
                                     onClick={() => !noOption && viewFile('playbook')}
@@ -370,7 +366,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               <Select 
                                 allowClear={true}
                                 getPopupContainer={triggerNode => triggerNode.parentNode}
-                                placeholder='请选择playbook文件'
+                                placeholder={t('define.form.select.placeholder')}
                                 style={{ width: '100%' }}
                               >
                                 {playbooks.map(it => <Option value={it}>{it}</Option>)}
@@ -382,7 +378,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label='密钥'
+                        label={t('define.ssh')}
                         name='keyId'
                         dependencies={['playbook']}
                         rules={[
@@ -390,7 +386,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                             const playbook = form.getFieldValue('playbook');
                             return {
                               required: !!playbook,
-                              message: '请选择密钥'
+                              message: t('define.form.select.placeholder')
                             };
                           }
                         ]}
@@ -398,7 +394,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         <Select 
                           allowClear={true}
                           getPopupContainer={triggerNode => triggerNode.parentNode}
-                          placeholder='请选择密钥'
+                          placeholder={t('define.form.select.placeholder')}
                           style={{ width: '100%' }}
                         >
                           {keys.map(it => <Option value={it.id}>{it.name}</Option>)}
@@ -407,34 +403,34 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label={<span>target<Tooltip title='Target是指通过资源定位来对指定的资源进行部署，如果制定了资源名称或路径，则Terraform在执行时将仅生成包含制定资源的计划，并仅针对该计划进行部署'><InfoCircleOutlined /></Tooltip></span>}
+                        label={<span>target<Tooltip title={t('define.env.field.target.tooltip')}><InfoCircleOutlined /></Tooltip></span>}
                         name='targets'
                       >
-                        <Input placeholder={'请输入target'} style={{ width: '100%' }} />
+                        <Input placeholder={t('define.form.input.placeholder')} style={{ width: '100%' }} />
                       </Form.Item>
                     </Col>
                   </Row>
                 </Tabs.TabPane>
                 <Tabs.TabPane
-                  tab={'执行'}
+                  tab={t('define.env.deploy.advanced.execute')}
                   key={'execute'}
                   forceRender={true}
                 >
                   <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={7}>
                       <Form.Item
-                        label='部署通道标签'
+                        label={t('define.env.field.runnerTags')}
                         name='runnerTags'
                         rules={[
                           {
                             required: true,
-                            message: '请选择部署通道标签'
+                            message: t('define.form.select.placeholder')
                           }
                         ]}
                       >
                         <Select 
                           allowClear={true}
-                          placeholder='请选择部署通道标签'
+                          placeholder={t('define.form.select.placeholder')}
                           mode='multiple'
                           style={{ width: '100%' }}
                           disabled={locked}
@@ -446,7 +442,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     <Col span={7}>
                       <Form.Item 
                         style={{ marginBottom: 0 }}
-                        label='存活时间'
+                        label={t('define.env.field.lifeTime')}
                       >
                         <Row>
                           <Col span={8} className={styles.survivalTimeRight}>
@@ -497,7 +493,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label='步骤超时时间'
+                        label={t('define.env.field.stepTimeout')}
                       >
                         <Row align='middle' gutter={[ 8, 0 ]}>
                           <Col flex='1'>
@@ -505,11 +501,11 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               name='stepTimeout'
                               noStyle={true}
                             >
-                              <InputNumber disabled={locked} style={{ width: '100%' }} min={0} precision={0} placeholder='请输入步骤超时时间' />
+                              <InputNumber disabled={locked} style={{ width: '100%' }} min={0} precision={0} placeholder={t('define.form.input.placeholder')} />
                             </Form.Item>
                           </Col>
                           <Col flex='0 0 auto'>
-                            <span style={{ color: '#24292F' }}>分钟</span>
+                            <span style={{ color: '#24292F' }}>{t('define.unit.minute')}</span>
                           </Col>
                         </Row>
                       </Form.Item>
@@ -525,7 +521,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           >
                             <Checkbox disabled={locked}/>
                           </Form.Item>
-                          <span>执行失败时，间隔</span>
+                          <span>{t('define.env.field.retryDelay.prefix')}</span>
                           <Form.Item 
                             name='retryDelay'
                             initialValue={0}
@@ -533,7 +529,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           >
                             <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
                           </Form.Item>
-                          <span>秒自动重试</span>
+                          <span>{t('define.env.field.retryDelay.suffix')}</span>
                           <Form.Item
                             noStyle={true}
                             initialValue={0}
@@ -541,7 +537,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           >
                             <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }} />
                           </Form.Item>
-                          <span>次</span> 
+                          <span>{t('define.frequency')}</span> 
                         </Space>
                       </Form.Item>
                     </Col>
@@ -551,7 +547,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
+                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>{t('define.autoApproval')}</Checkbox> 
                       </Form.Item>
                     </Col>
                     <Col span={7}></Col>
@@ -571,9 +567,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox disabled={locked} onChange={e => checkedChange(e, '推送到分支时重新部署')}>推送到分支时重新部署</Checkbox> 
+                          <Checkbox disabled={locked} onChange={e => checkedChange(e, t('define.env.field.triggers.commit'))}>{t('define.env.field.triggers.commit')}</Checkbox> 
                         </Form.Item>
-                        <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
+                        <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
                     </Col>
                     <Col span={7}>
@@ -584,9 +580,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           initialValue={false}
                           noStyle={true}
                         >
-                          <Checkbox disabled={locked}>PR/MR时执行PLAN</Checkbox> 
+                          <Checkbox disabled={locked}>{t('define.env.field.triggers.prmr')}</Checkbox> 
                         </Form.Item>
-                        <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
+                        <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
                     </Col>
                     <Col span={7}>
@@ -594,14 +590,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                   </Row>
                 </Tabs.TabPane>
                 <Tabs.TabPane
-                  tab={'合规'}
+                  tab={t('define.compliance')}
                   key={'compliance'}
                   forceRender={true}
                 >
                   <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={12}>
                       <Form.Item
-                        label='开启合规检测'
+                        label={t('define.ct.field.policyEnable')}
                         name='policyEnable'
                         valuePropName='checked'
                         initialValue={false}
@@ -619,9 +615,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           return policyEnable ? (
                             <>
                               <Form.Item
-                                label='绑定策略组'
+                                label={t('define.ct.field.policyGroup')}
                                 name='policyGroup'
-                                rules={[{ required: true, message: '请绑定策略组' }]}
+                                rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                                 labelCol={{ span: 6 }}
                                 wrapperCol={{ span: 16 }}
                               >
@@ -632,7 +628,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                   allowClear={true}
                                   showArrow={true}
                                   options={policiesGroupOptions}
-                                  placeholder='请选择策略组'
+                                  placeholder={t('define.form.select.placeholder')}
                                   disabled={locked}
                                 />
                               </Form.Item>
@@ -643,7 +639,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox disabled={locked}>合规不通过时中止部署</Checkbox>                  
+                                <Checkbox disabled={locked}>{t('define.stopOnViolation')}</Checkbox>                  
                               </Form.Item>
                             </>
                           ) : null;
@@ -652,7 +648,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={12}>
                       <Form.Item
-                        label='开启漂移检测'
+                        label={t('define.env.field.openCronDrift')}
                         name='openCronDrift'
                         valuePropName='checked'
                         initialValue={false}
@@ -670,7 +666,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           return openCronDrift ? (
                             <>
                               <Form.Item 
-                                label='定时检测' 
+                                label={t('define.env.field.cronDriftExpress')} 
                                 required={true} 
                                 labelCol={{ span: 6 }}
                                 wrapperCol={{ span: 18 }}
@@ -683,11 +679,11 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                       rules={[
                                         {
                                           required: true,
-                                          message: '请输入crontab表达式'
+                                          message: t('define.form.input.placeholder')
                                         }
                                       ]}
                                     >
-                                      <Input disabled={locked} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
+                                      <Input disabled={locked} placeholder={t('define.env.field.cronDriftExpress.placeholder')} /> 
                                     </Form.Item>
                                   </Col>
                                   <Col flex={2}>
@@ -695,13 +691,13 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                       placement='topRight'
                                       content={(
                                         <>
-                                          <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
-                                          <div style={{ fontWeight: 500 }}>举例：</div>
+                                          <div>{t('define.env.field.cronDriftExpress.example.title')}</div>
+                                          <div style={{ fontWeight: 500 }}>{t('define.env.field.cronDriftExpress.example.subTitle')}</div>
                                           <div>
-                                            1.每隔1 分钟执行一次 */1 * * * *<br/>
-                                            2.每天 23点 执行一次 0 23 * * *<br/>
-                                            3.每个月1号23 点执行一次 0 23 1 * *<br/>
-                                            4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
+                                            {t('define.env.field.cronDriftExpress.example.1')}<br/>
+                                            {t('define.env.field.cronDriftExpress.example.2')}<br/>
+                                            {t('define.env.field.cronDriftExpress.example.3')}<br/>
+                                            {t('define.env.field.cronDriftExpress.example.4')}<br/>
                                           </div>
                                         </>
                                       )}
@@ -718,7 +714,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox disabled={locked} onChange={e => checkedChange(e, '自动纠正漂移')}>自动纠漂</Checkbox>                  
+                                <Checkbox disabled={locked} onChange={e => checkedChange(e, t('define.autoRepairDrift'))}>{t('define.autoRepairDrift')}</Checkbox>                  
                               </Form.Item>
                             </>
                           ) : null;

@@ -446,7 +446,7 @@ export default () => {
                       <Input />
                     </Form.Item>
                     <Form.Item 
-                      label='分支/标签'
+                      label={`${t('define.branch')}/${t('define.tag')}`}
                       name='repoRevision'
                       dependencies={['dir']}
                       rules={[
@@ -473,23 +473,23 @@ export default () => {
                           }
                         }}
                       >
-                        <Select.OptGroup label='分支'>
+                        <Select.OptGroup label={t('define.branch')}>
                           {repoBranchOptions.map(it => <Select.Option value={it.value} type='branch'>{it.label}</Select.Option>)}
                         </Select.OptGroup>
-                        <Select.OptGroup label='标签'>
+                        <Select.OptGroup label={t('define.tag')}>
                           {repoTagOptions.map(it => <Select.Option value={it.value} type='gitTags'>{it.label}</Select.Option>)}
                         </Select.OptGroup>
                       </Select>
                     </Form.Item>
                     <Form.Item 
-                      label='分支'
+                      label={t('define.branch')}
                       name='branch'
                       hidden={true}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item 
-                      label='标签'
+                      label={t('define.tag')}
                       name='gitTags'
                       hidden={true}
                     >
@@ -517,7 +517,7 @@ export default () => {
                 return (
                   <>
                     <Form.Item 
-                      label='策略组'
+                      label={t('define.policyGroup')}
                       name='repoId'
                       rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >

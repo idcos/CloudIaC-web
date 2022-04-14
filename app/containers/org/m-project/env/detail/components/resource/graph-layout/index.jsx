@@ -6,6 +6,7 @@ import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import { DIMENSION_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 import DetailDrawer from '../components/detail-drawer';
 import styles from './styles.less';
 import DetailPageContext from '../../../detail-page-context';
@@ -51,7 +52,6 @@ const GraphLayout = ({ setMode }) => {
   const onChangeDimension = (v) => {
     setDimension(v);
     mutateGraphData(); 
-    fetchGraphData();
   };
 
   return (
@@ -62,7 +62,7 @@ const GraphLayout = ({ setMode }) => {
       <Row justify='space-between' className={styles.header}>
         <Space>
           <Input.Search
-            placeholder='请输入关键字搜索'
+            placeholder={t('define.form.input.search.placeholder.key')}
             style={{ width: 240 }}
             onSearch={v => setSearch(v)}
           />
@@ -78,12 +78,12 @@ const GraphLayout = ({ setMode }) => {
               isFullscreen ? (
                 <>
                   <FullscreenExitOutlined className='icon'/>
-                  <span>退出全屏</span> 
+                  <span>{t('define.action.exitFullScreen')}</span> 
                 </>
               ) : (
                 <>
                   <FullscreenOutlined className='icon'/>
-                  <span>全屏显示</span>
+                  <span>{t('define.action.fullScreen')}</span>
                 </>
               )
             }
@@ -91,7 +91,7 @@ const GraphLayout = ({ setMode }) => {
         </Space>
         {type === 'env' && (
           <Button onClick={() => setMode('table')} icon={<MenuOutlined/>}>
-            切换列表展示
+            {t('define.resource.action.changeTableMode')}
           </Button>
         )}
       </Row>

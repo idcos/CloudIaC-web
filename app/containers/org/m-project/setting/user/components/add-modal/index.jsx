@@ -55,7 +55,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
   return (
     <Modal
-      title='添加用户'
+      title={t('define.project.user.action.add')}
       visible={visible}
       onCancel={toggleVisible}
       okButtonProps={{
@@ -72,7 +72,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         form={form}
       >
         <Form.Item
-          label='用户'
+          label={t('define.user')}
           name='userId'
           rules={[
             {
@@ -83,7 +83,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='请选择用户'
+            placeholder={t('define.form.select.placeholder')}
             mode={'multiple'}
             optionFilterProp='children'
           >
@@ -91,7 +91,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
           </Select>
         </Form.Item>
         <Form.Item
-          label='角色'
+          label={t('define.org.user.role')}
           name='role'
           rules={[
             {
@@ -102,7 +102,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='请选择角色'
+            placeholder={t('define.form.select.placeholder')}
           >
             {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
           </Select>

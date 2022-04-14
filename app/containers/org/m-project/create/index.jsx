@@ -34,7 +34,7 @@ const CreateProjectPage = (props) => {
       setSubmitLoading(false);
       reloadGlobalProjects();
       notification.success({
-        message: '创建成功'
+        message: t('define.message.opSuccess')
       });
       const projectId = res.result.id;
       history.push(`/org/${orgId}/project/${projectId}/m-project-env`);
@@ -59,7 +59,7 @@ const CreateProjectPage = (props) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='创建项目'
+      title={t('define.project.create')}
       breadcrumb={true}
     />}
   >
@@ -70,19 +70,19 @@ const CreateProjectPage = (props) => {
         onFinish={onFinish}
       >
         <Form.Item
-          label='项目名称'
+          label={t('define.projectName')}
           name='name'
           rules={[
             {
               required: true,
-              message: '请输入项目名称'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input style={{ width: 254 }} placeholder='请输入项目名称'/>
+          <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')}/>
         </Form.Item>
         <Form.Item
-          label='项目描述'
+          label={t('define.projectDes')}
           name='description'
           rules={[
             {
@@ -90,10 +90,10 @@ const CreateProjectPage = (props) => {
             }
           ]}
         >
-          <Input.TextArea style={{ width: 400 }} placeholder='请输入项目描述'/>
+          <Input.TextArea style={{ width: 400 }} placeholder={t('define.form.input.placeholder')}/>
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-          <Button type='primary' loading={submitLoading} htmlType={'submit'} >提交</Button>
+          <Button type='primary' loading={submitLoading} htmlType={'submit'} >{t('define.action.submit')}</Button>
         </Form.Item>
       </Form>
     </div>

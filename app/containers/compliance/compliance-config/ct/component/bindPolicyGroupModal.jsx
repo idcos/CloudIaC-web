@@ -81,12 +81,12 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
         form={form}
       >
         <Form.Item
-          label='绑定策略组'
+          label={t('define.ct.field.policyGroup')}
           name='policyGroupIds'
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='绑定策略组'
+            placeholder={t('define.ct.field.policyGroup')}
             mode={'multiple'}
             allowClear={true}
             showArrow={true}

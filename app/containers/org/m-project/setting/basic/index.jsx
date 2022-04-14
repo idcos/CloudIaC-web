@@ -17,7 +17,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
   const [ projectInfo, setProjectInfo ] = useState({});
   const [form] = Form.useForm();
   let CHART = useRef([
-    { key: 'project_statistics', domRef: useRef(), des: '环境状态占比', ins: null }
+    { key: 'project_statistics', domRef: useRef(), ins: null }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
 
@@ -80,7 +80,7 @@ const Basic = ({ orgId, projectId, dispatch }) => {
       setProjectInfo(res.result || {});
       setSpinning(false);
       notification.success({
-        message: '修改信息成功'
+        message: t('define.message.opSuccess')
       });
       fetchProjectInfo();
       reloadGlobalProjects();
@@ -95,14 +95,14 @@ const Basic = ({ orgId, projectId, dispatch }) => {
   return (
     <Spin spinning={spinning}>
       <div className={styles.basic}>
-        <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={'基础信息'}>
+        <Card headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} title={t('define.page.userSet.basic')}>
           <Form
             form={form}
             {...FL}
             onFinish={onFinish}
           >
             <Form.Item
-              label='项目名称'
+              label={t('define.projectName')}
               name='name'
               rules={[
                 {
@@ -111,10 +111,10 @@ const Basic = ({ orgId, projectId, dispatch }) => {
                 }
               ]}
             >
-              <Input placeholder='请输入云模板名称' />
+              <Input placeholder={t('define.form.input.placeholder')} />
             </Form.Item>
             <Form.Item
-              label='项目描述'
+              label={t('define.projectDes')}
               name='description'
               rules={[
                 {
@@ -122,18 +122,18 @@ const Basic = ({ orgId, projectId, dispatch }) => {
                 }
               ]}
             >
-              <Input.TextArea placeholder='请输入描述' />
+              <Input.TextArea placeholder={t('define.form.input.placeholder')} />
             </Form.Item>
             <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
-              <Button type='primary' htmlType={'submit'} >保存</Button>
+              <Button type='primary' htmlType={'submit'} >{t('define.action.save')}</Button>
             </Form.Item>
           </Form>
         </Card>
-        <Card title={'项目统计'} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} style={{ marginTop: 24 }}>
+        <Card title={t('define.project.statistics')} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} style={{ marginTop: 24 }}>
           <Row style={{ display: 'flex', justifyContent: 'center', padding: '0px 72px' }}>
             {CHART.current.map(chart => <Col span={18}>
               <div className='chartPanel' style={{ position: 'relative' }}>
-                <h2 style={{ position: 'absolute', top: 65, left: 18 }}>云模板数量
+                <h2 style={{ position: 'absolute', top: 65, left: 18 }}>{t('define.ct.num')}
                   <h1 style={{ display: 'flex' }}>{projectInfo.tplCount || 0}</h1>
                 </h2>
                 <div ref={chart.domRef} className='chartEle'></div>

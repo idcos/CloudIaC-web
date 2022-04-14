@@ -107,7 +107,7 @@ const Policy = ({ location, match }) => {
     },
     {
       dataIndex: 'tags',
-      title: '标签',
+      title: t('define.tag'),
       width: 230,
       render: (text) => {
         const tags = text ? text.split(',') : [];
@@ -137,7 +137,7 @@ const Policy = ({ location, match }) => {
     },
     {
       dataIndex: 'groupName',
-      title: '策略组',
+      title: t('define.policyGroup'),
       width: 170,
       ellipsis: true
     },
@@ -198,7 +198,7 @@ const Policy = ({ location, match }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='策略'
+      title={t('define.policy')}
       breadcrumb={true}
       subDes={<Button onClick={() => goOnlineTestPage()}>在线测试</Button>}
     />}

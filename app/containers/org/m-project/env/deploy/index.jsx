@@ -230,21 +230,21 @@ const Index = ({ match = {} }) => {
       const value = await form.validateFields().catch((err) => {
         const errInfo = get(err, 'errorFields[0].errors[0]', '');
         throw {
-          message: '表单校验错误',
+          message: t('define.form.error'),
           description: errInfo
         };
       });
       const configData = await configRef.current.onfinish().catch((err) => {
         const errInfo = get(err, 'errorFields[0].errors[0]', '');
         throw {
-          message: '表单校验错误',
+          message: t('define.form.error'),
           description: errInfo
         };
       });
       const varData = await varRef.current.validateForm().catch(() => {
         throw {
-          message: '表单校验错误',
-          description: '请检查变量表单填写是否有误'
+          message: t('define.form.error'),
+          description: t('define.form.error.variable')
         };
       });
       let values = { ...value, ...configData };
@@ -258,7 +258,7 @@ const Index = ({ match = {} }) => {
         };
       }
       notification.success({
-        message: '保存成功'
+        message: t('define.message.opSuccess')
       });
       const envInfo = res.result || {};
       if (envId) { // 重新部署环境，跳部署历史详情
@@ -288,7 +288,7 @@ const Index = ({ match = {} }) => {
         <PageHeader 
           title={
             <Space size='middle' align='center'>
-              <span>{!!envId ? '重新部署' : '部署新环境'}</span>
+              <span>{!!envId ? t('define.redeployment') : t('define.deployEnv')}</span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                 <LayoutOutlined style={{ color: '#000', fontSize: 16 }}/>
                 <span style={{ color: '#57606A', fontSize: 12, fontWeight: 'normal' }}>{tplInfo.name}</span>
@@ -310,44 +310,44 @@ const Index = ({ match = {} }) => {
           <Row justify='space-between' style={{ marginBottom: 24 }}>
             <Col span={7}>
               <Form.Item
-                label='环境名称：'
+                label={t('define.name')}
                 name='name'
                 getValueFromEvent={(e) => e.target.value.trim()}
                 rules={[
                   {
                     required: true,
-                    message: '请输入环境名称'
+                    message: t('define.form.input.placeholder')
                   }
                 ]}
                 initialValue={info.name || undefined}
               >
-                <Input disabled={info.locked} value={info.name} placeholder={'请输入环境名称'} style={{ width: '100%' }} />
+                <Input disabled={info.locked} value={info.name} placeholder={t('define.form.input.placeholder')} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={7}>
               <Form.Item
-                label='分支/标签：'
+                label={`${t('define.branch')}/${t('define.tag')}`}
                 name='revision'
                 rules={[
                   {
                     required: true,
-                    message: '请选择分支/标签'
+                    message: t('define.form.select.placeholder')
                   }
                 ]}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
-                  placeholder='请选择分支/标签'
+                  placeholder={t('define.form.select.placeholder')}
                   style={{ width: '100%' }}
                   onChange={(value) => {
                     changeVcsFetchParams({ repoRevision: value });
                   }}
                   disabled={info.locked}
                 >
-                  <OptGroup label='分支'>
+                  <OptGroup label={t('define.branch')}>
                     {branch.map(it => <Option value={it.name}>{it.name}</Option>)}
                   </OptGroup>
-                  <OptGroup label='标签'>
+                  <OptGroup label={t('define.tag')}>
                     {tag.map(it => <Option value={it.name}>{it.name}</Option>)}
                   </OptGroup>
                 </Select>
@@ -355,11 +355,11 @@ const Index = ({ match = {} }) => {
             </Col>
             <Col span={7}>
               <Form.Item
-                label='工作目录'
+                label={t('define.workdir')}
                 name='workdir'
               >
                 <Input 
-                  placeholder='请输入工作目录' 
+                  placeholder={t('define.form.input.placeholder')}
                   onBlur={(e) => {
                     changeVcsFetchParams({ workdir: e.target.value });
                   }}
@@ -387,8 +387,8 @@ const Index = ({ match = {} }) => {
             defaultExpandCollapse={false}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >Plan计划</Button>
-            <Button htmlType='submit' disabled={planLoading || info.locked} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >执行部署</Button>
+            <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >{t('define.env.action.plan')}</Button>
+            <Button htmlType='submit' disabled={planLoading || info.locked} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >{t('define.env.action.deploy')}</Button>
           </Row>
         </Form>
       </div>

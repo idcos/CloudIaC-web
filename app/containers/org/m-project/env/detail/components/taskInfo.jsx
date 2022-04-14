@@ -34,17 +34,17 @@ const TaskInfo = (props) => {
             }
           </Descriptions.Item>
           <Descriptions.Item label={t('define.type')}>{TASK_TYPE[taskInfo.type] || '-'}</Descriptions.Item>
-          <Descriptions.Item label='分支/标签'>{taskInfo.revision || '-'}</Descriptions.Item>
-          <Descriptions.Item label='Commit_ID'><span onClick={() => {
+          <Descriptions.Item label={`${t('define.branch')}/${t('define.tag')}`}>{taskInfo.revision || '-'}</Descriptions.Item>
+          <Descriptions.Item label='Commit ID'><span onClick={() => {
             window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`); 
           }} className={styles.linkToPage}
           >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
-          <Descriptions.Item label='更新时间'>{timeUtils.format(taskInfo.updatedAt) || '-'}</Descriptions.Item>
-          <Descriptions.Item label='创建时间'>{timeUtils.format(taskInfo.createdAt) || '-'}</Descriptions.Item>
+          <Descriptions.Item label={t('define.updateTime')}>{timeUtils.format(taskInfo.updatedAt) || '-'}</Descriptions.Item>
+          <Descriptions.Item label={t('define.createdAt')}>{timeUtils.format(taskInfo.createdAt) || '-'}</Descriptions.Item>
           <Descriptions.Item label='开始时间'>{timeUtils.format(taskInfo.startAt) || '-'}</Descriptions.Item>
-          <Descriptions.Item label='执行时长'>{timeUtils.diff(taskInfo.endAt, taskInfo.startAt) || '-'}</Descriptions.Item>
-          <Descriptions.Item label='执行人'>{taskInfo.creator || '-'}</Descriptions.Item>
-          <Descriptions.Item label='资源变更'><ChangeInfo {...taskInfo.result} /></Descriptions.Item>
+          <Descriptions.Item label={t('define.task.field.duration')}>{timeUtils.diff(taskInfo.endAt, taskInfo.startAt) || '-'}</Descriptions.Item>
+          <Descriptions.Item label={t('define.task.field.creator')}>{taskInfo.creator || '-'}</Descriptions.Item>
+          <Descriptions.Item label={t('define.task.field.result')}><ChangeInfo {...taskInfo.result} /></Descriptions.Item>
           <Descriptions.Item label='target'>{taskInfo.targets}</Descriptions.Item>
         </Descriptions>
       </Collapse.Panel>

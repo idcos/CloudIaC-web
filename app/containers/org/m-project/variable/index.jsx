@@ -75,7 +75,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
   return (
     <Layout
       extraHeader={<PageHeader
-        title='变量'
+        title={t('define.variable')}
         breadcrumb={true}
       />}
     >
@@ -93,7 +93,7 @@ const ProjectVariable = ({ match = {}, userInfo }) => {
             {
               PROJECT_OPERATOR ? (
                 <div className='btn-wrapper'>
-                  <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>保存</Button>
+                  <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>{t('define.action.save')}</Button>
                 </div>
               ) : null
             }

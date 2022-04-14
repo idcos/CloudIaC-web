@@ -73,7 +73,7 @@ const TreeNode = ({ cfg }) => {
         >
           <Dot />
           <Text customNodeType='collapse-expand-btn' style={{ fill: '#0B847C', fontSize: 16, margin: [0, 0, 0, 8], cursor: 'pointer' }}>
-            {isRoot ? 'Root节点' : ellipsisText(nodeName, 20)}{resourcesList.length > 0 ? `[${resourcesList.length}]` : ''}
+            {isRoot ? 'Root Node' : ellipsisText(nodeName, 20)}{resourcesList.length > 0 ? `[${resourcesList.length}]` : ''}
           </Text>
         </Rect>
         {

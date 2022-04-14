@@ -11,6 +11,7 @@ import CostReport from './cost-report';
 import classNames from 'classnames';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { t } from 'utils/i18n';
 import vcsAPI from 'services/vcs';
 
 const EnvInfo = () => {
@@ -72,7 +73,7 @@ const EnvInfo = () => {
       return '-';
     case 0:
     case '0':
-      return '不限制';
+      return t('define.noLimit');
     default:
       const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
       return it.name;
@@ -82,26 +83,26 @@ const EnvInfo = () => {
   return (
     <div className={'envInfoBox'}>
       <div className='info'>
-        <div className='title'>环境属性</div>
+        <div className='title'>{t('define.envProps')}</div>
         <div className='info-border'>
           <Descriptions
             labelStyle={{ color: '#24292F', fontWeight: 500 }}
             contentStyle={{ color: '#57606A' }}
           >
             {envInfo.isBilling && (
-              <Descriptions.Item span={3} label='当月费用'>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}元</Descriptions.Item>
+              <Descriptions.Item span={3} label={t('define.env.field.monthCost')}>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}{t('define.money.yuan')}</Descriptions.Item>
             )}
-            <Descriptions.Item span={3} label='资源数'>{envInfo.resourceCount}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.env.field.resourcesNum')}>{envInfo.resourceCount}</Descriptions.Item>
 
-            <Descriptions.Item span={3} label='存活时间'>{formatTTL(envInfo)}</Descriptions.Item>
-            <Descriptions.Item span={3} label='更新时间'>{timeUtils.format(envInfo.updatedAt) || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.env.field.lifeTime')}>{formatTTL(envInfo)}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.updateTime')}>{timeUtils.format(envInfo.updatedAt) || '-'}</Descriptions.Item>
 
-            <Descriptions.Item span={3} label='云模板'><span onClick={() => {
+            <Descriptions.Item span={3} label={t('define.scope.template')}><span onClick={() => {
               history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
             }} className={styles.linkToPage}
             >{envInfo.templateName || '-'}</span></Descriptions.Item>
-            <Descriptions.Item span={3} label='分支/标签'>{envInfo.revision || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='Commit_ID'>{
+            <Descriptions.Item span={3} label={`${t('define.branch')}/${t('define.tag')}`}>{envInfo.revision || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label='Commit ID'>{
               taskInfo.commitId ? (
                 urlMap.commitUrl ? (
                   <span onClick={() => window.open(urlMap.commitUrl)} className={styles.linkToPage}>{taskInfo.commitId.substring(0, 12)}</span>
@@ -109,15 +110,15 @@ const EnvInfo = () => {
               ) : '-'
             }</Descriptions.Item>
 
-            <Descriptions.Item span={3} label='密钥'>{envInfo.keyName || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='tfvars文件'>{
+            <Descriptions.Item span={3} label={t('define.ssh')}>{envInfo.keyName || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.variable.tfVarsFile')}>{
               envInfo.tfVarsFile ? (
                 urlMap.tfVarsFileUrl ? (
                   <span onClick={() => window.open(urlMap.tfVarsFileUrl)} className={styles.linkToPage}>{envInfo.tfVarsFile}</span>
                 ) : envInfo.tfVarsFile
               ) : '-'
             }</Descriptions.Item>
-            <Descriptions.Item span={3} label='playbook文件'>{
+            <Descriptions.Item span={3} label={t('define.variable.playbook')}>{
               envInfo.playbook ? (
                 urlMap.playbookUrl ? (
                   <span onClick={() => window.open(urlMap.playbookUrl)} className={styles.linkToPage}>{envInfo.playbook}</span>
@@ -125,13 +126,13 @@ const EnvInfo = () => {
               ) : '-'
             }</Descriptions.Item>
 
-            <Descriptions.Item span={3} label='部署通道'>{envInfo.runnerId || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.env.field.runner')}>{envInfo.runnerId || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label='target'>{envInfo.target || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='推送到分支时重新部署'>{(envInfo.triggers || []).includes('commit') ? '是' : '否' }</Descriptions.Item>
-            <Descriptions.Item span={3} label='PR/MR时执行PLAN'>{(envInfo.triggers || []).includes('prmr') ? '是' : '否' }</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.env.field.triggers.commit')}>{(envInfo.triggers || []).includes('commit') ? t('define.yes') : t('define.no') }</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.env.field.triggers.prmr')}>{(envInfo.triggers || []).includes('prmr') ? t('define.yes') : t('define.no') }</Descriptions.Item>
            
-            <Descriptions.Item span={3} label='创建人'>{envInfo.creator || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='创建时间'>{timeUtils.format(envInfo.createdAt) || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.creator')}>{envInfo.creator || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.createdAt')}>{timeUtils.format(envInfo.createdAt) || '-'}</Descriptions.Item>
           </Descriptions>
         </div>
       </div>
@@ -139,7 +140,7 @@ const EnvInfo = () => {
         <div className='cost-report-border'>
           {envInfo.isBilling ? (
             <CostReport orgId={orgId} projectId={projectId} envId={envId} />
-          ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='暂未开启费用统计' style={{ marginTop: 200 }} />}
+          ) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('define.noOpenCostStatistics')} style={{ marginTop: 200 }} />}
         </div>
       </div>
     </div>

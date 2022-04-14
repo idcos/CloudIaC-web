@@ -2,6 +2,7 @@ import React, { useState, useContext, useMemo, memo } from 'react';
 import { Collapse } from 'antd';
 import { useEventEmitter } from 'ahooks';
 import { Eb_WP } from 'components/error-boundary';
+import { t } from 'utils/i18n';
 import GraphLayout from './graph-layout';
 import TableLayout from './table-layout';
 import DetailPageContext from '../../detail-page-context';
@@ -25,7 +26,7 @@ const Resource = () => {
   return (
     <>
       <Collapse expandIconPosition={'right'} defaultActiveKey={['1']} forceRender={true}>
-        <Panel header='资源列表' key='1'>
+        <Panel header={t('define.resource.list')} key='1'>
           {content}
         </Panel>
       </Collapse>

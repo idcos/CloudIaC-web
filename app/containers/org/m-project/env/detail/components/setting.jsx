@@ -99,12 +99,12 @@ const Setting = () => {
       }
       reload();
       notification.success({
-        description: '保存成功'
+        description: t('define.message.opSuccess')
       });
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
-        message: '保存失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -160,10 +160,8 @@ const Setting = () => {
       Modal.confirm({
         icon: <InfoCircleFilled />,
         width: 480,
-        title: `开启『${str}』`,
-        content: `开启『${str}』时需要同时开启『自动通过审批』，否则『${str}』功能无法自动进行，操作可能存在不可预知风险`,
-        okText: '确认开启',
-        cancelText: '取消',
+        title: `${t('define.action.open')}『${str}』`,
+        content: `${t('define.action.open')}『${str}』${t('define.env.deploy.needAutoApproval.confirm.content.middle')}『${str}』${t('define.env.deploy.needAutoApproval.confirm.content.suffix')}`,
         cancelButtonProps: {
           className: 'ant-btn-tertiary' 
         },
@@ -171,7 +169,7 @@ const Setting = () => {
           form.setFieldsValue({ autoApproval: true });
         },
         onCancel() {
-          if (str === '推送到分支时重新部署') {
+          if (str === t('define.env.field.triggers.commit')) {
             form.setFieldsValue({ commit: false });
           } else {
             form.setFieldsValue({ autoRepairDrift: false });
@@ -186,16 +184,14 @@ const Setting = () => {
     const { autoRepairDrift, commit } = form.getFieldsValue();
     if (!e.target.checked && autoRepairDrift || !e.target.checked && commit) {
       const title = [
-        !!autoRepairDrift ? '自动纠正漂移' : '',
-        !!commit ? '推送到分支重新部署' : ''
+        !!autoRepairDrift ? t('define.autoRepairDrift') : '',
+        !!commit ? t('define.env.field.triggers.commit') : ''
       ].filter(it => !!it).join('|');
       Modal.confirm({
         icon: <InfoCircleFilled />,
         width: 480,
-        title: `关闭『自动通过审批』`,
-        content: `当前环境已开启『${title}』，如取消该选项，则『${title}』功能也将一并取消，是否继续？`,
-        okText: '确认关闭',
-        cancelText: '取消',
+        title: `${t('define.action.close')}『${t('define.autoApproval')}』`,
+        content: `${t('define.env.deploy.autoApproval.confirm.content.prefix')}『${title}』${t('define.env.deploy.autoApproval.confirm.content.middle')}『${title}』${t('define.env.deploy.autoApproval.confirm.content.suffix')}`,
         cancelButtonProps: {
           className: 'ant-btn-tertiary' 
         },
@@ -211,9 +207,9 @@ const Setting = () => {
 
   const showConfirm = () => {
     confirm({
-      title: '确认要归档环境?',
+      title: t('define.env.action.archive.confirm.title'),
       icon: <InfoCircleFilled />,
-      content: '对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失。',
+      content: t('define.env.action.archive.des'),
       onOk() {
         return archive();
       },
@@ -234,7 +230,7 @@ const Setting = () => {
       >
         <div>
           <Card
-            title={'执行'}
+            title={t('define.env.deploy.advanced.execute')}
             key={'execute'}
             forceRender={true}
           >
@@ -242,7 +238,7 @@ const Setting = () => {
               <Col span={8}>
                 <Form.Item 
                   style={{ marginBottom: 0 }}
-                  label='存活时间'
+                  label={t('define.env.field.lifeTime')}
                 >
                   <Row>
                     <Col span={8} className={styles.survivalTimeRight}>
@@ -293,7 +289,7 @@ const Setting = () => {
               </Col>
               <Col span={7}>
                 <Form.Item
-                  label='步骤超时时间'
+                  label={t('define.env.field.stepTimeout')}
                 >
                   <Row align='middle' gutter={[ 8, 0 ]}>
                     <Col flex='1'>
@@ -301,11 +297,11 @@ const Setting = () => {
                         name='stepTimeout'
                         noStyle={true}
                       >
-                        <InputNumber disabled={locked} style={{ width: '100%' }} placeholder='请输入步骤超时时间' />
+                        <InputNumber disabled={locked} style={{ width: '100%' }} placeholder={t('define.form.input.placeholder')} />
                       </Form.Item>
                     </Col>
                     <Col flex='0 0 auto'>
-                      <span style={{ color: '#24292F' }}>分钟</span>
+                      <span style={{ color: '#24292F' }}>{t('define.unit.minute')}</span>
                     </Col>
                   </Row>
                 </Form.Item>
@@ -321,7 +317,7 @@ const Setting = () => {
                     >
                       <Checkbox disabled={locked}/>
                     </Form.Item>
-                    <span>执行失败时，间隔</span>
+                    <span>{t('define.env.field.retryDelay.prefix')}</span>
                     <Form.Item 
                       name='retryDelay'
                       initialValue={0}
@@ -329,7 +325,7 @@ const Setting = () => {
                     >
                       <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }}/>
                     </Form.Item>
-                    <span>秒自动重试</span>
+                    <span>{t('define.env.field.retryDelay.suffix')}</span>
                     <Form.Item
                       noStyle={true}
                       initialValue={0}
@@ -337,7 +333,7 @@ const Setting = () => {
                     >
                       <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }} />
                     </Form.Item>
-                    <span>次</span> 
+                    <span>{t('define.frequency')}</span> 
                   </Space>
                 </Form.Item>
               </Col>
@@ -347,7 +343,7 @@ const Setting = () => {
                   valuePropName='checked'
                   initialValue={false}
                 >
-                  <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>自动通过审批</Checkbox> 
+                  <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>{t('define.autoApproval')}</Checkbox> 
                 </Form.Item>
               </Col>
             </Row>
@@ -370,10 +366,10 @@ const Setting = () => {
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox disabled={locked} onChange={e => checkedChange(e, '推送到分支时重新部署', 'commit')}>推送到分支时重新部署</Checkbox> 
+                        <Checkbox disabled={locked} onChange={e => checkedChange(e, t('define.env.field.triggers.commit'), 'commit')}>{t('define.env.field.triggers.commit')}</Checkbox> 
                       </Form.Item>
                       <Space size={8}>
-                        <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>
+                        <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>
                         <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('commit')} copyRequest={() => copyRequest()}/>
                       </Space>
                     </>
@@ -392,10 +388,10 @@ const Setting = () => {
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox disabled={locked}>PR/MR时执行PLAN</Checkbox> 
+                        <Checkbox disabled={locked}>{t('define.env.field.triggers.prmr')}</Checkbox> 
                       </Form.Item>
                       <Space size={8}>
-                        <Tooltip title='勾选该选项将自动调用VCS API设置webhook，请确保VCS配置中的token具有足够权限'><InfoCircleOutlined /></Tooltip>  
+                        <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>  
                         <Copy disabled={!PROJECT_OPERATOR || !getFieldValue('prmr')} copyRequest={() => copyRequest()}/>
                       </Space>
                     </>
@@ -407,7 +403,7 @@ const Setting = () => {
             </Row>
           </Card>           
           <Card
-            title={'合规'}
+            title={t('define.compliance')}
             key={'compliance'}
             forceRender={true}
           >
@@ -423,7 +419,7 @@ const Setting = () => {
                   <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={colSpan}>
                       <Form.Item
-                        label='开启合规检测'
+                        label={t('define.ct.field.policyEnable')}
                         name='policyEnable'
                         valuePropName='checked'
                         initialValue={false}
@@ -435,7 +431,7 @@ const Setting = () => {
                       {policyEnable ? (
                         <>
                           <Form.Item
-                            label='绑定策略组'
+                            label={t('define.ct.field.policyGroup')}
                             name='policyGroup'
                             rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                             labelCol={{ span: 8 }}
@@ -448,7 +444,7 @@ const Setting = () => {
                               allowClear={true}
                               showArrow={true}
                               options={policiesGroupOptions}
-                              placeholder='请选择策略组'
+                              placeholder={t('define.form.select.placeholder')}
                               disabled={locked}
                             />
                           </Form.Item>
@@ -459,14 +455,14 @@ const Setting = () => {
                             initialValue={false}
                             className='ant-form-item-no-min-height'
                           >
-                            <Checkbox disabled={locked}>合规不通过时中止部署</Checkbox>                  
+                            <Checkbox disabled={locked}>{t('define.stopOnViolation')}</Checkbox>                  
                           </Form.Item>
                         </>
                       ) : null}
                     </Col>
                     <Col span={colSpan}>
                       <Form.Item
-                        label='开启漂移检测'
+                        label={t('define.env.field.openCronDrift')}
                         name='openCronDrift'
                         valuePropName='checked'
                         initialValue={false}
@@ -478,7 +474,7 @@ const Setting = () => {
                       {openCronDrift ? (
                         <>
                           <Form.Item 
-                            label='定时检测' 
+                            label={t('define.env.field.cronDriftExpress')} 
                             required={true} 
                             labelCol={{ span: 8 }}
                             wrapperCol={{ span: 16 }}
@@ -491,11 +487,11 @@ const Setting = () => {
                                   rules={[
                                     {
                                       required: true,
-                                      message: '请输入crontab表达式'
+                                      message: t('define.form.input.placeholder')
                                     }
                                   ]}
                                 >
-                                  <Input disabled={locked} placeholder={'*/10 * * * * 代表每隔10分钟执行一次'} /> 
+                                  <Input disabled={locked} placeholder={t('define.env.field.cronDriftExpress.placeholder')} /> 
                                 </Form.Item>
                               </Col>
                               <Col flex={2}>
@@ -503,13 +499,13 @@ const Setting = () => {
                                   placement='topRight'
                                   content={(
                                     <>
-                                      <div>最小时间单位为分钟, 支持 "分 时 日 月 周"</div>
-                                      <div style={{ fontWeight: 500 }}>举例：</div>
+                                      <div>{t('define.env.field.cronDriftExpress.example.title')}</div>
+                                      <div style={{ fontWeight: 500 }}>{t('define.env.field.cronDriftExpress.example.subTitle')}</div>
                                       <div>
-                                        1.每隔1 分钟执行一次 */1 * * * *<br/>
-                                        2.每天 23点 执行一次 0 23 * * *<br/>
-                                        3.每个月1号23 点执行一次 0 23 1 * *<br/>
-                                        4.每天的0点、13点、18点、21点都执行一次：0 0,13,18,21 * * *<br/>
+                                        {t('define.env.field.cronDriftExpress.example.1')}<br/>
+                                        {t('define.env.field.cronDriftExpress.example.2')}<br/>
+                                        {t('define.env.field.cronDriftExpress.example.3')}<br/>
+                                        {t('define.env.field.cronDriftExpress.example.4')}<br/>
                                       </div>
                                     </>
                                   )}
@@ -526,7 +522,7 @@ const Setting = () => {
                             initialValue={false}
                             className='ant-form-item-no-min-height'
                           >
-                            <Checkbox disabled={locked} onChange={e => checkedChange(e, '自动纠正漂移', 'openCronDrift')}>自动纠漂</Checkbox>                  
+                            <Checkbox disabled={locked} onChange={e => checkedChange(e, t('define.autoRepairDrift'), 'openCronDrift')}>{t('define.autoRepairDrift')}</Checkbox>                  
                           </Form.Item>
                         </>
                       ) : null}
@@ -540,37 +536,36 @@ const Setting = () => {
           {
             PROJECT_OPERATOR ? (
               <Row style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
-                <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} >保存</Button>
+                <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} >{t('define.action.save')}</Button>
               </Row>
             ) : null
           }
           <Card
-            title={'其它'}
+            title={t('define.other')}
           >
             <Row justify='center' style={{ margin: '10px 0px 20px 0px' }}>
               <Col span={21}>
-                <span>环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。</span>
+                <span>
+                  {envInfo.locked ? t('define.env.action.unlock.des') : t('define.env.action.lock.des')}
+                </span>
               </Col>
               <Col span={3} style={{ textAlign: "right" }}>
                 {PROJECT_APPROVER && <div>{
                   !envInfo.locked ? (
-                    <Tooltip title='锁定当前环境'><Button onClick={() => onLock('lock')} >锁定环境</Button></Tooltip>
-                  ) :
-                    (<Tooltip title='解锁当前环境'>
-                      <Button onClick={() => {
-                        clickLock();
-                        console.log(envInfo.locked);
-                      }}
-                      >解锁环境</Button></Tooltip>)}</div>}
+                    <Button onClick={() => onLock('lock')} >{t('define.env.action.lock')}</Button>
+                  ) : (
+                    <Button onClick={() => clickLock()}>{t('define.env.action.unlock')}</Button>
+                  )
+                }</div>}
               </Col>
             </Row>
             <hr style={{ backgroundColor: "rgba(225, 228, 232, 1)", height: "2px", border: "none" }} />
             <Row style={{ alignItems: "center", margin: '22px 0px 26px 0px' }} >
               <Col span={21} >
-                <span>对于已销毁并不再使用的环境可以进行归档，环境归档后将从环境列表中消失。</span>
+                <span>{t('define.env.action.archive.des')}</span>
               </Col>
               <Col span={3} style={{ textAlign: "right" }}>
-                <Button loading={fileLoading} onClick={showConfirm} disabled={envInfo.status !== 'inactive'} >归档环境</Button>
+                <Button loading={fileLoading} onClick={showConfirm} disabled={envInfo.status !== 'inactive'} >{t('define.env.action.archive')}</Button>
               </Col>
             </Row>
           </Card>

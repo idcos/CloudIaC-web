@@ -32,14 +32,14 @@ import DetailPageContext from './detail-page-context';
 import { t } from 'utils/i18n';
 
 const subNavs = {
-  overview: '概览',
-  resource: '资源',
+  overview: t('define.overview'),
+  resource: t('define.resource'),
   output: 'Output',
-  deployJournal: '部署日志',
-  deployHistory: '部署历史',
-  variable: '变量',
-  compInfo: '合规状态',
-  setting: '设置'
+  deployJournal: t('task.deployLog.name'),
+  deployHistory: t('define.deployHistory'),
+  variable: t('define.variable'),
+  compInfo: t('policy.detection.complianceStatus'),
+  setting: t('define.setting')
 };
 
 const EnvDetail = (props) => {
@@ -140,37 +140,35 @@ const EnvDetail = (props) => {
   const destroy = () => {
     Modal.confirm({
       width: 480,
-      title: `你确定要销毁环境“${envInfo.name}”吗？`,
+      title: `${t('define.env.action.destroy.confirm.title.prefix')} “${envInfo.name}”?`,
       icon: <InfoCircleFilled />,
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
       content: (
         <>
-          <div style={{ marginBottom: 29 }}>销毁资源将删除环境所有资源</div>
+          <div style={{ marginBottom: 29 }}>{t('define.env.action.destroy.confirm.content.des')}</div>
           <Form layout='vertical' requiredMark='optional' form={form}>
             <Form.Item
               name='name'
-              label='输入环境名称以确认'
+              label={t('define.env.action.destroy.confirm.content.field.name')}
               rules={[
-                { required: true, message: '请输入环境名称' },
+                { required: true, message: t('define.form.input.placeholder') },
                 () => ({
                   validator(_, value) {
                     if (!value || envInfo.name === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('环境名称不一致!'));
+                    return Promise.reject(new Error(t('define.env.action.destroy.confirm.content.field.name.noSameError')));
                   }
                 })
               ]}
             >
-              <Input placeholder='请输入环境名称' />
+              <Input placeholder={t('define.form.input.placeholder')} />
             </Form.Item>
           </Form>
         </>
       ),
-      okText: '确认',
-    	cancelText: '取消',
       onOk: async () => {
         const values = await form.validateFields();
         const res = await envAPI.envDestroy({ orgId, projectId, envId });
@@ -289,7 +287,7 @@ const EnvDetail = (props) => {
                       </Tooltip>
                     ) : null
                   }
-                  {envInfo.isDrift && <Tag style={{ margin: 0 }} color={'orange'}>漂移</Tag>}
+                  {envInfo.isDrift && <Tag style={{ margin: 0 }} color={'orange'}>{t('define.drift')}</Tag>}
                   <PolicyStatus style={{ margin: 0 }} policyStatus={envInfo.policyStatus} onlyShowResultStatus={true} />
                 </div>
                 <EnvTags
@@ -305,8 +303,8 @@ const EnvDetail = (props) => {
             subDes={
               PROJECT_OPERATOR ? (
                 <Space>
-                  <Button disabled={envInfo.locked} onClick={destroy}>销毁资源</Button>
-                  <Button onClick={redeploy} type='primary'>重新部署</Button>
+                  <Button disabled={envInfo.locked} onClick={destroy}>{t('define.env.action.destroy')}</Button>
+                  <Button onClick={redeploy} type='primary'>{t('define.redeployment')}</Button>
                 </Space>
               ) : null
             }

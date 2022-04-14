@@ -10,11 +10,11 @@ import getPermission from "utils/permission";
 import { t } from 'utils/i18n';
 
 const envNavs = {
-  '': '全部',
-  active: '活跃',
-  approving: '待审批',
-  inactive: '已销毁',
-  failed: '失败'
+  '': t('define.all'),
+  active: t('env.status.active'),
+  approving: t('env.status.approving'),
+  inactive: t('env.status.inactive'),
+  failed: t('env.status.failed')
 };
 
 const Envs = (props) => {
@@ -38,7 +38,7 @@ const Envs = (props) => {
                 history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
               }} 
               type='primary'
-            >部署新环境</Button>
+            >{t('define.deployEnv')}</Button>
           ) : null
         )}
       />}
@@ -62,7 +62,7 @@ const Envs = (props) => {
             <Input
               style={{ width: 400 }}
               allowClear={true}
-              placeholder='请输入环境名称、标签或云模板名称搜索'
+              placeholder={t('define.env.search.placeholder')}
               prefix={<SearchOutlined />}
               defaultValue={query.q}
               onPressEnter={(e) => {

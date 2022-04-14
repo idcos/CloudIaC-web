@@ -2,6 +2,7 @@ import React, { memo, useContext } from 'react';
 import { createBrowserHistory } from 'history';
 import cenvAPI from 'services/cenv';
 import envAPI from 'services/env';
+import { t } from 'utils/i18n';
 import DetectionCard from 'components/detection-card';
 import DetailPageContext from '../detail-page-context';
 
@@ -28,7 +29,7 @@ const ComplianceInfo = () => {
           onSuccessCallback={reload}
           disableEmptyDescription={
             <span>
-              <span>未开启合规检测，</span><a onClick={openComplianceScan}>去开启</a>
+              <span>{t('define.noOpenComplianceScan')}</span><a onClick={openComplianceScan}>{t('define.action.goOpen')}</a>
             </span>
           }
         />

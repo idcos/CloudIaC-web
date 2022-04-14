@@ -11,6 +11,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PolicyStatus from 'components/policy-status';
 import EnvTags from '../env-tags';
 import envAPI from 'services/env';
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const EnvList = (props) => {
@@ -62,7 +63,7 @@ const EnvList = (props) => {
         return '-';
       case 0:
       case '0':
-        return '不限制';
+        return t('define.noLimit');
       default:
         const it = AUTO_DESTROY.find(d => d.code === ttl) || {};
         return it.name;
@@ -134,24 +135,24 @@ const EnvList = (props) => {
             labelStyle={{ color: '#24292F' }}
             contentStyle={{ color: '#57606A' }}
           >
-            <Descriptions.Item label='存活时间'>{formatTTL(data)}</Descriptions.Item>
-            <Descriptions.Item label='云模板'>{data.templateName || '-'}</Descriptions.Item>
-            <Descriptions.Item label='资源数'>{data.resourceCount || '-'}</Descriptions.Item>
-            <Descriptions.Item label='更新时间'>{timeUtils.format(data.updatedAt) || '-'}</Descriptions.Item>
+            <Descriptions.Item label={t('define.env.field.lifeTime')}>{formatTTL(data)}</Descriptions.Item>
+            <Descriptions.Item label={t('define.scope.template')}>{data.templateName || '-'}</Descriptions.Item>
+            <Descriptions.Item label={t('define.env.field.resourcesNum')}>{data.resourceCount || '-'}</Descriptions.Item>
+            <Descriptions.Item label={t('define.updateTime')}>{timeUtils.format(data.updatedAt) || '-'}</Descriptions.Item>
             {
               open && (
                 <>
-                  <Descriptions.Item label='Commit_ID'>{(data.commitId || '').substring(0, 12) || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='分支/标签'>{data.revision || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='密钥'>{data.keyName || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='tfvars文件'>{data.tfVarsFile || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='playbook文件'>{data.playbook || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='部署通道'>{data.runnerId || '-'}</Descriptions.Item>
+                  <Descriptions.Item label='Commit ID'>{(data.commitId || '').substring(0, 12) || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={`${t('define.branch')}/${t('define.tag')}`}>{data.revision || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={t('define.ssh')}>{data.keyName || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={t('define.variable.tfVarsFile')}>{data.tfVarsFile || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={t('define.variable.playbook')}>{data.playbook || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={t('define.env.field.runner')}>{data.runnerId || '-'}</Descriptions.Item>
                   <Descriptions.Item label='target'>{data.target || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='推送到分支时重新部署'>{(data.triggers || []).includes('commit') ? '是' : '否' }</Descriptions.Item>
-                  <Descriptions.Item label='PR/MR时执行PLAN'>{(data.triggers || []).includes('prmr') ? '是' : '否' }</Descriptions.Item>
-                  <Descriptions.Item label='创建人'>{data.creator || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='创建时间'>{timeUtils.format(data.createdAt) || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={t('define.env.field.triggers.commit')}>{(data.triggers || []).includes('commit') ? t('define.yes') : t('define.no') }</Descriptions.Item>
+                  <Descriptions.Item label={t('define.env.field.triggers.prmr')}>{(data.triggers || []).includes('prmr') ? t('define.yes') : t('define.no') }</Descriptions.Item>
+                  <Descriptions.Item label={t('define.creator')}>{data.creator || '-'}</Descriptions.Item>
+                  <Descriptions.Item label={t('define.createdAt')}>{timeUtils.format(data.createdAt) || '-'}</Descriptions.Item>
                 </>
               )
             }

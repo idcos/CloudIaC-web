@@ -99,7 +99,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='绑定策略组'
+            placeholder={t('define.ct.field.policyGroup')}
             showArrow={true}
             optionFilterProp='label'
             allowClear={true}

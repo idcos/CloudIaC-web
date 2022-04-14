@@ -88,7 +88,7 @@ const TableLayout = ({ setMode }) => {
   const columns = [
     {
       dataIndex: 'provider',
-      title: '云平台',
+      title: t('define.resource.field.provider'),
       ellipsis: true,
       width: 220
     },
@@ -100,7 +100,7 @@ const TableLayout = ({ setMode }) => {
     },
     {
       dataIndex: 'count',
-      title: '数量',
+      title: t('define.count'),
       ellipsis: true,
       width: 80
     },
@@ -120,16 +120,16 @@ const TableLayout = ({ setMode }) => {
     },
     {
       dataIndex: 'module',
-      title: '模块',
+      title: t('define.resource.field.module'),
       ellipsis: true,
       width: 200
     },
     {
       dataIndex: 'isDrift',
-      title: '是否漂移',
+      title: t('define.resource.field.isDrift'),
       ellipsis: true,
       width: 120,
-      render: T => T ? <Tag color='green'>是</Tag> : <Tag>否</Tag>
+      render: T => T ? <Tag color='green'>{t('define.yes')}</Tag> : <Tag>{t('define.no')}</Tag>
     }
   ];
 
@@ -138,12 +138,12 @@ const TableLayout = ({ setMode }) => {
       <Space size='middle' direction='vertical' style={{ width: '100%' }}>
         <Row justify='space-between'>
           <Input.Search
-            placeholder='请输入关键字搜索'
+            placeholder={t('define.form.input.search.placeholder.key')}
             style={{ width: 240 }}
             onSearch={v => setSearch(v)}
           />
           {type === 'env' && (
-            <Button onClick={() => setMode('graph')} icon={<FundViewOutlined />}>切换图形展示</Button>
+            <Button onClick={() => setMode('graph')} icon={<FundViewOutlined />}>{t('define.resource.action.changeGraphMode')}</Button>
           )}
         </Row>
         <Table

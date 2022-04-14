@@ -5,6 +5,7 @@ import getPermission from "utils/permission";
 import taskAPI from 'services/task';
 import { timeUtils } from "utils/time";
 import DeployLogCard from 'components/deploy-log-card';
+import { t } from 'utils/i18n';
 import styles from '../styles.less';
 import DetailPageContext from '../detail-page-context';
 
@@ -45,7 +46,7 @@ const deployJournal = () => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: "获取失败",
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -61,7 +62,7 @@ const deployJournal = () => {
         throw new Error(res.message);
       }
       notification.success({
-        message: "操作成功"
+        message: t('define.message.opSuccess')
       });
       form.resetFields();
       fetchComments();
@@ -76,7 +77,7 @@ const deployJournal = () => {
     <div className={styles.deployJournal}>
       <DeployLogCard taskInfo={taskInfo} envInfo={envInfo} reload={reload}/>
       <Collapse expandIconPosition={'right'} style={{ marginTop: 24 }} defaultActiveKey={[]} forceRender={true}>
-        <Panel header={<span>评论（{comments.length}）</span>} key='1'>
+        <Panel header={<span>{t('define.comment')}（{comments.length}）</span>} key='1'>
           <List
             loading={loading}
             itemLayout='horizontal'
@@ -101,15 +102,15 @@ const deployJournal = () => {
             PROJECT_OPERATOR ? (
               <Form layout='vertical' onFinish={onFinish} form={form}>
                 <Form.Item
-                  label='描述'
+                  label={t('define.des')}
                   name='comment'
                   rules={[
                     {
-                      message: "请输入"
+                      message: t('define.form.input.placeholder')
                     }
                   ]}
                 >
-                  <Input.TextArea placeholder='请输入评论内容' />
+                  <Input.TextArea placeholder={t('define.form.input.placeholder')} />
                 </Form.Item>
                 <Form.Item shouldUpdate={true}>
                   {({ getFieldValue }) => (
@@ -120,7 +121,7 @@ const deployJournal = () => {
                         !getFieldValue("comment") 
                       }
                     >
-                      发表评论
+                      {t('define.comment.publish')}
                     </Button>
                   )}
                 </Form.Item>

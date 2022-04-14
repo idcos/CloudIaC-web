@@ -4,6 +4,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import { chartUtils } from 'components/charts-cfg';
+import { t } from 'utils/i18n';
 
 export default ({ orgId, projectId, envId }) => {
   const cost_type_pie = useRef();
@@ -11,8 +12,8 @@ export default ({ orgId, projectId, envId }) => {
   const [ list, setList ] = useState([]);
 
   let CHART = useRef([
-    { key: 'cost_type_pie', domRef: cost_type_pie, ins: null, title: '费用类型' },
-    { key: 'cost_stacked_area', domRef: cost_stacked_area, ins: null, title: '费用趋势' }
+    { key: 'cost_type_pie', domRef: cost_type_pie, ins: null, title: t('define.resource.costType') },
+    { key: 'cost_stacked_area', domRef: cost_stacked_area, ins: null, title: t('define.resource.costTrend') }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
 
@@ -44,34 +45,34 @@ export default ({ orgId, projectId, envId }) => {
   const columns = [
     {
       dataIndex: 'resType',
-      title: '资源类型',
+      title: t('env.resource.mode.type'),
       width: 150,
       ellipsis: true
     },
     {
       dataIndex: 'resAttr',
-      title: '资源属性',
+      title: t('define.resource.props'),
       width: 150,
       ellipsis: true,
       render: (text) => text || '-'
     },
     {
       dataIndex: 'instanceId',
-      title: '实例ID',
+      title: t('define.resource.instanceID'),
       width: 150,
       ellipsis: true,
       render: (text) => text || '-'
     },
     {
       dataIndex: 'curMonthCost',
-      title: '当月费用（元）',
+      title: t('define.resource.curMonthCost'),
       width: 80,
       ellipsis: true,
       render: (text) => text || '-'
     },
     {
       dataIndex: 'totalCost',
-      title: '总费用（元）',
+      title: t('define.resource.totalCost'),
       width: 80,
       ellipsis: true,
       render: (text) => text || '-'

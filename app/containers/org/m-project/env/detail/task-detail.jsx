@@ -16,14 +16,15 @@ import Variable from './components/variable';
 import TaskInfo from './components/taskInfo';
 import ComplianceInfo from './components/compliance-info';
 import DetailPageContext from './detail-page-context';
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const subNavs = {
-  deployJournal: '部署日志',
-  resource: '资源',
-  compInfo: '合规状态',
+  deployJournal: t('task.deployLog.name'),
+  resource: t('define.resource'),
+  compInfo: t('policy.detection.complianceStatus'),
   output: 'Output',
-  variable: '变量'
+  variable: t('define.variable')
 };
 
 const TaskDetail = (props) => {

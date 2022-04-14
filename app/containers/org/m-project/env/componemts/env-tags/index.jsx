@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import noop from 'lodash/noop';
 import styles from './styles.less';
 import classNames from 'classnames';
+import { t } from 'utils/i18n';
 
 export default ({
   tags,
@@ -72,7 +73,7 @@ export default ({
         ) : (
           <Tag className='add-tag-btn' onClick={showEditInput}>
             <Space size={4}>
-              <PlusOutlined />添加标签
+              <PlusOutlined />{t('define.addTag')}
             </Space>
           </Tag>
         )

@@ -134,7 +134,7 @@ const CCTList = () => {
   // 开启/关闭合规检测
   const switchEnabled = ({ enabled, id, policyGroups, name }) => {
     if (enabled) {
-      openBindPolicyGroupModal({ id, policyGroups, title: '开启合规检测' }, () => {
+      openBindPolicyGroupModal({ id, policyGroups, title: t('define.ct.field.policyEnable') }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
@@ -162,12 +162,12 @@ const CCTList = () => {
     },
     {
       dataIndex: 'policyGroups',
-      title: '绑定策略组',
+      title: t('define.ct.field.policyGroup'),
       width: 220,
       ellipsis: true,
       render: (policyGroups, record) => {
         return (
-          <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
+          <a onClick={() => openBindPolicyGroupModal({ ...record, title: t('define.ct.field.policyGroup') })}>
             {policyGroups.length > 0 ? (
               policyGroups.map(it => it.name).join('、')
             ) : '-'}
@@ -258,7 +258,7 @@ const CCTList = () => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='云模板'
+      title={t('define.scope.template')}
       breadcrumb={true}
     />}
   >

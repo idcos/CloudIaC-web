@@ -121,13 +121,13 @@ const PolicyGroupList = ({ match }) => {
     },
     {
       dataIndex: 'description',
-      title: '描述',
+      title: t('define.des'),
       width: 170,
       ellipsis: true
     },
     {
       dataIndex: 'labels',
-      title: '标签',
+      title: t('define.tag'),
       width: 370,
       ellipsis: true,
       render: (text) => {
@@ -205,7 +205,7 @@ const PolicyGroupList = ({ match }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title={'策略组'}
+      title={t('define.policyGroup')}
       breadcrumb={true}
     />}
   >

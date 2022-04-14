@@ -182,8 +182,8 @@ const OnlineTest = ({ match = {} }) => {
                           style={{ width: '31%' }} 
                           placeholder={t('define.type')}
                           options={[
-                            { label: '云模版', value: 'template' },
-                            { label: '环境', value: 'env' }
+                            { label: t('define.scope.template'), value: 'template' },
+                            { label: t('define.scope.env'), value: 'env' }
                           ]}
                           onChange={setParseType}
                           value={parseType}

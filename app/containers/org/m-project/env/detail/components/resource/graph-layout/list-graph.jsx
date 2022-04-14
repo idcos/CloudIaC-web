@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Space, Spin, Row, Col, Tooltip } from 'antd';
 import classNames from 'classnames';
+import { t } from 'utils/i18n';
 import { filterListData } from './util';
 import styles from './styles.less';
 
@@ -15,11 +16,11 @@ const ListGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
       <Space className='explain' size={16}>
         <div className='explain-item resource'>
           <span className='icon'></span>
-          <span className='text'>资源</span>
+          <span className='text'>{t('define.resource')}</span>
         </div>
         <div className='explain-item deviation'>
           <span className='icon'></span>
-          <span className='text'>漂移</span>
+          <span className='text'>{t('define.drift')}</span>
         </div>
       </Space>
       {loading ? (

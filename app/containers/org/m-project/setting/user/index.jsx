@@ -118,11 +118,10 @@ const User = ({ orgId, projectId }) => {
   const remove = ({ id, name }) => {
     Modal.confirm({
       width: 480,
-      title: `你确定要移除 ${name} 用户吗？`,
-      content: `该操作将同时把该用户从参与的项目中移除`,
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
+      content: t('define.project.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
-      okText: '移除',
-      cancelText: '取消',
+      okText: t('define.org.user.action.remove'),
       okButtonProps: {
         danger: true
       },
@@ -156,13 +155,13 @@ const User = ({ orgId, projectId }) => {
     },
     {
       dataIndex: 'updatedAt',
-      title: '加入时间',
+      title: t('define.org.user.createdAt'),
       ellipsis: true,
       width: 180,
       render: (text) => moment(text).format(dateFormat)
     },
     {
-      title: '项目角色',
+      title: t('define.org.user.role'),
       ellipsis: true,
       width: 180,
       render: (record) => {
@@ -184,7 +183,7 @@ const User = ({ orgId, projectId }) => {
       render: (_text, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' onClick={() => remove(record)}>移除</Button>
+            <Button type='link' onClick={() => remove(record)}>{t('define.org.user.action.remove')}</Button>
           </div>
         );
       }
@@ -198,7 +197,7 @@ const User = ({ orgId, projectId }) => {
         onClick={() => {
           toggleVisible();
         }}
-      >添加用户</Button>
+      >{t('define.project.user.action.add')}</Button>
     </div>
     <Table
       columns={columns}

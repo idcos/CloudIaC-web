@@ -52,7 +52,7 @@ const DeployHistory = () => {
   const columns = [
     {
       dataIndex: 'type',
-      title: '作业类型',
+      title: t('define.task.field.type'),
       width: 168,
       ellipsis: true,
       render: (t, r) => <span>{TASK_TYPE[t] || '-'}</span>
@@ -81,7 +81,7 @@ const DeployHistory = () => {
     },
     {
       dataIndex: 'result',
-      title: '资源变更',
+      title: t('define.task.field.result'),
       width: 120,
       ellipsis: true,
       render: (t, r) => {
@@ -90,21 +90,21 @@ const DeployHistory = () => {
     },
     {
       dataIndex: 'createdAt',
-      title: '开始执行时间',
+      title: t('define.task.field.createdAt'),
       width: 178,
       ellipsis: true,
       render: (t) => timeUtils.format(t)
     },
     {
       dataIndex: 'startAt',
-      title: '执行时长',
+      title: t('define.task.field.duration'),
       width: 178,
       ellipsis: true,
       render: (t, r) => timeUtils.diff(r.endAt, t)
     },
     {
       dataIndex: 'source',
-      title: '触发类型',
+      title: t('define.task.field.source'),
       width: 120,
       render: (t, { sourceSys }) => (
         <>
@@ -114,7 +114,7 @@ const DeployHistory = () => {
     },
     {
       dataIndex: 'creator',
-      title: '执行人',
+      title: t('define.task.field.creator'),
       width: 120,
       ellipsis: true
     },
@@ -124,12 +124,12 @@ const DeployHistory = () => {
       width: 90,
       ellipsis: true,
       fixed: 'right',
-      render: (t, r) => {
+      render: (_, r) => {
         return (<a
           onClick={() => {
             history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${r.id}`); 
           }}
-        >进入详情</a>); 
+        >{t('define.action.enter')}</a>); 
       }
     }
   ];
@@ -159,26 +159,26 @@ const DeployHistory = () => {
   }, [searchCount]);
 
   const title = <div>
-    <span style={{ lineHeight: "32px" }}>部署历史</span>
+    <span style={{ lineHeight: "32px" }}>{t('define.deployHistory')}</span>
     <span style={{ float: "right" }}>
       <Space>
         <Select 
           allowClear={true}
           style={{ width: 258 }}
-          placeholder='请选择触发类型'
+          placeholder={t('define.task.search.source')}
           options={triggerTypeArr()}
           onChange={(value) => searchParamsChange({ source: value })}
         ></Select>
         <Select 
           allowClear={true}
           style={{ width: 258 }}
-          placeholder='请选择任务类型'
+          placeholder={t('define.task.search.taskType')}
           options={taskTypeArr()}
           onChange={(value) => searchParamsChange({ taskType: value })}
         ></Select>
         <Search 
           allowClear={true}
-          placeholder='请输入执行人姓名' 
+          placeholder={t('define.task.search.user')} 
           onSearch={(value) => searchParamsChange({ user: value })} 
           style={{ width: 296 }} 
         />

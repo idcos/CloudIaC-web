@@ -3,11 +3,7 @@ import React, { useState } from 'react';
 import { Button, Modal, notification, Space } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import envAPI from 'services/env';
-
-const FL = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 14 }
-};
+import { t } from 'utils/i18n';
 
 export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, envId }) => {
   const [ loading, setLoading ] = useState(false);
@@ -50,7 +46,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
     title={
       <span>
         <InfoCircleFilled style={{ color: '#DD2B0E', marginRight: 8, fontSize: 21 }} />
-        <span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`锁定环境 “${envInfo.name}”`}</span>
+        <span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`${lockType === 'lock' ? t('define.env.action.lock') : t('define.env.action.unlock')} “${envInfo.name}”`}</span>
       </span>
     }
     visible={true}
@@ -60,10 +56,10 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
     footer={
       <Space>
         <Button key='back' className='ant-btn-tertiary' onClick={toggleVisible}>
-          取消
+          {t('define.ct.import.action.cancel')}
         </Button>
         {lockType !== 'lock' && <Button key='submit' loading={clearLoading} onClick={() => onClear(true)}>
-          取消定时销毁且解锁
+          {t('define.env.action.unlock.confirm.action.cancelTiming')}
         </Button>}
         <Button
           key='link'
@@ -77,20 +73,18 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
             }
           }}
         >
-          确认锁定
+          {lockType === 'lock' ? t('define.env.action.lock.confirm.action.confirmLock') : t('define.env.action.unlock.confirm.action.confirmLock')}
         </Button>
       </Space>
     }
   >
     {lockType === 'lock' ? (
       <div style={{ color: 'rgba(87, 96, 106, 100)' }}>
-        环境锁定后该环境将拒绝执行apply任务，包括『自动纠正漂移』、『定时销毁』、API触发的部署等任务，但漂移检测等plan类型任务可以照常执行。
+        {t('define.env.action.lock.des')}
       </div>
     ) : (
       <div style={{ color: 'rgba(87, 96, 106, 100)' }}>
-        <div >当前环境设置了定时销毁，并已过了定时销毁时间，解锁后将立即<br />
-          触发定时销毁任务，如不想销毁该环境，请选择<br />
-          『清除定时销毁并解锁』</div>
+        {t('define.env.action.unlock.des')}
       </div>
     )}
   </Modal>;

@@ -87,7 +87,7 @@ export default () => {
         </Form.Item>
         <Form.Item 
           name='labels' 
-          label='标签'
+          label={t('define.tag')}
         >
           <Select 
             mode='tags' 
