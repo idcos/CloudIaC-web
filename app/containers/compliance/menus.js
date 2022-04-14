@@ -21,7 +21,7 @@ export const getComplianceMenus = () => {
       icon: <ControlOutlined />
     },
     {
-      subName: '合规配置',
+      subName: t('define.complianceConfig'),
       subKey: 'compliance-config',
       emptyMenuList: [],
       menuList: [
@@ -38,7 +38,7 @@ export const getComplianceMenus = () => {
       ]
     },
     {
-      subName: '策略管理',
+      subName: t('define.policyManagement'),
       subKey: 'policy-config',
       emptyMenuList: [],
       menuList: [

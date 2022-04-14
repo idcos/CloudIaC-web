@@ -9,7 +9,7 @@ import EllipsisText from 'components/EllipsisText';
 import { t } from 'utils/i18n';
 
 const FL = {
-  labelCol: { span: 6 },
+  labelCol: { span: 7 },
   wrapperCol: { span: 16 }
 };
 
@@ -88,12 +88,12 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
         form={form}
       >
         <Form.Item
-          label='环境绑定策略组'
+          label={t('define.ct.field.policyGroup')}
           name='policyGroupIds'
           rules={[
             {
               required: true,
-              message: '请绑定策略组'
+              message: t('define.ct.field.policyGroup')
             }
           ]}
         >

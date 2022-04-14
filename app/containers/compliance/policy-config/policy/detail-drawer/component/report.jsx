@@ -72,13 +72,13 @@ export default ({ policyId }) => {
   const columns = [
     {
       dataIndex: 'templateName',
-      title: '云模板名称',
+      title: t('define.ct.name'),
       width: 280,
       ellipsis: true
     },
     {
       dataIndex: 'envName',
-      title: '环境名称',
+      title: t('define.env.name'),
       width: 280,
       ellipsis: true,
       render: (text) => text || '-'
@@ -95,10 +95,10 @@ export default ({ policyId }) => {
   return (
     <Space direction='vertical' size='middle' style={{ width: '100%', display: 'flex' }}>
       <Card 
-        title='报表内容' 
+        title={t('define.report.content')}
         type='inner' 
         headStyle={{ borderBottom: 'none', marginBottom: 0 }} 
-        bodyStyle={{ minHeight: 300, backgroundColor: 'rgba(230, 240, 240, 0.7)', padding: '0 16px' }}
+        bodyStyle={{ minHeight: 300, backgroundColor: 'rgba(230, 240, 240, 0.7)', padding: '16px 16px 0' }}
       >
         <Spin spinning={reportLoading}>
           <Row gutter={[ 16, 16 ]}>
@@ -112,7 +112,7 @@ export default ({ policyId }) => {
           </Row>
         </Spin>
       </Card>
-      <Card title='错误列表' type='inner' bodyStyle={{ minHeight: 300 }}>
+      <Card title={t('define.error.table')} type='inner' bodyStyle={{ minHeight: 300 }}>
         <Table
           columns={columns}
           scroll={{ x: 'min-content' }}

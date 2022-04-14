@@ -47,7 +47,7 @@ export const EnvStat = ({ showData = [], total = 0 }) => {
         width: 32
       },
       { 
-        title: '环境名称', 
+        title: t('define.env.name'), 
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
@@ -144,7 +144,7 @@ export const ResStat = ({ showData = [], total = 0 }) => {
         width: 32
       },
       { 
-        title: '环境名称', 
+        title: t('define.env.name'), 
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
@@ -261,7 +261,7 @@ export const EnvResStat = ({ showData }) => {
         width: 32
       },
       { 
-        title: '环境名称', 
+        title: t('define.env.name'), 
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
@@ -371,7 +371,7 @@ export const ResGrowTrend = ({ showData = [] }) => {
         width: 32
       },
       { 
-        title: '环境名称', 
+        title: t('define.env.name'), 
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (

@@ -111,7 +111,7 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'repoAddr',
-      title: t('define.repoAddr'),
+      title: t('define.repo'),
       width: 249,
       ellipsis: true,
       render: (text) => (

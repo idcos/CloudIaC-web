@@ -69,14 +69,14 @@ export default ({ policyId, visible, onClose, reload }) => {
   const save = async () => {
     const { reason } = await form.validateFields();
     if (isEmpty(addTargetIds)) {
-      return notification.error({ message: '请勾选来源' });
+      return notification.error({ message: t('define.suppress.error.emptyTargetId') });
     }
     updateSuppress({ policyId, addTargetIds, reason });
   };
 
   return (
     <Drawer
-      title='屏蔽'
+      title={t('define.scan.status.suppressed')}
       visible={visible}
       onClose={onClose}
       width={700}
@@ -84,13 +84,13 @@ export default ({ policyId, visible, onClose, reload }) => {
       footerStyle={{ textAlign: 'right' }}
       footer={
         <Space>
-          <Button onClick={onClose}>取消</Button>
-          <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
+          <Button onClick={onClose}>{t('define.action.cancel')}</Button>
+          <Button type='primary' onClick={save} loading={saveLoading}>{t('define.action.save')}</Button>
         </Space>
       }
     >
       <Alert 
-        message='提示：策略禁用后所有应用该策略的环境和云模板在执行检测时都将忽略该条策略'
+        message={t('define.suppress.alert.message')}
         type='error'
         showIcon={true}
         closable={true}
@@ -101,7 +101,7 @@ export default ({ policyId, visible, onClose, reload }) => {
         style={{ margin: '28px 0' }}
       >
         <Form.Item
-          label='屏蔽说明'
+          label={t('define.suppress.field.reason')}
           name='reason'
           rules={[
             {
@@ -110,10 +110,10 @@ export default ({ policyId, visible, onClose, reload }) => {
             }
           ]}
         >
-          <Input placeholder={'请填写屏蔽说明'}/>
+          <Input placeholder={t('define.form.input.placeholder')}/>
         </Form.Item>
       </Form>
-      <Card title='来源' type='inner'>
+      <Card title={t('define.suppress.source')} type='inner'>
         <Table 
           rowKey='targetId'
           loading={tableLoading}

@@ -140,11 +140,9 @@ const CCTList = () => {
     } else {
       Modal.confirm({
         width: 480,
-        title: `确认操作`,
-        content: `你确定要关闭${name}的合规检测吗？`,
+        title: t('define.confirm.title'),
+        content: `${t('define.closeComplianceScan.confirm.content.prefix')} ${name} ${t('define.closeComplianceScan.confirm.content.suffix')}`,
         icon: <InfoCircleFilled />,
-        okText: '确认',
-        cancelText: '取消',
         cancelButtonProps: {
           className: 'ant-btn-tertiary' 
         },
@@ -156,7 +154,7 @@ const CCTList = () => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模板名称',
+      title: t('define.ct.name'),
       width: 220,
       ellipsis: true
     },
@@ -177,22 +175,22 @@ const CCTList = () => {
     },
     {
       dataIndex: 'passed',
-      title: '通过',
+      title: t('define.scan.status.passed'),
       width: 48
     },
     {
       dataIndex: 'violated',
-      title: '不通过',
+      title: t('define.scan.status.violated'),
       width: 64
     },
     {
       dataIndex: 'suppressed',
-      title: '屏蔽',
+      title: t('define.scan.status.suppressed'),
       width: 48
     },
     {
       dataIndex: 'failed',
-      title: '失败',
+      title: t('define.scan.status.failed'),
       width: 48
     },
     {
@@ -211,7 +209,7 @@ const CCTList = () => {
     },
     {
       dataIndex: 'policyEnable',
-      title: '开启检测',
+      title: t('define.action.openScan'),
       width: 88,
       ellipsis: true,
       fixed: 'right',
@@ -242,13 +240,13 @@ const CCTList = () => {
               onClick={() => runScan({ id })}
               loading={scanLoading}
               disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
-            >检测</Button>
+            >{t('define.action.scan')}</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
               disabled={SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
-            >查看结果</Button>
+            >{t('define.action.viewResult')}</Button>
           </Space>
         );
       }
@@ -270,7 +268,7 @@ const CCTList = () => {
             <Input
               style={{ width: 320 }}
               allowClear={true}
-              placeholder='请输入云模版名称搜索'
+              placeholder={t('define.ct.search.placeholder')}
               prefix={<SearchOutlined />}
               onPressEnter={(e) => {
                 const q = e.target.value;

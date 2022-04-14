@@ -7,7 +7,7 @@ import { t } from 'utils/i18n';
 
 const { Option } = Select;
 const FL = {
-  labelCol: { span: 5 },
+  labelCol: { span: 7 },
   wrapperCol: { span: 16 }
 };
 
@@ -65,6 +65,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
   return (
     <Modal
       title={title}
+      width={600}
       visible={visible}
       onCancel={onClose}
       okButtonProps={{

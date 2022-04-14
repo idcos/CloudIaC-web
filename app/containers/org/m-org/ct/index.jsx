@@ -128,7 +128,7 @@ const CTList = ({ match = {} }) => {
     },
     {
       dataIndex: 'repoAddr',
-      title: t('define.repoAddr'),
+      title: t('define.repo'),
       width: 249,
       ellipsis: true,
       render: (text) => <a href={text} target='_blank'><EllipsisText>{text}</EllipsisText></a>

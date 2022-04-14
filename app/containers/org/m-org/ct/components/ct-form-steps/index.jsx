@@ -21,7 +21,7 @@ const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'repo', title: t('define.repoAddr'), Component: Repo },
+  { type: 'repo', title: t('define.repo'), Component: Repo },
   { type: 'variable', title: t('define.variable'), Component: Variable },
   { type: 'basic', title: t('define.setting'), Component: Basic },
   { type: 'relation', title: t('define.ct.import.init.associatedProject'), Component: Relation }

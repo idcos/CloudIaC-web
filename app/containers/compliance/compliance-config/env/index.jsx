@@ -155,11 +155,9 @@ const CenvList = () => {
     } else {
       Modal.confirm({
         width: 480,
-        title: `确认操作`,
-        content: `你确定要关闭${name}的合规检测吗？`,
+        title: t('define.confirm.title'),
+        content: `${t('define.closeComplianceScan.confirm.content.prefix')}${name}${t('define.closeComplianceScan.confirm.content.suffix')}`,
         icon: <InfoCircleFilled />,
-        okText: '确认',
-        cancelText: '取消',
         cancelButtonProps: {
           className: 'ant-btn-tertiary' 
         },
@@ -171,7 +169,7 @@ const CenvList = () => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '环境名称',
+      title: t('define.env.name'),
       width: 220,
       ellipsis: true
     },
@@ -207,39 +205,39 @@ const CenvList = () => {
     },
     {
       dataIndex: 'passed',
-      title: '通过',
+      title: t('define.scan.status.passed'),
       width: 48
     },
     {
       dataIndex: 'violated',
-      title: '不通过',
+      title: t('define.scan.status.violated'),
       width: 64
     },
     {
       dataIndex: 'suppressed',
-      title: '屏蔽',
+      title: t('define.scan.status.suppressed'),
       width: 48
     },
     {
       dataIndex: 'failed',
-      title: '失败',
+      title: t('define.scan.status.failed'),
       width: 48
     },
     {
       dataIndex: 'projectName',
-      title: '项目名称',
+      title: t('define.projectName'),
       width: 132,
       ellipsis: true
     },
     {
       dataIndex: 'templateName',
-      title: '云模板名称',
+      title: t('define.ct.name'),
       width: 132,
       ellipsis: true
     },
     {
       dataIndex: 'policyEnable',
-      title: '开启检测',
+      title: t('define.action.openScan'),
       width: 75,
       ellipsis: true,
       fixed: 'right',
@@ -270,13 +268,13 @@ const CenvList = () => {
               onClick={() => runScan({ id })}
               loading={scanLoading}
               disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
-            >检测</Button>
+            >{t('define.action.scan')}</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
               disabled={SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
-            >查看结果</Button>
+            >{t('define.action.viewResult')}</Button>
           </Space>
         );
       }
@@ -299,14 +297,14 @@ const CenvList = () => {
                 style={{ width: 282 }}
                 allowClear={true}
                 options={projectOptions}
-                placeholder='请选择项目'
+                placeholder={t('define.project.select.placeholder')}
                 value={form.projectId}
                 onChange={(projectId) => onChangeFormParams({ projectId })}
               />
               <Input
                 style={{ width: 320 }}
                 allowClear={true}
-                placeholder='请输入环境名称搜索'
+                placeholder={t('define.searchByEnvName.placeholder')}
                 prefix={<SearchOutlined />}
                 onPressEnter={(e) => {
                   const q = e.target.value;

@@ -4,6 +4,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
 import { POLICIES_SEVERITY_STATUS_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 import FixSuggestion from './component/fix-suggestion';
 import Report from './component/report';
 import Suppress from './component/suppress';
@@ -25,9 +26,9 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
   };
 
   const TabPaneMap = [
-    { key: 'report', tab: '报表', children: <Report policyId={id}/> },
-    { key: 'suppress', tab: '屏蔽', children: <Suppress policyId={id} detailInfo={detailInfo} reloadPolicyDetailAndList={reloadPolicyDetailAndList} /> },
-    { key: 'fix-suggestion', tab: '参考', children: <FixSuggestion content={detailInfo.fixSuggestion}/> }
+    { key: 'report', tab: t('define.report'), children: <Report policyId={id}/> },
+    { key: 'suppress', tab: t('define.scan.status.suppressed'), children: <Suppress policyId={id} detailInfo={detailInfo} reloadPolicyDetailAndList={reloadPolicyDetailAndList} /> },
+    { key: 'fix-suggestion', tab: t('define.suggestion'), children: <FixSuggestion content={detailInfo.fixSuggestion}/> }
   ];
 
   return (
@@ -42,8 +43,8 @@ export default ({ id, visible, onClose, reloadPolicyList }) => {
         column={3}
         labelStyle={{ width: 105, textAlign: 'right', display: 'block' }}
       >
-        <Descriptions.Item label='严重性'>{POLICIES_SEVERITY_STATUS_ENUM[detailInfo.severity] || '-'}</Descriptions.Item>
-        <Descriptions.Item label='策略ID'>{detailInfo.id}</Descriptions.Item>
+        <Descriptions.Item label={t('policy.detection.info.field.severity')}>{POLICIES_SEVERITY_STATUS_ENUM[detailInfo.severity] || '-'}</Descriptions.Item>
+        <Descriptions.Item label={`${t('define.policy')} ID`}>{detailInfo.id}</Descriptions.Item>
       </Descriptions>
       <Tabs
         type='card'

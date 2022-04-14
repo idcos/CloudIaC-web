@@ -102,26 +102,26 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
     },
     {
       dataIndex: 'type',
-      title: '屏蔽类型',
+      title: t('define.suppress.field.type'),
       width: 120,
       ellipsis: true,
       render: (text) => SUPPRESS_TYPE_ENUM[text]
     },
     {
       dataIndex: 'reason',
-      title: '屏蔽说明',
+      title: t('define.suppress.field.reason'),
       width: 149,
       ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '操作人',
+      title: t('define.suppress.field.creator'),
       width: 72,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '屏蔽时间',
+      title: t('define.suppress.field.createdAt'),
       width: 123,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm')
@@ -135,10 +135,10 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
         const { id } = record;
         const { loading: delLoading } = delOneSuppressFetches[id] || {};
         return <Popconfirm
-          title='确定要删除该屏蔽内容？'
+          title={t('define.suppress.action.delete.confirm.title')}
           onConfirm={() => delOneSuppress(id)}
         >
-          <Button type='link' style={{ padding: 0, fontSize: 12 }} loading={delLoading}>删除</Button>
+          <Button type='link' style={{ padding: 0, fontSize: 12 }} loading={delLoading}>{t('define.action.delete')}</Button>
         </Popconfirm>
       }
     }
@@ -151,11 +151,9 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
   const onSuppressPolicy = () => {
     Modal.confirm({
       width: 480,
-      title: '你确定要屏蔽此策略吗？',
-      content: '屏蔽此策略后，所有应用该策略的云模板和环境都将在检测过程中忽略此策略',
+      title: t('define.suppress.confirm.title'),
+      content: t('define.suppress.confirm.content'),
       icon: <InfoCircleFilled />,
-      okText: '确认',
-    	cancelText: '取消',
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
       },
@@ -164,14 +162,14 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
   };
 
   return (
-    <Card title='屏蔽内容' bodyStyle={{ minHeight: 300 }} type='inner'>
+    <Card title={t('define.suppress.title')} bodyStyle={{ minHeight: 300 }} type='inner'>
       <Space direction='vertical' size='middle' style={{ width: '100%' }}>
         <Space>
           <Button type='primary' onClick={onSuppressPolicy} disabled={!enabled}>
-            屏蔽此策略
+            {t('define.suppressType.policy')}
           </Button>
           <Button onClick={openSuppressFormDrawer} disabled={!enabled}>
-            按来源屏蔽
+            {t('define.suppressType.source')}
           </Button>
         </Space>
         <Table

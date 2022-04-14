@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Card } from 'antd';
 import { chartUtils } from 'components/charts-cfg';
 import { UpPointIcon, DownPointIcon } from 'components/iconfont';
+import { t } from 'utils/i18n';
 import styles from '../style.less';
 
 const Index = ({ summaryData = {} }) => {
@@ -36,13 +37,13 @@ const Index = ({ summaryData = {} }) => {
   >  
     <div className={styles.title} style={{ paddingBottom: 0 }}>
       <div className={styles.titleHeader}>
-        未解决错误策略
+        {t('define.unresolvedErrorPolicy')}
       </div>
       <div className={styles.titleContext}>
         {summaryData.total}
       </div>
       <div className={styles.titleFooter}>
-        <div className={styles.values}>最近15天</div>
+        <div className={styles.values}>{t('define.last15days')}</div>
         <div className={styles.icon}>
           {summaryData.changes != 0 && <span>{summaryData.changes > 0 ? <UpPointIcon style={{ padding: '0 5px' }}/> : <DownPointIcon style={{ padding: '0 5px' }}/>}</span>}
           {summaryData.changes != 0 && <span>{`${valueToPercent(summaryData.changes)}%`}</span>} </div>
