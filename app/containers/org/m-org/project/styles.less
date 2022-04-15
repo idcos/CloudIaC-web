@@ -2,10 +2,74 @@
 
 
 .projectList {
+  width: 100%;
 
   :global {
-    .btns {
-      margin-bottom: 20px;
+    .pjtBox {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      padding-left: 16px;
+
+
+      .pjtItemBox {
+        margin-top: 16px;
+        height: 145px;
+        border-radius: 3px;
+        background-color: rgba(255, 255, 255, 1);
+        border: 2px solid rgba(225, 228, 232, 1);
+        align-items: flex-start;
+        padding: 16px;
+        margin-right: 16px;
+        width: calc(25% - 16px);
+        cursor: pointer;
+
+        .pjtItemBox-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .pjtItemBox-header-left {
+            display: flex;
+            align-items: center;
+          }
+
+          .configBox {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:hover {
+              background-color: rgba(244, 245, 245, 1);
+            }
+          }
+
+          .configIcon:hover {
+            color: rgba(0, 130, 84, 1);
+          }
+        }
+
+        .project-report {
+          height: 54px;
+        }
+      }
+
+      .pjtItemBox:hover {
+        border-color: rgba(0, 130, 84, 1);
+      }
+
+      .creatPjtBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+        .plusIcon {
+          font-size: 20px;
+        }
+      }
     }
   }
 }

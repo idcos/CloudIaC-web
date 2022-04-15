@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, notification, Divider, Popconfirm } from 'antd';
+import { Button, Col, Row, notification, Divider, Popconfirm, Dropdown, Menu } from 'antd';
+import { PlusCircleOutlined, MinusOutlined } from '@ant-design/icons';
+import classNames from 'classnames';
 import moment from 'moment';
 import { connect } from "react-redux";
 import { Eb_WP } from 'components/error-boundary';
@@ -7,6 +9,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import OpModal from 'components/project-modal';
 import projectAPI from 'services/project';
+import ProjectCard from './components/projectCard';
 import { t } from 'utils/i18n';
 import styles from './styles.less';
 
@@ -21,7 +24,7 @@ const Index = (props) => {
     }),
     [ query, setQuery ] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 0
       // status: 'all'
     }),
     [ visible, setVisible ] = useState(false),
@@ -144,6 +147,7 @@ const Index = (props) => {
         [tableFilterFieldName]: combinedStatus || status,
         orgId: params.orgId
       });
+      console.log(res, 'tre');
       if (res.code != 200) {
         throw new Error(res.message);
       }
@@ -201,64 +205,49 @@ const Index = (props) => {
       });
     }
   };
+
   return <Layout
     extraHeader={<PageHeader
       title={t('define.scope.project')}
       breadcrumb={true}
     />}
   >
-    <div className='idcos-card'>
-      <div className={styles.projectList}>
-        <div className='btns'>
-          <Button type='primary' onClick={() => {
+    <div className={styles.projectList}>
+      <div className={'pjtBox'}>
+        <div 
+          onClick={() => {
             setOpt('add');
             toggleVisible();
-          }}
-          >{t('define.project.create')}</Button>
+          }} 
+          className={classNames('pjtItemBox', 'creatPjtBox')
+          }
+        >
+          <PlusCircleOutlined className={'plusIcon'} />{t('define.project.create')}
         </div>
-        <Table
-          columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          scroll={{ x: 'min-content' }}
-          onChange={(pagination, filters, sorter, { action }) => {
-            if (action == 'filter') {
-              const statusFilter = filters[tableFilterFieldName];
-              changeQuery({
-                status: 'all',
-                combinedStatus: statusFilter ? statusFilter.join(',') : undefined
-              });
-            }
-          }}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-            onChange: (page, pageSize) => {
-              changeQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
-          }}
-        />
         {
-          visible && <OpModal
-            visible={visible}
-            orgId={params.orgId}
-            opt={opt}
-            curRecord={record}
-            toggleVisible={toggleVisible}
-            reload={fetchList}
-            operation={operation}
-          />
+          resultMap.list.map((item, i) => {
+            return <ProjectCard 
+              setOpt={setOpt}
+              setRecord={setRecord}
+              toggleVisible={toggleVisible}
+              updateStatus={updateStatus}
+              item={item}
+            />;
+          })
         }
       </div>
+      {
+        visible && <OpModal
+          visible={visible}
+          orgId={params.orgId}
+          opt={opt}
+          curRecord={record}
+          toggleVisible={toggleVisible}
+          reload={fetchList}
+          operation={operation}
+        />
+      }
     </div>
-    
   </Layout>;
 };
 

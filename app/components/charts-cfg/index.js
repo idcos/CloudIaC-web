@@ -663,6 +663,38 @@ export const chartOptions = {
         }
       ]
     };
+  },
+  project_trend_Line: ({ costTypeStat = [] }) => {
+    return {
+      grid: {
+        top: '12px',
+        left: "2px",
+        right: "2px",
+        bottom: "2px",
+        height: "50px"
+      },
+      xAxis: {
+        type: 'category',
+        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+        show: false
+      },
+      yAxis: {
+        type: 'value',
+        show: false
+      },
+      series: [
+        {
+          data: [ 150, 230, 224, 218, 135, 147, 260 ],
+          type: 'line',
+          symbol: "none"
+        },
+        {
+          data: [ 100, 111, 113, 115, 116, 222, 333 ],
+          type: 'line',
+          symbol: "none"
+        }
+      ] 
+    };
   }
 };
 
