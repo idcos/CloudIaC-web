@@ -354,7 +354,8 @@ export const chartOptions = {
       active: '#85C836',
       failed: '#FC4E66',
       approving: '#357DFA',
-      inactive: '#24292F',
+      destroyed: '#24292F',
+      inactive: '#faad14',
       running: '#26D880'
     };
     const colors = [];

@@ -66,6 +66,7 @@ export const ENV_STATUS = {
   'active': t('env.status.active'), 
   'failed': t('env.status.failed'), 
   'inactive': t('env.status.inactive'),
+  'destroyed': t('env.status.destroyed'),
   'running': t('env.status.running'),
   'approving': t('env.status.approving')
 };
@@ -74,6 +75,7 @@ export const ENV_STATUS_COLOR = {
   'active': '#008C5A', 
   'failed': '#DD2B0E', 
   'inactive': '#faad14',
+  'destroyed': '#24292F',
   'running': '#08979c',
   'approving': '#0969DA'
 };
