@@ -32,7 +32,7 @@ const CCTList = () => {
     id: null
   });
 
-  // 启用/禁用云模版扫描
+  // 启用/禁用云模板扫描
   const {
     run: changeEnabled
   } = useRequest(
@@ -64,7 +64,7 @@ const CCTList = () => {
     }
   );
 
-  // 云模版列表查询
+  // 云模板列表查询
   const {
     loading: tableLoading,
     data: tableData,

@@ -33,7 +33,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
 
-  // 创建/编辑云模版提交接口
+  // 创建/编辑云模板提交接口
   const {
     run: onSave,
     loading: saveLoading
@@ -47,7 +47,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     }
   );
 
-  // 创建/编辑云模版提交接口
+  // 创建/编辑云模板提交接口
   const {
     run: onlineCheckForm
   } = useRequest(
