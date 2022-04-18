@@ -686,12 +686,26 @@ export const chartOptions = {
         {
           data: [ 150, 230, 224, 218, 135, 147, 260 ],
           type: 'line',
-          symbol: "none"
+          symbol: "none",
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 2
+              }
+            }
+          }
         },
         {
           data: [ 100, 111, 113, 115, 116, 222, 333 ],
           type: 'line',
-          symbol: "none"
+          symbol: "none",
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 2
+              }
+            }
+          }
         }
       ] 
     };

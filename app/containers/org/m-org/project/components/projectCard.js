@@ -64,8 +64,9 @@ export default ({ item = {}, setOpt, setRecord, toggleVisible, updateStatus }) =
   return (<div className={'pjtItemBox'}>
     <div className={'pjtItemBox-header'}>
       <span className={'pjtItemBox-header-left'}> 
-        <PlusCircleOutlined />
+        <PlusCircleOutlined className={'pjtItemBox-header-left-icon'} />
         {item.name}
+        <div className={'pjtItemBox-header-left-count'}>1</div>
       </span>
       <span className={'configBox'}>
         <Dropdown overlay={() => menu(item)} placement='bottomRight'>
