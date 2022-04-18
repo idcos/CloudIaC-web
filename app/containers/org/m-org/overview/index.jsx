@@ -4,6 +4,7 @@ import { FileTextOutlined } from '@ant-design/icons';
 import sortBy from 'lodash/sortBy';
 import reduce from 'lodash/reduce';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import { chartUtils } from 'components/charts-cfg';
@@ -174,21 +175,27 @@ const overview = ({ curOrg, projects, curProject }) => {
                 >
                   <div>
                     <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
-                    <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
-                    <div className={styles.table}>
-                      <div className={classNames(styles.table_header)}>
-                        <div>{t('define.page.overview.order')}</div>
-                        <div>{t('define.page.overview.envStatus')}</div>
-                        <div>{t('define.page.overview.ratio')}</div>
-                      </div>
-                      {envStatTopData.map((val, i) => {
-                        return <div className={classNames(styles.table_item)}>
-                          <div>0{i + 1}</div>
-                          <div>{ENV_STATUS[val.status]}</div>
-                          <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
-                        </div>;
-                      })}
-                    </div>
+                    {isEmpty(data.envStat) ? (
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 110 }}/>
+                    ) : (
+                      <>
+                        <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
+                        <div className={styles.table}>
+                          <div className={classNames(styles.table_header)}>
+                            <div>{t('define.page.overview.order')}</div>
+                            <div>{t('define.page.overview.envStatus')}</div>
+                            <div>{t('define.page.overview.ratio')}</div>
+                          </div>
+                          {envStatTopData.map((val, i) => {
+                            return <div className={classNames(styles.table_item)}>
+                              <div>0{i + 1}</div>
+                              <div>{ENV_STATUS[val.status]}</div>
+                              <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
+                            </div>;
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -203,21 +210,27 @@ const overview = ({ curOrg, projects, curProject }) => {
                 >
                   <div>
                     <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
-                    <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
-                    <div className={styles.table}>
-                      <div className={classNames(styles.table_header)}>
-                        <div>{t('define.page.overview.order')}</div>
-                        <div>{t('define.page.overview.resourceType')}</div>
-                        <div>{t('define.page.overview.ratio')}</div>
-                      </div>
-                      {resStatTopData.map((val, i) => {
-                        return <div className={classNames(styles.table_item)}>
-                          <div>0{i + 1}</div>
-                          <div>{val.resType}</div>
-                          <div>{(val.count * 100 / resStatTotal).toFixed(1) + '%'}</div>
-                        </div>;
-                      })}
-                    </div>
+                    {isEmpty(data.resStat) ? (
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 110 }}/>
+                    ) : (
+                      <>
+                        <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
+                        <div className={styles.table}>
+                          <div className={classNames(styles.table_header)}>
+                            <div>{t('define.page.overview.order')}</div>
+                            <div>{t('define.page.overview.resourceType')}</div>
+                            <div>{t('define.page.overview.ratio')}</div>
+                          </div>
+                          {resStatTopData.map((val, i) => {
+                            return <div className={classNames(styles.table_item)}>
+                              <div>0{i + 1}</div>
+                              <div>{val.resType}</div>
+                              <div>{(val.count * 100 / resStatTotal).toFixed(1) + '%'}</div>
+                            </div>;
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -232,9 +245,15 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("projectResStat"); 
                   }}
                 >
-                  <div style={{ width: '100%', height: "100%" }}>
-                    <div ref={overview_pro_resource} style={{ width: '100%', height: "100%" }}></div>
-                  </div>
+                  {isEmpty(data.projectResStat) ? (
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
+                  ) : (
+                    <>
+                      <div style={{ width: '100%', height: "100%" }}>
+                        <div ref={overview_pro_resource} style={{ width: '100%', height: "100%" }}></div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </Col>
@@ -246,9 +265,15 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("resGrowTrend"); 
                   }}
                 >
-                  <div style={{ width: '100%', height: "100%" }}>
-                    <div ref={overview_resource_tendency} style={{ width: '100%', height: "100%" }}></div>
-                  </div>
+                  {isEmpty(data.resGrowTrend) ? (
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
+                  ) : (
+                    <>
+                      <div style={{ width: '100%', height: "100%" }}>
+                        <div ref={overview_resource_tendency} style={{ width: '100%', height: "100%" }}></div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </Col>
