@@ -4,6 +4,7 @@ import { t } from 'utils/i18n';
 import orgsAPI from 'services/orgs';
 import projectAPI from 'services/project';
 import userAPI from 'services/user';
+import { safeJsonParse, getMatchParams } from 'utils/util';
 
 function* getOrgs(action) {
   try {
@@ -16,19 +17,12 @@ function* getOrgs(action) {
       payload: res.result || {}
     });
     //url中默认存在orgId
-    const { pathname } = window.location;
-    const url_orgId = pathname.split('/').filter(i => i)[1];
-    if (pathname.indexOf('/org') == 0 && url_orgId) {
+    const { orgId } = getMatchParams();
+    if (orgId) {
       yield put({
         type: 'global/set-curOrg',
         payload: {
-          orgId: url_orgId
-        }
-      });
-      yield put({
-        type: 'global/getProjects',
-        payload: {
-          orgId: url_orgId
+          orgId
         }
       });
     }
@@ -45,18 +39,41 @@ function* getProjects(action) {
     if (res.code !== 200) {
       throw new Error(res.message);
     }
+    const projects = res.result || {};
     yield put({
       type: 'global/set-projects',
-      payload: res.result || {}
+      payload: projects
     });
-    //url中默认存在orgId
-    const { pathname } = window.location;
-    const url_projectId = pathname.split('/').filter(i => i)[3];
-    if (pathname.indexOf('/project/') !== -1 && url_projectId) {
+    const { projectId } = getMatchParams();
+    const localCurProject = safeJsonParse([localStorage.getItem('curProject')]);
+    const localProjectId = (localCurProject || {}).id;
+    const projectList = projects.list || [];
+    if (projectList.length === 0) {
       yield put({
         type: 'global/set-curProject',
         payload: {
-          projectId: url_projectId
+          projectId: null
+        }
+      });
+    } else if (projectId) {
+      yield put({
+        type: 'global/set-curProject',
+        payload: {
+          projectId: projectId
+        }
+      });
+    } else if (projectList.find(it => localProjectId && localProjectId === it.id)) {
+      yield put({
+        type: 'global/set-curProject',
+        payload: {
+          projectId: localProjectId
+        }
+      });
+    } else {
+      yield put({
+        type: 'global/set-curProject',
+        payload: {
+          projectId: (projectList[0] || {}).id
         }
       });
     }

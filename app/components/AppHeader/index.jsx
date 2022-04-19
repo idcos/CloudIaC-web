@@ -48,23 +48,15 @@ const AppHeader = (props) => {
   }, [ orgId, projectId ]);
 
   useEffect(() => {
-    if (projectList.length > 0 && !projectList.find(it => it.id === projectId)) {
+    if (orgId) {
       dispatch({
-        type: 'global/set-curProject',
+        type: 'global/getProjects',
         payload: {
-          projectId: url_projectId || projectList[0].id
+          orgId: orgId
         }
       });
     }
-    if (projectList.length === 0) {
-      dispatch({
-        type: 'global/set-curProject',
-        payload: {
-          projectId: null
-        }
-      });
-    }
-  }, [ projectList, projectId ]);
+  }, [orgId]);
 
   useEffect(() => {
     const { orgId } = queryString.parse(location.search);

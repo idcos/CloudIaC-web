@@ -1,12 +1,12 @@
 import { handleActions } from 'redux-actions';
-
 import { fromJS } from 'immutable';
+import { safeJsonStringify, safeJsonParse } from 'utils/util';
 
 const initialState = fromJS({
   orgs: {},
   curOrg: null,
   projects: {},
-  curProject: null,
+  curProject: safeJsonParse([localStorage.getItem('curProject')]),
   userInfo: {}
 });
 
@@ -25,11 +25,11 @@ const reducer = handleActions({
     return state.set('projects', fromJS(payload));
   },
   'global/set-curProject': (state, { payload }) => {
-    if (!payload.projectId) {
-      return state.set('curProject', null);
-    }
-    const projects = state.toJS().projects.list;
-    return state.set('curProject', projects.find(it => it.id == payload.projectId));
+    const { projectId } = payload;
+    const projects = state.toJS().projects.list || [];
+    const curProject = projects.find(it => projectId && it.id == projectId) || projects[0] || null;
+    localStorage.setItem('curProject', safeJsonStringify([curProject]));
+    return state.set('curProject', curProject);
   },
   'global/set-userInfo': (state, { payload }) => {
     return state.set('userInfo', fromJS(payload));

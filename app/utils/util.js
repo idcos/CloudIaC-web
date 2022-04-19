@@ -1,4 +1,5 @@
 import find from "lodash/find";
+import { matchPath } from 'react-router-dom';
 
 /**
  * 将对象字段按照key排序，并返回`${key}${value}`字符串
@@ -166,4 +167,10 @@ export const downloadImportTemplate = async(downloadApi, opts) => {
     console.log(error);
   }
 
+};
+
+export const getMatchParams = () => {
+  const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
+  const { orgId, projectId } = match.params || {};
+  return { orgId, projectId };
 };

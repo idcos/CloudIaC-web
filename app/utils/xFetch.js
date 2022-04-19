@@ -1,6 +1,6 @@
 
 import { logout } from 'services/logout';
-import { matchPath } from 'react-router-dom';
+import { getMatchParams } from 'utils/util';
 import { t, getLanguage } from 'utils/i18n';
 
 function parseJSON(res) {
@@ -15,8 +15,7 @@ async function xFetch(url, options) {
 
   const opts = { isEncode: true, ...options, credentials: 'include' };
   const token = localStorage['accessToken'];
-  const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
-  const { orgId, projectId } = match.params || {};
+  const { orgId } = getMatchParams();
   const language = getLanguage();
   const acceptLanguageMap = {
     zh: 'zh-CN',
