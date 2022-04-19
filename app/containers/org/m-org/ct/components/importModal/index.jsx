@@ -194,16 +194,36 @@ const Index = ({ reload, toggleVisible, orgId }) => {
                   {fileList[0] && fileList[0] ? t('define.ct.import.init.upload.reSelectFile') : t('define.ct.import.init.upload.selectFile')}
                 </Button>
               </Upload>
-              <span className={styles.radioText} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#08857C' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : t('define.ct.import.init.upload.extra')}</span> 
+              <span className={styles.uploadExtra} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#08857C' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : t('define.ct.import.init.upload.extra')}</span> 
             </Space>
             <Space direction='vertical' size={6} style={{ width: '100%' }}>
               <div className={styles.importHeader}><span>*</span> {t('define.ct.import.init.actionModeWhenRepeating')}</div>
-              <Radio.Group onChange={(e) => setType(e.target.value)} value={type} style={{ width: '100%' }}>
+              <Radio.Group className={styles.radioGroup} onChange={(e) => setType(e.target.value)} value={type} style={{ width: '100%' }}>
                 <Space direction='vertical' size={4} style={{ width: '100%' }}>
-                  <Radio value={'update'}>{t('define.ct.import.infoType.updated')} <span className={styles.radioText}>{t('define.ct.import.init.actionModeWhenRepeating.updated')}</span></Radio> 
-                  <Radio value={'skip'}>{t('define.ct.import.infoType.skipped')} <span className={styles.radioText}>{t('define.ct.import.init.actionModeWhenRepeating.skip')}</span></Radio> 
-                  <Radio value={'copy'}>{t('define.ct.import.infoType.copied')} <span style={{ marginLeft: 0 }} className={styles.radioText}>{t('define.ct.import.init.actionModeWhenRepeating.copy')}</span></Radio> 
-                  <Radio value={'abort'}>{t('define.ct.import.infoErrorType.duplicate')} <span className={styles.radioText}>{t('define.ct.import.init.actionModeWhenRepeating.abort')}</span></Radio>
+                  <Radio value={'update'}>
+                    <span>{t('define.ct.import.infoType.updated')}</span>
+                    <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.updated')}>
+                      {t('define.ct.import.init.actionModeWhenRepeating.updated')}
+                    </span>
+                  </Radio> 
+                  <Radio value={'skip'}>
+                    <span>{t('define.ct.import.infoType.skipped')}</span>
+                    <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.skip')}>
+                      {t('define.ct.import.init.actionModeWhenRepeating.skip')}
+                    </span>
+                  </Radio> 
+                  <Radio value={'copy'}>
+                    <span>{t('define.ct.import.infoType.copied')}</span>
+                    <span style={{ marginLeft: 8 }} className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.copy')}>
+                      {t('define.ct.import.init.actionModeWhenRepeating.copy')}
+                    </span>
+                  </Radio> 
+                  <Radio value={'abort'}>
+                    <span>{t('define.ct.import.infoErrorType.duplicate')}</span>
+                    <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.abort')}>
+                      {t('define.ct.import.init.actionModeWhenRepeating.abort')}
+                    </span>
+                  </Radio>
                 </Space>
               </Radio.Group>
             </Space>
