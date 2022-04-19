@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Col, Row, notification, Divider, Popconfirm, Dropdown, Menu } from 'antd';
-import { PlusCircleOutlined, MinusOutlined } from '@ant-design/icons';
+import { notification } from 'antd';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
-import moment from 'moment';
 import { connect } from "react-redux";
 import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
@@ -11,6 +10,7 @@ import OpModal from 'components/project-modal';
 import projectAPI from 'services/project';
 import ProjectCard from './components/projectCard';
 import { t } from 'utils/i18n';
+import history from 'utils/history';
 import styles from './styles.less';
 
 
@@ -33,80 +33,9 @@ const Index = (props) => {
 
   const tableFilterFieldName = 'taskStatus';
 
-  const columns = [
-    {
-      dataIndex: 'name',
-      title: t('define.name'),
-      width: 230,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'description',
-      title: t('define.des'),
-      width: 264,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'creator',
-      title: t('define.creator'),
-      width: 160,
-      ellipsis: true
-    },
-    {
-      dataIndex: 'createdAt',
-      title: t('define.createdAt'),
-      width: 210,
-      ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
-    },
-    {
-      dataIndex: 'status',
-      title: t('define.status'),
-      width: 100,
-      ellipsis: true,
-      render: (text) => {
-        return <span>{text === 'enable' ? t('define.project.status.enable') : t('define.project.status.disabled')}</span>; 
-      }
-    },
-    {
-      title: t('define.action'),
-      width: 169,
-      ellipsis: true,
-      fixed: 'right',
-      render: (_, record) => {
-        return (
-          <span className='inlineOp'>
-            <a type='link' onClick={() => edit(record)}>{t('define.action.modify')}</a>
-            <Divider type='vertical' />
-            {record.status === 'enable' ? 
-              <Popconfirm
-                title={t('define.project.status.disabled.confirm.title')}
-                onConfirm={() => updateStatus(record, 'disable')}
-              >
-                <a>{t('define.project.status.disabled')}</a>
-              </Popconfirm> : 
-              <Popconfirm
-                title={t('define.project.action.recovery.confirm.title')}
-                onConfirm={() => updateStatus(record, 'enable')}
-              >
-                <a>{t('define.project.action.recovery')}</a>
-              </Popconfirm>
-            }
-          </span>
-        );
-      }
-    }
-  ];
-
   useEffect(() => {
     fetchList();
   }, [query]);
-
-  const edit = (record) => {
-    setOpt('edit');
-    setRecord(record);
-    toggleVisible();
-  };
 
   // 重新刷新全局的projects
   const reloadGlobalProjects = () => {
@@ -116,6 +45,16 @@ const Index = (props) => {
         orgId: params.orgId
       }
     });
+  };
+
+  const changeProject = (pjtId) => {
+    dispatch({
+      type: 'global/set-curProject',
+      payload: {
+        projectId: pjtId
+      }
+    });
+    history.push(`/org/${params.orgId}/project/${pjtId}/m-project-env`);
   };
   
   const updateStatus = async(record, status) => {
@@ -163,13 +102,6 @@ const Index = (props) => {
         description: e.message
       });
     }
-  };
-
-  const changeQuery = (payload) => {
-    setQuery({
-      ...query,
-      ...payload
-    });
   };
 
   const toggleVisible = () => {
@@ -227,6 +159,7 @@ const Index = (props) => {
         {
           resultMap.list.map((item, i) => {
             return <ProjectCard 
+              changeProject={changeProject}
               setOpt={setOpt}
               setRecord={setRecord}
               toggleVisible={toggleVisible}

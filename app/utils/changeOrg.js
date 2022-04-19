@@ -31,13 +31,13 @@ const changeOrg = async ({ orgId, dispatch, needJump = true, menuType = 'execute
       return;
     }
     if (!ORG_SET && !(projects.list || []).length) {
-      history.push(`/org/${orgId}/m-other-resource`);
+      history.push(`/org/${orgId}/m-org-resource`);
       return;
     }
     if (ORG_SET) {
-      history.push(`/org/${orgId}/m-org-ct`);
+      history.push(`/org/${orgId}/m-org-overview`);
     } else {
-      history.push(`/org/${orgId}/project/${projects.list[0].id}/m-project-env`);
+      history.push(`/org/${orgId}/project/${projects.list[0].id}/m-project-overview`);
     }
   }
 };

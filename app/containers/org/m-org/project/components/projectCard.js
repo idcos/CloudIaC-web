@@ -8,7 +8,7 @@ import { chartUtils } from 'components/charts-cfg';
 import { t } from 'utils/i18n';
 import styles from '../styles.less';
 
-export default ({ item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
+export default ({ changeProject, item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
   const project_trend_Line = useRef();
   
   let CHART = useRef([
@@ -61,7 +61,7 @@ export default ({ item = {}, setOpt, setRecord, toggleVisible, updateStatus }) =
     </Menu.Item>
   </Menu>);
 
-  return (<div className={'pjtItemBox'}>
+  return (<div className={'pjtItemBox'} onClick={() => changeProject(item.id)}>
     <div className={'pjtItemBox-header'}>
       <span className={'pjtItemBox-header-left'}> 
         <PlusCircleOutlined className={'pjtItemBox-header-left-icon'} />

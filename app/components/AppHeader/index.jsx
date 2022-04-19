@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown, Tooltip, Button, Badge } from 'antd';
-import { QuestionCircleFilled, DownOutlined, EyeOutlined, FundFilled, SettingFilled, SecurityScanFilled } from '@ant-design/icons';
+import { QuestionCircleFilled, DownOutlined, FundFilled, SettingFilled, SecurityScanFilled } from '@ant-design/icons';
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
 import { QuitIcon, EnIcon, ZhIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
-import SeniorSelect from 'components/senior-select';
 import getPermission from "utils/permission";
 import { t, getLanguage, setLanguage } from "utils/i18n";
+import { getMatchParams } from "utils/util";
 import styles from './styles.less';
 
 const KEY = 'global';
@@ -20,10 +20,9 @@ const AppHeader = (props) => {
   const { theme, locationPathName, orgs, curOrg, projects, curProject, dispatch, userInfo } = props;
   const { ORG_SET } = getPermission(userInfo);
   const { pathname } = window.location;
-  const orgList = (orgs || {}).list || [];
   const projectList = (projects || {}).list || [];
   const projectId = (curProject || {}).id;
-  const url_projectId = pathname.indexOf('/project/') !== -1 ? pathname.split('/').filter(i => i)[3] : null;
+  const matchParams = getMatchParams();
   const orgId = (curOrg || {}).id;
   const preStateRef = useRef({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
@@ -85,13 +84,13 @@ const AppHeader = (props) => {
 
   const jumpExecute = () => {
     if (!ORG_SET && !projectList.length) {
-      history.push(`/org/${orgId}/m-other-resource`);
+      history.push(`/org/${orgId}/m-org-resource`);
       return;
     }
     if (ORG_SET) {
-      history.push(`/org/${orgId}/m-org-ct`);
+      history.push(`/org/${orgId}/m-org-overview`);
     } else {
-      history.push(`/org/${orgId}/project/${projectList[0].id}/m-project-env`);
+      history.push(`/org/${orgId}/project/${projectList[0].id}/m-project-overview`);
     }
   };
 
@@ -102,6 +101,14 @@ const AppHeader = (props) => {
       history.push(`/org/${orgId}/compliance/dashboard`);
     }
     setMenuType(value);
+  };
+
+  const linkToOrgView = () => {
+    history.push(`/org/${orgId}/m-org-overview`);
+  };
+
+  const linkToProjectView = () => {
+    history.push(`/org/${orgId}/project/${projectId}/m-org-overview`);
   };
 
   return <div className={`idcos-app-header ${theme || ''}`}>
@@ -129,32 +136,13 @@ const AppHeader = (props) => {
         )}
       </div>
       <div className='rParts'>
-        {
-          !!orgId ? (
-            <>
-              <SeniorSelect
-                style={{ width: 250 }}
-                options={orgList}
-                onChange={changeCurOrg}
-                listHeight={800}
-                maxLen={10}
-                value={orgId}
-                showSearch={true}
-                searchPlaceholder={t('define.searchOrgPlaceholder')}
-                lablePropsNames={{ name: 'name' }}
-                valuePropName='id'
-                formatOptionLabel={(name) => <>{t('define.scope.org')}: {name}</>}
-                seniorSelectfooter={(
-                  <div className={styles.seniorSelectfooter}>
-                    <div className='more' onClick={() => history.push('/')}>
-                      <EyeOutlined className='icon' />{t('define.viewMore')}
-                    </div>
-                  </div>
-                )}
-              />
-            </>
-          ) : null
-        }
+        <div className='change-view-btn'>
+          {matchParams.projectId ? (
+            <span onClick={linkToOrgView}>组织视图</span>
+          ) : (
+            !!projectId && <span onClick={linkToProjectView}>项目视图</span>
+          )}
+        </div>
         <div className='user'>
           <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? <EnIcon /> : <ZhIcon />}</span>
           <Tooltip 

@@ -14,7 +14,7 @@ import getPermission from "utils/permission";
 import { t } from 'utils/i18n';
 import { useLoopPolicyStatus } from 'utils/hooks';
 import PolicyStatus from 'components/policy-status';
-import DetectionDrawer from '../../m-org/ct/components/detection-drawer';
+import DetectionDrawer from 'containers/org/m-org/ct/components/detection-drawer';
 
 const CTList = ({ userInfo, match = {} }) => {
 

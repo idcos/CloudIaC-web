@@ -1,16 +1,12 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { EyeOutlined, PlusSquareOutlined, MenuOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { useSessionStorageState } from 'ahooks';
 import classNames from 'classnames';
-import { Divider, notification, Tooltip } from 'antd';
-import MenuSelect from 'components/menu-select';
+import { Divider, Tooltip } from 'antd';
 import RoutesList from 'components/routes-list';
 import versionCfg from 'assets/version.json';
 import history from "utils/history";
-import { t } from 'utils/i18n';
-import ProjectModal from 'components/project-modal';
-import projectAPI from 'services/project';
 import getMenus from './menus';
 import styles from './styles.less';
 
@@ -22,9 +18,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
   const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
   const projectList = (projects || {}).list || [];
   const pjtId = projectId || (curProject || {}).id;
-  const [ pjtSelectActive, setPjtSelectActive ] = useState(false);
-  const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
-  const pjtSelectRef = useRef();
  
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
@@ -38,49 +31,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
         break;
       default:
         break;
-    }
-  };
-
-  const togglePjtModalVsible = () => {
-    // 打开创建项目modal时 关闭项目选择器
-    if (!pjtModalVsible) {
-      pjtSelectRef.current && pjtSelectRef.current.setVisible(false);
-    }
-    setPjtModalVsible(!pjtModalVsible);
-  };
-
-  const changeProject = (pjtId) => {
-    dispatch({
-      type: 'global/set-curProject',
-      payload: {
-        projectId: pjtId
-      }
-    });
-    history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
-  };
-
-  const pjtOperation = async ({ action, payload }, cb) => {
-    try {
-      const method = {
-        add: (param) => projectAPI.createProject(param)
-      };
-      let params = {
-        ...payload
-      };
-      const res = await method[action](params);
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      notification.success({
-        message: t('define.message.opSuccess')
-      });
-      cb && cb();
-    } catch (e) {
-      cb && cb(e);
-      notification.error({
-        message: t('define.message.opFail'),
-        description: e.message
-      });
     }
   };
 
@@ -128,63 +78,6 @@ const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}
   return (
     <div className={styles.orgWrapper}>
       <div className={classNames('left-nav', { collapsed })}>
-        {
-          projectList.length ? (
-            <>
-              <MenuSelect
-                overlayWidth='200px'
-                options={projectList}
-                actionContent={collapsed ? (
-                  <Tooltip title={t('define.project.change')} placement='right'>
-                    <div className={styles.projectActionContent}>
-                      <span>{((curProject || {}).name || '')[0]}</span>
-                    </div>
-                  </Tooltip>
-                ) : null}
-                onChange={changeProject}
-                setActive={setPjtSelectActive}
-                selectionStyle={{ padding: '13px 20px 13px 24px' }}
-                bodyStyle={{ maxHeight: 'none' }}
-                valuePropName='id' 
-                lablePropsNames={{ name: 'name' }}
-                value={pjtId}
-                showSearch={true}
-                searchPlaceholder={t('define.project.search.placeholder')}
-                selectRef={pjtSelectRef}
-                maxLen={10}
-                menuSelectfooter={(
-                  <div 
-                    className={styles.menuSelectfooterContent} 
-                  >
-                    <div className='more' onClick={() => history.push(`/project-select-page?orgId=${orgId}`)}>
-                      <EyeOutlined className='icon' />{t('define.project.viewMore')}
-                    </div>
-                    <div className='create'>
-                      <div className='btn' onClick={togglePjtModalVsible}>
-                        <span className='icon'>
-                          <PlusSquareOutlined/>
-                        </span>
-                        <span>{t('define.project.create')}</span>
-                      </div>
-                    </div>
-                    {
-                      pjtModalVsible && <ProjectModal
-                        visible={pjtModalVsible}
-                        orgId={orgId}
-                        opt='add'
-                        toggleVisible={togglePjtModalVsible}
-                        operation={pjtOperation}
-                      />
-                    }
-                  </div>
-                )}
-              />
-              {!pjtSelectActive && !collapsed && <div style={{ padding: '0 19px' }}>
-                <Divider style={{ margin: '0' }} />
-              </div>}
-            </>
-          ) : null
-        }
         <div className='menu-wrapper'>
           {
             menus.map(subMenu => {
