@@ -70,12 +70,12 @@ function* getProjects(action) {
         }
       });
     } else {
-      yield put({
-        type: 'global/set-curProject',
-        payload: {
-          projectId: (projectList[0] || {}).id
-        }
-      });
+      // yield put({
+      //   type: 'global/set-curProject',
+      //   payload: {
+      //     projectId: (projectList[0] || {}).id
+      //   }
+      // });
     }
   } catch (err) {
     notification.error({
