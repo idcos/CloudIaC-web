@@ -14,12 +14,6 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
-  const edit = (record) => {
-    setOpt('edit');
-    setRecord(record);
-    toggleVisible();
-  };
-
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'project_trend_Line') {
@@ -35,8 +29,13 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
     };
   }, []);
 
-  const comfirmDisabled = (e) => {
-    e.stopPropagation();
+  const edit = () => {
+    setOpt('edit');
+    setRecord(item);
+    toggleVisible();
+  };
+
+  const comfirmDisabled = () => {
     Modal.confirm({
       icon: <InfoCircleFilled />,
       title: t('define.project.status.disabled.confirm.title'),
@@ -44,8 +43,7 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
     });
   };
 
-  const comfirmEnable = (e) => {
-    e.stopPropagation();
+  const comfirmEnable = () => {
     Modal.confirm({
       icon: <InfoCircleFilled />,
       title: t('define.project.action.recovery.confirm.title'),
@@ -53,23 +51,29 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
     });
   };
 
-  const menu = (<Menu>
-    <Menu.Item>
-      <a 
-        onClick={(e) => {
-          e.stopPropagation();
-          edit(item);
-        }}
-      >
-        {t('define.action.modify')}
-      </a>
-    </Menu.Item>
-    <Menu.Item>
-      {item.status === 'enable' ? 
-        <a onClick={comfirmDisabled}>{t('define.project.status.disabled')}</a> : 
-        <a onClick={comfirmEnable}>{t('define.project.action.recovery')}</a>
-      }
-    </Menu.Item>
+  const onClickMenu = ({ key, domEvent }) => {
+    domEvent.stopPropagation();
+    switch (key) {
+      case 'modify':
+        edit();
+        break;
+      case 'disabled':
+        comfirmDisabled();
+        break;
+      case 'recovery':
+        comfirmEnable();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const menu = (<Menu onClick={onClickMenu}>
+    <Menu.Item key='modify'>{t('define.action.modify')}</Menu.Item>
+    {item.status === 'enable' ? 
+      <Menu.Item key='disabled'>{t('define.project.status.disabled')}</Menu.Item> : 
+      <Menu.Item key='recovery'>{t('define.project.action.recovery')}</Menu.Item>
+    }
   </Menu>);
 
   return (<div className={'pjtItemBox'} onClick={() => item.status === 'enable' && changeProject(item.id)}>
@@ -86,6 +90,7 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
       <Dropdown 
         overlay={menu} 
         placement='bottomRight'
+        getPopupContainer={t => t}
       >
         <EllipsisOutlined className={'configIcon'} onClick={(e) => e.stopPropagation()} />
       </Dropdown>
