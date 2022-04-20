@@ -1,0 +1,20 @@
+
+.radioButtonGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  :global {
+    .radio-button {
+      min-width: 84px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      cursor: pointer;
+      &.active {
+        background: #CFE7E5;
+        color: #08857C;
+        border-radius: 4px;
+      }
+    }
+  }
+}

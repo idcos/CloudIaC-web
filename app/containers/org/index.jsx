@@ -1,113 +1,39 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { MenuOutlined } from '@ant-design/icons';
+import React from 'react';
+import { Space } from 'antd';
 import { connect } from 'react-redux';
-import { useSessionStorageState } from 'ahooks';
-import classNames from 'classnames';
-import { Divider, Tooltip } from 'antd';
 import RoutesList from 'components/routes-list';
-import versionCfg from 'assets/version.json';
 import history from "utils/history";
+import { t } from "utils/i18n";
+import { RadioButtonGroup } from 'components/ui-design';
 import getMenus from './menus';
 import styles from './styles.less';
 
 const KEY = 'global';
 
-const OrgWrapper = ({ routes, userInfo, curOrg, projects, curProject, match = {}, dispatch }) => {
+const OrgWrapper = ({ routes, userInfo, curOrg, match = {} }) => {
 
-  const [ collapsed, setCollapsed ] = useSessionStorageState('execute_menu_collapsed', false);
-  const { orgId, mOrgKey, projectId, mProjectKey } = match.params || {};
-  const projectList = (projects || {}).list || [];
-  const pjtId = projectId || (curProject || {}).id;
+  const { orgId, mOrgKey } = match.params || {};
  
   // 跳转 scope作用域
-  const linkTo = (scope, menuItemKey) => {
-    switch (scope) {
-      case 'org':
-      case 'other':
-        history.push(`/org/${orgId}/${menuItemKey}`);
-        break;
-      case 'project':
-        history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
-        break;
-      default:
-        break;
-    }
+  const linkTo = (menuItemKey) => {
+    history.push(`/org/${orgId}/${menuItemKey}`);
   };
 
-  const renderMenus = useCallback(({ subKey, emptyMenuList = [], menuList }) => {
-    let scope = subKey, menuKey, isEmptyData = false;
-    switch (subKey) {
-    case 'org':
-    case 'other':
-      menuKey = mOrgKey;
-      break;
-    case 'project':
-      menuKey = mProjectKey;
-      // 没有项目id情况下 作用域指向组织
-      if (!pjtId) {
-        isEmptyData = true;
-        scope = 'org';
-        menuKey = mOrgKey;
-      }
-      break;
-    default:
-      break;
-    }
-    return (isEmptyData ? emptyMenuList : menuList).map(menuItem => {
-      if (menuItem.isHide) {
-        return null;
-      }
-      return (
-        <div 
-          className={`menu-item ${menuKey === menuItem.key ? 'checked' : ''}`} 
-          onClick={() => linkTo(scope, menuItem.key)}
-        >
-          <Tooltip title={collapsed && menuItem.name} placement='right'>
-            <span className='icon'>{menuItem.icon}</span>
-          </Tooltip>
-          {!collapsed && <span>{menuItem.name}</span>}
-        </div>
-      );
-    });
-  }, [ pjtId, collapsed ]);
-
-  const menus = getMenus(userInfo || {}, {
-    projectList
-  });
+  const menus = getMenus(userInfo || {});
 
   return (
     <div className={styles.orgWrapper}>
-      <div className={classNames('left-nav', { collapsed })}>
-        <div className='menu-wrapper'>
-          {
-            menus.map(subMenu => {
-              return (
-                <div className='sub-menu'>
-                  {subMenu.subName ? (
-                    <div className='menu-title'>
-                      {collapsed ? <div className='divider'></div> : subMenu.subName}
-                    </div>
-                  ) : (
-                    menus.length > 1 && ( 
-                      <Divider style={{ margin: '12px 0' }} />
-                    )
-                  )}
-                  <div className='menu-list'>
-                    { renderMenus(subMenu) }
-                  </div>
-                </div>
-              );
-            })
-          }
-        </div>
-        <div className='nav-footer'>
-          <span className='icon' onClick={() => setCollapsed(!collapsed)}>
-            <MenuOutlined />
-          </span>
-          <span className='text'>v{versionCfg.version || ''}</span>
-        </div>
+      <div className='header'>
+        <Space size={32}>
+          <div className='view-title'>{t('define.orgView')}</div>
+          <RadioButtonGroup 
+            value={mOrgKey}
+            onChange={(val) => linkTo(val)}
+            options={menus.map(it => ({ label: it.name, value: it.key }))} 
+          />
+        </Space>
       </div>
-      <div className='right-content'>
+      <div className='body'>
         <RoutesList
           routes={routes}
           routesParams={{
@@ -125,7 +51,6 @@ export default connect(
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
     curProject: state[KEY].get('curProject'),
-    projects: state[KEY].get('projects').toJS(),
     userInfo: state[KEY].get('userInfo').toJS()
   })
 )(OrgWrapper);
