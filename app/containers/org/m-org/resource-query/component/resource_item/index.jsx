@@ -73,6 +73,6 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
 export default connect((state) => {
   return {
     curOrg: state[KEY].get('curOrg'),
-    curProject: state[KEY].get('curProject')
+    curProject: state[KEY].get('curProject') || {}
   };
 })(resourceItem);

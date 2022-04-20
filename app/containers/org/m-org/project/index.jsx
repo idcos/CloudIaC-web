@@ -31,7 +31,9 @@ const Index = (props) => {
     [ record, setRecord ] = useState({});
 
   useEffect(() => {
-    fetchLastUseProject();
+    if (curProject.id) {
+      fetchLastUseProject();
+    }
   }, [curProject.id]);
 
   useEffect(() => {
@@ -209,7 +211,7 @@ const Index = (props) => {
 
 export default connect(
   (state) => ({ 
-    curProject: state.global.get('curProject')
+    curProject: state.global.get('curProject') || {}
   })
 )(
   Eb_WP()(Index)

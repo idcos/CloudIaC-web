@@ -6,7 +6,7 @@ const initialState = fromJS({
   orgs: {},
   curOrg: null,
   projects: {},
-  curProject: safeJsonParse([localStorage.getItem('curProject')]),
+  curProject: safeJsonParse([localStorage.getItem('curProject')], {}),
   userInfo: {}
 });
 
@@ -27,7 +27,7 @@ const reducer = handleActions({
   'global/set-curProject': (state, { payload }) => {
     const { projectId } = payload;
     const projects = state.toJS().projects.list || [];
-    const curProject = projects.find(it => projectId && it.id == projectId) || null;
+    const curProject = projects.find(it => projectId && it.id == projectId) || {};
     localStorage.setItem('curProject', safeJsonStringify([curProject]));
     return state.set('curProject', curProject);
   },

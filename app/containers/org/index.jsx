@@ -50,7 +50,7 @@ export default connect(
   (state) => ({ 
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
-    curProject: state[KEY].get('curProject'),
+    curProject: state[KEY].get('curProject') || {},
     userInfo: state[KEY].get('userInfo').toJS()
   })
 )(OrgWrapper);
