@@ -2,13 +2,13 @@
 
 .orgWrapper {
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
   min-width: @ctw;
 
   :global {
 
     .header {
-      padding: 36px 24px 24px;
+      padding: 36px 24px 0;
       .view-title {
         color: #24292F;
         font-size: 16px;
@@ -16,10 +16,8 @@
       }
     }
 
-    .right-content {
-      min-width: 0;
-      height: 100%;
-      background-color: @backGroundIac;
+    .body {
+
     }
   }
 }

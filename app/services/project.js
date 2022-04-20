@@ -10,11 +10,8 @@ const projectAPI = {
   detailProject: ({ projectId, orgId }) => {
     return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
   },
-  projectList: ({ pageNo, pageSize, orgId }) => {
-    return getWithArgs('/api/v1/projects', {
-      pageSize,
-      currentPage: pageNo
-    }, { 'IaC-Org-Id': orgId });
+  projectList: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/projects', restParams, { 'IaC-Org-Id': orgId });
   },
   allEnableProjects: ({ orgId }) => {
     return getWithArgs('/api/v1/projects', {

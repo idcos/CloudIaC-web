@@ -1,26 +1,24 @@
 @import 'containers/App/styles/variable.less';
 
-
 .projectList {
   width: 100%;
+  margin-top: 48px;
 
   :global {
     .pjtBox {
+      width: 100%;
       display: flex;
       flex-wrap: wrap;
-      width: 100%;
-      padding-left: 16px;
-
+      gap: 24px;
+      padding: 0 24px;
 
       .pjtItemBox {
-        margin-top: 16px;
+        flex: 0 0 282px;
         height: 145px;
-        border-radius: 3px;
-        background-color: rgba(255, 255, 255, 1);
-        border: 2px solid rgba(225, 228, 232, 1);
+        border-radius: 4px;
+        border: 2px solid #E1E4E8;
         align-items: flex-start;
         padding: 16px;
-        margin-right: 16px;
         width: calc(25% - 16px);
         cursor: pointer;
 
@@ -28,45 +26,63 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 12px;
 
           .pjtItemBox-header-left {
+            flex: 1;
+            min-width: 0;
             display: flex;
             align-items: center;
             color: #24292F;
             font-weight: 600;
+            gap: 8px;
 
             &-icon {
-              margin-right: 8px;
+            }
+
+            &-name {
+              flex: 1;
+              min-width: 0;
+              display: flex;
+              align-items: center;
             }
 
             &-count {
-              background-color: rgba(0, 130, 84, 1);
-              border-radius: 50%;
-              width: 18.5px;
+              background-color: #008C5A;
+              border-radius: 8px;
               height: 16px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
+              padding: 0 6px;
+              text-align: center;
+              line-height: 16px;
               color: #fff;
               font-size: 12px;
-              margin-left: 8px;
             }
           }
 
-          .configBox {
-            width: 16px;
-            height: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
+          .configIcon {
+            font-size: 16px;
+            border-radius: 2px;
+            color: #24292F;
             &:hover {
-              background-color: rgba(244, 245, 245, 1);
+              background-color: #DAE4E6;
+              color: #008C5A;
             }
           }
+         
+        }
 
-          .configIcon:hover {
-            color: rgba(0, 130, 84, 1);
+        .pjtItemBox-content {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          .description {
+            flex: 1;
+            min-width: 0;
+            font-size: 12px;
+            color: #57606A;
+          }
+          .mark {
+            color: #24292F;
           }
         }
 
@@ -84,9 +100,18 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        background-color: #F9F9F9;
 
         .plusIcon {
-          font-size: 20px;
+          font-size: 16px;
+          margin-bottom: 4px;
+          padding: 8px;
+          border-radius: 50%;
+          border: 1px solid #E1E4E8;
+        }
+        .create-text {
+          color: #24292F;
+          font-weight: 500;
         }
       }
     }

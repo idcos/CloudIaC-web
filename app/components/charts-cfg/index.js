@@ -664,7 +664,7 @@ export const chartOptions = {
       ]
     };
   },
-  project_trend_Line: ({ costTypeStat = [] }) => {
+  project_trend_Line: ({ resStats = [] }) => {
     return {
       grid: {
         top: '12px',
@@ -675,28 +675,17 @@ export const chartOptions = {
       },
       xAxis: {
         type: 'category',
-        data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
+        data: resStats.map(it => it.date),
         show: false
       },
       yAxis: {
         type: 'value',
-        show: false
+        show: false,
+        min: -1
       },
       series: [
         {
-          data: [ 150, 230, 224, 218, 135, 147, 260 ],
-          type: 'line',
-          symbol: "none",
-          itemStyle: {
-            normal: {
-              lineStyle: {
-                width: 2
-              }
-            }
-          }
-        },
-        {
-          data: [ 100, 111, 113, 115, 116, 222, 333 ],
+          data: resStats.map(it => it.count),
           type: 'line',
           symbol: "none",
           itemStyle: {

@@ -1,14 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Dropdown, Menu, Popconfirm } from 'antd';
-import { PlusCircleOutlined, MinusOutlined } from '@ant-design/icons';
-import { useThrottleEffect } from 'ahooks';
-import classnames from 'classnames';
+import React, { useRef, useEffect } from "react";
+import { Dropdown, Empty, Menu, Modal, Tooltip } from 'antd';
+import { PlusCircleOutlined, InfoCircleFilled, EllipsisOutlined } from '@ant-design/icons';
 import EllipsisText from 'components/EllipsisText';
 import { chartUtils } from 'components/charts-cfg';
 import { t } from 'utils/i18n';
-import styles from '../styles.less';
+import isEmpty from "lodash/isEmpty";
 
-export default ({ changeProject, item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
+export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
   const project_trend_Line = useRef();
   
   let CHART = useRef([
@@ -25,7 +23,7 @@ export default ({ changeProject, item = {}, setOpt, setRecord, toggleVisible, up
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'project_trend_Line') {
-        chartUtils.update(chart, {});
+        chartUtils.update(chart, { resStats: item.resStats || [] });
       }
     });
   }, []);
@@ -37,46 +35,73 @@ export default ({ changeProject, item = {}, setOpt, setRecord, toggleVisible, up
     };
   }, []);
 
-  const menu = (item) => (<Menu>
+  const comfirmDisabled = (e) => {
+    e.stopPropagation();
+    Modal.confirm({
+      icon: <InfoCircleFilled />,
+      title: t('define.project.status.disabled.confirm.title'),
+      onOk: () => updateStatus(item, 'disable')
+    });
+  };
+
+  const comfirmEnable = (e) => {
+    e.stopPropagation();
+    Modal.confirm({
+      icon: <InfoCircleFilled />,
+      title: t('define.project.action.recovery.confirm.title'),
+      onOk: () => updateStatus(item, 'enable')
+    });
+  };
+
+  const menu = (<Menu>
     <Menu.Item>
-      <a onClick={() => edit(item)}>
+      <a 
+        onClick={(e) => {
+          e.stopPropagation();
+          edit(item);
+        }}
+      >
         {t('define.action.modify')}
       </a>
     </Menu.Item>
     <Menu.Item>
       {item.status === 'enable' ? 
-        <Popconfirm
-          title={t('define.project.status.disabled.confirm.title')}
-          onConfirm={() => updateStatus(item, 'disable')}
-        >
-          <a>{t('define.project.status.disabled')}</a>
-        </Popconfirm> : 
-        <Popconfirm
-          title={t('define.project.action.recovery.confirm.title')}
-          onConfirm={() => updateStatus(item, 'enable')}
-        >
-          <a>{t('define.project.action.recovery')}</a>
-        </Popconfirm>
+        <a onClick={comfirmDisabled}>{t('define.project.status.disabled')}</a> : 
+        <a onClick={comfirmEnable}>{t('define.project.action.recovery')}</a>
       }
     </Menu.Item>
   </Menu>);
 
-  return (<div className={'pjtItemBox'} onClick={() => changeProject(item.id)}>
+  return (<div className={'pjtItemBox'} onClick={() => item.status === 'enable' && changeProject(item.id)}>
     <div className={'pjtItemBox-header'}>
       <span className={'pjtItemBox-header-left'}> 
-        <PlusCircleOutlined className={'pjtItemBox-header-left-icon'} />
-        {item.name}
-        <div className={'pjtItemBox-header-left-count'}>1</div>
+        {/* <PlusCircleOutlined className={'pjtItemBox-header-left-icon'} /> */}
+        <div className={'pjtItemBox-header-left-name'}><EllipsisText>{item.name}</EllipsisText></div>
+        {!!item.activeEnvironment && (
+          <Tooltip title={t('define.activeEnvironment')}>
+            <div className={'pjtItemBox-header-left-count'}>{item.activeEnvironment}</div>
+          </Tooltip>
+        )}
       </span>
-      <span className={'configBox'}>
-        <Dropdown overlay={() => menu(item)} placement='bottomRight'>
-          <MinusOutlined className={'configIcon'} />
-        </Dropdown>
+      <Dropdown 
+        overlay={menu} 
+        placement='bottomRight'
+      >
+        <EllipsisOutlined className={'configIcon'} onClick={(e) => e.stopPropagation()} />
+      </Dropdown>
+    </div>
+    <div className='pjtItemBox-content'>
+      <div className='description'>
+        <EllipsisText>{item.description || '-'}</EllipsisText>
+      </div>
+      <span className='mark'>
+        {!!isLastUse && '最近选择'}
       </span>
     </div>
-    <div><EllipsisText>{item.description || '-'}</EllipsisText></div>
     <div className={'project-report'}>
-      <div ref={project_trend_Line} style={{ width: '100%', height: "100%" }}></div>
+      {isEmpty(item.resStats) ? (
+        <Empty imageStyle={{ display: 'none' }} style={{ marginTop: 16 }} />
+      ) : <div ref={project_trend_Line} style={{ width: '100%', height: "100%" }}></div>}
     </div>
   </div>);
 };

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { notification } from 'antd';
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { connect } from "react-redux";
 import { Eb_WP } from 'components/error-boundary';
-import PageHeader from 'components/pageHeader';
-import Layout from 'components/common/layout';
 import OpModal from 'components/project-modal';
 import projectAPI from 'services/project';
 import ProjectCard from './components/projectCard';
@@ -15,23 +13,26 @@ import styles from './styles.less';
 
 
 const Index = (props) => {
-  const { match, dispatch } = props,
+  const { curProject, match, dispatch } = props,
     { params } = match;
   const [ loading, setLoading ] = useState(false),
+    [ lastUseProject, setLastUseProject ] = useState(),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
     [ query, setQuery ] = useState({
       pageNo: 1,
-      pageSize: 0
-      // status: 'all'
+      pageSize: 0,
+      withStat: true
     }),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
     [ record, setRecord ] = useState({});
 
-  const tableFilterFieldName = 'taskStatus';
+  useEffect(() => {
+    fetchLastUseProject();
+  }, [curProject.id]);
 
   useEffect(() => {
     fetchList();
@@ -77,16 +78,32 @@ const Index = (props) => {
     fetchList();
   };
 
+  const fetchLastUseProject = async () => {
+    try {
+      const res = await projectAPI.projectList({
+        ...query,
+        projectId: curProject.id,
+        orgId: params.orgId
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      setLastUseProject((res.result.list || [])[0]);
+    } catch (e) {
+      notification.error({
+        message: t('define.message.getFail'),
+        description: e.message
+      });
+    }
+  };
+
   const fetchList = async () => {
     try {
       setLoading(true);
-      const { combinedStatus, status, ...restQuery } = query;
       const res = await projectAPI.projectList({
-        ...restQuery,
-        [tableFilterFieldName]: combinedStatus || status,
+        ...query,
         orgId: params.orgId
       });
-      console.log(res, 'tre');
       if (res.code != 200) {
         throw new Error(res.message);
       }
@@ -138,12 +155,7 @@ const Index = (props) => {
     }
   };
 
-  return <Layout
-    extraHeader={<PageHeader
-      title={t('define.scope.project')}
-      breadcrumb={true}
-    />}
-  >
+  return (
     <div className={styles.projectList}>
       <div className={'pjtBox'}>
         <div 
@@ -151,11 +163,22 @@ const Index = (props) => {
             setOpt('add');
             toggleVisible();
           }} 
-          className={classNames('pjtItemBox', 'creatPjtBox')
-          }
+          className={classNames('pjtItemBox', 'creatPjtBox')}
         >
-          <PlusCircleOutlined className={'plusIcon'} />{t('define.project.create')}
+          <PlusOutlined className='plusIcon' />
+          <span className='create-text'>{t('define.project.create')}</span>
         </div>
+        {lastUseProject && (
+          <ProjectCard 
+            changeProject={changeProject}
+            setOpt={setOpt}
+            setRecord={setRecord}
+            toggleVisible={toggleVisible}
+            updateStatus={updateStatus}
+            isLastUse={true}
+            item={lastUseProject}
+          />
+        )}
         {
           resultMap.list.map((item, i) => {
             return <ProjectCard 
@@ -181,9 +204,13 @@ const Index = (props) => {
         />
       }
     </div>
-  </Layout>;
+  );
 };
 
-export default connect()(
+export default connect(
+  (state) => ({ 
+    curProject: state.global.get('curProject')
+  })
+)(
   Eb_WP()(Index)
 );
