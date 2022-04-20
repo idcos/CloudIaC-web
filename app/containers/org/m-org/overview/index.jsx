@@ -20,7 +20,7 @@ import { EnvStat, ProjectStat, ResGrowTrend, ResStat } from './components/dataDe
 
 const KEY = 'global';
 
-const overview = ({ curOrg, projects, curProject }) => {
+const overview = ({ curOrg, projects }) => {
 
   const overview_envs_state = useRef();
   const overview_resouces_type = useRef();
@@ -109,15 +109,12 @@ const overview = ({ curOrg, projects, curProject }) => {
   }, [fetchCount]);
 
   useEffect(() => {
+    onChangeSelectedPrpo([]);
     resizeHelper.attach();
     return () => {
       resizeHelper.remove();
     };
   }, []);
-
-  useEffect(() => {
-    curProject.id && onChangeSelectedPrpo([curProject.id]);
-  }, [curProject]);
 
   useEffect(() => {
     statisticsCount > 0 && startStatistics();
@@ -146,7 +143,7 @@ const overview = ({ curOrg, projects, curProject }) => {
           >
           </Select>
         </div>
-        {curProject.id ? <div>
+        <div>
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.env_state}>
@@ -228,15 +225,13 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("projectResStat"); 
                   }}
                 >
-                  {isEmpty(data.projectResStat) ? (
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
-                  ) : (
-                    <>
-                      <div style={{ width: '100%', height: "100%" }}>
-                        <div ref={overview_pro_resource} style={{ width: '100%', height: "100%" }}></div>
-                      </div>
-                    </>
-                  )}
+                  <div style={{ width: '100%', height: "100%" }}>
+                    {isEmpty(data.projectResStat) ? (
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
+                    ) : (
+                      <div ref={overview_pro_resource} style={{ width: '100%', height: "100%" }}></div>
+                    )}
+                  </div>
                 </div>
               </div>
             </Col>
@@ -248,27 +243,25 @@ const overview = ({ curOrg, projects, curProject }) => {
                     setSelectedModule("resGrowTrend"); 
                   }}
                 >
-                  {isEmpty(data.resGrowTrend) ? (
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
-                  ) : (
-                    <>
-                      <div style={{ width: '100%', height: "100%" }}>
-                        <div ref={overview_resource_tendency} style={{ width: '100%', height: "100%" }}></div>
-                      </div>
-                    </>
-                  )}
+                  <div style={{ width: '100%', height: "100%" }}>
+                    {isEmpty(data.resGrowTrend) ? (
+                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
+                    ) : (
+                      <div ref={overview_resource_tendency} style={{ width: '100%', height: "100%" }}></div>
+                    )}
+                  </div>
                 </div>
               </div>
             </Col>
           </Row>
-        </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+        </div>
       </div>
-      {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
+      <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
         { selectedModule === 'projectResStat' ? <ProjectStat showData={data.projectResStat}/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend showData={data.resGrowTrend}/> : undefined }
-      </div>}
+      </div>
     </div>
   );
 };
@@ -276,7 +269,6 @@ const overview = ({ curOrg, projects, curProject }) => {
 export default connect(
   (state) => ({ 
     curOrg: state[KEY].get('curOrg'),
-    curProject: state[KEY].get('curProject') || {},
     projects: state[KEY].get('projects').toJS()
   })
 )(overview);
