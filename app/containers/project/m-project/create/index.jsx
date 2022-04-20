@@ -37,7 +37,7 @@ const CreateProjectPage = (props) => {
         message: t('define.message.opSuccess')
       });
       const projectId = res.result.id;
-      history.push(`/org/${orgId}/project/${projectId}/m-project-env`);
+      history.push(`/org/${orgId}/project/${projectId}/m-project-overview`);
     } catch (e) {
       setSubmitLoading(false);
       notification.error({

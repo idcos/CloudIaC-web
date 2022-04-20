@@ -56,7 +56,7 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
         projectId: pjtId
       }
     });
-    history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
+    history.push(`/org/${orgId}/project/${pjtId}/m-project-overview`);
   };
 
   const pjtOperation = async ({ action, payload }, cb) => {

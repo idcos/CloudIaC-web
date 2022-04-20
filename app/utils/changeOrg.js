@@ -31,7 +31,7 @@ const changeOrg = async ({ orgId, dispatch, needJump = true, menuType = 'execute
       return;
     }
     if (!ORG_SET && !(projects.list || []).length) {
-      history.push(`/org/${orgId}/m-org-resource`);
+      history.push(`/org/${orgId}/m-org-overview`);
       return;
     }
     if (ORG_SET) {

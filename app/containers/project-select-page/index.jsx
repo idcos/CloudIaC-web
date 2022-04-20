@@ -34,7 +34,7 @@ const ProjectSelectPage = ({ projects, dispatch }) => {
         projectId: pjtId
       }
     });
-    history.push(`/org/${orgId}/project/${pjtId}/m-project-env`);
+    history.push(`/org/${orgId}/project/${pjtId}/m-project-overview`);
   };
 
   return (

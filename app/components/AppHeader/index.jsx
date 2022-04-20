@@ -107,10 +107,6 @@ const AppHeader = (props) => {
     history.push(`/org/${orgId}/m-org-overview`);
   };
 
-  const linkToProjectView = () => {
-    history.push(`/org/${orgId}/project/${projectId}/m-org-overview`);
-  };
-
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'> 
       <div 
@@ -137,11 +133,7 @@ const AppHeader = (props) => {
       </div>
       <div className='rParts'>
         <div className='change-view-btn'>
-          {matchParams.projectId ? (
-            <span onClick={linkToOrgView}>组织视图</span>
-          ) : (
-            !!projectId && <span onClick={linkToProjectView}>项目视图</span>
-          )}
+          {!!orgId && <span onClick={linkToOrgView}>当前组织：{curOrg.name}</span>}
         </div>
         <div className='user'>
           <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? <EnIcon /> : <ZhIcon />}</span>

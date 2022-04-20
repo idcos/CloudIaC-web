@@ -54,7 +54,7 @@ const Index = (props) => {
         projectId: pjtId
       }
     });
-    history.push(`/org/${params.orgId}/project/${pjtId}/m-project-env`);
+    history.push(`/org/${params.orgId}/project/${pjtId}/m-project-overview`);
   };
   
   const updateStatus = async(record, status) => {

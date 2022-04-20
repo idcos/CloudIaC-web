@@ -109,7 +109,7 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-org-overview',
+          path: '/org/:orgId/project/:projectId/m-project-overview',
           name: '概览',
           component: loadable(() => import('containers/project/m-project/overview'), asyncLoadFallback),
           exact: true
