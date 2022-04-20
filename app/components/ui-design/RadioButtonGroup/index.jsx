@@ -1,3 +1,4 @@
+import React from 'react';
 import noop from 'lodash/noop';
 import classNames from 'classnames';
 import styles from './styles.less';

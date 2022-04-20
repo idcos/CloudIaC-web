@@ -1,51 +1,42 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Tabs } from 'antd';
-import PageHeader from 'components/pageHeader';
-import Layout from 'components/common/layout';
 import getPermission from "utils/permission";
 import { connect } from 'react-redux';
 import { t } from 'utils/i18n';
+import { Menus } from 'components/ui-design';
 import ApiToken from './api-token';
 import UserRole from './user-role';
 import Vcs from './vcs';
 import Ssh from './ssh';
 import Notification from './notification';
 import ResourceAccount from './resource-account';
+import styles from './styles.less';
 
 const OrgSetting = ({ match, userInfo }) => {
  
   const { orgId } = match.params;
-  const [ panel, setPanel ] = useState();
-  const [ subNavs, setSubNavs ] = useState({});
+  const [ activeKey, setActiveKey ] = useState();
+  const [ menus, setMenus ] = useState([]);
   const { ORG_SET, PROJECT_OPERATOR, PROJECT_SET } = getPermission(userInfo);
 
   useEffect(() => {
-    if (ORG_SET) {
-      setSubNavs({
-        userRole: t('define.userRole'),
-        apiToken: 'API Token',
-        vcs: 'VCS',
-        ssh: t('define.ssh'),
-        notification: t('define.notification'),
-        resourceAccount: t('define.resourceAccount.title')
-      });
-      setPanel('userRole');
-    } else if (PROJECT_SET) {
-      setSubNavs({
-        userRole: t('define.userRole'),
-        ssh: t('define.ssh')
-      });
-      setPanel('userRole');
-    } else if (PROJECT_OPERATOR) {
-      setSubNavs({
-        ssh: t('define.ssh')
-      });
-      setPanel('ssh');
-    }
+    const M = [
+      { key: 'userRole', name: t('define.userRole'), icon: '', hide: !ORG_SET && !PROJECT_SET },
+      { key: 'apiToken', name: 'API Token', icon: '', hide: !ORG_SET },
+      { key: 'vcs', name: 'VCS', icon: '', hide: !ORG_SET },
+      { key: 'ssh', name: t('define.ssh'), icon: '', hide: !ORG_SET && !PROJECT_OPERATOR },
+      { key: 'notification', name: t('define.notification'), icon: '', hide: !ORG_SET },
+      { key: 'resourceAccount', name: t('define.resourceAccount.title'), icon: '', hide: !ORG_SET }
+    ].filter(it => !it.hide);
+    setMenus([
+      { type: 'title', title: '设置' },
+      ...M
+    ]);
+    setActiveKey((M[0] || {}).key);
   }, [userInfo]);
 
   const renderByPanel = useCallback(() => {
-    if (!panel) {
+    if (!activeKey) {
       return null;
     }
     const PAGES = {
@@ -56,48 +47,49 @@ const OrgSetting = ({ match, userInfo }) => {
       notification: (props) => <Notification {...props} />,
       resourceAccount: (props) => <ResourceAccount {...props} />
     };
-    return PAGES[panel]({
-      title: subNavs[panel],
+    return PAGES[activeKey]({
+      title: menus[activeKey],
       orgId,
       userInfo
     });
-  }, [panel]);
+  }, [activeKey]);
 
   return (
-    <Layout
-      extraHeader={<PageHeader
-        title={t('define.setting')}
-        breadcrumb={true}
-        renderFooter={() => (
-          <Tabs
-            tabBarStyle={{ backgroundColor: '#fff' }}
-            animated={false}
-            renderTabBar={(props, DefaultTabBar) => {
-              return (
-                <div style={{ marginBottom: -16 }}>
-                  <DefaultTabBar {...props} />
-                </div>
-              );
-            }}
-            activeKey={panel}
-            onChange={(k) => setPanel(k)}
-          >
-            {Object.keys(subNavs).map((key) => {
-              return (
-                <Tabs.TabPane
-                  tab={subNavs[key]}
-                  key={key}
-                />
-              );
-            })}
-          </Tabs>
-        )}
-      />}
-    >
-      <div className='idcos-card'>
+    <div className={styles.orgSet}>
+      <div className='left-menus'>
+        <Menus 
+          activeKey={activeKey} 
+          onChange={(key) => setActiveKey(key)}
+          menus={menus}
+        />
+      </div>
+      <div className='right-content'>
         {renderByPanel()}
       </div>
-    </Layout>
+      {/* <Tabs
+        tabBarStyle={{ backgroundColor: '#fff' }}
+        animated={false}
+        renderTabBar={(props, DefaultTabBar) => {
+          return (
+            <div style={{ marginBottom: -16 }}>
+              <DefaultTabBar {...props} />
+            </div>
+          );
+        }}
+        activeKey={activeKey}
+        onChange={(k) => setActiveKey(k)}
+      >
+        {Object.keys(menus).map((key) => {
+          return (
+            <Tabs.TabPane
+              tab={menus[key]}
+              key={key}
+            />
+          );
+        })}
+      </Tabs> */}
+      
+    </div>
   );
 };
 
