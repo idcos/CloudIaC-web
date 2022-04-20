@@ -67,25 +67,8 @@ export default ({ match }) => {
   };
 
   return (
-    <Layout
-      extraHeader={
-        <PageHeader
-          title={
-            <div className={styles.search}>
-              <span style={{ fontSize: 20 }}>{t('define.resourceQuery')}</span>
-              <Input
-                allowClear={true}
-                style={{ width: 400, marginLeft: 135, height: 32 }}
-                placeholder={t('define.form.input.search.placeholder.key')}
-                prefix={<SearchOutlined />}
-                onPressEnter={(e) => onParamsSearch({ q: e.target.value })}
-              />
-            </div>}
-          breadcrumb={true}
-        />
-      }
-    >
-      <div className={classNames(styles.res_query, 'idcos-card')}>
+    <div style={{ padding: 24 }}>
+      <div className={classNames(styles.res_query)}>
         <div className={styles.left}>
           <div className={styles.env_list}>
             <span>{t('define.scope.env')}</span>
@@ -113,6 +96,15 @@ export default ({ match }) => {
           </div>
         </div>
         <div className={styles.right}>
+          <div className={styles.search}>
+            <Input
+              allowClear={true}
+              style={{ width: 400 }}
+              placeholder={t('define.form.input.search.placeholder.key')}
+              prefix={<SearchOutlined />}
+              onPressEnter={(e) => onParamsSearch({ q: e.target.value })}
+            />
+          </div>
           {tableLoading ? <Spin className='spinning' spinning={true} /> : (
             resources.list.length ? (
               resources.list.map((val) => {
@@ -133,6 +125,6 @@ export default ({ match }) => {
           </div>
         </div>
       </div>
-    </Layout>
+    </div>
   );
 };

@@ -70,28 +70,21 @@ export default ({ match }) => {
   };
 
   return (
-    <Layout
-      extraHeader={<PageHeader
-        title={t('define.variable')}
-        breadcrumb={true}
-      />}
-    >
+    <div style={{ width: 1200, margin: '36px auto' }}>
       <Spin spinning={spinning}>
         <div className={styles.variable}>
-          <div className='idcos-card'>
-            <VariableForm 
-              fetchParams={{ orgId }} 
-              varRef={varRef} 
-              defaultScope={defaultScope} 
-              defaultData={{ variables: vars }}
-              event$={event$}
-            />
-            <div className='btn-wrapper'>
-              <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>{t('define.action.save')}</Button>
-            </div>
+          <VariableForm 
+            fetchParams={{ orgId }} 
+            varRef={varRef} 
+            defaultScope={defaultScope} 
+            defaultData={{ variables: vars }}
+            event$={event$}
+          />
+          <div className='btn-wrapper'>
+            <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>{t('define.action.save')}</Button>
           </div>
         </div>
       </Spin>
-    </Layout>
+    </div>
   );
 };

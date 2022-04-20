@@ -234,13 +234,8 @@ const CTList = ({ match = {} }) => {
     return !selectedRows.length || selectedRows.find(it => SCAN_DISABLE_STATUS.includes(it.policyStatus));
   });
 
-  return <Layout
-    extraHeader={<PageHeader
-      title={t('define.scope.template')}
-      breadcrumb={true}
-    />}
-  >
-    <div className='idcos-card'>
+  return (
+    <div style={{ padding: '36px 24px' }}>
       <div>
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
@@ -294,7 +289,7 @@ const CTList = ({ match = {} }) => {
       />} 
       {visible && <ImportModal orgId={orgId} reload={() => fetchList()} toggleVisible={() => setVisible(false)}/>}
     </div>
-  </Layout>;
+  );
 };
 
 export default Eb_WP()(CTList);

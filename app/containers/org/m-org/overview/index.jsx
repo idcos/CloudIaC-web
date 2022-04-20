@@ -124,46 +124,29 @@ const overview = ({ curOrg, projects, curProject }) => {
   }, [statisticsCount]);
   return (
     <div className={styles.overview}>
-      <Layout
-        style={{ flex: 1, minWidth: 0 }}
-        className='idcos-no-scrollbar'
-        extraHeader={
-          <PageHeader
-            title={
-              <div 
-                className={styles.select} 
-                style={{ 
-                  height: "56px",
-                  lineHeight: "56px",
-                  marginBottom: "0"
-                }}
-              >
-                <span style={{ fontSize: 20 }}>{t('define.overview')}</span>
-                <Select
-                  placeholder={t('define.page.selectProject.title')}
-                  mode='multiple'
-                  maxTagCount={3}
-                  allowClear={true}
-                  maxTagTextLength={10}
-                  style={{ minWidth: 173, marginLeft: 12, fontWeight: 'normal' }}
-                  value={selectedProjectIds}
-                  suffixIcon={<FileTextOutlined />}
-                  onChange={(v) => {
-                    onChangeSelectedPrpo(v);
-                  }}
-                  options={
-                    (projects.list || []).map((val) => {
-                      return { label: val.name, value: val.id };
-                    })
-                  }
-                >
-                </Select>
-              </div>}
-            breadcrumb={true}
-          />
-        }
-      >
-        {curProject.id ? <div className={classNames(styles.overview_left, 'idcos-card')}>
+      <div className={styles.overview_left}>
+        <div className={styles.select}>
+          <Select
+            placeholder={t('define.page.selectProject.title')}
+            mode='multiple'
+            maxTagCount={3}
+            allowClear={true}
+            maxTagTextLength={10}
+            style={{ minWidth: 173 }}
+            value={selectedProjectIds}
+            suffixIcon={<FileTextOutlined />}
+            onChange={(v) => {
+              onChangeSelectedPrpo(v);
+            }}
+            options={
+              (projects.list || []).map((val) => {
+                return { label: val.name, value: val.id };
+              })
+            }
+          >
+          </Select>
+        </div>
+        {curProject.id ? <div>
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.env_state}>
@@ -279,7 +262,7 @@ const overview = ({ curOrg, projects, curProject }) => {
             </Col>
           </Row>
         </div> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-      </Layout>
+      </div>
       {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }

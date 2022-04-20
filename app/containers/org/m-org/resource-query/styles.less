@@ -2,7 +2,7 @@
   display: flex;
   min-height: 700px;
   .left {
-    width: 176px;
+    width: 180px;
     border-right: 1px solid rgba(225, 228, 232, 1);
     .env_list, .provider_list {
       color: #57606A;
@@ -36,10 +36,18 @@
   }
   .right {
     flex: 1;
-    margin-left: 35px;
+    margin: 0 36px;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .search {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
     .pagination {
       width: 100%;
       text-align: right;
