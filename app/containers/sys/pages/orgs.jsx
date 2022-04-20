@@ -154,7 +154,7 @@ const Orgs = ({ title, dispatch }) => {
             toggleVisible();
           }}
           >{t('define.action.modify')}</a>   
-          <a onClick={() => changeOrg({ orgId: record.id, dispatch })}>{t('define.action.enter')}</a>       
+          <a disabled={record.status == 'disable'} onClick={() => changeOrg({ orgId: record.id, dispatch })}>{t('define.action.enter')}</a>       
         </Space>;
       }
     }

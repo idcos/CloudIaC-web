@@ -17,17 +17,13 @@ const KEY = 'global';
 const AppHeader = (props) => {
 
   const language = getLanguage();
-  const { theme, locationPathName, orgs, curOrg, projects, curProject, dispatch, userInfo } = props;
-  const { ORG_SET } = getPermission(userInfo);
-  const { pathname } = window.location;
-  const projectList = (projects || {}).list || [];
+  const { theme, locationPathName, curOrg, curProject, dispatch, userInfo } = props;
   const projectId = (curProject || {}).id;
-  const matchParams = getMatchParams();
   const orgId = (curOrg || {}).id;
   const preStateRef = useRef({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
-  const [ menuType, setMenuType ] = useState(pathname.indexOf('compliance') !== -1 ? 'compliance' : 'execute');
-
+  const menuType = locationPathName.indexOf('compliance') !== -1 ? 'compliance' : 'execute';
+  
   useEffect(() => {
    
     if (orgId && !(orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId)) {
@@ -82,25 +78,12 @@ const AppHeader = (props) => {
     localStorage.newbieGuide_devManual = false;
   };
 
-  const jumpExecute = () => {
-    if (!ORG_SET && !projectList.length) {
-      history.push(`/org/${orgId}/m-org-resource`);
-      return;
-    }
-    if (ORG_SET) {
-      history.push(`/org/${orgId}/m-org-overview`);
-    } else {
-      history.push(`/org/${orgId}/project/${projectList[0].id}/m-project-overview`);
-    }
-  };
-
   const changeMenu = (value) => {
     if (value === 'execute') {
-      jumpExecute();
+      history.push(`/org/${orgId}/m-org-overview`);
     } else {
       history.push(`/org/${orgId}/compliance/dashboard`);
     }
-    setMenuType(value);
   };
 
   const linkToOrgView = () => {
@@ -112,8 +95,7 @@ const AppHeader = (props) => {
       <div 
         className='logo' 
         onClick={() => {
-          history.push('/'); 
-          setMenuType('execute');
+          history.push('/');
         }}
       >
         <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
@@ -133,7 +115,12 @@ const AppHeader = (props) => {
       </div>
       <div className='rParts'>
         <div className='change-view-btn'>
-          {!!orgId && <span onClick={linkToOrgView}>当前组织：{curOrg.name}</span>}
+          {!!orgId && (
+            <span onClick={linkToOrgView}>
+              {t('define.orgPosition')}
+              <span style={{ fontSize: 16 }}>{curOrg.name}</span>
+            </span>
+          )}
         </div>
         <div className='user'>
           <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? <EnIcon /> : <ZhIcon />}</span>
@@ -194,7 +181,6 @@ export default connect((state) => {
   return {
     orgs: state[KEY].get('orgs').toJS(),
     curOrg: state[KEY].get('curOrg'),
-    projects: state[KEY].get('projects').toJS(),
     curProject: state[KEY].get('curProject'),
     userInfo: state[KEY].get('userInfo').toJS()
   };
