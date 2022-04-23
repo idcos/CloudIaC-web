@@ -30,6 +30,8 @@
         height: 356px;
         padding: 7px 20px 0 11px;
         border-radius: 4px;
+        display: flex;
+        flex-direction: column;
         :hover {
           cursor: pointer;
         }
@@ -109,6 +111,8 @@
         border: solid 1px #E1E4E8;
         height: 246px;
         border-radius: 4px;
+        display: flex;
+        flex-direction: column;
         :hover {
           cursor: pointer;
         }
@@ -120,8 +124,9 @@
         border: 1px solid #08857C;
         & > div:first-child {
           height: 100%;
+          box-sizing: border-box;
           background-color: #FAFDFC;
-          padding: 7px 20px 0 11px;
+          // padding: 7px 20px 0 11px;
           border-radius: 8px;
         }
       }
