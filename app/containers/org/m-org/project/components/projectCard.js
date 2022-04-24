@@ -100,7 +100,7 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
         <EllipsisText>{item.description || '-'}</EllipsisText>
       </div>
       <span className='mark'>
-        {!!isLastUse && '最近选择'}
+        {!!isLastUse && t('define.recentSelection')}
       </span>
     </div>
     <div className={'project-report'}>

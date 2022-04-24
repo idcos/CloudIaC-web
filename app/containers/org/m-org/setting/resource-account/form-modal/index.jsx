@@ -288,7 +288,7 @@ export default ({ orgId, event$ }) => {
           <Form.Item noStyle={true} shouldUpdate={true}>
             {
               ({ getFieldValue }) => {
-                const providerValue = getFieldValue('provider') || {};
+                const providerValue = getFieldValue('provider');
                 if (providerValue === 'alicloud') {
                   return (
                     <Form.Item

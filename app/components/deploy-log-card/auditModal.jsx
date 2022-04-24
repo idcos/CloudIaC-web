@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Modal } from "antd";
+import { CheckCircleFilled, ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons'
 import { t } from 'utils/i18n';
 import styles from "./styles.less";
 
@@ -16,18 +17,9 @@ import styles from "./styles.less";
  * @constructor
  */
 function AuditModal(props) {
-  const { visible, setVisible, passOrReject, data, loading, PROJECT_APPROVER } =
-    props;
-
-  const renderNumber = (key) => {
-    if (data && data["planResult"]) {
-      return Object.keys(data["planResult"]).includes(key)
-        ? data["planResult"][key]
-        : "";
-    } else {
-      return "";
-    }
-  };
+  const { visible, setVisible, passOrReject, data, envInfo, loading, PROJECT_APPROVER } = props;
+  const { resAdded, resChanged, resDestroyed, resAddedCost, resUpdatedCost, resDestroyedCost } = data['planResult'] || {};
+  const { isBilling } = envInfo || {};
 
   return (
     <div className={styles.auditModal}>
@@ -65,11 +57,30 @@ function AuditModal(props) {
             <div>{t('task.audit.deleteResource')}</div>
           </div>
           <div className={styles.row}>
-            <div>{renderNumber("resAdded")}</div>
-            <div>{renderNumber("resChanged")}</div>
-            <div>{renderNumber("resDestroyed")}</div>
+            <div>{resAdded}</div>
+            <div>{resChanged}</div>
+            <div>{resDestroyed}</div>
           </div>
         </div>
+        {!!isBilling && (
+          <>
+            <div className={styles.cost}>
+              <CheckCircleFilled style={{ color: "#00A870" }} />
+              <span>{t('task.audit.addResourceCost')}: ￥{(resAddedCost || 0).toFixed(2)}</span>
+            </div>
+            <div className={styles.cost}>
+              <InfoCircleFilled style={{ color: "#FCAA37" }} />
+              <span>{t('task.audit.modifyResourceCost')}: ￥{(resUpdatedCost || 0).toFixed(2)}</span>
+            </div>
+            <div className={styles.cost}>
+              <ExclamationCircleFilled style={{ color: "#E34D59" }} />
+              <span>{t('task.audit.deleteResourceCost')}: ￥{(resDestroyedCost || 0).toFixed(2)}</span>
+            </div>
+            <div className={styles.tip}>
+              {t('task.audit.tip.cost')}
+            </div>
+          </>
+        )}
       </Modal>
     </div>
   );

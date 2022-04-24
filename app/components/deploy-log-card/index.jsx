@@ -421,6 +421,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
         setVisible={setAuditModalVisible}
         passOrReject={passOrRejecy}
         data={taskInfo}
+        envInfo={envInfo}
         loading={{ approvedLoading, rejectedLoading }}
         PROJECT_APPROVER={PROJECT_APPROVER}
       />
