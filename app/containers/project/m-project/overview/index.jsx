@@ -74,16 +74,16 @@ const overview = ({ curOrg, curProject }) => {
     }
   );
 
-  let CHART = useRef([
+  let CHART = [
     { key: 'overview_envs_state', domRef: overview_envs_state, ins: null },
     { key: 'overview_resouces_type', domRef: overview_resouces_type, ins: null },
     { key: 'overview_pro_resource', domRef: overview_pro_resource, ins: null },
     { key: 'overview_resource_tendency', domRef: overview_resource_tendency, ins: null }
-  ]);
-  const resizeHelper = chartUtils.resizeEvent(CHART.current);
+  ];
+  const resizeHelper = chartUtils.resizeEvent(CHART);
 
   useEffect(() => {
-    CHART.current.forEach(chart => {
+    CHART.forEach(chart => {
       if (chart.key === 'overview_envs_state') {
         chartUtils.update(chart, data.envStat);
       }
