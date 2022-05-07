@@ -6,7 +6,7 @@ import { chartUtils } from 'components/charts-cfg';
 import { t } from 'utils/i18n';
 import isEmpty from "lodash/isEmpty";
 
-export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
+export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
   const project_trend_Line = useRef();
   
   let CHART = useRef([
@@ -87,13 +87,15 @@ export default ({ isLastUse, changeProject, item = {}, setOpt, setRecord, toggle
           </Tooltip>
         )}
       </span>
-      <Dropdown 
-        overlay={menu} 
-        placement='bottomRight'
-        getPopupContainer={t => t}
-      >
-        <EllipsisOutlined className={'configIcon'} onClick={(e) => e.stopPropagation()} />
-      </Dropdown>
+      {!readOnly && (
+        <Dropdown 
+          overlay={menu} 
+          placement='bottomRight'
+          getPopupContainer={t => t}
+        >
+          <EllipsisOutlined className={'configIcon'} onClick={(e) => e.stopPropagation()} />
+        </Dropdown>
+      )}
     </div>
     <div className='pjtItemBox-content'>
       <div className='description'>

@@ -13,8 +13,7 @@ const getMenus = (userInfo) => {
     {
       name: t('define.scope.project'),
       key: 'm-org-project',
-      icon: <ProjectOutlined />,
-      isHide: !ORG_SET
+      icon: <ProjectOutlined />
     },
     {
       name: t('define.scope.template'),

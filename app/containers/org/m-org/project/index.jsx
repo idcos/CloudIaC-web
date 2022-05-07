@@ -9,12 +9,14 @@ import projectAPI from 'services/project';
 import ProjectCard from './components/projectCard';
 import { t } from 'utils/i18n';
 import history from 'utils/history';
+import getPermission from "utils/permission";
 import styles from './styles.less';
 
 
 const Index = (props) => {
-  const { curProject, match, dispatch } = props,
+  const { curProject, match, dispatch, userInfo } = props,
     { params } = match;
+  const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
     [ lastUseProject, setLastUseProject ] = useState(),
     [ resultMap, setResultMap ] = useState({
@@ -160,16 +162,18 @@ const Index = (props) => {
   return (
     <div className={styles.projectList}>
       <div className={'pjtBox'}>
-        <div 
-          onClick={() => {
-            setOpt('add');
-            toggleVisible();
-          }} 
-          className={classNames('pjtItemBox', 'creatPjtBox')}
-        >
-          <PlusOutlined className='plusIcon' />
-          <span className='create-text'>{t('define.project.create')}</span>
-        </div>
+        {!!ORG_SET && (
+          <div 
+            onClick={() => {
+              setOpt('add');
+              toggleVisible();
+            }} 
+            className={classNames('pjtItemBox', 'creatPjtBox')}
+          >
+            <PlusOutlined className='plusIcon' />
+            <span className='create-text'>{t('define.project.create')}</span>
+          </div>
+        )}
         {lastUseProject && (
           <ProjectCard 
             changeProject={changeProject}
@@ -179,6 +183,7 @@ const Index = (props) => {
             updateStatus={updateStatus}
             isLastUse={true}
             item={lastUseProject}
+            readOnly={!ORG_SET}
           />
         )}
         {
@@ -190,6 +195,7 @@ const Index = (props) => {
               toggleVisible={toggleVisible}
               updateStatus={updateStatus}
               item={item}
+              readOnly={!ORG_SET}
             />;
           })
         }
@@ -211,7 +217,8 @@ const Index = (props) => {
 
 export default connect(
   (state) => ({ 
-    curProject: state.global.get('curProject') || {}
+    curProject: state['global'].get('curProject') || {},
+    userInfo: state['global'].get('userInfo').toJS()
   })
 )(
   Eb_WP()(Index)
