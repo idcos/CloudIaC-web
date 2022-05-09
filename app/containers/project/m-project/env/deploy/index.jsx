@@ -79,6 +79,7 @@ const Index = ({ match = {} }) => {
         form.setFieldsValue(data);
         setInfo(data);
         fetchParams.repoRevision = data.revision;
+        fetchParams.workdir = data.workdir;
       } else {
         const { repoRevision, workdir } = tplInfoRes;
         form.setFieldsValue({ revision: repoRevision || undefined, workdir });
