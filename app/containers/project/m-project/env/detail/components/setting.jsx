@@ -565,7 +565,7 @@ const Setting = () => {
                 <span>{t('define.env.action.archive.des')}</span>
               </Col>
               <Col span={3} style={{ textAlign: "right" }}>
-                <Button loading={fileLoading} onClick={showConfirm} disabled={envInfo.status !== 'inactive'} >{t('define.env.action.archive')}</Button>
+                <Button loading={fileLoading} onClick={showConfirm} disabled={![ 'destroyed', 'inactive' ].includes(envInfo.status)} >{t('define.env.action.archive')}</Button>
               </Col>
             </Row>
           </Card>
