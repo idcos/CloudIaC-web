@@ -30,10 +30,10 @@ const EnvInfo = () => {
   }, []);
 
   useEffect(() => {
-    if (taskInfo.id && envInfo.id) {
+    if (taskInfo.id && tplInfo.id && envInfo.id) {
       getUrlMap();
     }
-  }, [ taskInfo.id, envInfo.id ]);
+  }, [ taskInfo.id, tplInfo.id, envInfo.id ]);
 
   const getUrlMap = () => {
     Promise.all([
