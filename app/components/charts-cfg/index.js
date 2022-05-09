@@ -665,6 +665,9 @@ export const chartOptions = {
     };
   },
   project_trend_Line: ({ resStats = [] }) => {
+    const xList = resStats.map(it => it.date);
+    const yList = resStats.map(it => it.count);
+    let max = Math.max.apply(null, yList);
     return {
       grid: {
         top: '12px',
@@ -675,17 +678,17 @@ export const chartOptions = {
       },
       xAxis: {
         type: 'category',
-        data: resStats.map(it => it.date),
+        data: xList,
         show: false
       },
       yAxis: {
         type: 'value',
         show: false,
-        min: -1
+        min: -max
       },
       series: [
         {
-          data: resStats.map(it => it.count),
+          data: yList,
           type: 'line',
           symbol: "none",
           itemStyle: {

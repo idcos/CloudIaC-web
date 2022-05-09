@@ -507,7 +507,7 @@
   "env.status.active": "活跃",
   "env.status.approving": "待审批",
   "env.status.failed": "失败",
-  "env.status.inactive": "不活跃",
+  "env.status.inactive": "非活跃",
   "env.status.destroyed": "已销毁",
   "env.status.running": "执行中",
   "org.eventType.task.approving": "等待审批",
