@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { notification } from 'antd';
+import { Empty, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { connect } from "react-redux";
@@ -161,45 +161,49 @@ const Index = (props) => {
 
   return (
     <div className={styles.projectList}>
-      <div className={'pjtBox'}>
-        {!!ORG_SET && (
-          <div 
-            onClick={() => {
-              setOpt('add');
-              toggleVisible();
-            }} 
-            className={classNames('pjtItemBox', 'creatPjtBox')}
-          >
-            <PlusOutlined className='plusIcon' />
-            <span className='create-text'>{t('define.project.create')}</span>
-          </div>
-        )}
-        {lastUseProject && (
-          <ProjectCard 
-            changeProject={changeProject}
-            setOpt={setOpt}
-            setRecord={setRecord}
-            toggleVisible={toggleVisible}
-            updateStatus={updateStatus}
-            isLastUse={true}
-            item={lastUseProject}
-            readOnly={!ORG_SET}
-          />
-        )}
-        {
-          resultMap.list.map((item, i) => {
-            return <ProjectCard 
+      {(!ORG_SET && resultMap.list.length === 0) ? (
+        <Empty style={{ marginTop: 200 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description='您在当前组织下暂无可访问的项目，请联系管理员' />
+      ) : (
+        <div className={'pjtBox'}>
+          {!!ORG_SET && (
+            <div 
+              onClick={() => {
+                setOpt('add');
+                toggleVisible();
+              }} 
+              className={classNames('pjtItemBox', 'creatPjtBox')}
+            >
+              <PlusOutlined className='plusIcon' />
+              <span className='create-text'>{t('define.project.create')}</span>
+            </div>
+          )}
+          {lastUseProject && (
+            <ProjectCard 
               changeProject={changeProject}
               setOpt={setOpt}
               setRecord={setRecord}
               toggleVisible={toggleVisible}
               updateStatus={updateStatus}
-              item={item}
+              isLastUse={true}
+              item={lastUseProject}
               readOnly={!ORG_SET}
-            />;
-          })
-        }
-      </div>
+            />
+          )}
+          {
+            resultMap.list.map((item, i) => {
+              return <ProjectCard 
+                changeProject={changeProject}
+                setOpt={setOpt}
+                setRecord={setRecord}
+                toggleVisible={toggleVisible}
+                updateStatus={updateStatus}
+                item={item}
+                readOnly={!ORG_SET}
+              />;
+            })
+          }
+        </div>
+      )}
       {
         visible && <OpModal
           visible={visible}
