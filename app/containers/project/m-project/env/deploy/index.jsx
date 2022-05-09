@@ -79,6 +79,9 @@ const Index = ({ match = {} }) => {
         form.setFieldsValue(data);
         setInfo(data);
         fetchParams.repoRevision = data.revision;
+      } else {
+        const { repoRevision, workdir } = tplInfoRes;
+        form.setFieldsValue({ revision: repoRevision || undefined, workdir });
       }
       setFetchParams(fetchParams);
       fetchTfvars(fetchParams);
@@ -305,7 +308,6 @@ const Index = ({ match = {} }) => {
           colon={true}
           form={form}
           {...FL}
-          initialValues={info}
         >
           <Row justify='space-between' style={{ marginBottom: 24 }}>
             <Col span={7}>
