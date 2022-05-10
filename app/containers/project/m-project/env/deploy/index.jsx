@@ -254,7 +254,7 @@ const Index = ({ match = {} }) => {
       let values = { ...value, ...configData };
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
-      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData, source: 'manual' });
       if (res.code !== 200) {
         throw {
           message: res.message,
