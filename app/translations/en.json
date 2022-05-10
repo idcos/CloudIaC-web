@@ -348,6 +348,7 @@
   "define.project.action.recovery.confirm.title": "Are you sure you want to recovery the project?",
   "define.project.change": "Switch project",
   "define.project.create": "Create project",
+  "define.project.empty.des": "You have no accessible items in the current organization. Please contact the administrator",
   "define.project.search.placeholder": "Search by name",
   "define.project.select.placeholder": "Please select an project",
   "define.project.selectAll": "Select All projects",

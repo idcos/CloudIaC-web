@@ -162,7 +162,7 @@ const Index = (props) => {
   return (
     <div className={styles.projectList}>
       {(!ORG_SET && resultMap.list.length === 0) ? (
-        <Empty style={{ marginTop: 200 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description='您在当前组织下暂无可访问的项目，请联系管理员' />
+        <Empty style={{ marginTop: 200 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('define.project.empty.des')} />
       ) : (
         <div className={'pjtBox'}>
           {!!ORG_SET && (

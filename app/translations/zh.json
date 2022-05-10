@@ -348,6 +348,7 @@
   "define.project.action.recovery.confirm.title": "确定要将项目恢复？",
   "define.project.change": "切换项目",
   "define.project.create": "创建项目",
+  "define.project.empty.des": "您在当前组织下暂无可访问的项目，请联系管理员",
   "define.project.search.placeholder": "请输入项目名称搜索",
   "define.project.select.placeholder": "请选择项目",
   "define.project.selectAll": "选择全部项目",
