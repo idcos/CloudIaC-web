@@ -18,7 +18,6 @@ const Index = (props) => {
     { params } = match;
   const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
-    [ lastUseProject, setLastUseProject ] = useState(),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
@@ -31,12 +30,6 @@ const Index = (props) => {
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
     [ record, setRecord ] = useState({});
-
-  useEffect(() => {
-    if (curProject.id) {
-      fetchLastUseProject();
-    }
-  }, [curProject.id]);
 
   useEffect(() => {
     fetchList();
@@ -80,25 +73,6 @@ const Index = (props) => {
       reloadGlobalProjects();
     }
     fetchList();
-  };
-
-  const fetchLastUseProject = async () => {
-    try {
-      const res = await projectAPI.projectList({
-        ...query,
-        projectId: curProject.id,
-        orgId: params.orgId
-      });
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      setLastUseProject((res.result.list || [])[0]);
-    } catch (e) {
-      notification.error({
-        message: t('define.message.getFail'),
-        description: e.message
-      });
-    }
   };
 
   const fetchList = async () => {
@@ -185,7 +159,7 @@ const Index = (props) => {
                 setRecord={setRecord}
                 toggleVisible={toggleVisible}
                 updateStatus={updateStatus}
-                isLastUse={lastUseProject && lastUseProject.id === item.id}
+                isLastUse={curProject.id === item.id}
                 item={item}
                 readOnly={!ORG_SET}
               />;
