@@ -29,7 +29,7 @@ const { Option } = Select;
 const Setting = () => {
   
   const [form] = Form.useForm();
-  const { userInfo, envInfo, reload, orgId, projectId, envId, clickLock, onLock } = useContext(DetailPageContext);
+  const { userInfo, envInfo, reload, orgId, projectId, envId, onUnLock, onLock } = useContext(DetailPageContext);
   const { locked } = envInfo;
   // 此处需要用window.location获取最新的参数, 因为环境详情的location只做参数切换并不会刷新location值不刷新
   const { formTab } = queryString.parse(window.location.search); 
@@ -554,7 +554,7 @@ const Setting = () => {
                   !envInfo.locked ? (
                     <Button onClick={() => onLock('lock')} >{t('define.env.action.lock')}</Button>
                   ) : (
-                    <Button onClick={() => clickLock()}>{t('define.env.action.unlock')}</Button>
+                    <Button onClick={() => onUnLock()}>{t('define.env.action.unlock')}</Button>
                   )
                 }</div>}
               </Col>

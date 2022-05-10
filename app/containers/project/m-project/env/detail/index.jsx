@@ -196,18 +196,25 @@ const EnvDetail = (props) => {
       if (confirmRes.code !== 200) {
         return notification.error({ message: confirmRes.message });
       }
-
       if (!confirmRes.result.autoDestroyPass) {
-        setLockLoading(true);
-        let res = await envAPI.envUnLocked({ orgId, projectId, envId });
-        setLockLoading(false);
-
-        if (res.code !== 200) {
-          return notification.error({ message: res.message });
-        }
-
-        notification.success({ message: t('define.message.opSuccess') });
-        fetchEnvInfo();
+        Modal.confirm({
+          width: 480,
+          title: t('define.env.action.unlock'),
+          icon: <InfoCircleFilled />,
+          cancelButtonProps: {
+            className: 'ant-btn-tertiary' 
+          },
+          onOk: async () => {
+            setLockLoading(true);
+            let res = await envAPI.envUnLocked({ orgId, projectId, envId });
+            setLockLoading(false);
+            if (res.code !== 200) {
+              return notification.error({ message: res.message });
+            }
+            notification.success({ message: t('define.message.opSuccess') });
+            fetchEnvInfo();
+          }
+        });
       } else {
         setLockVisible(true);
         setLockType(type);
@@ -238,13 +245,8 @@ const EnvDetail = (props) => {
     return PAGES[panel]();
   }, [panel]);
 
-  const clickLock = () => {
-    if (lockLoading || envDetailLoading) {
-      return;
-    } else {
-      setLockLoading(true);
-      onLock('unlock');
-    }
+  const onUnLock = () => {
+    onLock('unlock');
   };
   return (
     <DetailPageContext.Provider
@@ -260,7 +262,7 @@ const EnvDetail = (props) => {
         projectId,
         type: 'env',
         changeTabPage: setPanel,
-        clickLock,
+        onUnLock,
         onLock
       }}
     >
