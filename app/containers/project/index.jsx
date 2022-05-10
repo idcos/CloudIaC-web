@@ -156,7 +156,7 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
                   <div 
                     className={styles.menuSelectfooterContent} 
                   >
-                    <div className='more' onClick={() => history.push(`/project-select-page?orgId=${orgId}`)}>
+                    <div className='more' onClick={() => history.push(`/org/${orgId}/m-org-project`)}>
                       <EyeOutlined className='icon' />{t('define.project.viewMore')}
                     </div>
                     <div className='create'>

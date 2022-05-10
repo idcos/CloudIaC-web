@@ -178,12 +178,6 @@ export default function createRoutes() {
       ]
     },
     {
-      path: '/project-select-page',
-      name: '全部项目',
-      component: loadable(() => import('containers/project-select-page'), asyncLoadFallback),
-      exact: true
-    },
-    {
       path: '/sys/setting',
       name: '系统设置',
       component: loadable(() => import('containers/sys'), asyncLoadFallback),
