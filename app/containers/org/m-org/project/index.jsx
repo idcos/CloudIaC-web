@@ -177,18 +177,6 @@ const Index = (props) => {
               <span className='create-text'>{t('define.project.create')}</span>
             </div>
           )}
-          {lastUseProject && (
-            <ProjectCard 
-              changeProject={changeProject}
-              setOpt={setOpt}
-              setRecord={setRecord}
-              toggleVisible={toggleVisible}
-              updateStatus={updateStatus}
-              isLastUse={true}
-              item={lastUseProject}
-              readOnly={!ORG_SET}
-            />
-          )}
           {
             resultMap.list.map((item, i) => {
               return <ProjectCard 
@@ -197,6 +185,7 @@ const Index = (props) => {
                 setRecord={setRecord}
                 toggleVisible={toggleVisible}
                 updateStatus={updateStatus}
+                isLastUse={lastUseProject && lastUseProject.id === item.id}
                 item={item}
                 readOnly={!ORG_SET}
               />;
