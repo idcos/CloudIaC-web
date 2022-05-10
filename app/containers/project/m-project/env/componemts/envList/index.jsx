@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Card, Descriptions, Tag, Space, Empty, Spin, Collapse, Tooltip } from 'antd';
-import { DownOutlined, RightOutlined } from '@ant-design/icons';
+import { DownOutlined, RightOutlined, LockOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -112,6 +112,7 @@ const EnvList = (props) => {
                 <div className={styles.id}>ID：{data.id}</div>
               </div>
               <div className={styles.tags}>
+                {!!data.locked && <LockOutlined style={{ color: '#000', marginRight: 8, fontSize: 16 }} />}
                 {data.isDrift && (
                   <Tooltip context={'检测到该环境存在漂移资源'}>
                     <Tag

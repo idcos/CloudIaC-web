@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { Modal, notification, Tabs, Button, Form, Input, Tag, Tooltip, Space } from "antd";
-import { InfoCircleFilled } from '@ant-design/icons';
+import { InfoCircleFilled, LockOutlined } from '@ant-design/icons';
 import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -276,6 +276,7 @@ const EnvDetail = (props) => {
             title={(
               <Space size={8} align='center'>
                 <span>{envInfo.name || ''}</span>
+                {!!envInfo.locked && <LockOutlined style={{ color: '#000', fontSize: 16 }} />}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {ENV_STATUS[envInfo.status] && (
                     <Tag style={{ margin: 0 }} color={ENV_STATUS_COLOR[envInfo.status] || 'default'}>
