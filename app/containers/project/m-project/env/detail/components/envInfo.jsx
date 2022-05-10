@@ -35,16 +35,18 @@ const EnvInfo = () => {
     }
   }, [ taskInfo.id, tplInfo.id, envInfo.id ]);
 
-  const getUrlMap = () => {
-    Promise.all([
-      linkToPage({ commitId: taskInfo.commitId }),
-      linkToPage({ path: (envInfo.workdir + '/' + envInfo.tfVarsFile).replace('//', '/').replace('///', '/') }),
-      linkToPage({ path: (envInfo.workdir + '/' + envInfo.playbook).replace('//', '/').replace('///', '/') })
-    ]).then(([ commitUrl, tfVarsFileUrl, playbookUrl ]) => {
-      setUrlMap({
-        commitUrl, tfVarsFileUrl, playbookUrl
-      });
+  const getUrlMap = async () => {
+    let data = {};
+    await linkToPage({ commitId: taskInfo.commitId }).then((commitUrl) => {
+      data.commitUrl = commitUrl;
     });
+    await linkToPage({ path: (envInfo.workdir + '/' + envInfo.tfVarsFile).replace('//', '/').replace('///', '/') }).then((tfVarsFileUrl) => {
+      data.tfVarsFileUrl = tfVarsFileUrl;
+    });
+    await linkToPage({ path: (envInfo.workdir + '/' + envInfo.playbook).replace('//', '/').replace('///', '/') }).then((playbookUrl) => {
+      data.playbookUrl = playbookUrl;
+    });
+    setUrlMap(data);
   };
 
   // 跳转repo页面
