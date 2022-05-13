@@ -129,18 +129,6 @@ const Basic = ({ orgId, projectId, dispatch }) => {
             </Form.Item>
           </Form>
         </Card>
-        <Card title={t('define.project.statistics')} headStyle={{ backgroundColor: 'rgba(230, 240, 240, 0.7)' }} type={'inner'} style={{ marginTop: 24 }}>
-          <Row style={{ display: 'flex', justifyContent: 'center', padding: '0px 72px' }}>
-            {CHART.current.map(chart => <Col span={18}>
-              <div className='chartPanel' style={{ position: 'relative' }}>
-                <h2 style={{ position: 'absolute', top: 65, left: 18 }}>{t('define.ct.num')}
-                  <h1 style={{ display: 'flex' }}>{projectInfo.tplCount || 0}</h1>
-                </h2>
-                <div ref={chart.domRef} className='chartEle'></div>
-              </div>
-            </Col>)}
-          </Row>
-        </Card>
       </div>
     </Spin>
   );
