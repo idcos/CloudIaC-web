@@ -40,7 +40,9 @@ const envAPI = {
   },
   //销毁环境资源
   envDestroy: ({ envId, projectId, orgId }) => {
-    return post(`/api/v1/envs/${envId}/destroy`, { "taskType": "destroy"
+    return post(`/api/v1/envs/${envId}/destroy`, { 
+      taskType: 'destroy',
+      source: 'manual'
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源列表
