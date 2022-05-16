@@ -100,7 +100,7 @@ const EnvInfo = () => {
             <Descriptions.Item span={3} label={t('define.updateTime')}>{timeUtils.format(envInfo.updatedAt) || '-'}</Descriptions.Item>
 
             <Descriptions.Item span={3} label={t('define.scope.template')}><span onClick={() => {
-              history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
+              history.push(`/org/${orgId}/project/${projectId}/m-project-ct?name=${envInfo.templateName}`);
             }} className={styles.linkToPage}
             >{envInfo.templateName || '-'}</span></Descriptions.Item>
             <Descriptions.Item span={3} label={`${t('define.branch')}/${t('define.tag')}`}>{envInfo.revision || '-'}</Descriptions.Item>

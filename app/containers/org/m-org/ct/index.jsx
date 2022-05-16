@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Table, notification, Space, Popconfirm } from 'antd';
+import { Button, Table, notification, Space, Popconfirm, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import history from 'utils/history';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -52,6 +53,7 @@ const CTList = ({ match = {} }) => {
       tplAPI.list.bind(null, { 
         currentPage: query.pageNo,
         pageSize: query.pageSize,
+        q: query.q,
         orgId
       })
     ), {
@@ -243,6 +245,16 @@ const CTList = ({ match = {} }) => {
             <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
           </Space>
           <Space>
+            <Input
+              style={{ width: 320 }}
+              allowClear={true}
+              placeholder={t('define.ct.search.placeholder')}
+              prefix={<SearchOutlined />}
+              onPressEnter={(e) => {
+                const q = e.target.value;
+                changeQuery({ q });
+              }}
+            />
             <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
             <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button>
           </Space>

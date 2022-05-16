@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Space, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import history from 'utils/history';
 import moment from 'moment';
 import { connect } from "react-redux";
+import queryString from 'query-string';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import EllipsisText from 'components/EllipsisText';
@@ -16,14 +18,16 @@ import { useLoopPolicyStatus } from 'utils/hooks';
 import PolicyStatus from 'components/policy-status';
 import DetectionDrawer from 'containers/org/m-org/ct/components/detection-drawer';
 
-const CTList = ({ userInfo, match = {} }) => {
+const CTList = ({ userInfo, match = {}, location }) => {
 
+  const { name } = queryString.parse(location.search);
   const { check, loopRequesting } = useLoopPolicyStatus();
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { orgId, projectId } = match.params || {};
   const [ query, setQuery ] = useState({
     pageNo: 1,
-    pageSize: 10
+    pageSize: 10,
+    q: name
   });
   const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
     visible: false,
@@ -47,6 +51,7 @@ const CTList = ({ userInfo, match = {} }) => {
       tplAPI.list.bind(null, { 
         currentPage: query.pageNo,
         pageSize: query.pageSize,
+        q: query.q,
         orgId,
         projectId
       })
@@ -181,6 +186,23 @@ const CTList = ({ userInfo, match = {} }) => {
   >
     <div className='idcos-card'>
       <div>
+        <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
+          <div>
+          </div>
+          <Space>
+            <Input
+              defaultValue={query.q}
+              style={{ width: 320 }}
+              allowClear={true}
+              placeholder={t('define.ct.search.placeholder')}
+              prefix={<SearchOutlined />}
+              onPressEnter={(e) => {
+                const q = e.target.value;
+                changeQuery({ q });
+              }}
+            />
+          </Space>
+        </Space>
         <Table
           columns={columns}
           dataSource={resultMap.list}
