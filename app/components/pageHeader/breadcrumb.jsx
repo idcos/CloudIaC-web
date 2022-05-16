@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { t } from 'utils/i18n';
 
-const KEY = 'global';
+const KEY = 'global'; 
 
 const breadcrumbNameMap = {
   'org': { text: t('define.scope.org') },
