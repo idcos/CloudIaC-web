@@ -390,6 +390,7 @@
   "define.resource.totalCost": "总费用（元）",
   "define.resourceAccount.accountDes": "账号描述",
   "define.resourceAccount.action.add": "添加资源账号",
+  "define.resourceAccount.action.addKeyValue": "添加键值对",
   "define.resourceAccount.action.delect.confirm.title": "确定要删除该资源账号？",
   "define.resourceAccount.action.modify": "编辑资源账号",
   "define.resourceAccount.sameKeyError": "以下资源账号存在相同的key，请重新选择",

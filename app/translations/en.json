@@ -390,6 +390,7 @@
   "define.resource.totalCost": "Total cost (yuan)",
   "define.resourceAccount.accountDes": "Account description",
   "define.resourceAccount.action.add": "Add resource account",
+  "define.resourceAccount.action.addKeyValue": "Add key value pair",
   "define.resourceAccount.action.delect.confirm.title": "Are you sure you want to delete this resource account?",
   "define.resourceAccount.action.modify": "Modify resource account",
   "define.resourceAccount.sameKeyError": "The following resource accounts have the same key, please re select",
