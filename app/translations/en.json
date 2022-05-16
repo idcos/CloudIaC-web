@@ -365,6 +365,7 @@
   "define.projectOverview": "Project overview",
   "define.recentSelection": "Recent selection",
   "define.redeployment": "Redeployment",
+  "define.relationEnvironment": "Number of relation environments",
   "define.repo": "Repository",
   "define.repoName": "Repository name",
   "define.repoName.search.placeholder": "Search by Repository name",

@@ -365,6 +365,7 @@
   "define.projectOverview": "项目概览",
   "define.recentSelection": "最近选择",
   "define.redeployment": "重新部署",
+  "define.relationEnvironment": "关联环境数量",
   "define.repo": "仓库",
   "define.repoName": "仓库名称",
   "define.repoName.search.placeholder": "请输入仓库名称搜索",

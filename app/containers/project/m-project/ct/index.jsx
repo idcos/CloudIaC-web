@@ -95,7 +95,7 @@ const CTList = ({ userInfo, match = {} }) => {
     },
     {
       dataIndex: 'relationEnvironment',
-      title: t('define.activeEnvironment'),
+      title: t('define.relationEnvironment'),
       width: 78,
       ellipsis: true,
       render: (text, record) => (

@@ -121,8 +121,8 @@ const CTList = ({ match = {} }) => {
       ellipsis: true
     },
     {
-      dataIndex: 'activeEnvironment',
-      title: t('define.activeEnvironment'),
+      dataIndex: 'relationEnvironment',
+      title: t('define.relationEnvironment'),
       width: 78,
       ellipsis: true
     },
