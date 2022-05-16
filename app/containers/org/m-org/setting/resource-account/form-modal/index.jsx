@@ -246,7 +246,7 @@ export default ({ orgId, event$ }) => {
                   <Form.Item>
                     <Space onClick={() => add({})} style={{ cursor: 'pointer' }}>
                       <PlusOutlined />
-                      <span>{t('define.resourceAccount.action.add')}</span>
+                      <span>{t('define.resourceAccount.action.addKeyValue')}</span>
                     </Space>
                   </Form.Item>
                 </>

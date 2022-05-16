@@ -137,7 +137,7 @@ export default ({ orgId }) => {
 
   return (
     <Space size='middle' direction='vertical' style={{ width: '100%', display: 'flex' }}>
-      <Button type='primary' onClick={() => event$.emit({ type: 'open-resource-account-form-modal' })}>{t('define.resourceAccount.action.addKeyValue')}</Button>
+      <Button type='primary' onClick={() => event$.emit({ type: 'open-resource-account-form-modal' })}>{t('define.resourceAccount.action.add')}</Button>
       <Table
         columns={columns}
         scroll={{ x: 'min-content' }}
