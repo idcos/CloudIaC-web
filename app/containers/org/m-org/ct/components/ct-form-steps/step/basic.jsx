@@ -62,7 +62,6 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
       <Form.Item
         label={t('define.name')}
         name='name'
-        getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
@@ -70,7 +69,7 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
           }
         ]}
       >
-        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} />
+        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
       </Form.Item>
       <Form.Item
         label={t('define.des')}

@@ -86,7 +86,6 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
       <Form.Item
         label={t('define.projectName')}
         name='name'
-        getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
@@ -94,7 +93,7 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
           }
         ]}
       >
-        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} />
+        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
       </Form.Item>
       <Form.Item
         label={t('define.projectDes')}

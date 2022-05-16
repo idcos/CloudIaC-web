@@ -49,7 +49,6 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
       <Form.Item
         label={t('define.name')}
         name='name'
-        getValueFromEvent={(e) => e.target.value.trim()}
         rules={[
           {
             required: true,
@@ -57,7 +56,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord }) => {
           }
         ]}
       >
-        <Input placeholder={t('define.form.input.placeholder')}/>
+        <Input placeholder={t('define.form.input.placeholder')} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
       </Form.Item>
       <Form.Item
         label={t('define.des')}

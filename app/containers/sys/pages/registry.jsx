@@ -65,9 +65,8 @@ export default () => {
       <Form.Item
         label={t('define.page.sysSet.registry.field.registryAddr')}
         name='registryAddr'
-        getValueFromEvent={(e) => e.target.value.trim()}
       >
-        <Input placeholder={t('define.page.sysSet.registry.field.registryAddr.placeholder')} />
+        <Input placeholder={t('define.page.sysSet.registry.field.registryAddr.placeholder')} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }} style={{ paddingTop: 24 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>

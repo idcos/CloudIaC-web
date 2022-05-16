@@ -315,7 +315,6 @@ const Index = ({ match = {} }) => {
               <Form.Item
                 label={t('define.name')}
                 name='name'
-                getValueFromEvent={(e) => e.target.value.trim()}
                 rules={[
                   {
                     required: true,
@@ -324,7 +323,7 @@ const Index = ({ match = {} }) => {
                 ]}
                 initialValue={info.name || undefined}
               >
-                <Input disabled={info.locked} value={info.name} placeholder={t('define.form.input.placeholder')} style={{ width: '100%' }} />
+                <Input disabled={info.locked} value={info.name} placeholder={t('define.form.input.placeholder')} style={{ width: '100%' }} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
               </Form.Item>
             </Col>
             <Col span={7}>
