@@ -65,7 +65,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
     if (formData.repoRevision) {
       fetchAutoMatchTfVersion(formData);
     }
-  }, [ctData, type]);
+  }, [ ctData, type ]);
 
   const fetchVcsList = async () => {
     try {
@@ -109,7 +109,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
         const { repoId, repoFullName } = form.getFieldsValue();
         const hasSelectedItem = (data.list || []).find((it) => it.id === repoId);
         if (repoId && repoFullName && !hasSelectedItem) {
-          return [ ...data.list, { id: repoId, fullName: repoFullName } ];
+          return [ ...data.list, { id: repoId, fullName: repoFullName }];
         } else {
           return data.list || [];
         }
@@ -214,7 +214,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       mutateAutoMatchTfVersion(undefined);
       fetchAutoMatchTfVersion(allValues);
       form.setFieldsValue({
-        tfVersion: undefined,
+        tfVersion: undefined
       });
     }
   };
@@ -371,7 +371,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
                   (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
                 }
                 {
-                  (formData.tfVersion && !([...tfversionOptions, TFVERSION_AUTO_MATCH]).includes(formData.tfVersion)) && (
+                  (formData.tfVersion && !([ ...tfversionOptions, TFVERSION_AUTO_MATCH ]).includes(formData.tfVersion)) && (
                     <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
                   )
                 }

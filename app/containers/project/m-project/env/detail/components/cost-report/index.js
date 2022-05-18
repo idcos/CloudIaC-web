@@ -12,8 +12,8 @@ export default ({ orgId, projectId, envId }) => {
   const [ list, setList ] = useState([]);
 
   let CHART = useRef([
-    { key: 'cost_type_pie', domRef: cost_type_pie, ins: null, title: t('define.resource.costType') },
-    { key: 'cost_stacked_area', domRef: cost_stacked_area, ins: null, title: t('define.resource.costTrend') }
+    { key: 'cost_type_pie', domRef: cost_type_pie, ins: null, title: t('define.resource.curMonthCostType') },
+    { key: 'cost_stacked_area', domRef: cost_stacked_area, ins: null, title: t('define.resource.environmentCostTrend') }
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART);
 
@@ -92,6 +92,7 @@ export default ({ orgId, projectId, envId }) => {
           )}
         </Row>
       </Spin>
+      <div className='title'>{t('define.resource.activeExpenses')}</div>
       <Table
         columns={columns}
         scroll={{ x: 'min-content' }}

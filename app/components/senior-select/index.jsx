@@ -27,7 +27,8 @@ export default (props) => {
     maxLen,
     seniorSelectfooter = null,
     formatOptionLabel = (t) => t,
-    options = []
+    options = [],
+    dropdownMatchSelectWidth
   } = props || {};
 
   const [ showOptions, setShowOptions ] = useState([]);
@@ -61,6 +62,7 @@ export default (props) => {
         onChange(value);
       }}
       value={value}
+      dropdownMatchSelectWidth={dropdownMatchSelectWidth}
       dropdownRender={menu => {
         const showFlattenOptions = intersectionWith(menu.props.flattenOptions, showOptions, (flattenOption, showOption) => {
           return flattenOption.key === showOption[valuePropName];

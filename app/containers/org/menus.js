@@ -5,11 +5,11 @@ import { t } from 'utils/i18n';
 const getMenus = (userInfo) => {
   const { ORG_SET, PROJECT_OPERATOR } = getPermission(userInfo);
   return [
-    {
-      name: t('define.overview'),
-      key: 'm-org-overview',
-      icon: <ControlOutlined />
-    },
+    // {
+    //   name: t('define.overview'),
+    //   key: 'm-org-overview',
+    //   icon: <ControlOutlined />
+    // },
     {
       name: t('define.scope.project'),
       key: 'm-org-project',

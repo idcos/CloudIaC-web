@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useContext } from 'react';
-import { Descriptions, Collapse, Empty } from 'antd';
+import { Descriptions, Collapse, Empty, Divider } from 'antd';
 import { AUTO_DESTROY } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
@@ -95,15 +95,27 @@ const EnvInfo = () => {
               <Descriptions.Item span={3} label={t('define.env.field.monthCost')}>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}{t('define.money.yuan')}</Descriptions.Item>
             )}
             <Descriptions.Item span={3} label={t('define.env.field.resourcesNum')}>{envInfo.resourceCount}</Descriptions.Item>
-
+          </Descriptions>
+          <Divider style={{ marginTop: 0, marginBottom: '18px' }}/>
+          <Descriptions
+            labelStyle={{ color: '#24292F', fontWeight: 500 }}
+            contentStyle={{ color: '#57606A' }}
+          >
             <Descriptions.Item span={3} label={t('define.env.field.lifeTime')}>{formatTTL(envInfo)}</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.updateTime')}>{timeUtils.format(envInfo.updatedAt) || '-'}</Descriptions.Item>
-
+          </Descriptions>
+          <Divider style={{ marginTop: 0, marginBottom: '18px' }}/>
+          <Descriptions
+            labelStyle={{ color: '#24292F', fontWeight: 500 }}
+            contentStyle={{ color: '#57606A' }}
+          >
             <Descriptions.Item span={3} label={t('define.scope.template')}><span onClick={() => {
               history.push(`/org/${orgId}/project/${projectId}/m-project-ct?name=${envInfo.templateName}`);
             }} className={styles.linkToPage}
             >{envInfo.templateName || '-'}</span></Descriptions.Item>
             <Descriptions.Item span={3} label={`${t('define.branch')}/${t('define.tag')}`}>{envInfo.revision || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label={t('define.workdir')}>{envInfo.workdir || '-'}</Descriptions.Item>
+            
             <Descriptions.Item span={3} label='Commit ID'>{
               taskInfo.commitId ? (
                 urlMap.commitUrl ? (
@@ -111,7 +123,12 @@ const EnvInfo = () => {
                 ) : taskInfo.commitId.substring(0, 12)
               ) : '-'
             }</Descriptions.Item>
-
+          </Descriptions>
+          <Divider style={{ marginTop: 0, marginBottom: '18px' }}/>
+          <Descriptions
+            labelStyle={{ color: '#24292F', fontWeight: 500 }}
+            contentStyle={{ color: '#57606A' }}
+          >
             <Descriptions.Item span={3} label={t('define.ssh')}>{envInfo.keyName || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.variable.tfVarsFile')}>{
               envInfo.tfVarsFile ? (
@@ -127,11 +144,23 @@ const EnvInfo = () => {
                 ) : envInfo.playbook
               ) : '-'
             }</Descriptions.Item>
+          </Descriptions>
+          <Divider style={{ marginTop: 0, marginBottom: '18px' }}/>
+          <Descriptions
+            labelStyle={{ color: '#24292F', fontWeight: 500 }}
+            contentStyle={{ color: '#57606A' }}
+          >
 
             <Descriptions.Item span={3} label={t('define.env.field.runner')}>{envInfo.runnerId || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label='target'>{envInfo.target || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.env.field.triggers.commit')}>{(envInfo.triggers || []).includes('commit') ? t('define.yes') : t('define.no') }</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.env.field.triggers.prmr')}>{(envInfo.triggers || []).includes('prmr') ? t('define.yes') : t('define.no') }</Descriptions.Item>
+          </Descriptions>
+          <Divider style={{ marginTop: 0, marginBottom: '18px' }}/>
+          <Descriptions
+            labelStyle={{ color: '#24292F', fontWeight: 500 }}
+            contentStyle={{ color: '#57606A' }}
+          >
            
             <Descriptions.Item span={3} label={t('define.creator')}>{envInfo.creator || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.createdAt')}>{timeUtils.format(envInfo.createdAt) || '-'}</Descriptions.Item>
