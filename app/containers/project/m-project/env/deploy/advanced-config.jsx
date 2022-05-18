@@ -42,6 +42,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   }, [envId]);
 
   useEffect(() => {
+    if (!envId && runnner.length) {
+      form.setFieldsValue({
+        runnerTags: runnner.slice(0, 1)
+      });
+    }
+  }, [ envId, runnner ]);
+
+  useEffect(() => {
     if (envId) {
       setFormValues(data);
     } else {
