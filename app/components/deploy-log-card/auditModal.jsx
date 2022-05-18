@@ -62,7 +62,7 @@ function AuditModal(props) {
             <div>{resDestroyed}</div>
           </div>
         </div>
-        {!!isBilling && (
+        {!!(isBilling && (resAddedCost || resUpdatedCost || resDestroyedCost)) && (
           <>
             <div className={styles.cost}>
               <CheckCircleFilled style={{ color: "#00A870" }} />
