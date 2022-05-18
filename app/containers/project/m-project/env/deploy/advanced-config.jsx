@@ -213,9 +213,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
     }
   }), [onfinish]);
 
-  const checkedChange = (e, str) => {
-    let checked = e.target ? e.target.checked : e;
-    if (checked && !form.getFieldValue('autoApproval')) {
+  // 检查改变
+  const checkedChange = (flag, str) => {
+    if (flag && !form.getFieldValue('autoApproval')) {
       Modal.confirm({
         icon: <InfoCircleFilled />,
         width: 480,
@@ -230,21 +230,24 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
         onCancel() {
           if (str === t('define.env.field.triggers.commit')) {
             form.setFieldsValue({ commit: false });
-          } else {
+          } else if (str === t('define.autoRepairDrift')) {
             form.setFieldsValue({ autoRepairDrift: false });
+          } else if (str === t('define.env.field.lifeTime')) {
+            form.setFieldsValue({ type: 'infinite' });
           }
         }
       });
     }
   };
 
-  const autoApprovalClick = (e) => {
-    const { autoRepairDrift, commit } = form.getFieldsValue();
-    if (!e.target.checked && autoRepairDrift || !e.target.checked && commit) {
+  const autoApprovalClick = (flag) => {
+    const { autoRepairDrift, commit, type } = form.getFieldsValue();
+    if (!flag && (autoRepairDrift || commit || type !== 'infinite')) {
       const title = [
         !!autoRepairDrift ? t('define.autoRepairDrift') : '',
-        !!commit ? t('define.env.field.triggers.commit') : ''
-      ].filter(it => !!it).join('|');
+        !!commit ? t('define.env.field.triggers.commit') : '',
+        type !== 'infinite' ? t('define.env.field.lifeTime') : ''
+      ].filter(it => !!it).join(' | ');
       Modal.confirm({
         icon: <InfoCircleFilled />,
         width: 480,
@@ -254,7 +257,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
           className: 'ant-btn-tertiary' 
         },
         onOk() {
-          form.setFieldsValue({ autoRepairDrift: false, commit: false });
+          form.setFieldsValue({ autoRepairDrift: false, commit: false, type: 'infinite' });
         },
         onCancel() {
           form.setFieldsValue({ autoApproval: true });
@@ -450,7 +453,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               name='type'
                               initialValue={'infinite'}
                             >
-                              <Select disabled={locked} style={{ width: '100%' }}>
+                              <Select disabled={locked} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
                                 {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                               </Select>
                             </Form.Item>
@@ -547,7 +550,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e))}>{t('define.autoApproval')}</Checkbox> 
+                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e.target.checked))}>{t('define.autoApproval')}</Checkbox> 
                       </Form.Item>
                     </Col>
                     <Col span={7}></Col>
@@ -567,7 +570,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox disabled={locked} onChange={e => checkedChange(e, t('define.env.field.triggers.commit'))}>{t('define.env.field.triggers.commit')}</Checkbox> 
+                          <Checkbox disabled={locked} onChange={e => checkedChange(e.target.checked, t('define.env.field.triggers.commit'))}>{t('define.env.field.triggers.commit')}</Checkbox> 
                         </Form.Item>
                         <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
@@ -714,7 +717,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox disabled={locked} onChange={e => checkedChange(e, t('define.autoRepairDrift'))}>{t('define.autoRepairDrift')}</Checkbox>                  
+                                <Checkbox disabled={locked} onChange={e => checkedChange(e.target.checked, t('define.autoRepairDrift'))}>{t('define.autoRepairDrift')}</Checkbox>                  
                               </Form.Item>
                             </>
                           ) : null;
