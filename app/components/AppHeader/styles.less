@@ -74,6 +74,30 @@
     z-index: 10;
     height: @AppHeaderHeight;
 
+    .tab-icon {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      margin-left: 10px;
+    }
+    .tab-triangle {
+      box-sizing: content-box;
+      position: absolute;
+      left: 0;
+      top: 2.5px;
+      width: 0;
+      height: 0;
+      border: 5px solid #ffffff;
+      border-top-color: #ffffff;
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+      border-right-color: transparent;
+    }
+    .header-divider {
+      height: 24px;
+      border-color: #393939;
+    }
+
     &.dark {
       background: @AppHeaderBg;
     }
@@ -82,6 +106,7 @@
       display: flex;
       align-items: center;
       margin: 0 auto;
+      background: @header-color;
      
 
       .logo {

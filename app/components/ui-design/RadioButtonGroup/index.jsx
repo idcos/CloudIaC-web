@@ -9,16 +9,19 @@ export default ({ options = [], value, onChange = noop }) => {
     <div className={styles.radioButtonGroup}>
       {options.map((opt) => {
         return (
-          <div 
-            className={classNames('radio-button', { active: opt.value === value, disabled: opt.disabled })}
-            onClick={() => {
-              if (opt.value !== value && !opt.disabled) {
-                onChange(opt.value);
-              }
-            }}
-          >
-            {opt.label}
+          <div className={'radio-button-wrapper'}>
+            <div 
+              className={classNames('radio-button', { active: opt.value === value, disabled: opt.disabled })}
+              onClick={() => {
+                if (opt.value !== value && !opt.disabled) {
+                  onChange(opt.value);
+                }
+              }}
+            >
+              {opt.label}
+            </div>
           </div>
+          
         );
       })}
     </div>
