@@ -42,6 +42,12 @@ const getMenus = (userInfo, { projectList }) => {
           isHide: !PROJECT_SET,
           key: 'm-project-setting',
           icon: <SettingOutlined />
+        },
+        {
+          name: t('define.resourceQuery'),
+          isHide: !PROJECT_SET,
+          key: 'm-project-resource',
+          icon: <SearchOutlined />
         }
       ]
     }

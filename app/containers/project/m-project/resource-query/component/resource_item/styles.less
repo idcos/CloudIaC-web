@@ -1,0 +1,70 @@
+.resource_item {
+  width: 100%;
+  border: 2px solid rgba(225, 228, 232, 1);
+  border-radius: 3px;
+  margin-bottom: 24px;
+  .header {
+    display: flex;
+    height: 42px;
+    line-height: 42px;
+    padding-left: 15px;
+    padding-right: 50px;
+    background-color: #F9F9F9;
+    justify-content: space-between;
+    .item {
+      font-size: 12px;
+      &:last-child {
+        margin-right: 0;
+      }
+      .label {
+        color: rgba(36, 41, 47, 100);
+        font-family: PingFangSC-Medium;
+        margin-right: 24px;
+      }
+      .value {
+        color: rgba(87, 96, 106, 100);
+        font-family: PingFangSC-Regular;
+        a {
+          color: inherit;
+          &:hover {
+            color: #08857C;
+          }
+        }
+      }
+    }
+  }
+  .json {
+    position: relative;
+    height: auto;
+    max-height: 432px;
+    min-height: 100px;
+    background-color: #E1E4E8;
+    overflow: hidden;
+    .code_btn {
+      z-index: 5;
+      position: absolute;
+      right: 12px;
+      top: 14px;
+      background-color: rgba(225, 228, 232, 0.2);
+      border: 1px solid rgba(201, 204, 209, 1);
+      color: rgba(36, 41, 47, 100);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      box-shadow: none;
+    }
+    :global {
+      .CodeMirror {
+        background-color: #E1E4E8;
+        .cm-string {
+          color: #24292F;
+        }
+      }
+      .CodeMirror-linenumber {
+        color: #ccc;
+      }
+    }
+  }
+  .unfold {
+    max-height: inherit;
+  }
+}

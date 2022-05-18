@@ -114,6 +114,12 @@ export default function createRoutes() {
           component: loadable(() => import('containers/project/m-project/overview'), asyncLoadFallback),
           exact: true
         },
+        {
+          path: '/org/:orgId/project/:projectId/m-project-resource',
+          name: '资源发现',
+          component: loadable(() => import('containers/project/m-project/resource-query'), asyncLoadFallback),
+          exact: true
+        },
       ]
     },
     {
