@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Col, Modal, notification, Row, Select, Table, Input } from "antd";
+import { Form, Col, Modal, notification, Row, Select, Radio } from "antd";
 import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
@@ -72,23 +72,61 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
         form={form}
       >
         <Form.Item
-          label={t('define.user')}
-          name='userId'
-          rules={[
-            {
-              required: true,
-              message: t('define.form.select.placeholder')
-            }
-          ]}
+          label={t('define.page.userSet.basic.field.type')}
+          name='type'
+          required={true}
+          initialValue='LDAP/OU'
         >
-          <Select 
-            getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder={t('define.form.select.placeholder')}
-            mode={'multiple'}
-            optionFilterProp='children'
-          >
-            {userOptions.map(it => <Option value={it.id}>{it.name}</Option>)}
-          </Select>
+          <Radio.Group>
+            <Radio value='LDAP/OU'>LDAP/OU</Radio>
+            <Radio value='user'>LDAP/User</Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item noStyle={true} shouldUpdate={true}>
+          {(form) => {
+            const { type } = form.getFieldsValue();
+            return type === 'LDAP/OU' ? (
+              <Form.Item
+                label='OU'
+                name='userId'
+                rules={[
+                  {
+                    required: true,
+                    message: t('define.form.select.placeholder')
+                  }
+                ]}
+              >
+                <Select 
+                  getPopupContainer={triggerNode => triggerNode.parentNode}
+                  placeholder={t('define.form.select.placeholder')}
+                  mode={'multiple'}
+                  optionFilterProp='children'
+                >
+                  {userOptions.map(it => <Option value={it.id}>{it.name}</Option>)}
+                </Select>
+              </Form.Item>  
+            ) : (
+              <Form.Item
+                label={t('define.user')}
+                name='userId'
+                rules={[
+                  {
+                    required: true,
+                    message: t('define.form.select.placeholder')
+                  }
+                ]}
+              >
+                <Select 
+                  getPopupContainer={triggerNode => triggerNode.parentNode}
+                  placeholder={t('define.form.select.placeholder')}
+                  mode={'multiple'}
+                  optionFilterProp='children'
+                >
+                  {userOptions.map(it => <Option value={it.id}>{it.name}</Option>)}
+                </Select>
+              </Form.Item>  
+            );
+          }}
         </Form.Item>
         <Form.Item
           label={t('define.org.user.role')}

@@ -75,7 +75,6 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET }) 
           name='type'
           required={true}
           initialValue='LDAP/OU'
-          treeData={treeData}
         >
           <Radio.Group>
             <Radio value='LDAP/OU'>LDAP/OU</Radio>

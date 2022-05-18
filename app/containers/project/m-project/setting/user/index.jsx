@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Select, notification, Table, Modal } from 'antd';
+import { Button, Select, notification, Table, Modal, Tabs } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -14,6 +14,7 @@ const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 const User = ({ orgId, projectId }) => {
   const [ loading, setLoading ] = useState(false),
+    [ tabKey, setTabKey ] = useState('user'),
     [ visible, setVisible ] = useState(false),
     [ resultMap, setResultMap ] = useState({
       list: [],
@@ -134,6 +135,25 @@ const User = ({ orgId, projectId }) => {
     });
   };
 
+  const removeOU = ({ id, name }) => {
+    Modal.confirm({
+      width: 480,
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ?`,
+      content: t('define.project.user.action.remove.confirm.content'),
+      icon: <InfoCircleFilled />,
+      okText: t('define.org.user.action.remove'),
+      okButtonProps: {
+        danger: true
+      },
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
+      onOk: () => {
+        return removeUser(id);
+      }
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'name',
@@ -190,6 +210,50 @@ const User = ({ orgId, projectId }) => {
     }
   ];
 
+  const OUColumns = [
+    {
+      dataIndex: 'name',
+      title: 'OU',
+      ellipsis: true,
+      width: 165
+    },
+    {
+      title: t('define.org.user.role'),
+      ellipsis: true,
+      width: 180,
+      render: (record) => {
+        const { role, id } = record;
+        return (
+          <Select 
+            style={{ width: '100%' }}
+            value={role}
+            onChange={(role) => onChangeRole({ role, userId: id })}
+          >
+            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
+          </Select>
+        );
+      }
+    },
+    {
+      dataIndex: 'updatedAt',
+      title: t('define.org.user.createdAt'),
+      ellipsis: true,
+      width: 180,
+      render: (text) => moment(text).format(dateFormat)
+    },
+    {
+      title: t('define.action'),
+      width: 169,
+      render: (_text, record) => {
+        return (
+          <div className='common-table-btn-wrapper'>
+            <Button type='link' onClick={() => removeOU(record)}>{t('define.org.user.action.remove')}</Button>
+          </div>
+        );
+      }
+    }
+  ];
+
   return <>
     <div style={{ marginBottom: 20 }}>
       <Button 
@@ -199,26 +263,52 @@ const User = ({ orgId, projectId }) => {
         }}
       >{t('define.project.user.action.add')}</Button>
     </div>
-    <Table
-      columns={columns}
-      dataSource={resultMap.list}
-      loading={loading}
-      scroll={{ x: 'min-content' }}
-      pagination={{
-        current: query.pageNo,
-        pageSize: query.pageSize,
-        total: resultMap.total,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-        onChange: (page, pageSize) => {
-          changeQuery({
-            pageNo: page,
-            pageSize
-          });
-        }
-      }}
-    />
+    <Tabs activeKey={tabKey} onChange={setTabKey}>
+      <Tabs.TabPane tab={t('define.user')} key='user'>
+        <Table
+          columns={columns}
+          dataSource={resultMap.list}
+          loading={loading}
+          scroll={{ x: 'min-content' }}
+          pagination={{
+            current: query.pageNo,
+            pageSize: query.pageSize,
+            total: resultMap.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
+            onChange: (page, pageSize) => {
+              changeQuery({
+                pageNo: page,
+                pageSize
+              });
+            }
+          }}
+        />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab='LDAP/OU' key='ou'>
+        <Table
+          columns={OUColumns}
+          dataSource={resultMap.list}
+          loading={loading}
+          scroll={{ x: 'min-content' }}
+          pagination={{
+            current: query.pageNo,
+            pageSize: query.pageSize,
+            total: resultMap.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
+            onChange: (page, pageSize) => {
+              changeQuery({
+                pageNo: page,
+                pageSize
+              });
+            }
+          }}
+        />
+      </Tabs.TabPane>
+    </Tabs>
     {
       visible && <AddModal
         orgId={orgId}
