@@ -13,7 +13,7 @@ import { t } from 'utils/i18n';
 
 export default ({ match }) => {
 
-  const { orgId } = match.params || {};
+  const { orgId, projectId } = match.params || {};
   const [ page, setPage ] = useState({ currentPage: 1, pageSize: 10 });
   const [ searchParams, setSearchParams ] = useState({});
   const [ searchCount, setSearchCount ] = useState(1);
@@ -28,7 +28,7 @@ export default ({ match }) => {
     }
   } = useRequest(
     () => requestWrapper(
-      projectAPI.listResources.bind(null, { orgId, ...page, ...searchParams })
+      projectAPI.listResources.bind(null, { orgId, projectId, ...page, ...searchParams })
     ), {
       debounceInterval: 1000, // 防抖
       refreshDeps: [searchCount]
@@ -43,7 +43,7 @@ export default ({ match }) => {
     } = {}
   } = useRequest(
     () => requestWrapper(
-      projectAPI.filters.bind(null, { orgId })
+      projectAPI.filters.bind(null, { orgId, projectId })
     ), {
       formatResult: (data) => {
         const { envs, Providers } = data || {};

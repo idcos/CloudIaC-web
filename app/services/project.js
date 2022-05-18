@@ -32,7 +32,7 @@ const projectAPI = {
     });
   },
   filters: ({ orgId, projectId }) => {
-    return getWithArgs(`/api/v1/projects/resources/filters`, {
+    return getWithArgs(`/api/v1/projects/resources/filters`, {}, {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
