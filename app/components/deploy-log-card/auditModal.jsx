@@ -19,7 +19,6 @@ import styles from "./styles.less";
 function AuditModal(props) {
   const { visible, setVisible, passOrReject, data, envInfo, loading, PROJECT_APPROVER } = props;
   const { resAdded, resChanged, resDestroyed, resAddedCost, resUpdatedCost, resDestroyedCost } = data['planResult'] || {};
-  const { isBilling } = envInfo || {};
 
   return (
     <div className={styles.auditModal}>
@@ -62,7 +61,7 @@ function AuditModal(props) {
             <div>{resDestroyed}</div>
           </div>
         </div>
-        {!!(isBilling && (resAddedCost || resUpdatedCost || resDestroyedCost)) && (
+        {!!(resAddedCost || resUpdatedCost || resDestroyedCost) && (
           <>
             <div className={styles.cost}>
               <CheckCircleFilled style={{ color: "#00A870" }} />
