@@ -683,8 +683,7 @@ export const chartOptions = {
       },
       yAxis: {
         type: 'value',
-        show: false,
-        min: -max
+        show: false
       },
       series: [
         {
@@ -697,9 +696,26 @@ export const chartOptions = {
                 width: 2
               }
             }
+          },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [
+                {
+                  offset: 0, color: 'rgba(1,141,95, 1)'
+                },
+                {
+                  offset: 1, color: 'rgba(255, 255, 255, 0.2)'
+                }
+              ]
+            }
           }
         }
-      ] 
+      ]
     };
   }
 };
