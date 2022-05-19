@@ -37,16 +37,6 @@ const orgsAPI = {
       status
     });
   },
-  inviteLdapUser: ({ orgId, ...rest }) => {
-    return post(`/api/v1/orgs/${orgId}/users/invite`, rest, {
-      'IaC-Org-Id': orgId
-    });
-  },
-  removeLdapUser: ({ orgId, id }) => {
-    return del(`/api/v1/orgs/${orgId}/users/${id}`, {}, {
-      'IaC-Org-Id': orgId
-    });
-  },
   inviteUser: ({ orgId, name, email, phone, role }) => {
     return post(`/api/v1/orgs/${orgId}/users/invite`, {
       name, email, phone, role

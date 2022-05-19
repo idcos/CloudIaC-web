@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, notification, Space, Dropdown, Popconfirm, Modal, Menu, Tabs } from 'antd';
+import { Button, Table, notification, Space, Dropdown, Popconfirm, Modal, Menu, Tabs, Select } from 'antd';
 import { InfoCircleFilled, DownOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
+import ldapAPI from 'services/ldap';
 import { ORG_USER } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
 import getPermission from "utils/permission";
@@ -25,7 +26,15 @@ export default ({ userInfo, orgId }) => {
       list: [],
       total: 0
     }),
+    [ ouResultMap, setOuResultMap ] = useState({
+      list: [],
+      total: 0
+    }),
     [ query, setQuery ] = useState({
+      pageNo: 1,
+      pageSize: 10
+    }),
+    [ ouQuery, setOuQuery ] = useState({
       pageNo: 1,
       pageSize: 10
     });
@@ -33,6 +42,35 @@ export default ({ userInfo, orgId }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+
+  useEffect(() => {
+    fetchOuList();
+  }, [ouQuery]);
+
+  const fetchOuList = async () => {
+    try {
+      setLoading(true);
+      const res = await ldapAPI.orgOus({
+        pageSize: ouQuery.pageSize,
+        currentPage: ouQuery.pageNo,
+        orgId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setOuResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: t('define.message.getFail'),
+        description: e.message
+      });
+    }
+  };
 
   const fetchList = async () => {
     try {
@@ -66,16 +104,27 @@ export default ({ userInfo, orgId }) => {
     });
   };
 
+  const changeOuQuery = (payload) => {
+    setOuQuery({
+      ...ouQuery,
+      ...payload
+    });
+  };
+
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
         edit: (param) => orgsAPI.updateUser(param),
         add: (param) => orgsAPI.inviteUser(param),
-        ldapAdd: (param) => orgsAPI.inviteLdapUser(param),
         batchAdd: (param) => orgsAPI.batchInviteUser(param),
         resetUserPwd: ({ orgId, id }) => userAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id }),
-        removeLdapUser: ({ orgId, id }) => orgsAPI.removeLdapUser({ orgId, id })
+        removeLdapUser: ({ orgId, id }) => orgsAPI.removeLdapUser({ orgId, id }),
+        // ldap apis
+        addLdapOU: (param) => ldapAPI.addOrgOu(param),
+        addLdapUser: (param) => ldapAPI.addOrgUser(param),
+        delOrgOu: (param) => ldapAPI.delOrgOu(param),
+        updateOrgOu: (param) => ldapAPI.updateOrgOu(param)
       };
       const res = await method[doWhat]({
         orgId,
@@ -87,7 +136,13 @@ export default ({ userInfo, orgId }) => {
       notification.success({
         message: t('define.message.opSuccess')
       });
-      fetchList();
+      if ([ 'addLdapOU', 'delOrgOu', 'updateOrgOu' ].includes(doWhat)) {
+        setTabKey('ou');
+        fetchOuList();
+      } else {
+        setTabKey('user');
+        fetchList();
+      }
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -128,15 +183,15 @@ export default ({ userInfo, orgId }) => {
         className: 'ant-btn-tertiary' 
       },
       onOk: () => {
-        return operation({ doWhat: 'removeLdapUser', payload: { id } });
+        return operation({ doWhat: 'removeUser', payload: { id } });
       }
     });
   };
 
-  const removeOU = ({ id, name }) => {
+  const removeOU = ({ id, ou }) => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ?`,
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${ou} ?`,
       content: t('define.org.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
       okText: t('define.org.user.action.remove'),
@@ -147,7 +202,7 @@ export default ({ userInfo, orgId }) => {
         className: 'ant-btn-tertiary' 
       },
       onOk: () => {
-        return operation({ doWhat: 'removeUser', payload: { id } });
+        return operation({ doWhat: 'delOrgOu', payload: { id } });
       }
     });
   };
@@ -217,7 +272,7 @@ export default ({ userInfo, orgId }) => {
 
   const OUColumns = [
     {
-      dataIndex: 'name',
+      dataIndex: 'ou',
       title: 'OU',
       width: 268,
       ellipsis: true
@@ -227,7 +282,18 @@ export default ({ userInfo, orgId }) => {
       title: t('define.org.user.role'),
       width: 160,
       ellipsis: true,
-      render: (text) => ORG_USER.role[text]
+      render: (text, record) => {
+        const { role, id } = record;
+        return (
+          <Select 
+            style={{ width: '100%' }}
+            value={role}
+            onChange={(role) => operation({ doWhat: 'updateOrgOu', payload: { role, id } })}
+          >
+            {Object.keys(ORG_USER.role).map(it => <Select.Option value={it}>{ORG_USER.role[it]}</Select.Option>)}
+          </Select>
+        );
+      }
     },
     {
       dataIndex: 'createdAt',
@@ -319,18 +385,18 @@ export default ({ userInfo, orgId }) => {
       <Tabs.TabPane tab='LDAP/OU' key='ou'>
         <Table
           columns={OUColumns}
-          dataSource={resultMap.list}
+          dataSource={ouResultMap.list}
           loading={loading}
           scroll={{ x: 'min-content' }}
           pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
+            current: ouQuery.pageNo,
+            pageSize: ouQuery.pageSize,
+            total: ouResultMap.total,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
             onChange: (page, pageSize) => {
-              changeQuery({
+              changeOuQuery({
                 pageNo: page,
                 pageSize
               });
@@ -353,6 +419,7 @@ export default ({ userInfo, orgId }) => {
     }
     {
       ldapVisible && <LdapModal
+        orgId={orgId}
         visible={ldapVisible}
         toggleVisible={toggleLdapVisible}
         opt={opt}

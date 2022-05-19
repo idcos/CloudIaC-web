@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Form, TreeSelect, Modal, Select, Radio } from 'antd';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { ORG_USER } from 'constants/types';
 import { t } from 'utils/i18n';
+import ldapAPI from 'services/ldap';
 
 const { Option } = Select;
 const FL = {
@@ -9,20 +12,51 @@ const FL = {
   wrapperCol: { span: 16 }
 };
 
-export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET }) => {
+export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, orgId }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  
   const [form] = Form.useForm();
+  
+  const {
+    data: ous = []
+  } = useRequest(
+    () => requestWrapper(
+      ldapAPI.ous.bind(null, { orgId })
+    ), {
+      formatResult: res => loopTree(res ? [res] : [])
+    }
+  );
+
+  const loopTree = (data) => {
+    if (!data) {
+      return [];
+    }
+    return data.map((it) => {
+      return {
+        label: it.ou,
+        value: it.dn,
+        children: loopTree(it.children)
+      };
+    });
+  };
+
+  const {
+    data: users = []
+  } = useRequest(
+    () => requestWrapper(
+      ldapAPI.users.bind(null, { orgId, count: 0 })
+    ), {
+      formatResult: res => (res && res.ldapUsers) || []
+    }
+  );
   
   const onOk = async () => {
     const formValues = await form.validateFields();
     setSubmitLoading(true);
     operation({
-      doWhat: opt,
+      doWhat: formValues.type === 'LDAP/OU' ? 'addLdapOU' : 'addLdapUser',
       payload: {
-        ...formValues,
-        id: curRecord && curRecord.id
+        ...formValues
       }
     }, (hasError) => {
       setSubmitLoading(false);
@@ -30,27 +64,6 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET }) 
     });
   };
 
-  const treeData = [
-    {
-      title: 'Node1',
-      value: '0-0',
-      children: [
-        {
-          title: 'Child Node1',
-          value: '0-0-1'
-        },
-        {
-          title: 'Child Node2',
-          value: '0-0-2'
-        }
-      ]
-    },
-    {
-      title: 'Node2',
-      value: '0-1'
-    }
-  ];
-  
   return (
     <Modal
       width={560}
@@ -87,26 +100,26 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET }) 
             return type === 'LDAP/OU' ? (
               <Form.Item
                 label='OU'
-                name='ou'
+                name='dn'
                 required={true}
               >
                 <TreeSelect 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
-                  treeData={treeData}
+                  treeData={ous}
                   treeDefaultExpandAll={true}
                 />
               </Form.Item>
             ) : (
               <Form.Item
                 label='User'
-                name='user'
+                name='email'
                 required={true}
               >
                 <Select 
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
-                  options={[{ label: '1', value: '1' }]}
+                  options={users.map((it) => ({ label: it.uid, value: it.email }))}
                 />
               </Form.Item>
             );
