@@ -36,6 +36,12 @@ const ldapAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  projectOus: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs('/api/v1/ldap/project_ous', restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
   addProjectOu: ({ orgId, projectId, ...restParams }) => {
     return post('/api/v1/ldap/auth/project_ou', restParams, {
       'IaC-Org-Id': orgId,

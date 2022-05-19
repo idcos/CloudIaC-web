@@ -51,10 +51,11 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
   );
   
   const onOk = async () => {
-    const formValues = await form.validateFields();
+    const values = await form.validateFields();
+    const { type, ...formValues } = values || {};
     setSubmitLoading(true);
     operation({
-      doWhat: formValues.type === 'LDAP/OU' ? 'addLdapOU' : 'addLdapUser',
+      doWhat: type === 'LDAP/OU' ? 'addLdapOU' : 'addLdapUser',
       payload: {
         ...formValues
       }
@@ -107,6 +108,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   treeData={ous}
+                  multiple={true}
                   treeDefaultExpandAll={true}
                 />
               </Form.Item>

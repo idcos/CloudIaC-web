@@ -6,6 +6,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
+import ldapAPI from 'services/ldap';
 import { PROJECT_ROLE } from 'constants/types';
 import AddModal from './components/add-modal';
 
@@ -23,11 +24,23 @@ const User = ({ orgId, projectId }) => {
     [ query, setQuery ] = useState({
       pageNo: 1,
       pageSize: 10
+    }),
+    [ ouResultMap, setOuResultMap ] = useState({
+      list: [],
+      total: 0
+    }),
+    [ ouQuery, setOuQuery ] = useState({
+      pageNo: 1,
+      pageSize: 10
     });
 
   useEffect(() => {
     fetchList();
   }, [query]);
+
+  useEffect(() => {
+    fetchOuList();
+  }, [ouQuery]);
 
   // 移除用户接口
   const {
@@ -41,10 +54,55 @@ const User = ({ orgId, projectId }) => {
     ), {
       manual: true,
       onSuccess: () => {
+        setTabKey('user');
         fetchList();
       }
     }
   );
+
+  // 移除Ou接口
+  const {
+    run: removeOu
+  } = useRequest(
+    (id) => requestWrapper(
+      ldapAPI.delProjectOu.bind(null, { orgId, projectId, id }),
+      {
+        autoSuccess: true
+      }
+    ), {
+      manual: true,
+      onSuccess: () => {
+        setTabKey('ou');
+        fetchOuList();
+      }
+    }
+  );
+
+  const fetchOuList = async () => {
+    try {
+      setLoading(true);
+      const res = await ldapAPI.projectOus({
+        currentPage: ouQuery.pageNo,
+        pageSize: ouQuery.pageSize,
+        orgId,
+        projectId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setOuResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: t('define.message.getFail'),
+        description: e.message
+      });
+    }
+  };
 
   const fetchList = async () => {
     try {
@@ -81,9 +139,23 @@ const User = ({ orgId, projectId }) => {
     });
   };
 
+  const changeOuQuery = (payload) => {
+    setOuQuery({
+      ...ouQuery,
+      ...payload
+    });
+  };
+
   const onChangeRole = (payload) => {
     operation({ 
       doWhat: 'changeRole', 
+      payload
+    });
+  };
+
+  const onChangeOuRole = (payload) => {
+    operation({ 
+      doWhat: 'changeOuRole', 
       payload
     });
   };
@@ -92,7 +164,10 @@ const User = ({ orgId, projectId }) => {
     try {
       const method = {
         changeRole: (param) => projectAPI.updateUserRole(param),
-        add: (param) => projectAPI.createUser(param)
+        add: (param) => projectAPI.createUser(param),
+        // ldap ou apis
+        addOu: (param) => ldapAPI.addProjectOu(param),
+        changeOuRole: (param) => ldapAPI.updateProjectOu(param)
       };
       const res = await method[doWhat]({
         ...payload, 
@@ -105,7 +180,13 @@ const User = ({ orgId, projectId }) => {
       notification.success({
         message: t('define.message.opSuccess')
       });
-      fetchList();
+      if ([ 'addOu', 'changeOuRole' ].includes(doWhat)) {
+        setTabKey('ou');
+        fetchOuList();
+      } else {
+        setTabKey('user');
+        fetchList();
+      }
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -135,10 +216,10 @@ const User = ({ orgId, projectId }) => {
     });
   };
 
-  const removeOU = ({ id, name }) => {
+  const removeOU = ({ id, ou }) => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ?`,
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${ou} ?`,
       content: t('define.project.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
       okText: t('define.org.user.action.remove'),
@@ -149,7 +230,7 @@ const User = ({ orgId, projectId }) => {
         className: 'ant-btn-tertiary' 
       },
       onOk: () => {
-        return removeUser(id);
+        return removeOu(id);
       }
     });
   };
@@ -212,7 +293,7 @@ const User = ({ orgId, projectId }) => {
 
   const OUColumns = [
     {
-      dataIndex: 'name',
+      dataIndex: 'ou',
       title: 'OU',
       ellipsis: true,
       width: 165
@@ -227,7 +308,7 @@ const User = ({ orgId, projectId }) => {
           <Select 
             style={{ width: '100%' }}
             value={role}
-            onChange={(role) => onChangeRole({ role, userId: id })}
+            onChange={(role) => onChangeOuRole({ role, id })}
           >
             {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
           </Select>
@@ -289,18 +370,18 @@ const User = ({ orgId, projectId }) => {
       <Tabs.TabPane tab='LDAP/OU' key='ou'>
         <Table
           columns={OUColumns}
-          dataSource={resultMap.list}
+          dataSource={ouResultMap.list}
           loading={loading}
           scroll={{ x: 'min-content' }}
           pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
+            current: ouQuery.pageNo,
+            pageSize: ouQuery.pageSize,
+            total: ouResultMap.total,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
             onChange: (page, pageSize) => {
-              changeQuery({
+              changeOuQuery({
                 pageNo: page,
                 pageSize
               });

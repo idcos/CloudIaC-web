@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Modal, notification, Row, Select, Radio } from "antd";
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import { PROJECT_ROLE } from 'constants/types';
+import ldapAPI from 'services/ldap';
 
 const { Option } = Select;
 const FL = {
@@ -15,6 +18,16 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ userOptions, setUserOptions ] = useState([]);
   const [form] = Form.useForm();
+
+  const {
+    data: ous = []
+  } = useRequest(
+    () => requestWrapper(
+      ldapAPI.orgOus.bind(null, { orgId, pageSize: 0 })
+    ), {
+      formatResult: res => (res && res.list) || []
+    }
+  );
 
   useEffect(() => {
     fetchUserOptions();
@@ -39,13 +52,14 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
+    const { type, ...formValues } = values || {};
     setSubmitLoading(true);
     operation({
-      doWhat: 'add',
+      doWhat: type === 'ou' ? 'addOu' : 'add',
       payload: {
         orgId,
         type: 'api',
-        ...values
+        ...formValues
       }
     }, (hasError) => {
       setSubmitLoading(false);
@@ -75,20 +89,20 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
           label={t('define.page.userSet.basic.field.type')}
           name='type'
           required={true}
-          initialValue='LDAP/OU'
+          initialValue='ou'
         >
           <Radio.Group>
-            <Radio value='LDAP/OU'>LDAP/OU</Radio>
+            <Radio value='ou'>LDAP/OU</Radio>
             <Radio value='user'>LDAP/User</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item noStyle={true} shouldUpdate={true}>
           {(form) => {
             const { type } = form.getFieldsValue();
-            return type === 'LDAP/OU' ? (
+            return type === 'ou' ? (
               <Form.Item
                 label='OU'
-                name='userId'
+                name='dn'
                 rules={[
                   {
                     required: true,
@@ -102,7 +116,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
                   mode={'multiple'}
                   optionFilterProp='children'
                 >
-                  {userOptions.map(it => <Option value={it.id}>{it.name}</Option>)}
+                  {ous.map(it => <Option value={it.dn}>{it.ou}</Option>)}
                 </Select>
               </Form.Item>  
             ) : (
