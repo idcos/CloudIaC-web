@@ -367,7 +367,7 @@ const User = ({ orgId, projectId }) => {
           }}
         />
       </Tabs.TabPane>
-      <Tabs.TabPane tab='LDAP/OU' key='ou'>
+      <Tabs.TabPane tab='OU' key='ou'>
         <Table
           columns={OUColumns}
           dataSource={ouResultMap.list}

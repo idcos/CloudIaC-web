@@ -92,8 +92,8 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
           initialValue='ou'
         >
           <Radio.Group>
-            <Radio value='ou'>LDAP/OU</Radio>
-            <Radio value='user'>LDAP/User</Radio>
+            <Radio value='ou'>OU</Radio>
+            <Radio value='user'>{t('define.user')}</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item noStyle={true} shouldUpdate={true}>
