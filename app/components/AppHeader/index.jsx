@@ -89,16 +89,16 @@ const AppHeader = (props) => {
     }
   };
 
-  const linkToOrgView = () => {
-    history.push(`/org/${orgId}/m-org-overview`);
-  };
-
   return <div className={`idcos-app-header ${theme || ''}`}>
     <div className='inner'> 
       <div 
         className='logo' 
         onClick={() => {
-          history.push('/');
+          if (orgId) {
+            history.push(`/org/${orgId}/m-org-overview`);
+          } else {
+            history.push('/');
+          }
         }}
       >
         <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
