@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Empty, notification } from 'antd';
+import { notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { connect } from "react-redux";
@@ -7,15 +7,16 @@ import { Eb_WP } from 'components/error-boundary';
 import OpModal from 'components/project-modal';
 import projectAPI from 'services/project';
 import ProjectCard from './components/projectCard';
+import EmptyGen from 'components/empty-gen';
 import { t } from 'utils/i18n';
 import history from 'utils/history';
 import getPermission from "utils/permission";
+import { IAC_PUBLICITY_HOST } from 'constants/types';
 import styles from './styles.less';
 
 
-const Index = (props) => {
-  const { curProject, match, dispatch, userInfo } = props,
-    { params } = match;
+const Index = ({ curProject, match, dispatch, userInfo }) => {
+  const { params } = match;
   const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
     [ resultMap, setResultMap ] = useState({
@@ -54,7 +55,7 @@ const Index = (props) => {
     });
     history.push(`/org/${params.orgId}/project/${pjtId}/m-project-overview`);
   };
-  
+
   const updateStatus = async(record, status) => {
     let payload = {
       orgId: params.orgId,
@@ -135,25 +136,43 @@ const Index = (props) => {
 
   return (
     <div className={styles.projectList}>
-      {(!ORG_SET && resultMap.list.length === 0) ? (
-        <Empty style={{ marginTop: 200 }} image={Empty.PRESENTED_IMAGE_SIMPLE} description={t('define.project.empty.des')} />
+      {(resultMap.list.length === 0) ? (
+        !ORG_SET ?
+          <EmptyGen
+            imgName='contact-admin.png'
+            title={t('define.project.noPermission')}
+            description={t('define.project.empty.des')}
+            linkText={t('define.project')}
+            linkUrl={`${IAC_PUBLICITY_HOST}/markdown/docs/mkdocs/manual/org-project-role.md`}
+          /> :
+          <EmptyGen
+            imgName='new-project.png'
+            title={t('define.project.new')}
+            imgClickFn={() => {
+              setOpt('add');
+              toggleVisible();
+            }}
+            description={t('define.project.empty.des')}
+            linkText={t('define.project')}
+            linkUrl={`${IAC_PUBLICITY_HOST}/markdown/docs/mkdocs/manual/org-project-role.md`}
+          />
       ) : (
         <div className={'pjtBox'}>
           {!!ORG_SET && (
-            <div 
+            <div
               onClick={() => {
                 setOpt('add');
                 toggleVisible();
-              }} 
+              }}
               className={classNames('pjtItemBox', 'creatPjtBox')}
             >
               <PlusOutlined className='plusIcon' />
-              <span className='create-text'>{t('define.project.create')}</span>
+              <span className='create-text'>{t('define.project.new')}</span>
             </div>
           )}
           {
             resultMap.list.map((item, i) => {
-              return <ProjectCard 
+              return <ProjectCard
                 changeProject={changeProject}
                 setOpt={setOpt}
                 setRecord={setRecord}
@@ -183,7 +202,7 @@ const Index = (props) => {
 };
 
 export default connect(
-  (state) => ({ 
+  (state) => ({
     curProject: state['global'].get('curProject') || {},
     userInfo: state['global'].get('userInfo').toJS()
   })

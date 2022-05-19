@@ -101,8 +101,7 @@ const Index = ({ match = {} }) => {
 
   // 获取分支数据
   const fetchRepoBranch = async (fetchParams) => {
-    const { vcsId, repoId, repoRevision } = fetchParams;
-    !envId && !!repoRevision && form.setFieldsValue({ revision: repoRevision });
+    const { vcsId, repoId } = fetchParams;
     try { 
       const res = await vcsAPI.listRepoBranch({
         orgId, 

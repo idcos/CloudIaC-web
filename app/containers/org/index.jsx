@@ -1,5 +1,5 @@
 import React from 'react';
-import { Space } from 'antd';
+import { Space, Divider } from 'antd';
 import { connect } from 'react-redux';
 import RoutesList from 'components/routes-list';
 import history from "utils/history";
@@ -24,8 +24,11 @@ const OrgWrapper = ({ routes, userInfo, curOrg, match = {} }) => {
   return (
     <div className={styles.orgWrapper}>
       <div className='header'>
-        <Space size={32}>
-          <div className='view-title'>{t('define.orgView')}</div>
+        <Space size={8}>
+          <div className='view-title' onClick={() => linkTo('m-org-overview')}>
+            <span>{t('define.docs.organization')}</span><span style={{ fontWeight: 'bold' }}>{` [${t('define.overview')}]`}</span>
+          </div>
+          <Divider type='vertical' className='header-divider'/>
           <RadioButtonGroup 
             value={mOrgKey}
             onChange={(val) => linkTo(val)}

@@ -38,7 +38,7 @@ export default ({ match }) => {
   //获取环境和provider列表
   const {
     data: {
-      envs = [],
+      projects = [],
       providers = []
     } = {}
   } = useRequest(
@@ -46,9 +46,9 @@ export default ({ match }) => {
       orgsAPI.filters.bind(null, { orgId })
     ), {
       formatResult: (data) => {
-        const { envs, Providers } = data || {};
+        const { projects, Providers } = data || {};
         return {
-          envs: (envs || []).map((val) => ({ label: val.envName, value: val.envId })),
+          projects: (projects || []).map((val) => ({ label: val.projectName, value: val.projectId })),
           providers: (Providers || []).map((val) => ({ label: val, value: val }))
         };
       }
@@ -71,13 +71,13 @@ export default ({ match }) => {
       <div className={classNames(styles.res_query)}>
         <div className={styles.left}>
           <div className={styles.env_list}>
-            <span>{t('define.scope.env')}</span>
+            <span>{t('define.scope.project')}</span>
             <Checkbox.Group 
               className={styles.checbox}
               style={{ width: '100%' }} 
-              onChange={(v) => onParamsSearch({ envIds: v.length > 0 ? v : undefined })}  
+              onChange={(v) => onParamsSearch({ projectIds: v.length > 0 ? v : undefined })}  
             >
-              {envs.map((item) => {
+              {projects.map((item) => {
                 return <span title={item.label}><Checkbox value={item.value}>{item.label}</Checkbox></span>;
               })}
             </Checkbox.Group>

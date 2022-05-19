@@ -8,7 +8,19 @@ const KEY = 'global';
 
 const breadcrumbNameMap = {
   'org': { text: t('define.scope.org') },
-  'project': { text: t('define.scope.project'), disabled: true },
+  'project': { 
+    render: ({ params, isLastOne }) => {
+      const { orgId } = params;
+      const link = `/org/${orgId}/m-org-project`;
+      return (
+        <Breadcrumb.Item>
+          <Link to={link} disabled={isLastOne}>
+            {t('define.scope.project')}
+          </Link>
+        </Breadcrumb.Item>
+      );
+    }
+  },
   'm-org-project': { text: `${t('define.orgSet')}: ${t('define.scope.project')}` },
   'm-org-ct': { text: `${t('define.orgSet')}: ${t('define.scope.template')}` },
   'm-org-variable': { text: `${t('define.orgSet')}: ${t('define.variable')}` },
@@ -18,6 +30,7 @@ const breadcrumbNameMap = {
   'm-project-ct': { text: `${t('define.projectInfo')}: ${t('define.scope.template')}` },
   'm-project-variable': { text: `${t('define.projectInfo')}: ${t('define.variable')}` },
   'm-project-setting': { text: `${t('define.projectInfo')}: ${t('define.setting')}` },
+  'm-project-resource': { text: t('define.resourceQuery') },
   'm-org-resource': { text: t('define.resourceQuery') },
   'm-project-overview': { text: t('define.projectOverview') },
   'm-org-overview': { text: t('define.orgOverview') },

@@ -25,6 +25,18 @@ const projectAPI = {
       'IaC-Project-Id': projectId
     });
   },
+  listResources: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs(`/api/v1/projects/resources`, restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  filters: ({ orgId, projectId }) => {
+    return getWithArgs(`/api/v1/projects/resources/filters`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
   listAuthUser: ({ orgId, projectId, ...restParams }) => {
     return getWithArgs('/api/v1/projects/authorization/users', restParams, {
       'IaC-Org-Id': orgId,

@@ -84,7 +84,7 @@ const orgsAPI = {
     });
   },
   filters: ({ orgId }) => {
-    return getWithArgs(`/api/v1/orgs/resources/filters`, {
+    return getWithArgs(`/api/v1/orgs/resources/filters`, {}, {
       'IaC-Org-Id': orgId
     });
   },

@@ -1,14 +1,18 @@
 import React, { useRef, useEffect } from "react";
-import { Dropdown, Empty, Menu, Modal, Tooltip } from 'antd';
-import { PlusCircleOutlined, InfoCircleFilled, EllipsisOutlined } from '@ant-design/icons';
+import { Button, Modal, Tooltip } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
+import { GdIcon, RenameIcon } from 'components/iconfont';
 import EllipsisText from 'components/EllipsisText';
 import { chartUtils } from 'components/charts-cfg';
-import { t } from 'utils/i18n';
+import { t, getLanguage } from 'utils/i18n';
+import { formatImgUrl } from 'utils/util';
+import moment from 'moment';
 import isEmpty from "lodash/isEmpty";
 
 export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setRecord, toggleVisible, updateStatus }) => {
   const project_trend_Line = useRef();
-  
+
+  const language = getLanguage();
   let CHART = useRef([
     { key: 'project_trend_Line', domRef: project_trend_Line, ins: null }
   ]);
@@ -51,35 +55,34 @@ export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setReco
     });
   };
 
-  const onClickMenu = ({ key, domEvent }) => {
+  const handleActions = ({ key, domEvent }) => {
     domEvent.stopPropagation();
     switch (key) {
-      case 'modify':
-        edit();
-        break;
-      case 'disabled':
-        comfirmDisabled();
-        break;
-      case 'recovery':
-        comfirmEnable();
-        break;
-      default:
-        break;
+    case 'modify':
+      edit();
+      break;
+    case 'disabled':
+      comfirmDisabled();
+      break;
+    case 'recovery':
+      comfirmEnable();
+      break;
+    default:
+      break;
     }
   };
 
-  const menu = (<Menu onClick={onClickMenu}>
-    <Menu.Item key='modify'>{t('define.action.modify')}</Menu.Item>
-    {item.status === 'enable' ? 
-      <Menu.Item key='disabled'>{t('define.project.status.disabled')}</Menu.Item> : 
-      <Menu.Item key='recovery'>{t('define.project.action.recovery')}</Menu.Item>
-    }
-  </Menu>);
+  return (<div className={`pjtItemBox ${!!isLastUse ? 'recent-project' : ''}`} onClick={() => item.status === 'enable' && changeProject(item.id)}>
 
-  return (<div className={'pjtItemBox'} onClick={() => item.status === 'enable' && changeProject(item.id)}>
+    {!!isLastUse &&
+      <div className='last-use-bar' role='img'>
+        <img width={96} height={16} style={{ verticalAlign: 'top' }} src={formatImgUrl(`/assets/img/recent-project-${language}.png`)} />
+      </div>}
     <div className={'pjtItemBox-header'}>
-      <span className={'pjtItemBox-header-left'}> 
-        {/* <PlusCircleOutlined className={'pjtItemBox-header-left-icon'} /> */}
+      <span className={'pjtItemBox-header-left'}>
+        <div role='img'>
+          <img width={18} height={20} src={formatImgUrl(`/assets/img/jewel.png`)} />
+        </div>
         <div className={'pjtItemBox-header-left-name'}><EllipsisText>{item.name}</EllipsisText></div>
         {!!item.activeEnvironment && (
           <Tooltip title={t('define.activeEnvironment')}>
@@ -88,27 +91,37 @@ export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setReco
         )}
       </span>
       {!readOnly && (
-        <Dropdown 
-          overlay={menu} 
-          placement='bottomRight'
-          getPopupContainer={t => t}
-        >
-          <EllipsisOutlined className={'configIcon'} onClick={(e) => e.stopPropagation()} />
-        </Dropdown>
+        <div className='pjtItemBox-actions'>
+          <Tooltip title={t('define.action.modify')}>
+            <Button icon={<RenameIcon style={{ fontSize: 14, color: '#008C5A' }} />} onClick={(e) => handleActions({ key: 'modify', domEvent: e })} type='text' size='small' />
+          </Tooltip>
+          {item.status === 'enable' ?
+            <Tooltip title={t('define.project.status.disabled')}>
+              <Button icon={<GdIcon style={{ fontSize: 14, color: '#008C5A' }} />} onClick={(e) => handleActions({ key: 'disabled', domEvent: e })} type='text' size='small' />
+            </Tooltip> :
+            <Tooltip title={t('define.project.action.recovery')}>
+              <Button icon={<GdIcon style={{ fontSize: 14, color: '#008C5A' }} />} onClick={(e) => handleActions({ key: 'recovery', domEvent: e })} type='text' size='small' />
+            </Tooltip>
+          }
+        </div>
       )}
     </div>
     <div className='pjtItemBox-content'>
       <div className='description'>
         <EllipsisText>{item.description || '-'}</EllipsisText>
       </div>
-      <span className='mark'>
-        {!!isLastUse && t('define.recentSelection')}
-      </span>
     </div>
     <div className={'project-report'}>
       {isEmpty(item.resStats) ? (
-        <Empty imageStyle={{ display: 'none' }} style={{ marginTop: 16 }} />
-      ) : <div ref={project_trend_Line} style={{ width: '100%', height: "100%" }}></div>}
+        <div className='empty-container' role='img'>
+          <img width={58} height={58} src={formatImgUrl(`/assets/img/no-data.png`)} />
+          <div className='empty-text'>{t('define.noDataView')}</div>
+        </div>
+      ) : <div ref={project_trend_Line} style={{ width: '100%', height: "100%", opacity: '0.44' }}></div>}
+    </div>
+    <div className='card-bottom-container'>
+      <EllipsisText className='text'>{item.creator || '-'}</EllipsisText>
+      <EllipsisText className='text'>{item.createdAt ? moment(new Date(item.createdAt)).format('YYYY-MM-DD') : '-'}</EllipsisText>
     </div>
   </div>);
 };
