@@ -58,7 +58,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
         <Button key='back' className='ant-btn-tertiary' onClick={toggleVisible}>
           {t('define.ct.import.action.cancel')}
         </Button>
-        {lockType !== 'lock' && <Button danger={true} key='submit' loading={clearLoading} onClick={() => onClear(true)}>
+        {lockType !== 'lock' && <Button danger={true} key='submit' loading={clearLoading} onClick={() => onClear()}>
           {t('define.env.action.unlock.confirm.action.cancelTiming')}
         </Button>}
         <Button
@@ -67,7 +67,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
           loading={loading}
           onClick={() => {
             if (lockType === 'unlock') {
-              onClear();
+              onClear(true);
             } else {
               onOk();
             }

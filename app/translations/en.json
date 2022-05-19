@@ -159,7 +159,7 @@
   "define.env.action.unlock": "Unlock environment",
   "define.env.action.unlock.confirm.action.cancelTiming": "Unlock and destroy",
   "define.env.action.unlock.confirm.action.confirmLock": "Unlock only",
-  "define.env.action.unlock.des": "Scheduled destruction is set for the current environment, and the scheduled destruction time has passed. The scheduled destruction task will be triggered immediately after unlocking. If you do not want to destroy the environment, please select Unlock and destroy",
+  "define.env.action.unlock.des": "Scheduled destruction is set for the current environment, and the scheduled destruction time has passed. The scheduled destruction task will be triggered immediately after unlocking. If you do not want to destroy the environment, please select Unlock only",
   "define.env.deploy.advanced": "Advanced setting",
   "define.env.deploy.advanced.execute": "Execute",
   "define.env.deploy.advanced.tpl": "Template",

@@ -206,7 +206,7 @@ const EnvDetail = (props) => {
           },
           onOk: async () => {
             setLockLoading(true);
-            let res = await envAPI.envUnLocked({ orgId, projectId, envId });
+            let res = await envAPI.envUnLocked({ orgId, projectId, envId, clearDestroyAt: true });
             setLockLoading(false);
             if (res.code !== 200) {
               return notification.error({ message: res.message });
