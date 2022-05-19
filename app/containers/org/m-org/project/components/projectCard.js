@@ -72,12 +72,12 @@ export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setReco
     }
   };
 
-  return (<div className={'pjtItemBox'} onClick={() => item.status === 'enable' && changeProject(item.id)}>
+  return (<div className={`pjtItemBox ${!!isLastUse ? 'recent-project' : ''}`} onClick={() => item.status === 'enable' && changeProject(item.id)}>
 
-    {/* todo {!!isLastUse &&
+    {!!isLastUse &&
       <div className='last-use-bar' role='img'>
-        <img width={96} height={16} src={formatImgUrl(`/assets/img/${language === 'zh' ? 'project-list-bar' : '' }.png`)} />
-      </div>} */}
+        <img width={96} height={16} style={{ verticalAlign: 'top' }} src={formatImgUrl(`/assets/img/recent-project-${language}.png`)} />
+      </div>}
     <div className={'pjtItemBox-header'}>
       <span className={'pjtItemBox-header-left'}>
         <div role='img'>
