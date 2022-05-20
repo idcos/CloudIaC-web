@@ -288,6 +288,7 @@ export default ({ userInfo, orgId }) => {
           <Select 
             style={{ width: '100%' }}
             value={role}
+            disabled={!ORG_SET}
             onChange={(role) => operation({ doWhat: 'updateOrgOu', payload: { role, id } })}
           >
             {Object.keys(ORG_USER.role).map(it => <Select.Option value={it}>{ORG_USER.role[it]}</Select.Option>)}
