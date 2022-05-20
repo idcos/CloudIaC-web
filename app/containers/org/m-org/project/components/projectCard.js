@@ -21,10 +21,10 @@ export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setReco
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'project_trend_Line') {
-        chartUtils.update(chart, { resStats: item.resStats || [] });
+        item.resStats && chartUtils.update(chart, { resStats: item.resStats || [] });
       }
     });
-  }, []);
+  }, [item]);
 
   useEffect(() => {
     resizeHelper.attach();
