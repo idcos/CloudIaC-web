@@ -532,8 +532,15 @@ export const chartOptions = {
         {
           type: 'line',
           stack: 'Total',
-          smooth: false,
+          smooth: true,
           showSymbol: false,
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                width: 2
+              }
+            }
+          },
           areaStyle: {},
           emphasis: {
             focus: 'series'
@@ -646,7 +653,7 @@ export const chartOptions = {
           name: t('define.thisMonth'),
           type: 'line',
           stack: 'Total',
-          smooth: false,
+          smooth: true,
           showSymbol: false,
           areaStyle: {},
           itemStyle: {

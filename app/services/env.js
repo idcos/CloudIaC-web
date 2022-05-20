@@ -36,7 +36,7 @@ const envAPI = {
   
   // 环境重新部署
   envRedeploy: ({ envId, projectId, orgId, ...resetParams }) => {
-    return post(`/api/v1/envs/${envId}/deploy`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/deploy`, { source: 'manual', ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   //销毁环境资源
   envDestroy: ({ envId, projectId, orgId }) => {
@@ -77,7 +77,7 @@ const envAPI = {
   },
   // 创建环境
   createEnv: ({ orgId, projectId, ...resetParams }) => {
-    return post(`/api/v1/envs`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs`, { source: 'manual', ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境合规详情
   result: ({ orgId, projectId, envId, ...restParams }) => {

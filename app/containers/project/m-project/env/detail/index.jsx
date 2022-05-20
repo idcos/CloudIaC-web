@@ -306,8 +306,8 @@ const EnvDetail = (props) => {
             subDes={
               PROJECT_OPERATOR ? (
                 <Space>
-                  <Button disabled={envInfo.locked} onClick={destroy}>{t('define.env.action.destroy')}</Button>
                   <Button onClick={redeploy} type='primary'>{t('define.redeployment')}</Button>
+                  <Button disabled={envInfo.locked} onClick={destroy}>{t('define.env.action.destroy')}</Button>
                 </Space>
               ) : null
             }

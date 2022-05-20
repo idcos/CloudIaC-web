@@ -5,7 +5,7 @@ import { t } from 'utils/i18n';
 import styles from "./styles.less";
 
 /**
- * 审核弹窗
+ * 审批弹窗
  * @param {Object} props
  * @param {boolean} props.visible - 弹窗显隐state
  * @param {React.SetStateAction} props.setVisible - 弹窗显隐setState方法
@@ -22,7 +22,7 @@ function AuditModal(props) {
 
   return (
     <div className={styles.auditModal}>
-      {/*审核弹窗*/}
+      {/*审批弹窗*/}
       <Modal
         onCancel={() => setVisible(false)}
         visible={visible}

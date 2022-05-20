@@ -7,7 +7,7 @@ import { t } from 'utils/i18n';
  * 全局滚动dom id
  */
 
-export const IAC_PUBLICITY_HOST = 'http://10.0.2.134:3080';
+export const IAC_PUBLICITY_HOST = 'https://www.cloudiac.org';
 export const GLOBAL_SCROLL_DOM_ID = 'global_scroll_dom_id';
 
 // Terraform版本自动匹配值

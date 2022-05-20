@@ -112,12 +112,11 @@ export default ({ readOnly, isLastUse, changeProject, item = {}, setOpt, setReco
       </div>
     </div>
     <div className={'project-report'}>
-      {isEmpty(item.resStats) ? (
-        <div className='empty-container' role='img'>
-          <img width={58} height={58} src={formatImgUrl(`/assets/img/no-data.png`)} />
-          <div className='empty-text'>{t('define.noDataView')}</div>
-        </div>
-      ) : <div ref={project_trend_Line} style={{ width: '100%', height: "100%", opacity: '0.44' }}></div>}
+      <div className='empty-container' style={{ display: isEmpty(item.resStats) ? '' : 'none' }} role='img'>
+        <img width={58} height={58} src={formatImgUrl(`/assets/img/no-data.png`)} />
+        <div className='empty-text'>{t('define.noDataView')}</div>
+      </div>
+      <div ref={project_trend_Line} style={{ display: isEmpty(item.resStats) ? 'none' : '', width: '100%', height: "100%", opacity: '0.44' }}></div>
     </div>
     <div className='card-bottom-container'>
       <EllipsisText className='text'>{item.creator || '-'}</EllipsisText>
