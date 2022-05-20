@@ -105,6 +105,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
                 required={true}
               >
                 <TreeSelect 
+                  showArrow={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   treeData={ous}
@@ -119,6 +120,8 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
                 required={true}
               >
                 <Select 
+                  showArrow={true}
+                  mode='multiple'
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   options={users.map((it) => ({ label: it.uid, value: it.email }))}
