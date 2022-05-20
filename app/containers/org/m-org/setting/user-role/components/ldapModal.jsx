@@ -41,11 +41,14 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
   };
 
   const {
-    data: users = []
+    data: users = [],
+    run: searchUsers
   } = useRequest(
-    () => requestWrapper(
-      ldapAPI.users.bind(null, { orgId, count: 0 })
+    (params) => requestWrapper(
+      ldapAPI.users.bind(null, { orgId, count: 1000, ...params })
     ), {
+      manual: true,
+      debounceInterval: 1000,
       formatResult: res => (res && res.ldapUsers) || []
     }
   );
@@ -122,6 +125,9 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
                 <Select 
                   showArrow={true}
                   mode='multiple'
+                  filterOption={false}
+                  onSearch={(val) => searchUsers({ q: val })}
+                  onFocus={() => searchUsers()}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   options={users.map((it) => ({ label: it.uid, value: it.email }))}

@@ -23,7 +23,8 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
     data: ous = []
   } = useRequest(
     () => requestWrapper(
-      ldapAPI.orgOus.bind(null, { orgId, pageSize: 0 })
+      // filterProjectId传入会过滤掉已加入项目的ou
+      ldapAPI.orgOus.bind(null, { orgId, pageSize: 0, filterProjectId: projectId })
     ), {
       formatResult: res => (res && res.list) || []
     }
@@ -111,6 +112,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
                 ]}
               >
                 <Select 
+                  showArrow={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   mode={'multiple'}
@@ -131,6 +133,7 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
                 ]}
               >
                 <Select 
+                  showArrow={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   mode={'multiple'}
