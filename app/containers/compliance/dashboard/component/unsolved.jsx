@@ -7,11 +7,18 @@ import styles from '../style.less';
 
 const Index = ({ summaryData = {} }) => {
 
+  const wrapperRef = useRef();
+  let CHART = useRef([
+    { key: 'unsolved_rate', domRef: useRef(), ins: null }
+  ]);
+
+  const resizeHelper = chartUtils.resizeEventOfDomRef(CHART.current, wrapperRef);
+
   useEffect(() => {
     // fetchDate();
     resizeHelper.attach();
-    return resizeHelper.remove();
-  }, []);
+    return () => resizeHelper.remove();
+  }, [wrapperRef.current]);
 
   useEffect(() => {
     CHART.current.forEach(chart => {
@@ -20,12 +27,6 @@ const Index = ({ summaryData = {} }) => {
       }
     });
   }, [summaryData.summary]);
-
-  let CHART = useRef([
-    { key: 'unsolved_rate', domRef: useRef(), ins: null }
-  ]);
-
-  const resizeHelper = chartUtils.resizeEvent(CHART);
 
   const valueToPercent = (value) => {
     return Math.round(parseFloat(value) * 10000) / 100;
@@ -49,9 +50,11 @@ const Index = ({ summaryData = {} }) => {
           {summaryData.changes != 0 && <span>{`${valueToPercent(summaryData.changes)}%`}</span>} </div>
       </div>
     </div>
-    {CHART.current.map(chart => <div>
-      <div ref={chart.domRef} style={{ width: '100%', height: 279 }}></div>
-    </div>)}
+    <div ref={wrapperRef}>
+      {CHART.current.map(chart => <div>
+        <div ref={chart.domRef} style={{ width: '100%', height: 279 }}></div>
+      </div>)}
+    </div>
   </Card>;
 };
 

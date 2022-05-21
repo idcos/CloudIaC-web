@@ -2,6 +2,7 @@ import isArray from 'lodash/isArray';
 import { ENV_STATUS } from 'constants/types';
 import moment from 'moment';
 import { t } from 'utils/i18n';
+import ResizeObserver from 'resize-observer-polyfill';
 
 // eslint-disable-next-line no-undef
 let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
@@ -767,6 +768,19 @@ export const chartUtils = {
     return {
       attach: () => window.addEventListener('resize', RESIZE_HANDLE),
       remove: () => window.removeEventListener('resize', RESIZE_HANDLE),
+      resize: RESIZE_HANDLE
+    };
+  },
+  resizeEventOfDomRef: (CHARTS, ref) => {
+    const RESIZE_HANDLE = () => CHARTS.forEach(chart => {
+      chart.ins && chart.ins.resize();
+    });
+    const myObserver = new ResizeObserver(() => {
+      RESIZE_HANDLE();
+    });
+    return {
+      attach: () => ref.current && myObserver.observe(ref.current),
+      remove: () => ref.current && myObserver.unobserve(ref.current),
       resize: RESIZE_HANDLE
     };
   }

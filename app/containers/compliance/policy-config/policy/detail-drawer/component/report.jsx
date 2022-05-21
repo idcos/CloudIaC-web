@@ -20,7 +20,7 @@ export default ({ policyId }) => {
     { key: 'policy_running_trend', domRef: policy_running_trend, ins: null },
     { key: 'detect_pass_rate', domRef: detect_pass_rate, ins: null }
   ]);
-  const resizeHelper = chartUtils.resizeEvent(CHART);
+  const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
   const { loading: reportLoading } = useRequest(
     () => requestWrapper(
@@ -66,7 +66,7 @@ export default ({ policyId }) => {
     CHART.current.forEach(chart => {
       chartUtils.update(chart, {});
     });
-    return resizeHelper.remove();
+    return () => resizeHelper.remove();
   }, []);
 
   const columns = [

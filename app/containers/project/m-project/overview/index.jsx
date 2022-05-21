@@ -22,6 +22,7 @@ const KEY = 'global';
 
 const overview = ({ curOrg, curProject }) => {
 
+  const wrapperRef = useRef();
   const overview_envs_state = useRef();
   const overview_resouces_type = useRef();
   const overview_pro_resource = useRef();
@@ -74,16 +75,16 @@ const overview = ({ curOrg, curProject }) => {
     }
   );
 
-  let CHART = [
+  let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, ins: null },
     { key: 'overview_resouces_type', domRef: overview_resouces_type, ins: null },
     { key: 'overview_pro_resource', domRef: overview_pro_resource, ins: null },
     { key: 'overview_resource_tendency', domRef: overview_resource_tendency, ins: null }
-  ];
-  const resizeHelper = chartUtils.resizeEvent(CHART);
+  ]);
+  const resizeHelper = chartUtils.resizeEventOfDomRef(CHART.current, wrapperRef);
 
   useEffect(() => {
-    CHART.forEach(chart => {
+    CHART.current.forEach(chart => {
       if (chart.key === 'overview_envs_state') {
         chartUtils.update(chart, data.envStat);
       }
@@ -104,7 +105,7 @@ const overview = ({ curOrg, curProject }) => {
     return () => {
       resizeHelper.remove();
     };
-  }, []);
+  }, [wrapperRef.current]);
 
   return (
     <div className={styles.overview}>
@@ -129,7 +130,7 @@ const overview = ({ curOrg, curProject }) => {
           />
         }
       >
-        {curProject.id ? <div className={classNames(styles.overview_left, 'idcos-card')}>
+        {curProject.id ? <div className={classNames(styles.overview_left, 'idcos-card')} ref={wrapperRef}>
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.env_state}>

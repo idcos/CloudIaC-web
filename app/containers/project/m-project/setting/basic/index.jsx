@@ -19,12 +19,12 @@ const Basic = ({ orgId, projectId, dispatch }) => {
   let CHART = useRef([
     { key: 'project_statistics', domRef: useRef(), ins: null }
   ]);
-  const resizeHelper = chartUtils.resizeEvent(CHART);
+  const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
   useEffect(() => {
     fetchProjectInfo();
     resizeHelper.attach();
-    return resizeHelper.remove();
+    return () => resizeHelper.remove();
   }, []);
 
   useEffect(() => {

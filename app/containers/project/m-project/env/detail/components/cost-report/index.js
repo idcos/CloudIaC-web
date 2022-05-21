@@ -11,11 +11,12 @@ export default ({ orgId, projectId, envId }) => {
   const cost_stacked_area = useRef();
   const [ list, setList ] = useState([]);
 
+  const wrapperRef = useRef();
   let CHART = useRef([
     { key: 'cost_type_pie', domRef: cost_type_pie, ins: null, title: t('define.resource.curMonthCostType') },
     { key: 'cost_stacked_area', domRef: cost_stacked_area, ins: null, title: t('define.resource.environmentCostTrend') }
   ]);
-  const resizeHelper = chartUtils.resizeEvent(CHART);
+  const resizeHelper = chartUtils.resizeEventOfDomRef(CHART.current, wrapperRef);
 
   const { loading: reportLoading, run: getReportData } = useRequest(
     () => requestWrapper(
@@ -33,13 +34,12 @@ export default ({ orgId, projectId, envId }) => {
     }
   );
 
-
   useEffect(() => {
     resizeHelper.attach();
     CHART.current.forEach(chart => {
       chartUtils.update(chart, {});
     });
-    return resizeHelper.remove();
+    return () => resizeHelper.remove();
   }, []);
 
   const columns = [
@@ -81,7 +81,7 @@ export default ({ orgId, projectId, envId }) => {
   return (
     <Space direction='vertical' size='middle' style={{ width: '100%', display: 'flex' }}>
       <Spin spinning={reportLoading}>
-        <Row gutter={[ 16, 16 ]}>
+        <Row gutter={[ 16, 16 ]} ref={wrapperRef}>
           {CHART.current.map(chart => 
             <Col span={12}>
               <div className='title'>{chart.title}</div>

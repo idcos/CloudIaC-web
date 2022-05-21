@@ -83,15 +83,16 @@ const overview = ({ curOrg, projects }) => {
     setStatisticsCount(preValue => preValue + 1);
   };
 
-  let CHART = [
+  let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, ins: null },
     { key: 'overview_resouces_type', domRef: overview_resouces_type, ins: null },
     { key: 'overview_pro_resource', domRef: overview_pro_resource, ins: null },
     { key: 'overview_resource_tendency', domRef: overview_resource_tendency, ins: null }
-  ];
+  ]);
+  const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
   useEffect(() => {
-    CHART.forEach(chart => {
+    CHART.current.forEach(chart => {
       if (chart.key === 'overview_envs_state') {
         chartUtils.update(chart, data.envStat);
       }
@@ -112,12 +113,11 @@ const overview = ({ curOrg, projects }) => {
   }, []);
 
   useEffect(() => {
-    const resizeHelper = chartUtils.resizeEvent(CHART);
     resizeHelper.attach();
     return () => {
       resizeHelper.remove();
     };
-  }, [CHART]);
+  }, []);
 
   useEffect(() => {
     statisticsCount > 0 && startStatistics();
