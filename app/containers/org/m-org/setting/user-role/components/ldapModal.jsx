@@ -130,7 +130,7 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
                   onFocus={() => searchUsers()}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
-                  options={users.map((it) => ({ label: it.uid, value: it.email }))}
+                  options={users.map((it) => ({ label: it.displayName, value: it.email }))}
                 />
               </Form.Item>
             );
