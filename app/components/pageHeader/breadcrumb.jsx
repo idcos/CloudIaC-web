@@ -7,7 +7,19 @@ import { t } from 'utils/i18n';
 const KEY = 'global'; 
 
 const breadcrumbNameMap = {
-  'org': { text: t('define.scope.org') },
+  'org': { 
+    render: ({ params, isLastOne }) => {
+      const { orgId } = params;
+      const link = `/org/${orgId}/m-org-overview`;
+      return (
+        <Breadcrumb.Item>
+          <Link to={link} disabled={isLastOne}>
+            {t('define.scope.org')}
+          </Link>
+        </Breadcrumb.Item>
+      );
+    }
+  },
   'project': { 
     render: ({ params, isLastOne }) => {
       const { orgId } = params;

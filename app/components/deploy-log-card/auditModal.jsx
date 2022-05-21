@@ -65,15 +65,27 @@ function AuditModal(props) {
           <>
             <div className={styles.cost}>
               <CheckCircleFilled style={{ color: "#00A870" }} />
-              <span>{t('task.audit.addResourceCost')}: ￥{(resAddedCost || 0).toFixed(2)}</span>
+              <span>
+                <span>{t('task.audit.addResourceCost')}: ￥</span>
+                <span style={{ color: '#08857C' }}>{(resAddedCost || 0).toFixed(2)}&nbsp;</span>
+                <span>{t('define.unit.money')}</span>
+              </span>
             </div>
             <div className={styles.cost}>
               <InfoCircleFilled style={{ color: "#FCAA37" }} />
-              <span>{t('task.audit.modifyResourceCost')}: ￥{(resUpdatedCost || 0).toFixed(2)}</span>
+              <span>
+                <span>{t('task.audit.modifyResourceCost')}: ￥</span>
+                <span style={{ color: '#08857C' }}>{(resUpdatedCost || 0).toFixed(2)}&nbsp;</span>
+                <span>{t('define.unit.money')}</span>
+              </span>
             </div>
             <div className={styles.cost}>
               <ExclamationCircleFilled style={{ color: "#E34D59" }} />
-              <span>{t('task.audit.deleteResourceCost')}: ￥{(resDestroyedCost || 0).toFixed(2)}</span>
+              <span>
+                <span>{t('task.audit.deleteResourceCost')}: ￥</span>
+                <span style={{ color: '#08857C' }}>{(resDestroyedCost || 0).toFixed(2)}&nbsp;</span>
+                <span>{t('define.unit.money')}</span>
+              </span>
             </div>
             <div className={styles.tip}>
               {t('task.audit.tip.cost')}
