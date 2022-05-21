@@ -40,7 +40,7 @@ export default ({ orgId, projectId, envId }) => {
       chartUtils.update(chart, {});
     });
     return () => resizeHelper.remove();
-  }, []);
+  }, [wrapperRef.current]);
 
   const columns = [
     {
