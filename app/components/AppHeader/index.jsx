@@ -185,7 +185,7 @@ const AppHeader = (props) => {
             language === 'zh' ? 
               <Tooltip 
                 placement='bottomRight' 
-                title={`switch to English`} 
+                title={`Switch to English`} 
                 color='#08857C'
               >
                 <span onClick={() => setLanguage('en')}>{<EnIcon />}</span>
