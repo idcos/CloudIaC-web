@@ -29,15 +29,15 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
   // 跳转 scope作用域
   const linkTo = (scope, menuItemKey) => {
     switch (scope) {
-      case 'org':
-      case 'other':
-        history.push(`/org/${orgId}/${menuItemKey}`);
-        break;
-      case 'project':
-        history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
-        break;
-      default:
-        break;
+    case 'org':
+    case 'other':
+      history.push(`/org/${orgId}/${menuItemKey}`);
+      break;
+    case 'project':
+      history.push(`/org/${orgId}/project/${pjtId}/${menuItemKey}`);
+      break;
+    default:
+      break;
     }
   };
 
