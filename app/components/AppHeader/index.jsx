@@ -153,38 +153,76 @@ const AppHeader = (props) => {
               {
                 // define.enterCompliance
                 menuType === 'execute' ? (
-                  <Tooltip placement='bottom' title={t('define.enterCompliance')}>
+                  <Tooltip 
+                    placement='bottomRight'
+                    title={t('define.enterCompliance')} 
+                    color='#08857C'
+                  >
                     <span onClick={() => changeMenu('compliance')}>{<SwitchComplianceIcon />}</span>
                   </Tooltip>
                   
                 ) : (
                   // define.enterExecute
-                  <Tooltip placement='bottom' title={t('define.enterExecute')}>
+                  <Tooltip 
+                    placement='bottomRight'
+                    title={t('define.enterExecute')}
+                    color='#08857C'
+                  >
                     <span onClick={() => changeMenu('execute')}>{<SwitchComplianceIcon />}</span>
                   </Tooltip>
                 )
               }
             </>
           )}
-          <span onClick={() => window.open('https://registry.cloudiac.org/')}>{ <ToRegistryIcon />}</span>
-          <span onClick={() => setLanguage(language === 'zh' ? 'en' : 'zh')}>{language === 'zh' ? <EnIcon /> : <ZhIcon />}</span>
+          <Tooltip 
+            placement='bottomRight'
+            title={t('define.page.toRegistry')} 
+            color='#08857C'
+          >
+            <span onClick={() => window.open('https://registry.cloudiac.org/')}>{ <ToRegistryIcon />}</span>
+          </Tooltip>
+          {
+            language === 'zh' ? 
+              <Tooltip 
+                placement='bottomRight' 
+                title={`switch to English`} 
+                color='#08857C'
+              >
+                <span onClick={() => setLanguage('en')}>{<EnIcon />}</span>
+              </Tooltip> : 
+              <Tooltip 
+                placement='bottomRight'
+                title={`切换至中文`} 
+                color='#08857C'
+              >
+                <span onClick={() => setLanguage('zh')}>{<ZhIcon />}</span>
+              </Tooltip>
+          }
           <Tooltip 
             color='#08857C'
             placement='bottomRight'
-            visible={devManualTooltipVisible}
             overlayStyle={{ maxWidth: 'none' }}
             title={
-              <div className='dev-manual-tooltip-content'>
-                {t('define.HelpDocTooltip')} 
-                <Button type='primary' onClick={() => onCloseDevManualTooltip()}>{t('define.gotIt')}</Button> 
-              </div>
+              devManualTooltipVisible ? 
+                <div className='dev-manual-tooltip-content'>
+                  {t('define.HelpDocTooltip')} 
+                  <Button type='primary' onClick={() => onCloseDevManualTooltip()}>{t('define.gotIt')}</Button> 
+                </div> : 
+                t('define.page.toHelpDoc')
             }
           >
             <Badge color={devManualTooltipVisible ? '#08857C' : null} offset={[ -1, 3 ]}>
               <span onClick={() => window.open(`${IAC_PUBLICITY_HOST}/markdown/docs/`)}><QuestionCircleFilled/></span>
             </Badge>
           </Tooltip>
-          <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
+          <Tooltip
+            placement='bottomRight'
+            title={t('define.page.toSysStatus')} 
+            color='#08857C'
+          >
+            <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
+          </Tooltip>
+          
           <Dropdown
             overlay={(
               <div className={styles.userDropContent}>
