@@ -30,6 +30,9 @@ const sysAPI = {
   },
   updateRegistryAddr: (params) => {
     return post('/api/v1/system_config/registry/addr', params);
+  },
+  getSysConfigSwitches: () => {
+    return get('/api/v1/system_config/switches');
   }
 };
 

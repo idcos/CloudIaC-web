@@ -34,6 +34,7 @@ import {
 } from "constants/types";
 import envAPI from "services/env";
 import taskAPI from "services/task";
+import sysAPI from 'services/sys';
 import history from "utils/history";
 import { timeUtils } from "utils/time";
 import SearchByKeyWord from "components/coder/ansi-coder-card/dom-event";
@@ -71,6 +72,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
   const [ activeKey, setActiveKey ] = useState([]);
   const [ canAutoScroll, setCanAutoScroll ] = useState(true);
   const [ auditModalVisible, setAuditModalVisible ] = useState(false);
+  const [ canShowAbort, setCanShowAbort ] = useState(false);
   const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
   const autoScroll = !taskHasEnd && canAutoScroll;
 
@@ -127,6 +129,18 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
       }
     }
   };
+
+  // 系统设置中止按钮显示查询
+  useRequest(
+    () => requestWrapper(
+      sysAPI.getSysConfigSwitches.bind(null)
+    ),
+    {
+      onSuccess: (data) => {
+        setCanShowAbort(data.abortStatus || false);
+      }
+    }
+  );
 
   // 任务步骤列表查询
   const {
@@ -308,7 +322,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
           <Space size={24}>
             {PROJECT_OPERATOR && (
               <Space size={8}>
-                {!suspendStatusList.has(status) && (
+                {!suspendStatusList.has(status) && canShowAbort && (
                   <Button
                     onClick={() => suspend()}
                     disabled={aborting}
