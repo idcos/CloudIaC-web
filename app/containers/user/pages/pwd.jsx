@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, Typography } from 'antd';
 import { t } from 'utils/i18n';
+
+const { Text } = Typography;
 
 const layout = {
   labelCol: {
@@ -50,9 +52,12 @@ const Pwd = ({ title, userInfo, updateUserInfo }) => {
             message: t('define.form.input.placeholder')
           }
         ]}
+        extra={
+          <Text type='warning'>{t('define.page.userSet.pwd.field.newPassword.rule')}</Text>
+        }
       >
         <Input.Password autoComplete='new-password'/>
-      </Form.Item>
+      </Form.Item>   
       <Form.Item
         label={t('define.page.userSet.pwd.field.reNewPassword')}
         name='reNewPassword'

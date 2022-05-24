@@ -316,6 +316,7 @@
   "define.page.userSet.pwd": "修改密码",
   "define.page.userSet.pwd.action.save": "更改信息",
   "define.page.userSet.pwd.field.newPassword": "新密码",
+  "define.page.userSet.pwd.field.newPassword.rule": "数字、大写字母、小写字母两种及两种以上组合，且长度在6~30之间",
   "define.page.userSet.pwd.field.oldPassword": "原密码",
   "define.page.userSet.pwd.field.reNewPassword": "确认新密码",
   "define.page.userSet.pwd.field.reNewPassword.error.noSame": "两次输入不一致",
