@@ -46,10 +46,10 @@ export default ({ match }) => {
       projectAPI.filters.bind(null, { orgId, projectId })
     ), {
       formatResult: (data) => {
-        const { envs, Providers } = data || {};
+        const { envs, providers } = data || {};
         return {
           envs: (envs || []).map((val) => ({ label: val.envName, value: val.envId })),
-          providers: (Providers || []).map((val) => ({ label: val, value: val }))
+          providers: (providers || []).map((val) => ({ label: val, value: val }))
         };
       }
     }

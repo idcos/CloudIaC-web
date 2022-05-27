@@ -46,10 +46,10 @@ export default ({ match }) => {
       orgsAPI.filters.bind(null, { orgId })
     ), {
       formatResult: (data) => {
-        const { projects, Providers } = data || {};
+        const { projects, providers } = data || {};
         return {
           projects: (projects || []).map((val) => ({ label: val.projectName, value: val.projectId })),
-          providers: (Providers || []).map((val) => ({ label: val, value: val }))
+          providers: (providers || []).map((val) => ({ label: val, value: val }))
         };
       }
     }
