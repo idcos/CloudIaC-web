@@ -162,12 +162,13 @@ export default () => {
               <Input.Password placeholder={t('define.loginPage.password.placeholder')} />
             </Form.Item>
 
-            <Form.Item {...tailLayout} style={{ paddingTop: 8 }}>
+            <Form.Item {...tailLayout} style={{ paddingTop: 8, marginBottom: 0 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
                 {t('define.loginPage.login')}
               </Button>
             </Form.Item>
           </Form>
+          <div className='free-register'>{t('define.loginPage.password.registerForFree')}</div>
         </div>
       </Col>
     </Row>

@@ -5,14 +5,16 @@ const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const htmlChunks = [ 'app', 'login' ];
+const htmlChunks = [ 'app', 'login', 'register' ];
 const getExcludeHtmlChunks = (value) => htmlChunks.filter((htmlChunk) => value !== htmlChunk);
 
 module.exports = require('./webpack.base.babel')({
   mode: 'production',
   entry: {
     app: path.join(process.cwd(), 'app/app.js'),
-    login: path.join(process.cwd(), 'login/login.js')
+    login: path.join(process.cwd(), 'login/login.js'),
+    register: path.join(process.cwd(), 'register/register.js')
+
   },
   output: {
     filename: 'js/[name].[chunkhash].js',
@@ -86,6 +88,24 @@ module.exports = require('./webpack.base.babel')({
         minifyURLs: true
       },
       excludeChunks: getExcludeHtmlChunks('login'),
+      inject: true
+    }),
+    new HtmlWebpackPlugin({
+      template: 'register/register.html',
+      filename: 'register.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      },
+      excludeChunks: getExcludeHtmlChunks('register'),
       inject: true
     }),
     new HashedModuleIdsPlugin({
