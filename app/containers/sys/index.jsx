@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Menu, Tabs } from 'antd';
+import { connect } from "react-redux";
 import PageHeader from 'components/pageHeader';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
@@ -9,16 +10,24 @@ import Orgs from './pages/orgs';
 import Params from './pages/params';
 import Registry from './pages/registry';
 
+
 const subNavs = {
-  org: t('define.orgSet'),
-  params: t('define.page.sysSet.params'),
-  registry: t('define.page.sysSet.registry')
+  org: {
+    title: t('define.orgSet'),
+    needAdmin: false
+  },
+  params: {
+    title: t('define.page.sysSet.params'),
+    needAdmin: true
+  },
+  registry: {
+    title: t('define.page.sysSet.registry'),
+    needAdmin: true
+  }
 };
 
-const Sys = () => {
-
+const Sys = ({ userInfo }) => {
   const [ panel, setPanel ] = useState('org');
-
   const renderByPanel = useCallback(() => {
     const PAGES = {
       org: (props) => <Orgs {...props}/>,
@@ -26,7 +35,7 @@ const Sys = () => {
       registry: (props) => <Registry {...props}/>
     };
     return PAGES[panel]({
-      title: subNavs[panel]
+      title: subNavs[panel].title
     });
   }, [panel]);
 
@@ -53,8 +62,9 @@ const Sys = () => {
         >
           {Object.keys(subNavs).map((it) => (
             <Tabs.TabPane
-              tab={subNavs[it]}
+              tab={subNavs[it].title}
               key={it}
+              disabled={subNavs[it].needAdmin && !userInfo.isAdmin}
             />
           ))}
         </Tabs>
@@ -67,4 +77,8 @@ const Sys = () => {
   </Layout>;
 };
 
-export default Eb_WP()(Sys);
+export default connect(
+  (state) => ({
+    userInfo: state['global'].get('userInfo').toJS()
+  })
+)(Eb_WP()(Sys));

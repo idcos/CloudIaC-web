@@ -235,14 +235,18 @@ const AppHeader = (props) => {
                     <span className='icon'><SecurityScanFilled /></span>
                     <span className='text'>{t('define.userSet')}</span>
                   </div>
-                  {
+                  {/* {
                     userInfo.isAdmin ? (
                       <div className='link-item' onClick={() => history.push('/sys/setting')}>
                         <span className='icon'><SettingFilled /></span>
                         <span className='text'>{t('define.sysSet')}</span>
                       </div>
                     ) : null
-                  }
+                  } */}
+                  <div className='link-item' onClick={() => history.push('/sys/setting')}>
+                    <span className='icon'><SettingFilled /></span>
+                    <span className='text'>{t('define.sysSet')}</span>
+                  </div>
                   <div className='link-item' onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>{t('define.logout')}</span>
