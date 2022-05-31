@@ -12,7 +12,7 @@ import Notification from './notification';
 import ResourceAccount from './resource-account';
 import styles from './styles.less';
 
-const OrgSetting = ({ match, userInfo }) => {
+const OrgSetting = ({ match, userInfo, sysConfigSwitches }) => {
  
   const { orgId } = match.params;
   const [ activeKey, setActiveKey ] = useState();
@@ -50,7 +50,8 @@ const OrgSetting = ({ match, userInfo }) => {
     return PAGES[activeKey]({
       title: menus[activeKey],
       orgId,
-      userInfo
+      userInfo,
+      sysConfigSwitches
     });
   }, [activeKey]);
 
@@ -95,6 +96,7 @@ const OrgSetting = ({ match, userInfo }) => {
 
 export default connect(
   (state) => ({ 
+    sysConfigSwitches: state.global.get('sysConfigSwitches').toJS(),
     userInfo: state['global'].get('userInfo').toJS()
   })
 )(OrgSetting);

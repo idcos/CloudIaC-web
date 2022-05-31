@@ -13,7 +13,7 @@ import AddModal from './components/add-modal';
 const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
-const User = ({ orgId, projectId }) => {
+const User = ({ orgId, projectId, sysConfigSwitches }) => {
   const [ loading, setLoading ] = useState(false),
     [ tabKey, setTabKey ] = useState('user'),
     [ visible, setVisible ] = useState(false),
@@ -367,7 +367,7 @@ const User = ({ orgId, projectId }) => {
           }}
         />
       </Tabs.TabPane>
-      <Tabs.TabPane tab='OU' key='ou'>
+      <Tabs.TabPane tab='OU' key='ou' disabled={!sysConfigSwitches.enableLdap}>
         <Table
           columns={OUColumns}
           dataSource={ouResultMap.list}
@@ -398,6 +398,7 @@ const User = ({ orgId, projectId }) => {
         operation={operation}
         visible={visible}
         toggleVisible={toggleVisible}
+        sysConfigSwitches={sysConfigSwitches}
       />
     }
   </>;

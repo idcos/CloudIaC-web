@@ -13,7 +13,7 @@ const FL = {
   wrapperCol: { span: 16 }
 };
 
-export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
+export default ({ orgId, projectId, visible, toggleVisible, operation, sysConfigSwitches }) => {
 
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ userOptions, setUserOptions ] = useState([]);
@@ -90,10 +90,10 @@ export default ({ orgId, projectId, visible, toggleVisible, operation }) => {
           label={t('define.page.userSet.basic.field.type')}
           name='type'
           required={true}
-          initialValue='ou'
+          initialValue={sysConfigSwitches.enableLdap ? 'ou' : 'user'}
         >
           <Radio.Group>
-            <Radio value='ou'>OU</Radio>
+            <Radio value='ou' disabled={!sysConfigSwitches.enableLdap}>OU</Radio>
             <Radio value='user'>{t('define.user')}</Radio>
           </Radio.Group>
         </Form.Item>

@@ -15,7 +15,7 @@ const subNavs = {
   user: t('define.user')
 };
 
-const ProjectSetting = ({ match, dispatch }) => {
+const ProjectSetting = ({ match, dispatch, sysConfigSwitches }) => {
 
   const { orgId, projectId } = match.params;
 
@@ -29,7 +29,8 @@ const ProjectSetting = ({ match, dispatch }) => {
       title: subNavs[panel],
       orgId, 
       projectId,
-      dispatch
+      dispatch,
+      sysConfigSwitches
     });
   }, [panel]);
 
@@ -69,6 +70,10 @@ const ProjectSetting = ({ match, dispatch }) => {
   </Layout>;
 };
 
-export default connect()(
+export default connect(
+  (state) => ({ 
+    sysConfigSwitches: state.global.get('sysConfigSwitches').toJS()
+  })
+)(
   Eb_WP()(ProjectSetting)
 );

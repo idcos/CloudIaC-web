@@ -12,7 +12,7 @@ import { t } from 'utils/i18n';
 import OpModal from './components/memberModal';
 import LdapModal from './components/ldapModal';
 
-export default ({ userInfo, orgId }) => {
+export default ({ userInfo, orgId, sysConfigSwitches }) => {
 
   const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
@@ -345,7 +345,7 @@ export default ({ userInfo, orgId }) => {
     <Menu onClick={invitation}>
       <Menu.Item key='invitation'>{t('define.org.user.action.add')}</Menu.Item>
       <Menu.Item key='batch-invitation'>{t('define.org.user.action.batchAdd')}</Menu.Item>
-      <Menu.Item key='ldap-invitation'>{t('define.org.user.action.ldapAdd')}</Menu.Item>
+      <Menu.Item key='ldap-invitation' disabled={!sysConfigSwitches.enableLdap}>{t('define.org.user.action.ldapAdd')}</Menu.Item>
     </Menu>
   );
 
@@ -383,7 +383,7 @@ export default ({ userInfo, orgId }) => {
           }}
         />
       </Tabs.TabPane>
-      <Tabs.TabPane tab='LDAP/OU' key='ou'>
+      <Tabs.TabPane tab='LDAP/OU' key='ou' disabled={!sysConfigSwitches.enableLdap}>
         <Table
           columns={OUColumns}
           dataSource={ouResultMap.list}
