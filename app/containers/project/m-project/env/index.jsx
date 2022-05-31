@@ -11,6 +11,7 @@ import { t } from 'utils/i18n';
 
 const envNavs = {
   '': t('define.all'),
+  running: t('env.status.running'),
   active: t('env.status.active'),
   approving: t('env.status.approving'),
   inactive: t('env.status.inactive'),

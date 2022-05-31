@@ -18,7 +18,6 @@ const EnvList = (props) => {
 
   const { match, panel, query } = props;
   const { params: { orgId, projectId } } = match;
-
   const {
     data: resultMap = {
       list: [],
@@ -27,12 +26,20 @@ const EnvList = (props) => {
     loading
   } = useRequest(
     () => requestWrapper(
-      envAPI.envsList.bind(null, {
-        status: panel,
-        orgId,
-        projectId,
-        ...query
-      })
+      envAPI.envsList.bind(null, 
+        panel == 'running' ? {
+          deploying: true,
+          status: panel,
+          orgId,
+          projectId,
+          ...query
+        } : {
+          status: panel,
+          orgId,
+          projectId,
+          ...query
+        }
+      )
     ), {
       refreshDeps: [query]
     }
