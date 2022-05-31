@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form, Input, Button, notification, Row, Col } from 'antd';
 import queryString from 'query-string';
 import { LangIcon } from 'components/iconfont';
 import { t, getLanguage, setLanguage } from 'utils/i18n';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import { authAPI } from "../services/auth";
 import styles from './styles.less';
 
@@ -18,7 +20,18 @@ export default () => {
 
   const language = getLanguage();
   const { callbackUrl, redirectToRegistry } = queryString.parse(window.location.search);
-  
+  const [ canShowRegister, setCanShowRegister ] = useState(false);
+  useRequest(
+    () => requestWrapper(
+      authAPI.getSysConfigSwitches.bind(null)
+    ),
+    {
+      onSuccess: (data) => {
+        setCanShowRegister(data.enableRegister || false);
+      }
+    }
+  );
+
   const onFinish = async (values) => {
     try {
       const res = await authAPI.login(values);
@@ -173,7 +186,8 @@ export default () => {
               </Button>
             </Form.Item>
           </Form>
-          <div className='free-register' onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div>
+          { canShowRegister && <div className='free-register' onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div> }
+          
         </div>
       </Col>
     </Row>

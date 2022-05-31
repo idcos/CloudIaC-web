@@ -17,5 +17,8 @@ export const authAPI = {
   },
   getSsoToken: () => {
     return post('/api/v1/sso/tokens', {});
+  },
+  getSysConfigSwitches: () => {
+    return get('/api/v1/system_config/switches');
   }
 };
