@@ -94,6 +94,11 @@ export default () => {
     window.location.href = '/';
   };
 
+  const redirectToRegister = () => {
+    const search = window.location.search;
+    window.location.href = `/register${search}`;
+  };
+
   return (
     <Row wrap={false} className={styles.login}>
       <Col span={14} className='left'>
@@ -168,7 +173,7 @@ export default () => {
               </Button>
             </Form.Item>
           </Form>
-          <div className='free-register'>{t('define.loginPage.password.registerForFree')}</div>
+          <div className='free-register' onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div>
         </div>
       </Col>
     </Row>

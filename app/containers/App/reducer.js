@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import { safeJsonStringify, safeJsonParse } from 'utils/util';
 
 const initialState = fromJS({
+  sysConfigSwitches: {},
   orgs: {},
   curOrg: null,
   projects: {},
@@ -11,6 +12,10 @@ const initialState = fromJS({
 });
 
 const reducer = handleActions({
+  'global/set-sysConfigSwitches': (state, { payload }) => {
+    console.log(payload);
+    return state.set('sysConfigSwitches', fromJS(payload));
+  },
   'global/set-orgs': (state, { payload }) => {
     return state.set('orgs', fromJS(payload));
   },

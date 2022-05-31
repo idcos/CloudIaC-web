@@ -4,6 +4,7 @@ import { t } from 'utils/i18n';
 import orgsAPI from 'services/orgs';
 import projectAPI from 'services/project';
 import userAPI from 'services/user';
+import sysAPI from 'services/sys';
 import { safeJsonParse, getMatchParams } from 'utils/util';
 
 function* getOrgs(action) {
@@ -123,7 +124,25 @@ function* updateUserInfo({ payload, cb }) {
   }
 }
 
+function* getSysConfigSwitches({ payload } = {}) {
+  try {
+    const res = yield call(sysAPI.getSysConfigSwitches, payload);
+    if (res.code !== 200) {
+      throw new Error(res.message);
+    }
+    yield put({
+      type: 'global/set-sysConfigSwitches',
+      payload: res.result || {}
+    });
+  } catch (err) {
+    notification.error({
+      message: err.message
+    });
+  }
+}
+
 export default function* testSaga() {
+  yield takeLatest('global/getSysConfigSwitches', getSysConfigSwitches);
   yield takeLatest('global/getOrgs', getOrgs);
   yield takeLatest('global/getProjects', getProjects);
   yield takeLatest('global/getUserInfo', getUserInfo);

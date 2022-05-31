@@ -21,6 +21,11 @@ export default () => {
     await console.log(values);
   };
 
+  const redirectToLogin = () => {
+    const search = window.location.search;
+    window.location.href = `/login${search}`;
+  };
+
   return (
     <Row wrap={false} className={styles.register}>
       <Col span={14} className='left'>
@@ -77,8 +82,25 @@ export default () => {
                 <Input placeholder={t('define.registerPage.email.placeholder')} />
               </Form.Item>
             </div>
-          
 
+            <div>
+              <Form.Item
+                className='format-form-item'
+                label={
+                  <>
+                    <span>{t('define.registerPage.name')}</span>
+                  </>
+                }
+                name='name'
+                rules={[
+                  { required: true, message: t('define.registerPage.name.placeholder') } 
+                ]}
+                getValueFromEvent={(e) => e.target.value.trim()}
+              >
+                <Input placeholder={t('define.registerPage.name.placeholder')} />
+              </Form.Item>
+            </div>
+          
             <Form.Item
               className='format-form-item'
               label={t('define.registerPage.password')}
@@ -95,7 +117,7 @@ export default () => {
               </Button>
             </Form.Item>
           </Form>
-          <div className='free-register'>{t('define.registerPage.returnToLogin')}</div>
+          <div className='return-login' onClick={redirectToLogin}>{t('define.registerPage.returnToLogin')}</div>
         </div>
       </Col>
     </Row>

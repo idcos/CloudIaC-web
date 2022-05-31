@@ -70,6 +70,9 @@ if (!window.Intl) {
 
 const fetchGlobal = () => {
   store.dispatch({
+    type: 'global/getSysConfigSwitches'
+  });
+  store.dispatch({
     type: 'global/getOrgs',
     payload: {
       status: 'enable'

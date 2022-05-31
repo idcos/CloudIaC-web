@@ -50,11 +50,40 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
   }, [ envId, runnner ]);
 
   useEffect(() => {
-    if (envId) {
-      setFormValues(data);
-    } else {
-      setFormValues(tplInfo);
+
+    if (!envId && tplInfo.isDemo) {
+      setFormValues({ 
+        ...tplInfo,
+        ttl: "12h",
+        type: 'timequantum',
+        autoApproval: true 
+      });
+      return;
     }
+    if (envId && data.isDemo) {
+      setFormValues({ 
+        ...data,
+        ttl: "12h",
+        type: 'timequantum',
+        autoApproval: true 
+      });
+      return;
+    }
+    let _setValue = {};
+    if (envId) {
+      _setValue = { ...data };
+    } else {
+      _setValue = { ...tplInfo };
+    }
+    if (!!_setValue.autoDestroyAt) {
+      _setValue.type = 'time';
+      setFormValues({ destroyAt: moment(_setValue.autoDestroyAt) });
+    } else if (((_setValue.ttl === '' || _setValue.ttl === null || _setValue.ttl == 0) && !_setValue.autoDestroyAt || !envId)) {
+      _setValue.type = 'infinite';
+    } else if (!_setValue.autoDestroyAt) {
+      _setValue.type = 'timequantum';
+    }
+    setFormValues(_setValue);
   }, [ envId, data, tplInfo ]);
 
   const fetchSysInfo = async () => {
@@ -121,14 +150,6 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
       data.triggers.forEach((name) => {
         data[name] = true;
       });
-    }
-    if (!!data.autoDestroyAt) {
-      data.type = 'time';
-      form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-    } else if (((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt || !envId)) {
-      data.type = 'infinite';
-    } else if (!data.autoDestroyAt) {
-      data.type = 'timequantum';
     }
     form.setFieldsValue(data);
   };
@@ -461,7 +482,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               name='type'
                               initialValue={'infinite'}
                             >
-                              <Select disabled={locked} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
+                              <Select disabled={locked || (tplInfo.isDemo || data.isDemo)} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
                                 {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                               </Select>
                             </Form.Item>
@@ -482,7 +503,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                                     noStyle={true}
                                     shouldUpdate={true}
                                   >
-                                    <Select disabled={locked} style={{ width: '100%' }}>
+                                    <Select disabled={locked || (tplInfo.isDemo || data.isDemo)} style={{ width: '100%' }}>
                                       {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                                     </Select>
                                   </Form.Item>;
@@ -558,7 +579,10 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e.target.checked))}>{t('define.autoApproval')}</Checkbox> 
+                        <Checkbox 
+                          disabled={locked || (tplInfo.isDemo || data.isDemo)} 
+                          onChange={(e => autoApprovalClick(e.target.checked))}
+                        >{t('define.autoApproval')}</Checkbox> 
                       </Form.Item>
                     </Col>
                     <Col span={7}></Col>

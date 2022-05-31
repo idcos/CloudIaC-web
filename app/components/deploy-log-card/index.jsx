@@ -34,7 +34,6 @@ import {
 } from "constants/types";
 import envAPI from "services/env";
 import taskAPI from "services/task";
-import sysAPI from 'services/sys';
 import history from "utils/history";
 import { timeUtils } from "utils/time";
 import SearchByKeyWord from "components/coder/ansi-coder-card/dom-event";
@@ -55,8 +54,7 @@ const searchService = new SearchByKeyWord({
 const enableStatusList = [ 'complete', 'failed', 'timeout', 'running' ];
 const suspendStatusList = new Set([ 'rejected', 'failed', 'aborted', 'complete' ]); // 中止按钮隐藏的状态
 
-const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult }) => {
-
+const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, sysConfigSwitches }) => {
   const [form] = Form.useForm();
 
   const searchRef = useRef();
@@ -130,17 +128,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
     }
   };
 
-  // 系统设置中止按钮显示查询
-  useRequest(
-    () => requestWrapper(
-      sysAPI.getSysConfigSwitches.bind(null)
-    ),
-    {
-      onSuccess: (data) => {
-        setCanShowAbort(data.abortStatus || false);
-      }
-    }
-  );
+
 
   // 任务步骤列表查询
   const {
@@ -322,7 +310,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
           <Space size={24}>
             {PROJECT_OPERATOR && (
               <Space size={8}>
-                {!suspendStatusList.has(status) && canShowAbort && (
+                { status && !suspendStatusList.has(status) && sysConfigSwitches.abortStatus && (
                   <Button
                     onClick={() => suspend()}
                     disabled={aborting}
@@ -446,6 +434,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult })
 
 export default connect((state) => {
   return {
+    sysConfigSwitches: state.global.get('sysConfigSwitches').toJS(),
     userInfo: state.global.get('userInfo').toJS()
   };
 })(DeployLogCard);
