@@ -205,20 +205,16 @@ export const ResStat = ({ showData = [], total = 0 }) => {
 };
 
 export const EnvResStat = ({ showData }) => {
-
-  const { last_month = [], this_month = [] } = showData || {};
-  const [ tabKey, setTabKey ] = useState('last');
-
   const columns = [
     {
       title: '序列号',
       key: 1,
       align: 'right',
       width: 26,
-      render: (text, record, index) => <span style={{ color: getColor(index) }}>{index + 1}</span>
+      render: (text, record, index) => <span style={{ color: getColor(index) }}>{index + 1}</span> 
     },
     {
-      title: t('define.type'),
+      title: t('define.name'),
       dataIndex: 'resType',
       key: 'resType',
       render: (text, record) => (
@@ -228,32 +224,18 @@ export const EnvResStat = ({ showData }) => {
       )
     },
     {
-      title: '偏差',
-      hide: tabKey !== 'this',
-      className: 'up',
-      width: 40,
-      render: (text, record) => (
-        <>
-          {record.up === 0 && <span>--</span>}
-          {record.up > 0 && (
-            <Space size={2} align='center'><TrenDupIcon/>{Math.abs(record.up)}</Space>
-          )}
-          {record.up < 0 && (
-            <Space size={2} align='center'><TrendDownIcon/>{Math.abs(record.up)}</Space>
-          )}
-        </>
-      )
-    },
-    {
-      title: '数量',
+      title: '占比',
       dataIndex: 'count',
-      align: 'right',
       key: 'count',
-      width: 40
+      align: 'right',
+      width: 60,
+      render: (text, record) => <span>{record.count}</span>
     }
-  ].filter(it => !it.hide);
+  ];
+      
+   
 
-  const expandedRowRender = ({ details }) => {
+  const expandedRowRender = (record) => {
     const columns = [
       {
         title: '树状分割线', 
@@ -261,7 +243,7 @@ export const EnvResStat = ({ showData }) => {
         width: 32
       },
       { 
-        title: t('define.env.name'), 
+        title: '项目名称', 
         dataIndex: 'name', 
         key: 'name',
         render: (text, record) => (
@@ -275,9 +257,11 @@ export const EnvResStat = ({ showData }) => {
         dataIndex: 'count', 
         align: 'right',
         key: 'count',
-        width: 60
+        width: 60,
+        render: (text, record) => <span>{record.count}</span>
       }
     ];
+    const { details } = record || {};
     return (
       <Table 
         columns={columns} 
@@ -311,28 +295,18 @@ export const EnvResStat = ({ showData }) => {
   };
 
   return (
-    <div className={styles.tabsWrapper}>
-      <h2>{t('define.page.overview.envResStat')}</h2>
-      <Tabs activeKey={tabKey} onChange={(v) => setTabKey(v)}>
-        <TabPane tab={t('define.lastMonth')} key='last'>
-          <div className={styles.data_table}>
-            <Table 
-              {...commonTableProps}
-              dataSource={sortBy(last_month, it => -it.count)} 
-            />
-          </div>
-        </TabPane>
-        <TabPane tab={t('define.thisMonth')} key='this'>
-          <div className={styles.data_table}>
-            <Table 
-              {...commonTableProps}
-              dataSource={sortBy(this_month, it => -it.count)} 
-            />
-          </div>
-        </TabPane>
-      </Tabs>
+    <div className={styles.tableWrapper}>
+      <h2>{t('define.page.overview.detail')}</h2>
+      <h3>{t('define.page.overview.projectResStat')}</h3>
+      <div className={styles.data_table}>
+        <Table 
+          {...commonTableProps}
+          dataSource={sortBy(showData, it => -it.count)}  
+        />
+      </div>
     </div>
   );
+
 };
 
 export const ResGrowTrend = ({ showData = [] }) => {

@@ -433,8 +433,8 @@ export const chartOptions = {
       ]
     };
   },
-  overview_pro_resource: ({ last_month = [], this_month = [] } = {}) => {
-    const xData = last_month.map((it) => it.resType);
+  overview_pro_resource: ({ series_list = [], dataList = [] }) => {
+    const xData = dataList && dataList.map((it) => it.resType);
     return {
       tooltip: {
         trigger: 'axis',
@@ -443,10 +443,7 @@ export const chartOptions = {
         }
       },
       legend: {
-        itemHeight: 6,
-        itemWidth: 6,
-        left: 11,
-        top: 14
+        show: false
       },
       grid: {
         left: 23,
@@ -460,6 +457,9 @@ export const chartOptions = {
           type: 'category',
           data: xData,
           axisTick: { show: false },
+          axisLabel: {
+            show: false
+          },
           splitLine: {
             show: false
           }
@@ -471,22 +471,22 @@ export const chartOptions = {
           type: 'value'
         }
       ],
-      series: [
+      series: series_list.map((sery) => (
         {
-          name: t('define.lastMonth'),
-          barWidth: '8%',
-          barGap: '0%',
+          name: sery,
           type: 'bar',
-          data: last_month.map(it => it.count)
-        },
-        {
-          name: t('define.thisMonth'),
-          barWidth: '8%',
-          barGap: '0%',
-          type: 'bar',
-          data: this_month.map(it => it.count)
+          stack: 'total',
+          label: {
+            show: false
+          },
+          emphasis: {
+            focus: 'series'
+          },
+          data: dataList.map(
+            (item) => (item.detailsMap[sery])
+          )
         }
-      ]
+      )) || []
     };
   },
   overview_resource_tendency: (data = []) => {

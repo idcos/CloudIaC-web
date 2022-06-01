@@ -40,9 +40,8 @@ const overview = ({ curOrg, projects }) => {
       envStat: [],
       resStat: [],
       projectResStat: {
-        last_month: [],
-        this_month: [],
-        stackList: projects.list || []
+        series_list: [],
+        dataList: []
       },
       resGrowTrend: []
     },
@@ -57,11 +56,7 @@ const overview = ({ curOrg, projects }) => {
         return {
           envStat: envStat || [], 
           resStat: resStat || [], 
-          projectResStat: {
-            last_month: get(projectResStat, '[0].resTypes', []), 
-            this_month: get(projectResStat, '[1].resTypes', []), 
-            stackList: projects.list || []
-          }, 
+          projectResStat: formatResStat(projectResStat) || {}, 
           resGrowTrend: resGrowTrend || []
         };
       },
@@ -82,6 +77,19 @@ const overview = ({ curOrg, projects }) => {
     setSelectedProjectIds(v);
     setStatisticsCount(preValue => preValue + 1);
   };
+  const formatResStat = (data = []) => {
+    let series_list = [];
+    if (data.length) {
+      series_list = data[0].details.map((item) => item.name);
+    }
+    for (let i = 0; i < data.length; i++) {
+      data[i].detailsMap = {};
+      data[i].details.forEach((item) => {
+        data[i].detailsMap[item.name] = item.count;
+      });
+    }
+    return { dataList: data, series_list: series_list };
+  }; 
 
   let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, ins: null },
@@ -262,7 +270,7 @@ const overview = ({ curOrg, projects }) => {
       <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
-        { selectedModule === 'projectResStat' ? <ProjectStat showData={data.projectResStat}/> : undefined }
+        { selectedModule === 'projectResStat' ? <ProjectStat showData={data.projectResStat.dataList}/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend showData={data.resGrowTrend}/> : undefined }
       </div>
     </div>

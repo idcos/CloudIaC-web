@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form, Input, Button, notification, Row, Col } from 'antd';
 import queryString from 'query-string';
 import { LangIcon } from 'components/iconfont';
 import { t, getLanguage, setLanguage } from 'utils/i18n';
 import styles from './styles.less';
+import { registerAPI } from '../services/register';
 
 const layout = {
   labelCol: { span: 5 },
@@ -16,9 +17,68 @@ const tailLayout = {
 export default () => {
 
   const language = getLanguage();
-  
+  const [form] = Form.useForm();
+  const emailResend = useRef('');
   const onFinish = async (values) => {
-    await console.log(values);
+    try {
+      const email_res = await registerAPI.email({ email: values.email });
+      if (email_res.code != 200) {
+        throw new Error(email_res.message);
+      }
+      const { result: email_result = {} } = email_res;
+      const { activeStatus, email } = email_result;
+      if (email && activeStatus === 'active') {
+        form.setFields([
+          {
+            name: 'email',
+            errors: [
+              t('define.registerPage.email.disabled')
+            ]
+          }
+        ]);
+      } else if (email && activeStatus === 'inactive') {
+        emailResend.current = email;
+        form.setFields([
+          {
+            name: 'email',
+            errors: [
+              <div className={styles.email_exist}>
+                <div>{t('define.registerPage.email.exist')}</div>
+                <div className='send' onClick={handleResend}>{t('define.registerPage.email.resend')}</div>
+              </div>
+            ]
+          }
+        ]);
+      } else {
+        const register_res = await registerAPI.register(values);
+        if (register_res.code != 200) {
+          throw new Error(register_res.message);
+        } else {
+          notification.success({
+            message: t('define.message.registerSuccess')
+          });
+          setTimeout(() => {
+            redirectToLogin();
+          }, 1500);
+        }
+      }
+    } catch (e) {
+      notification.error({
+        message: e.message
+      });
+    }
+  };
+
+  const handleResend = async () => {
+    const res = await registerAPI.retry({ email: emailResend.current });
+    if (res.code === 200) {
+      notification.success({
+        message: t('define.message.opSuccess')
+      });
+      setTimeout(() => {
+        redirectToLogin();
+      }, 1500);
+    } 
   };
 
   const redirectToLogin = () => {
@@ -60,6 +120,7 @@ export default () => {
           <Form
             {...layout}
             name='basic'
+            form={form}
             className='registerForm'
             requiredMark='optional'
             onFinish={onFinish}

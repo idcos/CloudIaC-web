@@ -39,8 +39,8 @@ const overview = ({ curOrg, curProject }) => {
       envStat: [],
       resStat: [],
       envResStat: {
-        last_month: [],
-        this_month: []
+        series_list: [],
+        dataList: []
       },
       resGrowTrend: []
     }
@@ -54,10 +54,7 @@ const overview = ({ curOrg, curProject }) => {
         return {
           envStat: envStat || [], 
           resStat: resStat || [], 
-          envResStat: {
-            last_month: get(envResStat, '[0].resTypes', []), 
-            this_month: get(envResStat, '[1].resTypes', [])
-          }, 
+          envResStat: formatResStat(envResStat) || {},
           resGrowTrend: resGrowTrend || []
         };
       },
@@ -74,6 +71,19 @@ const overview = ({ curOrg, curProject }) => {
       }
     }
   );
+  const formatResStat = (data = []) => {
+    let series_list = [];
+    if (data.length) {
+      series_list = data[0].details.map((item) => item.name);
+    }
+    for (let i = 0; i < data.length; i++) {
+      data[i].detailsMap = {};
+      data[i].details.forEach((item) => {
+        data[i].detailsMap[item.name] = item.count;
+      });
+    }
+    return { dataList: data, series_list: series_list };
+  }; 
 
   let CHART = useRef([
     { key: 'overview_envs_state', domRef: overview_envs_state, ins: null },
@@ -250,7 +260,7 @@ const overview = ({ curOrg, curProject }) => {
       {curProject.id && <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         { selectedModule === 'envStat' ? <EnvStat showData={data.envStat} total={envStatTotal} /> : undefined }
         { selectedModule === 'resStat' ? <ResStat showData={data.resStat} total={resStatTotal} /> : undefined }
-        { selectedModule === 'envResStat' ? <EnvResStat showData={data.envResStat}/> : undefined }
+        { selectedModule === 'envResStat' ? <EnvResStat showData={data.envResStat.dataList}/> : undefined }
         { selectedModule === 'resGrowTrend' ? <ResGrowTrend showData={data.resGrowTrend}/> : undefined }
       </div>}
     </div>

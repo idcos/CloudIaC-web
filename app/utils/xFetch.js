@@ -11,8 +11,11 @@ function parseJSON(res) {
   });
 }
 
-async function xFetch(url, options) {
+function parseCommon(res) {
+  return { ...res, httpCode: res.status };
+}
 
+async function xFetch(url, options) {
   const opts = { isEncode: true, ...options, credentials: 'include' };
   const token = localStorage['accessToken'];
   const { orgId } = getMatchParams();
@@ -22,8 +25,8 @@ async function xFetch(url, options) {
     en: 'en-US'
   };
   opts.headers = {
-    ...opts.headers,
     'Authorization': token,
+    ...opts.headers,
     'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
     'IaC-Project-Id': opts['IaC-Project-Id'] || '',
     'Accept-Language': acceptLanguageMap[language] || 'zh-CN'
@@ -46,5 +49,29 @@ async function xFetch(url, options) {
     return jsonResponse.jsonResult;
   }
 }
+export const xFetch_nologin = async (url, options) => {
+  const opts = { isEncode: true, ...options, credentials: 'include' };
+  const token = localStorage['accessToken'];
+  const { orgId } = getMatchParams();
+  const language = getLanguage();
+  const acceptLanguageMap = {
+    zh: 'zh-CN',
+    en: 'en-US'
+  };
+  opts.headers = {
+    'Authorization': token,
+    ...opts.headers,
+    'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
+    'IaC-Project-Id': opts['IaC-Project-Id'] || '',
+    'Accept-Language': acceptLanguageMap[language] || 'zh-CN'
+  };
+
+  if (opts.isEncode && !opts.isEncodeParams) {
+    url = encodeURI(url);
+  }
+  const fetchResponse = await fetch(url, opts);
+  const jsonResponse = await parseCommon(fetchResponse);
+  return jsonResponse;
+};
 
 export default xFetch;

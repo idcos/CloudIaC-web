@@ -119,7 +119,7 @@ export default function createRoutes() {
           name: '资源发现',
           component: loadable(() => import('containers/project/m-project/resource-query'), asyncLoadFallback),
           exact: true
-        },
+        }
       ]
     },
     {

@@ -13,7 +13,6 @@ const initialState = fromJS({
 
 const reducer = handleActions({
   'global/set-sysConfigSwitches': (state, { payload }) => {
-    console.log(payload);
     return state.set('sysConfigSwitches', fromJS(payload));
   },
   'global/set-orgs': (state, { payload }) => {

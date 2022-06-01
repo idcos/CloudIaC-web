@@ -1,10 +1,14 @@
-import xFetch from './xFetch';
+import xFetch, { xFetch_nologin } from './xFetch';
 import md5 from 'blueimp-md5';
 import { flatObj } from './util';
 import secretKey from './sk';
 
 export function get(url, options) {
   return xFetch(url, options);
+}
+
+export function get_nologin(url, options) {
+  return xFetch_nologin(url, options);
 }
 
 export function getWithArgs(url, args, options) {
@@ -31,16 +35,30 @@ export function getWithArgs(url, args, options) {
 
 export function post(url, data, options) {
   const opts = {
-    ...options,
     method: 'POST',
     cache: 'no-cache',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
+    ...options,
     body: JSON.stringify(data)
   };
   return xFetch(url, opts);
+}
+
+export function post_nologin(url, data, options) {
+  const opts = {
+    method: 'POST',
+    cache: 'no-cache',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    ...options,
+    body: JSON.stringify(data)
+  };
+  return xFetch_nologin(url, opts);
 }
 
 export function postFile(url, data, options) {
