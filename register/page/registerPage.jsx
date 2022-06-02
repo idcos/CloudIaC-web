@@ -21,46 +21,16 @@ export default () => {
   const emailResend = useRef('');
   const onFinish = async (values) => {
     try {
-      const email_res = await registerAPI.email({ email: values.email });
-      if (email_res.code != 200) {
-        throw new Error(email_res.message);
-      }
-      const { result: email_result = {} } = email_res;
-      const { activeStatus, email } = email_result;
-      if (email && activeStatus === 'active') {
-        form.setFields([
-          {
-            name: 'email',
-            errors: [
-              t('define.registerPage.email.disabled')
-            ]
-          }
-        ]);
-      } else if (email && activeStatus === 'inactive') {
-        emailResend.current = email;
-        form.setFields([
-          {
-            name: 'email',
-            errors: [
-              <div className={styles.email_exist}>
-                <div>{t('define.registerPage.email.exist')}</div>
-                <div className='send' onClick={handleResend}>{t('define.registerPage.email.resend')}</div>
-              </div>
-            ]
-          }
-        ]);
+      const register_res = await registerAPI.register(values);
+      if (register_res.code != 200) {
+        throw new Error(register_res.message);
       } else {
-        const register_res = await registerAPI.register(values);
-        if (register_res.code != 200) {
-          throw new Error(register_res.message);
-        } else {
-          notification.success({
-            message: t('define.message.registerSuccess')
-          });
-          setTimeout(() => {
-            redirectToLogin();
-          }, 1500);
-        }
+        notification.success({
+          message: t('define.message.registerSuccess')
+        });
+        setTimeout(() => {
+          redirectToLogin();
+        }, 1500);
       }
     } catch (e) {
       notification.error({
@@ -69,6 +39,25 @@ export default () => {
     }
   };
 
+  const handleCheckEmail = async (rules, value, callback) => {
+    const email_res = await registerAPI.email({ email: value });
+    if (email_res.code != 200) {
+      callback();
+    }
+    const { result: email_result = {} } = email_res;
+    const { activeStatus, email } = email_result;
+    if (email && activeStatus === 'active') {
+      callback(new Error(t('define.registerPage.email.disabled')));
+    } else if (email && activeStatus === 'inactive') {
+      emailResend.current = email;
+      callback(
+        <div className={styles.email_exist}>
+          <div>{t('define.registerPage.email.exist')}</div>
+          <div className='send' onClick={handleResend}>{t('define.registerPage.email.resend')}</div>
+        </div>
+      );
+    }
+  };
   const handleResend = async () => {
     const res = await registerAPI.retry({ email: emailResend.current });
     if (res.code === 200) {
@@ -134,9 +123,13 @@ export default () => {
                   </>
                 }
                 name='email'
+                validateTrigger={'onBlur'}
                 rules={[
                   { required: true, message: t('define.registerPage.email.placeholder') }, 
-                  { type: 'email', message: t('define.registerPage.email.formatError') }
+                  { type: 'email', message: t('define.registerPage.email.formatError') },
+                  { validator: (rules, value, callback) => {
+                    handleCheckEmail(rules, value, callback); 
+                  } }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >

@@ -1,5 +1,6 @@
 import React, { memo, useState, useEffect, useContext } from 'react';
-import { Descriptions, Collapse, Empty, Divider } from 'antd';
+import { Descriptions, Collapse, Empty, Divider, Tooltip } from 'antd';
+import { QuestionCircleFilled } from '@ant-design/icons';
 import { AUTO_DESTROY } from 'constants/types';
 import { Eb_WP } from 'components/error-boundary';
 import { timeUtils } from "utils/time";
@@ -92,7 +93,24 @@ const EnvInfo = () => {
             contentStyle={{ color: '#57606A' }}
           >
             {envInfo.isBilling && (
-              <Descriptions.Item span={3} label={t('define.env.field.monthCost')}>{envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}{t('define.money.yuan')}</Descriptions.Item>
+              <Descriptions.Item 
+                span={3} 
+                label={
+                  <div>
+                    {t('define.env.field.monthCost')}
+                    &nbsp;
+                    <Tooltip
+                      placement='topLeft'
+                      title={t('define.env.field.monthCost.tooltip')} 
+                      color='#08857C'
+                    >
+                      <QuestionCircleFilled style={{ color: '#333333' }}/>
+                    </Tooltip>
+                  </div>
+                }
+              >
+                {envInfo.monthCost ? envInfo.monthCost.toFixed(2) : 0}{t('define.money.yuan')}
+              </Descriptions.Item>
             )}
             <Descriptions.Item span={3} label={t('define.env.field.resourcesNum')}>{envInfo.resourceCount}</Descriptions.Item>
           </Descriptions>

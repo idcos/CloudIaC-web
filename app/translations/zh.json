@@ -186,6 +186,7 @@
   "define.env.field.cronDriftExpress.placeholder": "*/10 * * * * 代表每隔10分钟执行一次",
   "define.env.field.lifeTime": "存活时间",
   "define.env.field.monthCost": "当月费用",
+  "define.env.field.monthCost.tooltip": "当月费用为该环境当月已产生的费用，包含当月已销毁资源产生的费用",
   "define.env.field.openCronDrift": "开启漂移检测",
   "define.env.field.resourcesNum": "资源数",
   "define.env.field.retryDelay.prefix": "执行失败时，间隔",

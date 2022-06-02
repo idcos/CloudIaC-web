@@ -186,6 +186,7 @@
   "define.env.field.cronDriftExpress.placeholder": "*/10 * * * * The representative executes every 10 minutes",
   "define.env.field.lifeTime": "Life time",
   "define.env.field.monthCost": "Current month cost",
+  "define.env.field.monthCost.tooltip": "The cost of the current month is the cost incurred by the environment in the current month, including the cost of resources destroyed in the current month",
   "define.env.field.openCronDrift": "Open drift detection",
   "define.env.field.resourcesNum": "Number of resources",
   "define.env.field.retryDelay.prefix": "When execution fails, Interval",
