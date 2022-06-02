@@ -11,7 +11,7 @@ function* getOrgs(action) {
   try {
     const { isDemo } = queryString.parse(location.search);
     let res;
-    if (isDemo) {
+    if (isDemo === 'true') {
       res = yield call(orgsAPI.allEnableOrgs, { ...action.payload, isDemo: true });
     } else {
       res = yield call(orgsAPI.allEnableOrgs, action.payload);
