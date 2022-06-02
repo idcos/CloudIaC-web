@@ -6,10 +6,16 @@ import projectAPI from 'services/project';
 import userAPI from 'services/user';
 import sysAPI from 'services/sys';
 import { safeJsonParse, getMatchParams } from 'utils/util';
-
+import queryString from 'query-string';
 function* getOrgs(action) {
   try {
-    const res = yield call(orgsAPI.allEnableOrgs, action.payload);
+    const { isDemo } = queryString.parse(location.search);
+    let res;
+    if (isDemo) {
+      res = yield call(orgsAPI.allEnableOrgs, { ...action.payload, isDemo: true });
+    } else {
+      res = yield call(orgsAPI.allEnableOrgs, action.payload);
+    }
     if (res.code !== 200) {
       throw new Error(res.message);
     }
