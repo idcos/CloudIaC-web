@@ -56,6 +56,8 @@ export default () => {
           <div className='send' onClick={handleResend}>{t('define.registerPage.email.resend')}</div>
         </div>
       );
+    } else {
+      callback();
     }
   };
   const handleResend = async () => {
