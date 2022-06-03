@@ -137,8 +137,31 @@ const Orgs = ({ orgs, userInfo, dispatch }) => {
             </>
           )}
         />
+        <div className='divider'></div>
+        <div 
+          className='create'
+          onClick={() => {
+            setOpt('add');
+            toggleVisible();
+          }}
+        >
+          <div className='create_main'>
+            +{t('define.page.sysSet.org.action.create')}
+          </div>
+          <div>
+            <RightOutlined />
+          </div>
+        </div>
       </div>
     </div>
+    {
+      visible && <OrgModal
+        visible={visible}
+        toggleVisible={toggleVisible}
+        opt={opt}
+        operation={operation}
+      />
+    }
   </Layout>);
 };
 
