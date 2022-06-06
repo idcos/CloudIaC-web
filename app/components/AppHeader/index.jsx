@@ -29,7 +29,7 @@ const AppHeader = (props) => {
   
   useEffect(() => {
    
-    if (orgId && !(orgId !== preStateRef.current.orgId && projectId === preStateRef.current.projectId)) {
+    if (orgId && !(orgId !== preStateRef.current.orgId && projectId && projectId === preStateRef.current.projectId)) {
       dispatch({
         type: 'global/getUserInfo',
         payload: {
