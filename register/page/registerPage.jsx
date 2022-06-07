@@ -25,7 +25,7 @@ export default () => {
         ...values,
         email: encodeURIComponent(values.email)
       };
-      
+
       const register_res = await registerAPI.register(_values);
       if (register_res.code != 200) {
         throw new Error(register_res.message);
@@ -45,7 +45,7 @@ export default () => {
   };
 
   const handleCheckEmail = async (rules, value, callback) => {
-    const email_res = await registerAPI.email({ email: encodeURIComponent(value) });
+    const email_res = await registerAPI.email({ email: value });
     if (email_res.code != 200) {
       callback(new Error(email_res.message_detail || email_res.message));
     }
@@ -66,7 +66,7 @@ export default () => {
     }
   };
   const handleResend = async () => {
-    const res = await registerAPI.retry({ email: encodeURIComponent(emailResend.current) });
+    const res = await registerAPI.retry({ email: emailResend.current });
     if (res.code === 200) {
       notification.success({
         message: t('define.message.opSuccess')

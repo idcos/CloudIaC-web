@@ -11,11 +11,11 @@ export const registerAPI = {
   email: ({ email }) => {
     return getWithArgs('/api/v1/auth/email', {
       email: email
-    });
+    }, { isEncodeParams: true });
   },
   retry: ({ email }) => {
     return getWithArgs('/api/v1/activation/retry', {
       email: email
-    });
+    }, { isEncodeParams: true });
   }
 };
