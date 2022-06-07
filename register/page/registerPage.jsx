@@ -21,12 +21,7 @@ export default () => {
   const emailResend = useRef('');
   const onFinish = async (values) => {
     try {
-      const _values = {
-        ...values,
-        email: encodeURIComponent(values.email)
-      };
-
-      const register_res = await registerAPI.register(_values);
+      const register_res = await registerAPI.register(values);
       if (register_res.code != 200) {
         throw new Error(register_res.message);
       } else {
