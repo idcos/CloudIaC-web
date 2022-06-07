@@ -42,7 +42,7 @@ export default () => {
   const handleCheckEmail = async (rules, value, callback) => {
     const email_res = await registerAPI.email({ email: value });
     if (email_res.code != 200) {
-      callback();
+      callback(new Error(email_res.message_detail || email_res.message));
     }
     const { result: email_result = {} } = email_res;
     const { activeStatus, email } = email_result;
