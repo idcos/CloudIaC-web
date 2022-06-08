@@ -30,7 +30,7 @@ const Setting = () => {
   
   const [form] = Form.useForm();
   const { userInfo, envInfo, reload, orgId, projectId, envId, onUnLock, onLock } = useContext(DetailPageContext);
-  const { locked } = envInfo;
+  const { locked, isDemo } = envInfo;
   // 此处需要用window.location获取最新的参数, 因为环境详情的location只做参数切换并不会刷新location值不刷新
   const { formTab } = queryString.parse(window.location.search); 
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
@@ -554,9 +554,9 @@ const Setting = () => {
               <Col span={3} style={{ textAlign: "right" }}>
                 {PROJECT_APPROVER && <div>{
                   !envInfo.locked ? (
-                    <Button onClick={() => onLock('lock')} >{t('define.env.action.lock')}</Button>
+                    <Button onClick={() => onLock('lock')} disabled={isDemo}>{t('define.env.action.lock')}</Button>
                   ) : (
-                    <Button onClick={() => onUnLock()}>{t('define.env.action.unlock')}</Button>
+                    <Button onClick={() => onUnLock()} disabled={isDemo}>{t('define.env.action.unlock')}</Button>
                   )
                 }</div>}
               </Col>
