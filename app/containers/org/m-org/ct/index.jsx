@@ -167,17 +167,20 @@ const CTList = ({ match = {} }) => {
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
+        console.log('record', record);
         return (
-          <Space>
-            <a type='link' onClick={() => updateCT(record.id)}>{t('define.action.modify')}</a>
-            <Popconfirm
-              placement='left'
-              title={t('define.ct.delete.confirm.title')}
-              onConfirm={() => onDel(record.id)}
-            >
-              <a type='link'>{t('define.action.delete')}</a>
-            </Popconfirm>
-          </Space>
+          record.isDemo ? 
+            <></> :
+            <Space>
+              <a type='link' onClick={() => updateCT(record.id)}>{t('define.action.modify')}</a>
+              <Popconfirm
+                placement='left'
+                title={t('define.ct.delete.confirm.title')}
+                onConfirm={() => onDel(record.id)}
+              >
+                <a type='link'>{t('define.action.delete')}</a>
+              </Popconfirm>
+            </Space>
         );
       }
     }

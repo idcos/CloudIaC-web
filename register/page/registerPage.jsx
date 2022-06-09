@@ -127,11 +127,11 @@ export default () => {
                 name='email'
                 validateTrigger={'onBlur'}
                 rules={[
-                  { required: true, message: t('define.registerPage.email.placeholder') }, 
-                  { type: 'email', message: t('define.registerPage.email.formatError') },
-                  { validator: (rules, value, callback) => {
-                    handleCheckEmail(rules, value, callback); 
-                  } }
+                  { 
+                    validator: (rules, value, callback) => {
+                      handleCheckEmail(rules, value, callback); 
+                    } 
+                  }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >

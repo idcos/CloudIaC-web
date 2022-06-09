@@ -248,7 +248,7 @@ const Setting = () => {
                         name='type'
                         initialValue={'infinite'}
                       >
-                        <Select disabled={locked} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
+                        <Select disabled={locked || isDemo} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
                           {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
                         </Select>
                       </Form.Item>
@@ -269,7 +269,7 @@ const Setting = () => {
                               noStyle={true}
                               shouldUpdate={true}
                             >
-                              <Select disabled={locked} style={{ width: '100%' }}>
+                              <Select disabled={locked || isDemo} style={{ width: '100%' }}>
                                 {AUTO_DESTROY.map(it => <Option value={it.code}>{it.name}</Option>)}
                               </Select>
                             </Form.Item>;
@@ -280,7 +280,7 @@ const Setting = () => {
                               noStyle={true}
                               shouldUpdate={true}
                             >
-                              <DatePicker disabled={locked} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
+                              <DatePicker disabled={locked || isDemo} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                             </Form.Item>;
                           }
                         }}
@@ -345,7 +345,7 @@ const Setting = () => {
                   valuePropName='checked'
                   initialValue={false}
                 >
-                  <Checkbox disabled={locked} onChange={(e => autoApprovalClick(e.target.checked))}>{t('define.autoApproval')}</Checkbox> 
+                  <Checkbox disabled={locked || isDemo} onChange={(e => autoApprovalClick(e.target.checked))}>{t('define.autoApproval')}</Checkbox> 
                 </Form.Item>
               </Col>
             </Row>
