@@ -14,7 +14,7 @@ const subNavs = {
   pwd: t('define.page.userSet.pwd')
 };
 
-const User = ({ userInfo, dispatch }) => {
+const User = ({ userInfo, dispatch, curOrg, curProject }) => {
 
   const [ panel, setPanel ] = useState('basic');
 
@@ -23,6 +23,8 @@ const User = ({ userInfo, dispatch }) => {
       type: 'global/updateUserInfo',
       payload: {
         ...payload,
+        orgId: curOrg.id, 
+        projectId: curProject.id,
         id: userInfo.id
       },
       cb
@@ -79,7 +81,9 @@ const User = ({ userInfo, dispatch }) => {
 
 const mapStateToProps = (state) => {
   return {
-    userInfo: state.global.get('userInfo').toJS()
+    userInfo: state.global.get('userInfo').toJS(),
+    curOrg: state.global.get('curOrg') || {},
+    curProject: state.global.get('curProject') || {}
   };
 };
 

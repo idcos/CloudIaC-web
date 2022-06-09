@@ -118,8 +118,8 @@ function* updateUserInfo({ payload, cb }) {
       message: t('define.message.opSuccess')
     });
     yield put({
-      type: 'global/set-userInfo',
-      payload: res.result || {}
+      type: 'global/getUserInfo',
+      payload
     });
     cb && cb();
   } catch (err) {
