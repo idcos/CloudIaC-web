@@ -64,7 +64,6 @@ const Sys = ({ userInfo }) => {
             <Tabs.TabPane
               tab={subNavs[it].title}
               key={it}
-              disabled={subNavs[it].needAdmin && !userInfo.isAdmin}
             />
           ))}
         </Tabs>

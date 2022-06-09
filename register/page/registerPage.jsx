@@ -126,9 +126,11 @@ export default () => {
                 name='email'
                 validateTrigger={'onBlur'}
                 rules={[
-                  { validator: (rules, value, callback) => {
-                    handleCheckEmail(rules, value, callback); 
-                  } }
+                  { 
+                    validator: (rules, value, callback) => {
+                      handleCheckEmail(rules, value, callback); 
+                    } 
+                  }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >

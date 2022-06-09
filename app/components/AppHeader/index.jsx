@@ -62,14 +62,6 @@ const AppHeader = (props) => {
       changeCurOrg(orgId, false);
       return;
     }
-    if (locationPathName === '/') {
-      dispatch({
-        type: 'global/set-curOrg',
-        payload: {
-          orgId: null
-        }
-      });
-    }
   }, [locationPathName]);
 
   const changeCurOrg = (value, needJump = true) => {
