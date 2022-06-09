@@ -113,7 +113,6 @@ export default () => {
             name='basic'
             form={form}
             className='registerForm'
-            requiredMark='optional'
             onFinish={onFinish}
           >
             <div>
@@ -127,11 +126,9 @@ export default () => {
                 name='email'
                 validateTrigger={'onBlur'}
                 rules={[
-                  { 
-                    validator: (rules, value, callback) => {
-                      handleCheckEmail(rules, value, callback); 
-                    } 
-                  }
+                  { validator: (rules, value, callback) => {
+                    handleCheckEmail(rules, value, callback); 
+                  } }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >
