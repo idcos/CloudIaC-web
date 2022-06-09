@@ -291,7 +291,7 @@ const CTList = ({ match = {} }) => {
                 setSelectedRows(rows);
               },
               getCheckboxProps: (R) => ({
-                disabled: R.internal
+                disabled: R.internal || R.isDemo
               })
             }
           }
