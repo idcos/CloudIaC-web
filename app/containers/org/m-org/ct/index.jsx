@@ -167,7 +167,6 @@ const CTList = ({ match = {} }) => {
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
-        console.log('record', record);
         return (
           record.isDemo ? 
             <></> :

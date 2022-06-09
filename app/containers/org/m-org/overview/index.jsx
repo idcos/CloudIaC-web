@@ -166,27 +166,41 @@ const overview = ({ curOrg, projects }) => {
                 >
                   <div>
                     <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
-                    {isEmpty(data.envStat) ? (
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 110 }}/>
-                    ) : (
-                      <>
-                        <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
-                        <div className={styles.table}>
-                          <div className={classNames(styles.table_header)}>
-                            <div>{t('define.page.overview.order')}</div>
-                            <div>{t('define.page.overview.envStatus')}</div>
-                            <div>{t('define.page.overview.ratio')}</div>
+                    <>
+                      {isEmpty(data.envStat) ? (
+                        <Empty 
+                          image={Empty.PRESENTED_IMAGE_SIMPLE}
+                          style={{ 
+                            width: '100%',
+                            top: '150px',
+                            left: 0,
+                            zIndex: 100,
+                            position: 'absolute' 
+                          }}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                      <div ref={overview_envs_state} style={{ width: '100%', height: 214 }}></div>
+                      {
+                        isEmpty(data.envStat) ? 
+                          <></> : 
+                          <div className={styles.table}>
+                            <div className={classNames(styles.table_header)}>
+                              <div>{t('define.page.overview.order')}</div>
+                              <div>{t('define.page.overview.envStatus')}</div>
+                              <div>{t('define.page.overview.ratio')}</div>
+                            </div>
+                            {envStatTopData.map((val, i) => {
+                              return <div className={classNames(styles.table_item)}>
+                                <div>0{i + 1}</div>
+                                <div>{ENV_STATUS[val.status]}</div>
+                                <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
+                              </div>;
+                            })}
                           </div>
-                          {envStatTopData.map((val, i) => {
-                            return <div className={classNames(styles.table_item)}>
-                              <div>0{i + 1}</div>
-                              <div>{ENV_STATUS[val.status]}</div>
-                              <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
-                            </div>;
-                          })}
-                        </div>
-                      </>
-                    )}
+                      } 
+                    </>
                   </div>
                 </div>
               </div>
@@ -201,27 +215,43 @@ const overview = ({ curOrg, projects }) => {
                 >
                   <div>
                     <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
-                    {isEmpty(data.resStat) ? (
-                      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 110 }}/>
-                    ) : (
-                      <>
-                        <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
-                        <div className={styles.table}>
-                          <div className={classNames(styles.table_header)}>
-                            <div>{t('define.page.overview.order')}</div>
-                            <div>{t('define.page.overview.resourceType')}</div>
-                            <div>{t('define.page.overview.ratio')}</div>
+                    <>
+                      {isEmpty(data.resStat) ? (
+                        <Empty 
+                          image={Empty.PRESENTED_IMAGE_SIMPLE} 
+                          style={{ 
+                            width: '100%',
+                            top: '150px',
+                            zIndex: '100',
+                            position: 'absolute',
+                            left: 0
+                          }}
+                        />
+                      ) : (
+                        <>
+                        </>
+                      )}
+                      <div ref={overview_resouces_type} style={{ width: '100%', height: 214 }}></div>
+                      {
+                        isEmpty(data.resStat) ? 
+                          <></> :
+                          <div className={styles.table}>
+                            <div className={classNames(styles.table_header)}>
+                              <div>{t('define.page.overview.order')}</div>
+                              <div>{t('define.page.overview.resourceType')}</div>
+                              <div>{t('define.page.overview.ratio')}</div>
+                            </div>
+                            {resStatTopData.map((val, i) => {
+                              return <div className={classNames(styles.table_item)}>
+                                <div>0{i + 1}</div>
+                                <div>{val.resType}</div>
+                                <div>{(val.count * 100 / resStatTotal).toFixed(1) + '%'}</div>
+                              </div>;
+                            })}
                           </div>
-                          {resStatTopData.map((val, i) => {
-                            return <div className={classNames(styles.table_item)}>
-                              <div>0{i + 1}</div>
-                              <div>{val.resType}</div>
-                              <div>{(val.count * 100 / resStatTotal).toFixed(1) + '%'}</div>
-                            </div>;
-                          })}
-                        </div>
-                      </>
-                    )}
+                      }
+                    </>
+                    
                   </div>
                 </div>
               </div>
