@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Space, Input } from 'antd';
+import { Table, Space, Input, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import history from 'utils/history';
 import moment from 'moment';
@@ -182,6 +182,13 @@ const CTList = ({ userInfo, match = {}, location }) => {
     extraHeader={<PageHeader
       title={t('define.scope.template')}
       breadcrumb={true}
+      subDes={
+        <Button 
+          onClick={() => {
+            history.push(`/org/${orgId}/m-org-ct/createCT?related_project=${projectId}`);
+          }} 
+          type='primary'
+        >{t('define.addTemplate')}</Button>}
     />}
   >
     <div className='idcos-card'>

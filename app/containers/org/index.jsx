@@ -26,7 +26,7 @@ const OrgWrapper = ({ routes, userInfo, curOrg, match = {} }) => {
       <div className='header'>
         <Space size={8}>
           <div className='view-title' onClick={() => linkTo('m-org-overview')}>
-            <span>{t('define.docs.organization')}</span><span style={{ fontWeight: 'bold' }}>{` [${t('define.overview')}]`}</span>
+            <span style={{ fontWeight: 'bold' }}>{`${t('define.overview')}`}</span>
           </div>
           <Divider type='vertical' className='header-divider'/>
           <RadioButtonGroup 

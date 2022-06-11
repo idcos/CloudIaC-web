@@ -4,7 +4,7 @@ import { RightOutlined } from "@ant-design/icons";
 import { Eb_WP } from 'components/error-boundary';
 import Layout from 'components/common/layout';
 import EmptyGen from 'components/empty-gen';
-import OrgModal from './components/orgModal';
+import OrgModal from 'components/orgModal';
 import { connect } from "react-redux";
 import { compose } from 'redux';
 import changeOrg from "utils/changeOrg";

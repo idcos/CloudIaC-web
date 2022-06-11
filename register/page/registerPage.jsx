@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form, Input, Button, notification, Row, Col } from 'antd';
+import { Form, Input, Button, notification, Row, Col, Typography } from 'antd';
 import queryString from 'query-string';
 import { LangIcon } from 'components/iconfont';
 import { t, getLanguage, setLanguage } from 'utils/i18n';
 import styles from './styles.less';
 import { registerAPI } from '../services/register';
+const { Text } = Typography;
 
 const layout = {
   labelCol: { span: 5 },
@@ -165,6 +166,7 @@ export default () => {
             >
               <Input.Password placeholder={t('define.registerPage.password.placeholder')} />
             </Form.Item>
+            <Text type='warning'>{t('define.page.userSet.pwd.field.newPassword.rule')}</Text>
 
             <Form.Item {...tailLayout} style={{ paddingTop: 8, marginBottom: 0 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>

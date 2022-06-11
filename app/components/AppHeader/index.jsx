@@ -1,18 +1,30 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Dropdown, Tooltip, Button, Badge, Divider } from 'antd';
-import { QuestionCircleFilled, DownOutlined, FundFilled, SettingFilled, SecurityScanFilled, EyeOutlined } from '@ant-design/icons';
+import { Dropdown, Tooltip, Button, Badge, Divider, notification } from 'antd';
+import { 
+  QuestionCircleFilled, 
+  DownOutlined, 
+  FundFilled, 
+  SettingFilled, 
+  SecurityScanFilled, 
+  EyeOutlined,
+  PlusSquareOutlined
+} from '@ant-design/icons';
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
 import { QuitIcon, EnIcon, ZhIcon, ToRegistryIcon, SwitchComplianceIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
+import orgsAPI from 'services/orgs';
 import SeniorSelect from 'components/senior-select';
+import OrgModal from 'components/orgModal';
 import getPermission from "utils/permission";
 import { t, getLanguage, setLanguage } from "utils/i18n";
 import { getMatchParams } from "utils/util";
+
 import styles from './styles.less';
 import { IAC_PUBLICITY_HOST } from 'constants/types';
+
 
 const KEY = 'global';
 
@@ -26,6 +38,8 @@ const AppHeader = (props) => {
   const preStateRef = useRef({});
   const [ devManualTooltipVisible, setDevManualTooltipVisible ] = useState(localStorage.newbieGuide_devManual === 'true');
   const menuType = locationPathName.indexOf('compliance') !== -1 ? 'compliance' : 'execute';
+  const [ visible, setVisible ] = useState(false);
+  const [ opt, setOpt ] = useState(null);
   
   useEffect(() => {
    
@@ -67,6 +81,7 @@ const AppHeader = (props) => {
   const changeCurOrg = (value, needJump = true) => {
     changeOrg({ orgId: value, dispatch, needJump, menuType });
   };
+  
 
   const onCloseDevManualTooltip = () => {
     setDevManualTooltipVisible(false);
@@ -78,6 +93,44 @@ const AppHeader = (props) => {
       history.push(`/org/${orgId}/m-org-overview`);
     } else {
       history.push(`/org/${orgId}/compliance/dashboard`);
+    }
+  };
+  const resfreshGlobalOrg = () => {
+    dispatch({
+      type: 'global/getOrgs',
+      payload: {
+        status: 'enable'
+      }
+    });
+  };
+  const toggleVisible = () => {
+    if (visible) {
+      setOpt(null);
+    }
+    setVisible(!visible);
+  };
+  const operation = async ({ doWhat, payload }, cb) => {
+    try {
+      const method = {
+        add: (param) => orgsAPI.create(param)
+      };
+      const res = await method[doWhat]({
+        ...payload
+      });
+      if (res.code != 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        message: t('define.message.opSuccess')
+      });
+      resfreshGlobalOrg();
+      cb && cb();
+    } catch (e) {
+      cb && cb(e);
+      notification.error({
+        message: t('define.message.opFail'),
+        description: e.message
+      });
     }
   };
 
@@ -132,6 +185,16 @@ const AppHeader = (props) => {
                     <div className='more' onClick={() => history.push('/')}>
                       <EyeOutlined className='icon' />{t('define.header.organization.more')}
                     </div>
+                    <div className='more' onClick={
+                      () => {
+                        setOpt('add');
+                        toggleVisible(); 
+                      }
+                    }
+                    >
+                      <PlusSquareOutlined className='icon' />{t('define.header.organization.create')}
+                    </div>
+                    
                   </div>
                 )}
               />
@@ -248,6 +311,14 @@ const AppHeader = (props) => {
         </div>
       </div>
     </div>
+    {
+      visible && <OrgModal
+        visible={visible}
+        toggleVisible={toggleVisible}
+        opt={opt}
+        operation={operation}
+      />
+    }
   </div>;
 };
 

@@ -3,6 +3,7 @@ import { Space, Checkbox, Form, Button, Row, Divider, notification, Empty } from
 import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import OpModal from 'components/project-modal';
+import queryString from 'query-string';
 
 const FL = {
   labelCol: { span: 0 },
@@ -17,17 +18,21 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
   const [ indeterminate, setIndeterminate ] = useState(false);
   const [ checkAll, setCheckAll ] = useState(false);
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
-
+  const { related_project } = queryString.parse(location.search);
   useEffect(() => {
     fetchProject();
   }, []);
 
   useEffect(() => {
-    const defaultValues = ctData[type];
+    const defaultValues = {
+      ...ctData[type],
+      projectId: [related_project]
+    };
     if (defaultValues) {
       form.setFieldsValue(defaultValues);
     }
   }, [ ctData, type ]);
+
 
   useEffect(() => {
     const defaultValues = ctData[type];
@@ -145,7 +150,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
           <Form.Item 
             name='projectId'
           >
-            <Checkbox.Group onChange={onChange}>
+            <Checkbox.Group onChange={onChange} initialValues={[related_project]}>
               <Space direction='vertical' size={6}>
                 {projectList.map(it => <Checkbox value={it.id}>{it.name}</Checkbox>)}
               </Space>

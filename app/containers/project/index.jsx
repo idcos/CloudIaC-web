@@ -201,6 +201,17 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
                   )}
                   <div className='menu-list'>
                     { renderMenus(subMenu) }
+                    <div 
+                      className={`menu-item`} 
+                      onClick={() => {
+                        togglePjtModalVsible();
+                      }}
+                    >
+                      <Tooltip title={collapsed && t('define.project.create')} placement='right'>
+                        <span className='icon'><PlusSquareOutlined /></span>
+                      </Tooltip>
+                      {!collapsed && <span>{t('define.project.create')}</span>}
+                    </div>
                   </div>
                 </div>
               );
