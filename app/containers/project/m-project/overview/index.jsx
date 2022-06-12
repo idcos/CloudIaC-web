@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Select, Row, Col, Empty } from 'antd';
+import { Select, Row, Col, Empty, Button } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 import sortBy from 'lodash/sortBy';
 import reduce from 'lodash/reduce';
@@ -11,6 +11,7 @@ import { chartUtils } from 'components/charts-cfg';
 import classNames from 'classnames';
 import projectAPI from 'services/project';
 import { useRequest } from 'ahooks';
+import history from 'utils/history';
 import { requestWrapper } from 'utils/request';
 import { t } from 'utils/i18n';
 import { connect } from 'react-redux';
@@ -134,6 +135,13 @@ const overview = ({ curOrg, curProject }) => {
                 }}
               >
                 <span style={{ fontSize: 20 }}>{t('define.overview')}</span>
+                <Button 
+                  style={{ marginLeft: '20px' }}
+                  onClick={() => {
+                    history.push(`/org/${curOrg.id}/project/${curProject.id}/m-project-ct`);
+                  }} 
+                  type='primary'
+                >{t('define.deployEnv')}</Button>
               </div>
             }
             breadcrumb={true}

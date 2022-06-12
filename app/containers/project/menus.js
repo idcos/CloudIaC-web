@@ -23,11 +23,6 @@ const getMenus = (userInfo, { projectList }) => {
           icon: <ControlOutlined />
         },
         {
-          name: t('define.deployNew'),
-          key: 'm-project-deploy',
-          icon: <CodeOutlined />
-        },
-        {
           name: t('define.scope.env'),
           key: 'm-project-env',
           icon: <CodeOutlined />

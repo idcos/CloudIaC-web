@@ -42,7 +42,6 @@ const breadcrumbNameMap = {
   'm-project-ct': { text: `${t('define.projectInfo')}: ${t('define.scope.template')}` },
   'm-project-variable': { text: `${t('define.projectInfo')}: ${t('define.variable')}` },
   'm-project-setting': { text: `${t('define.projectInfo')}: ${t('define.setting')}` },
-  'm-project-deploy': { text: `${t('define.projectInfo')}: ${t('define.deployEnv')}` },
   'm-project-resource': { text: t('define.resourceQuery') },
   'm-org-resource': { text: t('define.resourceQuery') },
   'm-project-overview': { text: t('define.projectOverview') },

@@ -120,9 +120,11 @@ const AppHeader = (props) => {
       if (res.code != 200) {
         throw new Error(res.message);
       }
+      const { result } = res;
       notification.success({
         message: t('define.message.opSuccess')
       });
+      history.push(`/org/${result.id}/m-org-overview`);
       resfreshGlobalOrg();
       cb && cb();
     } catch (e) {

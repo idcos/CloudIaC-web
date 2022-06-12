@@ -91,12 +91,6 @@ export default function createRoutes() {
           exact: true
         },
         {
-          path: '/org/:orgId/project/:projectId/m-project-deploy',
-          name: '项目信息：部署新环境',
-          component: loadable(() => import('containers/project/m-project/ct'), asyncLoadFallback),
-          exact: true
-        },
-        {
           path: '/org/:orgId/project/:projectId/m-project-ct',
           name: '项目信息：云模板',
           component: loadable(() => import('containers/project/m-project/ct'), asyncLoadFallback),

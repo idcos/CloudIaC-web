@@ -71,9 +71,12 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
       if (res.code != 200) {
         throw new Error(res.message);
       }
+      
       notification.success({
         message: t('define.message.opSuccess')
       });
+      const { result } = res;
+      history.push(`/org/${orgId}/project/${result.id}/m-project-overview`);
       cb && cb();
     } catch (e) {
       cb && cb(e);
