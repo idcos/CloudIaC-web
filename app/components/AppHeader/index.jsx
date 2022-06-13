@@ -124,8 +124,8 @@ const AppHeader = (props) => {
       notification.success({
         message: t('define.message.opSuccess')
       });
-      history.push(`/org/${result.id}/m-org-overview`);
       resfreshGlobalOrg();
+      changeCurOrg(result.id, true);
       cb && cb();
     } catch (e) {
       cb && cb(e);

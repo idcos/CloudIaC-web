@@ -76,7 +76,7 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
         message: t('define.message.opSuccess')
       });
       const { result } = res;
-      history.push(`/org/${orgId}/project/${result.id}/m-project-overview`);
+      changeProject(result.id);
       cb && cb();
     } catch (e) {
       cb && cb(e);
