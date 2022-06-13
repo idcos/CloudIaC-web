@@ -3,7 +3,7 @@ import getPermission from "utils/permission";
 import { t } from 'utils/i18n';
 
 const getMenus = (userInfo) => {
-  const { ORG_SET, PROJECT_OPERATOR } = getPermission(userInfo);
+  const { ORG_SET, PROJECT_OPERATOR, PROJECT_SET } = getPermission(userInfo);
   return [
     // {
     //   name: t('define.overview'),
@@ -19,7 +19,7 @@ const getMenus = (userInfo) => {
       name: t('define.scope.template'),
       key: 'm-org-ct',
       icon: <LayoutOutlined />,
-      isHide: !ORG_SET && !PROJECT_OPERATOR
+      isHide: !ORG_SET && !PROJECT_SET
     },
     {
       name: t('define.variable'),
