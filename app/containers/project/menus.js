@@ -29,6 +29,7 @@ const getMenus = (userInfo, { projectList }) => {
         },
         {
           name: t('define.scope.template'),
+          isHide: !PROJECT_SET,
           key: 'm-project-ct',
           icon: <LayoutOutlined />
         },

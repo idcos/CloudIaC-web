@@ -19,7 +19,7 @@ const getMenus = (userInfo) => {
       name: t('define.scope.template'),
       key: 'm-org-ct',
       icon: <LayoutOutlined />,
-      isHide: !ORG_SET
+      isHide: !ORG_SET && !PROJECT_OPERATOR
     },
     {
       name: t('define.variable'),
