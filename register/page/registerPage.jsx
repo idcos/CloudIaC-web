@@ -39,6 +39,7 @@ export default () => {
       });
     }
   };
+  const specialWordResp = '\!\"#$%&\'\(\)*+\,-./:;<=>?@\[\\\]\^_`\{\|\}~';
 
   const handleCheckEmail = async (rules, value, callback) => {
     const email_res = await registerAPI.email({ email: value });
@@ -164,13 +165,13 @@ export default () => {
               validateTrigger={'onBlur'}
               rules={[
                 { required: true, message: t('define.registerPage.password.placeholder') },
-                { pattern: '^(?![0-9]+$)(?![\w]+$)(?![a-zA-Z]+$)(?![^0-9\w]+$)(?![^\da-zA-Z]+$)(?![^\da-zA-Z]+$).{6,30}$', message: t('define.page.userSet.pwd.field.newPassword.rule') }
+                { pattern: `^(?![0-9]+$)(?![${specialWordResp}]+$)(?![a-zA-Z]+$)(?![^${specialWordResp}a-zA-Z]+$)(?![^0-9a-zA-Z]+$)(?![^${specialWordResp}0-9a-zA-Z]+$).{6,30}$`, message: t('define.page.userSet.pwd.field.newPassword.rule') }
               ]}
               getValueFromEvent={(e) => e.target.value.trim()}
             >
               <Input.Password placeholder={t('define.registerPage.password.placeholder')} />
             </Form.Item>
-            <Form.Item {...tailLayout} style={{ paddingTop: 12, marginBottom: 0 }}>
+            <Form.Item {...tailLayout} style={{ paddingTop: 8, marginBottom: 0 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
                 {t('define.registerPage.register')}
               </Button>
