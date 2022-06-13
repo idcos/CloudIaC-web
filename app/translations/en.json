@@ -325,7 +325,7 @@
   "define.page.userSet.pwd": "Change Password",
   "define.page.userSet.pwd.action.save": "Change information",
   "define.page.userSet.pwd.field.newPassword": "New password",
-  "define.page.userSet.pwd.field.newPassword.rule": "Two or more combinations of numbers, uppercase letters, and lowercase letters, and the length is between 6 and 30",
+  "define.page.userSet.pwd.field.newPassword.rule": "At least two combinations of letters, numbers and symbols, and the length is between 6 and 30",
   "define.page.userSet.pwd.field.oldPassword": "Old password",
   "define.page.userSet.pwd.field.reNewPassword": "Confirm new password",
   "define.page.userSet.pwd.field.reNewPassword.error.noSame": "The two inputs are inconsistent",

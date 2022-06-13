@@ -161,12 +161,19 @@ export default () => {
               className='format-form-item'
               label={t('define.registerPage.password')}
               name='password'
-              rules={[{ required: true, message: t('define.registerPage.password.placeholder') }]}
+              validateTrigger={'onBlur'}
+              rules={[
+                { required: true, message: t('define.registerPage.password.placeholder') },
+                { pattern: '^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,30}$', message: t('define.page.userSet.pwd.field.newPassword.rule') }
+              ]}
               getValueFromEvent={(e) => e.target.value.trim()}
             >
               <Input.Password placeholder={t('define.registerPage.password.placeholder')} />
             </Form.Item>
-            <Text type='warning'>{t('define.page.userSet.pwd.field.newPassword.rule')}</Text>
+            <div style={{ paddingTop: '30px' }}>
+              <Text type='warning'>{t('define.page.userSet.pwd.field.newPassword.rule')}</Text>
+            </div>
+            
 
             <Form.Item {...tailLayout} style={{ paddingTop: 8, marginBottom: 0 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
