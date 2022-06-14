@@ -51,7 +51,7 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
     className='antd-modal-type-form'
     onOk={onOk}
     width={550}
-    zIndex={1111111}
+    zIndex={1000}
   >
     <Form
       {...FL}
