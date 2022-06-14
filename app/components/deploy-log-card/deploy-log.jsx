@@ -8,6 +8,7 @@ import { requestWrapper } from 'utils/request';
 import { getNumLen } from 'utils/util';
 import { useEventSource } from "utils/hooks";
 import styles from './styles.less';
+import uniq from 'lodash.uniq';
 
 const ansi_up = new AnsiUp();
 
@@ -86,7 +87,7 @@ export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscre
     evtSourceInit(
       {
         onmessage: (data) => {
-          setTaskStepLog((prevLog) => [ ...prevLog, data ]);
+          setTaskStepLog((prevLog) => uniq([ ...prevLog, data ] || []));
         }
       },
       {
