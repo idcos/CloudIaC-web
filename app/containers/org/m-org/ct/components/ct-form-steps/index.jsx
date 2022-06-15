@@ -43,7 +43,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     ),
     {
       manual: true,
-      onSuccess: () =>  goCTlist()
+      onSuccess: () => goCTlist()
     }
   );
 
@@ -73,7 +73,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         }
       }
     };
-  }, [stepIndex, ctData]);
+  }, [ stepIndex, ctData ]);
 
   const goCTlist = () => {
     history.push(`/org/${orgId}/m-org-ct`);
@@ -98,14 +98,14 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
 
   useEffect(() => {
     switch (opType) {
-      case 'add':
-        getVars();
-        break;
-      case 'edit':
-        fetchCTDetail();
-        break;
-      default:
-        break;
+    case 'add':
+      getVars();
+      break;
+    case 'edit':
+      fetchCTDetail();
+      break;
+    default:
+      break;
     }
   }, [opType]);
 

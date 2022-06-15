@@ -154,28 +154,21 @@ const ApiToken = ({ orgId }) => {
 
   return <>
     <div style={{ marginBottom: 20 }}>
-      <Popover 
-        placement='right' 
-        visible={visible}
-        arrowPointAtCenter={true}
-        autoAdjustOverflow={true}
-        trigger={'click'}
-        close={toggleVisible}
-        formContent={<TokenForm 
+      <Button 
+        type='primary'
+        onClick={() => {
+          toggleVisible();
+        }}
+      >{t('define.token.action.add')}</Button>
+      {
+        visible && <TokenForm 
           orgId={orgId}
           reload={fetchList}
           operation={operation}
-          visible={visible}
           toggleVisible={toggleVisible}
-        />}
-      >
-        <Button 
-          type='primary'
-          onClick={() => {
-            toggleVisible();
-          }}
-        >{t('define.token.action.add')}</Button>
-      </Popover>
+          visible={visible}
+        />
+      }
     </div>
     <Table
       columns={columns}
