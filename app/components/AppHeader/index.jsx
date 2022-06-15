@@ -153,7 +153,7 @@ const AppHeader = (props) => {
       <Divider type='vertical' className='header-divider'/>
       <div className='rParts'>
         {
-          !!orgId ? (
+          (!!orgId && locationPathName !== '/') ? (
             <>
               <SeniorSelect
                 style={{ width: 'auto' }}
