@@ -17,7 +17,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 
-const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
+const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
 
   const formData = ctData[type] || {};
   const [form] = Form.useForm();
@@ -250,6 +250,8 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
     vcsId && fetchRepos({ vcsId, q: value });
   };
 
+  const isRegistrySource = sourceRef.current === 'registry';
+
   return <div className='form-wrapper' style={{ width: 600 }}>
     <Form
       form={form}
@@ -260,6 +262,7 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
       <Form.Item
         label='vcs'
         name='vcsId'
+        hidden={isRegistrySource}
         rules={[
           {
             required: true,
@@ -284,9 +287,22 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           {vcsList.map(it => <Option value={it.id}>{it.name}</Option>)}
         </Select>
       </Form.Item>
+      {isRegistrySource && (
+        <Form.Item
+          label='vcs'
+          rules={[
+            {
+              required: true
+            }
+          ]}
+        >
+          {t('define.import.fromExchange')}
+        </Form.Item>
+      )}
       <Form.Item
         label={t('define.repoName')}
         name='repoId'
+        hidden={isRegistrySource}
         rules={[
           {
             required: true,
@@ -304,6 +320,18 @@ const Repo = ({ onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, 
           {repos.map(it => <Option value={it.id}>{it.fullName}</Option>)}
         </Select>
       </Form.Item>
+      {isRegistrySource && (
+        <Form.Item
+          label={t('define.repoName')}
+          rules={[
+            {
+              required: true
+            }
+          ]}
+        >
+          {formData.repoFullName}
+        </Form.Item>
+      )}
       <Form.Item
         name='repoFullName'
         hidden={true}

@@ -32,6 +32,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
+  const sourceRef = useRef('vcs');
 
   // 创建/编辑云模板提交接口
   const {
@@ -122,7 +123,8 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         name, description, policyEnable, policyGroup, tplTriggers,
         vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
         tfVarsFile, playbook, keyId,
-        projectId
+        projectId,
+        source
       } = res.result || {};
       setCtData({
         basic: { name, description, policyEnable, policyGroup, tplTriggers },
@@ -130,6 +132,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         variable: { tfVarsFile, playbook, keyId },
         relation: { projectId }
       });
+      sourceRef.current = source;
       getVars(); // 变量单独查询
     } catch (e) {
       notification.error({
@@ -188,6 +191,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               isShow={stepIndex === index}
               saveLoading={saveLoading}
               onlineCheckForm={onlineCheckForm}
+              sourceRef={sourceRef}
             />
           ) : null
         ))
