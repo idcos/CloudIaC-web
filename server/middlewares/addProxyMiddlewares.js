@@ -45,12 +45,13 @@ const addProxyMiddlewares = (app, options = {}) => {
     finalKeys.forEach(key => {
       const service = proxyConfig[key];
       console.log('service', service);
-      const { api } = service;
+      const { api, pathRewrite } = service;
       const logLevel = service.logLevel || 'info';
       const Proxy = createProxyMiddleware({
         target: api,
         logLevel,
-        changeOrigin: true
+        changeOrigin: true,
+        pathRewrite
       });
       service.endpoints.forEach(endpoint => {
         app.all(endpoint, (req, res, next) => {

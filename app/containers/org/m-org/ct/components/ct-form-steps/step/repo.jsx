@@ -19,6 +19,7 @@ const { Option, OptGroup } = Select;
 
 const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgId, ctData, type, opType, saveLoading }) => {
 
+  const isRegistrySource = sourceRef.current === 'registry';
   const formData = ctData[type] || {};
   const [form] = Form.useForm();
   const [ vcsVisible, setVcsVisible ] = useState(false);
@@ -118,6 +119,10 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
   );
 
   const fetchRepoBranches = async ({ vcsId, repoId }) => {
+    // Registry来源就不查分支
+    if (isRegistrySource) {
+      return;
+    }
     try {
       const res = await vcsAPI.listRepoBranch({
         orgId,
@@ -249,8 +254,6 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
     const vcsId = form.getFieldValue('vcsId');
     vcsId && fetchRepos({ vcsId, q: value });
   };
-
-  const isRegistrySource = sourceRef.current === 'registry';
 
   return <div className='form-wrapper' style={{ width: 600 }}>
     <Form

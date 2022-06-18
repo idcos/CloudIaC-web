@@ -33,6 +33,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
   const sourceRef = useRef('vcs');
+  const [ ready, setReady ] = useState(opType === 'add');
 
   // 创建/编辑云模板提交接口
   const {
@@ -133,6 +134,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         relation: { projectId }
       });
       sourceRef.current = source;
+      setReady(true);
       getVars(); // 变量单独查询
     } catch (e) {
       notification.error({
@@ -177,7 +179,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         </Steps>
       </div>
       {
-        steps.map((it, index) => (
+        ready && steps.map((it, index) => (
           stepIndex === index ? (
             <it.Component
               childRef={stepRef}

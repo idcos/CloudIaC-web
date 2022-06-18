@@ -34,6 +34,8 @@ export default ({
     featuredImage,
     hostname,
     latestVersion,
+    latestVersionGitTag,
+    exchangeRepoPath,
     id,
     key,
     logo,
@@ -58,7 +60,7 @@ export default ({
         toggleVisible();
       }}
       onOk={() => {
-        const search = queryString.stringify({ repoFullName: repoName, repoId, repoRevision: latestVersion });
+        const search = queryString.stringify({ repoFullName: name, repoId: exchangeRepoPath, repoRevision: latestVersionGitTag });
         history.push({
           pathname: `/org/${orgId}/m-org-ct/importCT-exchange/exchange-createCT`,
           search: search

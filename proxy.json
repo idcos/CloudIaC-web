@@ -15,8 +15,12 @@
   },
   "registry": {
     "api": "http://10.0.2.120",
+    "pathRewrite": {
+      "/registry/api": "/api"
+    },
+    "changeOrigin": true,
     "endpoints": [
-      "/registry/*"
+      "/registry/api/*"
     ]
   }
 }
