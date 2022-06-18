@@ -193,6 +193,10 @@ const CTList = ({ match = {} }) => {
     history.push(`/org/${orgId}/m-org-ct/updateCT/${tplId}`);
   };
 
+  const importFromExchange = () => {
+    history.push(`/org/${orgId}/m-org-ct/importCT-exchange`);
+  };
+
   const onDel = async (tplId) => {
     try {
       const res = await tplAPI.del({
@@ -244,6 +248,7 @@ const CTList = ({ match = {} }) => {
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
             <Button type='primary' onClick={createCT}>{t('define.addTemplate')}</Button>
+            <Button onClick={importFromExchange}>{t('define.import.fromExchange')}</Button>
             <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
           </Space>
           <Space>

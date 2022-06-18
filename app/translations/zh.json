@@ -217,6 +217,7 @@
   "define.gotIt": "知道了",
   "define.hasDrift": "检测到该环境存在漂移资源",
   "define.import": "导入",
+  "define.import.fromExchange": "从Exchange导入",
   "define.last15days": "最近15天",
   "define.lastMonth": "上月",
   "define.loginPage.email": "邮箱",

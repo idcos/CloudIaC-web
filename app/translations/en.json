@@ -217,6 +217,7 @@
   "define.gotIt": "Got it",
   "define.hasDrift": "Drift resource detected in this environment",
   "define.import": "Import",
+  "define.import.fromExchange": "Import from Exchange",
   "define.last15days": "Last 15 days",
   "define.lastMonth": "Last month",
   "define.loginPage.email": "Email",
