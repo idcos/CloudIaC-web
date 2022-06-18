@@ -171,6 +171,12 @@ export default function createRoutes() {
           exact: true
         },
         {
+          path: '/org/:orgId/m-org-ct/importCT-exchange/exchange-createCT',
+          name: '从Exchange导入',
+          component: loadable(() => import('containers/org/m-org/ct/exchange/create'), asyncLoadFallback),
+          exact: true
+        },
+        {
           path: '/org/:orgId/m-org-variable',
           name: '组织设置：变量',
           component: loadable(() => import('containers/org/m-org/variable'), asyncLoadFallback),

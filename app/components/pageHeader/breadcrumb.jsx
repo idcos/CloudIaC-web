@@ -49,6 +49,7 @@ const breadcrumbNameMap = {
   'createCT': { text: t('define.addTemplate') },
   'updateCT': { text: t('define.modifyTemplate') },
   'importCT-exchange': { text: t('define.import.fromExchange') }, 
+  'exchange-createCT': { text: t('define.addTemplate') }, 
   'deploy': { 
     render: ({ params, isLastOne, url, index }) => {
       const { envId, orgId, projectId } = params;
