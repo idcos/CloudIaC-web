@@ -1,0 +1,98 @@
+.detail {
+  :global{
+    .content {
+      display: flex;
+      width: 100%;
+      position: relative;
+      margin-top: 16px;
+      .icon-container {
+        width: 64px;
+        height: 64px;
+      }
+      .select-container {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .main-content {
+        margin: 0 85px 0 30px;
+        flex: 1;
+        .content-header {
+          display: flex;
+          gap: 8px;
+          .title {
+            color: #333333;
+            font-size: 18px;
+            font-family: PingFangSC-Semibold;
+          }
+          .yunji {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: rgba(0, 0, 0, 0.66);
+          }
+        }
+        .content-description {
+          margin: 8px 0px 16px;
+          width: 309px;
+          height: 44px;
+          line-height: 22px;
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.66);
+          overflow: hidden;
+          text-overflow: ellipsis; /* 文本溢出时显示省略号来代表被修剪的文本 */
+          display: -webkit-box; /* 必须结合的属性 ，将对象作为弹性伸缩盒子模型显示 */
+          -webkit-box-orient: vertical; /* 必须结合的属性 ，设置或检索伸缩盒对象的子元素的排列方式 */
+          -webkit-line-clamp: 2; /* 文本需要显示多少行 */
+        }
+        .tags {
+          margin-top: 10px;
+          display: flex;
+          gap: 10px;
+        }
+        .tag {
+          border-radius: 10px;
+          background-color: rgba(250, 250, 250, 1);
+          border: 1px solid rgba(214, 214, 214, 1);
+          padding: 0 7px;
+          line-height: 20px;
+          text-align: center;
+          font-size: 12px;
+          color: rgba(87, 96, 106, 100);
+        }
+        .info-container {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          font-size: 12px;
+          margin: 22px 0 24px;
+          .info {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+          .label {
+            color: #959DA5;
+          }
+          .normal {
+            color: rgba(0, 0, 0, 0.86);
+          }
+        }
+      }
+    }
+    .markdown {
+      width: 100%;
+      height: auto;
+      min-height: 100px;
+      max-height: 269px;
+      padding: 0 10px 0 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(208, 215, 222, 1);
+      word-break: normal;
+      overflow: auto;
+      margin-top: 32px;
+    } 
+  }
+}

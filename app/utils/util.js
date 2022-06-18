@@ -174,3 +174,14 @@ export const getMatchParams = () => {
   const { orgId, projectId } = match.params || {};
   return { orgId, projectId };
 };
+
+export const getIconUrl = (logo, featured = false) => {
+  if (!logo) {
+    if (!featured) {
+      return '/assets/img/local_from.svg';
+    } else {
+      return '/assets/img/local_featured.png';
+    }
+  }
+  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `/api/v1/icons?path=${logo}`;
+};

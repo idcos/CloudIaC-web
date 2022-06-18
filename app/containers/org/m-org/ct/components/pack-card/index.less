@@ -1,10 +1,114 @@
 .pack_card {
   width: 328px;
-  height: 143px;
+  height: 147px;
   border-radius: 4px;
   border: 2px solid rgb(226, 228, 232);
+  display: flex;
+  flex-direction: column;
+
 
   :global {
+    .main{
+      flex: 1;
+      border-bottom: 2px solid rgb(226, 228, 232);
+      position: relative;
+      background: url(/assets/img/pack_card_bg.svg) no-repeat;
+      background-size: cover;
+
+      .icon {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        left: 19px;
+        top: 15px;
+        z-index: 10;
+      }
+      .content {
+        width: 100%;
+        height: 100%;
+        padding-left: 70px;
+        display: flex;
+        flex-direction: column;
+      }
+      .title {
+        margin-top: 15px;
+        line-height: 22px;
+        color: rgba(35, 35, 35, 100);
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .comment {
+        margin-top: 4px;
+        opacity: 0.46;
+        color: rgba(0, 0, 0, 1);
+        font-size: 12px;
+        line-height: 18px;
+        opacity: 0.46;
+      }
+      .tags {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+      .tag {
+        border-radius: 10px;
+        background-color: rgba(250, 250, 250, 1);
+        border: 1px solid rgba(214, 214, 214, 1);
+        padding: 0 7px;
+        line-height: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: rgba(87, 96, 106, 100);
+      }
+    }
+    .bottom {
+      color: rgba(87, 96, 106, 0.66);
+      height: 40px;
+      width: 100%;
+      padding-left: 16px;
+      display: flex;
+      font-size: 12px;
+      align-items: center;
+
+      .bottom-left {
+        width: 200px;
+        padding-right: 12px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .from {
+        display: flex;
+        align-items: center;
+      }
+      .tier-icon {
+        font-size: 16px;
+        margin-right: 6px;
+      }
+      .version{
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .divider {
+        width: 1px;
+        height: 8px;
+        background-color: rgba(235, 235, 235, 1);
+      }
+      .bottom-right {
+        flex: 1;
+        height: 100%;
+        padding-left: 12px;
+        display: flex;
+        align-items: center;
+      }
+      .download-icon {
+        margin-right: 6px;
+      }
+    }
+    
+
 
   }
 }

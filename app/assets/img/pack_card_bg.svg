@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="444px" height="142px" viewBox="0 0 444 142" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>椭圆形</title>
+    <defs>
+        <linearGradient x1="50%" y1="-6.07153217e-15%" x2="50%" y2="94.2856727%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#F6F8F8" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="444" height="142" rx="6"></rect>
+        <linearGradient x1="29.5500265%" y1="52.8689673%" x2="85.6226067%" y2="43.728866%" id="linearGradient-4">
+            <stop stop-color="#F6F8F8" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Exchange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Pack" transform="translate(-404.000000, -227.000000)">
+            <g id="编组-21" transform="translate(403.000000, 226.000000)">
+                <g id="椭圆形" transform="translate(1.000000, 1.000000)">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="蒙版" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                    <ellipse stroke="#FFFFFF" stroke-width="1.5" fill="#F7F9F9" mask="url(#mask-3)" cx="166" cy="275.5" rx="224.25" ry="231.688017"></ellipse>
+                    <polygon id="路径-3" stroke="#FFFFFF" stroke-width="1.5" fill="url(#linearGradient-4)" mask="url(#mask-3)" transform="translate(347.000000, 75.500000) rotate(12.000000) translate(-347.000000, -75.500000) " points="193 171 401.272041 -20 501 -20 501 171"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
