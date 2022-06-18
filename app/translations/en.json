@@ -126,6 +126,7 @@
   "define.ct.import.result.success": "Import succeeded",
   "define.ct.import.success.prefix": "Successfully imported template",
   "define.ct.import.success.suffix": "Item:",
+  "define.ct.message.50010340": "The corresponding tfvars or playbook file is not found under the set working directory, please select again",
   "define.ct.name": "Cloud template name",
   "define.ct.num": "Number of cloud templates",
   "define.ct.search.placeholder": "Search by cloud template name",

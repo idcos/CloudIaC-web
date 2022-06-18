@@ -126,6 +126,7 @@
   "define.ct.import.result.success": "导入成功",
   "define.ct.import.success.prefix": "成功导入模板",
   "define.ct.import.success.suffix": "条：",
+  "define.ct.message.50010340": "设置的工作目录下未找到相应的tfvars或playbook文件，请重新选择",
   "define.ct.name": "云模板名称",
   "define.ct.num": "云模板数量",
   "define.ct.search.placeholder": "请输入云模板名称搜索",

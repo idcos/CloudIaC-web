@@ -19,7 +19,8 @@ export const requestWrapper = (apiFn, options) => {
       if (errorJudgeFn(res)) {
         const err = {
           message: res.message,
-          description: showErrMsgDescription ? res.message_detail : undefined
+          description: showErrMsgDescription ? res.message_detail : undefined,
+          res
         };
         throw err;
       }

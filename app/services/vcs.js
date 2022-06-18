@@ -67,6 +67,11 @@ const vcsAPI = {
   },
   getReposUrl: ({ vcsId, ...restParams }) => {
     return getWithArgs(`/api/v1/vcs/${vcsId}/repos/url`, restParams);
+  },
+  getRegistryVcs: ({ orgId }) => {
+    return getWithArgs(`/api/v1/vcs/registry`, {}, {
+      'IaC-Org-Id': orgId
+    });
   }
 };
 

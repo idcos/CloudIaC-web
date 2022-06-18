@@ -1,31 +1,59 @@
 import React, { useImperativeHandle, useEffect } from 'react';
-import { Space, Form, Input, Button, Switch, Alert, Select, Checkbox } from "antd";
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Space, Form, Input, Button, Switch, Alert, Select, Checkbox, Row, Col, Tooltip } from "antd";
+import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import isEmpty from 'lodash/isEmpty';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import cgroupsAPI from 'services/cgroups';
+import tplAPI from 'services/tpl';
 import { t } from 'utils/i18n';
+import { TFVERSION_AUTO_MATCH } from 'constants/types';
+
+const { Option } = Select;
 
 const FL = {
   labelCol: { span: 7 },
   wrapperCol: { span: 15 }
 };
 
-export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctData, type, saveLoading }) => {
+export default ({ repoInfo, orgId, onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctData, type, saveLoading }) => {
 
   const [form] = Form.useForm();
+  const formData = ctData[type] || {};
 
   useImperativeHandle(childRef, () => ({
     onFinish: async (index) => {
       const values = await form.validateFields();
-      await onlineCheckForm(values);
+      const checkInfo = { ...values, ...repoInfo, ...ctData.variable };
+      await onlineCheckForm(checkInfo);
       stepHelper.updateData({
         type, 
-        data: values
+        data: { ...values, autoMatchTfVersion }
       });
       stepHelper.go(index);
     }
   }));
+
+  // Terraform版本选项列表
+  const {
+    data: tfversionOptions = []
+  } = useRequest(
+    () => requestWrapper(
+      tplAPI.listTfversions.bind(null, { orgId })
+    )
+  );
+
+  // 获取Terraform版本自动匹配值
+  const {
+    data: autoMatchTfVersion
+  } = useRequest(
+    () => requestWrapper(
+      tplAPI.autotfversion.bind(null, { orgId, repoId: repoInfo.repoId, vcsBranch: repoInfo.repoRevision, vcsId: repoInfo.vcsId })
+    ),
+    {
+      ready: !isEmpty(repoInfo)
+    }
+  );
 
   // 策略组选项列表查询
   const { data: policiesGroupOptions = [] } = useRequest(
@@ -38,10 +66,11 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
   );
 
   const onFinish = async (values) => {
-    await onlineCheckForm(values);
+    const checkInfo = { ...values, ...repoInfo, ...ctData.variable };
+    await onlineCheckForm(checkInfo);
     stepHelper.updateData({
       type, 
-      data: values,
+      data: { ...values, autoMatchTfVersion },
       isSubmit: opType === 'edit'
     });
     opType === 'add' && stepHelper.next();
@@ -76,6 +105,58 @@ export default ({ onlineCheckForm, goCTlist, opType, childRef, stepHelper, ctDat
         name='description'
       >
         <Input.TextArea placeholder={t('define.form.input.placeholder')} rows={7} />
+      </Form.Item>
+      <Form.Item label={t('define.workdir')} wrapperCol={{ span: 18 }}>
+        <Row>
+          <Col flex='14'>
+            <Form.Item
+              noStyle={true}
+              name='workdir'
+            >
+              <Input placeholder={t('define.form.input.placeholder')} />
+            </Form.Item>
+          </Col>
+          <Col flex='4'>
+            <Tooltip title={t('define.workdir.toolTip')}>
+              <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+            </Tooltip>
+          </Col>
+        </Row>
+      </Form.Item>
+      <Form.Item label={t('define.terraformVersion')} required={true} wrapperCol={{ span: 18 }}>
+        <Row>
+          <Col flex='14'>
+            <Form.Item
+              noStyle={true}
+              name='tfVersion'
+              rules={[
+                {
+                  required: true,
+                  message: t('define.form.select.placeholder')
+                }
+              ]}
+            >
+              <Select placeholder={t('define.form.select.placeholder')}>
+                {
+                  autoMatchTfVersion && <Option value={TFVERSION_AUTO_MATCH}>{t('define.autoMatching')}</Option>
+                }
+                {
+                  (tfversionOptions || []).map(it => <Option value={it}>{it}</Option>)
+                }
+                {
+                  (formData.tfVersion && !([ ...tfversionOptions, TFVERSION_AUTO_MATCH ]).includes(formData.tfVersion)) && (
+                    <Option value={formData.tfVersion}>{formData.tfVersion}</Option>
+                  )
+                }
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col flex='4'>
+            <Tooltip title={t('define.terraformVersion.tooltip')}>
+              <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+            </Tooltip>
+          </Col>
+        </Row>
       </Form.Item>
       <Form.Item
         label={t('define.ct.field.policyEnable')}

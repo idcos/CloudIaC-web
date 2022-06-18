@@ -9,10 +9,10 @@ import { Eb_WP } from 'components/error-boundary';
 import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
+import vcsAPI from 'services/vcs';
 import history from "utils/history";
 import { t } from 'utils/i18n';
 import Basic from './step/basic';
-import Repo from './step/repo';
 import Variable from './step/variable';
 import Relation from './step/relation';
 import styles from './styles.less';
@@ -21,17 +21,29 @@ const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'repo', title: t('define.repo'), Component: Repo },
   { type: 'variable', title: t('define.variable'), Component: Variable },
   { type: 'basic', title: t('define.setting'), Component: Basic },
   { type: 'relation', title: t('define.ct.import.init.associatedProject'), Component: Relation }
 ];
 
-const CTFormSteps = ({ orgId, tplId, opType }) => {
+const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
   
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
+
+  const {
+    data: repoInfo = {}
+  } = useRequest(
+    () => requestWrapper(
+      vcsAPI.getRegistryVcs.bind(null, { orgId })
+    ), {
+      formatResult: data => data ? {
+        vcsId: data.id,
+        ...queryInfo
+      } : {}
+    }
+  );
 
   // 创建/编辑云模板提交接口
   const {
@@ -47,15 +59,30 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     }
   );
 
-  // 创建/编辑云模板提交接口
+  // 校验接口
   const {
     run: onlineCheckForm
   } = useRequest(
     (params) => requestWrapper(
-      tplAPI.check.bind(null, { ...params, templateId: tplId, orgId })
+      tplAPI.check.bind(null, { ...params, templateId: tplId, orgId }), {
+        autoError: false
+      }
     ),
     {
-      manual: true
+      manual: true,
+      onError: (err) => {
+        const { code, message, message_detail } = (err || {}).res || {};
+        if (code == 50010340) {
+          notification.error({
+            message: t('define.ct.message.50010340')
+          });
+        } else {
+          notification.error({
+            message: message || t('define.message.opSuccess'),
+            description: message_detail
+          });
+        }
+      }
     }
   );
 
@@ -80,14 +107,15 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   };
 
   const submit = (data) => {
-    const { basic, repo, variable, relation } = data;
+    const { basic, variable, relation } = data;
     let params = {
-      ...basic, 
-      ...repo, 
       ...variable, 
+      ...basic, 
       ...relation,
+      ...repoInfo,
       orgId,
-      tplId
+      tplId,
+      source: 'registry'
     };
     if (params.tfVersion === TFVERSION_AUTO_MATCH) {
       params.tfVersion = params.autoMatchTfVersion;
@@ -101,43 +129,10 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     case 'add':
       getVars();
       break;
-    case 'edit':
-      fetchCTDetail();
-      break;
     default:
       break;
     }
   }, [opType]);
-
-  const fetchCTDetail = async () => {
-    try {
-      const res = await tplAPI.detail({
-        orgId, 
-        tplId
-      });
-      if (res.code !== 200) {
-        throw new Error(res.message);
-      }
-      const {
-        name, description, policyEnable, policyGroup, tplTriggers,
-        vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
-        tfVarsFile, playbook, keyId,
-        projectId
-      } = res.result || {};
-      setCtData({
-        basic: { name, description, policyEnable, policyGroup, tplTriggers },
-        repo: { vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion },
-        variable: { tfVarsFile, playbook, keyId },
-        relation: { projectId }
-      });
-      getVars(); // 变量单独查询
-    } catch (e) {
-      notification.error({
-        message: t('define.message.getFail'),
-        description: e.message
-      });
-    }
-  };
 
   const getVars = async () => {
     try {
@@ -188,6 +183,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               isShow={stepIndex === index}
               saveLoading={saveLoading}
               onlineCheckForm={onlineCheckForm}
+              repoInfo={repoInfo}
             />
           ) : null
         ))

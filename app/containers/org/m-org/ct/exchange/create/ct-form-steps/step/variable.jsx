@@ -1,9 +1,10 @@
 import React, { useRef, useMemo, useImperativeHandle } from 'react';
 import { Button, Space } from "antd";
+import isEmpty from 'lodash/isEmpty';
 import { t } from 'utils/i18n';
 import VariableForm from 'components/variable-form';
 
-export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
+export default ({ repoInfo, tplId, goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
 
   const varRef = useRef();
 
@@ -29,13 +30,13 @@ export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, o
   };
 
   const fetchParams = useMemo(() => {
-    if (!ctData.repo) {
+    if (isEmpty(repoInfo)) {
       return null;
     }
     return {
-      ...ctData.repo, orgId, tplId, objectType: opType === 'add' ? 'org' : 'template'
+      ...repoInfo, orgId, tplId, objectType: opType === 'add' ? 'org' : 'template'
     };
-  }, [ ctData.repo, orgId ]);
+  }, [ repoInfo, orgId ]);
 
   return <div className='form-wrapper'>
     <VariableForm 
