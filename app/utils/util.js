@@ -183,5 +183,8 @@ export const getIconUrl = (logo, featured = false) => {
       return '/assets/img/local_featured.png';
     }
   }
-  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `/api/v1/icons?path=${logo}`;
+  if (logo.startsWith('/api/v1')) {
+    return logo.replace('/api/v1', '/registry/api/v1');
+  }
+  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `/registry/api/v1/icons?path=${logo}`;
 };
