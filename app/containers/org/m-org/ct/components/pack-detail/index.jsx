@@ -27,7 +27,7 @@ export default ({
   orgId
 }) => { 
   const {
-    categories,
+    categoryNames,
     creatorId,
     description,
     featured,
@@ -109,7 +109,7 @@ export default ({
               </Row>
             </div>
             <div className='tags'>
-              { (detail.categories || '').split(',').map(item => <div className='tag'>{item}</div>)}
+              { (categoryNames ? categoryNames.split(',') : []).map(item => <div className='tag'>{item}</div>)}
             </div>
             
           </div>
