@@ -11,7 +11,7 @@ const PackCard = ({ data, toggleVisible }) => {
     name, 
     namespace, 
     description, 
-    categories, 
+    categoryNames, 
     logo, 
     id,
     tier, 
@@ -29,11 +29,10 @@ const PackCard = ({ data, toggleVisible }) => {
       <div className={'main'}>
         <img className={'icon'} src={getIconUrl(logo)}/>
         <div className={'content'}>
-          <div className={'title'}>{name}</div>
+          <div className={'title idcos-text-ellipsis'}>{name}</div>
           <div className={'comment'}>{description}</div>
           <div className={'tags'}>
-            { (categories || '').split(',').map(item => <div className='tag'>{item}</div>)}
-
+            { (categoryNames ? categoryNames.split(',') : []).map(item => <div className='tag'>{item}</div>)}
           </div>
         </div>
       </div>
