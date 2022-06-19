@@ -3,7 +3,7 @@ import styles from './index.less';
 import { Tooltip } from 'antd';
 import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
 import { DownloadOutlined } from '@ant-design/icons';
-import { getIconUrl } from 'utils/util';
+import { getRegistryIconUrl } from 'utils/util';
 import { t } from 'utils/i18n';
 
 const PackCard = ({ data, toggleVisible }) => {
@@ -27,7 +27,7 @@ const PackCard = ({ data, toggleVisible }) => {
     }}
     >
       <div className={'main'}>
-        <img className={'icon'} src={getIconUrl(logo)}/>
+        <img className={'icon'} src={getRegistryIconUrl(logo)}/>
         <div className={'content'}>
           <div className={'title idcos-text-ellipsis'}>{name}</div>
           <div className={'comment'}>{description}</div>

@@ -17,7 +17,7 @@ import {
 import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
 import styles from './index.less';
 import { formatNumber } from 'utils/format';
-import { getIconUrl } from 'utils/util';
+import { getRegistryIconUrl } from 'utils/util';
 import queryString from 'query-string';
 import history from 'utils/history';
 export default ({
@@ -70,7 +70,7 @@ export default ({
       <div className={styles.detail}>
         <div className={'content'}>
           <div className='icon-container'>
-            <img width={64} height={64}src={getIconUrl(logo)} />
+            <img width={64} height={64}src={getRegistryIconUrl(logo)} />
           </div>
           <div className='main-content'>
             <div className='content-header'>

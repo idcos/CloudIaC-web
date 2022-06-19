@@ -175,7 +175,7 @@ export const getMatchParams = () => {
   return { orgId, projectId };
 };
 
-export const getIconUrl = (logo, featured = false) => {
+export const getRegistryIconUrl = (logo, featured = false) => {
   if (!logo) {
     if (!featured) {
       return '/assets/img/local_from.svg';
