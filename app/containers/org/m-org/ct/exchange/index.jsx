@@ -10,8 +10,8 @@ import Layout from "components/common/layout";
 import PageHeader from "components/pageHeader";
 import classNames from 'classnames';
 import styles from './index.less';
-import PackCard from '../components/pack-card';
-import PackDetail from '../components/pack-detail';
+import StackCard from '../components/stack-card';
+import StackDetail from '../components/stack-detail';
 import stackAPI from 'services/stack';
 export default ({ match = {} }) => {
   const pageSize = 24;
@@ -20,7 +20,7 @@ export default ({ match = {} }) => {
   const [ detail, setDetail ] = useState({});
   const [ searchKeyword, setSearchKeyword ] = useState('');
   const { orgId } = match.params || {};
-  const [ packId, setPackId ] = useState('');
+  const [ stackId, setStackId ] = useState('');
   const [ versionList, setVersionList ] = useState([]);
   const [ readme, setReadme ] = useState('');
   const [ currentVersion, setCurrentVersion ] = useState();
@@ -100,14 +100,14 @@ export default ({ match = {} }) => {
       <div className={classNames('idcos-card', styles.exchange_list)}>
         {
           list.map((item) => (
-            <PackCard 
+            <StackCard 
               data={item}
               toggleVisible={toggleVisible}
             />
           ))
         }
       </div>
-      <PackDetail 
+      <StackDetail 
         detail={detail} 
         visible={visible}
         toggleVisible={toggleVisible}
