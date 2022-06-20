@@ -12,7 +12,7 @@ import classNames from 'classnames';
 import styles from './index.less';
 import PackCard from '../components/pack-card';
 import PackDetail from '../components/pack-detail';
-import packAPI from 'services/pack';
+import stackAPI from 'services/stack';
 export default ({ match = {} }) => {
   const pageSize = 24;
   const [ current, setCurrent ] = useState(1);
@@ -21,6 +21,9 @@ export default ({ match = {} }) => {
   const [ searchKeyword, setSearchKeyword ] = useState('');
   const { orgId } = match.params || {};
   const [ packId, setPackId ] = useState('');
+  const [ versionList, setVersionList ] = useState([]);
+  const [ readme, setReadme ] = useState('');
+  const [ currentVersion, setCurrentVersion ] = useState();
   const { 
     data: {
       list = [],
@@ -28,7 +31,7 @@ export default ({ match = {} }) => {
     } = {}
   } = useRequest(
     () => requestWrapper(
-      packAPI.list.bind(null, { 
+      stackAPI.list.bind(null, { 
         pageSize, 
         page: current
       }),
@@ -43,7 +46,7 @@ export default ({ match = {} }) => {
   );
 
   const getDetail = async (id) => {
-    const res = await packAPI.detail(id);
+    const res = await stackAPI.detail(id);
     if (res.code !== 0) {
       return notification.error({ message: res.message });
     }
@@ -52,9 +55,41 @@ export default ({ match = {} }) => {
 
   const toggleVisible = (packId) => {
     if (!visible) {
+      setCurrentVersion(undefined);
+      setReadme('');
       getDetail(packId);
+      getVersionList(packId);
     }
     setVisible(!visible);
+  };
+
+  useEffect(() => {
+    if (currentVersion === undefined && detail.latestVersionId) {
+      setCurrentVersion(detail.latestVersion);
+    }
+  }, [detail]);
+
+  useEffect(() => {
+    if (currentVersion) {
+      getReadme(detail.id, { version: currentVersion });
+    }
+  }, [ detail, currentVersion ]);
+
+  const getVersionList = async (id) => {
+    const res = await stackAPI.version(id);
+    if (res.code !== 0) {
+      return notification.error({ message: res.message });
+    }
+    setVersionList(res.result || []);
+  };
+
+  const getReadme = async (id, { version }) => {
+    const res = await stackAPI.readme(id, { version });
+    if (res.code !== 0) {
+      return notification.error({ message: res.message });
+    }
+    const { content } = res.result || {};
+    setReadme(content || '');
   };
 
 
@@ -77,6 +112,10 @@ export default ({ match = {} }) => {
         visible={visible}
         toggleVisible={toggleVisible}
         orgId={orgId}
+        readme={readme}
+        versionList={versionList}
+        currentVersion={currentVersion}
+        setCurrentVersion={setCurrentVersion}
       />
     </Layout>
   );

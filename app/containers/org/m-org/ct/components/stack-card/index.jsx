@@ -3,10 +3,11 @@ import styles from './index.less';
 import { Tooltip } from 'antd';
 import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
 import { DownloadOutlined } from '@ant-design/icons';
+import { formatNumber } from 'utils/format';
 import { getRegistryIconUrl } from 'utils/util';
 import { t } from 'utils/i18n';
 
-const PackCard = ({ data, toggleVisible }) => {
+const StackCard = ({ data, toggleVisible }) => {
   const {
     name, 
     namespace, 
@@ -22,7 +23,7 @@ const PackCard = ({ data, toggleVisible }) => {
     repoAddr
   } = data;
   return (
-    <div className={styles.pack_card} onClick={() => {
+    <div className={styles.stack_card} onClick={() => {
       toggleVisible(id); 
     }}
     >
@@ -53,10 +54,10 @@ const PackCard = ({ data, toggleVisible }) => {
         <div className={'divider'}></div>
         <div className={'bottom-right'}>
           <DownloadOutlined className={'download-icon'}/> 
-          <div>下载 {downloadCount}</div>
+          <div>{formatNumber(downloadCount)}</div>
         </div>
       </div>
     </div>
   );
 };
-export default PackCard;
+export default StackCard;

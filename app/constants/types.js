@@ -1,6 +1,6 @@
 import { Space } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutlined } from '@ant-design/icons';
-import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon } from 'components/iconfont';
+import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon, TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
 import { t } from 'utils/i18n';
 
 /**
@@ -38,6 +38,17 @@ export const SYS = {
   status: {
     passing: t('sys.status.normal')
   }
+};
+
+export const TIER_ENUM = {
+  official: t('define.exchange.official'),
+  verified: t('define.exchange.verified'),
+  community: t('define.exchange.community')
+};
+
+export const TIER_ICON_ENUM = {
+  official: TierOfficialIcon,
+  verified: TierVerifiedIcon
 };
 
 export const PROJECT_ROLE = {

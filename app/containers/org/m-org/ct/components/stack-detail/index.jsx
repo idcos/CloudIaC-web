@@ -15,52 +15,54 @@ import {
   CaretDownOutlined
 } from '@ant-design/icons';
 import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
+import MarkdownDoc from "components/markdown-doc";
 import styles from './index.less';
 import { formatNumber } from 'utils/format';
 import { getRegistryIconUrl } from 'utils/util';
 import queryString from 'query-string';
 import history from 'utils/history';
+import { t } from 'utils/i18n';
+import { TIER_ENUM, TIER_ICON_ENUM } from 'constants/types';
 export default ({
   toggleVisible,
   visible,
   detail,
-  orgId
+  orgId,
+  versionList,
+  readme,
+  currentVersion,
+  setCurrentVersion
 }) => { 
   const {
     categoryNames,
-    creatorId,
     description,
-    featured,
-    featuredImage,
-    hostname,
-    latestVersion,
-    latestVersionGitTag,
     exchangeRepoPath,
     id,
-    key,
     logo,
     name,
-    namespace,
-    repoAddr,
-    repoId,
-    repoName,
-    tier,
-    vcsId,
-    icon,
-    downloadCount
+    namespace
   } = detail;
+  const genLabel = (item) => {
+    if (item.verified === true) {
+      return <div>
+        <span>{item.version}</span>
+        <img src='/assets/img/yunji_auth.svg' style={{ marginLeft: 4 }} />
+      </div>;
+    }
+    return <span>{item.version}</span>;
+  };
   return (
     <Modal
       visible={visible}
       width={720}
-      title={'Pack详情'}
+      title={t('define.exchange.stackDetail')}
       centered={true}
-      okText={'创建云模板'}
+      okText={t('define.createCT')}
       onCancel={() => {
         toggleVisible();
       }}
       onOk={() => {
-        const search = queryString.stringify({ repoFullName: name, repoId: exchangeRepoPath, repoRevision: latestVersionGitTag });
+        const search = queryString.stringify({ repoFullName: name, repoId: exchangeRepoPath, repoRevision: currentVersion });
         history.push({
           pathname: `/org/${orgId}/m-org-ct/importCT-exchange/exchange-createCT`,
           search: search
@@ -76,8 +78,8 @@ export default ({
             <div className='content-header'>
               <div className='title'>{name}</div>
               <div className='yunji'>
-                <TierOfficialIcon width={16} height={16} />
-                <div>云霁官方</div>
+                {TIER_ICON_ENUM[detail.tier] ? TIER_ICON_ENUM[detail.tier] : null}
+                <div>{TIER_ENUM[detail.tier]}</div>
               </div>
             </div>
             <div className='content-description'>{description || '-'}</div>
@@ -86,14 +88,14 @@ export default ({
                 <Col span={8}>
                   <div className='info'>
                     <UserOutlined className='label' />
-                    <span className='label'>作者</span>
+                    <span className='label'>{t('define.author')}</span>
                     <span className='normal'>{namespace}</span>
                   </div>
                 </Col>
                 <Col span={8}>
                   <div className='info'>
                     <DownloadOutlined className='label' />
-                    <span className='label'>下载</span>
+                    <span className='label'>{t('define.download')}</span>
                     <span className='normal'>{formatNumber(detail.downloadCount)}</span>
                   </div>
                 </Col>
@@ -102,8 +104,8 @@ export default ({
                 <Col span={24}>
                   <div className='info'>
                     <CodeOutlined className='label' />
-                    <span className='label'>应用ID</span>
-                    <a href={`https://exchange.cloudiac.org//pack/detail?id=${id}`} target='_blank'>{id}</a>
+                    <span className='label'>{t('define.application.id')}</span>
+                    <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{id}</a>
                   </div>
                 </Col>
               </Row>
@@ -117,16 +119,19 @@ export default ({
             <Select
               suffixIcon={<CaretDownOutlined color='#57606A' />}
               style={{ width: 209, height: 34 }}
-              placeholder={"Examples"}
+              placeholder={t('define.exchange.select.placeholder')}
               dropdownStyle={{ width: 280 }}
-              onChange={(exampleId) => {
-                console.log(exampleId);
+              onChange={(version) => {
+                setCurrentVersion(version);
               }}
-              // options={exampleList}
+              options={versionList.map(item => ({ label: genLabel(item), value: item.version }))}
+              value={currentVersion}
             />
           </div>
         </div>
-        <div className='markdown'></div>
+        <div className='markdown'>
+          <MarkdownDoc mdText={readme} />
+        </div>
       </div>
         
 

@@ -10,17 +10,8 @@
       "/api/*",
       "/rbac/*",
       "/sso/*",
-      "/xmdb/v2/**"
-    ]
-  },
-  "registry": {
-    "api": "http://10.0.2.120",
-    "pathRewrite": {
-      "/registry/api": "/api"
-    },
-    "changeOrigin": true,
-    "endpoints": [
-      "/registry/api/*"
+      "/xmdb/v2/**",
+      "/registry/*"
     ]
   }
 }
