@@ -215,6 +215,7 @@
   "define.exchange.stackDetail": "Stack detail",
   "define.exchange.community": "Community",
   "define.exchange.official": "Official",
+  "define.exchange.search.placeholder": "Search by name, tag, and contributor",
   "define.exchange.verified": "Verified",
   "define.export": "Export",
   "define.form.error": "Form verification error",

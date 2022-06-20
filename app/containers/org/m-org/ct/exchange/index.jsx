@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { notification } from "antd";
+import { notification, Input, Pagination } from "antd";
 import history from 'utils/history';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { SearchOutlined } from '@ant-design/icons';
 import { t } from 'utils/i18n';
 import { Eb_WP } from 'components/error-boundary';
 import Layout from "components/common/layout";
@@ -24,6 +25,7 @@ export default ({ match = {} }) => {
   const [ versionList, setVersionList ] = useState([]);
   const [ readme, setReadme ] = useState('');
   const [ currentVersion, setCurrentVersion ] = useState();
+  const [ query, setQuery ] = useState({});
   const { 
     data: {
       list = [],
@@ -33,7 +35,8 @@ export default ({ match = {} }) => {
     () => requestWrapper(
       stackAPI.list.bind(null, { 
         pageSize, 
-        page: current
+        page: current,
+        q: query.q
       }),
       {
         errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
@@ -41,10 +44,13 @@ export default ({ match = {} }) => {
     ),
     {
       formatResult: data => data,
-      refreshDeps: [ searchKeyword, current ]
+      refreshDeps: [ searchKeyword, current, query ]
     }
   );
-
+  useEffect(() => {
+    setCurrent(1);
+  }, [query]);
+ 
   const getDetail = async (id) => {
     const res = await stackAPI.detail(id);
     if (res.code !== 0) {
@@ -91,21 +97,50 @@ export default ({ match = {} }) => {
     const { content } = res.result || {};
     setReadme(content || '');
   };
+  
 
 
   return (
     <Layout
-      extraHeader={<PageHeader title={t('define.import.fromExchange')} breadcrumb={true} />}
+      extraHeader={
+        <PageHeader 
+          title={t('define.import.fromExchange')} 
+          breadcrumb={true}
+          subDes={<Input
+            style={{ width: 300 }}
+            allowClear={true}
+            placeholder={t('define.exchange.search.placeholder')}
+            prefix={<SearchOutlined />}
+            defaultValue={query.q}
+            onPressEnter={(e) => {
+              setQuery({ q: e.target.value });
+            }}
+          />}
+        />
+      }
     >
-      <div className={classNames('idcos-card', styles.exchange_list)}>
-        {
-          list.map((item) => (
-            <StackCard 
-              data={item}
-              toggleVisible={toggleVisible}
-            />
-          ))
-        }
+      <div className='idcos-card'>
+        <div className={styles.exchange_list}>
+          {
+            list.map((item) => (
+              <StackCard 
+                data={item}
+                toggleVisible={toggleVisible}
+              />
+            ))
+          }
+        </div>
+        
+        <Pagination 
+          style={{ textAlign: 'right', marginTop: 24, position: 'relative' }}
+          showSizeChanger={false}
+          hideOnSinglePage={false}
+          current={current} 
+          pageSize={pageSize} 
+          onChange={(page) => setCurrent(page)} 
+          total={total}
+          showTotal={(total) => t('define.pagination.showTotal', { values: { total } })}
+        />
       </div>
       <StackDetail 
         detail={detail} 

@@ -215,6 +215,7 @@
   "define.exchange.stackDetail": "Stack详情",
   "define.exchange.community": "社区用户",
   "define.exchange.official": "云霁官方",
+  "define.exchange.search.placeholder": "搜索名称、Tag、贡献者",
   "define.exchange.verified": "原厂认证",
   "define.export": "导出",
   "define.form.error": "表单校验错误",
