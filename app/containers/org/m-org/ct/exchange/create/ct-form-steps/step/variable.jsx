@@ -52,7 +52,6 @@ export default ({ repoInfo, tplId, goCTlist, childRef, stepHelper, type, opType,
         {
           opType === 'add' ? (
             <>
-              <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>{t('define.action.prev')}</Button>
               <Button type='primary' onClick={onFinish}>{t('define.action.next')}</Button>
             </>
           ) : (
