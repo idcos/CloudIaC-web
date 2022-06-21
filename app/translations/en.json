@@ -460,7 +460,7 @@
   "define.searchByEnvName.placeholder": "Search by environment name",
   "define.searchByRepoName": "Search by warehouse name",
   "define.searchOrgPlaceholder": "Search by organization name",
-  "define.selectCt.placeholder": "Please select cloud template",
+  "define.selectCt.placeholder": "Please select Stack",
   "define.selectEnv.placeholder": "Please select environment",
   "define.setting": "Settings",
   "define.ssh": "SSH key",
