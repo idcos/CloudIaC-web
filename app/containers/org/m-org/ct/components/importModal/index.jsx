@@ -114,135 +114,135 @@ const Index = ({ reload, toggleVisible, orgId }) => {
 
   const modalContent = useMemo(() => {
     switch (importStatus) {
-      case 'success':
-        return (
-          <Space direction='vertical' size={4}>
-            <div className={styles.resultHeader}>{t('define.ct.import.success.prefix')}&nbsp;{computeCount('success')}&nbsp;{t('define.ct.import.success.suffix')}</div>
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].templates || []).map((dt) => {
-                return (<>
-                  {!!infoType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.scope.template')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].varGroups || []).map((dt) => {
-                return (<>
-                  {!!infoType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.resourceAccount.title')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].vcs || []).map((dt) => {
-                return (<>
-                  {!!infoType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.vcs')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-          </Space>
-        );
-      case 'error':
-        return (
-          <Space direction='vertical' size={4}>
-            <div className={styles.resultHeader}>{t('define.ct.import.error.title')}{hasColon ? '：' : '。'}</div>
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].templates || []).map((dt) => {
-                return (<>
-                  {!!infoErrorType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.scope.template')}】</span>: <span className={styles.resultText}>{dt.id}</span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].varGroups || []).map((dt) => {
-                return (<>
-                  {!!infoErrorType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.resourceAccount.title')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].vcs || []).map((dt) => {
-                return (<>
-                  {!!infoErrorType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.vcs')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-          </Space>
-        );
-      case 'init':
-        return (
-          <Space direction='vertical' size='middle' style={{ width: '100%' }}>
-            <Space style={{ width: '100%' }}>
-              <Upload 
-                {...props} 
+    case 'success':
+      return (
+        <Space direction='vertical' size={4}>
+          <div className={styles.resultHeader}>{t('define.ct.import.success.prefix')}&nbsp;{computeCount('success')}&nbsp;{t('define.ct.import.success.suffix')}</div>
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].templates || []).map((dt) => {
+              return (<>
+                {!!infoType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.scope.template')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].varGroups || []).map((dt) => {
+              return (<>
+                {!!infoType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.resourceAccount.title')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].vcs || []).map((dt) => {
+              return (<>
+                {!!infoType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.vcs')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+        </Space>
+      );
+    case 'error':
+      return (
+        <Space direction='vertical' size={4}>
+          <div className={styles.resultHeader}>{t('define.ct.import.error.title')}{hasColon ? '：' : '。'}</div>
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].templates || []).map((dt) => {
+              return (<>
+                {!!infoErrorType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.scope.template')}】</span>: <span className={styles.resultText}>{dt.id}</span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].varGroups || []).map((dt) => {
+              return (<>
+                {!!infoErrorType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.resourceAccount.title')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].vcs || []).map((dt) => {
+              return (<>
+                {!!infoErrorType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.vcs')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+        </Space>
+      );
+    case 'init':
+      return (
+        <Space direction='vertical' size='middle' style={{ width: '100%' }}>
+          <Space style={{ width: '100%' }}>
+            <Upload 
+              {...props} 
+            >
+              <Button
+                icon={<DownIcon/>}
+                style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
               >
-                <Button
-                  icon={<DownIcon/>}
-                  style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
-                >
-                  {fileList[0] && fileList[0] ? t('define.ct.import.init.upload.reSelectFile') : t('define.ct.import.init.upload.selectFile')}
-                </Button>
-              </Upload>
-              <span className={styles.uploadExtra} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#08857C' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : t('define.ct.import.init.upload.extra')}</span> 
-            </Space>
-            <Space direction='vertical' size={6} style={{ width: '100%' }}>
-              <div className={styles.importHeader}><span>*</span> {t('define.ct.import.init.actionModeWhenRepeating')}</div>
-              <Radio.Group className={styles.radioGroup} onChange={(e) => setType(e.target.value)} value={type} style={{ width: '100%' }}>
-                <Space direction='vertical' size={4} style={{ width: '100%' }}>
-                  <Radio value={'update'}>
-                    <span>{t('define.ct.import.infoType.updated')}</span>
-                    <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.updated')}>
-                      {t('define.ct.import.init.actionModeWhenRepeating.updated')}
-                    </span>
-                  </Radio> 
-                  <Radio value={'skip'}>
-                    <span>{t('define.ct.import.infoType.skipped')}</span>
-                    <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.skip')}>
-                      {t('define.ct.import.init.actionModeWhenRepeating.skip')}
-                    </span>
-                  </Radio> 
-                  <Radio value={'copy'}>
-                    <span>{t('define.ct.import.infoType.copied')}</span>
-                    <span style={{ marginLeft: 8 }} className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.copy')}>
-                      {t('define.ct.import.init.actionModeWhenRepeating.copy')}
-                    </span>
-                  </Radio> 
-                  <Radio value={'abort'}>
-                    <span>{t('define.ct.import.infoErrorType.duplicate')}</span>
-                    <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.abort')}>
-                      {t('define.ct.import.init.actionModeWhenRepeating.abort')}
-                    </span>
-                  </Radio>
-                </Space>
-              </Radio.Group>
-            </Space>
-            <Space style={{ width: '100%' }}>
-              <span>{t('define.ct.import.init.associatedProject')}</span><Select 
-                getPopupContainer={triggerNode => triggerNode.parentNode}
-                placeholder={t('define.form.select.placeholder')}
-                mode={'multiple'}
-                showArrow={true}
-                style={{ width: 350 }}
-                onChange={e => setSelectProject(e)}
-              >
-                {(projectList || []).map(it => <Option value={it.id}>{it.name}</Option>)}
-              </Select>
-            </Space>
+                {fileList[0] && fileList[0] ? t('define.ct.import.init.upload.reSelectFile') : t('define.ct.import.init.upload.selectFile')}
+              </Button>
+            </Upload>
+            <span className={styles.uploadExtra} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#08857C' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : t('define.ct.import.init.upload.extra')}</span> 
           </Space>
-        );
-      default:
-        break;
+          <Space direction='vertical' size={6} style={{ width: '100%' }}>
+            <div className={styles.importHeader}><span>*</span> {t('define.ct.import.init.actionModeWhenRepeating')}</div>
+            <Radio.Group className={styles.radioGroup} onChange={(e) => setType(e.target.value)} value={type} style={{ width: '100%' }}>
+              <Space direction='vertical' size={4} style={{ width: '100%' }}>
+                <Radio value={'update'}>
+                  <span>{t('define.ct.import.infoType.updated')}</span>
+                  <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.updated')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.updated')}
+                  </span>
+                </Radio> 
+                <Radio value={'skip'}>
+                  <span>{t('define.ct.import.infoType.skipped')}</span>
+                  <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.skip')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.skip')}
+                  </span>
+                </Radio> 
+                <Radio value={'copy'}>
+                  <span>{t('define.ct.import.infoType.copied')}</span>
+                  <span style={{ marginLeft: 8 }} className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.copy')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.copy')}
+                  </span>
+                </Radio> 
+                <Radio value={'abort'}>
+                  <span>{t('define.ct.import.infoErrorType.duplicate')}</span>
+                  <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.abort')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.abort')}
+                  </span>
+                </Radio>
+              </Space>
+            </Radio.Group>
+          </Space>
+          <Space style={{ width: '100%' }}>
+            <span>{t('define.ct.import.init.associatedProject')}</span><Select 
+              getPopupContainer={triggerNode => triggerNode.parentNode}
+              placeholder={t('define.form.select.placeholder')}
+              mode={'multiple'}
+              showArrow={true}
+              style={{ width: 350 }}
+              onChange={e => setSelectProject(e)}
+            >
+              {(projectList || []).map(it => <Option value={it.id}>{it.name}</Option>)}
+            </Select>
+          </Space>
+        </Space>
+      );
+    default:
+      break;
     }
   });
 

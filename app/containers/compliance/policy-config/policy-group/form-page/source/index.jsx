@@ -400,7 +400,7 @@ export default () => {
               }}
             >
               <Radio value='vcs'>VCS</Radio>
-              <Radio value='registry'>Registry</Radio>
+              <Radio value='registry'>Exchange</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item noStyle={true} shouldUpdate={true}>
