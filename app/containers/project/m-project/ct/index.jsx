@@ -22,7 +22,7 @@ const CTList = ({ userInfo, match = {}, location }) => {
 
   const { name } = queryString.parse(location.search);
   const { check, loopRequesting } = useLoopPolicyStatus();
-  const { PROJECT_OPERATOR } = getPermission(userInfo);
+  const { PROJECT_OPERATOR, SYS_OPERATOR, ORG_SET, PROJECT_SET } = getPermission(userInfo);
   const { orgId, projectId } = match.params || {};
   const [ query, setQuery ] = useState({
     pageNo: 1,
@@ -183,12 +183,14 @@ const CTList = ({ userInfo, match = {}, location }) => {
       title={t('define.scope.template')}
       breadcrumb={true}
       subDes={
+        (SYS_OPERATOR || ORG_SET || PROJECT_SET) &&
         <Button 
           onClick={() => {
             history.push(`/org/${orgId}/m-org-ct/createCT?related_project=${projectId}`);
           }} 
           type='primary'
-        >{t('define.addTemplate')}</Button>}
+        >{t('define.addTemplate')}</Button>
+      }
     />}
   >
     <div className='idcos-card'>
