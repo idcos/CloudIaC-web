@@ -435,7 +435,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                     </Col>
                     <Col span={7}>
                       <Form.Item
-                        label={<span>target<Tooltip title={t('define.env.field.target.tooltip')}><InfoCircleOutlined /></Tooltip></span>}
+                        label={<span>Target<Tooltip title={t('define.env.field.target.tooltip')}><InfoCircleOutlined /></Tooltip></span>}
                         name='targets'
                       >
                         <Input placeholder={t('define.form.input.placeholder')} style={{ width: '100%' }} />

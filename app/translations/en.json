@@ -195,7 +195,7 @@
   "define.env.field.openCronDrift": "Open drift detection",
   "define.env.field.resourcesNum": "Number of resources",
   "define.env.field.retryDelay.prefix": "When execution fails, Interval",
-  "define.env.field.retryDelay.suffix": "second automatic retry",
+  "define.env.field.retryDelay.suffix": "Second automatic retry",
   "define.env.field.runner": "Deployment channel",
   "define.env.field.runnerTags": "Deployment channel label",
   "define.env.field.stepTimeout": "Step timeout",
