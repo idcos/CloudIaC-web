@@ -22,7 +22,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     form.setFieldsValue({ policyGroupIds: policyGroupIds || [] });
   }, []);
 
-  // 云模板绑定策略组查询
+  // Stack绑定策略组查询
   const { data: ctPoliciesGroups = [] } = useRequest(
     () => requestWrapper(
       ctplAPI.listBindPoliciesGroups.bind(null, { id: tplId, pageSize: 0 }),

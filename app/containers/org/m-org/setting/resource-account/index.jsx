@@ -110,7 +110,7 @@ export default ({ orgId }) => {
         const { id } = record;
         const { loading: delLoading = false } = delFetches[id] || {};
         return (
-          <div className='common-table-btn-wrapper'>
+          <div className='common-table-btn-wrapper' style={{ display: 'flex', alignItems: 'center' }}>
             <Button type='link' onClick={() => event$.emit({ type: 'open-resource-account-form-modal', data: { id } })}>{t('define.action.modify')}</Button>
             <Popconfirm
               title={t('define.resourceAccount.action.delect.confirm.title')}

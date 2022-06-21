@@ -12,7 +12,7 @@ import {
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
-import { QuitIcon, EnIcon, ZhIcon, ToRegistryIcon, SwitchComplianceIcon } from 'components/iconfont';
+import { QuitIcon, EnIcon, ZhIcon, ToExchangeIcon, SwitchComplianceIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import orgsAPI from 'services/orgs';
@@ -233,10 +233,10 @@ const AppHeader = (props) => {
           )}
           <Tooltip 
             placement='bottomRight'
-            title={t('define.page.toRegistry')} 
+            title={t('define.page.toExchange')} 
             color='#08857C'
           >
-            <span onClick={() => window.open('https://registry.cloudiac.org/')}>{ <ToRegistryIcon />}</span>
+            <span onClick={() => window.open('https://exchange.cloudiac.org/')}>{ <ToExchangeIcon />}</span>
           </Tooltip>
           {
             language === 'zh' ? 

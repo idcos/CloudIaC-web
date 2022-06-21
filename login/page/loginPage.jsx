@@ -19,7 +19,7 @@ const tailLayout = {
 export default () => {
 
   const language = getLanguage();
-  const { callbackUrl, redirectToRegistry } = queryString.parse(window.location.search);
+  const { callbackUrl, redirectToExchange } = queryString.parse(window.location.search);
   const [ canShowRegister, setCanShowRegister ] = useState(false);
   useRequest(
     () => requestWrapper(
@@ -54,8 +54,8 @@ export default () => {
         throw new Error(updateUserInfoRes.message);
       }
       setUserConfig(updateUserInfoRes.result || {});
-      if (redirectToRegistry === 'y') {
-        redirectToRegistryPage();
+      if (redirectToExchange === 'y') {
+        redirectToExchangePage();
       } else {
         redirectToPage();
       }
@@ -73,15 +73,15 @@ export default () => {
 
   useEffect(() => {
     if (localStorage.accessToken) {
-      if (redirectToRegistry === 'y') {
-        redirectToRegistryPage();
+      if (redirectToExchange === 'y') {
+        redirectToExchangePage();
       } else {
         redirectToIndex();
       }
     }
   }, []);
 
-  const redirectToRegistryPage = async () => {
+  const redirectToExchangePage = async () => {
     const { url, query } = queryString.parseUrl(decodeURIComponent(callbackUrl));
     const res = await authAPI.getSsoToken();
     const { token } = res && res.result || {};

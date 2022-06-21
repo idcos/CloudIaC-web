@@ -21,7 +21,7 @@ const cenvAPI = {
   detail: ({ envId, ...restParams }) => {
     return getWithArgs(`/api/v1/policies/envs/${envId}`, restParams, {});
   },
-  // 启用/禁用云模板扫描
+  // 启用/禁用Stack扫描
   enabled: ({ id, ...restParams }) => {
     return put(`/api/v1/policies/envs/${id}/enabled`, restParams, {});
   }

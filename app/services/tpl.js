@@ -47,7 +47,7 @@ const tplAPI = {
       'IaC-Org-Id': orgId
     });
   },
-  // 导入云模板
+  // 导入Stack
   importTemplates: ({ orgId, file }) => {
     return postFile(`/api/v1/templates/import`, file, {
       'IaC-Org-Id': orgId

@@ -72,7 +72,7 @@ const EnvDetail = (props) => {
     }
   );
 
-  // 获取云模板详情
+  // 获取Stack详情
   const { data: tplInfo = {} } = useRequest(
     () => requestWrapper(
       tplAPI.detail.bind(null, {

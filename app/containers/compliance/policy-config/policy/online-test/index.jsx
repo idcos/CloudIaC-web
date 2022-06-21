@@ -67,7 +67,7 @@ const OnlineTest = ({ match = {} }) => {
     }
   );
   
-  // 云模板选项查询
+  // Stack选项查询
   const { data: ctOptions, run: fetchCtOptions } = useRequest(
     () => requestWrapper(
       ctplAPI.list.bind(null, { pageSize: 0 }),

@@ -121,7 +121,7 @@ const Approve = () => (
   </svg>
 );
 
-const ToRegistry = () => (
+const ToExchange = () => (
   <svg t='1652858267875' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2299' width='1em' height='1em'><path d='M875.52 40.96a113.777778 113.777778 0 0 1 113.777778 113.777778v739.555555a113.777778 113.777778 0 0 1-113.777778 113.777778h-739.555556a113.777778 113.777778 0 0 1-113.777777-113.777778v-739.555555a113.777778 113.777778 0 0 1 113.777777-113.777778h739.555556z m-79.985778 191.146667H257.422222a23.324444 23.324444 0 0 0-23.324444 23.381333v263.224889c0 3.185778 2.56 5.859556 5.802666 5.859555h40.96a5.859556 5.859556 0 0 0 5.802667-5.859555V284.728889h479.573333v479.573333H532.423111a5.859556 5.859556 0 0 0-5.859555 5.916445v40.96c0 3.185778 2.616889 5.802667 5.859555 5.802666h263.168a23.324444 23.324444 0 0 0 23.381333-23.381333V255.431111a23.324444 23.324444 0 0 0-23.381333-23.324444z m-275.911111 292.864l-131.185778 15.36a5.859556 5.859556 0 0 0-3.413333 9.955555l38.115556 38.115556-187.164445 187.448889a5.859556 5.859556 0 0 0 0 8.248889l31.004445 31.004444c2.275556 2.275556 5.973333 2.275556 8.248888 0l187.278223-187.335111 38.343111 38.343111c3.413333 3.413333 9.329778 1.365333 9.898666-3.413333l15.36-131.185778a5.859556 5.859556 0 0 0-6.485333-6.542222z' fill='currentColor' p-id='2300'></path></svg>
 );
 
@@ -188,7 +188,7 @@ export const ApproveIcon = props => <Icon component={Approve} {...props} />;
 export const LangIcon = props => <Icon component={Lang} {...props} />;
 export const EnIcon = props => <Icon component={En} {...props} />;
 export const ZhIcon = props => <Icon component={Zh} {...props} />;
-export const ToRegistryIcon = props => <Icon component={ToRegistry} {...props} />;
+export const ToExchangeIcon = props => <Icon component={ToExchange} {...props} />;
 export const SwitchComplianceIcon = props => <Icon component={SwitchCompliance} {...props} />;
 export const RenameIcon = props => <Icon component={Rename} {...props} />;
 export const GdIcon = props => <Icon component={Gd} {...props} />;

@@ -43,7 +43,7 @@ const CenvList = () => {
     )
   );
 
-  // 启用/禁用云模板扫描
+  // 启用/禁用Stack扫描
   const {
     run: changeEnabled,
     fetches: changeEnabledFetches

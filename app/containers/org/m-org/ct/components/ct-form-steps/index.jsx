@@ -35,7 +35,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   const sourceRef = useRef('vcs');
   const [ ready, setReady ] = useState(opType === 'add');
 
-  // 创建/编辑云模板提交接口
+  // 创建/编辑Stack提交接口
   const {
     run: onSave,
     loading: saveLoading
@@ -49,7 +49,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     }
   );
 
-  // 创建/编辑云模板提交接口
+  // 创建/编辑Stack提交接口
   const {
     run: onlineCheckForm
   } = useRequest(

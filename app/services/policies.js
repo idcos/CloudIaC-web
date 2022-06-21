@@ -20,7 +20,7 @@ const policiesAPI = {
   update: ({ id, ...restParams }) => {
     return put(`${baseUrl}/${id}`, restParams);
   },
-  // 云模板/环境源码解析
+  // Stack/环境源码解析
   parse: (params) => {
     return post(`${baseUrl}/parse`, params);
   }, 

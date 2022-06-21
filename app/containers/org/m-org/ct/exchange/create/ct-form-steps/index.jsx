@@ -45,7 +45,7 @@ const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
     }
   );
 
-  // 创建/编辑云模板提交接口
+  // 创建/编辑Stack提交接口
   const {
     run: onSave,
     loading: saveLoading

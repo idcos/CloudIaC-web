@@ -21,7 +21,7 @@ const subNavs = {
     needAdmin: true
   },
   registry: {
-    title: t('define.page.sysSet.registry'),
+    title: t('define.page.sysSet.exchange'),
     needAdmin: true
   }
 };
