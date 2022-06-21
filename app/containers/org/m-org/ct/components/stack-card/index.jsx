@@ -44,15 +44,15 @@ const StackCard = ({ data, toggleVisible }) => {
             { tier === 'verified' && <TierVerifiedIcon className={'tier-icon'} />}  
             <div>{namespace}</div>
           </div>
+        </div>
+        <div className={'bottom-right'}>
           <div className={'version'}>
             <span>{latestVersion}</span>
             {!!latestVersionVerified && (
               <img src='/assets/img/yunji_auth.svg' />
             )}
           </div>
-        </div>
-        <div className={'divider'}></div>
-        <div className={'bottom-right'}>
+          <div className={'divider'}></div>
           <DownloadOutlined className={'download-icon'}/> 
           <div>{formatNumber(downloadCount)}</div>
         </div>
