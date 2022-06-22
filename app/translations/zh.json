@@ -453,6 +453,7 @@
   "define.setting": "设置",
   "define.ssh": "SSH密钥",
   "define.ssh.action.add": "添加密钥",
+  "define.ssh.deleted": "密钥被删除",
   "define.ssh.name": "密钥名称",
   "define.ssh.privateKey": "私钥",
   "define.status": "状态",
