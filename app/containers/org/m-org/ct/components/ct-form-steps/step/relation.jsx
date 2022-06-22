@@ -105,7 +105,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
       };
       const res = await method[action](params);
       if (res.code != 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
       notification.success({
         message: t('define.message.opSuccess')
@@ -116,7 +116,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
       cb && cb(e);
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message_detail || e.message
       });
     }
   };

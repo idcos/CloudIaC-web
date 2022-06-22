@@ -54,12 +54,12 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
     try {
       const res = await projectAPI.detailProject({ projectId: curRecord.id, orgId });
       if (res.code !== 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message_detail || e.message
       });
     }
   };
