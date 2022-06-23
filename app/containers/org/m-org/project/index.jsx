@@ -65,7 +65,7 @@ const Index = ({ curProject, match, dispatch, userInfo }) => {
     const res = await projectAPI.editProject(payload);
     if (res.code != 200) {
       return notification.error({
-        message: res.message
+        message: res.message_detail || res.message
       });
     } else {
       notification.success({
@@ -118,7 +118,7 @@ const Index = ({ curProject, match, dispatch, userInfo }) => {
       };
       const res = await method[action](params);
       if (res.code != 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
       notification.success({
         message: t('define.message.opSuccess')
@@ -129,7 +129,7 @@ const Index = ({ curProject, match, dispatch, userInfo }) => {
       cb && cb(e);
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message_detail || e.message
       });
     }
   };

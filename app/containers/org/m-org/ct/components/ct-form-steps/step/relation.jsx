@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useMemo, useImperativeHandle } from 'react';
 import { Space, Checkbox, Form, Button, Row, Divider, notification, Empty } from "antd";
 import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
@@ -23,25 +23,31 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
     fetchProject();
   }, []);
 
+  const defaultValues = useMemo(() => {
+    let defaultValues = ctData[type];
+    if (related_project) {
+      defaultValues = {
+        ...defaultValues,
+        projectId: [related_project]
+      };
+    }
+    return defaultValues;
+  }, [ ctData, type, related_project ]);
+
   useEffect(() => {
-    const defaultValues = {
-      ...ctData[type],
-      projectId: [related_project]
-    };
     if (defaultValues) {
       form.setFieldsValue(defaultValues);
     }
-  }, [ ctData, type ]);
+  }, [defaultValues]);
 
 
   useEffect(() => {
-    const defaultValues = ctData[type];
     if (defaultValues && projectList.length) {
       const { projectId = [] } = defaultValues;
       setIndeterminate(!!projectId && !!projectId.length && projectId.length < projectList.length);
       !!projectId && !!projectId.length && setCheckAll(projectId.length === projectList.length);
     }
-  }, [ ctData, type, projectList ]);
+  }, [ defaultValues, projectList ]);
 
   const fetchProject = async() => {
     let res = await projectAPI.allEnableProjects({ orgId });
@@ -99,7 +105,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
       };
       const res = await method[action](params);
       if (res.code != 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
       notification.success({
         message: t('define.message.opSuccess')
@@ -110,7 +116,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
       cb && cb(e);
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message_detail || e.message
       });
     }
   };

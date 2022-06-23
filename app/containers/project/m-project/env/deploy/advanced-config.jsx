@@ -22,7 +22,7 @@ const FL = {
 };
 const { Option } = Select;
 
-const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, playbooks }) => {
+const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks }) => {
   const { vcsId, repoId, repoRevision } = tplInfo;
   const { locked } = data;
   const [form] = Form.useForm();
@@ -420,6 +420,16 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys, tfvars, 
                               required: !!playbook,
                               message: t('define.form.select.placeholder')
                             };
+                          },
+                          {
+                            validator(_, value) {
+                              if (value) {
+                                if (!keys.find((item) => (item.id === value))) {
+                                  return Promise.reject(new Error(t('define.ssh.deleted')));
+                                }  
+                              }
+                              return Promise.resolve();
+                            }
                           }
                         ]}
                       >
