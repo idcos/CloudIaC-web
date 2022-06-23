@@ -453,7 +453,7 @@
   "define.setting": "Settings",
   "define.ssh": "SSH key",
   "define.ssh.action.add": "Add SSH",
-  "define.ssh.deleted": "SSH deleted",
+  "define.ssh.deleted": "SSH has been deleted",
   "define.ssh.name": "SSH name",
   "define.ssh.privateKey": "Private key",
   "define.status": "Status",
