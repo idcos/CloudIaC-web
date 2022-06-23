@@ -170,7 +170,7 @@ const EnvInfo = () => {
           >
 
             <Descriptions.Item span={3} label={t('define.env.field.runner')}>{envInfo.runnerId || '-'}</Descriptions.Item>
-            <Descriptions.Item span={3} label='target'>{envInfo.target || '-'}</Descriptions.Item>
+            <Descriptions.Item span={3} label='Target'>{envInfo.target || '-'}</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.env.field.triggers.commit')}>{(envInfo.triggers || []).includes('commit') ? t('define.yes') : t('define.no') }</Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.env.field.triggers.prmr')}>{(envInfo.triggers || []).includes('prmr') ? t('define.yes') : t('define.no') }</Descriptions.Item>
           </Descriptions>
