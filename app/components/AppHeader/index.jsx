@@ -148,7 +148,6 @@ const AppHeader = (props) => {
           }
         }}
       >
-        
         <img src='/assets/logo/iac-logo.svg' alt='IaC'/>
       </div>
       <Divider type='vertical' className='header-divider'/>
