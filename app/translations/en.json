@@ -129,6 +129,7 @@
   "define.ct.name": "Cloud template name",
   "define.ct.num": "Number of cloud templates",
   "define.ct.search.placeholder": "Search by cloud template name",
+  "define.expired": "Expired", 
   "define.deploy": "Deploy",
   "define.deployEnv": "Deploy new environment",
   "define.deployHistory": "Deployment history",
