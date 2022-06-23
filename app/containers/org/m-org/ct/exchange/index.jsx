@@ -59,12 +59,12 @@ export default ({ match = {} }) => {
     setDetail(res.result || {});
   };
 
-  const toggleVisible = (packId) => {
+  const toggleVisible = (stackId) => {
     if (!visible) {
       setCurrentVersion(undefined);
       setReadme('');
-      getDetail(packId);
-      getVersionList(packId);
+      getDetail(stackId);
+      getVersionList(stackId);
     }
     setVisible(!visible);
   };
