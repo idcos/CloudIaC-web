@@ -156,7 +156,7 @@ const EnvList = (props) => {
                   <Descriptions.Item label={t('define.variable.tfVarsFile')}>{data.tfVarsFile || '-'}</Descriptions.Item>
                   <Descriptions.Item label={t('define.variable.playbook')}>{data.playbook || '-'}</Descriptions.Item>
                   <Descriptions.Item label={t('define.env.field.runner')}>{data.runnerId || '-'}</Descriptions.Item>
-                  <Descriptions.Item label='target'>{data.target || '-'}</Descriptions.Item>
+                  <Descriptions.Item label='Target'>{data.target || '-'}</Descriptions.Item>
                   <Descriptions.Item label={t('define.env.field.triggers.commit')}>{(data.triggers || []).includes('commit') ? t('define.yes') : t('define.no') }</Descriptions.Item>
                   <Descriptions.Item label={t('define.env.field.triggers.prmr')}>{(data.triggers || []).includes('prmr') ? t('define.yes') : t('define.no') }</Descriptions.Item>
                   <Descriptions.Item label={t('define.creator')}>{data.creator || '-'}</Descriptions.Item>
