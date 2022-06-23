@@ -69,7 +69,7 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
       };
       const res = await method[action](params);
       if (res.code != 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
       
       notification.success({
@@ -82,7 +82,7 @@ const ProjectWrapper = ({ routes, userInfo, curOrg, projects, curProject, match 
       cb && cb(e);
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message_detail || e.message
       });
     }
   };
