@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>形状结合</title>
+    <g id="Exchange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.8">
+        <g id="Pack" transform="translate(-894.000000, -579.000000)" fill="#E6EDED">
+            <g id="编组-27" transform="translate(873.000000, 562.000000)">
+                <path d="M28,17 L28,47 L23,47 C21.8954305,47 21,46.1045695 21,45 L21,19 C21,17.8954305 21.8954305,17 23,17 L28,17 Z M51,27.2972973 L51,45 C51,46.1045695 50.1045695,47 49,47 L30.76,47 L30.76,27.297 L51,27.2972973 Z M51,19 L51,24.4594595 L30.76,24.459 L30.76,17 L49,17 C50.1045695,17 51,17.8954305 51,19 Z" id="形状结合"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -18,7 +18,7 @@ import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
 import MarkdownDoc from "components/markdown-doc";
 import styles from './index.less';
 import { formatNumber } from 'utils/format';
-import { getRegistryIconUrl } from 'utils/util';
+import { getStackIconUrl } from 'utils/util';
 import queryString from 'query-string';
 import history from 'utils/history';
 import { t } from 'utils/i18n';
@@ -40,12 +40,13 @@ export default ({
     id,
     logo,
     name,
+    title,
     namespace
   } = detail;
   const genLabel = (item) => {
     if (item.verified === true) {
-      return <div>
-        <span>{item.version}</span>
+      return <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div>{item.version}</div>
         <img src='/assets/img/yunji_auth.svg' style={{ marginLeft: 4 }} />
       </div>;
     }
@@ -58,11 +59,14 @@ export default ({
       title={t('define.exchange.stackDetail')}
       centered={true}
       okText={t('define.createCT')}
+      okButtonProps={{
+        disabled: !currentVersion
+      }}
       onCancel={() => {
         toggleVisible();
       }}
       onOk={() => {
-        const search = queryString.stringify({ repoFullName: name, repoId: exchangeRepoPath, repoRevision: currentVersion });
+        const search = queryString.stringify({ repoFullName: exchangeRepoPath, repoId: exchangeRepoPath, repoRevision: currentVersion });
         history.push({
           pathname: `/org/${orgId}/m-org-ct/importCT-exchange/exchange-createCT`,
           search: search
@@ -72,14 +76,14 @@ export default ({
       <div className={styles.detail}>
         <div className={'content'}>
           <div className='icon-container'>
-            <img width={64} height={64}src={getRegistryIconUrl(logo)} />
+            <img width={64} height={64}src={getStackIconUrl(logo)} />
           </div>
           <div className='main-content'>
             <div className='content-header'>
-              <div className='title'>{name}</div>
+              <div className='title'>{title}</div>
               <div className='yunji'>
                 {TIER_ICON_ENUM[detail.tier] ? TIER_ICON_ENUM[detail.tier] : null}
-                <div>{TIER_ENUM[detail.tier]}</div>
+                {TIER_ICON_ENUM[detail.tier] ? <div>{TIER_ENUM[detail.tier]}</div> : null}
               </div>
             </div>
             <div className='content-description'>{description || '-'}</div>
@@ -104,7 +108,7 @@ export default ({
                 <Col span={24}>
                   <div className='info'>
                     <CodeOutlined className='label' />
-                    <span className='label'>{t('define.application.id')}</span>
+                    <span className='label'>{t('define.stack.id')}</span>
                     <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{id}</a>
                   </div>
                 </Col>

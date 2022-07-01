@@ -175,13 +175,9 @@ export const getMatchParams = () => {
   return { orgId, projectId };
 };
 
-export const getRegistryIconUrl = (logo, featured = false) => {
+export const getStackIconUrl = (logo) => {
   if (!logo) {
-    if (!featured) {
-      return '/assets/img/local_from.svg';
-    } else {
-      return '/assets/img/local_featured.png';
-    }
+    return '/assets/img/stack-default.svg';
   }
   if (logo.startsWith('/api/v1')) {
     return logo.replace('/api/v1', '/registry/api/v1');

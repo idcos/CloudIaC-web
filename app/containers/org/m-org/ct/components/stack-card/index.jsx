@@ -4,7 +4,7 @@ import { Tooltip } from 'antd';
 import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
 import { DownloadOutlined } from '@ant-design/icons';
 import { formatNumber } from 'utils/format';
-import { getRegistryIconUrl } from 'utils/util';
+import { getStackIconUrl } from 'utils/util';
 import { t } from 'utils/i18n';
 
 const StackCard = ({ data, toggleVisible }) => {
@@ -16,7 +16,7 @@ const StackCard = ({ data, toggleVisible }) => {
     logo, 
     id,
     tier, 
-    hostname, 
+    title,
     latestVersion, 
     latestVersionVerified,
     downloadCount,
@@ -28,9 +28,9 @@ const StackCard = ({ data, toggleVisible }) => {
     }}
     >
       <div className={'main'}>
-        <img className={'icon'} src={getRegistryIconUrl(logo)}/>
+        <img className={'icon'} src={getStackIconUrl(logo)}/>
         <div className={'content'}>
-          <div className={'title idcos-text-ellipsis'}>{name}</div>
+          <div className={'title idcos-text-ellipsis'}>{title}</div>
           <div className={'comment'}>{description}</div>
           <div className={'tags'}>
             { (categoryNames ? categoryNames.split(',') : []).map(item => <div className='tag'>{item}</div>)}
@@ -53,8 +53,11 @@ const StackCard = ({ data, toggleVisible }) => {
             )}
           </div>
           <div className={'divider'}></div>
-          <DownloadOutlined className={'download-icon'}/> 
-          <div>{formatNumber(downloadCount)}</div>
+          <div className={'download'}>
+            <DownloadOutlined className={'download-icon'}/> 
+            <div>{t('define.download')}</div>
+            <div>{formatNumber(downloadCount)}</div>
+          </div>
         </div>
       </div>
     </div>
