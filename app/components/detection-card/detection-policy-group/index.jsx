@@ -31,7 +31,8 @@ const Index = ({ info, refresh, targetId, targetType }) => {
           <div>
             <div className='policyGroupName'>{name || '-'}</div>
             <Space className='statistics' split='，'>
-              {!!(failed || violated) && <span className='failed'>{failed + violated} {t('define.charts.proportion_of_results.status.violated')}</span>}
+              {!!violated && <span className='failed'>{violated} {t('define.charts.proportion_of_results.status.violated')}</span>}
+              {!!failed && <span className='failed'>{failed} {t('define.charts.proportion_of_results.status.failed')}</span>}
               {!!passed && <span className='passed'>{passed} {t('define.charts.proportion_of_results.status.passed')}</span>}
               {!!suppressed && <span className='suppressed'>{suppressed} {t('define.charts.proportion_of_results.status.suppressed')}</span>}
             </Space>

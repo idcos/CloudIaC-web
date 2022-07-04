@@ -14,7 +14,8 @@ import styles from './styles.less';
 
 export default ({ data, refresh, targetId, targetType }) => {
 
-  const isError = data.status === 'violated' || data.status === 'failed';
+  const isError = data.status === 'violated';
+  const isFailed = data.status === 'failed';
   const [ collapsed, setCollapsed ] = useState(true);
 
   // 更新策略屏蔽
@@ -61,6 +62,34 @@ export default ({ data, refresh, targetId, targetType }) => {
     { 
       layout: 'vertical',
       code: 'source', 
+      format: (text) => (
+        <Coder
+          style={{ height: 350 }}
+          selfClassName='idcos-common-gray-background-coder'
+          options={{ mode: 'text/webassembly' }}
+          value={text || ''}
+        />
+      )
+    },
+    { label: t('policy.detection.info.field.severity'), code: 'severity', format: (text) => POLICIES_SEVERITY_STATUS_ENUM[(text || '').toLowerCase()] || text },
+    { label: t('policy.detection.info.field.resource_type'), code: 'resource_type' },
+    { 
+      layout: 'vertical',
+      code: 'rego', 
+      format: (text) => (
+        <Coder
+          style={{ height: 350 }}
+          selfClassName='idcos-common-gray-background-coder'
+          options={{ mode: 'rego' }}
+          value={text || ''}
+        />
+      )
+    }
+  ];
+  const errorList = [
+    { 
+      layout: 'vertical',
+      code: 'message', 
       format: (text) => (
         <Coder
           style={{ height: 350 }}
@@ -132,7 +161,7 @@ export default ({ data, refresh, targetId, targetType }) => {
       {!collapsed && (
         <div className={styles.collapse_body}>
           <Space size='middle' direction='vertical' style={{ width: '100%' }}>
-            {(isError ? failedList : passedList).map(({ label, code, format, layout = 'horizontal' }) => (
+            {(isError ? failedList : isFailed ? errorList : passedList).map(({ label, code, format, layout = 'horizontal' }) => (
               <Descriptions 
                 column={1}
                 colon={false}
