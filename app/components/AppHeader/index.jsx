@@ -12,7 +12,7 @@ import {
 import { connect } from "react-redux";
 import queryString from 'query-string';
 import history from 'utils/history';
-import { QuitIcon, EnIcon, ZhIcon, ToExchangeIcon, SwitchComplianceIcon } from 'components/iconfont';
+import { QuitIcon, EnIcon, ZhIcon, ToExchangeIcon, SwitchComplianceIcon, DashboardIcon } from 'components/iconfont';
 import changeOrg from "utils/changeOrg";
 import { logout } from 'services/logout';
 import orgsAPI from 'services/orgs';
@@ -301,7 +301,7 @@ const AppHeader = (props) => {
                     ) : null
                   }
                   <div className='link-item' onClick={() => history.push('/platform/statistics')}>
-                    <span className='icon'><QuitIcon/></span>
+                    <span className='icon'><DashboardIcon/></span>
                     <span className='text'>{t('define.platformStatistics')}</span>
                   </div>
                   <div className='link-item' onClick={() => logout()}>

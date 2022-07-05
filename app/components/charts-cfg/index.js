@@ -583,6 +583,18 @@ export const chartOptions = {
               shadowOffsetX: 0,
               shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
+          },
+          itemStyle: {
+            normal: {
+              color: function (colors) {
+                var colorList = [
+                  '#2EC4B6',
+                  '#219EBC',
+                  '#0694E8'
+                ];
+                return colorList[colors.dataIndex % 3];
+              }
+            }
           }
         }
       ]
@@ -620,6 +632,18 @@ export const chartOptions = {
               shadowOffsetX: 0,
               shadowColor: 'rgba(0, 0, 0, 0.5)'
             }
+          },
+          itemStyle: {
+            normal: {
+              color: function (colors) {
+                var colorList = [
+                  '#2EC4B6',
+                  '#219EBC',
+                  '#0694E8'
+                ];
+                return colorList[colors.dataIndex % 3];
+              }
+            }
           }
         }
       ]
@@ -656,6 +680,18 @@ export const chartOptions = {
               shadowBlur: 10,
               shadowOffsetX: 0,
               shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: function (colors) {
+                var colorList = [
+                  '#2EC4B6',
+                  '#219EBC',
+                  '#0694E8'
+                ];
+                return colorList[colors.dataIndex % 3];
+              }
             }
           }
         }
@@ -711,6 +747,14 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
+          itemStyle: {
+            normal: {
+              color: 'rgba(91, 143, 249, 0.6)',
+              lineStyle: {
+                width: 2
+              }
+            }
+          },
           data: [ 120, 132, 101, 134, 90, 230, 210 ]
         },
         {
@@ -721,6 +765,14 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
+          itemStyle: {
+            normal: {
+              color: 'rgba(90, 216, 166, 0.6)',
+              lineStyle: {
+                width: 2
+              }
+            }
+          },
           data: [ 220, 182, 191, 234, 290, 330, 310 ]
         },
         {
@@ -730,6 +782,14 @@ export const chartOptions = {
           areaStyle: {},
           emphasis: {
             focus: 'series'
+          },
+          itemStyle: {
+            normal: {
+              color: 'rgba(93, 112, 146, 0.6)',
+              lineStyle: {
+                width: 2
+              }
+            }
           },
           data: [ 150, 232, 201, 154, 190, 330, 410 ]
         }
@@ -770,6 +830,11 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
+          itemStyle: {
+            normal: {
+              color: 'rgba(91, 143, 249, 0.85)'
+            }
+          },
           data: [ 120, 132, 101, 134, 90, 230, 210 ]
         },
         {
@@ -779,6 +844,11 @@ export const chartOptions = {
           emphasis: {
             focus: 'series'
           },
+          itemStyle: {
+            normal: {
+              color: 'rgba(90, 216, 166, 0.85)'
+            }
+          },
           data: [ 220, 182, 191, 234, 290, 330, 310 ]
         },
         {
@@ -787,6 +857,11 @@ export const chartOptions = {
           stack: 'Ad',
           emphasis: {
             focus: 'series'
+          },
+          itemStyle: {
+            normal: {
+              color: 'rgba(93, 112, 146, 0.85)'
+            }
           },
           data: [ 150, 232, 201, 154, 190, 330, 410 ]
         }

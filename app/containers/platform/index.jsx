@@ -184,10 +184,15 @@ const overview = ({ curOrg, projects }) => {
                   <div className={styles.statisticsCard}>
                     <div className={styles.statisticsTop}>
                       <span>{item.name}</span>
-                      <span>总数/活跃</span>
                     </div>
                     <div className={styles.statisticsBottom}>
-                      {item.acount}/<span>{item.count}</span>
+                      <div>
+                        <span>总数</span>
+                        <span>{item.acount}  <span>/</span></span>
+                      </div>  <div>
+                        <span>活跃</span>
+                        <span>{item.count}</span>
+                      </div>
                     </div>
                   </div>
                 );
