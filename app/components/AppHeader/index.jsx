@@ -300,6 +300,10 @@ const AppHeader = (props) => {
                       </div>
                     ) : null
                   }
+                  <div className='link-item' onClick={() => history.push('/platform/statistics')}>
+                    <span className='icon'><QuitIcon/></span>
+                    <span className='text'>{t('define.platformStatistics')}</span>
+                  </div>
                   <div className='link-item' onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>{t('define.logout')}</span>

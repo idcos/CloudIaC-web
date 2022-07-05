@@ -551,7 +551,248 @@ export const chartOptions = {
       ]
     };
   },
+  platform_prvider_env_count_hold: () => {
+    return {
+      tooltip: {
+        trigger: 'item'
+      },
+      series: [
 
+        {
+          type: 'pie',
+          radius: [ '50%', '70%' ],
+          avoidLabelOverlap: false,
+          data: [
+            { value: 1048, name: 'Search Engine' },
+            { value: 735, name: 'Direct' },
+            { value: 580, name: 'Email' },
+            { value: 484, name: 'Union Ads' },
+            { value: 300, name: 'Video Ads' }
+          ],
+          label: {
+            show: true,
+            formatter: ' {b}：{d}%',
+            overflow: 'break'
+          },
+          labelLine: {
+            smooth: true
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+  },
+  platform_prvider_resource_count_hold: () => {
+    return {
+      tooltip: {
+        trigger: 'item'
+      },
+      series: [
+
+        {
+          type: 'pie',
+          radius: [ '50%', '70%' ],
+          avoidLabelOverlap: false,
+          data: [
+            { value: 1048, name: 'Search Engine' },
+            { value: 735, name: 'Direct' },
+            { value: 580, name: 'Email' },
+            { value: 484, name: 'Union Ads' },
+            { value: 300, name: 'Video Ads' }
+          ],
+          label: {
+            show: true,
+            formatter: ' {b}：{d}%',
+            overflow: 'break'
+          },
+          labelLine: {
+            smooth: true
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+  },
+  platform_prvider_resource_type_hold: () => {
+    return {
+      tooltip: {
+        trigger: 'item'
+      },
+      series: [
+
+        {
+          type: 'pie',
+          radius: [ '50%', '70%' ],
+          avoidLabelOverlap: false,
+          data: [
+            { value: 1048, name: 'Search Engine' },
+            { value: 735, name: 'Direct' },
+            { value: 580, name: 'Email' },
+            { value: 484, name: 'Union Ads' },
+            { value: 300, name: 'Video Ads' }
+          ],
+          label: {
+            show: true,
+            formatter: ' {b}：{d}%',
+            overflow: 'break'
+          },
+          labelLine: {
+            smooth: true
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+  },
+  platform_resource_change_trend: () => {
+    return {
+      title: {
+        text: 'Stacked Area Chart'
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#6a7985'
+          }
+        }
+      },
+      legend: {
+        data: [ 'Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine' ]
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: 'Email',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 120, 132, 101, 134, 90, 230, 210 ]
+        },
+        {
+          name: 'Union Ads',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 220, 182, 191, 234, 290, 330, 310 ]
+        },
+        {
+          name: 'Video Ads',
+          type: 'line',
+          stack: 'Total',
+          areaStyle: {},
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 150, 232, 201, 154, 190, 330, 410 ]
+        }
+      ]
+    };
+  },
+  platform_number_of_active_resources: () => {
+    return {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {},
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: [
+        {
+          type: 'category',
+          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value'
+        }
+      ],
+      series: [
+        {
+          name: 'Email',
+          type: 'bar',
+          stack: 'Ad',
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 120, 132, 101, 134, 90, 230, 210 ]
+        },
+        {
+          name: 'Union Ads',
+          type: 'bar',
+          stack: 'Ad',
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 220, 182, 191, 234, 290, 330, 310 ]
+        },
+        {
+          name: 'Video Ads',
+          type: 'bar',
+          stack: 'Ad',
+          emphasis: {
+            focus: 'series'
+          },
+          data: [ 150, 232, 201, 154, 190, 330, 410 ]
+        }
+      ]
+    };
+  },
   cost_type_pie: ({ costTypeStat = [] }) => {
     if (costTypeStat.length === 0) {
       return {

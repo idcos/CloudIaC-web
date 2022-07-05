@@ -203,6 +203,12 @@ export default function createRoutes() {
       exact: true
     },
     {
+      path: '/platform/statistics',
+      name: '平台统计',
+      component: loadable(() => import('containers/platform'), asyncLoadFallback),
+      exact: true
+    },
+    {
       path: '/sys/status',
       name: '系统状态',
       component: loadable(() => import('containers/sys/status'), asyncLoadFallback),

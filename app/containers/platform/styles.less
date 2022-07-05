@@ -1,0 +1,226 @@
+.overview {
+  display: flex;
+  padding-top: 36px;
+  height: 100%;
+
+  :global {
+    .header-wrapper {
+      padding: 12px 24px 0;
+    }
+  }
+
+  .overview_left {
+    padding-left: 24px;
+    flex: 1;
+    min-width: 0;
+    padding-right: 18px;
+    overflow-y: auto;
+
+    .select {
+      // height: 56px;
+      // line-height: 56px;
+      margin-bottom: 16px;
+    }
+
+    .content_title {
+      line-height: 26px;
+      color: rgba(36, 41, 47, 100);
+      font-size: 12px;
+      font-family: PingFangSC-Medium;
+    }
+
+    .env_state,
+    .resource_type {
+      .content {
+        border: solid 1px #E1E4E8;
+        height: 300px;
+        padding: 7px 20px 0 11px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+
+        .table {
+          height: 110px;
+
+          &_header {
+            display: flex;
+            height: 26px;
+            line-height: 26px;
+            color: rgba(135, 143, 153, 100);
+            font-size: 12px;
+            font-family: PingFangSC-Medium;
+
+            >div:first-child {
+              width: 72px;
+            }
+
+            >div:last-child {
+              width: 48px;
+              text-align: right;
+            }
+
+            >div:nth-child(2) {
+              flex: 1;
+              margin-left: 36px;
+            }
+          }
+
+          &_item {
+            display: flex;
+            height: 38px;
+            line-height: 38px;
+
+            &:nth-child(2) {
+              border-top: solid 1px #E1E4E8;
+              border-bottom: solid 1px #E1E4E8;
+            }
+
+            >div:first-child {
+              min-width: 72px;
+              color: rgba(36, 41, 47, 100);
+              font-size: 14px;
+              font-family: AlibabaSans-Regular;
+            }
+
+            >div:last-child {
+              min-width: 48px;
+              text-align: right;
+              color: rgba(36, 41, 47, 100);
+              font-size: 14px;
+              font-family: UbuntuMono-Regular;
+            }
+
+            >div:nth-child(2) {
+              flex: 1;
+              color: rgba(36, 41, 47, 100);
+              font-size: 12px;
+              font-family: PingFangSC-Regular;
+              margin-left: 36px;
+            }
+          }
+        }
+      }
+
+      .selected {
+        box-sizing: border-box;
+        padding: 0;
+        background-color: #08857C;
+        border: 1px solid #08857C;
+
+        .table_item>div:first-child {
+          color: #F5A623;
+        }
+
+        .table_item:nth-child(2)>div:first-child {
+          color: #FF3B3B;
+        }
+
+        &>div:first-child {
+          height: 100%;
+          background-color: #FAFDFC;
+          padding: 7px 20px 0 11px;
+          border-radius: 8px;
+        }
+      }
+    }
+
+    .pro_resource,
+    .resource_tendency {
+      .content {
+        border: solid 1px #E1E4E8;
+        height: 246px;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+
+        :hover {
+          cursor: pointer;
+        }
+      }
+
+      .selected {
+        box-sizing: border-box;
+        padding: 0;
+        background-color: #08857C;
+        border: 1px solid #08857C;
+
+        &>div:first-child {
+          height: 100%;
+          box-sizing: border-box;
+          background-color: #FAFDFC;
+          // padding: 7px 20px 0 11px;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+
+  .overview_right {
+    background-color: #F8F9FA;
+    border-left: 1px solid rgba(234, 235, 236, 1);
+    padding: 22px 20px 0 12px;
+    overflow-y: auto;
+  }
+
+  .statisticsCard {
+    width: 19%;
+    height: 126px;
+    line-height: 20px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 100);
+    border: 1px solid rgba(187, 187, 187, 100);
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  .statisticsTop {
+    color: rgba(16, 16, 16, 100);
+    font-size: 28px;
+    text-align: left;
+    font-family: SourceHanSansSC-regular;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+
+    &>span:nth-last-child(1) {
+      color: rgba(16, 16, 16, 100);
+      font-size: 16px;
+      text-align: left;
+      font-family: SourceHanSansSC-regular;
+    }
+  }
+
+  .statisticsBottom {
+    font-size: 36px;
+    text-align: right;
+    font-family: SourceHanSansSC-regular;
+
+    &>span:nth-last-child(1) {
+      color: rgba(22, 137, 225, 100);
+    }
+  }
+
+  .tableWrapper {
+    width: 280;
+  }
+
+  .dynamicTitle {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .listbody {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .orgInfo {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+}
