@@ -37,6 +37,9 @@ async function xFetch(url, options) {
   const fetchResponse = await fetch(url, opts);
   const jsonResponse = await parseJSON(fetchResponse);
   if (jsonResponse.httpCode == 401) {
+    if (options && options.disableLogout === true) {
+      return jsonResponse.jsonResult;
+    }
     // Here for your logout logic.
     logout();
     return;

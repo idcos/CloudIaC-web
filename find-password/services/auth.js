@@ -9,7 +9,7 @@ export const authAPI = {
   reset: ({ password, token }) => {
     return put('/api/v1/auth/password/reset', {
       password: password
-    }, { isEncodeParams: true }, { headers: { Authorization: token } });
+    }, { headers: { Authorization: token }, isEncodeParams: true, disableLogout: true });
   },
   sendEmail: ({ email }) => {
     return post('/api/v1/auth/password/reset/email', {

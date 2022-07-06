@@ -94,7 +94,8 @@ export function put(url, data, options) {
     cache: 'no-cache',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...(options || {}).headers
     },
     body: JSON.stringify(data)
   };

@@ -29,7 +29,7 @@ export default () => {
 
   useRequest(() => requestWrapper(authAPI.getSysConfigSwitches.bind(null)), {
     onSuccess: (data) => {
-      if (!(data.enableRegister || false)) {
+      if (!(data.enableRegister || false) && currentStep === 'sendEmail') {
         redirectToLogin();
       }
     }
@@ -76,40 +76,6 @@ export default () => {
     } catch (err) {
       notification.error({
         message: err.message
-      });
-    }
-  };
-
-  const onFinish = async (values) => {
-    try {
-      const res = await authAPI.login(values);
-      if (res.code != 200) {
-        throw new Error(res.message);
-      }
-      localStorage.accessToken = res.result.token;
-      const userInfoRes = await authAPI.info();
-      if (userInfoRes.code != 200) {
-        throw new Error(userInfoRes.message);
-      }
-      const userInfo = userInfoRes.result || {};
-      const { devManual = 0 } = userInfo.newbieGuide || {};
-      const updateUserInfoRes = await authAPI.updateSelf({
-        newbieGuide: {
-          devManual: devManual + 1
-        }
-      });
-      if (updateUserInfoRes.code != 200) {
-        throw new Error(updateUserInfoRes.message);
-      }
-      setUserConfig(updateUserInfoRes.result || {});
-      if (redirectToExchange === "y") {
-        redirectToExchangePage();
-      } else {
-        redirectToPage();
-      }
-    } catch (e) {
-      notification.error({
-        message: e.message
       });
     }
   };
