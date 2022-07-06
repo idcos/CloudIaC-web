@@ -326,6 +326,7 @@
   "define.page.selectOrg.empty.noPermission.des": "您暂未加入组织，快速了解",
   "define.page.selectProject.search.placeholder": "请输入项目名称搜索",
   "define.page.selectProject.title": "全部项目",
+  "define.page.selectOrganization.title": "全部组织",
   "define.page.sysSet.org.action.create": "创建组织",
   "define.page.sysSet.org.action.modify": "编辑组织",
   "define.page.sysSet.org.disable.confirm.title": "确定要禁用该组织？",

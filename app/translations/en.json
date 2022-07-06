@@ -326,6 +326,7 @@
   "define.page.selectOrg.empty.noPermission.des": "You have not joined the organization yet, quick start",
   "define.page.selectProject.search.placeholder": "Search by project name",
   "define.page.selectProject.title": "All projects",
+  "define.page.selectOrganization.title": "All organization",
   "define.page.sysSet.org.action.create": "Create organization",
   "define.page.sysSet.org.action.modify": "Modify organization",
   "define.page.sysSet.org.disable.confirm.title": "OK to disable the organization?",

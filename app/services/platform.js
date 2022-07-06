@@ -1,28 +1,28 @@
 import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 
 // 查询top位置5个数据
-export const getStat = ({ ...restParams }) => {
-  return getWithArgs('/api/v1/platform/stat/basedata', {}, restParams);
+export const getStat = (orgIds) => {
+  return getWithArgs('/api/v1/platform/stat/basedata', { orgIds }, {});
 };
   // provider环境数量统计
-export const getProviderEnv = ({ ...restParams }) => {
-  return getWithArgs('/api/v1/platform/stat/provider/env', {}, restParams);
+export const getProviderEnv = (orgIds) => {
+  return getWithArgs('/api/v1/platform/stat/provider/env', { orgIds }, {});
 };
 // provider资源数量占比
-export const getProviderResource = ({ ...restParams }) => {
-  return getWithArgs('/api/v1/platform/stat/provider/resource', {}, restParams);
+export const getProviderResource = (orgIds) => {
+  return getWithArgs('/api/v1/platform/stat/provider/resource', { orgIds }, {});
 };
 // 资源类型占比
-export const getProviderType = ({ ...restParams }) => {
-  return getWithArgs('/api/v1/platform/stat/resource/type', {}, restParams);
+export const getProviderType = (orgIds) => {
+  return getWithArgs('/api/v1/platform/stat/resource/type', { orgIds }, {});
 };
 // 一周资源变更趋势
-export const getProviderWeek = ({ ...restParams }) => {
-  return getWithArgs('/api/v1/platform/stat/resource/week', {}, restParams);
+export const getProviderWeek = (orgIds) => {
+  return getWithArgs('/api/v1/platform/stat/resource/week', { orgIds }, {});
 };
 // 活跃资源数量
-export const getProviderActive = ({ ...restParams }) => {
-  return getWithArgs('/api/v1/platform/stat/resource/active', {}, restParams);
+export const getProviderActive = (orgIds) => {
+  return getWithArgs('/api/v1/platform/stat/resource/active', { orgIds }, {});
 };
 
 

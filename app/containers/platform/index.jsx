@@ -19,23 +19,27 @@ const KEY = 'global';
 
 const overview = ({ curOrg, orgs }) => {
 
+  const TYPE_MAP = {
+    envCount: '环境',
+    orgCount: '组织',
+    projectCount: '项目',
+    stackCount: 'Stack',
+    userCount: '用户'
+  };
+
   const platform_prvider_env_count_hold = useRef();
   const platform_prvider_resource_count_hold = useRef();
   const platform_prvider_resource_type_hold = useRef();
   const platform_resource_change_trend = useRef();
   const platform_number_of_active_resources = useRef();
   
-  const [ selectedProjectIds, setSelectedProjectIds ] = useState([]);
+  const [ selectedOrganization, setSelectedOrganization ] = useState([]);
   const [ statisticsCount, setStatisticsCount ] = useState(0);
   const [ fetchCount, setFetchCount ] = useState(0);
-  const [ envStatTopData, setEnvStatTopData ] = useState([]);
-  const [ resStatTopData, setResStatTopData ] = useState([]);
-  const [ resStatTotal, setResStatTotal ] = useState(1);
-  const [ envStatTotal, setEnvStatTotal ] = useState(1);
   const [ data, setData ] = useState({});
 
-  const onChangeSelectedPrpo = (v) => {
-    setSelectedProjectIds(v);
+  const onChangeSelectedOrg = (v) => {
+    setSelectedOrganization(v);
     setStatisticsCount(preValue => preValue + 1);
   };
 
@@ -49,7 +53,7 @@ const overview = ({ curOrg, orgs }) => {
   const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
   const fetchDetail = async() => {
-    const detailData = await Promise.all([ getStat(), getProviderEnv(), getProviderResource(), getProviderType(), getProviderWeek(), getProviderActive() ]);
+    const detailData = await Promise.all([ getStat(selectedOrganization.join(',')), getProviderEnv(selectedOrganization.join(',')), getProviderResource(selectedOrganization.join(',')), getProviderType(selectedOrganization.join(',')), getProviderWeek(selectedOrganization.join(',')), getProviderActive(selectedOrganization.join(',')) ]);
     const list = [ 'stat', 'providerEnv', 'providerResource', 'providerType', 'providerWeek', 'providerActive' ];
     let obj = {};
     detailData.map((item, index) => {
@@ -80,9 +84,8 @@ const overview = ({ curOrg, orgs }) => {
   }, [fetchCount]);
 
   useEffect(() => {
-    onChangeSelectedPrpo([]);
     fetchDetail();
-  }, []);
+  }, [selectedOrganization]);
 
   useEffect(() => {
     resizeHelper.attach();
@@ -90,22 +93,21 @@ const overview = ({ curOrg, orgs }) => {
       resizeHelper.remove();
     };
   }, []);
-
   return (
     <div className={styles.overview}>
       <div className={styles.overview_left}>
         <div className={styles.select}>
           <Select
-            placeholder={t('define.page.selectProject.title')}
+            placeholder={t('define.page.selectOrganization.title')}
             mode='multiple'
             maxTagCount={3}
             allowClear={true}
             maxTagTextLength={10}
-            style={{ minWidth: 173 }}
-            value={selectedProjectIds}
+            style={{ minWidth: 173, marginTop: 16 }}
+            value={selectedOrganization}
             suffixIcon={<FileTextOutlined />}
             onChange={(v) => {
-              onChangeSelectedPrpo(v);
+              onChangeSelectedOrg(v);
             }}
             options={
               (orgs.list || []).map((val) => {
@@ -118,39 +120,19 @@ const overview = ({ curOrg, orgs }) => {
         <div>
           <Row style={{ padding: '13.5px 10.5px', justifyContent: 'space-between' }} gutter={[ 21, 27 ]}>
             {
-              [{
-                name: '组织',
-                count: 120,
-                acount: 152
-              }, {
-                name: '组织',
-                count: 120,
-                acount: 152
-              }, {
-                name: '组织',
-                count: 120,
-                acount: 152
-              }, {
-                name: '组织',
-                count: 120,
-                acount: 152
-              }, {
-                name: '组织',
-                count: 120,
-                acount: 152
-              }].map(item => {
+              Object.keys(data.stat || {}).map(item => {
                 return (
                   <div className={styles.statisticsCard}>
                     <div className={styles.statisticsTop}>
-                      <span>{item.name}</span>
+                      <span>{TYPE_MAP[item]}</span>
                     </div>
                     <div className={styles.statisticsBottom}>
                       <div>
                         <span>总数</span>
-                        <span>{item.acount}  <span>/</span></span>
+                        <span>{((data.stat || {})[item] || {}).total}  <span>/</span></span>
                       </div>  <div>
                         <span>活跃</span>
-                        <span>{item.count}</span>
+                        <span>{((data.stat || {})[item] || {}).active}</span>
                       </div>
                     </div>
                   </div>
@@ -181,24 +163,6 @@ const overview = ({ curOrg, orgs }) => {
                         <></>
                       )}
                       <div ref={platform_prvider_env_count_hold} style={{ width: '100%', height: 214 }}></div>
-                      {
-                        isEmpty(data.envStat) ? 
-                          <></> : 
-                          <div className={styles.table}>
-                            <div className={classNames(styles.table_header)}>
-                              <div>{t('define.page.overview.order')}</div>
-                              <div>{t('define.page.overview.envStatus')}</div>
-                              <div>{t('define.page.overview.ratio')}</div>
-                            </div>
-                            {envStatTopData.map((val, i) => {
-                              return <div className={classNames(styles.table_item)}>
-                                <div>0{i + 1}</div>
-                                <div>{ENV_STATUS[val.status]}</div>
-                                <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
-                              </div>;
-                            })}
-                          </div>
-                      } 
                     </>
                   </div>
                 </div>
@@ -226,24 +190,6 @@ const overview = ({ curOrg, orgs }) => {
                         <></>
                       )}
                       <div ref={platform_prvider_resource_count_hold} style={{ width: '100%', height: 214 }}></div>
-                      {
-                        isEmpty(data.envStat) ? 
-                          <></> : 
-                          <div className={styles.table}>
-                            <div className={classNames(styles.table_header)}>
-                              <div>{t('define.page.overview.order')}</div>
-                              <div>{t('define.page.overview.envStatus')}</div>
-                              <div>{t('define.page.overview.ratio')}</div>
-                            </div>
-                            {envStatTopData.map((val, i) => {
-                              return <div className={classNames(styles.table_item)}>
-                                <div>0{i + 1}</div>
-                                <div>{ENV_STATUS[val.status]}</div>
-                                <div>{(val.count * 100 / envStatTotal).toFixed(1) + '%'}</div>
-                              </div>;
-                            })}
-                          </div>
-                      } 
                     </>
                   </div>
                 </div>
@@ -272,24 +218,6 @@ const overview = ({ curOrg, orgs }) => {
                         </>
                       )}
                       <div ref={platform_prvider_resource_type_hold} style={{ width: '100%', height: 214 }}></div>
-                      {
-                        isEmpty(data.resStat) ? 
-                          <></> :
-                          <div className={styles.table}>
-                            <div className={classNames(styles.table_header)}>
-                              <div>{t('define.page.overview.order')}</div>
-                              <div>{t('define.page.overview.resourceType')}</div>
-                              <div>{t('define.page.overview.ratio')}</div>
-                            </div>
-                            {resStatTopData.map((val, i) => {
-                              return <div className={classNames(styles.table_item)}>
-                                <div>0{i + 1}</div>
-                                <div>{val.resType}</div>
-                                <div>{(val.count * 100 / resStatTotal).toFixed(1) + '%'}</div>
-                              </div>;
-                            })}
-                          </div>
-                      }
                     </>
                   </div>
                 </div>
@@ -330,8 +258,8 @@ const overview = ({ curOrg, orgs }) => {
       </div>
       <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
         <div className={styles.tableWrapper}>
-          <h2>{t('define.page.overview.dynamic')}</h2>
-          <div className={styles.data_table}>
+          {/* <h2>{t('define.page.overview.dynamic')}</h2> */}
+          <div className={styles.listInfo}>
             <List
               header={false}
               footer={false}
@@ -342,7 +270,7 @@ const overview = ({ curOrg, orgs }) => {
                     <span>{(item || {}).name || '张三'}: </span>
                     <EllipsisText style={{ maxWidth: 200 }}>{item || '-'}</EllipsisText>
                   </div>
-                  <div className={styles.orgInfo}><span>{(item || {}).orgName || '组织'}</span> <span>06-22 18:10:30</span></div>
+                  <div className={styles.orgInfo}><span>06-22 18:10:30</span> <span>{(item || {}).orgName || '组织'}</span> </div>
 
                 </List.Item>
               )}

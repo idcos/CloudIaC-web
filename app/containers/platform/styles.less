@@ -241,6 +241,10 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+    color: rgba(36, 41, 47, 100);
+    font-size: 12px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
   }
 
   .listbody {
@@ -249,9 +253,19 @@
   }
 
   .orgInfo {
-    display: flex;
-    justify-content: space-between;
     width: 100%;
+    color: rgba(153, 153, 153, 100);
+    font-size: 12px;
+    text-align: left;
+    font-family: PingFangSC-Regular;
+    margin-top: 8px;
+  }
+  .listInfo {
+    :global {
+      .ant-list-split .ant-list-item {
+        border-bottom: none;
+      }
+    }
   }
 
 }
