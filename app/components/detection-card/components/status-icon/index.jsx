@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { SuccessIcon, ErrorIcon } from "components/iconfont";
+import { SuccessIcon, ErrorIcon, ErrorFieldIcon } from "components/iconfont";
 import { ShieldIcon } from 'components/iconfont';
 import styles from './styles.less';
 
@@ -14,6 +14,10 @@ export default ({ type = '', hasWrapper = false }) => {
         wrapperBgColor: '#C3E6CD'
       };
     case 'failed': 
+      return {
+        icon: <ErrorFieldIcon style={{ color: '#DD2E12' }} />,
+        wrapperBgColor: '#FB9E03'
+      };
     case 'violated': 
       return {
         icon: <ErrorIcon style={{ color: '#DD2E12' }} />,
