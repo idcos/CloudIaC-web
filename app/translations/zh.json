@@ -242,6 +242,8 @@
   "define.findPassword.find": "找回",
   "define.findPassword.sendEmail.message_1": "修改密码链接已发送至您的邮箱，",
   "define.findPassword.sendEmail.message_2": "请登录邮箱并修改密码",
+  "define.findPassword.resetPassword.confirmPassword": "确认密码",
+  "define.findPassword.resetPassword.confirmPassword.placeholder": "请再次输入密码",
   "define.loginPage.email": "邮箱",
   "define.loginPage.email.formatError": "邮箱格式有误",
   "define.loginPage.email.placeholder": "请输入邮箱地址",

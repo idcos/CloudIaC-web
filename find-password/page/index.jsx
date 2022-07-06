@@ -24,8 +24,9 @@ export default () => {
     window.location.search
   );
   const [form] = Form.useForm();
-  const [ currentStep, setCurrentStep ] = useState("sendEmail");
+  const [ currentStep, setCurrentStep ] = useState("resetPassword");
   const [ token, setToken ] = useState();
+  const [ showErrorMessage, setShowErrorMessage ] = useState(false);
 
   useRequest(() => requestWrapper(authAPI.getSysConfigSwitches.bind(null)), {
     onSuccess: (data) => {
@@ -58,7 +59,7 @@ export default () => {
       }
       setCurrentStep('checkEmail');
     } catch (err) {
-      notification.error({
+      err.message && notification.error({
         message: err.message
       });
     }
@@ -74,7 +75,7 @@ export default () => {
       notification.success({ message: t('define.message.opSuccess') });
       setTimeout(() => redirectToLogin(), 500);
     } catch (err) {
-      notification.error({
+      err.message && notification.error({
         message: err.message
       });
     }
@@ -108,6 +109,20 @@ export default () => {
     if (email && activeStatus !== "active") {
       return Promise.reject(new Error(t("define.registerPage.email.disabled")));
     } else {
+      return Promise.resolve();
+    }
+  };
+
+  const handleValidatorNewPassword = async (rules, value) => {
+    const reg = new RegExp(`^(?![0-9]+$)(?![${specialWordResp}]+$)(?![a-zA-Z]+$)(?![^${specialWordResp}a-zA-Z]+$)(?![^0-9a-zA-Z]+$)(?![^${specialWordResp}0-9a-zA-Z]+$).{6,30}$`, 'g');
+    if (value == undefined || value === '') {
+      setShowErrorMessage(true);
+      return Promise.reject(new Error(t('define.registerPage.password.placeholder')));
+    } else if (!reg.test(value)) {
+      setShowErrorMessage(true);
+      return Promise.reject(new Error(t('define.page.userSet.pwd.field.newPassword.rule')));
+    } else {
+      setShowErrorMessage(false);
       return Promise.resolve();
     }
   };
@@ -167,23 +182,23 @@ export default () => {
           </Form.Item>
         </div>
 
-        <div className='action-container'>
-          <Button onClick={redirectToLogin}>
+        <div className='bottom-actions-container'>
+          <Button onClick={redirectToLogin} style={{ width: 140, height: 36 }}>
             {t('define.action.cancel')}
           </Button>
-          <Button type='primary' onClick={handleSendEmail}>
+          <Button type='primary' onClick={handleSendEmail} style={{ width: 140, height: 36 }}>
             {t('define.findPassword.find')}
           </Button>
         </div>
       </>);
     case "checkEmail":
       return <>
-        <div>
+        <div className='message-container'>
           <div>{t('define.findPassword.sendEmail.message_1')}</div>
           <div>{t('define.findPassword.sendEmail.message_2')}</div>
         </div>
-        <div className='action-container'>
-          <Button onClick={redirectToLogin}>
+        <div className='bottom-actions-container'>
+          <Button onClick={redirectToLogin} style={{ width: '100%' }}>
             {t('define.action.cancel')}
           </Button>
         </div>
@@ -196,17 +211,21 @@ export default () => {
           name='newPassword'
           validateTrigger={'onBlur'}
           rules={[
-            { required: true, message: t('define.registerPage.password.placeholder') },
-            { pattern: `^(?![0-9]+$)(?![${specialWordResp}]+$)(?![a-zA-Z]+$)(?![^${specialWordResp}a-zA-Z]+$)(?![^0-9a-zA-Z]+$)(?![^${specialWordResp}0-9a-zA-Z]+$).{6,30}$`, message: t('define.page.userSet.pwd.field.newPassword.rule') }
+            {
+              validator: (rules, value) => {
+                return handleValidatorNewPassword(rules, value);
+              }
+            }
           ]}
           getValueFromEvent={(e) => e.target.value.trim()}
-          extra={t('define.page.userSet.pwd.field.newPassword.rule')}
+          extra={!showErrorMessage && t('define.page.userSet.pwd.field.newPassword.rule')}
+          style={{ marginBottom: 48 }}
         >
           <Input.Password placeholder={t('define.registerPage.password.placeholder')} />
         </Form.Item>
         <Form.Item
           className='format-form-item'
-          label={t('define.page.userSet.pwd.field.reNewPassword')}
+          label={t('define.findPassword.resetPassword.confirmPassword')}
           name='reNewPassword'
           dependencies={['newPassword']}
           hasFeedback={true}
@@ -225,11 +244,13 @@ export default () => {
             })
           ]}
         >
-          <Input.Password autoComplete='new-password'/>
+          <Input.Password placeholder={t('define.registerPage.password.placeholder')} autoComplete='new-password'/>
         </Form.Item>
-        <Button type='primary' onClick={handleResetPassword}>
-          {t('define.findPassword.find')}
-        </Button>
+        <div className='bottom-actions-container'>
+          <Button type='primary' onClick={handleResetPassword} style={{ width: '100%' }}>
+            {t('define.action.confirm')}
+          </Button>
+        </div>
       </>;
     default:
       break;
@@ -237,51 +258,36 @@ export default () => {
   };
 
   return (
-    <Row wrap={false} className={styles.login}>
-      <Col span={14} className='left'>
-        <div className='logo'>
-          <img src='/assets/logo/iac-logo-light.svg' alt='logo' />
-        </div>
-        <div className='content'>
-          <div className='title'>
-            <div>CloudlaC</div>
-            <div>基础设施即代码平台</div>
+    <div className={styles.login}>
+      <div className='center-container'>
+        <div className='center-card'>
+          <div className='header-container'>
+            <div className='logo'>
+              <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
+            </div>
           </div>
-          <div className='describe'>引领云原生运维</div>
+          <div className='loginFormWrapper'>
+            {currentStep !== 'resetPassword' && <div className='title'>{t("define.findPassword")}</div>}
+            <Form {...layout} name='basic' className='loginForm' form={form}>
+              {renderFormItems()}
+            </Form>
+          </div>
         </div>
-        <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
-      </Col>
-      <Col span={10} className='right'>
-        {language === "zh" ? (
+        {language === 'zh' ? (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
             <span>产品使用语言</span>
-            <span
-              className='change-language-btn'
-              onClick={() => setLanguage("en")}
-            >
-              EN?
-            </span>
+            <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
           </div>
         ) : (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
             <span>View this page in</span>
-            <span
-              className='change-language-btn'
-              onClick={() => setLanguage("zh")}
-            >
-              中文?
-            </span>
+            <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
           </div>
         )}
-        <div className='loginFormWrapper'>
-          <div className='title'>{t("define.findPassword")}</div>
-          <Form {...layout} name='basic' className='loginForm' form={form}>
-            {renderFormItems()}
-          </Form>
-        </div>
-      </Col>
-    </Row>
+      </div>
+      <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
+    </div>
   );
 };

@@ -118,21 +118,65 @@ export default () => {
   };
 
   return (
-    <Row wrap={false} className={styles.login}>
-      <Col span={14} className='left'>
-        <div className='logo'>
-          <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
-        </div>
-        <div className='content'>
-          <div className='title'>
-            <div>CloudlaC</div>
-            <div>基础设施即代码平台</div>
+    <div className={styles.login}>
+      <div className='center-container'>
+        <div className='center-card'>
+          <div className='header-container'>
+            <div className='logo'>
+              <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
+            </div>
           </div>
-          <div className='describe'>引领云原生运维</div>
+          <div className='loginFormWrapper'>
+            <Form
+              {...layout}
+              name='basic'
+              className='loginForm'
+              requiredMark='optional'
+              onFinish={onFinish}
+            >
+              <div>
+                <Form.Item
+                  className='format-form-item'
+                  label={
+                    <>
+                      <span>{t('define.loginPage.email')}</span>
+                    </>
+                  }
+                  name='email'
+                  rules={[
+                    { required: true, message: t('define.loginPage.email.placeholder') },
+                    { type: 'email', message: t('define.loginPage.email.formatError') }
+                  ]}
+                  getValueFromEvent={(e) => e.target.value.trim()}
+                >
+                  <Input placeholder={t('define.loginPage.email.placeholder')} />
+                </Form.Item>
+              </div>
+
+
+              <Form.Item
+                className='format-form-item'
+                label={t('define.loginPage.password')}
+                name='password'
+                rules={[{ required: true, message: t('define.loginPage.password.placeholder') }]}
+                getValueFromEvent={(e) => e.target.value.trim()}
+              >
+                <Input.Password placeholder={t('define.loginPage.password.placeholder')} />
+              </Form.Item>
+
+              <Form.Item {...tailLayout} style={{ paddingTop: 36, marginBottom: 0 }}>
+                <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
+                  {t('define.loginPage.login')}
+                </Button>
+              </Form.Item>
+            </Form>
+            { canShowRegister && <div className='bottom-actions-container'>
+              <div onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div>
+              <div onClick={redirectToFindPassword}>{t('define.loginPage.password.findPassword')}</div>
+            </div>
+            }
+          </div>
         </div>
-        <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
-      </Col>
-      <Col span={10} className='right'>
         {language === 'zh' ? (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
@@ -146,58 +190,8 @@ export default () => {
             <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
           </div>
         )}
-        <div className='loginFormWrapper'>
-          <div className='title'>{t('define.loginPage.login')}</div>
-          <Form
-            {...layout}
-            name='basic'
-            className='loginForm'
-            requiredMark='optional'
-            onFinish={onFinish}
-          >
-            <div>
-              <Form.Item
-                className='format-form-item'
-                label={
-                  <>
-                    <span>{t('define.loginPage.email')}</span>
-                  </>
-                }
-                name='email'
-                rules={[
-                  { required: true, message: t('define.loginPage.email.placeholder') },
-                  { type: 'email', message: t('define.loginPage.email.formatError') }
-                ]}
-                getValueFromEvent={(e) => e.target.value.trim()}
-              >
-                <Input placeholder={t('define.loginPage.email.placeholder')} />
-              </Form.Item>
-            </div>
-
-
-            <Form.Item
-              className='format-form-item'
-              label={t('define.loginPage.password')}
-              name='password'
-              rules={[{ required: true, message: t('define.loginPage.password.placeholder') }]}
-              getValueFromEvent={(e) => e.target.value.trim()}
-            >
-              <Input.Password placeholder={t('define.loginPage.password.placeholder')} />
-            </Form.Item>
-
-            <Form.Item {...tailLayout} style={{ paddingTop: 8, marginBottom: 0 }}>
-              <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
-                {t('define.loginPage.login')}
-              </Button>
-            </Form.Item>
-          </Form>
-          { canShowRegister && <div className='bottom-actions-container'>
-            <div onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div>
-            <div onClick={redirectToFindPassword}>{t('define.loginPage.password.findPassword')}</div>
-          </div>
-          }
-        </div>
-      </Col>
-    </Row>
+      </div>
+      <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
+    </div>
   );
 };
