@@ -24,7 +24,7 @@ export default () => {
     window.location.search
   );
   const [form] = Form.useForm();
-  const [ currentStep, setCurrentStep ] = useState("resetPassword");
+  const [ currentStep, setCurrentStep ] = useState("sendEmail");
   const [ token, setToken ] = useState();
   const [ showErrorMessage, setShowErrorMessage ] = useState(false);
 
