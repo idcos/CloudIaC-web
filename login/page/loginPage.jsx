@@ -45,7 +45,7 @@ export default () => {
       }
       const userInfo = userInfoRes.result || {};
       const { devManual = 0 } = userInfo.newbieGuide || {};
-      const updateUserInfoRes = await authAPI.updateSelf({ 
+      const updateUserInfoRes = await authAPI.updateSelf({
         newbieGuide: {
           devManual: devManual + 1
         }
@@ -112,6 +112,11 @@ export default () => {
     window.location.href = `/register${search}`;
   };
 
+  const redirectToFindPassword = () => {
+    const search = window.location.search;
+    window.location.href = `/find-password/${search}`;
+  };
+
   return (
     <Row wrap={false} className={styles.login}>
       <Col span={14} className='left'>
@@ -131,7 +136,7 @@ export default () => {
         {language === 'zh' ? (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
-            <span>产品使用语言</span> 
+            <span>产品使用语言</span>
             <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
           </div>
         ) : (
@@ -160,7 +165,7 @@ export default () => {
                 }
                 name='email'
                 rules={[
-                  { required: true, message: t('define.loginPage.email.placeholder') }, 
+                  { required: true, message: t('define.loginPage.email.placeholder') },
                   { type: 'email', message: t('define.loginPage.email.formatError') }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
@@ -168,7 +173,7 @@ export default () => {
                 <Input placeholder={t('define.loginPage.email.placeholder')} />
               </Form.Item>
             </div>
-          
+
 
             <Form.Item
               className='format-form-item'
@@ -186,8 +191,11 @@ export default () => {
               </Button>
             </Form.Item>
           </Form>
-          { canShowRegister && <div className='free-register' onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div> }
-          
+          { canShowRegister && <div className='bottom-actions-container'>
+            <div onClick={redirectToRegister}>{t('define.loginPage.password.registerForFree')}</div>
+            <div onClick={redirectToFindPassword}>{t('define.loginPage.password.findPassword')}</div>
+          </div>
+          }
         </div>
       </Col>
     </Row>

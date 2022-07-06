@@ -46,7 +46,7 @@ module.exports = function addDevMiddlewares(app, webpackConfig) {
       }
     });
   });
-  
+
   app.get('/activation', (req, res) => {
     fs.readFile(path.join(compiler.outputPath, 'activation.html'), (err, file) => {
       if (err) {
@@ -59,6 +59,16 @@ module.exports = function addDevMiddlewares(app, webpackConfig) {
 
   app.get('/activation/*', (req, res) => {
     fs.readFile(path.join(compiler.outputPath, 'activation.html'), (err, file) => {
+      if (err) {
+        res.sendStatus(404);
+      } else {
+        res.send(file.toString());
+      }
+    });
+  });
+
+  app.get('/find-password/*', (req, res) => {
+    fs.readFile(path.join(compiler.outputPath, 'find-password.html'), (err, file) => {
       if (err) {
         res.sendStatus(404);
       } else {

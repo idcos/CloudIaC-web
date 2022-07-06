@@ -5,7 +5,7 @@ const { HashedModuleIdsPlugin } = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const htmlChunks = [ 'app', 'login', 'register', 'activation' ];
+const htmlChunks = [ 'app', 'login', 'register', 'activation', 'find-password' ];
 const getExcludeHtmlChunks = (value) => htmlChunks.filter((htmlChunk) => value !== htmlChunk);
 
 module.exports = require('./webpack.base.babel')({
@@ -14,7 +14,8 @@ module.exports = require('./webpack.base.babel')({
     app: path.join(process.cwd(), 'app/app.js'),
     login: path.join(process.cwd(), 'login/login.js'),
     register: path.join(process.cwd(), 'register/register.js'),
-    activation: path.join(process.cwd(), 'activation/activation.js')
+    activation: path.join(process.cwd(), 'activation/activation.js'),
+    'find-password': path.join(process.cwd(), 'find-password/find-password.js')
   },
   output: {
     filename: 'js/[name].[chunkhash].js',
@@ -124,6 +125,24 @@ module.exports = require('./webpack.base.babel')({
         minifyURLs: true
       },
       excludeChunks: getExcludeHtmlChunks('activation'),
+      inject: true
+    }),
+    new HtmlWebpackPlugin({
+      template: 'find-password/find-password.html',
+      filename: 'find-password.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true
+      },
+      excludeChunks: getExcludeHtmlChunks('find-password'),
       inject: true
     }),
     new HashedModuleIdsPlugin({
