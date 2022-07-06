@@ -21,12 +21,12 @@ let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
 }]);
 
 const platform_color_list = [
-  '#F8F9FA',
-  '#F8F9FA',
-  '#F8F9FA',
-  '#F8F9FA',
-  '#F8F9FA',
-  '#F8F9FA'
+  '#0782CA',
+  '#2EC4B6',
+  '#219EBC',
+  '#F77F00',
+  '#FCBF49',
+  '#003D5B'
 ];
 
 const formatPercent = (value) => {
@@ -589,12 +589,7 @@ export const chartOptions = {
           itemStyle: {
             normal: {
               color: function (colors) {
-                var colorList = [
-                  '#2EC4B6',
-                  '#219EBC',
-                  '#0694E8'
-                ];
-                return colorList[colors.dataIndex % 3];
+                return platform_color_list[colors.dataIndex % 6];
               }
             }
           }
@@ -632,12 +627,7 @@ export const chartOptions = {
           itemStyle: {
             normal: {
               color: function (colors) {
-                var colorList = [
-                  '#2EC4B6',
-                  '#219EBC',
-                  '#0694E8'
-                ];
-                return colorList[colors.dataIndex % 3];
+                return platform_color_list[colors.dataIndex % 6];
               }
             }
           }
@@ -675,12 +665,7 @@ export const chartOptions = {
           itemStyle: {
             normal: {
               color: function (colors) {
-                var colorList = [
-                  '#2EC4B6',
-                  '#219EBC',
-                  '#0694E8'
-                ];
-                return colorList[colors.dataIndex % 3];
+                return platform_color_list[colors.dataIndex % 6];
               }
             }
           }
@@ -750,7 +735,7 @@ export const chartOptions = {
         },
         itemStyle: {
           normal: {
-            color: 'rgba(91, 143, 249, 0.85)'
+            color: platform_color_list[index % 6]
           }
         },
         data: item.list || []
