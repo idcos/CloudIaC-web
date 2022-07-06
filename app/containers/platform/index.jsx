@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce';
 import isEmpty from 'lodash/isEmpty';
 import { chartUtils } from 'components/charts-cfg';
 import classNames from 'classnames';
-import orgsAPI from 'services/orgs';
+import { getStat, getProviderEnv, getProviderResource, getProviderType, getProviderWeek, getProviderActive } from 'services/platform';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { t } from 'utils/i18n';
@@ -17,7 +17,7 @@ import EllipsisText from 'components/EllipsisText';
 
 const KEY = 'global';
 
-const overview = ({ curOrg, projects }) => {
+const overview = ({ curOrg, orgs }) => {
 
   const platform_prvider_env_count_hold = useRef();
   const platform_prvider_resource_count_hold = useRef();
@@ -32,62 +32,12 @@ const overview = ({ curOrg, projects }) => {
   const [ resStatTopData, setResStatTopData ] = useState([]);
   const [ resStatTotal, setResStatTotal ] = useState(1);
   const [ envStatTotal, setEnvStatTotal ] = useState(1);
+  const [ data, setData ] = useState({});
 
-  const {
-    data = {
-      envStat: [],
-      resStat: [],
-      projectResStat: {
-        series_list: [],
-        dataList: []
-      },
-      resGrowTrend: []
-    },
-    run: startStatistics
-  } = useRequest(
-    () => requestWrapper(
-      orgsAPI.orgStatistics.bind(null, { curOrg, projectIds: selectedProjectIds })
-    ), {
-      manual: true,
-      formatResult: data => {
-        const { envStat, resStat, projectResStat, resGrowTrend } = data || {};
-        return {
-          envStat: envStat || [], 
-          resStat: resStat || [], 
-          projectResStat: formatResStat(projectResStat) || {}, 
-          resGrowTrend: resGrowTrend || []
-        };
-      },
-      onSuccess: ({ envStat, resStat }) => {
-        setEnvStatTopData(sortBy(envStat, item => -item.count).slice(0, 2));
-        setResStatTopData(sortBy(resStat, item => -item.count).slice(0, 2));
-        setEnvStatTotal(reduce(envStat, function(sum, item) {
-          return sum + item.count;
-        }, 0));
-        setResStatTotal(reduce(resStat, function(sum, item) {
-          return sum + item.count;
-        }, 0));
-        setFetchCount(preValue => preValue + 1);
-      }
-    }
-  );
   const onChangeSelectedPrpo = (v) => {
     setSelectedProjectIds(v);
     setStatisticsCount(preValue => preValue + 1);
   };
-  const formatResStat = (data = []) => {
-    let series_list = [];
-    if (data.length) {
-      series_list = data[0].details.map((item) => item.name);
-    }
-    for (let i = 0; i < data.length; i++) {
-      data[i].detailsMap = {};
-      data[i].details.forEach((item) => {
-        data[i].detailsMap[item.name] = item.count;
-      });
-    }
-    return { dataList: data, series_list: series_list };
-  }; 
 
   let CHART = useRef([
     { key: 'platform_prvider_env_count_hold', domRef: platform_prvider_env_count_hold, ins: null },
@@ -98,28 +48,40 @@ const overview = ({ curOrg, projects }) => {
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
+  const fetchDetail = async() => {
+    const detailData = await Promise.all([ getStat(), getProviderEnv(), getProviderResource(), getProviderType(), getProviderWeek(), getProviderActive() ]);
+    const list = [ 'stat', 'providerEnv', 'providerResource', 'providerType', 'providerWeek', 'providerActive' ];
+    let obj = {};
+    detailData.map((item, index) => {
+      obj[list[index]] = item['result'];
+    });
+    setData(obj || {});
+    setFetchCount(preValue => preValue + 1);
+  };
+
   useEffect(() => {
     CHART.current.forEach(chart => {
       if (chart.key === 'platform_prvider_env_count_hold') {
-        chartUtils.update(chart, data.envStat);
+        chartUtils.update(chart, data.providerEnv || []);
       }
       if (chart.key === 'platform_prvider_resource_count_hold') {
-        chartUtils.update(chart, data.envStat);
+        chartUtils.update(chart, data.providerResource || []);
       }
       if (chart.key === 'platform_prvider_resource_type_hold') {
-        chartUtils.update(chart, data.resStat);
+        chartUtils.update(chart, data.providerType || []);
       }
       if (chart.key === 'platform_resource_change_trend') {
-        chartUtils.update(chart, data.projectResStat);
+        chartUtils.update(chart, data.providerWeek);
       }
       if (chart.key === 'platform_number_of_active_resources') {
-        chartUtils.update(chart, data.resGrowTrend);
+        chartUtils.update(chart, data.providerActive);
       }
     });
   }, [fetchCount]);
 
   useEffect(() => {
     onChangeSelectedPrpo([]);
+    fetchDetail();
   }, []);
 
   useEffect(() => {
@@ -129,9 +91,6 @@ const overview = ({ curOrg, projects }) => {
     };
   }, []);
 
-  useEffect(() => {
-    statisticsCount > 0 && startStatistics();
-  }, [statisticsCount]);
   return (
     <div className={styles.overview}>
       <div className={styles.overview_left}>
@@ -149,7 +108,7 @@ const overview = ({ curOrg, projects }) => {
               onChangeSelectedPrpo(v);
             }}
             options={
-              (projects.list || []).map((val) => {
+              (orgs.list || []).map((val) => {
                 return { label: val.name, value: val.id };
               })
             }
@@ -202,12 +161,12 @@ const overview = ({ curOrg, projects }) => {
           <Row gutter={[ 21, 27 ]}>
             <Col span={8}>
               <div className={styles.env_state}>
-                <h3>{t('define.charts.platform_prvider_env_count_hold')}</h3>
+                {/* <h3>{t('define.charts.platform_prvider_env_count_hold')}</h3> */}
                 <div className={classNames(styles.content)}>
                   <div>
-                    {/* <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span> */}
+                    <span className={styles.content_title}>{t('define.charts.platform_prvider_env_count_hold')}</span>
                     <>
-                      {isEmpty(data.envStat) ? (
+                      {isEmpty(data.providerEnv) ? (
                         <Empty 
                           image={Empty.PRESENTED_IMAGE_SIMPLE}
                           style={{ 
@@ -247,12 +206,12 @@ const overview = ({ curOrg, projects }) => {
             </Col>
             <Col span={8}>
               <div className={styles.env_state}>
-                <h3>{t('define.charts.platform_prvider_resource_count_hold')}</h3>
+                {/* <h3>{t('define.charts.platform_prvider_resource_count_hold')}</h3> */}
                 <div className={classNames(styles.content)}>
                   <div>
-                    <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
+                    <span className={styles.content_title}>{t('define.charts.platform_prvider_resource_count_hold')}</span>
                     <>
-                      {isEmpty(data.envStat) ? (
+                      {isEmpty(data.providerResource) ? (
                         <Empty 
                           image={Empty.PRESENTED_IMAGE_SIMPLE}
                           style={{ 
@@ -292,12 +251,12 @@ const overview = ({ curOrg, projects }) => {
             </Col>
             <Col span={8}>
               <div className={styles.resource_type}>
-                <h3>{t('define.charts.platform_prvider_resource_type_hold')}</h3>
+                {/* <h3>{t('define.charts.platform_prvider_resource_type_hold')}</h3> */}
                 <div className={classNames(styles.content)}>
                   <div>
-                    <span className={styles.content_title}>{t('define.page.overview.lastUpdated')}</span>
+                    <span className={styles.content_title}>{t('define.charts.platform_prvider_resource_type_hold')}</span>
                     <>
-                      {isEmpty(data.resStat) ? (
+                      {isEmpty(data.providerType) ? (
                         <Empty 
                           image={Empty.PRESENTED_IMAGE_SIMPLE} 
                           style={{ 
@@ -340,10 +299,10 @@ const overview = ({ curOrg, projects }) => {
           <Row gutter={[ 21, 27 ]}>
             <Col span={12}>
               <div className={styles.pro_resource}>
-                <h3>{t('define.page.platform_resource_change_trend')}</h3>
                 <div className={classNames(styles.content)}>
+                  <span className={styles.content_title} style={{ marginLeft: 20 }}>{t('define.page.platform_resource_change_trend')}</span>
                   <div style={{ width: '100%', height: "100%" }}>
-                    {isEmpty(data.projectResStat) ? (
+                    {isEmpty(data.providerWeek) ? (
                       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
                     ) : (
                       <div ref={platform_resource_change_trend} style={{ width: '100%', height: "100%" }}></div>
@@ -354,10 +313,10 @@ const overview = ({ curOrg, projects }) => {
             </Col>
             <Col span={12}>
               <div className={styles.resource_tendency}>
-                <h3>{t('define.page.platform_number_of_active_resources')}</h3>
                 <div className={classNames(styles.content)}>
+                  <span className={styles.content_title} style={{ marginLeft: 20 }}>{t('define.page.platform_number_of_active_resources')}</span>
                   <div style={{ width: '100%', height: "100%" }}>
-                    {isEmpty(data.projectResStat) ? (
+                    {isEmpty(data.providerActive) ? (
                       <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} style={{ marginTop: 90 }}/>
                     ) : (
                       <div ref={platform_number_of_active_resources} style={{ width: '100%', height: "100%" }}></div>
@@ -398,6 +357,6 @@ const overview = ({ curOrg, projects }) => {
 export default connect(
   (state) => ({ 
     curOrg: state[KEY].get('curOrg'),
-    projects: state[KEY].get('projects').toJS()
+    orgs: state.global.get('orgs').toJS()
   })
 )(overview);

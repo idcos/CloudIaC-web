@@ -1,0 +1,42 @@
+import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
+
+// 查询top位置5个数据
+export const getStat = ({ ...restParams }) => {
+  return getWithArgs('/api/v1/platform/stat/basedata', {}, restParams);
+};
+  // provider环境数量统计
+export const getProviderEnv = ({ ...restParams }) => {
+  return getWithArgs('/api/v1/platform/stat/provider/env', {}, restParams);
+};
+// provider资源数量占比
+export const getProviderResource = ({ ...restParams }) => {
+  return getWithArgs('/api/v1/platform/stat/provider/resource', {}, restParams);
+};
+// 资源类型占比
+export const getProviderType = ({ ...restParams }) => {
+  return getWithArgs('/api/v1/platform/stat/resource/type', {}, restParams);
+};
+// 一周资源变更趋势
+export const getProviderWeek = ({ ...restParams }) => {
+  return getWithArgs('/api/v1/platform/stat/resource/week', {}, restParams);
+};
+// 活跃资源数量
+export const getProviderActive = ({ ...restParams }) => {
+  return getWithArgs('/api/v1/platform/stat/resource/active', {}, restParams);
+};
+
+
+
+// /**
+//  * 获取ci类依赖关系
+//  * @param tableName - 表名
+//  * @returns {Promise<never>|Promise<*>}
+//  */
+// export const getCIDependencies = (tableName) => get(`/api/v1/record/ci/relationship/dependencies/${tableName}`);
+
+// /**
+//  * 获取ci类标识规则
+//  * @param tableName - 表名
+//  * @returns {Promise<never>|Promise<*>}
+//  */
+// export const getCIIdentificationRule = tableName => get(`/api/v1/record/ci/identification/${tableName}`);

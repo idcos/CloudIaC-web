@@ -20,6 +20,15 @@ let colorConfig = new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
 
 }]);
 
+const platform_color_list = [
+  '#F8F9FA',
+  '#F8F9FA',
+  '#F8F9FA',
+  '#F8F9FA',
+  '#F8F9FA',
+  '#F8F9FA'
+];
+
 const formatPercent = (value) => {
   return Math.round(parseFloat(value) * 10000) / 100;
 };
@@ -551,24 +560,17 @@ export const chartOptions = {
       ]
     };
   },
-  platform_prvider_env_count_hold: () => {
+  platform_prvider_env_count_hold: (data = []) => {
     return {
       tooltip: {
         trigger: 'item'
       },
       series: [
-
         {
           type: 'pie',
           radius: [ '50%', '70%' ],
           avoidLabelOverlap: false,
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ],
+          data: data.map(item => ({ name: item.provider, value: item.count })),
           label: {
             show: true,
             formatter: ' {b}：{d}%',
@@ -600,7 +602,7 @@ export const chartOptions = {
       ]
     };
   },
-  platform_prvider_resource_count_hold: () => {
+  platform_prvider_resource_count_hold: (data = []) => {
     return {
       tooltip: {
         trigger: 'item'
@@ -611,13 +613,7 @@ export const chartOptions = {
           type: 'pie',
           radius: [ '50%', '70%' ],
           avoidLabelOverlap: false,
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ],
+          data: data.map(item => ({ name: item.provider, value: item.count })),
           label: {
             show: true,
             formatter: ' {b}：{d}%',
@@ -649,7 +645,7 @@ export const chartOptions = {
       ]
     };
   },
-  platform_prvider_resource_type_hold: () => {
+  platform_prvider_resource_type_hold: (data = []) => {
     return {
       tooltip: {
         trigger: 'item'
@@ -660,13 +656,7 @@ export const chartOptions = {
           type: 'pie',
           radius: [ '50%', '70%' ],
           avoidLabelOverlap: false,
-          data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
-          ],
+          data: data.map(item => ({ name: item.resType, value: item.count })),
           label: {
             show: true,
             formatter: ' {b}：{d}%',
@@ -698,11 +688,8 @@ export const chartOptions = {
       ]
     };
   },
-  platform_resource_change_trend: () => {
+  platform_resource_change_trend: (data = []) => {
     return {
-      title: {
-        text: 'Stacked Area Chart'
-      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -710,14 +697,6 @@ export const chartOptions = {
           label: {
             backgroundColor: '#6a7985'
           }
-        }
-      },
-      legend: {
-        data: [ 'Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine' ]
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {}
         }
       },
       grid: {
@@ -730,7 +709,7 @@ export const chartOptions = {
         {
           type: 'category',
           boundaryGap: false,
-          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+          data: data.map(item => item.date)
         }
       ],
       yAxis: [
@@ -740,7 +719,7 @@ export const chartOptions = {
       ],
       series: [
         {
-          name: 'Email',
+          name: '新增',
           type: 'line',
           stack: 'Total',
           areaStyle: {},
@@ -755,48 +734,27 @@ export const chartOptions = {
               }
             }
           },
-          data: [ 120, 132, 101, 134, 90, 230, 210 ]
-        },
-        {
-          name: 'Union Ads',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series'
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgba(90, 216, 166, 0.6)',
-              lineStyle: {
-                width: 2
-              }
-            }
-          },
-          data: [ 220, 182, 191, 234, 290, 330, 310 ]
-        },
-        {
-          name: 'Video Ads',
-          type: 'line',
-          stack: 'Total',
-          areaStyle: {},
-          emphasis: {
-            focus: 'series'
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgba(93, 112, 146, 0.6)',
-              lineStyle: {
-                width: 2
-              }
-            }
-          },
-          data: [ 150, 232, 201, 154, 190, 330, 410 ]
+          data: data.map(item => item.count)
         }
       ]
     };
   },
-  platform_number_of_active_resources: () => {
+  platform_number_of_active_resources: (data = []) => {
+    const list = (data.resTypesStat || []).map((item, index) => (
+      {
+        name: item.resType,
+        type: 'bar',
+        stack: 'active',
+        emphasis: {
+          focus: 'series'
+        },
+        itemStyle: {
+          normal: {
+            color: 'rgba(91, 143, 249, 0.85)'
+          }
+        },
+        data: item.list || []
+      }));
     return {
       tooltip: {
         trigger: 'axis',
@@ -814,7 +772,7 @@ export const chartOptions = {
       xAxis: [
         {
           type: 'category',
-          data: [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+          data: data.orgList || []
         }
       ],
       yAxis: [
@@ -822,50 +780,7 @@ export const chartOptions = {
           type: 'value'
         }
       ],
-      series: [
-        {
-          name: 'Email',
-          type: 'bar',
-          stack: 'Ad',
-          emphasis: {
-            focus: 'series'
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgba(91, 143, 249, 0.85)'
-            }
-          },
-          data: [ 120, 132, 101, 134, 90, 230, 210 ]
-        },
-        {
-          name: 'Union Ads',
-          type: 'bar',
-          stack: 'Ad',
-          emphasis: {
-            focus: 'series'
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgba(90, 216, 166, 0.85)'
-            }
-          },
-          data: [ 220, 182, 191, 234, 290, 330, 310 ]
-        },
-        {
-          name: 'Video Ads',
-          type: 'bar',
-          stack: 'Ad',
-          emphasis: {
-            focus: 'series'
-          },
-          itemStyle: {
-            normal: {
-              color: 'rgba(93, 112, 146, 0.85)'
-            }
-          },
-          data: [ 150, 232, 201, 154, 190, 330, 410 ]
-        }
-      ]
+      series: list
     };
   },
   cost_type_pie: ({ costTypeStat = [] }) => {
