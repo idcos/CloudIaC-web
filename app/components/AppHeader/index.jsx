@@ -279,6 +279,13 @@ const AppHeader = (props) => {
           >
             <span onClick={() => history.push('/sys/status')}><FundFilled/></span>
           </Tooltip>
+          {userInfo.isAdmin && <Tooltip
+            placement='bottomRight'
+            title={t('define.page.toSysStatus')} 
+            color='#08857C'
+          >
+            <span onClick={() => history.push('/platform/statistics')}><DashboardIcon/></span>
+          </Tooltip>}
           
           <Dropdown
             overlay={(
@@ -300,10 +307,6 @@ const AppHeader = (props) => {
                       </div>
                     ) : null
                   }
-                  {userInfo.isAdmin && <div className='link-item' onClick={() => history.push('/platform/statistics')}>
-                    <span className='icon'><DashboardIcon/></span>
-                    <span className='text'>{t('define.platformStatistics')}</span>
-                  </div>}
                   <div className='link-item' onClick={() => logout()}>
                     <span className='icon'><QuitIcon/></span>
                     <span className='text'>{t('define.logout')}</span>
