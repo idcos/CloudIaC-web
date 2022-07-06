@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce';
 import isEmpty from 'lodash/isEmpty';
 import { chartUtils } from 'components/charts-cfg';
 import classNames from 'classnames';
-import { getStat, getProviderEnv, getProviderResource, getProviderType, getProviderWeek, getProviderActive } from 'services/platform';
+import { getStat, getProviderEnv, getProviderResource, getProviderType, getProviderWeek, getProviderActive, getoPerationLog } from 'services/platform';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import { t } from 'utils/i18n';
@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import styles from './styles.less';
 import { ENV_STATUS } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
+import moment from 'moment';
 
 const KEY = 'global';
 
@@ -32,6 +33,7 @@ const overview = ({ curOrg, orgs }) => {
   const platform_prvider_resource_type_hold = useRef();
   const platform_resource_change_trend = useRef();
   const platform_number_of_active_resources = useRef();
+  const [ logData, setLogData ] = useState([]);
   
   const [ selectedOrganization, setSelectedOrganization ] = useState([]);
   const [ statisticsCount, setStatisticsCount ] = useState(0);
@@ -93,6 +95,20 @@ const overview = ({ curOrg, orgs }) => {
       resizeHelper.remove();
     };
   }, []);
+
+  const getLog = async() => {
+    let res = await getoPerationLog();
+    setLogData(res.result || []);
+  };
+
+  useEffect(() => {
+    getLog();
+  }, []);
+
+  const OBJ_TYPE = {
+    user: { login: "登陆平台" }
+  };
+
   return (
     <div className={styles.overview}>
       <div className={styles.overview_left}>
@@ -265,14 +281,14 @@ const overview = ({ curOrg, orgs }) => {
             <List
               header={false}
               footer={false}
-              dataSource={[ 'define.page.overview.dynamicdefine.page.overview.dynamicdefine.page.overview.dynamicdefine.page.overview.dynamicdefine.page.overview.dynamic', 2, 3, 5, 6, 7, 2, 3, 5, 6, 7, 2, 3, 5, 6, 7, 2, 3, 5, 6, 7, 2, 3, 5, 6, 7, 2, 3, 5, 6, 7 ]}
+              dataSource={logData}
               renderItem={item => (
                 <List.Item className={styles.listbody}>
                   <div className={styles.dynamicTitle}>
-                    <span>{(item || {}).name || '张三'}: </span>
-                    <EllipsisText style={{ maxWidth: 200 }}>{item || '-'}</EllipsisText>
+                    <span>{item.operatorName}: </span>
+                    <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{OBJ_TYPE[item.objectType][item.action] || '-'}</EllipsisText>
                   </div>
-                  <div className={styles.orgInfo}><span>06-22 18:10:30</span> <span>{(item || {}).orgName || '组织'}</span> </div>
+                  <div className={styles.orgInfo}><span>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span> <span>{item.objectName}</span> </div>
 
                 </List.Item>
               )}
