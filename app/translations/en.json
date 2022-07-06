@@ -462,6 +462,7 @@
   "define.resourceAccount.sameKeyError": "The following resource accounts have the same key, please re select",
   "define.resourceAccount.title": "Resource account",
   "define.resourceQuery": "Resource query",
+  "define.page.platform_overview.title": "Platform overview",
   "define.scan.status.failed": "Failed",
   "define.scan.status.passed": "Passed",
   "define.scan.status.suppressed": "Suppressed",

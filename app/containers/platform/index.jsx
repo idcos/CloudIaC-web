@@ -97,13 +97,15 @@ const overview = ({ curOrg, orgs }) => {
     <div className={styles.overview}>
       <div className={styles.overview_left}>
         <div className={styles.select}>
+          {t('define.page.platform_overview.title')}
           <Select
             placeholder={t('define.page.selectOrganization.title')}
             mode='multiple'
             maxTagCount={3}
             allowClear={true}
+            
             maxTagTextLength={10}
-            style={{ minWidth: 173, marginTop: 16 }}
+            style={{ minWidth: 173, marginTop: 16, paddingLeft: 16 }}
             value={selectedOrganization}
             suffixIcon={<FileTextOutlined />}
             onChange={(v) => {

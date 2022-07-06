@@ -462,6 +462,7 @@
   "define.resourceAccount.sameKeyError": "以下资源账号存在相同的key，请重新选择",
   "define.resourceAccount.title": "资源账号",
   "define.resourceQuery": "资源查询",
+  "define.page.platform_overview.title": "平台概览",
   "define.scan.status.failed": "失败",
   "define.scan.status.passed": "通过",
   "define.scan.status.suppressed": "屏蔽",
