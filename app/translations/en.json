@@ -303,6 +303,7 @@
   "define.page.toExchange": "Navigate to Exchange",
   "define.page.toHelpDoc": "View help-doc",
   "define.page.toSysStatus": "View system state",
+  "define.page.toPlatformDashboard": "View platform statistics",
   "define.page.NotFound.subTitle": "Sorry, the page you visited does not exist",
   "define.page.noAccess.reLogin": "Login again",
   "define.page.noAccess.subTitle": "Sorry, you don't have permission to access the page at present. Please contact the administrator",

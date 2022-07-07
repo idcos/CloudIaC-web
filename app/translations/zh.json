@@ -303,6 +303,7 @@
   "define.page.toExchange": "访问Exchange",
   "define.page.toHelpDoc": "查看帮助文档",
   "define.page.toSysStatus": "查看系统状态",
+  "define.page.toPlatformDashboard": "查看平台概览",
   "define.page.NotFound.subTitle": "抱歉，您访问的页面不存在",
   "define.page.noAccess.reLogin": "重新登录",
   "define.page.noAccess.subTitle": "对不起，您目前无权限访问页面，请联系管理员",

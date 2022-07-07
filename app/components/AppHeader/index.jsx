@@ -281,7 +281,7 @@ const AppHeader = (props) => {
           </Tooltip>
           {userInfo.isAdmin && <Tooltip
             placement='bottomRight'
-            title={t('define.page.toSysStatus')} 
+            title={t('define.page.toPlatformDashboard')} 
             color='#08857C'
           >
             <span onClick={() => history.push('/platform/statistics')}><DashboardIcon/></span>
