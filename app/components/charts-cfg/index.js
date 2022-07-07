@@ -573,7 +573,8 @@ export const chartOptions = {
           label: {
             show: true,
             formatter: ' {b}：{d}%',
-            overflow: 'break'
+            overflow: 'break',
+            color: '#999'
           },
           labelLine: {
             smooth: true
@@ -610,6 +611,7 @@ export const chartOptions = {
           label: {
             show: true,
             formatter: ' {b}：{d}%',
+            color: '#999',
             overflow: 'break'
           },
           labelLine: {
@@ -647,7 +649,8 @@ export const chartOptions = {
           label: {
             show: true,
             formatter: ' {b}：{d}%',
-            overflow: 'break'
+            overflow: 'break',
+            color: '#999'
           },
           labelLine: {
             smooth: true
