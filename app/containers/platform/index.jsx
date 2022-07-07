@@ -36,26 +36,40 @@ const overview = ({ curOrg, orgs }) => {
   const [ data, setData ] = useState({});
   const [ loading, setLoading ] = useState(false);
   const [ total, setTotal ] = useState(0);
-  const [ page, setPage ] = useState({ pageNo: 1, pageSize: 20 });
+  const [ page, setPage ] = useState({ pageNo: 1, pageSize: 100 });
+  let savedCallback = useRef();
 
   // 是否还有更多数据未加载
   const hasMore = useMemo(() => {
     return !(total && list.length >= total);
   }, [ list, total ]);
 
-  // 当搜索条件变化时，清空数据重新搜索
   useEffect(() => {
-    setPage({
-      pageNo: 1,
-      pageSize: 20
-    });
-    setList([]);
-    const searchParams = {
-      pageNo: 1,
-      pageSize: 20
+    const s = setInterval(() => {
+      fetchList(page);
+    }, 10000);
+    return () => {
+      clearInterval(s);
     };
-    fetchList(searchParams);
-  }, [ ]);
+  }, []);
+
+  useEffect(() => {
+    fetchList(page);
+  }, []);
+
+  // 当搜索条件变化时，清空数据重新搜索
+  // useEffect(() => {
+  //   setPage({
+  //     pageNo: 1,
+  //     pageSize: 20
+  //   });
+  //   setList([]);
+  //   const searchParams = {
+  //     pageNo: 1,
+  //     pageSize: 20
+  //   };
+  //   fetchList(searchParams);
+  // }, [ ]);
 
   // 滚动时查询加页并合并列表数据
   const handleInfiniteOnLoad = () => {
@@ -80,15 +94,17 @@ const overview = ({ curOrg, orgs }) => {
         description: res.message
       });
     }
-    setList(preList => {
-      const followList = ((res.result || {}).list) || [];
-      return [
-        ...preList,
-        ...followList
-      ];
-    });
+    // setList(preList => {
+    //   const followList = ((res.result || {}).list) || [];
+    //   return [
+    //     ...preList,
+    //     ...followList
+    //   ];
+    // });
+    setList(((res.result || {}).list) || []);
     setTotal(((res.result || {}).total) || 0);
   };
+
   const onChangeSelectedOrg = (v) => {
     setSelectedOrganization(v);
   };
@@ -322,41 +338,40 @@ const overview = ({ curOrg, orgs }) => {
         </div>
       </div>
       <div className={styles.statistics_right} style={{ flex: "0 0 280px" }}>
-        <InfiniteScroll
+        {/* <InfiniteScroll
           initialLoad={false}
           pageStart={0}
           loadMore={handleInfiniteOnLoad}
           hasMore={!loading && hasMore}
           useWindow={false}
-        >
-          <List
-            header={false}
-            footer={false}
-            dataSource={list}
-            // eslint-disable-next-line react/jsx-no-duplicate-props
-            footer={
-              !hasMore ? <div className='no-more'>没有更多了</div> : null
-            }
-            renderItem={item => (
-              <List.Item className={styles.listbody}>
-                <div className={styles.dynamicTitle}>
-                  <span>{item.operatorName}</span>
-                  <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{item.actionName || '-'}<span>{item.objectName && '：'} {item.objectName}</span> </EllipsisText>
-                </div>
-                <div className={styles.orgInfo}><span>{moment(item.createdAt).format('MM-DD HH:mm:ss')}</span> <span>{item.orgName}</span> </div>
+        > */}
+        <List
+          header={false}
+          footer={false}
+          dataSource={list}
+          // eslint-disable-next-line react/jsx-no-duplicate-props
+          // footer={
+          //   !hasMore ? <div className='no-more'>没有更多了</div> : null
+          // }
+          renderItem={item => (
+            <List.Item className={styles.listbody}>
+              <div className={styles.dynamicTitle}>
+                <span>{item.operatorName}</span>
+                <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{item.actionName || '-'}<span>{item.objectName && '：'} {item.objectName}</span> </EllipsisText>
+              </div>
+              <div className={styles.orgInfo}><span>{moment(item.createdAt).format('MM-DD HH:mm:ss')}</span> <span>{item.orgName}</span> </div>
 
-              </List.Item>
-            )}
-          >
-            {loading && hasMore && (
+            </List.Item>
+          )}
+        >
+          {/* {loading && hasMore && (
               <div className='loadingMore'>
                 <Spin />
               </div>
-            )}
+            )} */}
+        </List>
 
-          </List>
-
-        </InfiniteScroll>
+        {/* </InfiniteScroll> */}
       </div>
     </div>
   );
