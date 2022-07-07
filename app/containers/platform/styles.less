@@ -1,4 +1,4 @@
-.overview {
+.statistics {
   display: flex;
   height: calc(100% - 50px);
 
@@ -8,7 +8,7 @@
     }
   }
 
-  .overview_left {
+  .statistics_left {
     padding-left: 24px;
     flex: 1;
     min-width: 0;
@@ -154,11 +154,17 @@
     }
   }
 
-  .overview_right {
+  .statistics_right {
     background-color: #F8F9FA;
     border-left: 1px solid rgba(234, 235, 236, 1);
     padding: 22px 20px 0 12px;
     overflow-y: auto;
+
+    :global {
+      .ant-list-split .ant-list-item {
+        border-bottom: none;
+      }
+    }
   }
 
   .statisticsCard {
@@ -260,12 +266,9 @@
     font-family: PingFangSC-Regular;
     margin-top: 8px;
   }
-  .listInfo {
-    :global {
-      .ant-list-split .ant-list-item {
-        border-bottom: none;
-      }
-    }
+
+  .loadingMore {
+    text-align: center;
   }
 
 }

@@ -25,8 +25,8 @@ export const getProviderActive = (orgIds) => {
   return getWithArgs('/api/v1/platform/stat/resource/active', { orgIds }, {});
 };
 // 获取活动日志
-export const getoPerationLog = (orgIds) => {
-  return getWithArgs('/api/v1/platform/operation/log', { orgIds }, {});
+export const getoPerationLog = (params) => {
+  return getWithArgs('/api/v1/platform/operation/log', { ...params }, {});
 };
 
 

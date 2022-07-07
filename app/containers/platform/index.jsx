@@ -1,18 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Select, Row, Col, Empty, List, Typography } from 'antd';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { Select, Row, Col, Empty, List, notification, Spin } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
-import sortBy from 'lodash/sortBy';
-import reduce from 'lodash/reduce';
+import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash/isEmpty';
 import { chartUtils } from 'components/charts-cfg';
 import classNames from 'classnames';
 import { getStat, getProviderEnv, getProviderResource, getProviderType, getProviderWeek, getProviderActive, getoPerationLog } from 'services/platform';
-import { useRequest } from 'ahooks';
-import { requestWrapper } from 'utils/request';
 import { t } from 'utils/i18n';
 import { connect } from 'react-redux';
 import styles from './styles.less';
-import { ENV_STATUS } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
 import moment from 'moment';
 
@@ -33,16 +29,68 @@ const overview = ({ curOrg, orgs }) => {
   const platform_prvider_resource_type_hold = useRef();
   const platform_resource_change_trend = useRef();
   const platform_number_of_active_resources = useRef();
-  const [ logData, setLogData ] = useState([]);
-  
+
+  const [ list, setList ] = useState([]);
   const [ selectedOrganization, setSelectedOrganization ] = useState([]);
-  const [ statisticsCount, setStatisticsCount ] = useState(0);
   const [ fetchCount, setFetchCount ] = useState(0);
   const [ data, setData ] = useState({});
+  const [ loading, setLoading ] = useState(false);
+  const [ total, setTotal ] = useState(0);
+  const [ page, setPage ] = useState({ pageNo: 1, pageSize: 20 });
 
+  // 是否还有更多数据未加载
+  const hasMore = useMemo(() => {
+    return !(total && list.length >= total);
+  }, [ list, total ]);
+
+  // 当搜索条件变化时，清空数据重新搜索
+  useEffect(() => {
+    setPage({
+      pageNo: 1,
+      pageSize: 20
+    });
+    setList([]);
+    const searchParams = {
+      pageNo: 1,
+      pageSize: 20
+    };
+    fetchList(searchParams);
+  }, [ ]);
+
+  // 滚动时查询加页并合并列表数据
+  const handleInfiniteOnLoad = () => {
+    if (!hasMore || loading) {
+      return;
+    }
+    const newPage = { pageSize: 20, pageNo: page.pageNo + 1 };
+    setPage(newPage);
+    const searchParams = {
+      ...newPage
+    };
+    fetchList(searchParams);
+  };
+  // 查询数据
+  const fetchList = async (searchParams) => {
+    setLoading(true);
+    const res = await getoPerationLog(searchParams);
+    setLoading(false);
+    if (res.code !== 200) {
+      return notification.error({ 
+        message: '获取失败',
+        description: res.message
+      });
+    }
+    setList(preList => {
+      const followList = ((res.result || {}).list) || [];
+      return [
+        ...preList,
+        ...followList
+      ];
+    });
+    setTotal(((res.result || {}).total) || 0);
+  };
   const onChangeSelectedOrg = (v) => {
     setSelectedOrganization(v);
-    setStatisticsCount(preValue => preValue + 1);
   };
 
   let CHART = useRef([
@@ -96,22 +144,22 @@ const overview = ({ curOrg, orgs }) => {
     };
   }, []);
 
-  const getLog = async() => {
-    let res = await getoPerationLog();
-    setLogData(res.result || []);
-  };
+  // const getLog = async() => {
+  //   let res = await getoPerationLog();
+  //   setList(res.result || []);
+  // };
 
-  useEffect(() => {
-    getLog();
-  }, []);
+  // useEffect(() => {
+  //   getLog();
+  // }, []);
 
   const OBJ_TYPE = {
     user: { login: "登陆平台" }
   };
 
   return (
-    <div className={styles.overview}>
-      <div className={styles.overview_left}>
+    <div className={styles.statistics}>
+      <div className={styles.statistics_left}>
         <div className={styles.select}>
           {t('define.page.platform_overview.title')}
           <Select
@@ -274,27 +322,42 @@ const overview = ({ curOrg, orgs }) => {
           </Row>
         </div>
       </div>
-      <div className={styles.overview_right} style={{ flex: "0 0 280px" }}>
-        <div className={styles.tableWrapper}>
-          {/* <h2>{t('define.page.overview.dynamic')}</h2> */}
-          <div className={styles.listInfo}>
-            <List
-              header={false}
-              footer={false}
-              dataSource={logData}
-              renderItem={item => (
-                <List.Item className={styles.listbody}>
-                  <div className={styles.dynamicTitle}>
-                    <span>{item.operatorName}: </span>
-                    <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{OBJ_TYPE[item.objectType][item.action] || '-'}</EllipsisText>
-                  </div>
-                  <div className={styles.orgInfo}><span>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span> <span>{item.objectName}</span> </div>
+      <div className={styles.statistics_right} style={{ flex: "0 0 280px" }}>
+        <InfiniteScroll
+          initialLoad={false}
+          pageStart={0}
+          loadMore={handleInfiniteOnLoad}
+          hasMore={!loading && hasMore}
+          useWindow={false}
+        >
+          <List
+            header={false}
+            footer={false}
+            dataSource={list}
+            // eslint-disable-next-line react/jsx-no-duplicate-props
+            footer={
+              !hasMore ? <div className='no-more'>没有更多了</div> : null
+            }
+            renderItem={item => (
+              <List.Item className={styles.listbody}>
+                <div className={styles.dynamicTitle}>
+                  <span>{item.operatorName}: </span>
+                  <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{OBJ_TYPE[item.objectType][item.action] || '-'}</EllipsisText>
+                </div>
+                <div className={styles.orgInfo}><span>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span> <span>{item.objectName}</span> </div>
 
-                </List.Item>
-              )}
-            />
-          </div>
-        </div>
+              </List.Item>
+            )}
+          >
+            {loading && hasMore && (
+              <div className='loadingMore'>
+                <Spin />
+              </div>
+            )}
+
+          </List>
+
+        </InfiniteScroll>
       </div>
     </div>
   );
