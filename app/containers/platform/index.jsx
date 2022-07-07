@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Select, Row, Col, Empty, List, notification, Spin } from 'antd';
+import { Select, Row, Col, Empty, List, notification, Spin, Space, Card } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash/isEmpty';
@@ -161,7 +161,7 @@ const overview = ({ curOrg, orgs }) => {
     <div className={styles.statistics}>
       <div className={styles.statistics_left}>
         <div className={styles.select}>
-          {t('define.page.platform_overview.title')}
+          <span className={styles.platformTitle}>{t('define.page.platform_overview.title')}</span>
           <Select
             placeholder={t('define.page.selectOrganization.title')}
             mode='multiple'
@@ -183,8 +183,8 @@ const overview = ({ curOrg, orgs }) => {
           >
           </Select>
         </div>
-        <div>
-          <Row style={{ padding: '13.5px 10.5px', justifyContent: 'space-between' }} gutter={[ 21, 27 ]}>
+        <div style={{ width: '100%' }}>
+          <div className={styles.listStyle} >
             {
               Object.keys(data.stat || {}).map(item => {
                 return (
@@ -205,8 +205,8 @@ const overview = ({ curOrg, orgs }) => {
                 );
               })
             }
-          </Row>
-          <Row gutter={[ 21, 27 ]}>
+          </div>
+          <Row gutter={[ 24, 24 ]}>
             <Col span={8}>
               <div className={styles.env_state}>
                 {/* <h3>{t('define.charts.platform_prvider_env_count_hold')}</h3> */}
@@ -236,7 +236,6 @@ const overview = ({ curOrg, orgs }) => {
             </Col>
             <Col span={8}>
               <div className={styles.env_state}>
-                {/* <h3>{t('define.charts.platform_prvider_resource_count_hold')}</h3> */}
                 <div className={classNames(styles.content)}>
                   <div>
                     <span className={styles.content_title}>{t('define.charts.platform_prvider_resource_count_hold')}</span>
@@ -290,9 +289,9 @@ const overview = ({ curOrg, orgs }) => {
               </div>
             </Col>
           </Row>
-          <Row gutter={[ 21, 27 ]}>
+          <Row gutter={[ 24, 24 ]}>
             <Col span={12}>
-              <div className={styles.pro_resource}>
+              <div className={styles.env_state}>
                 <div className={classNames(styles.content)}>
                   <span className={styles.content_title} style={{ marginLeft: 20 }}>{t('define.page.platform_resource_change_trend')}</span>
                   <div style={{ width: '100%', height: "100%" }}>
@@ -306,7 +305,7 @@ const overview = ({ curOrg, orgs }) => {
               </div>
             </Col>
             <Col span={12}>
-              <div className={styles.resource_tendency}>
+              <div className={styles.env_state}>
                 <div className={classNames(styles.content)}>
                   <span className={styles.content_title} style={{ marginLeft: 20 }}>{t('define.page.platform_number_of_active_resources')}</span>
                   <div style={{ width: '100%', height: "100%" }}>
@@ -341,10 +340,10 @@ const overview = ({ curOrg, orgs }) => {
             renderItem={item => (
               <List.Item className={styles.listbody}>
                 <div className={styles.dynamicTitle}>
-                  <span>{item.operatorName}: </span>
-                  <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{OBJ_TYPE[item.objectType][item.action] || '-'}</EllipsisText>
+                  <span>{item.operatorName}</span>
+                  <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{item.actionName || '-'}<span>{item.objectName && '：'} {item.objectName}</span> </EllipsisText>
                 </div>
-                <div className={styles.orgInfo}><span>{moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span> <span>{item.objectName}</span> </div>
+                <div className={styles.orgInfo}><span>{moment(item.createdAt).format('MM-DD HH:mm:ss')}</span> <span>{item.orgName}</span> </div>
 
               </List.Item>
             )}
