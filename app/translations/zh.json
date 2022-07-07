@@ -250,7 +250,7 @@
   "define.loginPage.login": "登录",
   "define.loginPage.password": "密码",
   "define.loginPage.password.placeholder": "请输入登录密码",
-  "define.loginPage.password.registerForFree": "免费注册",
+  "define.loginPage.password.registerForFree": "注册新账号",
   "define.loginPage.password.findPassword": "忘记密码",
   "define.logout": "退出",
   "define.message.copyFail": "复制失败",

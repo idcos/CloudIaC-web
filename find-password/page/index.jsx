@@ -143,12 +143,8 @@ export default () => {
     window.location.href = redirectToUrl;
   };
 
-  const redirectToPage = () => {
-    if (callbackUrl) {
-      window.location.href = decodeURIComponent(callbackUrl);
-    } else {
-      redirectToIndex();
-    }
+  const redirectToOfficialWebsite = () => {
+    window.location.href = "https://www.cloudiac.org";
   };
 
   const redirectToIndex = () => {
@@ -262,7 +258,7 @@ export default () => {
       <div className='center-container'>
         <div className='center-card'>
           <div className='header-container'>
-            <div className='logo'>
+            <div className='logo' onClick={redirectToOfficialWebsite}>
               <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
             </div>
           </div>

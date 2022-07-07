@@ -117,12 +117,16 @@ export default () => {
     window.location.href = `/find-password/${search}`;
   };
 
+  const redirectToOfficialWebsite = () => {
+    window.location.href = "https://www.cloudiac.org";
+  };
+
   return (
     <div className={styles.login}>
       <div className='center-container'>
         <div className='center-card'>
           <div className='header-container'>
-            <div className='logo'>
+            <div className='logo' onClick={redirectToOfficialWebsite}>
               <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
             </div>
           </div>

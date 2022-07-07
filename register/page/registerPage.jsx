@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form, Input, Button, notification, Row, Col, Typography } from 'antd';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import queryString from 'query-string';
 import { LangIcon } from 'components/iconfont';
 import { t, getLanguage, setLanguage } from 'utils/i18n';
@@ -71,7 +72,7 @@ export default () => {
       setTimeout(() => {
         redirectToLogin();
       }, 1500);
-    } 
+    }
   };
 
   const redirectToLogin = () => {
@@ -79,35 +80,13 @@ export default () => {
     window.location.href = `/login${search}`;
   };
 
+  const redirectToOfficialWebsite = () => {
+    window.location.href = "https://www.cloudiac.org";
+  };
+
   return (
     <Row wrap={false} className={styles.register}>
-      <Col span={14} className='left'>
-        <div className='logo'>
-          <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
-        </div>
-        <div className='content'>
-          <div className='title'>
-            <div>CloudlaC</div>
-            <div>基础设施即代码平台</div>
-          </div>
-          <div className='describe'>引领云原生运维</div>
-        </div>
-        <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
-      </Col>
-      <Col span={10} className='right'>
-        {language === 'zh' ? (
-          <div className='change-language'>
-            <LangIcon className='lang-icon' />
-            <span>产品使用语言</span> 
-            <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
-          </div>
-        ) : (
-          <div className='change-language'>
-            <LangIcon className='lang-icon' />
-            <span>View this page in</span>
-            <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
-          </div>
-        )}
+      <Col span={10} className='left'>
         <div className='registerFormWrapper'>
           <div className='title'>{t('define.registerPage.register')}</div>
           <Form
@@ -128,10 +107,10 @@ export default () => {
                 name='email'
                 validateTrigger={'onBlur'}
                 rules={[
-                  { 
+                  {
                     validator: (rules, value, callback) => {
-                      handleCheckEmail(rules, value, callback); 
-                    } 
+                      handleCheckEmail(rules, value, callback);
+                    }
                   }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
@@ -150,14 +129,14 @@ export default () => {
                 }
                 name='name'
                 rules={[
-                  { required: true, message: t('define.registerPage.name.placeholder') } 
+                  { required: true, message: t('define.registerPage.name.placeholder') }
                 ]}
                 getValueFromEvent={(e) => e.target.value.trim()}
               >
                 <Input placeholder={t('define.registerPage.name.placeholder')} />
               </Form.Item>
             </div>
-          
+
             <Form.Item
               className='format-form-item'
               label={t('define.registerPage.password')}
@@ -171,7 +150,7 @@ export default () => {
             >
               <Input.Password placeholder={t('define.registerPage.password.placeholder')} />
             </Form.Item>
-            <Form.Item {...tailLayout} style={{ paddingTop: 8, marginBottom: 0 }}>
+            <Form.Item {...tailLayout} style={{ paddingTop: 36, marginBottom: 0 }}>
               <Button style={{ height: 36 }} block={true} type='primary' htmlType='submit'>
                 {t('define.registerPage.register')}
               </Button>
@@ -179,7 +158,42 @@ export default () => {
           </Form>
           <div className='return-login' onClick={redirectToLogin}>{t('define.registerPage.returnToLogin')}</div>
         </div>
+        {language === 'zh' ? (
+          <div className='change-language'>
+            <LangIcon className='lang-icon' />
+            <span>产品使用语言</span>
+            <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
+          </div>
+        ) : (
+          <div className='change-language'>
+            <LangIcon className='lang-icon' />
+            <span>View this page in</span>
+            <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
+          </div>
+        )}
       </Col>
+      <Col span={14} className='right'>
+        <div className='logo'>
+          <img src='/assets/logo/iac-logo.svg' alt='logo'/>
+        </div>
+        <div className='content'>
+          <div>$0 per month</div>
+          <div>Unlimited Number of Users</div>
+          <div>Unlimited Number of Projects</div>
+          <div>Unlimited Access to Registry in mainland</div>
+          <div>Up to 5 Organizations</div>
+          <div>Commnity Support</div>
+          <div>Fully Integated CI/CD</div>
+          <div>99.9% Guaranteed Uptime</div>
+          <div>Platform Security</div>
+          <div>Cloud Flexibility</div>
+        </div>
+        <div className='action'>
+          <Button type='primary' onClick={redirectToOfficialWebsite}>了解更多<ArrowRightOutlined /></Button>
+        </div>
+        <div className='foot'>Copyright © 2022 杭州云霁科技有限公司</div>
+      </Col>
+
     </Row>
   );
 };
