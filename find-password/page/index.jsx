@@ -195,7 +195,7 @@ export default () => {
         </div>
         <div className='bottom-actions-container'>
           <Button onClick={redirectToLogin} style={{ width: '100%' }}>
-            {t('define.action.cancel')}
+            {t('define.findPassword.sendEmail.back')}
           </Button>
         </div>
       </>;
