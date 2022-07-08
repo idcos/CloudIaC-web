@@ -253,6 +253,13 @@ export default () => {
     }
   };
 
+  const renderTitle = () => {
+    if (currentStep === 'resetPassword') {
+      return <div className='title-small-margin'>{t("define.findPassword.resetPassword")}</div>;
+    }
+    return <div className='title'>{t("define.findPassword")}</div>;
+  };
+
   return (
     <div className={styles.login}>
       <div className='center-container'>
@@ -263,7 +270,7 @@ export default () => {
             </div>
           </div>
           <div className='loginFormWrapper'>
-            {currentStep !== 'resetPassword' && <div className='title'>{t("define.findPassword")}</div>}
+            {renderTitle()}
             <Form {...layout} name='basic' className='loginForm' form={form}>
               {renderFormItems()}
             </Form>
