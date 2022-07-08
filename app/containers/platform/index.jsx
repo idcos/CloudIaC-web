@@ -357,7 +357,7 @@ const overview = ({ curOrg, orgs }) => {
             <List.Item className={styles.listbody}>
               <div className={styles.dynamicTitle}>
                 <span>{item.operatorName}</span>
-                <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{item.actionName || '-'}<span>{item.objectName && '：'} {item.objectName}</span> </EllipsisText>
+                <EllipsisText style={{ maxWidth: 200, paddingLeft: 8 }}>{`${item.actionName || '-'}${item.objectName && '：'} ${item.objectName} `}</EllipsisText>
               </div>
               <div className={styles.orgInfo}><span>{moment(item.createdAt).format('MM-DD HH:mm:ss')}</span> <span>{item.orgName}</span> </div>
 
