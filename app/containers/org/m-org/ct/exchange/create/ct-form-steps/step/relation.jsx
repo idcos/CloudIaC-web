@@ -26,7 +26,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
   useEffect(() => {
     const defaultValues = {
       ...ctData[type],
-      projectId: [related_project]
+      projectId: related_project ? [related_project] : []
     };
     if (defaultValues) {
       form.setFieldsValue(defaultValues);
@@ -59,7 +59,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
     onFinish: async (index) => {
       const values = await form.validateFields();
       stepHelper.updateData({
-        type, 
+        type,
         data: values
       });
       stepHelper.go(index);
@@ -68,7 +68,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
 
   const onFinish = (values) => {
     stepHelper.updateData({
-      type, 
+      type,
       data: values,
       isSubmit: true
     });
@@ -123,8 +123,8 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
     >
       <div>{
         projectList.length === 0 ? <div>
-          <Empty 
-            image={Empty.PRESENTED_IMAGE_SIMPLE} 
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
             description={<>{t('define.noData')}，<a onClick={togglePjtModalVsible}>{t('define.project.create')}</a></>}
           />
           {
@@ -147,7 +147,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
             </Checkbox>
           </Row>
           <Divider style={{ margin: '8px 0' }} />
-          <Form.Item 
+          <Form.Item
             name='projectId'
           >
             <Checkbox.Group onChange={onChange} initialValues={[related_project]}>
@@ -158,7 +158,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
           </Form.Item>
         </div>
       }</div>
-      
+
       <div className='btn-wrapper'>
         <Space size={24}>
           {
