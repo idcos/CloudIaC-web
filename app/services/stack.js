@@ -13,7 +13,7 @@ const stackAPI = {
         if (!url) {
           return reject(new Error(`url:'${url}' invalid`));
         }
-        getWithArgs(`${url}/api/v1/stacks/search`, restParams, {}).then((res) => {
+        getWithArgs(`${url}/api/v1/stacks/search`, restParams, { needDefaultHeader: false }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -35,7 +35,7 @@ const stackAPI = {
         if (!url) {
           return reject(new Error(`url:'${url}' invalid`));
         }
-        getWithArgs(`${url}/api/v1/stacks/${id}/detail`).then((res) => {
+        getWithArgs(`${url}/api/v1/stacks/${id}/detail`, undefined, { needDefaultHeader: false }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -57,7 +57,7 @@ const stackAPI = {
         if (!url) {
           return reject(new Error(`url:'${url}' invalid`));
         }
-        getWithArgs(`${url}/api/v1/stacks/${id}/versions`).then((res) => {
+        getWithArgs(`${url}/api/v1/stacks/${id}/versions`, undefined, { needDefaultHeader: false }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
@@ -79,7 +79,7 @@ const stackAPI = {
         if (!url) {
           return reject(new Error(`url:'${url}' invalid`));
         }
-        getWithArgs(`${url}/api/v1/stacks/${id}/readme`).then((res) => {
+        getWithArgs(`${url}/api/v1/stacks/${id}/readme`, undefined, { needDefaultHeader: false }).then((res) => {
           resolve(res);
         }).catch((err) => {
           reject(err);
