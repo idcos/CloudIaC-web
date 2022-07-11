@@ -16,7 +16,7 @@ function parseCommon(res) {
 }
 
 async function xFetch(url, options) {
-  const opts = { isEncode: true, ...options, credentials: 'include' };
+  const opts = { isEncode: true, needDefaultHeader: true, ...options, credentials: 'include' };
   const token = localStorage['accessToken'];
   const { orgId } = getMatchParams();
   const language = getLanguage();
@@ -24,13 +24,24 @@ async function xFetch(url, options) {
     zh: 'zh-CN',
     en: 'en-US'
   };
-  opts.headers = {
+  const defaultHeader = {
     'Authorization': token,
-    ...opts.headers,
     'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
-    'IaC-Project-Id': opts['IaC-Project-Id'] || '',
+    'IaC-Project-Id': opts['IaC-Project-Id'] || ''
+  };
+  // 默认使用defaultHeader请求头
+  if (opts.needDefaultHeader) {
+    opts.headers = {
+      ...defaultHeader,
+      ...opts.headers
+    };
+  }
+
+  opts.headers = {
+    ...opts.headers,
     'Accept-Language': acceptLanguageMap[language] || 'zh-CN'
   };
+
   if (opts.isEncode && !opts.isEncodeParams) {
     url = encodeURI(url);
   }

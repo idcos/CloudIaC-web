@@ -243,6 +243,7 @@
   "define.findPassword.sendEmail.message_1": "Modify the password link to your mailbox,",
   "define.findPassword.sendEmail.message_2": "Please log in to the mailbox and modify the password",
   "define.findPassword.sendEmail.back": "Back",
+  "define.findPassword.resetPassword": "Reset password",
   "define.findPassword.resetPassword.confirmPassword": "Confirm password",
   "define.findPassword.resetPassword.confirmPassword.placeholder": "Please enter the password again",
   "define.loginPage.email": "Email",
