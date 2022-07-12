@@ -528,7 +528,7 @@
   "define.task.search.taskType": "请选择任务类型",
   "define.task.search.user": "请输入执行人姓名",
   "define.terraformVersion": "Terraform版本",
-  "define.terraformVersion.tooltip": "当选择“自动检测”时，CloudIaC 会解析工作目录下的 versions.tf 文件，并根据其中的版本约束选择最佳的 terraform 版本，若匹配失败则默认使用 v0.14.0。",
+  "define.terraformVersion.tooltip": "当选择“自动匹配”时，CloudIaC 会解析工作目录下的 versions.tf 文件，并根据其中的版本约束选择最佳的 terraform 版本，若匹配失败则默认使用 v0.14.0。",
   "define.thisMonth": "当月",
   "define.time.days": "天",
   "define.time.hours": "时",

@@ -528,7 +528,7 @@
   "define.task.search.taskType": "Please select task type",
   "define.task.search.user": "Please enter the name of the executor",
   "define.terraformVersion": "Terraform version",
-  "define.terraformVersion.tooltip": "When \"auto detect\" is selected, cloudiac will resolve versions in the working directory TF file, and select the best terrain version according to the version constraints. If the matching fails, v0.0 is used by default 14.0。",
+  "define.terraformVersion.tooltip": "When \"automatic matching\" is selected, cloudiac will resolve versions in the working directory TF file, and select the best terrain version according to the version constraints. If the matching fails, v0.0 is used by default 14.0。",
   "define.thisMonth": "This month",
   "define.time.days": " days ",
   "define.time.hours": " hours ",
