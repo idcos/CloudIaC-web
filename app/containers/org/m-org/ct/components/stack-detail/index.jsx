@@ -38,6 +38,7 @@ export default ({
     description,
     exchangeRepoPath,
     id,
+    stackKey,
     logo,
     name,
     title,
@@ -109,7 +110,7 @@ export default ({
                   <div className='info'>
                     <CodeOutlined className='label' />
                     <span className='label'>{t('define.stack.id')}</span>
-                    <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{id}</a>
+                    <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{stackKey}</a>
                   </div>
                 </Col>
               </Row>
