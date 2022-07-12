@@ -262,8 +262,8 @@ const CTList = ({ match = {} }) => {
                 changeQuery({ q });
               }}
             />
-            <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
-            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button>
+            {/* <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
+            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button> */}
           </Space>
         </Space>
         <Table
