@@ -1,6 +1,6 @@
 {
   "name": "cloudiac-web",
-  "version": "1.0.0",
+  "version": "1.0.0-rc4",
   "git_commit": "GIT_COMMITID",
   "git_branch": "GIT_BRANCH"
 }
