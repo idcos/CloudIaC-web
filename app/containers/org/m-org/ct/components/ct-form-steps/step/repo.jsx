@@ -42,14 +42,15 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
     run: fetchAutoMatchTfVersion,
     mutate: mutateAutoMatchTfVersion
   } = useRequest(
-    ({ vcsId, repoRevision, repoId }) => requestWrapper(
-      tplAPI.autotfversion.bind(null, { orgId, repoId, vcsBranch: repoRevision, vcsId })
+    ({ vcsId, repoRevision, repoId, workdir }) => requestWrapper(
+      tplAPI.autotfversion.bind(null, { orgId, repoId, vcsBranch: repoRevision, vcsId, workdir })
     ),
     {
-      manual: true
+      manual: true,
+      debounceInterval: 300
     }
   );
-  
+
   useEffect(() => {
     fetchVcsList();
   }, []);
@@ -95,7 +96,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
     mutate: setRepos
   } = useRequest(
     ({ vcsId, q }) => requestWrapper(
-      vcsAPI.listRepo.bind(null, { 
+      vcsAPI.listRepo.bind(null, {
         orgId,
         vcsId,
         currentPage: 1,
@@ -215,7 +216,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
         tfVersion: undefined
       });
     }
-    if (changedValues.repoRevision) {
+    if (changedValues.repoRevision || changedValues.workdir) {
       mutateAutoMatchTfVersion(undefined);
       fetchAutoMatchTfVersion(allValues);
       form.setFieldsValue({
@@ -229,7 +230,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
       const values = await form.validateFields();
       await onlineCheckForm(values);
       stepHelper.updateData({
-        type, 
+        type,
         data: { ...values, autoMatchTfVersion }
       });
       stepHelper.go(index);
@@ -239,7 +240,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
   const onFinish = async (values) => {
     await onlineCheckForm(values);
     stepHelper.updateData({
-      type, 
+      type,
       data: { ...values, autoMatchTfVersion },
       isSubmit: opType === 'edit'
     });
@@ -273,7 +274,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
           }
         ]}
       >
-        <Select 
+        <Select
           placeholder={t('define.form.select.placeholder')}
           showSearch={true}
           optionFilterProp='children'
@@ -313,7 +314,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
           }
         ]}
       >
-        <Select 
+        <Select
           showSearch={true}
           filterOption={false}
           onDropdownVisibleChange={(open) => open && onSearchRepos()}
@@ -351,7 +352,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
           }
         ]}
       >
-        <Select 
+        <Select
           showSearch={true}
           optionFilterProp='children'
           placeholder={t('define.form.select.placeholder')}
@@ -364,22 +365,26 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
           </OptGroup>
         </Select>
       </Form.Item>
-      <Form.Item label={t('define.workdir')} wrapperCol={{ span: 18 }}>
-        <Row>
-          <Col flex='14'>
-            <Form.Item
-              noStyle={true}
-              name='workdir'
-            >
-              <Input placeholder={t('define.form.input.placeholder')} />
-            </Form.Item>
-          </Col>
-          <Col flex='4'>
-            <Tooltip title={t('define.workdir.toolTip')}>
-              <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
-            </Tooltip>
-          </Col>
-        </Row>
+      <Form.Item label={t('define.workdir')} wrapperCol={{ span: 18 }} shouldUpdate={true}>
+        {(form) => {
+          return (
+            <Row>
+              <Col flex='14'>
+                <Form.Item
+                  noStyle={true}
+                  name='workdir'
+                >
+                  <Input placeholder={t('define.form.input.placeholder')} disabled={!form.getFieldValue('repoRevision')}/>
+                </Form.Item>
+              </Col>
+              <Col flex='4'>
+                <Tooltip title={t('define.workdir.toolTip')}>
+                  <QuestionCircleOutlined style={{ fontSize: 16, marginLeft: 12, marginTop: 8, color: '#898989' }}/>
+                </Tooltip>
+              </Col>
+            </Row>
+          );
+        }}
       </Form.Item>
       <Form.Item label={t('define.terraformVersion')} required={true} wrapperCol={{ span: 18 }}>
         <Row>
