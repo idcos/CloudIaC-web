@@ -37,12 +37,14 @@ export default ({
     categoryNames,
     description,
     exchangeRepoPath,
+    stackKey,
     id,
     logo,
     name,
     title,
     namespace
   } = detail;
+  console.log(detail, 'detail')
   const genLabel = (item) => {
     if (item.verified === true) {
       return <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -109,7 +111,7 @@ export default ({
                   <div className='info'>
                     <CodeOutlined className='label' />
                     <span className='label'>{t('define.stack.id')}</span>
-                    <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{id}</a>
+                    <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{stackKey}</a>
                   </div>
                 </Col>
               </Row>
