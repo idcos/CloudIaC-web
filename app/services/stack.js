@@ -6,7 +6,7 @@ const stackAPI = {
     return new Promise((resolve, reject) => {
       sysAPI.getRegistryAddr().then((res) => {
         const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrCfg || registryAddrDB || '';
+        let url = registryAddrDB || registryAddrCfg || '';
         if (url.endsWith('/')) {
           url = url.slice(0, -1);
         }
@@ -28,7 +28,7 @@ const stackAPI = {
     return new Promise((resolve, reject) => {
       sysAPI.getRegistryAddr().then((res) => {
         const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrCfg || registryAddrDB || '';
+        let url = registryAddrDB || registryAddrCfg || '';
         if (url.endsWith('/')) {
           url = url.slice(0, -1);
         }
@@ -50,7 +50,7 @@ const stackAPI = {
     return new Promise((resolve, reject) => {
       sysAPI.getRegistryAddr().then((res) => {
         const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrCfg || registryAddrDB || '';
+        let url = registryAddrDB || registryAddrCfg || '';
         if (url.endsWith('/')) {
           url = url.slice(0, -1);
         }
@@ -72,7 +72,7 @@ const stackAPI = {
     return new Promise((resolve, reject) => {
       sysAPI.getRegistryAddr().then((res) => {
         const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrCfg || registryAddrDB || '';
+        let url = registryAddrDB || registryAddrCfg || '';
         if (url.endsWith('/')) {
           url = url.slice(0, -1);
         }
