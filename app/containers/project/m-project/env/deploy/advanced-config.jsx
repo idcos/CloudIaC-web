@@ -22,8 +22,8 @@ const FL = {
 };
 const { Option } = Select;
 
-const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks }) => {
-  const { vcsId, repoId, repoRevision } = tplInfo;
+const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks, repoRevision }) => {
+  const { vcsId, repoId } = tplInfo;
   const { locked } = data;
   const [form] = Form.useForm();
   const { Panel } = Collapse;
@@ -52,20 +52,20 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
   useEffect(() => {
 
     if (!envId && tplInfo.isDemo) {
-      setFormValues({ 
+      setFormValues({
         ...tplInfo,
         ttl: "12h",
         type: 'timequantum',
-        autoApproval: true 
+        autoApproval: true
       });
       return;
     }
     if (envId && data.isDemo) {
-      setFormValues({ 
+      setFormValues({
         ...data,
         ttl: "12h",
         type: 'timequantum',
-        autoApproval: true 
+        autoApproval: true
       });
       return;
     }
@@ -137,14 +137,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
   const viewFile = (formName) => {
     const fileName = form.getFieldValue(formName);
     if (fileName) {
-      setFileView({ 
+      setFileView({
         title: fileName,
         visible: true
       });
       fetchFile(fileName);
     }
   };
-  
+
   const setFormValues = (data) => {
     if (!isEmpty(data.triggers)) {
       data.triggers.forEach((name) => {
@@ -251,7 +251,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
         title: `${t('define.action.open')}『${str}』`,
         content: `${t('define.action.open')}『${str}』${t('define.env.deploy.needAutoApproval.confirm.content.middle')}『${str}』${t('define.env.deploy.needAutoApproval.confirm.content.suffix')}`,
         cancelButtonProps: {
-          className: 'ant-btn-tertiary' 
+          className: 'ant-btn-tertiary'
         },
         onOk() {
           form.setFieldsValue({ autoApproval: true });
@@ -283,7 +283,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
         title: `${t('define.action.close')}『${t('define.autoApproval')}』`,
         content: `${t('define.env.deploy.autoApproval.confirm.content.prefix')}『${title}』${t('define.env.deploy.autoApproval.confirm.content.middle')}『${title}』${t('define.env.deploy.autoApproval.confirm.content.suffix')}`,
         cancelButtonProps: {
-          className: 'ant-btn-tertiary' 
+          className: 'ant-btn-tertiary'
         },
         onOk() {
           form.setFieldsValue({ autoRepairDrift: false, commit: false, type: 'infinite' });
@@ -302,9 +302,9 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
       form={form}
       {...FL}
     >
-      <Collapse 
-        expandIconPosition={'right'} 
-        activeKey={activeKey} 
+      <Collapse
+        expandIconPosition={'right'}
+        activeKey={activeKey}
         onChange={setActiveKey}
         style={{ marginBottom: 20 }}
       >
@@ -317,7 +317,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                 animated={false}
                 activeKey={panel}
                 onChange={(k) => {
-                  setPanel(k); 
+                  setPanel(k);
                 }}
               >
                 <Tabs.TabPane
@@ -346,8 +346,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                               label={
                                 <>
                                   {t('define.variable.tfVarsFile')}
-                                  <EyeOutlined 
-                                    style={{ cursor: 'pointer' }} 
+                                  <EyeOutlined
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => !noOption && viewFile('tfVarsFile')}
                                   />
                                 </>
@@ -355,8 +355,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                               name='tfVarsFile'
                             >
                               <Select
-                                getPopupContainer={triggerNode => triggerNode.parentNode} 
-                                allowClear={true} 
+                                getPopupContainer={triggerNode => triggerNode.parentNode}
+                                allowClear={true}
                                 placeholder={t('define.form.select.placeholder')}
                                 style={{ width: '100%' }}
                               >
@@ -388,14 +388,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                 <>
                                   {t('define.variable.playbook')}
                                   <EyeOutlined
-                                    style={{ cursor: 'pointer' }} 
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => !noOption && viewFile('playbook')}
                                   />
                                 </>
                               }
                               name='playbook'
                             >
-                              <Select 
+                              <Select
                                 allowClear={true}
                                 getPopupContainer={triggerNode => triggerNode.parentNode}
                                 placeholder={t('define.form.select.placeholder')}
@@ -426,14 +426,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                               if (value) {
                                 if (!keys.find((item) => (item.id === value))) {
                                   return Promise.reject(new Error(t('define.ssh.deleted')));
-                                }  
+                                }
                               }
                               return Promise.resolve();
                             }
                           }
                         ]}
                       >
-                        <Select 
+                        <Select
                           allowClear={true}
                           getPopupContainer={triggerNode => triggerNode.parentNode}
                           placeholder={t('define.form.select.placeholder')}
@@ -470,7 +470,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           }
                         ]}
                       >
-                        <Select 
+                        <Select
                           allowClear={true}
                           placeholder={t('define.form.select.placeholder')}
                           mode='multiple'
@@ -482,13 +482,13 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                       </Form.Item>
                     </Col>
                     <Col span={7}>
-                      <Form.Item 
+                      <Form.Item
                         style={{ marginBottom: 0 }}
                         label={t('define.env.field.lifeTime')}
                       >
                         <Row>
                           <Col span={8} className={styles.survivalTimeRight}>
-                            <Form.Item 
+                            <Form.Item
                               name='type'
                               initialValue={'infinite'}
                             >
@@ -498,7 +498,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                             </Form.Item>
                           </Col>
                           <Col span={16} className={styles.survivalTimeLeft}>
-                            <Form.Item 
+                            <Form.Item
                               noStyle={true}
                               shouldUpdate={true}
                             >
@@ -508,7 +508,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                   return <></>;
                                 }
                                 if (type === 'timequantum') {
-                                  return <Form.Item 
+                                  return <Form.Item
                                     name='ttl'
                                     noStyle={true}
                                     shouldUpdate={true}
@@ -519,7 +519,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                   </Form.Item>;
                                 }
                                 if (type === 'time') {
-                                  return <Form.Item 
+                                  return <Form.Item
                                     name='destroyAt'
                                     noStyle={true}
                                     shouldUpdate={true}
@@ -555,7 +555,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                     <Col span={7}>
                       <Form.Item>
                         <Space style={{ minWidth: 340 }}>
-                          <Form.Item 
+                          <Form.Item
                             name='retryAble'
                             valuePropName='checked'
                             initialValue={false}
@@ -564,7 +564,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                             <Checkbox disabled={locked}/>
                           </Form.Item>
                           <span>{t('define.env.field.retryDelay.prefix')}</span>
-                          <Form.Item 
+                          <Form.Item
                             name='retryDelay'
                             initialValue={0}
                             noStyle={true}
@@ -579,20 +579,20 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           >
                             <InputNumber disabled={locked} className='no-step' min={0} precision={0} style={{ width: 40 }} />
                           </Form.Item>
-                          <span>{t('define.frequency')}</span> 
+                          <span>{t('define.frequency')}</span>
                         </Space>
                       </Form.Item>
                     </Col>
                     <Col span={7}>
-                      <Form.Item 
+                      <Form.Item
                         name='autoApproval'
                         valuePropName='checked'
                         initialValue={false}
                       >
-                        <Checkbox 
-                          disabled={locked || (tplInfo.isDemo || data.isDemo)} 
+                        <Checkbox
+                          disabled={locked || (tplInfo.isDemo || data.isDemo)}
                           onChange={(e => autoApprovalClick(e.target.checked))}
-                        >{t('define.autoApproval')}</Checkbox> 
+                        >{t('define.autoApproval')}</Checkbox>
                       </Form.Item>
                     </Col>
                     <Col span={7}></Col>
@@ -606,26 +606,26 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                   <Row style={{ height: '100%', marginBottom: 24 }} justify='space-between'>
                     <Col span={7}>
                       <Form.Item shouldUpdate={true}>
-                        <Form.Item 
+                        <Form.Item
                           name='commit'
                           noStyle={true}
                           valuePropName='checked'
                           initialValue={false}
                         >
-                          <Checkbox disabled={locked} onChange={e => checkedChange(e.target.checked, t('define.env.field.triggers.commit'))}>{t('define.env.field.triggers.commit')}</Checkbox> 
+                          <Checkbox disabled={locked} onChange={e => checkedChange(e.target.checked, t('define.env.field.triggers.commit'))}>{t('define.env.field.triggers.commit')}</Checkbox>
                         </Form.Item>
                         <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
                     </Col>
                     <Col span={7}>
                       <Form.Item shouldUpdate={true}>
-                        <Form.Item 
+                        <Form.Item
                           name='prmr'
                           valuePropName='checked'
                           initialValue={false}
                           noStyle={true}
                         >
-                          <Checkbox disabled={locked}>{t('define.env.field.triggers.prmr')}</Checkbox> 
+                          <Checkbox disabled={locked}>{t('define.env.field.triggers.prmr')}</Checkbox>
                         </Form.Item>
                         <Tooltip title={t('define.env.field.triggers.tooltip')}><InfoCircleOutlined /></Tooltip>
                       </Form.Item>
@@ -666,7 +666,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                 labelCol={{ span: 6 }}
                                 wrapperCol={{ span: 16 }}
                               >
-                                <Select 
+                                <Select
                                   mode='multiple'
                                   optionFilterProp='label'
                                   showSearch={true}
@@ -684,7 +684,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox disabled={locked}>{t('define.stopOnViolation')}</Checkbox>                  
+                                <Checkbox disabled={locked}>{t('define.stopOnViolation')}</Checkbox>
                               </Form.Item>
                             </>
                           ) : null;
@@ -702,7 +702,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                       >
                         <Switch disabled={locked} />
                       </Form.Item>
-                      <Form.Item 
+                      <Form.Item
                         noStyle={true}
                         shouldUpdate={true}
                       >
@@ -710,15 +710,15 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           const openCronDrift = getFieldValue('openCronDrift');
                           return openCronDrift ? (
                             <>
-                              <Form.Item 
-                                label={t('define.env.field.cronDriftExpress')} 
-                                required={true} 
+                              <Form.Item
+                                label={t('define.env.field.cronDriftExpress')}
+                                required={true}
                                 labelCol={{ span: 6 }}
                                 wrapperCol={{ span: 18 }}
                               >
                                 <Row>
                                   <Col flex={16}>
-                                    <Form.Item 
+                                    <Form.Item
                                       noStyle={true}
                                       name='cronDriftExpress'
                                       rules={[
@@ -728,7 +728,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                         }
                                       ]}
                                     >
-                                      <Input disabled={locked} placeholder={t('define.env.field.cronDriftExpress.placeholder')} /> 
+                                      <Input disabled={locked} placeholder={t('define.env.field.cronDriftExpress.placeholder')} />
                                     </Form.Item>
                                   </Col>
                                   <Col flex={2}>
@@ -759,7 +759,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                 initialValue={false}
                                 className='ant-form-item-no-min-height'
                               >
-                                <Checkbox disabled={locked} onChange={e => checkedChange(e.target.checked, t('define.autoRepairDrift'))}>{t('define.autoRepairDrift')}</Checkbox>                  
+                                <Checkbox disabled={locked} onChange={e => checkedChange(e.target.checked, t('define.autoRepairDrift'))}>{t('define.autoRepairDrift')}</Checkbox>
                               </Form.Item>
                             </>
                           ) : null;
@@ -768,7 +768,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                     </Col>
                   </Row>
                 </Tabs.TabPane>
-              </Tabs>  
+              </Tabs>
             </div>
           </div>
         </Panel>

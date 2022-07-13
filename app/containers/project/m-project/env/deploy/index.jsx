@@ -22,7 +22,7 @@ const FL = {
 };
 const { Option, OptGroup } = Select;
 const defaultScope = 'env';
-  
+
 const Index = ({ match = {} }) => {
   const { orgId, projectId, envId, tplId } = match.params || {};
   const varRef = useRef();
@@ -40,7 +40,8 @@ const Index = ({ match = {} }) => {
   const [ tfvars, setTfvars ] = useState([]);
   const [ playbooks, setPlaybooks ] = useState([]);
   const [ fetchParams, setFetchParams ] = useState({});
-  
+  const [ repoRevision, setRepoRevision ] = useState('');
+
   useEffect(() => {
     fetchInfo();
     getVars();
@@ -70,6 +71,7 @@ const Index = ({ match = {} }) => {
       });
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
+      setRepoRevision(tplInfoRes.repoRevision || '');
       let fetchParams = { ...tplInfoRes, orgId, projectId, tplId, envId, objectType: 'env' };
       if (envId) {
         const infores = await envAPI.envsInfo({
@@ -102,16 +104,16 @@ const Index = ({ match = {} }) => {
   // 获取分支数据
   const fetchRepoBranch = async (fetchParams) => {
     const { vcsId, repoId } = fetchParams;
-    try { 
+    try {
       const res = await vcsAPI.listRepoBranch({
-        orgId, 
-        vcsId, 
+        orgId,
+        vcsId,
         repoId
       });
       if (res.code === 200) {
         setBranch(res.result || []);
       }
-      
+
       if (res.code != 200) {
         throw new Error(res.message);
       }
@@ -126,13 +128,13 @@ const Index = ({ match = {} }) => {
   // 获取标签数据
   const fetchRepoTag = async (fetchParams) => {
     const { vcsId, repoId } = fetchParams;
-    try { 
+    try {
       const res = await vcsAPI.listRepoTag({
-        orgId, 
-        vcsId, 
+        orgId,
+        vcsId,
         repoId
       });
-      
+
       if (res.code === 200) {
         setTag(res.result || []);
       }
@@ -149,7 +151,7 @@ const Index = ({ match = {} }) => {
 
   // 获取通道数据
   const fetchRunner = async () => {
-    try { 
+    try {
       const res = await sysAPI.listCTRunnerTag({
         orgId
       });
@@ -167,11 +169,11 @@ const Index = ({ match = {} }) => {
       });
     }
   };
-  
+
   // 获取密钥数据
   const fetchKeys = async (fetchParams) => {
     const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
-    try { 
+    try {
       const res = await keysAPI.list({
         orgId,
         pageSize: 0
@@ -265,9 +267,9 @@ const Index = ({ match = {} }) => {
       });
       const envInfo = res.result || {};
       if (envId) { // 重新部署环境，跳部署历史详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`);
       } else { // 创建部署环境，跳环境详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`); 
+        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`);
       }
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
@@ -288,7 +290,7 @@ const Index = ({ match = {} }) => {
   return (
     <Layout
       extraHeader={
-        <PageHeader 
+        <PageHeader
           title={
             <Space size='middle' align='center'>
               <span>{!!envId ? t('define.redeployment') : t('define.deployEnv')}</span>
@@ -297,8 +299,8 @@ const Index = ({ match = {} }) => {
                 <span style={{ color: '#57606A', fontSize: 12, fontWeight: 'normal' }}>{tplInfo.name}</span>
               </div>
             </Space>
-          } 
-          breadcrumb={true} 
+          }
+          breadcrumb={true}
         />
       }
     >
@@ -336,12 +338,13 @@ const Index = ({ match = {} }) => {
                   }
                 ]}
               >
-                <Select 
+                <Select
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   style={{ width: '100%' }}
                   onChange={(value) => {
                     changeVcsFetchParams({ repoRevision: value });
+                    setRepoRevision(value);
                   }}
                   disabled={info.locked}
                 >
@@ -359,7 +362,7 @@ const Index = ({ match = {} }) => {
                 label={t('define.workdir')}
                 name='workdir'
               >
-                <Input 
+                <Input
                   placeholder={t('define.form.input.placeholder')}
                   onBlur={(e) => {
                     changeVcsFetchParams({ workdir: e.target.value });
@@ -378,11 +381,12 @@ const Index = ({ match = {} }) => {
             tfvars={tfvars}
             playbooks={playbooks}
             tplInfo={tplInfo}
+            repoRevision={repoRevision}
           />
           <VariableForm
-            varRef={varRef} 
+            varRef={varRef}
             defaultScope={defaultScope}
-            defaultData={{ variables: vars }} 
+            defaultData={{ variables: vars }}
             fetchParams={fetchParams}
             canImportTerraformVar={true}
             defaultExpandCollapse={false}
