@@ -22,7 +22,8 @@ const FL = {
 };
 const { Option } = Select;
 
-const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks, repoRevision }) => {
+const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks, repoObj }) => {
+  const { repoRevision, workdir } = repoObj;
   const { vcsId, repoId } = tplInfo;
   const { locked } = data;
   const [form] = Form.useForm();
@@ -106,7 +107,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
 
   const { run: fetchFile } = useRequest(
     (fileName) => requestWrapper(
-      vcsAPI.file.bind(null, { orgId, vcsId, repoId, branch: repoRevision, fileName, workdir: tplInfo.workdir })
+      vcsAPI.file.bind(null, { orgId, vcsId, repoId, branch: repoRevision, fileName, workdir })
     ),
     {
       manual: true,

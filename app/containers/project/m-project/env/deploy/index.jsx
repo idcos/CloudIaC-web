@@ -40,7 +40,7 @@ const Index = ({ match = {} }) => {
   const [ tfvars, setTfvars ] = useState([]);
   const [ playbooks, setPlaybooks ] = useState([]);
   const [ fetchParams, setFetchParams ] = useState({});
-  const [ repoRevision, setRepoRevision ] = useState('');
+  const [ repoObj, setRepoObj ] = useState({});
 
   useEffect(() => {
     fetchInfo();
@@ -81,11 +81,19 @@ const Index = ({ match = {} }) => {
         setInfo(data);
         fetchParams.repoRevision = data.revision;
         fetchParams.workdir = data.workdir;
-        setRepoRevision(data.revision || '');
+        setRepoObj({
+          ...repoObj,
+          repoRevision: data.repoRevision || '',
+          workdir: data.workdir
+        });
       } else {
         const { repoRevision, workdir } = tplInfoRes;
         form.setFieldsValue({ revision: repoRevision || undefined, workdir });
-        setRepoRevision(tplInfoRes.repoRevision || '');
+        setRepoObj({
+          ...repoObj,
+          repoRevision: tplInfoRes.repoRevision || '',
+          workdir: tplInfoRes.workdir
+        });
       }
       setFetchParams(fetchParams);
       fetchTfvars(fetchParams);
@@ -345,7 +353,7 @@ const Index = ({ match = {} }) => {
                   style={{ width: '100%' }}
                   onChange={(value) => {
                     changeVcsFetchParams({ repoRevision: value });
-                    setRepoRevision(value);
+                    setRepoObj({ ... repoObj, repoRevision: value });
                   }}
                   disabled={info.locked}
                 >
@@ -367,6 +375,7 @@ const Index = ({ match = {} }) => {
                   placeholder={t('define.form.input.placeholder')}
                   onBlur={(e) => {
                     changeVcsFetchParams({ workdir: e.target.value });
+                    setRepoObj({ ... repoObj, workdir: e.target.value });
                   }}
                 />
               </Form.Item>
@@ -382,7 +391,7 @@ const Index = ({ match = {} }) => {
             tfvars={tfvars}
             playbooks={playbooks}
             tplInfo={tplInfo}
-            repoRevision={repoRevision}
+            repoObj={repoObj}
           />
           <VariableForm
             varRef={varRef}
