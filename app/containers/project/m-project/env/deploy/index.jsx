@@ -71,7 +71,6 @@ const Index = ({ match = {} }) => {
       });
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
-      setRepoRevision(tplInfoRes.repoRevision || '');
       let fetchParams = { ...tplInfoRes, orgId, projectId, tplId, envId, objectType: 'env' };
       if (envId) {
         const infores = await envAPI.envsInfo({
@@ -82,9 +81,11 @@ const Index = ({ match = {} }) => {
         setInfo(data);
         fetchParams.repoRevision = data.revision;
         fetchParams.workdir = data.workdir;
+        setRepoRevision(data.revision || '');
       } else {
         const { repoRevision, workdir } = tplInfoRes;
         form.setFieldsValue({ revision: repoRevision || undefined, workdir });
+        setRepoRevision(tplInfoRes.repoRevision || '');
       }
       setFetchParams(fetchParams);
       fetchTfvars(fetchParams);
