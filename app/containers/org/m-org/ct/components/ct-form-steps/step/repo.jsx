@@ -216,7 +216,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
         tfVersion: undefined
       });
     }
-    if (changedValues.repoRevision || changedValues.workdir) {
+    if (changedValues.repoRevision || changedValues.workdir || changedValues.workdir === '') {
       mutateAutoMatchTfVersion(undefined);
       fetchAutoMatchTfVersion(allValues);
       form.setFieldsValue({
