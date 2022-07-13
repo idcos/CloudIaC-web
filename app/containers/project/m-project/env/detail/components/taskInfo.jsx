@@ -50,6 +50,17 @@ const TaskInfo = (props) => {
     }
   );
 
+  const renderCommitId = () => {
+    if (urlMap.commitUrl) {
+      return <span onClick={() => {
+        window.open(urlMap.commitUrl);
+      }} className={styles.linkToPage}
+      >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span>;
+    } else {
+      return <span>{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span>;
+    }
+  };
+
 
   return (
     <Collapse expandIconPosition={'right'} forceRender={true}>
@@ -74,11 +85,7 @@ const TaskInfo = (props) => {
           </Descriptions.Item>
           <Descriptions.Item label={t('define.type')}>{TASK_TYPE[taskInfo.type] || '-'}</Descriptions.Item>
           <Descriptions.Item label={`${t('define.branch')}/${t('define.tag')}`}>{taskInfo.revision || '-'}</Descriptions.Item>
-          <Descriptions.Item label='Commit ID'><span onClick={() => {
-            // window.open(`${taskInfo.repoAddr.replace('.git', '')}/commit/${taskInfo.commitId}`);
-            window.open(urlMap.commitUrl);
-          }} className={styles.linkToPage}
-          >{taskInfo.commitId && taskInfo.commitId.substring(0, 12) || '-'}</span></Descriptions.Item>
+          <Descriptions.Item label='Commit ID'>{renderCommitId()}</Descriptions.Item>
           <Descriptions.Item label={t('define.updateTime')}>{timeUtils.format(taskInfo.updatedAt) || '-'}</Descriptions.Item>
           <Descriptions.Item label={t('define.createdAt')}>{timeUtils.format(taskInfo.createdAt) || '-'}</Descriptions.Item>
           <Descriptions.Item label='开始时间'>{timeUtils.format(taskInfo.startAt) || '-'}</Descriptions.Item>
