@@ -83,7 +83,7 @@ const Index = ({ match = {} }) => {
         fetchParams.workdir = data.workdir;
         setRepoObj({
           ...repoObj,
-          repoRevision: data.repoRevision || '',
+          repoRevision: data.revision || '',
           workdir: data.workdir
         });
       } else {
@@ -91,8 +91,8 @@ const Index = ({ match = {} }) => {
         form.setFieldsValue({ revision: repoRevision || undefined, workdir });
         setRepoObj({
           ...repoObj,
-          repoRevision: tplInfoRes.repoRevision || '',
-          workdir: tplInfoRes.workdir
+          repoRevision,
+          workdir
         });
       }
       setFetchParams(fetchParams);
