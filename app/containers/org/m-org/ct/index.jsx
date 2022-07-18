@@ -13,6 +13,7 @@ import ImportModal from './components/importModal';
 import DetectionDrawer from './components/detection-drawer';
 import tplAPI from 'services/tpl';
 import ctplAPI from 'services/ctpl';
+import sysAPI from 'services/sys';
 import { SCAN_DISABLE_STATUS } from 'constants/types';
 import { downloadImportTemplate } from 'utils/util';
 import { t } from 'utils/i18n';
@@ -20,6 +21,7 @@ import { useLoopPolicyStatus } from 'utils/hooks';
 import { UploadIcon, DownIcon } from 'components/iconfont';
 import PolicyStatus from 'components/policy-status';
 import isEmpty from 'lodash/isEmpty';
+
 
 const CTList = ({ match = {} }) => {
   const { check, loopRequesting } = useLoopPolicyStatus();
@@ -31,6 +33,7 @@ const CTList = ({ match = {} }) => {
       pageNo: 1,
       pageSize: 10
     });
+  const [ exchangeUrl, setExchangeUrl ] = useState('');
   const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
     visible: false,
     id: null
@@ -39,6 +42,20 @@ const CTList = ({ match = {} }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+  
+  useEffect(() => {
+    sysAPI.getRegistryAddr().then((res) => {
+      const { registryAddrDB, registryAddrCfg } = res.result || {};
+      let url = registryAddrDB || registryAddrCfg || '';
+      if (url.endsWith('/')) {
+        url = url.slice(0, -1);
+      }
+      if (!url) {
+        return (new Error(`url:'${url}' invalid`));
+      }
+      setExchangeUrl(url);
+    });
+  }, []);
 
   // 列表查询
   const {
@@ -248,7 +265,7 @@ const CTList = ({ match = {} }) => {
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
             <Button type='primary' onClick={createCT}>{t('define.addTemplate')}</Button>
-            <Button onClick={importFromExchange}>{t('define.import.fromExchange')}</Button>
+            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromExchange')}</Button>}
             <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
           </Space>
           <Space>

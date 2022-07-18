@@ -2,93 +2,17 @@ import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
 import sysAPI from 'services/sys';
 
 const stackAPI = {
-  list: ({ ...restParams }) => {
-    return new Promise((resolve, reject) => {
-      sysAPI.getRegistryAddr().then((res) => {
-        const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrDB || registryAddrCfg || '';
-        if (url.endsWith('/')) {
-          url = url.slice(0, -1);
-        }
-        if (!url) {
-          return reject(new Error(`url:'${url}' invalid`));
-        }
-        getWithArgs(`${url}/api/v1/stacks/search`, restParams, { needDefaultHeader: false }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      }).catch((err) => {
-        reject(err);
-      });
-    });
-    // return getWithArgs('/registry/api/v1/stacks/search', restParams, {});
+  list: (url, { ...restParams }) => {
+    return getWithArgs(`${url}/api/v1/stacks/search`, restParams, { needDefaultHeader: false });
   },
-  detail: (id) => {
-    return new Promise((resolve, reject) => {
-      sysAPI.getRegistryAddr().then((res) => {
-        const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrDB || registryAddrCfg || '';
-        if (url.endsWith('/')) {
-          url = url.slice(0, -1);
-        }
-        if (!url) {
-          return reject(new Error(`url:'${url}' invalid`));
-        }
-        getWithArgs(`${url}/api/v1/stacks/${id}/detail`, undefined, { needDefaultHeader: false }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      }).catch((err) => {
-        reject(err);
-      });
-    });
-    // return getWithArgs(`/registry/api/v1/stacks/${id}/detail`);
+  detail: (url, id) => {
+    return getWithArgs(`${url}/api/v1/stacks/${id}/detail`, undefined, { needDefaultHeader: false });
   },
-  version: (id) => {
-    return new Promise((resolve, reject) => {
-      sysAPI.getRegistryAddr().then((res) => {
-        const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrDB || registryAddrCfg || '';
-        if (url.endsWith('/')) {
-          url = url.slice(0, -1);
-        }
-        if (!url) {
-          return reject(new Error(`url:'${url}' invalid`));
-        }
-        getWithArgs(`${url}/api/v1/stacks/${id}/versions`, undefined, { needDefaultHeader: false }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      }).catch((err) => {
-        reject(err);
-      });
-    });
-    // return getWithArgs(`/registry/api/v1/stacks/${id}/versions`);
+  version: (url, id) => {
+    return getWithArgs(`${url}/api/v1/stacks/${id}/versions`, undefined, { needDefaultHeader: false });
   },
-  readme: (id, params) => {
-    return new Promise((resolve, reject) => {
-      sysAPI.getRegistryAddr().then((res) => {
-        const { registryAddrDB, registryAddrCfg } = res.result || {};
-        let url = registryAddrDB || registryAddrCfg || '';
-        if (url.endsWith('/')) {
-          url = url.slice(0, -1);
-        }
-        if (!url) {
-          return reject(new Error(`url:'${url}' invalid`));
-        }
-        getWithArgs(`${url}/api/v1/stacks/${id}/readme`, undefined, { needDefaultHeader: false }).then((res) => {
-          resolve(res);
-        }).catch((err) => {
-          reject(err);
-        });
-      }).catch((err) => {
-        reject(err);
-      });
-    });
-    // return getWithArgs(`/registry/api/v1/stacks/${id}/readme`, params);
+  readme: (url, id, params) => {
+    return getWithArgs(`${url}/api/v1/stacks/${id}/readme`, undefined, { needDefaultHeader: false });
   }
 };
 

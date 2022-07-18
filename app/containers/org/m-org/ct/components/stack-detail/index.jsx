@@ -24,6 +24,7 @@ import history from 'utils/history';
 import { t } from 'utils/i18n';
 import { TIER_ENUM, TIER_ICON_ENUM } from 'constants/types';
 export default ({
+  exchangeUrl,
   toggleVisible,
   visible,
   detail,
@@ -77,15 +78,15 @@ export default ({
       <div className={styles.detail}>
         <div className={'content'}>
           <div className='icon-container'>
-            <img width={64} height={64}src={getStackIconUrl(logo)} />
+            <img width={64} height={64}src={getStackIconUrl(exchangeUrl, logo)} />
           </div>
           <div className='main-content'>
             <div className='content-header'>
               <div className='title'>{title}</div>
-              <div className='yunji'>
+              {TIER_ICON_ENUM[detail.tier] && <div className='yunji'>
                 {TIER_ICON_ENUM[detail.tier] ? TIER_ICON_ENUM[detail.tier] : null}
                 {TIER_ICON_ENUM[detail.tier] ? <div>{TIER_ENUM[detail.tier]}</div> : null}
-              </div>
+              </div>}
             </div>
             <div className='content-description'>{description || '-'}</div>
             <div className='info-container'>
@@ -115,9 +116,9 @@ export default ({
                 </Col>
               </Row>
             </div>
-            <div className='tags'>
+            {categoryNames && <div className='tags'>
               { (categoryNames ? categoryNames.split(',') : []).map(item => <div className='tag'>{item}</div>)}
-            </div>
+            </div>}
             
           </div>
           <div className='select-container'>

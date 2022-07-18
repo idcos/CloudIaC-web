@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import styles from './index.less';
 import StackCard from '../components/stack-card';
 import StackDetail from '../components/stack-detail';
+import sysAPI from 'services/sys';
 import stackAPI from 'services/stack';
 export default ({ match = {} }) => {
   const pageSize = 24;
@@ -26,33 +27,66 @@ export default ({ match = {} }) => {
   const [ readme, setReadme ] = useState('');
   const [ currentVersion, setCurrentVersion ] = useState();
   const [ query, setQuery ] = useState({});
-  const { 
-    data: {
-      list = [],
-      total = 0
-    } = {}
-  } = useRequest(
-    () => requestWrapper(
-      stackAPI.list.bind(null, { 
-        pageSize, 
-        page: current,
-        q: query.q
-      }),
-      {
-        errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+  const [ exchangeUrl, setExchangeUrl ] = useState('');
+  const [ list, setList ] = useState([]);
+  const [ total, setTotal ] = useState(0);
+
+  useEffect(() => {
+    sysAPI.getRegistryAddr().then((res) => {
+      const { registryAddrDB, registryAddrCfg } = res.result || {};
+      let url = registryAddrDB || registryAddrCfg || '';
+      if (url.endsWith('/')) {
+        url = url.slice(0, -1);
       }
-    ),
-    {
-      formatResult: data => data,
-      refreshDeps: [ searchKeyword, current, query ]
+      if (!url) {
+        return (new Error(`url:'${url}' invalid`));
+      }
+      setExchangeUrl(url);
+      requestWrapper(
+        stackAPI.list.bind(null, url, { 
+          pageSize, 
+          page: current,
+          q: query.q
+        }),
+        {
+          errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+        }
+      ).then((res) => {
+        const { list, total } = res;
+        setTotal(total);
+        setList(list);
+      });
+
+    }); 
+  }, []);
+
+  useEffect(() => {
+    if (exchangeUrl) {
+      requestWrapper(
+        stackAPI.list.bind(null, exchangeUrl, { 
+          pageSize, 
+          page: current,
+          q: query.q
+        }),
+        {
+          errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+        }
+      ).then((res) => {
+        const { list, total } = res;
+        setTotal(total);
+        setList(list);
+      });
     }
-  );
+    
+  }, [ searchKeyword, current, query ]);
+
+
   useEffect(() => {
     setCurrent(1);
   }, [query]);
  
   const getDetail = async (id) => {
-    const res = await stackAPI.detail(id);
+    const res = await stackAPI.detail(exchangeUrl, id);
     if (res.code !== 0) {
       return notification.error({ message: res.message });
     }
@@ -82,7 +116,7 @@ export default ({ match = {} }) => {
   }, [ detail, currentVersion ]);
 
   const getVersionList = async (id) => {
-    const res = await stackAPI.version(id);
+    const res = await stackAPI.version(exchangeUrl, id);
     if (res.code !== 0) {
       return notification.error({ message: res.message });
     }
@@ -90,7 +124,7 @@ export default ({ match = {} }) => {
   };
 
   const getReadme = async (id, { version }) => {
-    const res = await stackAPI.readme(id, { version });
+    const res = await stackAPI.readme(exchangeUrl, id, { version });
     if (res.code !== 0) {
       return notification.error({ message: res.message });
     }
@@ -126,6 +160,7 @@ export default ({ match = {} }) => {
               <StackCard 
                 data={item}
                 toggleVisible={toggleVisible}
+                exchangeUrl={exchangeUrl}
               />
             ))
           }
@@ -151,6 +186,7 @@ export default ({ match = {} }) => {
         versionList={versionList}
         currentVersion={currentVersion}
         setCurrentVersion={setCurrentVersion}
+        exchangeUrl={exchangeUrl}
       />
     </Layout>
   );

@@ -7,7 +7,7 @@ import { formatNumber } from 'utils/format';
 import { getStackIconUrl } from 'utils/util';
 import { t } from 'utils/i18n';
 
-const StackCard = ({ data, toggleVisible }) => {
+const StackCard = ({ exchangeUrl, data, toggleVisible }) => {
   const {
     name, 
     namespace, 
@@ -28,7 +28,7 @@ const StackCard = ({ data, toggleVisible }) => {
     }}
     >
       <div className={'main'}>
-        <img className={'icon'} src={getStackIconUrl(logo)}/>
+        <img className={'icon'} src={getStackIconUrl(exchangeUrl, logo)}/>
         <div className={'content'}>
           <div className={'title idcos-text-ellipsis'}>{title}</div>
           <div className={'comment'}>{description}</div>
