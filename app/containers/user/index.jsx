@@ -33,8 +33,8 @@ const User = ({ userInfo, dispatch, curOrg, curProject }) => {
 
   const renderByPanel = useCallback(() => {
     const PAGES = {
-      basic: (props) => userInfo.name && <Basic {...props}/>,
-      pwd: (props) => userInfo.name && <Pwd {...props}/>
+      basic: (props) => userInfo.id && <Basic {...props}/>,
+      pwd: (props) => userInfo.id && <Pwd {...props}/>
     };
     return PAGES[panel]({
       title: subNavs[panel],
