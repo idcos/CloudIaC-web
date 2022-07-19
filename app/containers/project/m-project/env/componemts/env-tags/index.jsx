@@ -48,37 +48,39 @@ export default ({
   };
 
   return (
-    <div className={styles.tags}>
-      {data.map((tag, index) => {
-        return (
-          <EditTag 
-            tag={tag} 
-            canEdit={canEdit} 
-            delTag={() => delTag(index)}
-            saveTag={(value) => saveTag(value, index)}
-          />
-        );
-      })}
-      {(canEdit && data.length < 5) && (
-        isEdit ? (
-          <Input
-            ref={editInputRef}
-            maxLength={20}
-            type='text'
-            size='small'
-            className={styles.tagInput}
-            onPressEnter={addTag}
-            onBlur={() => setIsEdit(false)}
-          />
-        ) : (
-          <Tag className='add-tag-btn' onClick={showEditInput}>
-            <Space size={4}>
-              <PlusOutlined />{t('define.addTag')}
-            </Space>
-          </Tag>
-        )
-      )}
-    </div>
+    data && data.length ? 
+      <div className={styles.tags}>
+        {data.map((tag, index) => {
+          return (
+            <EditTag 
+              tag={tag} 
+              canEdit={canEdit} 
+              delTag={() => delTag(index)}
+              saveTag={(value) => saveTag(value, index)}
+            />
+          );
+        })}
+        {(canEdit && data.length < 5) && (
+          isEdit ? (
+            <Input
+              ref={editInputRef}
+              maxLength={20}
+              type='text'
+              size='small'
+              className={styles.tagInput}
+              onPressEnter={addTag}
+              onBlur={() => setIsEdit(false)}
+            />
+          ) : (
+            <Tag className='add-tag-btn' onClick={showEditInput}>
+              <Space size={4}>
+                <PlusOutlined />{t('define.addTag')}
+              </Space>
+            </Tag>
+          )
+        )}
+      </div> : 
+      <div></div>
   );
 };
 

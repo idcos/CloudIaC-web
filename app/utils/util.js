@@ -175,12 +175,12 @@ export const getMatchParams = () => {
   return { orgId, projectId };
 };
 
-export const getStackIconUrl = (logo) => {
+export const getStackIconUrl = (exchangeUrl, logo) => {
   if (!logo) {
     return '/assets/img/stack-default.svg';
   }
   if (logo.startsWith('/api/v1')) {
-    return logo.replace('/api/v1', '/registry/api/v1');
+    return exchangeUrl + logo;
   }
-  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `/registry/api/v1/icons?path=${logo}`;
+  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `${exchangeUrl}/api/v1/icons?path=${logo}`;
 };
