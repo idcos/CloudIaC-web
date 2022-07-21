@@ -24,7 +24,7 @@ import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
-import EnvTags from '../componemts/env-tags';
+import EnvTags from '../components/env-tags';
 import Lock from './components/lock';
 import styles from './styles.less';
 import { createBrowserHistory } from 'history';

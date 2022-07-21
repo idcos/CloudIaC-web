@@ -46,9 +46,9 @@ export default ({
       editInputRef.current && editInputRef.current.focus();
     }, 150);
   };
-
+  
   return (
-    data && data.length ? 
+    (data && data.length || canEdit) ? 
       <div className={styles.tags}>
         {data.map((tag, index) => {
           return (
