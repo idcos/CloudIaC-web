@@ -45,6 +45,7 @@ export default ({ data, canEdit = false, update }) => {
     }
   }, [isEdit]);
 
+  
   return (
     <>
       {data.map((tag, index) => (
