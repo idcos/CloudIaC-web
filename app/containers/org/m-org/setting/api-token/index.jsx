@@ -119,6 +119,7 @@ const ApiToken = ({ orgId }) => {
       ellipsis: true,
       render: (text, record) => (
         <div className='tableRender'>
+          
           {
             (record.createdAt && Date.parse(record.expiredAt) <= Date.now()) ? 
               <span className={`status-tip expired`}>{t('define.expired')}</span> :
