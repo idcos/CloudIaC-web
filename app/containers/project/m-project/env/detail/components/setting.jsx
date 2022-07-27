@@ -10,7 +10,7 @@ import { requestWrapper } from 'utils/request';
 import cgroupsAPI from 'services/cgroups';
 import getPermission from "utils/permission";
 import { Eb_WP } from 'components/error-boundary';
-import { AUTO_DESTROY, destoryType } from 'constants/types';
+import { AUTO_DESTROY, destroyType } from 'constants/types';
 import envAPI from 'services/env';
 import vcsAPI from 'services/vcs';
 import Copy from 'components/copy';
@@ -66,6 +66,8 @@ const Setting = () => {
       data.type = 'infinite';
     } else if (!data.autoDestroyAt) {
       data.type = 'timequantum';
+    } else if (data.autoDeployCron || data.autoDestroyCron) {
+      data.type = 'cycle';
     }
     form.setFieldsValue(data);
   };
@@ -249,7 +251,7 @@ const Setting = () => {
                         initialValue={'infinite'}
                       >
                         <Select disabled={locked || isDemo} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
-                          {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
+                          {destroyType.map(d => <Option value={d.value}>{d.name}</Option>)}
                         </Select>
                       </Form.Item>
                     </Col>
@@ -285,8 +287,49 @@ const Setting = () => {
                           }
                         }}
                       </Form.Item>
+
                     </Col>
                   </Row>
+                </Form.Item>
+                <Form.Item 
+                  shouldUpdate={true}
+                  noStyle={true}
+                >
+                  {({ getFieldValue }) => {
+                    let type = getFieldValue('type'); 
+                    if (type === 'cycle') {
+                      return <>
+                        <Form.Item
+                          label={t('define.deploy')}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Row>
+                            <Col span={18}>
+                              <Form.Item
+                                name='autoDeployCron'
+                              >
+                                <Input disabled={locked} placeholder={t('define.env.field.autoDeployCron.placeholder')} /> 
+                              </Form.Item> 
+                            </Col>
+                          </Row>
+                        </Form.Item>
+                        <Form.Item
+                          label={t('define.destroy')}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <Row>
+                            <Col span={18}>
+                              <Form.Item
+                                name='autoDestroyCron'
+                              >
+                                <Input disabled={locked} placeholder={t('define.env.field.autoDestroyCron.placeholder')} /> 
+                              </Form.Item> 
+                            </Col>
+                          </Row>
+                        </Form.Item>
+                      </>;
+                    }
+                  }}
                 </Form.Item>
               </Col>
               <Col span={7}>

@@ -4,7 +4,7 @@ import { InfoCircleFilled, InfoCircleOutlined, EyeOutlined, QuestionCircleOutlin
 import moment from 'moment';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
-import { AUTO_DESTROY, destoryType } from 'constants/types';
+import { AUTO_DESTROY, destroyType } from 'constants/types';
 import vcsAPI from 'services/vcs';
 import cgroupsAPI from 'services/cgroups';
 import ViewFileModal from 'components/view-file-modal';
@@ -494,7 +494,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                               initialValue={'infinite'}
                             >
                               <Select disabled={locked || (tplInfo.isDemo || data.isDemo)} style={{ width: '100%' }} onChange={value => checkedChange(value !== 'infinite', t('define.env.field.lifeTime'))}>
-                                {destoryType.map(d => <Option value={d.value}>{d.name}</Option>)}
+                                {destroyType.map(d => <Option value={d.value}>{d.name}</Option>)}
                               </Select>
                             </Form.Item>
                           </Col>

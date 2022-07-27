@@ -119,9 +119,8 @@ const ApiToken = ({ orgId }) => {
       ellipsis: true,
       render: (text, record) => (
         <div className='tableRender'>
-          
           {
-            (record.createdAt && Date.parse(record.expiredAt) <= Date.now()) ? 
+            (record.expiredAt && Date.parse(record.expiredAt) <= Date.now()) ? 
               <span className={`status-tip expired`}>{t('define.expired')}</span> :
               <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? t('define.status.disabled') : t('define.status.enabled')}</span>
           }
@@ -136,7 +135,7 @@ const ApiToken = ({ orgId }) => {
       render: (_, record) => {
         return <Space split={<Divider type='vertical' />}>
           {
-            !(record.createdAt && Date.parse(record.expiredAt) <= Date.now()) && (record.status == 'disable' ? <Popconfirm
+            !(record.expiredAt && Date.parse(record.expiredAt) <= Date.now()) && (record.status == 'disable' ? <Popconfirm
               title={t('define.token.action.enable.confirm.title')}
               onConfirm={() => operation({ doWhat: 'edit', payload: { id: record.id, status: 'enable' } })}
             >

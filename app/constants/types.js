@@ -67,12 +67,14 @@ export const AUTO_DESTROY = [
   { name: t('define.autoDestroy.30d'), code: '30d' }
 ];
 
-export const destoryType = [{
-  name: t('define.destoryType.infinite'), value: 'infinite'
+export const destroyType = [{
+  name: t('define.destroyType.infinite'), value: 'infinite'
 }, {
-  name: t('define.destoryType.timequantum'), value: 'timequantum'
+  name: t('define.destroyType.timequantum'), value: 'timequantum'
 }, {
-  name: t('define.destoryType.time'), value: 'time'
+  name: t('define.destroyType.time'), value: 'time'
+}, {
+  name: t('define.destroyType.cycle'), value: 'cycle'
 }];
 
 export const ENV_STATUS = {
