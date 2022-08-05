@@ -46,8 +46,8 @@ const VarFormTable = (props) => {
 
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
-  const [importVars, setImportVars] = useState([]);
-  const [importModalVisible, setImportModalVisible] = useState(false);
+  const [ importVars, setImportVars ] = useState([]);
+  const [ importModalVisible, setImportModalVisible ] = useState(false);
 
   useEffect(() => {
     varDataRef.current = varList;
@@ -61,7 +61,7 @@ const VarFormTable = (props) => {
     if (canImportVar && fetchParams) {
       fetchImportVars();
     }
-  }, [fetchParams, canImportVar]);
+  }, [ fetchParams, canImportVar ]);
 
   const fetchImportVars = async () => {
     const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
@@ -124,7 +124,7 @@ const VarFormTable = (props) => {
       id: 'name',
       editable: true,
       column: {
-        width: 200,
+        width: 200
       },
       renderFormInput: (record) => {
         const { overwrites } = record;
@@ -154,10 +154,10 @@ const VarFormTable = (props) => {
       id: 'value',
       editable: true,
       column: {
-        width: 210,
+        width: 210
       },
       formItemProps: {
-        dependencies: ['sensitive', 'description'],
+        dependencies: [ 'sensitive', 'description' ],
         rules: [
           (form) => ({
             validator(_, value) {
@@ -210,7 +210,7 @@ const VarFormTable = (props) => {
       id: 'description',
       editable: true,
       column: {
-        width: 260,
+        width: 260
       },
       formFieldProps: {
         placeholder: t('define.form.input.placeholder'),
@@ -312,7 +312,7 @@ const VarFormTable = (props) => {
   };
 
   const onImportFinish = (params, cb) => {
-    setVarList((preList) => [...preList, ...params]);
+    setVarList((preList) => [ ...preList, ...params ]);
     cb && cb();
   };
 
@@ -371,14 +371,14 @@ const VarFormTable = (props) => {
   const event$ = useEventEmitter();
   event$.useSubscription(({ type, data }) => {
     switch (type) {
-      case 'import-resource-account':
-        importResourceAccount(data);
-        break;
-      case 'remove-resource-account':
-        removeResourceAccount(data);
-        break;
-      default:
-        break;
+    case 'import-resource-account':
+      importResourceAccount(data);
+      break;
+    case 'remove-resource-account':
+      removeResourceAccount(data);
+      break;
+    default:
+      break;
     }
   });
 
