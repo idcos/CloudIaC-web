@@ -59,7 +59,7 @@ const Setting = () => {
       });
     }
     data.autoRepairDriftVisible = !!data.autoRepairDrift;
-    if (!!data.autoDestroyAt && !(data.autoDeployCron || data.autoDestroyCron)) {
+    if (!!data.autoDestroyAt && !(data.autoDeployCron && data.autoDestroyCron)) {
       data.type = 'time';
       form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
     } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
