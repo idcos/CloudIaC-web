@@ -659,6 +659,7 @@
   "task.status.rejected": "reject",
   "task.status.running": "running",
   "task.triggerType.api": "api triggered",
+  "task.triggerType.autoDeploy": "auto deploy",
   "task.triggerType.autoDestroy": "auto destroy",
   "task.triggerType.driftApply": "drift correction",
   "task.triggerType.driftPlan": "drift detection",

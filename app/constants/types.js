@@ -233,5 +233,6 @@ export const DEPLOY_HISTORY_SOURCE_ENUM = {
   webhookPlan: t('task.triggerType.webhookPlan'),
   webhookApply: t('task.triggerType.webhookApply'),
   autoDestroy: t('task.triggerType.autoDestroy'),
-  api: t('task.triggerType.api')
+  api: t('task.triggerType.api'),
+  autoDeploy: t('task.triggerType.autoDeploy')
 };

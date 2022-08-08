@@ -659,6 +659,7 @@
   "task.status.rejected": "驳回",
   "task.status.running": "执行中",
   "task.triggerType.api": "API触发",
+  "task.triggerType.autoDeploy": "定时部署",
   "task.triggerType.autoDestroy": "定时销毁",
   "task.triggerType.driftApply": "纠正漂移",
   "task.triggerType.driftPlan": "漂移检测",
