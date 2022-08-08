@@ -62,9 +62,9 @@ const Setting = () => {
     if (!!data.autoDestroyAt && !(data.autoDeployCron && data.autoDestroyCron)) {
       data.type = 'time';
       form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-    } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
+    } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt && !(data.autoDeployCron && data.autoDestroyCron)) {
       data.type = 'infinite';
-    } else if (!data.autoDestroyAt) {
+    } else if (!data.autoDestroyAt && !(data.autoDeployCron && data.autoDestroyCron)) {
       data.type = 'timequantum';
     } else if (data.autoDeployCron || data.autoDestroyCron) {
       data.type = 'cycle';
