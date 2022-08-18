@@ -307,7 +307,7 @@ const Setting = () => {
                             <Col span={18}>
                               <Form.Item
                                 name='autoDeployCron'
-                                rules={[{ required: true, message: t('define.form.input.placeholder') }]}
+                                rules={[{ required: false, message: t('define.form.input.placeholder') }]}
                               >
                                 <Input disabled={locked} placeholder={t('define.env.field.autoDeployCron.placeholder')} /> 
                               </Form.Item> 
@@ -322,7 +322,7 @@ const Setting = () => {
                             <Col span={18}>
                               <Form.Item
                                 name='autoDestroyCron'
-                                rules={[{ required: true, message: t('define.form.input.placeholder') }]}
+                                rules={[{ required: false, message: t('define.form.input.placeholder') }]}
                               >
                                 <Input disabled={locked} placeholder={t('define.env.field.autoDestroyCron.placeholder')} /> 
                               </Form.Item> 
