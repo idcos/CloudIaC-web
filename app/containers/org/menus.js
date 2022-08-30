@@ -1,83 +1,42 @@
-import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
+import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ControlOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
 import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 
-const getMenus = (userInfo, { projectList }) => {
-  const { ORG_SET, PROJECT_SET } = getPermission(userInfo);
+const getMenus = (userInfo) => {
+  const { ORG_SET, PROJECT_OPERATOR, PROJECT_SET } = getPermission(userInfo);
   return [
+    // {
+    //   name: t('define.overview'),
+    //   key: 'm-org-overview',
+    //   icon: <ControlOutlined />
+    // },
     {
-      subName: '项目信息',
-      subKey: 'project',
-      isHide: !PROJECT_SET && projectList.length === 0,
-      emptyMenuList: [
-        {
-          name: '创建项目',
-          key: 'm-project-create',
-          icon: <PlusSquareOutlined />
-        }
-      ],
-      menuList: [
-        {
-          name: '环境',
-          key: 'm-project-env',
-          icon: <CodeOutlined />
-        },
-        {
-          name: '云模板',
-          key: 'm-project-ct',
-          icon: <LayoutOutlined />
-        },
-        {
-          name: '变量',
-          key: 'm-project-variable',
-          icon: <InteractionOutlined />
-        },
-        {
-          name: '设置',
-          isHide: !PROJECT_SET,
-          key: 'm-project-setting',
-          icon: <SettingOutlined />
-        }
-      ]
+      name: t('define.scope.project'),
+      key: 'm-org-project',
+      icon: <ProjectOutlined />
     },
     {
-      subName: '组织设置',
-      subKey: 'org',
-      emptyMenuList: [],
-      isHide: !ORG_SET,
-      menuList: [
-        {
-          name: '项目',
-          key: 'm-org-project',
-          icon: <ProjectOutlined />
-        },
-        {
-          name: '云模板',
-          key: 'm-org-ct',
-          icon: <LayoutOutlined />
-        },
-        {
-          name: '变量',
-          key: 'm-org-variable',
-          icon: <InteractionOutlined />
-        },
-        {
-          name: '设定',
-          key: 'm-org-setting',
-          icon: <FormOutlined />
-        }
-      ]
+      name: t('define.scope.template'),
+      key: 'm-org-ct',
+      icon: <LayoutOutlined />,
+      isHide: !ORG_SET && !PROJECT_SET
     },
     {
-      subName: '',
-      subKey: 'other',
-      emptyMenuList: [],
-      menuList: [
-        {
-          name: '资源查询',
-          key: 'm-other-resource',
-          icon: <SearchOutlined />
-        }
-      ]
+      name: t('define.variable'),
+      key: 'm-org-variable',
+      icon: <InteractionOutlined />,
+      isHide: !ORG_SET
+    },
+    {
+      name: t('define.setting'),
+      key: 'm-org-setting',
+      icon: <FormOutlined />,
+      isHide: !ORG_SET && !PROJECT_OPERATOR
+    },
+    {
+      name: t('define.resourceQuery'),
+      key: 'm-org-resource',
+      icon: <SearchOutlined />
     }
   ].filter(it => !it.isHide);
 };

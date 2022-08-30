@@ -10,6 +10,7 @@ import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import history from "utils/history";
+import { t } from 'utils/i18n';
 import Basic from './step/basic';
 import Repo from './step/repo';
 import Variable from './step/variable';
@@ -20,10 +21,10 @@ const defaultScope = 'template';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'repo', title: '仓库', Component: Repo },
-  { type: 'variable', title: '变量', Component: Variable },
-  { type: 'basic', title: '设置', Component: Basic },
-  { type: 'relation', title: '关联项目', Component: Relation }
+  { type: 'repo', title: t('define.repo'), Component: Repo },
+  { type: 'variable', title: t('define.variable'), Component: Variable },
+  { type: 'basic', title: t('define.setting'), Component: Basic },
+  { type: 'relation', title: t('define.ct.import.init.associatedProject'), Component: Relation }
 ];
 
 const CTFormSteps = ({ orgId, tplId, opType }) => {
@@ -31,8 +32,10 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
   const [ stepIndex, setStepIndex ] = useState(0);
   const [ ctData, setCtData ] = useState({});
   const stepRef = useRef();
+  const sourceRef = useRef('vcs');
+  const [ ready, setReady ] = useState(opType === 'add');
 
-  // 创建/编辑云模版提交接口
+  // 创建/编辑Stack提交接口
   const {
     run: onSave,
     loading: saveLoading
@@ -42,11 +45,11 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
     ),
     {
       manual: true,
-      onSuccess: () =>  goCTlist()
+      onSuccess: () => goCTlist()
     }
   );
 
-  // 创建/编辑云模版提交接口
+  // 创建/编辑Stack提交接口
   const {
     run: onlineCheckForm
   } = useRequest(
@@ -72,7 +75,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         }
       }
     };
-  }, [stepIndex, ctData]);
+  }, [ stepIndex, ctData ]);
 
   const goCTlist = () => {
     history.push(`/org/${orgId}/m-org-ct`);
@@ -97,14 +100,14 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
 
   useEffect(() => {
     switch (opType) {
-      case 'add':
-        getVars();
-        break;
-      case 'edit':
-        fetchCTDetail();
-        break;
-      default:
-        break;
+    case 'add':
+      getVars();
+      break;
+    case 'edit':
+      fetchCTDetail();
+      break;
+    default:
+      break;
     }
   }, [opType]);
 
@@ -121,7 +124,8 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         name, description, policyEnable, policyGroup, tplTriggers,
         vcsId, repoId, repoFullName, repoRevision, workdir, tfVersion,
         tfVarsFile, playbook, keyId,
-        projectId
+        projectId,
+        source
       } = res.result || {};
       setCtData({
         basic: { name, description, policyEnable, policyGroup, tplTriggers },
@@ -129,10 +133,12 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         variable: { tfVarsFile, playbook, keyId },
         relation: { projectId }
       });
+      sourceRef.current = source;
+      setReady(true);
       getVars(); // 变量单独查询
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -147,7 +153,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
       setCtData(preCtData => set(preCtData, 'variable.variables', res.result || []));
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -173,7 +179,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
         </Steps>
       </div>
       {
-        steps.map((it, index) => (
+        ready && steps.map((it, index) => (
           stepIndex === index ? (
             <it.Component
               childRef={stepRef}
@@ -187,6 +193,7 @@ const CTFormSteps = ({ orgId, tplId, opType }) => {
               isShow={stepIndex === index}
               saveLoading={saveLoading}
               onlineCheckForm={onlineCheckForm}
+              sourceRef={sourceRef}
             />
           ) : null
         ))

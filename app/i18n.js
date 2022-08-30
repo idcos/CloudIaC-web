@@ -10,11 +10,14 @@
 
 const { addLocaleData } = require('react-intl');
 const enLocaleData = require('react-intl/locale-data/en');
+const zhLocaleData = require('react-intl/locale-data/zh');
 const { DEFAULT_LOCALE } = require('./locales');
 
 const enTranslationMessages = require('./translations/en.json');
+const zhTranslationMessages = require('./translations/zh.json');
 
 addLocaleData(enLocaleData);
+addLocaleData(zhLocaleData);
 
 const formatTranslationMessages = (locale, messages) => {
   const defaultFormattedMessages =
@@ -32,7 +35,8 @@ const formatTranslationMessages = (locale, messages) => {
 };
 
 const translationMessages = {
-  en: formatTranslationMessages('en', enTranslationMessages)
+  en: formatTranslationMessages('en', enTranslationMessages),
+  zh: formatTranslationMessages('en', zhTranslationMessages)
 };
 
 exports.formatTranslationMessages = formatTranslationMessages;

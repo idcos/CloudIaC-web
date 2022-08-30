@@ -12,6 +12,7 @@ import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
 import AffixBtnWrapper from 'components/common/affix-btn-wrapper';
 import { CustomTag } from 'components/custom';
+import { t } from 'utils/i18n';
 
 const defaultRego = 'package accurics\n\n## id 为策略在策略组中的唯一标识，由大小写英文字符、数字、"."、"_"、"-" 组成\n## 建议按`组织_云商_资源名称/分类_编号`的格式进行命名\n# @id: cloudiac_alicloud_security_p001\n\n# @name: 限制实例规格\n# @description: 限制实例规格为 nano 或者 small\n\n## 策略类型，如 aws, k8s, github, alicloud, ...\n# @policy_type: alicloud\n\n## 资源类型，如 aws_ami, k8s_pod, alicloud_ecs, ...\n# @resource_type: aliyun_ami\n\n## 策略严重级别: 可选 high/medium/low\n# @severity: medium\n\n## 策略标签，多个分类使用逗号分隔\n# @label: cat1,cat2\n\n## 策略修复建议（支持多行）\n# @fix_suggestion: 修改 instance_type 为包含 nano 或者 small 的实例类型。\n\nlimitedSmallInstanceType[instance.id] {\n\tinstance := input.alicloud_instance[_]\n\tnot contains(instance.config.instance_type, "nano")\n\tnot contains(instance.config.instance_type, "small")\n}';
   
@@ -66,7 +67,7 @@ const OnlineTest = ({ match = {} }) => {
     }
   );
   
-  // 云模版选项查询
+  // Stack选项查询
   const { data: ctOptions, run: fetchCtOptions } = useRequest(
     () => requestWrapper(
       ctplAPI.list.bind(null, { pageSize: 0 }),
@@ -127,12 +128,12 @@ const OnlineTest = ({ match = {} }) => {
   const test = () => {
     if (!rego) {
       return notification.error({
-        message: '策略编辑不能为空'
+        message: t('define.policy.rego.empty')
       });
     }
     if (!input || !isJsonString(input)) {
       return notification.error({
-        message: '“测试输入”必须为合法 json 字符串，且不能为空'
+        message: t('define.policy.input.error')
       });
     }
     runTest();
@@ -140,16 +141,16 @@ const OnlineTest = ({ match = {} }) => {
 
   const TestStatus = useMemo(() => {
     const map = {
-      passed: <CustomTag type='success' text='通过'/>,
-      violated: <CustomTag type='error' text='不通过'/>,
-      failed: <CustomTag type='error' text='错误'/>
+      passed: <CustomTag type='success' text={t('define.scan.status.passed')}/>,
+      violated: <CustomTag type='error' text={t('define.scan.status.violated')}/>,
+      failed: <CustomTag type='error' text={t('define.scan.status.failed')}/>
     };
     return map[outputInfo.policyStatus];
   });
   
   return (
     <Layout
-      extraHeader={<PageHeader title='在线测试' breadcrumb={true}/>}
+      extraHeader={<PageHeader title={t('define.onlineTest')} breadcrumb={true}/>}
     >
       <div className='idcos-card'>
         <Spin spinning={pageLoading}>
@@ -157,7 +158,7 @@ const OnlineTest = ({ match = {} }) => {
             <Col span={12}>
               <CoderCard 
                 height={680}
-                title='策略编辑' 
+                title={t('define.policy.rego')}
                 options={{ mode: 'rego' }} 
                 value={rego} 
                 onChange={setRego}
@@ -166,7 +167,7 @@ const OnlineTest = ({ match = {} }) => {
             </Col>
             <Col span={12}>
               <CoderCard 
-                title='测试输入'
+                title={t('define.policy.testInput')}
                 height={337}
                 value={input} 
                 onChange={mutateInput}
@@ -179,10 +180,10 @@ const OnlineTest = ({ match = {} }) => {
                       <Input.Group compact={true}>
                         <Select 
                           style={{ width: '31%' }} 
-                          placeholder='类型'
+                          placeholder={t('define.type')}
                           options={[
-                            { label: '云模版', value: 'template' },
-                            { label: '环境', value: 'env' }
+                            { label: t('define.scope.template'), value: 'template' },
+                            { label: t('define.scope.env'), value: 'env' }
                           ]}
                           onChange={setParseType}
                           value={parseType}
@@ -191,7 +192,7 @@ const OnlineTest = ({ match = {} }) => {
                           parseType === 'template' && (
                             <Select 
                               style={{ width: '69%' }} 
-                              placeholder='请选择云模版'
+                              placeholder={t('define.selectCt.placeholder')}
                               options={ctOptions}
                               allowClear={true}
                               optionFilterProp='label'
@@ -205,7 +206,7 @@ const OnlineTest = ({ match = {} }) => {
                           parseType === 'env' && (
                             <Select 
                               style={{ width: '69%' }}
-                              placeholder='请选择环境' 
+                              placeholder={t('define.selectEnv.placeholder')}
                               options={envOptions}
                               allowClear={true}
                               optionFilterProp='label'
@@ -223,7 +224,7 @@ const OnlineTest = ({ match = {} }) => {
               <CoderCard
                 title={
                   <Space>
-                    <span>测试输出</span>
+                    <span>{t('define.policy.testOutput')}</span>
                     {TestStatus}
                   </Space>
                 }
@@ -236,8 +237,8 @@ const OnlineTest = ({ match = {} }) => {
             </Col>
           </Row>
           <AffixBtnWrapper align='right'>
-            <Button onClick={goPolicyListPage}>关闭</Button>
-            <Button onClick={test} type='primary' loading={testLoading}>在线测试</Button>
+            <Button onClick={goPolicyListPage}>{t('define.action.close')}</Button>
+            <Button onClick={test} type='primary' loading={testLoading}>{t('define.onlineTest')}</Button>
           </AffixBtnWrapper>
         </Spin>
       </div>

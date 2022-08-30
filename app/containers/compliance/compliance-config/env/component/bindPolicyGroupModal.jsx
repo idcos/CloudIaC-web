@@ -6,9 +6,10 @@ import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
 import EllipsisText from 'components/EllipsisText';
+import { t } from 'utils/i18n';
 
 const FL = {
-  labelCol: { span: 6 },
+  labelCol: { span: 7 },
   wrapperCol: { span: 16 }
 };
 
@@ -21,7 +22,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     form.setFieldsValue({ policyGroupIds: policyGroupIds || [] });
   }, []);
 
-  // 云模版绑定策略组查询
+  // Stack绑定策略组查询
   const { data: ctPoliciesGroups = [] } = useRequest(
     () => requestWrapper(
       ctplAPI.listBindPoliciesGroups.bind(null, { id: tplId, pageSize: 0 }),
@@ -61,7 +62,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -76,6 +77,10 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
       okButtonProps={{
         loading: submitLoading
       }}
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
+      className='antd-modal-type-form'
       onOk={onOk}
     >
       <Form
@@ -83,18 +88,18 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
         form={form}
       >
         <Form.Item
-          label='环境绑定策略组'
+          label={t('define.ct.field.policyGroup')}
           name='policyGroupIds'
           rules={[
             {
               required: true,
-              message: '请绑定策略组'
+              message: t('define.ct.field.policyGroup')
             }
           ]}
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='绑定策略组'
+            placeholder={t('define.ct.field.policyGroup')}
             showArrow={true}
             optionFilterProp='label'
             allowClear={true}

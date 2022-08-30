@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Button, Input } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { t } from 'utils/i18n';
 import sysAPI from 'services/sys';
 
 const layout = {
@@ -62,14 +63,14 @@ export default () => {
       form={form}
     >
       <Form.Item
-        label='Registry地址'
+        label={t('define.page.sysSet.exchange.field.registryAddr')}
         name='registryAddr'
       >
-        <Input placeholder='未设置时默认使用SaaS版Registry' />
+        <Input placeholder={t('define.page.sysSet.exchange.field.registryAddr.placeholder')} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
       </Form.Item>
       <Form.Item wrapperCol={{ offset: 6, span: 16 }} style={{ paddingTop: 24 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
-          保存
+          {t('define.action.save')}
         </Button>
       </Form.Item>
     </Form>

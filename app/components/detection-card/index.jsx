@@ -4,6 +4,7 @@ import moment from 'moment';
 import noop from 'lodash/noop';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
+import { t } from 'utils/i18n';
 import PolicyStatus from 'components/policy-status';
 import { LoadingIcon } from 'components/lottie-icon';
 import { SCAN_DISABLE_STATUS } from 'constants/types';
@@ -79,7 +80,7 @@ export default ({
     return (
       <Space style={{ width: '100%', paddingTop: 80 }} direction='vertical' size='middle' align='center'>
         <LoadingIcon size={60} />
-        <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>检测中</span>
+        <span style={{ color: 'rgba(0, 0, 0, 0.86)' }}>{t('policy.detection.detecting')}</span>
       </Space>
     );
   } else {
@@ -88,7 +89,7 @@ export default ({
         <Row className='detection-header' wrap={false} justify='space-between' align='middle'>
           <Col>
             <Space>
-              <span>合规状态</span>
+              <span>{t('policy.detection.complianceStatus')}</span>
               <PolicyStatus policyStatus={policyStatus} style={{ margin: 0 }} />
               {policyStatus === 'disable' ? disableEmptyDescription : (
                 canScan && (
@@ -96,7 +97,7 @@ export default ({
                     disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
                     onClick={runScan}
                   >
-                    立即检测
+                    {t('policy.detection.detectionBtnText')}
                   </Button>
                 )
               )}
@@ -116,8 +117,8 @@ export default ({
               groups.length == 0 ? (
                 <Empty 
                   description={policyStatus === 'disable' ? (
-                    '未开启合规检测'
-                  ) : '暂无策略检测则默认显示通过'} 
+                    t('policy.detection.disableInfo')
+                  ) : t('policy.detection.emptyInfo')} 
                   image={Empty.PRESENTED_IMAGE_SIMPLE}
                 />
               ) : (

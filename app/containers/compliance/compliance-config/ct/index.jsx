@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Badge, Table, Input, Space, Divider, Switch, Button, Modal, Row, Col } from 'antd';
-import { ExclamationCircleFilled, SearchOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, SearchOutlined } from '@ant-design/icons';
 import { connect } from "react-redux";
 import noop from 'lodash/noop';
 import { useRequest } from 'ahooks';
@@ -15,6 +15,7 @@ import { useLoopPolicyStatus } from 'utils/hooks';
 import BindPolicyGroupModal from './component/bindPolicyGroupModal';
 import DetectionDrawer from './component/detection-drawer';
 import PolicyStatus from 'components/policy-status';
+import { t } from 'utils/i18n';
 
 const CCTList = () => {
 
@@ -31,7 +32,7 @@ const CCTList = () => {
     id: null
   });
 
-  // 启用/禁用云模版扫描
+  // 启用/禁用Stack扫描
   const {
     run: changeEnabled
   } = useRequest(
@@ -63,7 +64,7 @@ const CCTList = () => {
     }
   );
 
-  // 云模版列表查询
+  // Stack列表查询
   const {
     loading: tableLoading,
     data: tableData,
@@ -133,17 +134,18 @@ const CCTList = () => {
   // 开启/关闭合规检测
   const switchEnabled = ({ enabled, id, policyGroups, name }) => {
     if (enabled) {
-      openBindPolicyGroupModal({ id, policyGroups, title: '开启合规检测' }, () => {
+      openBindPolicyGroupModal({ id, policyGroups, title: t('define.ct.field.policyEnable') }, () => {
         changeEnabled({ id, enabled: true }); // changeEnabled成功会触发列表刷新，无需重复刷新列表
       });
     } else {
       Modal.confirm({
         width: 480,
-        title: `确认操作`,
-        content: `你确定要关闭${name}的合规检测吗？`,
-        icon: <ExclamationCircleFilled />,
-        okText: '确认',
-        cancelText: '取消',
+        title: t('define.confirm.title'),
+        content: `${t('define.closeComplianceScan.confirm.content.prefix')} ${name} ${t('define.closeComplianceScan.confirm.content.suffix')}`,
+        icon: <InfoCircleFilled />,
+        cancelButtonProps: {
+          className: 'ant-btn-tertiary' 
+        },
         onOk: () => changeEnabled({ id, enabled: false })
       });
     }
@@ -152,18 +154,18 @@ const CCTList = () => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模板名称',
+      title: t('define.ct.name'),
       width: 220,
       ellipsis: true
     },
     {
       dataIndex: 'policyGroups',
-      title: '绑定策略组',
+      title: t('define.ct.field.policyGroup'),
       width: 220,
       ellipsis: true,
       render: (policyGroups, record) => {
         return (
-          <a onClick={() => openBindPolicyGroupModal({ ...record, title: '绑定策略组' })}>
+          <a onClick={() => openBindPolicyGroupModal({ ...record, title: t('define.ct.field.policyGroup') })}>
             {policyGroups.length > 0 ? (
               policyGroups.map(it => it.name).join('、')
             ) : '-'}
@@ -173,28 +175,28 @@ const CCTList = () => {
     },
     {
       dataIndex: 'passed',
-      title: '通过',
+      title: t('define.scan.status.passed'),
       width: 48
     },
     {
       dataIndex: 'violated',
-      title: '不通过',
+      title: t('define.scan.status.violated'),
       width: 64
     },
     {
       dataIndex: 'suppressed',
-      title: '屏蔽',
+      title: t('define.scan.status.suppressed'),
       width: 48
     },
     {
       dataIndex: 'failed',
-      title: '失败',
+      title: t('define.scan.status.failed'),
       width: 48
     },
     {
       dataIndex: 'policyStatus',
-      title: '状态',
-      width: 94,
+      title: t('define.status'),
+      width: 110,
       render: (policyStatus, record) => {
         const clickProps = {
           style: { cursor: 'pointer' },
@@ -207,7 +209,7 @@ const CCTList = () => {
     },
     {
       dataIndex: 'policyEnable',
-      title: '开启检测',
+      title: t('define.action.openScan'),
       width: 88,
       ellipsis: true,
       fixed: 'right',
@@ -223,7 +225,7 @@ const CCTList = () => {
       }
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
@@ -238,13 +240,13 @@ const CCTList = () => {
               onClick={() => runScan({ id })}
               loading={scanLoading}
               disabled={SCAN_DISABLE_STATUS.includes(policyStatus)}
-            >检测</Button>
+            >{t('define.action.scan')}</Button>
             <Button 
               type='link'
               style={{ padding: 0, fontSize: '12px' }} 
               disabled={SCAN_DETAIL_DISABLE_STATUS.includes(policyStatus)}
               onClick={() => openDetectionDrawer({ id })}
-            >查看结果</Button>
+            >{t('define.action.viewResult')}</Button>
           </Space>
         );
       }
@@ -254,7 +256,7 @@ const CCTList = () => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='云模板'
+      title={t('define.scope.template')}
       breadcrumb={true}
     />}
   >
@@ -266,7 +268,7 @@ const CCTList = () => {
             <Input
               style={{ width: 320 }}
               allowClear={true}
-              placeholder='请输入云模版名称搜索'
+              placeholder={t('define.ct.search.placeholder')}
               prefix={<SearchOutlined />}
               onPressEnter={(e) => {
                 const q = e.target.value;

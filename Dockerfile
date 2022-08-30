@@ -8,7 +8,7 @@ RUN npm i \
     && npm run build
 
 # 打包镜像
-FROM nginx:1.11.6-alpine
+FROM nginx:1.21.6-alpine
 RUN rm /etc/nginx/conf.d/default.conf
 WORKDIR /usr/nginx/cloudiac-web
 COPY --from=builder /workspace/build /usr/nginx/cloudiac-web

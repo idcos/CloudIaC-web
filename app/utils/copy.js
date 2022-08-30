@@ -1,4 +1,5 @@
 import { notification } from "antd";
+import { t } from 'utils/i18n';
 
 const copy = (text) => {
   text = text || '';
@@ -12,11 +13,11 @@ const copy = (text) => {
   const copyStatus = document.execCommand("Copy"); // 执行copy操作
   if (copyStatus) {
     notification.success({
-      message: "复制成功"
+      message: t('define.message.copySuccess')
     });
   } else {
     notification.error({
-      message: "复制失败"
+      message: t('define.message.copyFail')
     });
   }
   window.getSelection().removeAllRanges(); //清除页面中已有的selection

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, Table, notification, Space, Popconfirm } from 'antd';
+import { Button, Table, notification, Space, Popconfirm, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import history from 'utils/history';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -12,15 +13,17 @@ import ImportModal from './components/importModal';
 import DetectionDrawer from './components/detection-drawer';
 import tplAPI from 'services/tpl';
 import ctplAPI from 'services/ctpl';
+import sysAPI from 'services/sys';
 import { SCAN_DISABLE_STATUS } from 'constants/types';
 import { downloadImportTemplate } from 'utils/util';
+import { t } from 'utils/i18n';
 import { useLoopPolicyStatus } from 'utils/hooks';
 import { UploadIcon, DownIcon } from 'components/iconfont';
 import PolicyStatus from 'components/policy-status';
 import isEmpty from 'lodash/isEmpty';
 
-const CTList = ({ match = {} }) => {
 
+const CTList = ({ match = {} }) => {
   const { check, loopRequesting } = useLoopPolicyStatus();
   const { orgId } = match.params || {};
   const [ visible, setVisible ] = useState(false),
@@ -30,6 +33,7 @@ const CTList = ({ match = {} }) => {
       pageNo: 1,
       pageSize: 10
     });
+  const [ exchangeUrl, setExchangeUrl ] = useState('');
   const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
     visible: false,
     id: null
@@ -38,6 +42,20 @@ const CTList = ({ match = {} }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+  
+  useEffect(() => {
+    sysAPI.getRegistryAddr().then((res) => {
+      const { registryAddrDB, registryAddrCfg } = res.result || {};
+      let url = registryAddrDB || registryAddrCfg || '';
+      if (url.endsWith('/')) {
+        url = url.slice(0, -1);
+      }
+      if (!url) {
+        return (new Error(`url:'${url}' invalid`));
+      }
+      setExchangeUrl(url);
+    });
+  }, []);
 
   // 列表查询
   const {
@@ -52,6 +70,7 @@ const CTList = ({ match = {} }) => {
       tplAPI.list.bind(null, { 
         currentPage: query.pageNo,
         pageSize: query.pageSize,
+        q: query.q,
         orgId
       })
     ), {
@@ -110,33 +129,33 @@ const CTList = ({ match = {} }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '云模板名称',
+      title: t('define.name'),
       width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'description',
-      title: '云模板描述',
+      title: t('define.des'),
       width: 180,
       ellipsis: true
     },
     {
       dataIndex: 'activeEnvironment',
-      title: '活跃环境',
+      title: t('define.activeEnvironment'),
       width: 78,
       ellipsis: true
     },
     {
       dataIndex: 'repoAddr',
-      title: '仓库',
+      title: t('define.repo'),
       width: 249,
       ellipsis: true,
       render: (text) => <a href={text} target='_blank'><EllipsisText>{text}</EllipsisText></a>
     },
     {
       dataIndex: 'policyStatus',
-      title: '合规状态',
-      width: 100,
+      title: t('policy.detection.complianceStatus'),
+      width: 110,
       ellipsis: true,
       render: (policyStatus, record) => {
         const clickProps = {
@@ -148,33 +167,36 @@ const CTList = ({ match = {} }) => {
     },
     {
       dataIndex: 'creator',
-      title: '创建人',
+      title: t('define.creator'),
       width: 70,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 152,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      title: '操作',
-      width: 100,
+      title: t('define.action'),
+      width: 120,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
         return (
-          <Space>
-            <a type='link' onClick={() => updateCT(record.id)}>编辑</a>
-            <Popconfirm
-              title='确定要删除该云模版？'
-              onConfirm={() => onDel(record.id)}
-            >
-              <a type='link'>删除</a>
-            </Popconfirm>
-          </Space>
+          record.isDemo ? 
+            <></> :
+            <Space>
+              <a type='link' onClick={() => updateCT(record.id)}>{t('define.action.modify')}</a>
+              <Popconfirm
+                placement='left'
+                title={t('define.ct.delete.confirm.title')}
+                onConfirm={() => onDel(record.id)}
+              >
+                <a type='link'>{t('define.action.delete')}</a>
+              </Popconfirm>
+            </Space>
         );
       }
     }
@@ -188,6 +210,10 @@ const CTList = ({ match = {} }) => {
     history.push(`/org/${orgId}/m-org-ct/updateCT/${tplId}`);
   };
 
+  const importFromExchange = () => {
+    history.push(`/org/${orgId}/m-org-ct/importCT-exchange`);
+  };
+
   const onDel = async (tplId) => {
     try {
       const res = await tplAPI.del({
@@ -198,12 +224,12 @@ const CTList = ({ match = {} }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '删除成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
     } catch (e) {
       notification.error({
-        message: '删除失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -233,22 +259,28 @@ const CTList = ({ match = {} }) => {
     return !selectedRows.length || selectedRows.find(it => SCAN_DISABLE_STATUS.includes(it.policyStatus));
   });
 
-  return <Layout
-    extraHeader={<PageHeader
-      title='云模板'
-      breadcrumb={true}
-    />}
-  >
-    <div className='idcos-card'>
+  return (
+    <div style={{ padding: '36px 24px' }}>
       <div>
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
-            <Button type='primary' onClick={createCT}>新建云模板</Button>
-            <Button disabled={batchScanDisabled} onClick={batchScan}>合规检测</Button>
+            <Button type='primary' onClick={createCT}>{t('define.addTemplate')}</Button>
+            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromExchange')}</Button>}
+            <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
           </Space>
           <Space>
-            <Button icon={<DownIcon />} onClick={() => setVisible(true)}>导入</Button>
-            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>导出</Button>
+            <Input
+              style={{ width: 320 }}
+              allowClear={true}
+              placeholder={t('define.ct.search.placeholder')}
+              prefix={<SearchOutlined />}
+              onPressEnter={(e) => {
+                const q = e.target.value;
+                changeQuery({ q });
+              }}
+            />
+            {/* <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
+            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button> */}
           </Space>
         </Space>
         <Table
@@ -263,7 +295,7 @@ const CTList = ({ match = {} }) => {
             total: resultMap.total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `共${total}条`,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
             onChange: (pageNo, pageSize) => {
               changeQuery({
                 pageNo,
@@ -281,7 +313,7 @@ const CTList = ({ match = {} }) => {
                 setSelectedRows(rows);
               },
               getCheckboxProps: (R) => ({
-                disabled: R.internal
+                disabled: R.internal || R.isDemo
               })
             }
           }
@@ -293,7 +325,7 @@ const CTList = ({ match = {} }) => {
       />} 
       {visible && <ImportModal orgId={orgId} reload={() => fetchList()} toggleVisible={() => setVisible(false)}/>}
     </div>
-  </Layout>;
+  );
 };
 
 export default Eb_WP()(CTList);

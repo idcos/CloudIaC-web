@@ -4,6 +4,7 @@ import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
 import EllipsisText from 'components/EllipsisText';
 import orgsAPI from 'services/orgs';
 import changeOrg from "utils/changeOrg";
+import { t } from "utils/i18n";
 import OrgModal from './components/orgModal';
 
 const Orgs = ({ title, dispatch }) => {
@@ -41,7 +42,7 @@ const Orgs = ({ title, dispatch }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -80,7 +81,7 @@ const Orgs = ({ title, dispatch }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       resfreshGlobalOrg();
@@ -88,7 +89,7 @@ const Orgs = ({ title, dispatch }) => {
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -104,7 +105,7 @@ const Orgs = ({ title, dispatch }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '组织名称',
+      title: t('define.name'),
       width: 240,
       ellipsis: true,
       render: (_, record) => <div className='tableRender'>
@@ -116,19 +117,19 @@ const Orgs = ({ title, dispatch }) => {
       dataIndex: 'description',
       width: 240,
       ellipsis: true,
-      title: '描述'
+      title: t('define.des')
     },
     {
       dataIndex: 'status',
       width: 150,
       ellipsis: true,
-      title: '状态',
+      title: t('define.status'),
       render: (text) => <div className='tableRender'>
-        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? '禁用' : '启用'}</span>
+        <span className={`status-tip ${text == 'disable' ? 'disabled' : 'enabled'}`}>{text == 'disable' ? t('define.status.disabled') : t('define.status.enabled')}</span>
       </div>
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 180,
       ellipsis: true,
       fixed: 'right',
@@ -136,15 +137,15 @@ const Orgs = ({ title, dispatch }) => {
         return <Space split={<Divider type='vertical' />}>
           {
             record.status == 'disable' ? <Popconfirm
-              title='确定要启用该组织？'
+              title={t('define.page.sysSet.org.enable.confirm.title')}
               onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'enable' } })}
             >
-              <a>启用</a>
+              <a>{t('define.status.enabled')}</a>
             </Popconfirm> : <Popconfirm
-              title='确定要禁用该组织？'
+              title={t('define.page.sysSet.org.disable.confirm.title')}
               onConfirm={() => operation({ doWhat: 'changeStatus', payload: { id: record.id, status: 'disable' } })}
             >
-              <a>禁用</a>
+              <a>{t('define.status.disabled')}</a>
             </Popconfirm>
           }
           <a onClick={() => {
@@ -152,8 +153,8 @@ const Orgs = ({ title, dispatch }) => {
             setCurRecord(record);
             toggleVisible();
           }}
-          >编辑</a>   
-          <a onClick={() => changeOrg({ orgId: record.id, dispatch })}>进入</a>       
+          >{t('define.action.modify')}</a>   
+          <a disabled={record.status == 'disable'} onClick={() => changeOrg({ orgId: record.id, dispatch })}>{t('define.action.enter')}</a>       
         </Space>;
       }
     }
@@ -167,7 +168,7 @@ const Orgs = ({ title, dispatch }) => {
           setOpt('add');
           toggleVisible();
         }}
-      >创建组织</Button>
+      >{t('define.page.sysSet.org.action.create')}</Button>
     </div>
     <Table
       columns={columns}
@@ -180,7 +181,7 @@ const Orgs = ({ title, dispatch }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             pageNo: page,

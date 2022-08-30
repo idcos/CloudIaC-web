@@ -5,22 +5,18 @@ import classNames from 'classnames';
 import styles from './index.less';
 import tplAPI from 'services/tpl';
 import projectAPI from 'services/project';
+import { t } from 'utils/i18n';
 
 const { Option } = Select;
 const infoType = {
-  created: '新增',
-  updated: '覆盖',
-  skipped: '跳过',
-  copied: '创建副本'
+  created: t('define.ct.import.infoType.created'),
+  updated: t('define.ct.import.infoType.updated'),
+  skipped: t('define.ct.import.infoType.skipped'),
+  copied: t('define.ct.import.infoType.copied')
 };
 const infoErrorType = {
-  renamed: '重命名',
-  duplicate: '中止'
-};
-const infoTypeName = {
-  templates: '云模板',
-  vcs: 'VCS',
-  varGroups: 'varGroups'
+  renamed: t('define.ct.import.infoErrorType.renamed'),
+  duplicate: t('define.ct.import.infoErrorType.duplicate')
 };
 const Index = ({ reload, toggleVisible, orgId }) => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
@@ -42,7 +38,7 @@ const Index = ({ reload, toggleVisible, orgId }) => {
       setProjectList(res.result.list || []);
     } else {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: res.message
       });
     }
@@ -73,10 +69,10 @@ const Index = ({ reload, toggleVisible, orgId }) => {
 
   const onOk = async () => {
     if (fileList.length === 0) {
-      return notification.error({ message: '请选择文件。' });
+      return notification.error({ message: t('define.ct.import.message.error.selectFile') });
     }
     if (!type) {
-      return notification.error({ message: '请选择UUID重复时的操作方式。' });
+      return notification.error({ message: t('define.ct.import.message.error.actionModeWhenRepeating') });
     }
 
     const formData = new FormData();
@@ -118,132 +114,149 @@ const Index = ({ reload, toggleVisible, orgId }) => {
 
   const modalContent = useMemo(() => {
     switch (importStatus) {
-      case 'success':
-        return (
-          <Space direction='vertical' size={4}>
-            <div className={styles.resultHeader}>成功导入模板{computeCount('success')}条：</div>
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].templates || []).map((dt) => {
-                return (<>
-                  {!!infoType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【云模板】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].varGroups || []).map((dt) => {
-                return (<>
-                  {!!infoType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].vcs || []).map((dt) => {
-                return (<>
-                  {!!infoType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-          </Space>
-        );
-      case 'error':
-        return (
-          <Space direction='vertical' size={4}>
-            <div className={styles.resultHeader}>UUID存在冲突，操作已中止，导入0条数据{hasColon ? '：' : '。'}</div>
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].templates || []).map((dt) => {
-                return (<>
-                  {!!infoErrorType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【云模板】</span>: <span className={styles.resultText}>{dt.id}</span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].varGroups || []).map((dt) => {
-                return (<>
-                  {!!infoErrorType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【资源账号】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-            {Object.keys(importInfo).map(it => {
-              return (importInfo[it].vcs || []).map((dt) => {
-                return (<>
-                  {!!infoErrorType[it] && <span>
-                    <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【VCS】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
-                  </span>}
-                </>);
-              });
-            })}
-          </Space>
-        );
-      case 'init':
-        return (
-          <Space direction='vertical' size='middle'>
-            <Space>
-              <Upload 
-                {...props} 
+    case 'success':
+      return (
+        <Space direction='vertical' size={4}>
+          <div className={styles.resultHeader}>{t('define.ct.import.success.prefix')}&nbsp;{computeCount('success')}&nbsp;{t('define.ct.import.success.suffix')}</div>
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].templates || []).map((dt) => {
+              return (<>
+                {!!infoType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.scope.template')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].varGroups || []).map((dt) => {
+              return (<>
+                {!!infoType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.resourceAccount.title')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].vcs || []).map((dt) => {
+              return (<>
+                {!!infoType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoType[it]}【{t('define.vcs')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+        </Space>
+      );
+    case 'error':
+      return (
+        <Space direction='vertical' size={4}>
+          <div className={styles.resultHeader}>{t('define.ct.import.error.title')}{hasColon ? '：' : '。'}</div>
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].templates || []).map((dt) => {
+              return (<>
+                {!!infoErrorType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.scope.template')}】</span>: <span className={styles.resultText}>{dt.id}</span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].varGroups || []).map((dt) => {
+              return (<>
+                {!!infoErrorType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.resourceAccount.title')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+          {Object.keys(importInfo).map(it => {
+            return (importInfo[it].vcs || []).map((dt) => {
+              return (<>
+                {!!infoErrorType[it] && <span>
+                  <span className={classNames(styles.resultTitle, { [styles.greenColor]: it === 'created' || it === 'copied' })}> {infoErrorType[it]}【{t('define.vcs')}】</span>: <span><span className={styles.resultText}>{dt.name}</span><span className={styles.resultText}>({dt.id})</span></span>
+                </span>}
+              </>);
+            });
+          })}
+        </Space>
+      );
+    case 'init':
+      return (
+        <Space direction='vertical' size='middle' style={{ width: '100%' }}>
+          <Space style={{ width: '100%' }}>
+            <Upload 
+              {...props} 
+            >
+              <Button
+                icon={<DownIcon/>}
+                style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
               >
-                <Button
-                  icon={<DownIcon/>}
-                  style={{ borderTopLeftRadius: 4, borderBottomLeftRadius: 4 }}
-                >
-                  {fileList[0] && fileList[0] ? '重新选择' : '选择文件'}
-                </Button>
-              </Upload>
-              <span className={styles.radioText} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#00AB9D' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : '支持json文件'}</span> 
-            </Space>
-            <Space direction='vertical' size={6}>
-              <div className={styles.importHeader}><span>*</span> 导入时以UUID作为是否重复导入的依据，UUID重复时的操作方式：</div>
-              <Radio.Group onChange={(e) => setType(e.target.value)} value={type}>
-                <Space direction='vertical' size={4}>
-                  <Radio value={'update'}>覆盖 <span className={styles.radioText}>UUID重复时更新该条数据（包括云模板、VCS、资源帐号）</span></Radio> 
-                  <Radio value={'skip'}>跳过 <span className={styles.radioText}>UUID重复时跳过该条数据，继续导入其他数据</span></Radio> 
-                  <Radio value={'copy'}>创建副本 <span style={{ marginLeft: 0 }} className={styles.radioText}>UUID重复时，重新创建一条数据，如果名称也相同，给名称加上_copy后缀</span></Radio> 
-                  <Radio value={'abort'}>中止 <span className={styles.radioText}>UUID重复时中止导入操作，不做任何变更</span></Radio>
-                </Space>
-              </Radio.Group>
-            </Space>
-            <Space>
-              <span>关联项目：</span><Select 
-                getPopupContainer={triggerNode => triggerNode.parentNode}
-                placeholder='请选择关联项目'
-                mode={'multiple'}
-                showArrow={true}
-                style={{ width: 350 }}
-                onChange={e => setSelectProject(e)}
-              >
-                {(projectList || []).map(it => <Option value={it.id}>{it.name}</Option>)}
-              </Select>
-            </Space>
+                {fileList[0] && fileList[0] ? t('define.ct.import.init.upload.reSelectFile') : t('define.ct.import.init.upload.selectFile')}
+              </Button>
+            </Upload>
+            <span className={styles.uploadExtra} style={{ marginLeft: 0, color: fileList[0] && fileList[0] ? '#08857C' : 'none' }}>{fileList[0] && fileList[0] ? fileList[0].name : t('define.ct.import.init.upload.extra')}</span> 
           </Space>
-        );
-      default:
-        break;
+          <Space direction='vertical' size={6} style={{ width: '100%' }}>
+            <div className={styles.importHeader}><span>*</span> {t('define.ct.import.init.actionModeWhenRepeating')}</div>
+            <Radio.Group className={styles.radioGroup} onChange={(e) => setType(e.target.value)} value={type} style={{ width: '100%' }}>
+              <Space direction='vertical' size={4} style={{ width: '100%' }}>
+                <Radio value={'update'}>
+                  <span>{t('define.ct.import.infoType.updated')}</span>
+                  <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.updated')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.updated')}
+                  </span>
+                </Radio> 
+                <Radio value={'skip'}>
+                  <span>{t('define.ct.import.infoType.skipped')}</span>
+                  <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.skip')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.skip')}
+                  </span>
+                </Radio> 
+                <Radio value={'copy'}>
+                  <span>{t('define.ct.import.infoType.copied')}</span>
+                  <span style={{ marginLeft: 8 }} className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.copy')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.copy')}
+                  </span>
+                </Radio> 
+                <Radio value={'abort'}>
+                  <span>{t('define.ct.import.infoErrorType.duplicate')}</span>
+                  <span className={styles.radioText} title={t('define.ct.import.init.actionModeWhenRepeating.abort')}>
+                    {t('define.ct.import.init.actionModeWhenRepeating.abort')}
+                  </span>
+                </Radio>
+              </Space>
+            </Radio.Group>
+          </Space>
+          <Space style={{ width: '100%' }}>
+            <span>{t('define.ct.import.init.associatedProject')}</span><Select 
+              getPopupContainer={triggerNode => triggerNode.parentNode}
+              placeholder={t('define.form.select.placeholder')}
+              mode={'multiple'}
+              showArrow={true}
+              style={{ width: 350 }}
+              onChange={e => setSelectProject(e)}
+            >
+              {(projectList || []).map(it => <Option value={it.id}>{it.name}</Option>)}
+            </Select>
+          </Space>
+        </Space>
+      );
+    default:
+      break;
     }
   });
 
   return <Modal
-    title={`${importStatus === 'success' ? '导入成功' : importStatus === 'error' ? '导入失败' : '导入云模板'}`}
+    title={`${importStatus === 'success' ? t('define.ct.import.result.success') : importStatus === 'error' ? t('define.ct.import.result.error') : t('define.ct.import')}`}
     visible={true}
     onCancel={toggleVisible}
-    okButtonProps={{
-      loading: submitLoading
-    }}
     width={600}
-    onOk={importStatus === 'init' ? onOk : toggleVisible}
+    className='antd-modal-type-form'
     footer={<>
       {importStatus === 'init' ? <Space>
-        <Button onClick={toggleVisible}>取消</Button>
-        <Button type={'primary'} onClick={onOk}>确认</Button>
-      </Space> : <Button type={'primary'} onClick={toggleVisible}>知道了</Button>}
+        <Button className='ant-btn-tertiary' onClick={toggleVisible}>{t('define.ct.import.action.cancel')}</Button>
+        <Button type={'primary'} onClick={onOk} loading={submitLoading}>{t('define.ct.import.action.ok')}</Button>
+      </Space> : <Button type={'primary'} onClick={toggleVisible}>{t('define.ct.import.action.gotIt')}</Button>}
     </>}
   >
     {modalContent}

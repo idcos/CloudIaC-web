@@ -8,6 +8,7 @@ import { requestWrapper } from 'utils/request';
 import { getNumLen } from 'utils/util';
 import { useEventSource } from "utils/hooks";
 import styles from './styles.less';
+import uniq from 'lodash.uniq';
 
 const ansi_up = new AnsiUp();
 
@@ -27,16 +28,16 @@ export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscre
 
   useEffect(() => {
     switch (stepStatus) {
-      case 'complete':
-      case 'failed':
-      case 'timeout':
-        fetchTaskStepLog();
-        break;
-      case 'running':
-        fetchSse();
-        break;
-      default:
-        break;
+    case 'complete':
+    case 'failed':
+    case 'timeout':
+      fetchTaskStepLog();
+      break;
+    case 'running':
+      fetchSse();
+      break;
+    default:
+      break;
     }
   }, [stepStatus]);
 
@@ -67,7 +68,7 @@ export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscre
 
   // 查询任务步骤完整日志
   const {
-    run: fetchTaskStepLog,
+    run: fetchTaskStepLog
   } = useRequest(
     () => requestWrapper(
       taskAPI.getTaskStepLog.bind(null, { orgId, projectId, taskId, stepId })
@@ -86,13 +87,13 @@ export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscre
     evtSourceInit(
       {
         onmessage: (data) => {
-          setTaskStepLog((prevLog) => [ ...prevLog, data ]);
+          setTaskStepLog((prevLog) => uniq([ ...prevLog, data ] || []));
         }
       },
       {
         url: `/api/v1/tasks/${taskId}/steps/${stepId}/log/sse`,
-        options: 
-        { 
+        options:
+        {
           withCredentials: true,
           headers: {
             'IaC-Org-Id': orgId,
@@ -103,7 +104,7 @@ export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscre
       }
     );
   };
- 
+
   // const go = (type) => {
   //   try {
   //     const scrollDom = ansiCoderWrapperRef.current;

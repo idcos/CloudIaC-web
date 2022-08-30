@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Progress, Card, Empty } from 'antd';
 import { DashboardOutlined } from '@ant-design/icons';
+import { t } from 'utils/i18n';
 import styles from '../style.less';
 
 const Index = ({ summaryData = [] }) => {
@@ -36,8 +37,8 @@ const Index = ({ summaryData = [] }) => {
 
   const list = [ 1, 2, 3, 4, 5 ];
   return <Card className={styles.card}>
-    <div className='top5'>策略组TOP5</div>
-    <span className='title'>策略组检测不通过</span>
+    <div className='top5'>{t('define.policyGroup.top5')}</div>
+    <span className='title'>{t('define.policyGroup.violated')}</span>
     { data.length === 0 ? <Empty 
       image={<DashboardOutlined />}
       imageStyle={{
@@ -48,7 +49,7 @@ const Index = ({ summaryData = [] }) => {
       }}
       description={
         <span>
-          暂无策略组检查
+          {t('define.policyGroup.empty')}
         </span>
       }
     /> : <>{data.map((item, index) => {

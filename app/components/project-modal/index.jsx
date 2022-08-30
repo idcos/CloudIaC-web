@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Modal, notification } from "antd";
 import { connect } from "react-redux";
-
+import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 
 const FL = {
@@ -54,22 +54,26 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
     try {
       const res = await projectAPI.detailProject({ projectId: curRecord.id, orgId });
       if (res.code !== 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
     } catch (e) {
       notification.error({
-        message: '获取失败',
-        description: e.message
+        message: t('define.message.getFail'),
+        description: e.message_detail || e.message
       });
     }
   };
  
   return <Modal
-    title={`${opt == 'add' ? '创建' : '编辑'}项目`}
+    title={opt == 'add' ? t('define.createProject') : t('define.modifyProject')}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
       loading: submitLoading
+    }}
+    className='antd-modal-type-form'
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
     }}
     onOk={onOk}
     width={600}
@@ -80,27 +84,27 @@ const ProjectModal = ({ dispatch, visible, opt, toggleVisible, curRecord = {}, o
       initialValues={curRecord}
     >
       <Form.Item
-        label='项目名称'
+        label={t('define.projectName')}
         name='name'
         rules={[
           {
             required: true,
-            message: '请输入项目名称'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input style={{ width: 254 }} placeholder='请输入项目名称'/>
+        <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
       </Form.Item>
       <Form.Item
-        label='项目描述'
+        label={t('define.projectDes')}
         name='description'
         rules={[
           {
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input.TextArea style={{ width: 400 }} placeholder='请输入项目描述'/>
+        <Input.TextArea style={{ width: 400 }} placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
     </Form>
   </Modal>;

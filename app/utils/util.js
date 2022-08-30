@@ -1,4 +1,5 @@
 import find from "lodash/find";
+import { matchPath } from 'react-router-dom';
 
 /**
  * 将对象字段按照key排序，并返回`${key}${value}`字符串
@@ -166,4 +167,20 @@ export const downloadImportTemplate = async(downloadApi, opts) => {
     console.log(error);
   }
 
+};
+
+export const getMatchParams = () => {
+  const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
+  const { orgId, projectId } = match.params || {};
+  return { orgId, projectId };
+};
+
+export const getStackIconUrl = (exchangeUrl, logo) => {
+  if (!logo) {
+    return '/assets/img/stack-default.svg';
+  }
+  if (logo.startsWith('/api/v1')) {
+    return exchangeUrl + logo;
+  }
+  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `${exchangeUrl}/api/v1/icons?path=${logo}`;
 };

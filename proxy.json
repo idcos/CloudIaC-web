@@ -10,7 +10,8 @@
       "/api/*",
       "/rbac/*",
       "/sso/*",
-      "/xmdb/v2/**"
+      "/xmdb/v2/**",
+      "/registry/*"
     ]
   }
 }

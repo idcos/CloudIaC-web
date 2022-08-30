@@ -7,6 +7,7 @@ import cgroupsAPI from 'services/cgroups';
 import history from 'utils/history';
 import Layout from "components/common/layout";
 import PageHeader from "components/pageHeader";
+import { t } from 'utils/i18n';
 import FormPageContext from './form-page-context';
 import Source from './source';
 import Seting from './seting';
@@ -15,8 +16,8 @@ import styles from './styles.less';
 const { Step } = Steps;
 
 const steps = [
-  { type: 'source', title: '选择来源', content: <Source /> },
-  { type: 'seting', title: '策略组设置', content: <Seting /> }
+  { type: 'source', title: t('define.policyGroup.form.step.source'), content: <Source /> },
+  { type: 'seting', title: t('define.policyGroup.form.step.seting'), content: <Seting /> }
 ];
 
 const FormPage = ({ match = {} }) => {
@@ -135,7 +136,7 @@ const FormPage = ({ match = {} }) => {
 
   return (
     <Layout
-      extraHeader={<PageHeader title={policyGroupId ? '编辑策略组' : '新建策略组'} breadcrumb={true}/>}
+      extraHeader={<PageHeader title={policyGroupId ? t('define.modifyPolicyGroup') : t('define.addPolicyGroup')} breadcrumb={true}/>}
     >
       <div className='idcos-card'>
         <div className={styles.formPage}>

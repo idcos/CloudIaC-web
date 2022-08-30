@@ -50,6 +50,7 @@ const Container = styled.div`
 
 const FormCoder = ({
   childRef,
+  domRef,
   language, // maybe used in the future
   value,
   style,
@@ -132,7 +133,7 @@ const FormCoder = ({
 
 
   return (
-    <Container style={style} hight={hight} className={selfClassName}>
+    <Container ref={domRef} style={style} hight={hight} className={selfClassName}>
       <ControlledEditor
         onChange={autoScrollToBottomFn}
         editorDidMount={editorDidMount}

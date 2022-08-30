@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState, useImperativeHandle } from 'react';
 import { Form, Select, Input, Button, Space } from 'antd';
+import { t } from 'utils/i18n';
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
 
@@ -73,26 +74,26 @@ export default () => {
       <Form form={form} {...FL}>
         <Form.Item 
           name='name' 
-          label='策略组名称'
-          rules={[{ required: true, message: '请输入' }]}
+          label={t('define.name')}
+          rules={[{ required: true, message: t('define.form.input.placeholder') }]}
         >
-          <Input style={{ width: 254 }} placeholder='请输入策略组名称' />
+          <Input style={{ width: 254 }} placeholder={t('define.form.input.placeholder')} />
         </Form.Item>
         <Form.Item 
           name='description' 
-          label='策略组描述'
+          label={t('define.des')}
         >
-          <Input.TextArea placeholder='请输入策略组描述' rows={7} />
+          <Input.TextArea placeholder={t('define.form.input.placeholder')} rows={7} />
         </Form.Item>
         <Form.Item 
           name='labels' 
-          label='标签'
+          label={t('define.tag')}
         >
           <Select 
             mode='tags' 
-            placeholder='请填写标签'
+            placeholder={t('define.form.input.placeholder')}
             allowClear={true}
-            notFoundContent='输入标签并回车'
+            notFoundContent={t('define.form.input.placeholder')}
             searchValue={tagSearchValue}
             open={false}
             onSearch={changeTagSearchValue}
@@ -105,13 +106,13 @@ export default () => {
         >
           {isCreate ? (
             <Space>
-              <Button className='ant-btn-tertiary' onClick={prev}>上一步</Button>
-              <Button type='primary' onClick={onCreate} loading={createLoading}>提交</Button>
+              <Button className='ant-btn-tertiary' onClick={prev}>{t('define.action.prev')}</Button>
+              <Button type='primary' onClick={onCreate} loading={createLoading}>{t('define.action.submit')}</Button>
             </Space>
           ) : (
             <Space>
-              <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>取消</Button>     
-              <Button type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
+              <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>{t('define.action.cancel')}</Button>     
+              <Button type='primary' onClick={onUpdate} loading={updateLoading}>{t('define.action.submit')}</Button>     
             </Space>
           )}
         </Form.Item>

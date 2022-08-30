@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Select, Input, Divider, Button, Space } from 'antd';
 import styled from 'styled-components';
 import isEmpty from 'lodash/isEmpty';
+import { t } from 'utils/i18n';
+import EllipsisText from '../../EllipsisText';
 
 const OptionWrapper = styled.div`
   display: flex;
@@ -18,17 +20,17 @@ const SelectTypeValue = ({
   form,
   ...props
 }) => {
-  const [options, setOptions] = useState([]);
-  const [inputValue, setInputValue] = useState();
+  const [ options, setOptions ] = useState([]);
+  const [ inputValue, setInputValue ] = useState();
 
   useEffect(() => {
     if (!isEmpty(inputOptions)) {
-      setOptions(inputOptions)
+      setOptions(inputOptions);
     }
   }, [inputOptions]);
 
   const addOption = () => {
-    const newOptions = [...options, inputValue];
+    const newOptions = [ ...options, inputValue ];
     setOptions(newOptions);
     setInputValue();
     form.setFieldsValue({ options: newOptions });
@@ -68,7 +70,7 @@ const SelectTypeValue = ({
                     disabled={!inputValue || options.includes(inputValue)}
                     onClick={addOption}
                   >
-                    添加
+                    {t('define.action.add')}
                   </Button>
                 </Space>
               </>
@@ -81,8 +83,8 @@ const SelectTypeValue = ({
         options.map(item => (
           <Select.Option key={item} value={item}>
             <OptionWrapper>
-              <span>{item}</span>
-              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>删除</Button>}
+              <EllipsisText style={{ width: 142 }}>{item}</EllipsisText>
+              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>{t('define.action.delete')}</Button>}
             </OptionWrapper>
           </Select.Option>
         ))

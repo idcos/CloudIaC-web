@@ -1,33 +1,56 @@
+
+import { logout } from 'services/logout';
+import { getMatchParams } from 'utils/util';
+import { t, getLanguage } from 'utils/i18n';
+
 function parseJSON(res) {
   return res.json().then(jsonResult => {
     return { ...res, jsonResult, httpCode: res.status };
   }).catch(() => {
-    throw new Error('接口错误');
+    throw new Error(t('define.message.interfaceFail'));
   });
 }
 
-import { logout } from 'services/logout';
-import { matchPath } from 'react-router-dom';
+function parseCommon(res) {
+  return { ...res, httpCode: res.status };
+}
 
 async function xFetch(url, options) {
-
-  const opts = { isEncode: true, ...options, credentials: 'include' };
+  const opts = { isEncode: true, needDefaultHeader: true, ...options, credentials: 'include' };
   const token = localStorage['accessToken'];
-  const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
-  const { orgId, projectId } = match.params || {};
-
-  opts.headers = {
-    ...opts.headers,
+  const { orgId } = getMatchParams();
+  const language = getLanguage();
+  const acceptLanguageMap = {
+    zh: 'zh-CN',
+    en: 'en-US'
+  };
+  const defaultHeader = {
     'Authorization': token,
     'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
     'IaC-Project-Id': opts['IaC-Project-Id'] || ''
   };
+  // 默认使用defaultHeader请求头
+  if (opts.needDefaultHeader) {
+    opts.headers = {
+      ...defaultHeader,
+      ...opts.headers
+    };
+  }
+
+  opts.headers = {
+    ...opts.headers,
+    'Accept-Language': acceptLanguageMap[language] || 'zh-CN'
+  };
+
   if (opts.isEncode && !opts.isEncodeParams) {
     url = encodeURI(url);
   }
   const fetchResponse = await fetch(url, opts);
   const jsonResponse = await parseJSON(fetchResponse);
   if (jsonResponse.httpCode == 401) {
+    if (options && options.disableLogout === true) {
+      return jsonResponse.jsonResult;
+    }
     // Here for your logout logic.
     logout();
     return;
@@ -40,5 +63,29 @@ async function xFetch(url, options) {
     return jsonResponse.jsonResult;
   }
 }
+export const xFetch_nologin = async (url, options) => {
+  const opts = { isEncode: true, ...options, credentials: 'include' };
+  const token = localStorage['accessToken'];
+  const { orgId } = getMatchParams();
+  const language = getLanguage();
+  const acceptLanguageMap = {
+    zh: 'zh-CN',
+    en: 'en-US'
+  };
+  opts.headers = {
+    'Authorization': token,
+    ...opts.headers,
+    'IaC-Org-Id': opts['IaC-Org-Id'] || orgId || '',
+    'IaC-Project-Id': opts['IaC-Project-Id'] || '',
+    'Accept-Language': acceptLanguageMap[language] || 'zh-CN'
+  };
+
+  if (opts.isEncode && !opts.isEncodeParams) {
+    url = encodeURI(url);
+  }
+  const fetchResponse = await fetch(url, opts);
+  const jsonResponse = await parseCommon(fetchResponse);
+  return jsonResponse;
+};
 
 export default xFetch;

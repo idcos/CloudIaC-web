@@ -1,0 +1,57 @@
+.res_query {
+  display: flex;
+  min-height: 700px;
+  .left {
+    width: 180px;
+    border-right: 1px solid rgba(225, 228, 232, 1);
+    .env_list, .provider_list {
+      color: #57606A;
+      font-size: 12px;
+      font-family: PingFangSC-Medium;
+      .checbox {
+        :global {
+          .ant-checkbox-wrapper {
+            width: 160px;
+            white-space: nowrap;
+            text-overflow:ellipsis;
+            overflow: hidden;
+            display: block;
+            margin-bottom: 24px;
+            color: rgba(51, 51, 51, 100);
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            &:first-child {
+              margin-top: 20px;
+            }
+            &>span:last-child {
+              width: 80px;
+            }
+          }
+        }
+      }
+    }
+    .provider_list {
+      margin-top: 13px;
+    }
+  }
+  .right {
+    flex: 1;
+    min-width: 0;
+    margin: 0 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .search {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .pagination {
+      width: 100%;
+      text-align: right;
+    }
+  }
+}

@@ -5,6 +5,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import policiesAPI from 'services/policies';
 import { TARGET_TYPE_ENUM } from 'constants/types';
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 5 },
@@ -52,13 +53,13 @@ export default ({ policyId, visible, onClose, reload }) => {
   const columns = [
     {
       dataIndex: 'targetName',
-      title: '名称',
+      title: t('define.name'),
       width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'targetType',
-      title: '类型',
+      title: t('define.type'),
       width: 200,
       ellipsis: true,
       render: (text) => TARGET_TYPE_ENUM[text]
@@ -68,14 +69,14 @@ export default ({ policyId, visible, onClose, reload }) => {
   const save = async () => {
     const { reason } = await form.validateFields();
     if (isEmpty(addTargetIds)) {
-      return notification.error({ message: '请勾选来源' });
+      return notification.error({ message: t('define.suppress.error.emptyTargetId') });
     }
     updateSuppress({ policyId, addTargetIds, reason });
   };
 
   return (
     <Drawer
-      title='屏蔽'
+      title={t('define.scan.status.suppressed')}
       visible={visible}
       onClose={onClose}
       width={700}
@@ -83,13 +84,13 @@ export default ({ policyId, visible, onClose, reload }) => {
       footerStyle={{ textAlign: 'right' }}
       footer={
         <Space>
-          <Button onClick={onClose}>取消</Button>
-          <Button type='primary' onClick={save} loading={saveLoading}>保存</Button>
+          <Button onClick={onClose}>{t('define.action.cancel')}</Button>
+          <Button type='primary' onClick={save} loading={saveLoading}>{t('define.action.save')}</Button>
         </Space>
       }
     >
       <Alert 
-        message='提示：策略禁用后所有应用该策略的环境和云模板在执行检测时都将忽略该条策略'
+        message={t('define.suppress.alert.message')}
         type='error'
         showIcon={true}
         closable={true}
@@ -100,26 +101,26 @@ export default ({ policyId, visible, onClose, reload }) => {
         style={{ margin: '28px 0' }}
       >
         <Form.Item
-          label='屏蔽说明'
+          label={t('define.suppress.field.reason')}
           name='reason'
           rules={[
             {
               required: true,
-              message: '请输入'
+              message: t('define.form.input.placeholder')
             }
           ]}
         >
-          <Input placeholder={'请填写屏蔽说明'}/>
+          <Input placeholder={t('define.form.input.placeholder')}/>
         </Form.Item>
       </Form>
-      <Card title='来源' type='inner'>
+      <Card title={t('define.suppress.source')} type='inner'>
         <Table 
           rowKey='targetId'
           loading={tableLoading}
           columns={columns}
           dataSource={tableData.list || []}
           pagination={{
-            showTotal: (total) => `共${total}条`
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } })
           }}
           scroll={{ x: 'min-content' }}
           rowSelection={{

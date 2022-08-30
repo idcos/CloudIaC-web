@@ -2,12 +2,13 @@ import React from 'react';
 import { Drawer } from "antd";
 import ctplAPI from 'services/ctpl';
 import DetectionCard from 'components/detection-card';
+import { t } from 'utils/i18n';
 
 export default ({ visible, onClose, id }) => {
 
   return (
     <Drawer
-      title='检测详情'
+      title={t('define.scanDetail')}
       placement='right'
       visible={visible}
       onClose={onClose}

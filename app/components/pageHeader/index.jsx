@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import styles from './styles.less';
 
@@ -19,9 +20,13 @@ const PageHeader = (props) => {
     curOrg,
     className,
     showIcon,
-    headerStyle
+    headerStyle,
+    colSpan = {
+      title: 18,
+      subDes: 6
+    }
   } = props;
-  return <div style={{ background: !!showIcon && `#fff url(/assets/backgroundIcon/${showIcon}.svg) no-repeat 10px -36px` }} className={`${styles.pageHeader} ${className}`}>
+  return <div style={{ background: !!showIcon && `#fff url(/assets/backgroundIcon/${showIcon}.svg) no-repeat 10px -36px` }} className={classNames(styles.pageHeader, className)}>
     <div>
       { breadcrumb && <BreadcrumbWrapper
         location={location}
@@ -31,13 +36,13 @@ const PageHeader = (props) => {
         }}
       />}
       <Row className='header-wrapper' style={{ background: !showIcon && `#fff`, ...headerStyle }} type='flex' align='middle' justify='space-around'>
-        <Col span={18}>
+        <Col span={colSpan.title}>
           <h2 className='title reset-styles'>
             <span className='text'>{title}</span>
             <span className='des'>{des}</span>
           </h2>
         </Col>
-        <Col span={6}>
+        <Col span={colSpan.subDes}>
           <p className='subDes reset-styles'>{subDes}</p>
         </Col>
       </Row>

@@ -3,10 +3,11 @@ import { Form, Modal, notification, Select } from "antd";
 import isEmpty from 'lodash/isEmpty';
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
+import { t } from 'utils/i18n';
 
 const { Option } = Select;
 const FL = {
-  labelCol: { span: 5 },
+  labelCol: { span: 7 },
   wrapperCol: { span: 16 }
 };
 
@@ -32,7 +33,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
       setList(res.result.list || []);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -55,7 +56,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
     } catch (e) {
       setSubmitLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -64,11 +65,16 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
   return (
     <Modal
       title={title}
+      width={600}
       visible={visible}
       onCancel={onClose}
       okButtonProps={{
         loading: submitLoading
       }}
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
+      className='antd-modal-type-form'
       onOk={onOk}
     >
       <Form
@@ -76,12 +82,12 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
         form={form}
       >
         <Form.Item
-          label='绑定策略组'
+          label={t('define.ct.field.policyGroup')}
           name='policyGroupIds'
         >
           <Select 
             getPopupContainer={triggerNode => triggerNode.parentNode}
-            placeholder='绑定策略组'
+            placeholder={t('define.ct.field.policyGroup')}
             mode={'multiple'}
             allowClear={true}
             showArrow={true}

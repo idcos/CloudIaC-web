@@ -15,10 +15,13 @@ const taskAPI = {
     });
   },
   // 获取环境资源列表
-  envsTaskList: ({ envId, orgId, projectId, q }) => {
+  envsTaskList: ({ envId, orgId, projectId, q, taskType, user, source }) => {
     return getWithArgs(`/api/v1/envs/${envId}/tasks`, {
       pageSize: 0,
-      q
+      q,
+      taskType,
+      user,
+      source
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源图形列表
@@ -63,6 +66,13 @@ const taskAPI = {
   },
   getTaskStepLog: ({ orgId, projectId, taskId, stepId }) => {
     return getWithArgs(`/api/v1/tasks/${taskId}/steps/${stepId}/log`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  // 任务中止
+  abortTask: ({ orgId, projectId, taskId }) => {
+    return post(`/api/v1/tasks/${taskId}/abort`, {}, {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });

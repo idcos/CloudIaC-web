@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Modal, Select } from "antd";
+import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 5 },
@@ -38,15 +39,19 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
   };
 
   return <Modal
-    title={opt === 'add' ? '添加VCS' : '编辑VCS'}
+    title={opt === 'add' ? t('define.vcs.add') : t('define.vcs.modify')}
     visible={visible}
     onCancel={toggleVisible}
     okButtonProps={{
       loading: submitLoading
     }}
+    cancelButtonProps={{ 
+      className: 'ant-btn-tertiary' 
+    }}
+    className='antd-modal-type-form'
     onOk={onOk}
     width={550}
-    zIndex={1111111}
+    zIndex={1000}
   >
     <Form
       {...FL}
@@ -54,30 +59,30 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
       initialValues={curRecord}
     >
       <Form.Item
-        label='名称'
+        label={t('define.name')}
         name='name'
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input placeholder='请输入资源名称'/>
+        <Input placeholder={t('define.form.input.placeholder')}/>
       </Form.Item>
       <Form.Item
-        label='类型'
+        label={t('define.type')}
         name='vcsType'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.select.placeholder')
           }
         ]}
       >
         <Select 
           getPopupContainer={triggerNode => triggerNode.parentNode}
-          placeholder='请选择VCS类型'
+          placeholder={t('define.form.select.placeholder')}
           onChange={onChangeVcsType}
           disabled={opt === 'edit'}
         >
@@ -88,16 +93,16 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
         </Select>
       </Form.Item>
       <Form.Item
-        label='地址'
+        label={t('define.address')}
         name='address'
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input placeholder='请输入地址'/>
+        <Input placeholder={t('define.form.input.placeholder')} />
       </Form.Item>
       <Form.Item
         label='Token'
@@ -105,11 +110,11 @@ export default ({ visible, opt, toggleVisible, curRecord = {}, operation }) => {
         rules={[
           {
             required: opt === 'add',
-            message: '请输入Token密码'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
-        <Input placeholder={opt === 'add' ? '请输入' : '空值保存时不会修改原有值'}/>
+        <Input placeholder={opt === 'add' ? t('define.form.input.placeholder') : t('define.emptyValueSave.placeholder')}/>
       </Form.Item>
     </Form>
   </Modal>;

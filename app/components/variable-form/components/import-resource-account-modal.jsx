@@ -6,10 +6,11 @@ import intersectionBy from 'lodash/intersectionBy';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
+import { t } from 'utils/i18n';
 
 export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
-  const { orgId } = fetchParams || {};
+  const { orgId, projectId } = fetchParams || {};
   const [ visible, setVisible ] = useState(false);
   const [ selectedRows, setSelectedRows ] = useState([]);
   const [ disabledKeys, setDisabledKeys ] = useState([]);
@@ -32,7 +33,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
     mutate: mutateDataSource
   } = useRequest(
     (params) => requestWrapper(
-      varGroupAPI.list.bind(null, { orgId, type: 'environment', ...params })
+      varGroupAPI.list.bind(null, { orgId, projectId, type: 'environment', ...params })
     ), {
       manual: true,
       formatResult: (res) => {
@@ -70,19 +71,19 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '账号描述',
+      title: t('define.resourceAccount.accountDes'),
       width: 200,
       ellipsis: true
     },
     {
       dataIndex: 'creator',
-      title: '创建人',
+      title: t('define.creator'),
       width: 140,
       ellipsis: true
     },
     {
       dataIndex: 'updatedAt',
-      title: '更新时间',
+      title: t('define.updateTime'),
       width: 200,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD hh:mm')
@@ -91,22 +92,25 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
 
   event$.useSubscription(({ type }) => {
     switch (type) {
-      case 'open-import-resource-account-modal':
-        onOpen();
-        break;
-      default:
-        break;
+    case 'open-import-resource-account-modal':
+      onOpen();
+      break;
+    default:
+      break;
     }
   });
 
   return (
     <Modal 
-      title='资源账号' 
+      title={t('define.resourceAccount.title')}
       visible={visible} 
       onCancel={onCancel} 
+      className='antd-modal-type-table'
+      cancelButtonProps={{ 
+        className: 'ant-btn-tertiary' 
+      }}
       onOk={onOk}
-      width={600}
-      bodyStyle={{ padding: 0 }}
+      width={680}
     >
       <Table 
         style={{ marginBottom: 14 }}
@@ -140,7 +144,7 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
               <Popover 
                 placement='topLeft'
                 trigger='click'
-                content={<><CloseCircleFilled style={{ color: '#F23C3C', marginRight: 8 }}/>以下资源账号存在相同的key，请重新选择</>} 
+                content={<><CloseCircleFilled style={{ color: '#F23C3C', marginRight: 8 }}/>{t('define.resourceAccount.sameKeyError')}</>} 
                 visible={popoverVisibleKey === record.varGroupId}
                 onVisibleChange={(visible) => !visible && setPopoverVisibleKey()} 
               >

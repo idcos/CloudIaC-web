@@ -8,6 +8,7 @@ import vcsAPI from 'services/vcs';
 import cgroupsAPI from 'services/cgroups';
 import registryAPI from 'services/registry';
 import Coder from "components/coder";
+import { t } from 'utils/i18n';
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
 
@@ -62,7 +63,7 @@ export default () => {
         form.validateFields([ 'repoRevision', 'dir' ]);
       },
       onError: (err) => {
-        setCheckErrMsg(err.message || '字段在线校验不通过');
+        setCheckErrMsg(err.message || t('define.policyGroup.form.error.online'));
         form.validateFields([ 'repoRevision', 'dir' ]);
       }
     }
@@ -378,7 +379,7 @@ export default () => {
               {
                 validator(_, value) {
                   if (!registryFlag && value === 'registry') {
-                    return Promise.reject(new Error('未查询到registry地址配置，请切换其他来源'));
+                    return Promise.reject(new Error(t('define.policyGroup.form.error.noRegistry')));
                   }
                   return Promise.resolve();
                 }
@@ -399,7 +400,7 @@ export default () => {
               }}
             >
               <Radio value='vcs'>VCS</Radio>
-              <Radio value='registry'>Registry</Radio>
+              <Radio value='registry'>Exchange</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item noStyle={true} shouldUpdate={true}>
@@ -412,10 +413,10 @@ export default () => {
                     <Form.Item 
                       label='VCS'
                       name='vcsId' 
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
-                        placeholder='请选择VCS'
+                        placeholder={t('define.form.select.placeholder')}
                         optionFilterProp='label'
                         showSearch={true}
                         loading={vcsLoading}
@@ -423,9 +424,9 @@ export default () => {
                       />
                     </Form.Item>
                     <Form.Item 
-                      label='代码仓库'
+                      label={t('define.repo')}
                       name='repoId'
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
                         loading={repoLoading}
@@ -435,7 +436,7 @@ export default () => {
                         filterOption={false}
                         onDropdownVisibleChange={(open) => open && onSearchRepos()}
                         onSearch={onSearchRepos}
-                        placeholder='请输入仓库名称搜索'
+                        placeholder={t('define.searchByRepoName')}
                       />
                     </Form.Item>
                     <Form.Item
@@ -445,11 +446,11 @@ export default () => {
                       <Input />
                     </Form.Item>
                     <Form.Item 
-                      label='分支/标签'
+                      label={`${t('define.branch')}/${t('define.tag')}`}
                       name='repoRevision'
                       dependencies={['dir']}
                       rules={[
-                        { required: true, message: '请选择' },
+                        { required: true, message: t('define.form.select.placeholder') },
                         ({ getFieldValue }) => ({
                           validator(_, value) {
                             const dir = getFieldValue('dir');
@@ -462,7 +463,7 @@ export default () => {
                       ]}
                     >
                       <Select 
-                        placeholder='请选择分支/标签'
+                        placeholder={t('define.form.select.placeholder')}
                         loading={repoBranchLoading || repoTagLoading}
                         onChange={(value, option) => {
                           if (option.type === 'branch') {
@@ -472,30 +473,30 @@ export default () => {
                           }
                         }}
                       >
-                        <Select.OptGroup label='分支'>
+                        <Select.OptGroup label={t('define.branch')}>
                           {repoBranchOptions.map(it => <Select.Option value={it.value} type='branch'>{it.label}</Select.Option>)}
                         </Select.OptGroup>
-                        <Select.OptGroup label='标签'>
+                        <Select.OptGroup label={t('define.tag')}>
                           {repoTagOptions.map(it => <Select.Option value={it.value} type='gitTags'>{it.label}</Select.Option>)}
                         </Select.OptGroup>
                       </Select>
                     </Form.Item>
                     <Form.Item 
-                      label='分支'
+                      label={t('define.branch')}
                       name='branch'
                       hidden={true}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item 
-                      label='标签'
+                      label={t('define.tag')}
                       name='gitTags'
                       hidden={true}
                     >
                       <Input />
                     </Form.Item>
                     <Form.Item 
-                      label='目录'
+                      label={t('define.workdir')}
                       name='dir'
                       rules={[
                         {
@@ -508,7 +509,7 @@ export default () => {
                         }
                       ]}
                     >
-                      <Input placeholder='请填写目录' />
+                      <Input placeholder={t('define.form.input.placeholder')} />
                     </Form.Item>
                   </>
                 );
@@ -516,12 +517,12 @@ export default () => {
                 return (
                   <>
                     <Form.Item 
-                      label='策略组'
+                      label={t('define.policyGroup')}
                       name='repoId'
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
-                        placeholder='请选择策略组'
+                        placeholder={t('define.form.select.placeholder')}
                         optionFilterProp='label'
                         showSearch={true}
                         loading={policyGroupLoading}
@@ -547,12 +548,12 @@ export default () => {
                       <Input />
                     </Form.Item>
                     <Form.Item 
-                      label='版本'
+                      label={t('define.version')}
                       name='gitTags'
-                      rules={[{ required: true, message: '请选择' }]}
+                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
                     >
                       <Select 
-                        placeholder='请选择版本'
+                        placeholder={t('define.form.select.placeholder')}
                         optionFilterProp='label'
                         showSearch={true}
                         loading={policyGroupVersionLoading}
@@ -577,12 +578,12 @@ export default () => {
               }));
               return isCreate ? (
                 <Space>
-                  <Button disabled={hasErr} type='primary' onClick={next}>下一步</Button>
+                  <Button disabled={hasErr} type='primary' onClick={next}>{t('define.action.next')}</Button>
                 </Space>
               ) : (
                 <Space>
-                  <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>取消</Button>     
-                  <Button disabled={hasErr} type='primary' onClick={onUpdate} loading={updateLoading}>提交</Button>     
+                  <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>{t('define.action.cancel')}</Button>     
+                  <Button disabled={hasErr} type='primary' onClick={onUpdate} loading={updateLoading}>{t('define.action.submit')}</Button>     
                 </Space>
               );
             }}
@@ -603,12 +604,12 @@ export default () => {
                         <div className='empty-text'>
                           {readmeText === undefined ? (
                             source === 'vcs' ? (
-                              <span>选择VCS、仓库、分支/标签查看策略组说明</span>
+                              <span>{t('define.policyGroup.form.readme.empty.vcs')}</span>
                             ) : (
-                              <span>选择策略组、版本查看策略组说明</span>
+                              <span>{t('define.policyGroup.form.readme.empty.registry')}</span>
                             )
                           ) : (
-                            <span>未获取策略组说明</span>
+                            <span>{t('define.policyGroup.form.readme.empty.default')}</span>
                           )}
                         </div>
                       )

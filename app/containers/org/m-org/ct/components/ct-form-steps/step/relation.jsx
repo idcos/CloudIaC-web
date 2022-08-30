@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useImperativeHandle } from 'react';
+import React, { useState, useEffect, useMemo, useImperativeHandle } from 'react';
 import { Space, Checkbox, Form, Button, Row, Divider, notification, Empty } from "antd";
-
+import { t } from 'utils/i18n';
 import projectAPI from 'services/project';
 import OpModal from 'components/project-modal';
+import queryString from 'query-string';
 
 const FL = {
   labelCol: { span: 0 },
@@ -17,26 +18,36 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
   const [ indeterminate, setIndeterminate ] = useState(false);
   const [ checkAll, setCheckAll ] = useState(false);
   const [ pjtModalVsible, setPjtModalVsible ] = useState(false);
-
+  const { related_project } = queryString.parse(location.search);
   useEffect(() => {
     fetchProject();
   }, []);
 
+  const defaultValues = useMemo(() => {
+    let defaultValues = ctData[type];
+    if (related_project) {
+      defaultValues = {
+        ...defaultValues,
+        projectId: [related_project]
+      };
+    }
+    return defaultValues;
+  }, [ ctData, type, related_project ]);
+
   useEffect(() => {
-    const defaultValues = ctData[type];
     if (defaultValues) {
       form.setFieldsValue(defaultValues);
     }
-  }, [ ctData, type ]);
+  }, [defaultValues]);
+
 
   useEffect(() => {
-    const defaultValues = ctData[type];
     if (defaultValues && projectList.length) {
       const { projectId = [] } = defaultValues;
       setIndeterminate(!!projectId && !!projectId.length && projectId.length < projectList.length);
       !!projectId && !!projectId.length && setCheckAll(projectId.length === projectList.length);
     }
-  }, [ ctData, type, projectList ]);
+  }, [ defaultValues, projectList ]);
 
   const fetchProject = async() => {
     let res = await projectAPI.allEnableProjects({ orgId });
@@ -44,7 +55,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
       setProjectList(res.result.list || []);
     } else {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: res.message
       });
     }
@@ -94,18 +105,18 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
       };
       const res = await method[action](params);
       if (res.code != 200) {
-        throw new Error(res.message);
+        throw new Error(res.message_detail || res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchProject();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
-        description: e.message
+        message: t('define.message.opFail'),
+        description: e.message_detail || e.message
       });
     }
   };
@@ -120,7 +131,7 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
         projectList.length === 0 ? <div>
           <Empty 
             image={Empty.PRESENTED_IMAGE_SIMPLE} 
-            description={<>暂无项目，<a onClick={togglePjtModalVsible}>创建项目</a></>}
+            description={<>{t('define.noData')}，<a onClick={togglePjtModalVsible}>{t('define.project.create')}</a></>}
           />
           {
             pjtModalVsible && <OpModal
@@ -138,14 +149,14 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
               onChange={onCheckAllChange}
               checked={checkAll}
             >
-              选择全部项目
+              {t('define.project.selectAll')}
             </Checkbox>
           </Row>
           <Divider style={{ margin: '8px 0' }} />
           <Form.Item 
             name='projectId'
           >
-            <Checkbox.Group onChange={onChange}>
+            <Checkbox.Group onChange={onChange} initialValues={[related_project]}>
               <Space direction='vertical' size={6}>
                 {projectList.map(it => <Checkbox value={it.id}>{it.name}</Checkbox>)}
               </Space>
@@ -159,13 +170,13 @@ export default ({ goCTlist, childRef, stepHelper, orgId, ctData, type, opType, s
           {
             opType === 'add' ? (
               <>
-                <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()} >上一步</Button>
-                <Button type='primary' htmlType={'submit'} loading={saveLoading}>完成</Button>
+                <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()} >{t('define.action.prev')}</Button>
+                <Button type='primary' htmlType={'submit'} loading={saveLoading}>{t('define.action.complete')}</Button>
               </>
             ) : (
               <>
-                <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
-                <Button type='primary' htmlType={'submit'} loading={saveLoading}>提交</Button>
+                <Button className='ant-btn-tertiary' onClick={goCTlist}>{t('define.action.cancel')}</Button>
+                <Button type='primary' htmlType={'submit'} loading={saveLoading}>{t('define.action.submit')}</Button>
               </>
             )
           }

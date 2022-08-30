@@ -1,11 +1,184 @@
 @import 'containers/App/styles/variable.less';
 
-
 .projectList {
+  width: 100%;
+  margin-top: 48px;
 
   :global {
-    .btns {
-      margin-bottom: 20px;
+
+    .pjtBox {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      padding: 0 24px;
+
+      .pjtItemBox {
+        position: relative;
+        width: 282px;
+        height: 145px;
+        border-radius: 3px;
+        border: 2px solid #E1E4E8;
+        border-top: 4px solid #24292F;
+        padding: 16px 16px 0;
+        cursor: pointer;
+
+        .last-use-bar {
+          position: absolute;
+          top: 0;
+          right: 0;
+          margin-right: -2px;
+          margin-top: -4px;
+        }
+
+        .pjtItemBox-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+
+          .pjtItemBox-header-left {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            color: #24292F;
+            font-weight: 600;
+            gap: 8px;
+
+            &-icon {
+            }
+
+            &-name {
+              flex: 1;
+              min-width: 0;
+              display: flex;
+              align-items: center;
+              font-family: PingFangSC-Medium;
+            }
+
+            &-count {
+              background-color: #008C5A;
+              border-radius: 8px;
+              height: 16px;
+              padding: 0 6px;
+              text-align: center;
+              line-height: 16px;
+              color: #fff;
+              font-size: 12px;
+            }
+          }
+
+          .configIcon {
+            font-size: 16px;
+            border-radius: 2px;
+            color: #24292F;
+            &:hover {
+              background-color: #DAE4E6;
+              color: #008C5A;
+            }
+            .ant-dropdown-menu {
+              width: 100px;
+              padding: 8px;
+              .ant-dropdown-menu-item {
+                padding: 9px 12px;
+                border-radius: 4px;
+                color: #24292F;
+
+                &:hover {
+                  background-color: #DAE4E6;
+                  color: #008C5A;
+                }
+              }
+            }
+          }
+        }
+
+        .pjtItemBox-content {
+          font-size: 12px;
+          line-height: 12px;
+          .description {
+            flex: 1;
+            min-width: 0;
+            font-size: 12px;
+            color: #57606A;
+          }
+        }
+
+        .project-report {
+          height: 64px;
+          .empty-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            .empty-text {
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              font-size: 12px;
+              color: #57606A;
+              opacity: 0.4;
+            }
+          }
+        }
+
+        .card-bottom-container {
+          display: flex;
+          justify-content: end;
+          gap: 8px;
+          .text {
+            color: #57606A;
+            font-size: 12px;
+            opacity: 0.4;
+          }
+        }
+      }
+
+      .pjtItemBox:hover {
+        border-top-color: rgba(0, 130, 84, 1);
+      }
+
+      .recent-project {
+        border-top-color: rgba(0, 130, 84, 1);
+      }
+
+      .pjtItemBox-actions {
+        display: none;
+        .ant-btn {
+          display: flex;
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .pjtItemBox:hover .pjtItemBox-actions {
+        display: flex;
+        gap: 6px;
+        color: #008C5A;
+      }
+
+      .creatPjtBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: #F9F9F9;
+        border-top: 6px solid #E7E9ED;
+
+        .plusIcon {
+          font-size: 16px;
+          margin-bottom: 4px;
+          padding: 7px;
+          border-radius: 50%;
+          border: 1px solid #E1E4E8;
+          background: #fff;
+        }
+        .create-text {
+          color: #24292F;
+          font-weight: 500;
+        }
+      }
     }
   }
 }

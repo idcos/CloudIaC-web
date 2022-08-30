@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { Form, Button, Input, Typography } from 'antd';
+import { t } from 'utils/i18n';
 
-import { Form, Button, Input } from 'antd';
+const { Text } = Typography;
 
 const layout = {
   labelCol: {
-    span: 6
+    span: 8
   },
   wrapperCol: {
     span: 16
@@ -30,54 +32,57 @@ const Pwd = ({ title, userInfo, updateUserInfo }) => {
       onFinish={onFinish}
     >
       <Form.Item
-        label='原密码'
+        label={t('define.page.userSet.pwd.field.oldPassword')}
         name='oldPassword'
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
       >
         <Input.Password autoComplete='new-password'/>
       </Form.Item>
       <Form.Item
-        label='新密码'
+        label={t('define.page.userSet.pwd.field.newPassword')}
         name='newPassword'
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           }
         ]}
+        extra={
+          <Text type='warning'>{t('define.page.userSet.pwd.field.newPassword.rule')}</Text>
+        }
       >
         <Input.Password autoComplete='new-password'/>
-      </Form.Item>
+      </Form.Item>   
       <Form.Item
-        label='确认新密码'
+        label={t('define.page.userSet.pwd.field.reNewPassword')}
         name='reNewPassword'
         dependencies={['newPassword']}
         hasFeedback={true}
         rules={[
           {
             required: true,
-            message: '请输入'
+            message: t('define.form.input.placeholder')
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('newPassword') === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('两次输入不一致!'));
+              return Promise.reject(new Error(t('define.page.userSet.pwd.field.reNewPassword.error.noSame')));
             }
           })
         ]}
       >
         <Input.Password autoComplete='new-password'/>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
-          更改信息
+          {t('define.page.userSet.pwd.action.save')}
         </Button>
       </Form.Item>
     </Form>

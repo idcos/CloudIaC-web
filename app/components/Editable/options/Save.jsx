@@ -3,7 +3,7 @@ import omit from 'lodash/omit';
 import { ButtonProps } from 'antd/lib/button';
 
 import { Button, Popconfirm } from 'antd';
-
+import { t } from 'utils/i18n';
 import { EditableContext, EditableRowContext } from '../context';
 
 const OptionSave = (props) => {
@@ -35,7 +35,7 @@ const OptionSave = (props) => {
     onClick={() => {
       save(id);
     }}
-  >{buttonText || '保存'}</Button> : null;
+  >{buttonText || t('define.action.save')}</Button> : null;
 };
 
 export default OptionSave;

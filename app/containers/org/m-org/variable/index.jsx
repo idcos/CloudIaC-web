@@ -7,6 +7,7 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import varsAPI from 'services/variables';
 import varGroupAPI from 'services/var-group';
+import { t } from 'utils/i18n';
 import styles from './styles.less';
 
 const defaultScope = 'org';
@@ -65,32 +66,25 @@ export default ({ match }) => {
     const { varGroupIds, delVarGroupIds, ...params } = varData;
     await updateVars(params);
     await updateVarGroup({ varGroupIds, delVarGroupIds });
-    notification.success({ message: '操作成功' });
+    notification.success({ message: t('define.message.opSuccess') });
   };
 
   return (
-    <Layout
-      extraHeader={<PageHeader
-        title='变量'
-        breadcrumb={true}
-      />}
-    >
+    <div style={{ width: 1200, margin: '36px auto' }}>
       <Spin spinning={spinning}>
         <div className={styles.variable}>
-          <div className='idcos-card'>
-            <VariableForm 
-              fetchParams={{ orgId }} 
-              varRef={varRef} 
-              defaultScope={defaultScope} 
-              defaultData={{ variables: vars }}
-              event$={event$}
-            />
-            <div className='btn-wrapper'>
-              <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>保存</Button>
-            </div>
+          <VariableForm 
+            fetchParams={{ orgId }} 
+            varRef={varRef} 
+            defaultScope={defaultScope} 
+            defaultData={{ variables: vars }}
+            event$={event$}
+          />
+          <div className='btn-wrapper'>
+            <Button type='primary' onClick={save} loading={updateLoading || updateVarGroupLoading}>{t('define.action.save')}</Button>
           </div>
         </div>
       </Spin>
-    </Layout>
+    </div>
   );
 };

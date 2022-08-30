@@ -1,10 +1,13 @@
 import { Space } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, SyncOutlined, CloseSquareOutlined } from '@ant-design/icons';
-import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon } from 'components/iconfont';
+import { SeverityLowIcon, SeverityMediumIcon, SeverityHighIcon, TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
+import { t } from 'utils/i18n';
 
 /**
  * 全局滚动dom id
  */
+
+export const IAC_PUBLICITY_HOST = 'https://www.cloudiac.org';
 export const GLOBAL_SCROLL_DOM_ID = 'global_scroll_dom_id';
 
 // Terraform版本自动匹配值
@@ -12,111 +15,132 @@ export const TFVERSION_AUTO_MATCH = 'tfversion_auto_match';
 
 export const ORG_USER = {
   role: {
-    member: '成员',
-    admin: '管理员',
-    complianceManager: '合规管理员'
+    member: t('org.role.member'),
+    admin: t('org.role.admin'),
+    complianceManager: t('org.role.complianceManager')
   },
   eventType: {
-    'task.failed': '部署失败',
-    'task.complete': '部署成功',
-    'task.approving': '等待审批',
-    'task.running': '新建部署',
-    'task.crondrift': '配置漂移'
+    'task.failed': t('org.eventType.task.failed'),
+    'task.complete': t('org.eventType.task.complete'),
+    'task.approving': t('org.eventType.task.approving'),
+    'task.running': t('org.eventType.task.running'),
+    'task.crondrift': t('org.eventType.task.crondrift')
   },
   notificationType: {
-    email: '邮件',
-    wechat: '企业微信',
-    dingtalk: '钉钉',
-    slack: 'Slack'
+    email: t('org.notificationType.email'),
+    wechat: t('org.notificationType.wechat'),
+    dingtalk: t('org.notificationType.dingtalk'),
+    slack: t('org.notificationType.slack')
   }
 };
 
 export const SYS = {
   status: {
-    passing: '正常'
+    passing: t('sys.status.normal')
   }
 };
 
+export const TIER_ENUM = {
+  official: t('define.exchange.official'),
+  verified: t('define.exchange.verified'),
+  community: t('define.exchange.community')
+};
+
+export const TIER_ICON_ENUM = {
+  official: TierOfficialIcon,
+  verified: TierVerifiedIcon
+};
+
 export const PROJECT_ROLE = {
-  manager: 'manager',
-  approver: 'approver',
-  operator: 'operator',
-  guest: 'guest'
+  manager: t('project.role.manager'),
+  approver: t('project.role.approver'),
+  operator: t('project.role.operator'),
+  guest: t('project.role.guest')
 };
 
 export const AUTO_DESTROY = [
-  { name: '12小时', code: '12h' },
-  { name: '一天', code: '1d' },
-  { name: '三天', code: '3d' },
-  { name: '一周', code: '1w' },
-  { name: '半个月', code: '15d' },
-  { name: '一个月', code: '30d' }
+  { name: t('define.autoDestroy.12h'), code: '12h' },
+  { name: t('define.autoDestroy.1d'), code: '1d' },
+  { name: t('define.autoDestroy.3d'), code: '3d' },
+  { name: t('define.autoDestroy.1w'), code: '1w' },
+  { name: t('define.autoDestroy.15d'), code: '15d' },
+  { name: t('define.autoDestroy.30d'), code: '30d' }
 ];
 
-export const destoryType = [{
-  name: '不限制', value: 'infinite'
+export const destroyType = [{
+  name: t('define.destroyType.infinite'), value: 'infinite'
 }, {
-  name: '小时/天', value: 'timequantum'
+  name: t('define.destroyType.timequantum'), value: 'timequantum'
 }, {
-  name: '具体时间', value: 'time'
+  name: t('define.destroyType.time'), value: 'time'
+}, {
+  name: t('define.destroyType.cycle'), value: 'cycle'
 }];
 
 export const ENV_STATUS = {
-  'active': '活跃', 
-  'failed': '失败', 
-  'inactive': '不活跃',
-  'running': '执行中',
-  'approving': '待审批'
+  'active': t('env.status.active'), 
+  'failed': t('env.status.failed'), 
+  'inactive': t('env.status.inactive'),
+  'destroyed': t('env.status.destroyed'),
+  'running': t('env.status.running'),
+  'approving': t('env.status.approving')
 };
 
 export const ENV_STATUS_COLOR = {
   'active': '#008C5A', 
   'failed': '#DD2B0E', 
   'inactive': '#faad14',
+  'destroyed': '#24292F',
   'running': '#08979c',
-  'approving': '#548BC5'
+  'approving': '#0969DA'
 };
 
 export const SCOPE_ENUM = {
-  org: '组织',
-  project: '项目',
-  template: '云模板',
-  env: '环境'
+  org: t('define.scope.org'),
+  project: t('define.scope.project'),
+  template: t('define.scope.template'),
+  env: t('define.scope.env')
+};
+
+export const VAR_TYPE_ENUM = {
+  terraform: t('define.varType.terraform'),
+  environment: t('define.varType.environment')
 };
 
 // 目标类型
 export const TARGET_TYPE_ENUM = {
-  template: '云模板',
-  env: '环境',
-  policy: '策略'
+  template: t('define.targetType.template'),
+  env: t('define.targetType.env'),
+  policy: t('define.targetType.policy')
 };
 
 // 屏蔽类型
 export const SUPPRESS_TYPE_ENUM = {
-  policy: '屏蔽此策略',
-  source: '按来源屏蔽'
+  policy: t('define.suppressType.policy'),
+  source: t('define.suppressType.source')
 };
 
 export const DOCS = {
-  quickstart: '快速入门',
-  developer: '开发者文档',
-  summarize: 'CloudIaC概述',
-  organization: '组织',
-  tpl: '云模板',
-  project: '项目',
-  variable: '变量',
-  env: '环境',
-  vcs: 'VCS',
-  role: '用户和角色'
+  quickstart: t('define.docs.quickstart'),
+  developer: t('define.docs.developer'),
+  summarize: t('define.docs.summarize'),
+  organization: t('define.docs.organization'),
+  tpl: t('define.docs.tpl'),
+  project: t('define.docs.project'),
+  variable: t('define.docs.variable'),
+  env: t('define.docs.env'),
+  vcs: t('define.vcs'),
+  role: t('define.docs.role')
 };
 
 export const TASK_STATUS = {
-  "pending": '排队',
-  "running": '执行中',
-  "approving": '待审批',
-  "failed": '失败',
-  "complete": '成功',
-  "rejected": '驳回'
+  "pending": t('task.status.pending'),
+  "running": t('task.status.running'),
+  "approving": t('task.status.approving'),
+  "failed": t('task.status.failed'),
+  "complete": t('task.status.complete'),
+  "rejected": t('task.status.rejected'),
+  "aborted": t('task.status.aborted')
 };
 
 export const TASK_STATUS_COLOR = {
@@ -125,13 +149,14 @@ export const TASK_STATUS_COLOR = {
   "approving": 'processing',
   "failed": 'error',
   "complete": 'success',
-  "rejected": "warning"
+  "rejected": "warning",
+  "aborted": 'error'
 };
 
 export const TASK_TYPE = {
-  'plan': 'plan作业',
-  'apply': 'apply作业',
-  'destroy': 'destroy作业'
+  'plan': t('task.type.plan'),
+  'apply': t('task.type.apply'),
+  'destroy': t('task.type.destroy')
 };
 
 /** 不需要长轮询获取任务信息的任务状态 */
@@ -139,7 +164,8 @@ export const END_TASK_STATUS_LIST = [
   'failed',
   'approving',
   'complete',
-  'rejected'
+  'rejected',
+  'aborted'
 ];
 
 export const END_ENV_STATUS_LIST = [
@@ -152,29 +178,29 @@ export const POLICIES_SEVERITY_STATUS_ENUM = {
   high: (
     <Space size={4}>
       <SeverityHighIcon />
-      <span>高</span>
+      <span>{t('policy.severity.high')}</span>
     </Space>
   ),
   medium: (
     <Space size={4}>
       <SeverityMediumIcon />
-      <span>中</span>
+      <span>{t('policy.severity.medium')}</span>
     </Space>
   ),
   low: (
     <Space size={4}>
       <SeverityLowIcon />
-      <span>低</span>
+      <span>{t('policy.severity.low')}</span>
     </Space>
   )
 };
 
 export const POLICIES_DETECTION = {
-  pending: '检测中',
-  passed: '通过',
-  failed: '失败',
-  violated: '不通过',
-  suppressed: '已屏蔽'
+  pending: t('policy.detection.status.pending'),
+  passed: t('policy.detection.status.passed'),
+  failed: t('policy.detection.status.failed'),
+  violated: t('policy.detection.status.violated'),
+  suppressed: t('policy.detection.status.suppressed')
 };
 export const POLICIES_DETECTION_COLOR = {
   pending: '#FFBF00',
@@ -191,9 +217,9 @@ export const POLICIES_DETECTION_ICON_COLLAPSE = {
   suppressed: <CloseSquareOutlined />
 };
 export const DIMENSION_ENUM = {
-  module: '所属模块',
-  provider: 'Provider',
-  type: '资源类型'
+  module: t('env.resource.mode.module'),
+  provider: t('env.resource.mode.provider'),
+  type: t('env.resource.mode.type')
 };
 // 禁止扫描的合规状态
 export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
@@ -201,11 +227,12 @@ export const SCAN_DISABLE_STATUS = [ 'disable', 'pending' ];
 export const SCAN_DETAIL_DISABLE_STATUS = [ 'disable', 'enable' ];
 
 export const DEPLOY_HISTORY_SOURCE_ENUM = {
-  manual: '手动',
-  driftPlan: '漂移检测',
-  driftApply: '纠正漂移',
-  webhookPlan: 'PR/MR',
-  webhookApply: '分支推送',
-  autoDestroy: '定时销毁',
-  api: 'API触发'
+  manual: t('task.triggerType.manual'),
+  driftPlan: t('task.triggerType.driftPlan'),
+  driftApply: t('task.triggerType.driftApply'),
+  webhookPlan: t('task.triggerType.webhookPlan'),
+  webhookApply: t('task.triggerType.webhookApply'),
+  autoDestroy: t('task.triggerType.autoDestroy'),
+  api: t('task.triggerType.api'),
+  autoDeploy: t('task.triggerType.autoDeploy')
 };

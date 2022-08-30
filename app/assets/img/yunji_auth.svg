@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 3</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#4CC7AF" offset="0%"></stop>
+            <stop stop-color="#259677" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Exchange" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Pack" transform="translate(-714.000000, -345.000000)" fill-rule="nonzero">
+            <g id="编组-21" transform="translate(403.000000, 226.000000)">
+                <g id="编组-17" transform="translate(273.000000, 115.000000)">
+                    <g id="编组-3" transform="translate(38.000000, 4.000000)">
+                        <circle id="椭圆形备份-2" fill="url(#linearGradient-1)" cx="5" cy="5" r="5"></circle>
+                        <polygon id="路径-3备份" fill="#FFFFFF" transform="translate(5.080939, 4.374498) rotate(45.000000) translate(-5.080939, -4.374498) " points="6.68742731 1.47197176 6.68742731 7.2770235 3.47445135 7.2770235 3.47445135 6.01120072 5.42160338 6.01118144 5.42160452 1.47197176"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

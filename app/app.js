@@ -12,7 +12,7 @@ import LanguageProvider from 'containers/LanguageProvider';
 import { translationMessages } from './i18n';
 import './publicPath';
 import { ConfigProvider, notification } from 'antd';
-import zhCN from 'antd/es/locale/zh_CN';
+import { getAntdLocale } from 'utils/i18n';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'inner-modules/idcos-antd-theme/default/override.less';
@@ -26,7 +26,7 @@ const MOUNT_NODE = document.getElementById('app');
 const ConnectedApp = props => (
   <Provider store={store}>
     <LanguageProvider messages={props.messages}>
-      <ConfigProvider locale={zhCN}>
+      <ConfigProvider locale={getAntdLocale()}>
         <ConnectedRouter history={history}>
           <App />
         </ConnectedRouter>
@@ -69,6 +69,9 @@ if (!window.Intl) {
 }
 
 const fetchGlobal = () => {
+  store.dispatch({
+    type: 'global/getSysConfigSwitches'
+  });
   store.dispatch({
     type: 'global/getOrgs',
     payload: {

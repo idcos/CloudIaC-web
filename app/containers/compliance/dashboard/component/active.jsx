@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react';
 import { Progress, Card } from 'antd';
 import { UpPointIcon, DownPointIcon } from 'components/iconfont';
+import { t } from 'utils/i18n';
 import styles from '../style.less';
 
 const Index = ({ summaryData = {} }) => {
 
   const namemap = {
-    violated: '不通过',
-    passed: '通过',
-    suppressed: '屏蔽',
-    failed: '错误'
+    violated: t('define.scan.status.violated'),
+    passed: t('define.scan.status.passed'),
+    suppressed: t('define.scan.status.suppressed'),
+    failed: t('define.scan.status.failed')
   };
 
   const colormap = {
@@ -37,13 +38,13 @@ const Index = ({ summaryData = {} }) => {
   >
     <div className={styles.title}>
       <div className={styles.titleHeader}>
-        活跃策略
+        {t('define.activePolicy')}
       </div>
       <div className={styles.titleContext}>
         {summaryData.total}
       </div>
       <div className={styles.titleFooter}>
-        <div className={styles.values}>最近15天</div>
+        <div className={styles.values}>{t('define.last15days')}</div>
         <div className={styles.icon}>
           {summaryData.changes != 0 && <span>{summaryData.changes > 0 ? <UpPointIcon style={{ padding: '0 5px' }}/> : <DownPointIcon style={{ padding: '0 5px' }}/>}</span>}
           {summaryData.changes != 0 && <span>{`${valueToPercent(summaryData.changes)}%`}</span>} </div>
@@ -59,7 +60,7 @@ const Index = ({ summaryData = {} }) => {
           />
           <span className={styles.pInfo}>
             <span>{namemap[item.name]}</span>
-            <span>占总扫描{item.percent}%</span>
+            <span>{t('define.totalScan')} {item.percent} %</span>
           </span>
         </div>
       ))}

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Divider, notification, Space, Table } from 'antd';
+import { Button, Divider, notification, Space, Table, Modal } from 'antd';
+import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import keysAPI from 'services/keys';
+import getPermission from "utils/permission";
 import OpModal from './components/op-modal';
+import { t } from 'utils/i18n';
 
-export default ({ orgId }) => {
+export default ({ orgId, userInfo }) => {
+
+  const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
     [ opt, setOpt ] = useState(null),
@@ -40,7 +45,7 @@ export default ({ orgId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -64,33 +69,53 @@ export default ({ orgId }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '密钥名称',
+      title: t('define.name'),
       width: 300,
       ellipsis: true
     },
     {
+      dataIndex: 'creator',
+      title: t('define.creator'),
+      width: 169,
+      ellipsis: true
+    },
+    {
       dataIndex: 'createdAt',
-      title: '创建时间',
+      title: t('define.createdAt'),
       width: 169,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
-        return <Space split={<Divider type='vertical' />}>
-          <a onClick={() => del(record)}>删除</a>
-        </Space>;
+        const creatorIsSelf = record.creatorId === userInfo.id;
+        return (
+          <Space split={<Divider type='vertical' />}>
+            <a 
+              disabled={!ORG_SET && !creatorIsSelf}
+              onClick={() => del(record)}
+            >{t('define.action.delete')}</a>
+          </Space>
+        );
       }
     }
   ];
 
   const del = (record) => {
-    const { id } = record;
-    operation({ doWhat: 'del', payload: { id } });
+    const { id, name } = record;
+    Modal.confirm({
+      title: t('define.action.delete.confirm.title'),
+      content: `${t('define.action.delete.confirm.content.prefix')} “${name}” ${t('define.action.delete.confirm.content.suffix')}`,
+      icon: <InfoCircleFilled />,
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
+      onOk: () => operation({ doWhat: 'del', payload: { id } })
+    });
   };
 
   const operation = async ({ doWhat, payload }, cb) => {
@@ -107,14 +132,14 @@ export default ({ orgId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchList();
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.opFail'),
         description: e.message
       });
     }
@@ -128,7 +153,7 @@ export default ({ orgId }) => {
           setOpt('add');
           toggleVisible();
         }}
-      >添加密钥</Button>
+      >{t('define.ssh.action.add')}</Button>
     </div>
     <Table
       columns={columns}
@@ -141,7 +166,7 @@ export default ({ orgId }) => {
         total: resultMap.total,
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         onChange: (page, pageSize) => {
           changeQuery({
             currentPage: page,

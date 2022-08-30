@@ -1,11 +1,129 @@
 :global :root {
-  // antd覆盖样式
+  // 表单、用户输入类
   .ant-input-suffix {
     color: #AAACAB;
   }
+  .ant-input, .ant-input-affix-wrapper, .ant-input-number {
+    border-color: #C9CCD1;
+    color: #24292F;
+    &:hover {
+      border-color: #47D6CF;
+    }
+    &:focus {
+      border-color: #209186;
+    }
+    &-disabled {
+      background-color: #EBEDF0;
+      border-color: #DFE1E3;
+      color: #878F99;
+    }
+  }
+  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    border-color: #C9CCD1;
+    color: #24292F;
+  }
+  .ant-select-disabled.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: #EBEDF0;
+    border-color: #DFE1E3;
+    color: #878F99;
+  }
+  .ant-form-item.ant-form-item-no-min-height {
+    &>.ant-form-item-control>.ant-form-item-control-input {
+      min-height: auto;
+    }
+  }
+  .ant-form-item-label {
+    font-weight: 500;
+    padding-right: 24px;
+    & > label {
+      color: #24292F;
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  // 气泡、弹窗、alert反馈类
   .ant-popover {
     max-width: 600px;
   }
+  .ant-alert {
+    align-items: flex-start;
+    .ant-alert-icon {
+      font-size: 16px;
+      margin-top: 4px;
+    }
+  }
+  .ant-modal {
+    .ant-modal-close {
+      top: 24px;
+      right: 24px;
+      .ant-modal-close-x {
+        width: 16px;
+        height: 16px;
+        line-height: 14px;
+        .ant-modal-close-icon {
+          font-size: 12px;
+          color: rgb(0, 0, 0, .6);
+          padding: 2px;
+          background-color: transparent;
+          border-radius: 2px;
+          &:hover {
+            background-color: #eeeeee;
+          }
+          &:active {
+            background-color: #DCDCDC;
+          }
+        }
+      }
+    }
+  }
+  .ant-modal:not(.ant-modal-confirm) {
+    // 表单类型
+    &.antd-modal-type-form {
+      .ant-modal-body {
+        padding-top: 28px;
+      }
+    }
+    &.antd-modal-type-table {
+      .ant-modal-body {
+        padding-top: 24px;
+      }
+    }
+    .ant-modal-header {
+      padding: 24px 32px 0px;
+      border-bottom: none;
+    }
+    .ant-modal-body {
+      padding: 16px 32px 24px;
+    }
+    .ant-modal-footer {
+      border-top: none;
+      padding: 0px 32px 32px;
+    }
+  }
+  .ant-modal-confirm {
+    .ant-modal-body {
+      .ant-modal-confirm-body {
+        & > .anticon {
+          color: #DD2B0E;
+          margin-right: 8px;
+          font-size: 21px;
+          & + .ant-modal-confirm-title {
+            color: #24292F;
+            line-height: 24px;
+            & + .ant-modal-confirm-content {
+              margin-left: 32px;
+              color: #57606A;
+              margin-top: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // 标签、按钮类
   .ant-tag {
     border-radius: 11px;
   }
@@ -13,7 +131,6 @@
     background-color: #EAECEE;
     border-color: #EAECEE;
     color: #24292F;
-
     &[disabled] {
       &, &:hover, &:focus, &:active {
         background-color: #F2F3F5;
@@ -23,6 +140,7 @@
     }
   }
 
+  // tabs、表格、列表类
   .ant-tabs {
     .ant-tabs-top>.ant-tabs-nav::before,
     .ant-tabs-bottom>.ant-tabs-nav::before,
@@ -30,24 +148,10 @@
     .ant-tabs-bottom>div>.ant-tabs-nav::before {
       border-bottom: 1px solid #ebebeb;
     }
-
     .ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab-active,
     .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab-active {
       border-bottom-color: #ebebeb;
     }
   }
 
-  .ant-alert {
-    align-items: flex-start;
-    .ant-alert-icon {
-      font-size: 16px;
-      margin-top: 4px;
-    }
-  }
-
-  .ant-form-item.ant-form-item-no-min-height {
-    &>.ant-form-item-control>.ant-form-item-control-input {
-      min-height: auto;
-    }
-  }
 }

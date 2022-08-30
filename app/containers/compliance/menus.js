@@ -5,6 +5,7 @@ import {
   ControlOutlined,
   GatewayOutlined
 } from '@ant-design/icons';
+import { t } from 'utils/i18n';
 
 export const getComplianceMenus = () => {
   return [
@@ -13,41 +14,41 @@ export const getComplianceMenus = () => {
       subKey: 'none',
       menuList: [
         {
-          name: '概览',
+          name: t('define.overview'),
           key: 'dashboard',
           icon: <ControlOutlined />
         }],
       icon: <ControlOutlined />
     },
     {
-      subName: '合规配置',
+      subName: t('define.complianceConfig'),
       subKey: 'compliance-config',
       emptyMenuList: [],
       menuList: [
         {
-          name: '云模板',
+          name: t('define.scope.template'),
           key: 'ct',
           icon: <LayoutOutlined />
         },
         {
-          name: '环境',
+          name: t('define.scope.env'),
           key: 'env',
           icon: <CloudOutlined />
         }
       ]
     },
     {
-      subName: '策略管理',
+      subName: t('define.policyManagement'),
       subKey: 'policy-config',
       emptyMenuList: [],
       menuList: [
         {
-          name: '策略组',
+          name: t('define.policyGroup'),
           key: 'policy-group',
           icon: <ClusterOutlined />
         },
         {
-          name: '策略',
+          name: t('define.policy'),
           key: 'policy',
           icon: <GatewayOutlined />
         }

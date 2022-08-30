@@ -14,6 +14,11 @@ const sysAPI = {
       'IaC-Org-Id': orgId
     });
   },
+  listCTRunnerTag: ({ orgId }) => {
+    return get('/api/v1/runners/tags', {
+      'IaC-Org-Id': orgId
+    });
+  },
   paramsSearch: () => {
     return get('/api/v1/systems');
   },
@@ -25,6 +30,9 @@ const sysAPI = {
   },
   updateRegistryAddr: (params) => {
     return post('/api/v1/system_config/registry/addr', params);
+  },
+  getSysConfigSwitches: () => {
+    return get('/api/v1/system_config/switches');
   }
 };
 

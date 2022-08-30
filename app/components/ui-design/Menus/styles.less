@@ -1,0 +1,35 @@
+.menus {
+  display: flex;
+  flex-direction: column;
+
+  :global {
+    .menu-title {
+      flex: 0 0 48px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      color: rgba(87, 96, 106, 60);
+      font-size: 12px;
+    }
+  
+    .menu-item {
+      flex: 0 0 48px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      color: #57606A;
+      gap: 16px;
+      cursor: pointer;
+
+      &.active {
+        color: #08857C;
+      }
+      &-icon {
+        font-size: 16px;
+      }
+      &-name {
+  
+      }
+    }
+  }
+}

@@ -1,0 +1,170 @@
+@import 'containers/App/styles/variable.less';
+
+.register {
+  width: 100vw;
+  height: 100vh;
+  :global {
+    .left {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      .registerFormWrapper {
+        width: 402px;
+        background-color: @gray-1;
+        border-radius: 4px;
+        padding: 24px;
+
+        .title {
+          line-height: 24px;
+          font-size: 24px;
+          color: @header-color;
+          margin-top: 23px;
+          margin-bottom: 50px;
+          font-family: PingFangSC-Semibold;
+        }
+
+        .registerForm {
+          .format-form-item {
+            border-bottom: 1px solid @gray-4;
+            height: 33px;
+
+            &.ant-form-item-with-help {
+              margin-bottom: 24px;
+            }
+
+            .ant-form-item-label {
+              label {
+                width: 100%;
+                color: @gray-8;
+                position: relative;
+
+                &::after {
+                  display: none;
+                }
+                &::before {
+                  content: '';
+                  width: 1px;
+                  height: 19px;
+                  position: absolute;
+                  top: 7px;
+                  right: 0;
+                  background: @gray-4;
+                }
+              }
+            }
+            .ant-form-item-explain {
+              padding-left: 11px;
+              font-size: 12px;
+            }
+            .ant-form-item-control {
+              input:-webkit-autofill {
+                //input 背景色     #0C2034根据自己需要替换
+                -webkit-box-shadow : 0 0 0px 1000px #ffffff inset !important;
+                //input字体颜色 颜色根据自己要求替换
+                -webkit-text-fill-color: #575757 !important;
+              }
+              input, .ant-input-affix-wrapper {
+                box-shadow: none !important;
+                border: none;
+
+                &::-webkit-input-placeholder { /* WebKit browsers */
+                  color: @gray-6;
+                }
+
+                &::-moz-placeholder { /* Mozilla Firefox 19+ */
+                  color: @gray-6;
+                }
+
+                &:-ms-input-placeholder { /* Internet Explorer 10+ */
+                  color: @gray-6;
+                }
+
+              }
+            }
+          }
+        }
+
+        .return-login {
+          line-height: 22px;
+          font-size: 12px;
+          color: #0B847C;
+          cursor: pointer;
+          margin-top: 16px;
+        }
+        .return-login:hover{
+          text-decoration: underline;
+        }
+
+      }
+      .change-language {
+        position: absolute;
+        left: 50%;
+        bottom: 36px;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        color: #57606A;
+        .change-language-btn {
+          color: #0B847C;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+    .right {
+      position: relative;
+      background-color: #F7FBFC;
+      display: flex;
+      flex-direction: column;
+      gap: 65px;
+      padding: 62px 0 70px 112px;
+      background-image: url('/assets/img/bg-register.svg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      .logo {
+        width: 245px;
+        height: 60px;
+      }
+      .content {
+        padding-left: 24px;
+        color: #fff;
+        font-family: HarmonyOS_Sans_SC_Medium;
+        font-size: 18px;
+        opacity: 0.8;
+      }
+      .action {
+        padding-left: 24px;
+      }
+      .foot {
+        position: absolute;
+        bottom: 36px;
+        left: 136px;
+        color: #fff;
+        opacity: 0.46;
+      }
+    }
+  }
+}
+
+.email_exist {
+  display: flex;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+  color: #000000;
+  :global {
+    .send {
+      cursor: pointer;
+      color: #55a4ff;
+    }
+    .send:hover {
+      text-decoration: underline;
+    }
+  }
+}

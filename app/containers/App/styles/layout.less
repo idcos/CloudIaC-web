@@ -63,7 +63,7 @@
   }
 
   .ant-popover-placement-right>.ant-popover-content>.ant-popover-arrow {
-    left: 5px ;
+    left: 5px;
   }
 
   .ant-popover-inner-content {
@@ -126,4 +126,29 @@
   font-family: 'enNubFont';
   margin-left: 8px;
   color: rgba(0, 0, 0, 0.6);
+}
+
+.dangerText {
+  color: red;
+}
+
+.itemRequired {
+  width: 472px;
+  height: 42px;
+  line-height: 42px;
+  border: 1px solid #C9CCD1;
+  border-bottom: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #24292F;
+}
+
+.itemRequired::before {
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
 }

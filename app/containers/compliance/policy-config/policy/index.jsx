@@ -15,6 +15,7 @@ import { POLICIES_SEVERITY_STATUS_ENUM } from 'constants/types';
 import policiesAPI from 'services/policies';
 import cgroupsAPI from 'services/cgroups';
 import DetailDrawer from './detail-drawer';
+import { t } from 'utils/i18n';
 
 const Policy = ({ location, match }) => {
 
@@ -95,7 +96,7 @@ const Policy = ({ location, match }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '策略名称',
+      title: t('define.name'),
       width: 220,
       ellipsis: true,
       render: (text, record) => (
@@ -106,7 +107,7 @@ const Policy = ({ location, match }) => {
     },
     {
       dataIndex: 'tags',
-      title: '标签',
+      title: t('define.tag'),
       width: 230,
       render: (text) => {
         const tags = text ? text.split(',') : [];
@@ -136,48 +137,48 @@ const Policy = ({ location, match }) => {
     },
     {
       dataIndex: 'groupName',
-      title: '策略组',
+      title: t('define.policyGroup'),
       width: 170,
       ellipsis: true
     },
     {
       dataIndex: 'severity',
-      title: '严重性',
-      width: 70,
+      title: t('policy.detection.info.field.severity'),
+      width: 110,
       ellipsis: true,
       render: (text) => POLICIES_SEVERITY_STATUS_ENUM[text] || '-'
     },
     {
       dataIndex: 'passed',
-      title: '通过',
+      title: t('define.scan.status.passed'),
       width: 48
     },
     {
       dataIndex: 'violated',
-      title: '不通过',
+      title: t('define.scan.status.violated'),
       width: 64
     },
     {
       dataIndex: 'failed',
-      title: '失败',
+      title: t('define.scan.status.failed'),
       width: 48
     },
     {
       dataIndex: 'creator',
-      title: '创建者',
+      title: t('define.creator'),
       width: 92,
       ellipsis: true
     },
     {
       dataIndex: 'updatedAt',
-      title: '最后更新时间',
+      title: t('define.updateTime'),
       width: 140,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-M-DD HH:mm')
     },
     {
-      title: '操作',
-      width: 80,
+      title: t('define.action'),
+      width: 100,
       ellipsis: true,
       fixed: 'right',
       render: (record) => {
@@ -188,7 +189,7 @@ const Policy = ({ location, match }) => {
               style={{ padding: 0, fontSize: '12px' }} 
               type='link' 
               onClick={() => goOnlineTestPage(id)}
-            >在线测试</Button>
+            >{t('define.onlineTest')}</Button>
           </Space>
         );
       }
@@ -197,9 +198,9 @@ const Policy = ({ location, match }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title='策略'
+      title={t('define.policy')}
       breadcrumb={true}
-      subDes={<Button onClick={() => goOnlineTestPage()}>在线测试</Button>}
+      subDes={<Button onClick={() => goOnlineTestPage()}>{t('define.onlineTest')}</Button>}
     />}
   >
     <div className='idcos-card'>
@@ -210,7 +211,7 @@ const Policy = ({ location, match }) => {
               <Select
                 style={{ width: 264 }}
                 allowClear={true}
-                placeholder='请选择策略组'
+                placeholder={t('define.policy.search.policyGroup.placeholder')}
                 options={policyGroupOptions}
                 optionFilterProp='label'
                 showSearch={true}
@@ -221,7 +222,7 @@ const Policy = ({ location, match }) => {
                 style={{ width: 264 }}
                 allowClear={true}
                 options={Object.keys(POLICIES_SEVERITY_STATUS_ENUM).map(it => ({ label: POLICIES_SEVERITY_STATUS_ENUM[it], value: it }))}
-                placeholder='请选择严重性'
+                placeholder={t('define.policy.search.severity.placeholder')}
                 onChange={(severity) => onChangeFormParams({ severity })}
               />
             </Space>
@@ -231,7 +232,7 @@ const Policy = ({ location, match }) => {
               <Input
                 style={{ width: 320 }}
                 allowClear={true}
-                placeholder='请输入策略名称或标签搜索'
+                placeholder={t('define.policy.search.key.placeholder')}
                 prefix={<SearchOutlined />}
                 onPressEnter={(e) => {
                   const q = e.target.value;

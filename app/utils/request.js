@@ -1,5 +1,5 @@
 import { notification } from "antd";
-import noop from 'lodash/noop'
+import { t } from 'utils/i18n';
 
 export const requestWrapper = (apiFn, options) => {
 
@@ -19,18 +19,19 @@ export const requestWrapper = (apiFn, options) => {
       if (errorJudgeFn(res)) {
         const err = {
           message: res.message,
-          description: showErrMsgDescription ? res.message_detail : undefined
+          description: showErrMsgDescription ? res.message_detail : undefined,
+          res
         };
         throw err;
       }
       const data = formatDataFn(res);
       autoSuccess && notification.success({
-        message: successMessage || res.message || '操作成功'
+        message: successMessage || res.message || t('define.message.opSuccess')
       });
       resolve(data);
     } catch (err) {
       autoError && notification.error({
-        message: errorMessage || err.message || '操作失败',
+        message: errorMessage || err.message || t('define.message.opFail'),
         description: err.description 
       });
       reject(err);

@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useImperativeHandle } from 'react';
 import { Button, Space } from "antd";
-
+import { t } from 'utils/i18n';
 import VariableForm from 'components/variable-form';
 
 export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
@@ -51,13 +51,13 @@ export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, o
         {
           opType === 'add' ? (
             <>
-              <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>上一步</Button>
-              <Button type='primary' onClick={onFinish}>下一步</Button>
+              <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>{t('define.action.prev')}</Button>
+              <Button type='primary' onClick={onFinish}>{t('define.action.next')}</Button>
             </>
           ) : (
             <>
-              <Button className='ant-btn-tertiary' onClick={goCTlist}>取消</Button>
-              <Button type='primary' onClick={onFinish} loading={saveLoading}>提交</Button>
+              <Button className='ant-btn-tertiary' onClick={goCTlist}>{t('define.action.cancel')}</Button>
+              <Button type='primary' onClick={onFinish} loading={saveLoading}>{t('define.action.submit')}</Button>
             </>
           )
         }

@@ -1,0 +1,105 @@
+.tableWrapper {
+  h2 {
+    line-height: 26px;
+    color: rgba(36, 41, 47, 100);
+    font-size: 20px;
+    font-family: PingFangSC-Medium;
+    margin-bottom: 22px;
+  }
+  h3 {
+    line-height: 16px;
+    color: rgba(17, 17, 17, 100);
+    font-size: 14px;
+    font-family: PingFangSC-Regular;
+    margin-left: 3px;
+    margin-bottom: 9px;
+  }
+}
+.tabsWrapper {
+  h2 {
+    color: rgba(36, 41, 47, 100);
+    font-size: 20px;
+    font-family: PingFangSC-Medium;
+    margin: 0 0 5px 0;
+  }
+  :global {
+    .ant-tabs {
+      overflow-x: visible;
+    }
+    .ant-tabs-nav {
+      width: 176px;
+    }
+    .ant-tabs-tab {
+      margin: 0;
+      width: 88px;
+      .ant-tabs-tab-btn {
+        margin: 0 auto;
+        color: rgba(87, 96, 106, 100);
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+      }
+    }
+  }
+}
+
+.data_table {
+  :global {
+    .ant-table-tbody {
+      background-color: #F8F9FA;
+      & > tr > td {
+        border: none;
+        padding: 4px;
+        .ant-table-wrapper:only-child .ant-table {
+          margin: 0;
+          tr > td {
+            padding: 8px 4px;
+            &.tree-split {
+              position: relative;
+              &::before {
+                left: 12px;
+                top: -18px;
+                position: absolute;
+                content: '';
+                width: 1px;
+                height: 37px;
+                background: #E7E7E7;
+              }
+              &::after {
+                left: 12px;
+                top: 19px;
+                position: absolute;
+                content: '';
+                width: 12px;
+                height: 1px;
+                background: #E7E7E7;
+              }
+            }
+          }
+          tr:nth-of-type(1) > td {
+            &.tree-split {
+              &::before {
+                height: 19px;
+                top: 0px;
+              }
+            }
+          }
+        }
+      }
+      .ant-table-expanded-row>td {
+        padding: 4px 0 0;
+      }
+      .ant-table-row {
+        height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+        color: #24292F;
+        .up {
+          color: #666666;
+        }
+        .title {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}

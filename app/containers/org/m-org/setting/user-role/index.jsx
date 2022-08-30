@@ -1,23 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, notification, Space, Divider, Popconfirm, Modal } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Table, notification, Space, Dropdown, Popconfirm, Modal, Menu, Tabs, Select } from 'antd';
+import { InfoCircleFilled, DownOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import orgsAPI from 'services/orgs';
 import userAPI from 'services/user';
+import ldapAPI from 'services/ldap';
 import { ORG_USER } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
+import getPermission from "utils/permission";
+import { t } from 'utils/i18n';
 import OpModal from './components/memberModal';
+import LdapModal from './components/ldapModal';
 
-export default ({ title, orgId }) => {
+export default ({ userInfo, orgId, sysConfigSwitches }) => {
+
+  const { ORG_SET } = getPermission(userInfo);
   const [ loading, setLoading ] = useState(false),
     [ visible, setVisible ] = useState(false),
+    [ tabKey, setTabKey ] = useState('user'),
+    [ ldapVisible, setLdapVisible ] = useState(false),
+    [ isBatch, setIsBatch ] = useState(false),
     [ opt, setOpt ] = useState(null),
     [ curRecord, setCurRecord ] = useState(null),
     [ resultMap, setResultMap ] = useState({
       list: [],
       total: 0
     }),
+    [ ouResultMap, setOuResultMap ] = useState({
+      list: [],
+      total: 0
+    }),
     [ query, setQuery ] = useState({
+      pageNo: 1,
+      pageSize: 10
+    }),
+    [ ouQuery, setOuQuery ] = useState({
       pageNo: 1,
       pageSize: 10
     });
@@ -25,6 +42,35 @@ export default ({ title, orgId }) => {
   useEffect(() => {
     fetchList();
   }, [query]);
+
+  useEffect(() => {
+    fetchOuList();
+  }, [ouQuery]);
+
+  const fetchOuList = async () => {
+    try {
+      setLoading(true);
+      const res = await ldapAPI.orgOus({
+        pageSize: ouQuery.pageSize,
+        currentPage: ouQuery.pageNo,
+        orgId
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      setOuResultMap({
+        list: res.result.list || [],
+        total: res.result.total || 0
+      });
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      notification.error({
+        message: t('define.message.getFail'),
+        description: e.message
+      });
+    }
+  };
 
   const fetchList = async () => {
     try {
@@ -45,7 +91,7 @@ export default ({ title, orgId }) => {
     } catch (e) {
       setLoading(false);
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -58,13 +104,27 @@ export default ({ title, orgId }) => {
     });
   };
 
+  const changeOuQuery = (payload) => {
+    setOuQuery({
+      ...ouQuery,
+      ...payload
+    });
+  };
+
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
         edit: (param) => orgsAPI.updateUser(param),
         add: (param) => orgsAPI.inviteUser(param),
+        batchAdd: (param) => orgsAPI.batchInviteUser(param),
         resetUserPwd: ({ orgId, id }) => userAPI.resetUserPwd({ orgId, id }),
-        removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id })
+        removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id }),
+        removeLdapUser: ({ orgId, id }) => orgsAPI.removeLdapUser({ orgId, id }),
+        // ldap apis
+        addLdapOU: (param) => ldapAPI.addOrgOu(param),
+        addLdapUser: (param) => ldapAPI.addOrgUser(param),
+        delOrgOu: (param) => ldapAPI.delOrgOu(param),
+        updateOrgOu: (param) => ldapAPI.updateOrgOu(param)
       };
       const res = await method[doWhat]({
         orgId,
@@ -74,14 +134,20 @@ export default ({ title, orgId }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
-      fetchList();
+      if ([ 'addLdapOU', 'delOrgOu', 'updateOrgOu' ].includes(doWhat)) {
+        setTabKey('ou');
+        fetchOuList();
+      } else {
+        setTabKey('user');
+        fetchList();
+      }
       cb && cb();
     } catch (e) {
       cb && cb(e);
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -95,16 +161,26 @@ export default ({ title, orgId }) => {
     setVisible(!visible);
   };
 
+  const toggleLdapVisible = () => {
+    if (visible) {
+      setCurRecord(null);
+      setOpt(null);
+    }
+    setLdapVisible(!ldapVisible);
+  };
+
   const remove = ({ id, name }) => {
     Modal.confirm({
       width: 480,
-      title: `你确定要移除 ${name} 用户吗？`,
-      content: `从组织移除用户将清除该用户在当前组织下所有项目中的项目角色权限，请确认操作`,
-      icon: <ExclamationCircleFilled style={{ color: '#FF4D4F' }}/>,
-      okText: '移除',
-      cancelText: '取消',
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
+      content: t('define.org.user.action.remove.confirm.content'),
+      icon: <InfoCircleFilled />,
+      okText: t('define.org.user.action.remove'),
       okButtonProps: {
         danger: true
+      },
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
       },
       onOk: () => {
         return operation({ doWhat: 'removeUser', payload: { id } });
@@ -112,10 +188,29 @@ export default ({ title, orgId }) => {
     });
   };
 
+  const removeOU = ({ id, ou }) => {
+    Modal.confirm({
+      width: 480,
+      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${ou} ?`,
+      content: t('define.org.user.action.remove.confirm.content'),
+      icon: <InfoCircleFilled />,
+      okText: t('define.org.user.action.remove'),
+      okButtonProps: {
+        danger: true
+      },
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
+      onOk: () => {
+        return operation({ doWhat: 'delOrgOu', payload: { id } });
+      }
+    });
+  };
+
   const columns = [
     {
       dataIndex: 'name',
-      title: '姓名',
+      title: t('define.page.userSet.basic.field.name'),
       width: 268,
       ellipsis: true,
       render: (_, record) => <div className='tableRender'>
@@ -125,80 +220,193 @@ export default ({ title, orgId }) => {
     },
     {
       dataIndex: 'phone',
-      title: '手机',
+      title: t('define.page.userSet.basic.field.phone'),
       width: 178,
       ellipsis: true
     },
     {
       dataIndex: 'createdAt',
-      title: '加入时间',
+      title: t('define.org.user.createdAt'),
       width: 212,
       ellipsis: true,
       render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
     },
     {
       dataIndex: 'role',
-      title: '权限',
+      title: t('define.org.user.role'),
       width: 160,
       ellipsis: true,
       render: (text) => ORG_USER.role[text]
     },
     {
-      title: '操作',
+      title: t('define.action'),
       width: 180,
       ellipsis: true,
       fixed: 'right',
       render: (_, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' onClick={() => {
-              setOpt('edit');
-              setCurRecord(record);
-              toggleVisible();
-            }}>编辑</Button>
+            <Button 
+              type='link' 
+              disabled={!ORG_SET}
+              onClick={() => {
+                setOpt('edit');
+                setCurRecord(record);
+                toggleVisible();
+                setIsBatch(false);
+              }}
+            >{t('define.action.modify')}</Button>
             <Popconfirm
-              title='确定要重置密码？'
+              title={t('define.org.user.action.resetPwd.confirm.title')}
               onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
+              disabled={!ORG_SET}
             >
-              <Button type='link'>重置密码</Button>
+              <Button type='link' disabled={!ORG_SET}>{t('define.org.user.action.resetPwd')}</Button>
             </Popconfirm>
-            <Button type='link' onClick={() => remove(record)}>移除</Button>
+            <Button type='link' disabled={!ORG_SET} onClick={() => remove(record)}>{t('define.org.user.action.remove')}</Button>
           </div>
         );
       }
     }
   ];
 
+  const OUColumns = [
+    {
+      dataIndex: 'ou',
+      title: 'OU',
+      width: 268,
+      ellipsis: true
+    },
+    {
+      dataIndex: 'role',
+      title: t('define.org.user.role'),
+      width: 160,
+      ellipsis: true,
+      render: (text, record) => {
+        const { role, id } = record;
+        return (
+          <Select 
+            style={{ width: '100%' }}
+            value={role}
+            disabled={!ORG_SET}
+            onChange={(role) => operation({ doWhat: 'updateOrgOu', payload: { role, id } })}
+          >
+            {Object.keys(ORG_USER.role).map(it => <Select.Option value={it}>{ORG_USER.role[it]}</Select.Option>)}
+          </Select>
+        );
+      }
+    },
+    {
+      dataIndex: 'createdAt',
+      title: t('define.org.user.createdAt'),
+      width: 212,
+      ellipsis: true,
+      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+    },
+    {
+      title: t('define.action'),
+      width: 180,
+      ellipsis: true,
+      fixed: 'right',
+      render: (_, record) => {
+        return (
+          <div className='common-table-btn-wrapper'>
+            <Button type='link' disabled={!ORG_SET} onClick={() => removeOU(record)}>{t('define.org.user.action.remove')}</Button>
+          </div>
+        );
+      }
+    }
+  ];
+
+
+
+  const invitation = (e) => {
+    switch (e.key) {
+    case 'invitation':
+      setOpt('add');
+      toggleVisible();
+      setIsBatch(false);
+      break;
+    case 'batch-invitation':
+      setOpt('add');
+      toggleVisible();
+      setIsBatch(true);
+      break;
+    case 'ldap-invitation':
+      setOpt('ldapAdd');
+      toggleLdapVisible();
+      break;
+    default:
+      break;
+    }
+  };
+
+  const menu = (
+    <Menu onClick={invitation}>
+      <Menu.Item key='invitation'>{t('define.org.user.action.add')}</Menu.Item>
+      <Menu.Item key='batch-invitation'>{t('define.org.user.action.batchAdd')}</Menu.Item>
+      <Menu.Item key='ldap-invitation' disabled={!sysConfigSwitches.enableLdap}>{t('define.org.user.action.ldapAdd')}</Menu.Item>
+    </Menu>
+  );
+
   return <div>
     <div style={{ marginBottom: 20 }}>
-      <Button 
-        type='primary'
-        onClick={() => {
-          setOpt('add');
-          toggleVisible();
-        }}
-      >邀请成员</Button>
+      <Dropdown overlay={menu}>
+        <Button>
+          <Space>
+            {t('define.org.user.action.addWrapper')}
+            <DownOutlined />
+          </Space>
+        </Button>
+      </Dropdown>
     </div>
-    <Table
-      columns={columns}
-      dataSource={resultMap.list}
-      loading={loading}
-      scroll={{ x: 'min-content' }}
-      pagination={{
-        current: query.pageNo,
-        pageSize: query.pageSize,
-        total: resultMap.total,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        showTotal: (total) => `共${total}条`,
-        onChange: (page, pageSize) => {
-          changeQuery({
-            pageNo: page,
-            pageSize
-          });
-        }
-      }}
-    />
+    <Tabs activeKey={tabKey} onChange={setTabKey}>
+      <Tabs.TabPane tab={t('define.user')} key='user'>
+        <Table
+          columns={columns}
+          dataSource={resultMap.list}
+          loading={loading}
+          scroll={{ x: 'min-content' }}
+          pagination={{
+            current: query.pageNo,
+            pageSize: query.pageSize,
+            total: resultMap.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
+            onChange: (page, pageSize) => {
+              changeQuery({
+                pageNo: page,
+                pageSize
+              });
+            }
+          }}
+        />
+      </Tabs.TabPane>
+      <Tabs.TabPane tab='LDAP/OU' key='ou' disabled={!sysConfigSwitches.enableLdap}>
+        <Table
+          columns={OUColumns}
+          dataSource={ouResultMap.list}
+          loading={loading}
+          scroll={{ x: 'min-content' }}
+          pagination={{
+            current: ouQuery.pageNo,
+            pageSize: ouQuery.pageSize,
+            total: ouResultMap.total,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
+            onChange: (page, pageSize) => {
+              changeOuQuery({
+                pageNo: page,
+                pageSize
+              });
+            }
+          }}
+        />
+      </Tabs.TabPane>
+    </Tabs>
+   
     {
       visible && <OpModal
         visible={visible}
@@ -206,6 +414,20 @@ export default ({ title, orgId }) => {
         opt={opt}
         curRecord={curRecord}
         operation={operation}
+        isBatch={isBatch}
+        ORG_SET={ORG_SET}
+      />
+    }
+    {
+      ldapVisible && <LdapModal
+        orgId={orgId}
+        visible={ldapVisible}
+        toggleVisible={toggleLdapVisible}
+        opt={opt}
+        curRecord={curRecord}
+        operation={operation}
+        isBatch={isBatch}
+        ORG_SET={ORG_SET}
       />
     }
   </div>;

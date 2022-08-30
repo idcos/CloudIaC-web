@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, InputNumber, Select, Space, notification } from 'antd';
 import sysAPI from 'services/sys';
+import { t } from "utils/i18n";
 
 const layout = {
   labelCol: {
-    span: 6
+    span: 8
   },
   wrapperCol: {
     span: 16
@@ -14,7 +15,6 @@ const { Option } = Select;
 
 const Params = () => {
   const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ sysInfo, setSysInfo ] = useState({});
 
   useEffect(() => {
     fetchInfo();
@@ -22,9 +22,10 @@ const Params = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = async ({ MAX_JOBS_PER_RUNNER, ...restFormData }) => {
+  const onFinish = async ({ MAX_JOBS_PER_RUNNER, TASK_STEP_TIMEOUT, ...restFormData }) => {
     const systemCfg = formatToParams({
       MAX_JOBS_PER_RUNNER: MAX_JOBS_PER_RUNNER + '',
+      TASK_STEP_TIMEOUT: TASK_STEP_TIMEOUT + '',
       ...restFormData
     });
     try {
@@ -35,7 +36,7 @@ const Params = () => {
       }
       setSubmitLoading(false);
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       fetchInfo();
     } catch (e) {
@@ -52,12 +53,14 @@ const Params = () => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      const formData = formatToFormData(res.result);
-      setSysInfo(formData);
+      let formData = formatToFormData(res.result);
+      // if (formData.TASK_STEP_TIMEOUT == 60) {
+      //   formData.TASK_STEP_TIMEOUT = undefined;
+      // }
       form.setFieldsValue(formData);
     } catch (e) {
       notification.error({
-        message: '获取失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -68,36 +71,59 @@ const Params = () => {
       onFinish={onFinish}
       form={form}
     >
-      <Form.Item label='并发作业数' required={true}>
+      <Form.Item label={t('define.page.sysSet.params.field.MAX_JOBS_PER_RUNNER')} required={true}>
         <Space>
           <Form.Item
             name='MAX_JOBS_PER_RUNNER'
             rules={[
               {
                 required: true,
-                message: '请输入'
+                message: t('define.form.input.placeholder')
               }
             ]}
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            <InputNumber min={0} precision={0} placeholder='请输入' />
+            <InputNumber min={0} precision={0} placeholder={t('define.form.input.placeholder')} />
           </Form.Item>
           <Form.Item
             style={{ display: 'inline-block' }}
             noStyle={true}
           >
-            个
+            {t('define.unit.piece')}
           </Form.Item>
         </Space>
       </Form.Item>
-      <Form.Item
-        label='日志保存周期'
+      <Form.Item label={t('define.page.sysSet.params.field.TASK_STEP_TIMEOUT')} required={true}>
+        <Space>
+          <Form.Item
+            name='TASK_STEP_TIMEOUT'
+            rules={[
+              {
+                required: true,
+                message: t('define.form.input.placeholder')
+              }
+            ]}
+            style={{ display: 'inline-block' }}
+            noStyle={true}
+          >
+            <InputNumber min={0} precision={0} placeholder='60' />
+          </Form.Item>
+          <Form.Item
+            style={{ display: 'inline-block' }}
+            noStyle={true}
+          >
+            {t('define.unit.minute')}
+          </Form.Item>
+        </Space>
+      </Form.Item>
+      <Form.Item 
+        label={t('define.page.sysSet.params.field.PERIOD_OF_LOG_SAVE')}
         name='PERIOD_OF_LOG_SAVE'
         rules={[
           {
             required: true,
-            message: '请选择'
+            message: t('define.form.select.placeholder')
           }
         ]}
         initialValue='Permanent'
@@ -107,19 +133,19 @@ const Params = () => {
           style={{ width: 240 }}
           disabled={true}
         >
-          <Option value='Permanent'>永久保存</Option>
+          <Option value='Permanent'>{t('define.page.sysSet.params.field.PERIOD_OF_LOG_SAVE.option.permanent')}</Option>
         </Select>
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type='primary' htmlType='submit' loading={submitLoading}>
-          更改信息
+          {t('define.page.sysSet.params.action.save')}
         </Button>
       </Form.Item>
     </Form>
   </div>;
 };
 
-const formatToFormData = (list) => {
+export const formatToFormData = (list) => {
   let formData = {};
   (list || []).forEach(({ name, value } = {}) => {
     formData[name] = value;
@@ -127,7 +153,7 @@ const formatToFormData = (list) => {
   return formData;
 };
 
-const formatToParams = (formData) => {
+export const formatToParams = (formData) => {
   const params = Object.keys(formData).map(name => {
     return {
       name,

@@ -10,11 +10,8 @@ const projectAPI = {
   detailProject: ({ projectId, orgId }) => {
     return get(`/api/v1/projects/${projectId}`, { 'IaC-Org-Id': orgId });
   },
-  projectList: ({ pageNo, pageSize, orgId }) => {
-    return getWithArgs('/api/v1/projects', {
-      pageSize,
-      currentPage: pageNo
-    }, { 'IaC-Org-Id': orgId });
+  projectList: ({ orgId, ...restParams }) => {
+    return getWithArgs('/api/v1/projects', restParams, { 'IaC-Org-Id': orgId });
   },
   allEnableProjects: ({ orgId }) => {
     return getWithArgs('/api/v1/projects', {
@@ -24,6 +21,18 @@ const projectAPI = {
   },
   getUserOptions: ({ orgId, projectId }) => {
     return get('/api/v1/projects/users', {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  listResources: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs(`/api/v1/projects/resources`, restParams, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  filters: ({ orgId, projectId }) => {
+    return getWithArgs(`/api/v1/projects/resources/filters`, {}, {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });
@@ -48,6 +57,12 @@ const projectAPI = {
   },
   removeUser: ({ orgId, projectId, userId }) => {
     return del(`/api/v1/projects/users/${userId}`, {}, {
+      'IaC-Org-Id': orgId,
+      'IaC-Project-Id': projectId
+    });
+  },
+  statistics: ({ orgId, projectId, ...restParams }) => {
+    return getWithArgs(`/api/v1/projects/${projectId}/statistics`, restParams, {
       'IaC-Org-Id': orgId,
       'IaC-Project-Id': projectId
     });

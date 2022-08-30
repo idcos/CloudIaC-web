@@ -36,11 +36,13 @@ const envAPI = {
   
   // 环境重新部署
   envRedeploy: ({ envId, projectId, orgId, ...resetParams }) => {
-    return post(`/api/v1/envs/${envId}/deploy`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs/${envId}/deploy`, { source: 'manual', ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   //销毁环境资源
   envDestroy: ({ envId, projectId, orgId }) => {
-    return post(`/api/v1/envs/${envId}/destroy`, { "taskType": "destroy"
+    return post(`/api/v1/envs/${envId}/destroy`, { 
+      taskType: 'destroy',
+      source: 'manual'
     }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 获取环境资源列表
@@ -75,7 +77,7 @@ const envAPI = {
   },
   // 创建环境
   createEnv: ({ orgId, projectId, ...resetParams }) => {
-    return post(`/api/v1/envs`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+    return post(`/api/v1/envs`, { source: 'manual', ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   },
   // 环境合规详情
   result: ({ orgId, projectId, envId, ...restParams }) => {
@@ -93,6 +95,32 @@ const envAPI = {
   },
   updateTag: ({ orgId, projectId, envId, ...resetParams }) => {
     return post(`/api/v1/envs/${envId}/tags`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+
+  // 锁定
+  envLocked: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/lock`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 解锁
+  envUnLocked: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/unlock`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
+  },
+  // 环境解锁确认
+  unlockedConfirm: ({ envId, orgId, projectId }) => {
+    return get(`/api/v1/envs/${envId}/unlock/confirm`, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
+  },
+  // 环境费用报表接口
+  envStatistics: ({ envId, orgId, projectId }) => {
+    return get(`/api/v1/envs/${envId}/statistics`, { 
+      'IaC-Org-Id': orgId, 
+      'IaC-Project-Id': projectId 
+    });
+  },
+  deployCheck: ({ orgId, projectId, envId, ...resetParams }) => {
+    return post(`/api/v1/envs/${envId}/deploy/check`, { ...resetParams }, { 'IaC-Org-Id': orgId, 'IaC-Project-Id': projectId });
   }
 };
 

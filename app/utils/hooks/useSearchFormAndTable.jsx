@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import omit from 'lodash/omit';
 import noop from 'lodash/noop';
 import isFunction from 'lodash/isFunction';
+import { t } from 'utils/i18n';
 
 /** 搜索表单和表格关联封装 */
 export const useSearchFormAndTable = (props) => {
@@ -118,7 +119,7 @@ export const useSearchFormAndTable = (props) => {
         pageSize: searchParams.paginate.pageSize,
         total: tableData.total,
         showSizeChanger: true,
-        showTotal: (total) => `共${total}条`,
+        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
         ...omit(pagination, ['current', 'pageSize', 'total', 'onChange'])
       },
       onChange: onTableChange 

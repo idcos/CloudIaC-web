@@ -51,11 +51,12 @@ const CommonLayout = ({
   contentStyle = {},
   footer,
   style,
+  className,
   containerStyle
 }) => {
  
   return (
-    <LayoutWrapper style={style} id={GLOBAL_SCROLL_DOM_ID} >
+    <LayoutWrapper style={style} className={className} id={GLOBAL_SCROLL_DOM_ID} >
       <Container style={containerStyle}>
         {extraHeader ? (<Header>{extraHeader}</Header>) : null}
         <Content 

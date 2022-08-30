@@ -10,13 +10,11 @@ import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import EllipsisText from 'components/EllipsisText';
 import cgroupsAPI from 'services/cgroups';
-import RelevancePolicyGroupModal from './component/relevancePolicyGroupModal';
+import { t } from 'utils/i18n';
 
 const PolicyGroupList = ({ match }) => {
 
   const { orgId } = match.params || {};
-  const [ policyGroupId, setPolicyGroupId ] = useState(null),
-    [ viewRelevance, setViewRelevance ] = useState(false);
 
   // 策略组列表查询
   const {
@@ -74,12 +72,12 @@ const PolicyGroupList = ({ match }) => {
         throw new Error(res.message);
       }
       notification.success({
-        message: '操作成功'
+        message: t('define.message.opSuccess')
       });
       refreshList();
     } catch (e) {
       notification.error({
-        message: '操作失败',
+        message: t('define.message.getFail'),
         description: e.message
       });
     }
@@ -88,15 +86,16 @@ const PolicyGroupList = ({ match }) => {
   const onDel = ({ id, policyCount, relCount }) => {
     Modal.confirm({
       width: 480,
-      title: `删除（此操作不可逆）`,
+      title: t('define.action.delete.confirm.title'),
       content: (
         <>
-          该策略组关联了“<b>{policyCount}</b>”条策略，并被绑定到了“<b>{relCount}</b>”个云模板或环境，删除策略组时将连同该策略组下的策略一并删除，确定要删除吗？
+          {t('define.policyGroup.action.delete.confirm.content.prefix')}“<b>{policyCount}</b>”{t('define.policyGroup.action.delete.confirm.content.middle')}“<b>{relCount}</b>”{t('define.policyGroup.action.delete.confirm.content.suffix')}
         </>
       ),
-      icon: <InfoCircleFilled style={{ color: '#DD2B0E' }} />,
-      okText: '确认删除',
-      cancelText: '取消',
+      icon: <InfoCircleFilled />,
+      cancelButtonProps: {
+        className: 'ant-btn-tertiary' 
+      },
       onOk: () => deleteGroup(id)
     });
   };
@@ -114,19 +113,19 @@ const PolicyGroupList = ({ match }) => {
   const columns = [
     {
       dataIndex: 'name',
-      title: '策略组名称',
+      title: t('define.name'),
       width: 188,
       ellipsis: true
     },
     {
       dataIndex: 'description',
-      title: '描述',
+      title: t('define.des'),
       width: 170,
       ellipsis: true
     },
     {
       dataIndex: 'labels',
-      title: '标签',
+      title: t('define.tag'),
       width: 370,
       ellipsis: true,
       render: (text) => {
@@ -157,7 +156,7 @@ const PolicyGroupList = ({ match }) => {
     },
     {
       dataIndex: 'policyCount',
-      title: '关联策略',
+      title: t('define.policyGroup.field.policyCount'),
       width: 100,
       ellipsis: true,
       render: (text, record) => <a 
@@ -168,14 +167,14 @@ const PolicyGroupList = ({ match }) => {
     },
     {
       dataIndex: 'updatedAt',
-      title: '最后更新日期',
+      title: t('define.updateTime'),
       width: 180,
       ellipsis: true,
       render: (text) => <span>{moment(text).format('YYYY-MM-DD HH:mm:ss')}</span>
     },
     {
-      title: '操作',
-      width: 120,
+      title: t('define.action'),
+      width: 170,
       ellipsis: true,
       fixed: 'right',
       render: (text, record) => {
@@ -183,18 +182,18 @@ const PolicyGroupList = ({ match }) => {
           <Space>
             <a 
               onClick={() => goFormPage(record.id)}
-            >编辑</a>
+            >{t('define.action.modify')}</a>
             <Popconfirm 
-              title={`确认${record.enabled ? '禁用' : '启用'}策略组?`} 
+              title={`${t('define.ct.import.action.ok')} ${record.enabled ? t('define.status.disabled') : t('define.status.enabled')} ${t('define.policyGroup')}?`} 
               onConfirm={() => enabled(!record.enabled, record)} 
               placement='bottomLeft'
             >
               <Button type='link' style={{ padding: 0, fontSize: 12 }}>
-                {record.enabled ? '禁用' : '启用'}
+                {record.enabled ? t('define.status.disabled') : t('define.status.enabled')}
               </Button>
             </Popconfirm>
             <Button onClick={() => onDel(record)} type='link' style={{ padding: 0, fontSize: 12 }}>
-              删除
+              {t('define.action.delete')}
             </Button>
           </Space>
         );
@@ -204,7 +203,7 @@ const PolicyGroupList = ({ match }) => {
 
   return <Layout
     extraHeader={<PageHeader
-      title={'策略组'}
+      title={t('define.policyGroup')}
       breadcrumb={true}
     />}
   >
@@ -213,14 +212,14 @@ const PolicyGroupList = ({ match }) => {
         <Row justify='space-between' wrap={false}>
           <Col>
             <Button type={'primary'} onClick={() => goFormPage()}>
-              新建策略组
+              {t('define.addPolicyGroup')}
             </Button>
           </Col>
           <Col>
             <Input
               style={{ width: 320 }}
               allowClear={true}
-              placeholder='请输入策略组名称搜索'
+              placeholder={t('define.policyGroup.search.placeholder')}
               prefix={<SearchOutlined />}
               onPressEnter={(e) => {
                 const q = e.target.value;
@@ -237,15 +236,6 @@ const PolicyGroupList = ({ match }) => {
         />
       </Space>
     </div>
-    {viewRelevance && <RelevancePolicyGroupModal 
-      reload={refreshList} 
-      visible={viewRelevance} 
-      id={policyGroupId} 
-      toggleVisible={() => {
-        setViewRelevance(false);
-        setPolicyGroupId(null); 
-      }}
-    />}
   </Layout>;
 };
 

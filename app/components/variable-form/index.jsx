@@ -10,6 +10,7 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
 import { useDeepCompareEffect } from 'utils/hooks';
+import { t } from 'utils/i18n';
 import VarFormTable from './var-form-table';
 import OtherVarForm from './other-var-form';
 import styles from './styles.less';
@@ -219,9 +220,9 @@ const VariableForm = ({
                 showInkInFixed={true}
                 getContainer={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
               >
-                <Link href='#terraform-var' title='Terraform变量' />
-                <Link href='#env-var' title='环境变量' />
-                { showOtherVars ? <Link href='#other-var' title='其它变量' /> : null }
+                <Link href='#terraform-var' title={t('define.varType.terraform')} />
+                <Link href='#env-var' title={t('define.varType.environment')} />
+                { showOtherVars ? <Link href='#other-var' title={t('define.varType.other')} /> : null }
               </Anchor>
             </div>
           </Affix>

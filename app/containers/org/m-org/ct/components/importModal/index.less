@@ -6,7 +6,29 @@
     vertical-align: middle;
     color: red;
     font-weight: normal;
+  }
+}
 
+.uploadExtra {
+  line-height: 22px;
+  color: rgba(0, 0, 0, 0.46);
+  font-size: 12px;
+  margin-left: 28px;
+}
+
+.radioGroup {
+  :global {
+    .ant-radio-wrapper {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      span.ant-radio + * {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+      }
+    }
   }
 }
 
@@ -14,7 +36,12 @@
   line-height: 22px;
   color: rgba(0, 0, 0, 0.46);
   font-size: 12px;
-  margin-left: 28px;
+  margin-left: 36px;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .resultHeader {

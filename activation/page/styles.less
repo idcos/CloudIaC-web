@@ -1,0 +1,95 @@
+@import 'containers/App/styles/variable.less';
+
+.activation {
+  width: 100vw;
+  height: 100vh;
+  :global {
+    .left {
+      background-color: #F7FBFC;
+      display: flex;
+      flex-direction: column;
+      padding: 62px 0 70px 112px;
+      justify-content: space-between;
+      background-image: url('/assets/img/login_bg_point.svg');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      .content {
+        padding: 0 0 48px 24px;
+        .title {
+          color: rgba(0, 0, 0, 0.86);
+          font-size: 44px;
+          line-height: 48px;
+          font-weight: bold;
+          margin-bottom: 48px;
+        }
+        .describe {
+          color: rgba(0, 0, 0, 0.86);
+          font-size: 22px;
+        }
+      }
+      .foot {
+        color: rgba(0, 0, 0, 0.46);
+      }
+    }
+    .right {
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      .change-language {
+        position: absolute;
+        top: 27px;
+        right: 30px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #57606A;
+        .lang-icon {
+          font-size: 24px;
+        }
+        .change-language-btn {
+          color: #0B847C;
+          font-size: 16px;
+          text-decoration: underline; 
+          cursor: pointer;
+        }
+      }
+      .activationFormWrapper {
+        width: 402px;
+        background-color: @gray-1;
+        border-radius: 4px;
+        padding: 24px;
+  
+        .title {
+          line-height: 24px;
+          font-size: 20px;
+          color: @gray-9;
+          margin-top: 23px;
+          margin-bottom: 29px;
+        }
+        .main {
+          height: 200px;
+          color: rgba(0, 0, 0, 0.86);
+          font-size: 14px;
+          padding-left: 50px;
+          padding-top: 60px;
+
+
+          .line {
+            line-height: 23px;
+          }
+
+          .click {
+            display: inline-block;
+            color: #18a2ff;
+            cursor: pointer;
+          }
+          .click:hover {
+            text-decoration: underline;
+          }
+        }     
+      }
+    }
+  }
+}

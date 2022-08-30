@@ -73,7 +73,7 @@ module.exports = {
     // 禁止在正则表达式字面量中使用多个空格
 
     'no-template-curly-in-string': 2,
-    // 模版字符串检查
+    // 模板字符串检查
 
     'no-unexpected-multiline': 2,
     // 避免令人误解的多行表达式
