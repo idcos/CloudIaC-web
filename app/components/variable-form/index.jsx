@@ -47,11 +47,11 @@ const VariableForm = ({
 
   event$ && event$.useSubscription(({ type }) => {
     switch (type) {
-      case 'fetchVarGroupList':
-        fetchVarGroupList();
-        break;
-      default:
-        break;
+    case 'fetchVarGroupList':
+      fetchVarGroupList();
+      break;
+    default:
+      break;
     }
   });
 
@@ -80,7 +80,7 @@ const VariableForm = ({
           const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
           return !hasSameVarName;
         });
-        setEnvVarGroupList([...otherScopeVarGroupList, ...sameScopeVarGroupList]);
+        setEnvVarGroupList([ ...otherScopeVarGroupList, ...sameScopeVarGroupList ]);
       }
     }
   );
@@ -238,7 +238,7 @@ export const formatVariableRequestParams = (data, defaultScope) => {
   const newVariables = variables.filter(
     ({ scope }) => scope === defaultScope
   ).map(
-    (it) => omit(it, ['isNew', '_key_id', 'overwrites'])
+    (it) => omit(it, [ 'isNew', '_key_id', 'overwrites' ])
   );
   return {
     variables: newVariables,
