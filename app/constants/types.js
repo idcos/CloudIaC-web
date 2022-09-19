@@ -41,9 +41,9 @@ export const SYS = {
 };
 
 export const TIER_ENUM = {
-  official: t('define.exchange.official'),
-  verified: t('define.exchange.verified'),
-  community: t('define.exchange.community')
+  official: t('define.iacStore.official'),
+  verified: t('define.iacStore.verified'),
+  community: t('define.iacStore.community')
 };
 
 export const TIER_ICON_ENUM = {

@@ -75,6 +75,8 @@ export default ({ match = {} }) => {
         const { list, total } = res;
         setTotal(total);
         setList(list);
+      }).catch((e) => {
+        console.log(e);
       });
     }
     
@@ -138,12 +140,12 @@ export default ({ match = {} }) => {
     <Layout
       extraHeader={
         <PageHeader 
-          title={t('define.import.fromExchange')} 
+          title={t('define.import.fromIaCStore')} 
           breadcrumb={true}
           subDes={<Input
             style={{ width: 300 }}
             allowClear={true}
-            placeholder={t('define.exchange.search.placeholder')}
+            placeholder={t('define.iacStore.search.placeholder')}
             prefix={<SearchOutlined />}
             defaultValue={query.q}
             onPressEnter={(e) => {

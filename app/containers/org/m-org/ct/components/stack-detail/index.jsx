@@ -58,7 +58,7 @@ export default ({
     <Modal
       visible={visible}
       width={720}
-      title={t('define.exchange.stackDetail')}
+      title={t('define.iacStore.stackDetail')}
       centered={true}
       okText={t('define.createCT')}
       okButtonProps={{
@@ -125,7 +125,7 @@ export default ({
             <Select
               suffixIcon={<CaretDownOutlined color='#57606A' />}
               style={{ width: 209, height: 34 }}
-              placeholder={t('define.exchange.select.placeholder')}
+              placeholder={t('define.iacStore.select.placeholder')}
               dropdownStyle={{ width: 280 }}
               onChange={(version) => {
                 setCurrentVersion(version);

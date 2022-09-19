@@ -265,7 +265,7 @@ const CTList = ({ match = {} }) => {
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
             <Button type='primary' onClick={createCT}>{t('define.addTemplate')}</Button>
-            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromExchange')}</Button>}
+            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromIaCStore')}</Button>}
             <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
           </Space>
           <Space>
