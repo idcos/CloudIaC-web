@@ -49,10 +49,10 @@ export default ({ match = {} }) => {
           q: query.q
         }),
         {
-          errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+          errorJudgeFn: (res) => (res && res.code !== 0 && (res.code === 404 || res.code === 500))
         }
       ).then((res) => {
-        const { list, total } = res;
+        const { list = [], total = 0 } = res;
         setTotal(total);
         setList(list);
       });
@@ -69,7 +69,7 @@ export default ({ match = {} }) => {
           q: query.q
         }),
         {
-          errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+          errorJudgeFn: (res) => (res && res.code !== 0 && (res.code === 404 || res.code === 500))
         }
       ).then((res) => {
         const { list, total } = res;
