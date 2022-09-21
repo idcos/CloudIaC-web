@@ -31,7 +31,7 @@ const Index = ({ match = {} }) => {
   const [ applyLoading, setApplyLoading ] = useState(false);
   const [ planLoading, setPlanLoading ] = useState(false);
   const [ vars, setVars ] = useState([]);
-  const [ runnner, setRunnner ] = useState([]);
+  const [ runner, setRunner ] = useState([]);
   const [ keys, setKeys ] = useState([]);
   const [ branch, setBranch ] = useState([]);
   const [ tag, setTag ] = useState([]);
@@ -166,7 +166,7 @@ const Index = ({ match = {} }) => {
       });
       let runnerTags = res.result.tags || [];
       if (res.code === 200) {
-        setRunnner(runnerTags);
+        setRunner(runnerTags);
       }
       if (res.code != 200) {
         throw new Error(res.message);
@@ -386,7 +386,7 @@ const Index = ({ match = {} }) => {
             data={info}
             orgId={orgId}
             envId={envId}
-            runnner={runnner}
+            runner={runner}
             keys={keys}
             tfvars={tfvars}
             playbooks={playbooks}

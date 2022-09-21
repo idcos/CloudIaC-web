@@ -22,7 +22,7 @@ const FL = {
 };
 const { Option } = Select;
 
-const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks, repoObj }) => {
+const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfvars, playbooks, repoObj }) => {
   const { repoRevision, workdir } = repoObj;
   const { vcsId, repoId } = tplInfo;
   const { locked } = data;
@@ -43,12 +43,12 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
   }, [envId]);
 
   useEffect(() => {
-    if (!envId && runnner.length) {
+    if (!envId && runner.length) {
       form.setFieldsValue({
-        runnerTags: runnner.slice(0, 1)
+        runnerTags: runner.slice(0, 1)
       });
     }
-  }, [ envId, runnner ]);
+  }, [ envId, runner ]);
 
   useEffect(() => {
 
@@ -84,8 +84,15 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
     } else if (!_setValue.autoDestroyAt) {
       _setValue.type = 'timequantum';
     }
+    console.log('runnerTags', _setValue.runnerTags);
+    console.log('runner', runner);
     setFormValues(_setValue);
   }, [ envId, data, tplInfo ]);
+
+  useEffect(() => {
+    console.log('runnerTags', data.runnerTags);
+    console.log('runner', runner);
+  }, [ runner, data ]);
 
   const fetchSysInfo = async () => {
     try {
@@ -468,6 +475,18 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           {
                             required: true,
                             message: t('define.form.select.placeholder')
+                          },
+                          {
+                            validator(_, value) {
+                              if (runner && runner.length) {
+                                for (let i = 0; i < value.length; i++) {
+                                  if (!runner.includes(value[i])) {
+                                    return Promise.reject(new Error(t('define.env.deploy.advanced.execute.notFound.runnerTag')));
+                                  }
+                                }
+                              }
+                              return Promise.resolve();
+                            }
                           }
                         ]}
                       >
@@ -478,7 +497,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           style={{ width: '100%' }}
                           disabled={locked}
                         >
-                          {runnner.map(it => <Option value={it}>{it}</Option>)}
+                          {runner.map(it => <Option value={it}>{it}</Option>)}
                         </Select>
                       </Form.Item>
                     </Col>

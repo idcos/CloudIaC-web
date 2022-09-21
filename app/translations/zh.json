@@ -182,6 +182,7 @@
   "define.env.action.unlock.des": "当前环境设置了定时销毁，并已过了定时销毁时间，解锁后将立即触发定时销毁任务，如不想销毁该环境，请选择『仅解锁』",
   "define.env.deploy.advanced": "高级设置",
   "define.env.deploy.advanced.execute": "执行",
+  "define.env.deploy.advanced.execute.notFound.runnerTag": "部署通道标签不存在",
   "define.env.deploy.advanced.tpl": "Stack",
   "define.env.deploy.advanced.tpl.notFound.playbookFile": "未找到该playbook文件",
   "define.env.deploy.advanced.tpl.notFound.tfvarsFile": "未找到该tfvars文件",
