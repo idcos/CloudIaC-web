@@ -166,9 +166,9 @@ const VarFormTable = (props) => {
                   const { sensitive, id } = form.getFieldsValue();
                   if (!(sensitive && id) && !value) {
                     notification.error({
-                      message: `${t('define.form.input.placeholder')} value`
+                      message: `${t('define.form.error.emptyValue')}`
                     });
-                    reject(new Error(t('define.form.input.placeholder')));
+                    reject(new Error(t('define.form.error.emptyValue')));
                   }
                   resolve();
                 }, 300);
