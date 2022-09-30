@@ -231,6 +231,7 @@
   "define.iacStore.verified": "Verified",
   "define.export": "Export",
   "define.form.error": "Form verification error",
+  "define.form.error.emptyValue": "Variable value cannot be empty",
   "define.form.error.format": "Incorrect format",
   "define.form.error.variable": "Please check whether the variable form is filled in incorrectly",
   "define.form.input.placeholder": "Please enter",

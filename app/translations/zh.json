@@ -231,6 +231,7 @@
   "define.iacStore.verified": "厂商认证",
   "define.export": "导出",
   "define.form.error": "表单校验错误",
+  "define.form.error.emptyValue": "变量值不能为空",
   "define.form.error.format": "格式有误",
   "define.form.error.variable": "请检查变量表单填写是否有误",
   "define.form.input.placeholder": "请输入",
