@@ -62,11 +62,20 @@ export default ({ match }) => {
   );
 
   const save = async () => {
-    const varData = await varRef.current.validateForm();
-    const { varGroupIds, delVarGroupIds, ...params } = varData;
-    await updateVars(params);
-    await updateVarGroup({ varGroupIds, delVarGroupIds });
-    notification.success({ message: t('define.message.opSuccess') });
+    try {
+      const varData = await varRef.current.validateForm().catch(() => {
+        throw {
+          message: t('define.form.error'),
+          description: t('define.form.error.variable')
+        };
+      });
+      const { varGroupIds, delVarGroupIds, ...params } = varData;
+      await updateVars(params);
+      await updateVarGroup({ varGroupIds, delVarGroupIds });
+      notification.success({ message: t('define.message.opSuccess') });
+    } catch (err) {
+      notification.error(err);
+    }
   };
 
   return (

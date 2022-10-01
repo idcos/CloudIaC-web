@@ -43,6 +43,7 @@ const VarFormTable = (props) => {
     expandCollapse,
     setExpandCollapse
   } = props;
+  console.log(props);
 
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
@@ -164,11 +165,14 @@ const VarFormTable = (props) => {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
                   const { sensitive, id } = form.getFieldsValue();
-                  if (!(sensitive && id) && !value) {
-                    notification.error({
-                      message: `${t('define.form.error.emptyValue')}`
-                    });
-                    reject(new Error(t('define.form.error.emptyValue')));
+                  if (defaultScope === 'env') {
+                    if (!(sensitive && id) && !value) {
+                      reject(new Error(t('define.form.error.emptyValue')));
+                    }
+                  } else {
+                    if (!id && sensitive && !value) {
+                      reject(new Error(t('define.form.error.emptyValue')));
+                    }
                   }
                   resolve();
                 }, 300);

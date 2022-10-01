@@ -84,15 +84,8 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
     } else if (!_setValue.autoDestroyAt) {
       _setValue.type = 'timequantum';
     }
-    console.log('runnerTags', _setValue.runnerTags);
-    console.log('runner', runner);
     setFormValues(_setValue);
   }, [ envId, data, tplInfo ]);
-
-  useEffect(() => {
-    console.log('runnerTags', data.runnerTags);
-    console.log('runner', runner);
-  }, [ runner, data ]);
 
   const fetchSysInfo = async () => {
     try {
