@@ -43,7 +43,6 @@ const VarFormTable = (props) => {
     expandCollapse,
     setExpandCollapse
   } = props;
-  console.log(props);
 
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
@@ -170,7 +169,8 @@ const VarFormTable = (props) => {
                       reject(new Error(t('define.form.error.emptyValue')));
                     }
                   } else {
-                    if (!id && sensitive && !value) {
+                    const { sensitive: originalSensitive } = !! id && defalutVarList.find((item) => item.id === id) || {};
+                    if ((!id || !!id && !originalSensitive) && sensitive && !value) {
                       reject(new Error(t('define.form.error.emptyValue')));
                     }
                   }
