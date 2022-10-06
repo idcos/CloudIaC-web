@@ -568,6 +568,7 @@
   "define.variable.isSensitive": "Is it sensitive",
   "define.variable.objectType": "From",
   "define.variable.playbook": "Playbook file",
+  "define.variable.rest": "Other variables",
   "define.variable.sameKeyError": "The key value cannot be repeated",
   "define.variable.sensitive": "Sensitive",
   "define.variable.tfVarsFile": "Tfvars file",

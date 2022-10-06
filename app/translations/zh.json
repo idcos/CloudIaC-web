@@ -568,6 +568,7 @@
   "define.variable.isSensitive": "是否敏感",
   "define.variable.objectType": "来自",
   "define.variable.playbook": "playbook文件",
+  "define.variable.rest": "其它变量",
   "define.variable.sameKeyError": "key值不允许重复",
   "define.variable.sensitive": "敏感",
   "define.variable.tfVarsFile": "tfvars文件",
