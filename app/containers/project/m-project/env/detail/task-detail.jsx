@@ -100,7 +100,7 @@ const TaskDetail = (props) => {
       <Layout
         extraHeader={
           <PageHeader
-            title={envInfo.name || ''}
+            title={envInfo.name && envInfo.name.replace(' ', '\u00A0') || ''}
             breadcrumb={true}
           />
         }
