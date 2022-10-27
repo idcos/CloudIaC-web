@@ -37,6 +37,10 @@ const Setting = () => {
   const [ fileLoading, setFileLoading ] = useState(false);
   const [ submitLoading, setSubmitLoading ] = useState(false);
   const [ panel, setPanel ] = useState(formTab || 'execute');
+  const envCanArchive = !envInfo.archived && (
+    [ 'destroyed', 'inactive' ].includes(envInfo.status) || (
+      envInfo.status == 'failed' && envInfo.resourceCount == 0 )
+  )
 
   useEffect(() => {
     envInfo && setFormValues(envInfo);
@@ -212,10 +216,25 @@ const Setting = () => {
   };
 
   const showConfirm = () => {
-    confirm({
+    const isForce = envInfo.status == 'failed';
+    const c = confirm({
       title: t('define.env.action.archive.confirm.title'),
       icon: <InfoCircleFilled />,
-      content: t('define.env.action.archive.des'),
+      content: isForce ? (
+        <div>
+          <p>{t('define.env.action.archive.des.failedStatus')}</p>
+          <Checkbox onChange={(e) => {onCheckboxChange(e.target.checked)}}>
+            <span style={{color: "#f5222d"}}>
+              {t('define.env.action.archive.confirm.force')}
+            </span>
+          </Checkbox>
+        </div>
+      ) : (
+        <p>{t('define.env.action.archive.des')}</p>
+      ),
+      okButtonProps: {
+        disabled: isForce 
+      },
       onOk() {
         return archive();
       },
@@ -223,6 +242,14 @@ const Setting = () => {
         console.log('Cancel');
       }
     });
+
+    const onCheckboxChange = (checked) => {
+      c.update({
+        okButtonProps: {
+          disabled:  !checked
+        }
+      })
+    };
   };
 
   return <div className={styles.depolySettingDetail}>
@@ -614,7 +641,7 @@ const Setting = () => {
                 <span>{t('define.env.action.archive.des')}</span>
               </Col>
               <Col span={3} style={{ textAlign: "right" }}>
-                <Button loading={fileLoading} onClick={showConfirm} disabled={![ 'destroyed', 'inactive' ].includes(envInfo.status)} >{t('define.env.action.archive')}</Button>
+                <Button loading={fileLoading} onClick={showConfirm} disabled={!envCanArchive}>{t('define.env.action.archive')}</Button>
               </Col>
             </Row>
           </Card>
