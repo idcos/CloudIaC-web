@@ -224,7 +224,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
   const suspend = () => {
     Modal.confirm({
       width: 480,
-      title: <>{t('define.task.abort.name')}&nbsp;“{envInfo.name}” </>,
+      title: <>{t('define.task.abort.name')}&nbsp;“{envInfo.name && envInfo.name.replace(' ', '\u00A0')}” </>,
       icon: <InfoCircleFilled />,
       getContainer: () => ref.current,
       content: (

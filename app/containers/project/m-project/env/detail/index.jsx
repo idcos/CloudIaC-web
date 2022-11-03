@@ -140,7 +140,7 @@ const EnvDetail = (props) => {
   const destroy = () => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.env.action.destroy.confirm.title.prefix')} “${envInfo.name}”?`,
+      title: `${t('define.env.action.destroy.confirm.title.prefix')} “${envInfo.name && envInfo.name.replace(' ', '\u00A0')}”?`,
       icon: <InfoCircleFilled />,
       cancelButtonProps: {
         className: 'ant-btn-tertiary' 
@@ -275,7 +275,7 @@ const EnvDetail = (props) => {
             }}
             title={(
               <Space size={8} align='center'>
-                <span>{envInfo.name || ''}</span>
+                <span>{`${envInfo.name && envInfo.name.replace(' ', '\u00A0')}` || ''}</span>
                 {!!envInfo.locked && <LockOutlined style={{ color: '#000', fontSize: 16 }} />}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {ENV_STATUS[envInfo.status] && (

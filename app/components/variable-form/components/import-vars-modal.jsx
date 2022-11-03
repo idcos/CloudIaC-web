@@ -16,11 +16,11 @@ export default (props) => {
   });
 
   const importVarsVital = importVars && importVars.filter((v) => {
-    return !!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '';
+    return !!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '' || !!v.required;
   });
 
   const importVarsRest = importVars && importVars.filter((v) => {
-    return !(!!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '');
+    return !(!!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '' || !!v.required);
   });
   const columns = [
     {
