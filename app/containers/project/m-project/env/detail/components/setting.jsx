@@ -39,8 +39,8 @@ const Setting = () => {
   const [ panel, setPanel ] = useState(formTab || 'execute');
   const envCanArchive = !envInfo.archived && (
     [ 'destroyed', 'inactive' ].includes(envInfo.status) || (
-      envInfo.status == 'failed' && envInfo.resourceCount == 0 )
-  )
+      envInfo.status == 'failed' && envInfo.resourceCount == 0)
+  );
 
   useEffect(() => {
     envInfo && setFormValues(envInfo);
@@ -223,8 +223,11 @@ const Setting = () => {
       content: isForce ? (
         <div>
           <p>{t('define.env.action.archive.des.failedStatus')}</p>
-          <Checkbox onChange={(e) => {onCheckboxChange(e.target.checked)}}>
-            <span style={{color: "#f5222d"}}>
+          <Checkbox onChange={(e) => {
+            onCheckboxChange(e.target.checked); 
+          }}
+          >
+            <span style={{ color: "#f5222d" }}>
               {t('define.env.action.archive.confirm.force')}
             </span>
           </Checkbox>
@@ -246,9 +249,9 @@ const Setting = () => {
     const onCheckboxChange = (checked) => {
       c.update({
         okButtonProps: {
-          disabled:  !checked
+          disabled: !checked
         }
-      })
+      });
     };
   };
 
