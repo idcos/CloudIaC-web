@@ -51,6 +51,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
   }, [ envId, runner ]);
 
   useEffect(() => {
+    console.log("data", data);
 
     if (!envId && tplInfo.isDemo) {
       setFormValues({
@@ -76,13 +77,17 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
     } else {
       _setValue = { ...tplInfo };
     }
-    if (!!_setValue.autoDestroyAt) {
-      _setValue.type = 'time';
-      setFormValues({ destroyAt: moment(_setValue.autoDestroyAt) });
-    } else if (((_setValue.ttl === '' || _setValue.ttl === null || _setValue.ttl == 0) && !_setValue.autoDestroyAt || !envId)) {
-      _setValue.type = 'infinite';
-    } else if (!_setValue.autoDestroyAt) {
-      _setValue.type = 'timequantum';
+    if (!!_setValue.autoDeployCron || !!_setValue.autoDestroyCron) {
+      _setValue.type = 'cycle';
+    } else {
+      if (!!_setValue.autoDestroyAt) {
+        _setValue.type = 'time';
+        setFormValues({ destroyAt: moment(_setValue.autoDestroyAt) });
+      } else if (((_setValue.ttl === '' || _setValue.ttl === null || _setValue.ttl == 0) && !_setValue.autoDestroyAt || !envId)) {
+        _setValue.type = 'infinite';
+      } else if (!_setValue.autoDestroyAt) {
+        _setValue.type = 'timequantum';
+      }
     }
     setFormValues(_setValue);
   }, [ envId, data, tplInfo ]);
