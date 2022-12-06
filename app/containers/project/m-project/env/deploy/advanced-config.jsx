@@ -51,8 +51,6 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
   }, [ envId, runner ]);
 
   useEffect(() => {
-    console.log("data", data);
-
     if (!envId && tplInfo.isDemo) {
       setFormValues({
         ...tplInfo,
@@ -544,6 +542,20 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
                                   >
                                     <DatePicker disabled={locked} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                                   </Form.Item>;
+                                }
+                                if (type === 'cycle') {
+                                  return <>
+                                    <Form.Item
+                                      name='autoDeployCron'
+                                      noStyle={true}
+                                      shouldUpdate={true}
+                                    ></Form.Item>
+                                    <Form.Item
+                                      name='autoDestroyCron'
+                                      noStyle={true}
+                                      shouldUpdate={true}
+                                    ></Form.Item>
+                                  </>;
                                 }
                               }}
                             </Form.Item>
