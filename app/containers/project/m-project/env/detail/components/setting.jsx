@@ -66,13 +66,13 @@ const Setting = () => {
     if (data.autoDeployCron || data.autoDestroyCron) {
       data.type = 'cycle';
     } else {
-      if (!!data.autoDestroyAt) {
+      if (!!data.ttl) {
+        data.type = 'timequantum';
+      } else if (!!data.autoDestroyAt) {
         data.type = 'time';
         form.setFieldsValue({ destroyAt: moment(data.autoDestroyAt) });
-      } else if ((data.ttl === '' || data.ttl === null || data.ttl == 0) && !data.autoDestroyAt) {
+      } else {
         data.type = 'infinite';
-      } else if (!data.autoDestroyAt) {
-        data.type = 'timequantum';
       }
     }
     form.setFieldsValue(data);

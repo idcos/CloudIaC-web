@@ -78,13 +78,13 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
     if (!!_setValue.autoDeployCron || !!_setValue.autoDestroyCron) {
       _setValue.type = 'cycle';
     } else {
-      if (!!_setValue.autoDestroyAt) {
+      if (!!_setValue.ttl) {
+        _setValue.type = 'timequantum';
+      } else if (!!_setValue.autoDestroyAt) {
         _setValue.type = 'time';
         setFormValues({ destroyAt: moment(_setValue.autoDestroyAt) });
-      } else if (((_setValue.ttl === '' || _setValue.ttl === null || _setValue.ttl == 0) && !_setValue.autoDestroyAt || !envId)) {
+      } else {
         _setValue.type = 'infinite';
-      } else if (!_setValue.autoDestroyAt) {
-        _setValue.type = 'timequantum';
       }
     }
     setFormValues(_setValue);
