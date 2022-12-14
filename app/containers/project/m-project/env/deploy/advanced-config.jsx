@@ -544,18 +544,29 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
                                   </Form.Item>;
                                 }
                                 if (type === 'cycle') {
-                                  return <>
+                                  return <div style={{
+                                    marginLeft: '10px'
+                                  }}
+                                  >
                                     <Form.Item
                                       name='autoDeployCron'
-                                      noStyle={true}
+                                      label={t('define.deploy')}
+                                      style={{ marginBottom: 0 }}
                                       shouldUpdate={true}
-                                    ></Form.Item>
+                                      rules={[{ required: false, message: t('define.form.input.placeholder') }]}
+                                    >
+                                      <Input disabled={locked} placeholder={t('define.env.field.autoDeployCron.placeholder')} /> 
+                                    </Form.Item>
                                     <Form.Item
                                       name='autoDestroyCron'
-                                      noStyle={true}
+                                      label={t('define.destroy')}
+                                      style={{ marginBottom: 0 }}
                                       shouldUpdate={true}
-                                    ></Form.Item>
-                                  </>;
+                                      rules={[{ required: false, message: t('define.form.input.placeholder') }]}
+                                    >
+                                      <Input disabled={locked} placeholder={t('define.env.field.autoDestroyCron.placeholder')} /> 
+                                    </Form.Item>
+                                  </div>;
                                 }
                               }}
                             </Form.Item>

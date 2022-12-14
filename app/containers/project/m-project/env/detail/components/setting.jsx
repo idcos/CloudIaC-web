@@ -615,7 +615,7 @@ const Setting = () => {
           {
             PROJECT_OPERATOR ? (
               <Row style={{ display: 'flex', justifyContent: 'center', padding: '24px 0' }}>
-                <Button loading={submitLoading} disabled={locked} type='primary' onClick={() => onFinish()} >{t('define.action.save')}</Button>
+                <Button loading={submitLoading} disabled={locked || (envId && !envInfo.id)} type='primary' onClick={() => onFinish()} >{t('define.action.save')}</Button>
               </Row>
             ) : null
           }

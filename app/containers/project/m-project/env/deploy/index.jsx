@@ -402,8 +402,8 @@ const Index = ({ match = {} }) => {
             defaultExpandCollapse={false}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >{t('define.env.action.plan')}</Button>
-            <Button htmlType='submit' disabled={planLoading || info.locked} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >{t('define.env.action.deploy')}</Button>
+            <Button htmlType='submit' disabled={applyLoading || (envId && !info.id)} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >{t('define.env.action.plan')}</Button>
+            <Button htmlType='submit' disabled={planLoading || info.locked || (envId && !info.id)} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >{t('define.env.action.deploy')}</Button>
           </Row>
         </Form>
       </div>
