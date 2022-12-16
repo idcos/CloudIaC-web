@@ -25,7 +25,18 @@ const Envs = (props) => {
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const { params: { orgId, projectId } } = match; 
   const [ panel, setPanel ] = useState('');
-  const [ query, setQuery ] = useState({ q: tplName });
+  const [ query, setQuery ] = useState({ 
+    q: tplName,
+    pageNo: 1,
+    pageSize: 10
+  });
+
+  const changeQuery = (payload) => {
+    setQuery({
+      ...query,
+      ...payload
+    });
+  };
 
   return (
     <Layout
@@ -57,7 +68,12 @@ const Envs = (props) => {
             );
           }}
           activeKey={panel}
-          onChange={(k) => setPanel(k)}
+          onChange={(k) => {
+            setPanel(k);
+            changeQuery({
+              pageNo: 1
+            });
+          }}
           destroyInactiveTabPane={true}
           tabBarExtraContent={
             <Input
@@ -67,7 +83,10 @@ const Envs = (props) => {
               prefix={<SearchOutlined />}
               defaultValue={query.q}
               onPressEnter={(e) => {
-                setQuery(preValue => ({ ...preValue, q: e.target.value }));
+                changeQuery({
+                  q: e.target.value,
+                  pageNo: 1
+                });
               }}
             />
           }
@@ -77,7 +96,7 @@ const Envs = (props) => {
               tab={envNavs[it]}
               key={it}
             > 
-              <EnvList {...props} panel={panel} query={query} />
+              <EnvList {...props} panel={panel} query={query} changeQuery={changeQuery} />
             </Tabs.TabPane>
           ))}
         </Tabs>

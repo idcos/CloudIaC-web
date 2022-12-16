@@ -276,7 +276,7 @@ const CTList = ({ match = {} }) => {
               prefix={<SearchOutlined />}
               onPressEnter={(e) => {
                 const q = e.target.value;
-                changeQuery({ q });
+                changeQuery({ q, pageNo: 1 });
               }}
             />
             <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
