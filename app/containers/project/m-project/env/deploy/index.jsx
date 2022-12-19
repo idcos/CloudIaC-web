@@ -261,6 +261,9 @@ const Index = ({ match = {} }) => {
           description: t('define.form.error.variable')
         };
       });
+      if (!configData.keyId) {
+        configData.keyId = '';
+      }
       let values = { ...value, ...configData };
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
