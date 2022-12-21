@@ -8,23 +8,31 @@ import { t } from 'utils/i18n';
 export const useSearchFormAndTable = (props) => {
 
   const {
+
     /** 需要自定义的分页属性 */ 
     pagination = {}, 
+
     /** 默认搜索参数 */ 
     defaultSearchParams,
+
     /** 表格数据 */
     tableData = { list: [], total: 0 },
+
     /** 触发搜索 */
     onSearch = noop
   } = props || {};
 
   const { 
+
     /** 分页搜索参数 */
     paginate: defaultPaginate = { current: 1, pageSize: 10 },
+
     /** 表单搜索参数 */
     form: defaultFormParams = {},
+
     /** 排序搜索参数 */
     sorter: defaultSorter = {},
+
     /** 表格过滤搜索参数 */
     filters: defaultFilters = {}
   } = defaultSearchParams || {};
@@ -89,25 +97,26 @@ export const useSearchFormAndTable = (props) => {
     const { current, pageSize } = pagination;
     const { field, order } = sorter;
     switch (action) {
-      case 'paginate':
-        setPaginate({ current, pageSize });
-        break;
-      case 'filter':
-        setSearchParams(({ filters, paginate, ...restParams }) => ({
-          paginate: { current: 1, pageSize },
-          filters: newFilters,
-          ...restParams
-        }));
-        break;
-      case 'sort':
-        setSorter({ field, order });
-        break;
-      default:
-        break;
+    case 'paginate':
+      setPaginate({ current, pageSize });
+      break;
+    case 'filter':
+      setSearchParams(({ filters, paginate, ...restParams }) => ({
+        paginate: { current: 1, pageSize },
+        filters: newFilters,
+        ...restParams
+      }));
+      break;
+    case 'sort':
+      setSorter({ field, order });
+      break;
+    default:
+      break;
     }
   };
 
   return {
+
     /** tableProps 关联预置表格属性
      *  -dataSource 当前页数据
      *  -pagination 关联预置分页属性
@@ -120,7 +129,7 @@ export const useSearchFormAndTable = (props) => {
         total: tableData.total,
         showSizeChanger: true,
         showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-        ...omit(pagination, ['current', 'pageSize', 'total', 'onChange'])
+        ...omit(pagination, [ 'current', 'pageSize', 'total', 'onChange' ])
       },
       onChange: onTableChange 
     },

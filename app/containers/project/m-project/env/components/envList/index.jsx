@@ -187,10 +187,10 @@ const EnvList = (props) => {
           total={resultMap.total} 
           hideOnSinglePage={true}
           pageSize={query.pageSize}
-          current={query.pageNo}
-          onChange={(pageNo, pageSize) => {
+          current={query.currentPage}
+          onChange={(currentPage, pageSize) => {
             changeQuery({
-              pageNo,
+              currentPage,
               pageSize
             });
           }}

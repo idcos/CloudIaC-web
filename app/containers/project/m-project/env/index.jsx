@@ -27,7 +27,7 @@ const Envs = (props) => {
   const [ panel, setPanel ] = useState('');
   const [ query, setQuery ] = useState({ 
     q: tplName,
-    pageNo: 1,
+    currentPage: 1,
     pageSize: 10
   });
 
@@ -71,7 +71,7 @@ const Envs = (props) => {
           onChange={(k) => {
             setPanel(k);
             changeQuery({
-              pageNo: 1
+              currentPage: 1
             });
           }}
           destroyInactiveTabPane={true}
@@ -85,7 +85,7 @@ const Envs = (props) => {
               onPressEnter={(e) => {
                 changeQuery({
                   q: e.target.value,
-                  pageNo: 1
+                  currentPage: 1
                 });
               }}
             />
