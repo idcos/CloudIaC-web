@@ -66,7 +66,7 @@ const Setting = () => {
     if (data.autoDeployCron || data.autoDestroyCron) {
       data.type = 'cycle';
     } else {
-      if (!!data.ttl) {
+      if (!!data.ttl && data.ttl !== '0') {
         data.type = 'timequantum';
       } else if (!!data.autoDestroyAt) {
         data.type = 'time';

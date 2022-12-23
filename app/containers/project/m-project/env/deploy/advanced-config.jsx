@@ -78,7 +78,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfva
     if (!!_setValue.autoDeployCron || !!_setValue.autoDestroyCron) {
       _setValue.type = 'cycle';
     } else {
-      if (!!_setValue.ttl) {
+      if (!!_setValue.ttl && _setValue.ttl !== '0') {
         _setValue.type = 'timequantum';
       } else if (!!_setValue.autoDestroyAt) {
         _setValue.type = 'time';
