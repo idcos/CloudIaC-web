@@ -87,7 +87,7 @@ export default ({ taskInfo, goBottom, stepId, stepStatus, autoScroll, isFullscre
     evtSourceInit(
       {
         onmessage: (data) => {
-          setTaskStepLog((prevLog) => uniq([ ...prevLog, data ] || []));
+          setTaskStepLog((prevLog) => [ ...prevLog, data ] || []);
         }
       },
       {
