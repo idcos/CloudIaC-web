@@ -163,17 +163,6 @@ const VarFormTable = (props) => {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const { sensitive, id } = form.getFieldsValue();
-                  if (defaultScope === 'env') {
-                    if (!(sensitive && id) && !value) {
-                      reject(new Error(t('define.form.error.emptyValue')));
-                    }
-                  } else {
-                    const { sensitive: originalSensitive } = !! id && defalutVarList.find((item) => item.id === id) || {};
-                    if ((!id || !!id && !originalSensitive) && sensitive && !value) {
-                      reject(new Error(t('define.form.error.emptyValue')));
-                    }
-                  }
                   resolve();
                 }, 300);
               });
