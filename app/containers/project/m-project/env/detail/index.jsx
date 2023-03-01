@@ -43,7 +43,7 @@ const subNavs = {
 };
 
 const EnvDetail = (props) => {
-
+  
   const { userInfo, location, match: { params: { orgId, projectId, envId } } } = props;
   const { tabKey } = queryString.parse(location.search);
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
@@ -53,7 +53,8 @@ const EnvDetail = (props) => {
   const [ lockVisible, setLockVisible ] = useState(false);
   const [ lockLoading, setLockLoading ] = useState(false);
   const [ lockType, setLockType ] = useState(false);
-
+  const [ nameEdit, setNameEdit ] = useState(false);
+  const [ envName, setEnvName ] = useState('');
   // 获取环境详情
   const { loading: envDetailLoading, data: envInfo = {}, run: fetchEnvInfo } = useRequest(
     () => requestWrapper(
@@ -71,7 +72,7 @@ const EnvDetail = (props) => {
       }
     }
   );
-
+  const env_data_name = `${envInfo.name && envInfo.name.replace(' ', '\u00A0')}` || '';
   // 获取Stack详情
   const { data: tplInfo = {} } = useRequest(
     () => requestWrapper(
@@ -248,6 +249,42 @@ const EnvDetail = (props) => {
   const onUnLock = () => {
     onLock('unlock');
   };
+  
+  const nameEditHandler = () => {
+    setEnvName(env_data_name);
+    setNameEdit(true);
+  };
+
+  const nameEnter = async (e) => { 
+    const value = e.target.value;
+    if (!value) {
+      notification.error({ message: t('define.task.abort.env.placeholder') });
+      return;
+    }
+    try {
+      const res = await envAPI.envsEdit({ 
+        orgId, 
+        projectId, 
+        name: value,
+        envId: envId ? envId : undefined 
+      });
+      if (res.code !== 200) {
+        throw new Error(res.message);
+      }
+      notification.success({
+        description: t('define.message.nameChangeSuccess')
+      });
+      setNameEdit(false);
+      reload();
+
+    } catch (e) {
+      notification.error({
+        message: t('define.message.opFail'),
+        description: e.message
+      });
+      setNameEdit(false);
+    }
+  };
   return (
     <DetailPageContext.Provider
       value={{
@@ -275,7 +312,23 @@ const EnvDetail = (props) => {
             }}
             title={(
               <Space size={8} align='center'>
-                <span>{`${envInfo.name && envInfo.name.replace(' ', '\u00A0')}` || ''}</span>
+                <div>
+                  { nameEdit && !!PROJECT_OPERATOR ? (
+                    <div>
+                      <Input
+                        value={envName}
+                        onChange={(e) => {
+                          setEnvName(e.target.value);
+                        }}
+                        onPressEnter={nameEnter}
+                        onBlur={nameEnter}
+                      />
+                    </div>
+                  ) : (
+                    <div onDoubleClick={nameEditHandler}>{env_data_name}</div>
+                  )}
+                </div>
+                
                 {!!envInfo.locked && <LockOutlined style={{ color: '#000', fontSize: 16 }} />}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   {ENV_STATUS[envInfo.status] && (

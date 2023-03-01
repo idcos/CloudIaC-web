@@ -5,15 +5,14 @@ import { connect } from "react-redux";
 import history from 'utils/history';
 import classNames from 'classnames';
 import { Button } from 'antd';
-import {
-  ArrowRightOutlined
-} from "@ant-design/icons";
+import { ArrowRightOutlined } from "@ant-design/icons";
 import Coder from 'components/coder';
 import { t } from 'utils/i18n';
+import { RESOURCE_MODE_ENUM } from 'constants/types'; 
 
 const KEY = 'global';
 
-const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg, projectId, envId }) => {
+const resourceItem = ({ attrs, projectName, mode, envName, type, resourceName, curOrg, projectId, envId }) => {
 
   const data = safeJsonParse([attrs]);
   const [ isUnfold, setIsUnfold ] = useState(false);
@@ -44,6 +43,10 @@ const resourceItem = ({ attrs, projectName, envName, type, resourceName, curOrg,
               {envName} <ArrowRightOutlined /> 
             </a>
           </span>
+        </div>
+        <div className={styles.item}>
+          <span className={styles.label}>{t('define.resource.mode')}</span>
+          <span className={styles.value}>{RESOURCE_MODE_ENUM[mode] || '-'}</span>
         </div>
         <div className={styles.item}>
           <span className={styles.label}>{t('define.page.overview.resourceType')}</span>

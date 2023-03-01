@@ -236,3 +236,8 @@ export const DEPLOY_HISTORY_SOURCE_ENUM = {
   api: t('task.triggerType.api'),
   autoDeploy: t('task.triggerType.autoDeploy')
 };
+
+export const RESOURCE_MODE_ENUM = {
+  managed: 'Resource',
+  data: 'Data Source'
+};

@@ -19,7 +19,7 @@ const Resource = () => {
     const modeMap = {
       'graph': <GraphLayout setMode={setMode} />,
       'table': <TableLayout setMode={setMode} />
-    }
+    };
     return modeMap[mode];
   });
 
