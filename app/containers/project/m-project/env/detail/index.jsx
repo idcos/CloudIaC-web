@@ -325,7 +325,7 @@ const EnvDetail = (props) => {
                       />
                     </div>
                   ) : (
-                    <div onDoubleClick={nameEditHandler}>{env_data_name}</div>
+                    <div style={{ cursor: 'grab' }} onDoubleClick={nameEditHandler}>{env_data_name}</div>
                   )}
                 </div>
                 
