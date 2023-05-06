@@ -13,8 +13,8 @@ export default ({
   canEdit = false,
   update = noop
 }) => {
-
-  const data = tags ? tags.split(',') : [];
+  
+  const data = tags || [];
   const [ isEdit, setIsEdit ] = useState(false);
   const editInputRef = useRef();
 
@@ -23,7 +23,13 @@ export default ({
     const editValue = e.target.value;
     setIsEdit(false);
     if (editValue) {
-      update([ ...data, editValue ]);
+      update([ 
+        ...data, 
+        {
+          value: editValue,
+          protection: false,
+        }
+      ]);
     } 
   };
 
@@ -36,7 +42,10 @@ export default ({
 
   const saveTag = (value, index) => {
     let newTags = cloneDeep(data);
-    newTags.splice(index, 1, value);
+    newTags.splice(index, 1, {
+      value,
+      protection: false
+    });
     update(newTags);
   };
 
@@ -53,8 +62,8 @@ export default ({
         {data.map((tag, index) => {
           return (
             <EditTag 
-              tag={tag} 
-              canEdit={canEdit} 
+              tag={tag.value} 
+              canEdit={canEdit && !tag.protection} 
               delTag={() => delTag(index)}
               saveTag={(value) => saveTag(value, index)}
             />
@@ -115,7 +124,7 @@ export const EditTag = ({ canEdit, tag, delTag, saveTag }) => {
     />
   ) : (
     <Tag
-      className={classNames({ 'can-edit': canEdit })}
+      className={classNames({ 'can-edit': canEdit, 'cannot-edit': !canEdit})}
       closable={canEdit}
       onClose={(e) => {
         e.preventDefault();
