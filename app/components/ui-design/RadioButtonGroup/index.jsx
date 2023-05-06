@@ -3,15 +3,17 @@ import noop from 'lodash/noop';
 import classNames from 'classnames';
 import styles from './styles.less';
 
-export default ({ options = [], value, onChange = noop }) => {
-
+const RadioButtonGroup = ({ options = [], value, onChange = noop }) => {
   return (
     <div className={styles.radioButtonGroup}>
-      {options.map((opt) => {
+      {options.map(opt => {
         return (
           <div className={'radio-button-wrapper'}>
-            <div 
-              className={classNames('radio-button', { active: opt.value === value, disabled: opt.disabled })}
+            <div
+              className={classNames('radio-button', {
+                active: opt.value === value,
+                disabled: opt.disabled,
+              })}
               onClick={() => {
                 if (opt.value !== value && !opt.disabled) {
                   onChange(opt.value);
@@ -21,9 +23,10 @@ export default ({ options = [], value, onChange = noop }) => {
               {opt.label}
             </div>
           </div>
-          
         );
       })}
     </div>
   );
 };
+
+export default RadioButtonGroup;

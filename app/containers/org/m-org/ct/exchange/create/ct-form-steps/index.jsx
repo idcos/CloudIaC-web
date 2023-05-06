@@ -10,7 +10,7 @@ import { TFVERSION_AUTO_MATCH } from 'constants/types';
 import varsAPI from 'services/variables';
 import tplAPI from 'services/tpl';
 import vcsAPI from 'services/vcs';
-import history from "utils/history";
+import history from 'utils/history';
 import { t } from 'utils/i18n';
 import Basic from './step/basic';
 import Variable from './step/variable';
@@ -23,74 +23,78 @@ const { Step } = Steps;
 const steps = [
   { type: 'variable', title: t('define.variable'), Component: Variable },
   { type: 'basic', title: t('define.setting'), Component: Basic },
-  { type: 'relation', title: t('define.ct.import.init.associatedProject'), Component: Relation }
+  {
+    type: 'relation',
+    title: t('define.ct.import.init.associatedProject'),
+    Component: Relation,
+  },
 ];
 
 const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
-  
-  const [ stepIndex, setStepIndex ] = useState(0);
-  const [ ctData, setCtData ] = useState({});
+  const [stepIndex, setStepIndex] = useState(0);
+  const [ctData, setCtData] = useState({});
   const stepRef = useRef();
 
-  const {
-    data: repoInfo = {}
-  } = useRequest(
-    () => requestWrapper(
-      vcsAPI.getRegistryVcs.bind(null, { orgId })
-    ), {
-      formatResult: data => data ? {
-        vcsId: data.id,
-        ...queryInfo
-      } : {}
-    }
+  const { data: repoInfo = {} } = useRequest(
+    () => requestWrapper(vcsAPI.getRegistryVcs.bind(null, { orgId })),
+    {
+      formatResult: data =>
+        data
+          ? {
+              vcsId: data.id,
+              ...queryInfo,
+            }
+          : {},
+    },
   );
 
   // 创建/编辑Stack提交接口
-  const {
-    run: onSave,
-    loading: saveLoading
-  } = useRequest(
-    (params) => requestWrapper(
-      tplAPI[opType === 'add' ? 'create' : 'update'].bind(null, formatVariableRequestParams(params, defaultScope))
-    ),
+  const { run: onSave, loading: saveLoading } = useRequest(
+    params =>
+      requestWrapper(
+        tplAPI[opType === 'add' ? 'create' : 'update'].bind(
+          null,
+          formatVariableRequestParams(params, defaultScope),
+        ),
+      ),
     {
       manual: true,
-      onSuccess: () => goCTlist()
-    }
+      onSuccess: () => goCTlist(),
+    },
   );
 
   // 校验接口
-  const {
-    run: onlineCheckForm
-  } = useRequest(
-    (params) => requestWrapper(
-      tplAPI.check.bind(null, { ...params, templateId: tplId, orgId }), {
-        autoError: false
-      }
-    ),
+  const { run: onlineCheckForm } = useRequest(
+    params =>
+      requestWrapper(
+        tplAPI.check.bind(null, { ...params, templateId: tplId, orgId }),
+        {
+          autoError: false,
+        },
+      ),
     {
       manual: true,
-      onError: (err) => {
+      onError: err => {
         const { code, message, message_detail } = (err || {}).res || {};
-        if (code == 50010340) {
+        if (code === 50010340) {
           notification.error({
-            message: t('define.ct.message.50010340')
+            message: t('define.ct.message.50010340'),
           });
         } else {
           notification.error({
             message: message || t('define.message.opSuccess'),
-            description: message_detail
+            description: message_detail,
           });
         }
-      }
-    }
+      },
+    },
   );
 
   const stepHelper = useCallback(() => {
     return {
-      go: (index) => setStepIndex(index),
+      go: index => setStepIndex(index),
       next: () => setStepIndex(stepIndex + 1),
-      prev: () => setStepIndex(stepIndex != 0 ? stepIndex - 1 : 0),
+      prev: () => setStepIndex(stepIndex !== 0 ? stepIndex - 1 : 0),
       updateData: ({ type, data, isSubmit }) => {
         const newCtData = { ...ctData, [type]: data };
         if (isSubmit) {
@@ -98,24 +102,24 @@ const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
         } else {
           setCtData(newCtData);
         }
-      }
+      },
     };
-  }, [ stepIndex, ctData ]);
+  }, [stepIndex, ctData]);
 
   const goCTlist = () => {
     history.push(`/org/${orgId}/m-org-ct`);
   };
 
-  const submit = (data) => {
+  const submit = data => {
     const { basic, variable, relation } = data;
     let params = {
-      ...variable, 
-      ...basic, 
+      ...variable,
+      ...basic,
       ...relation,
       ...repoInfo,
       orgId,
       tplId,
-      source: 'registry'
+      source: 'registry',
     };
     if (params.tfVersion === TFVERSION_AUTO_MATCH) {
       params.tfVersion = params.autoMatchTfVersion;
@@ -126,11 +130,11 @@ const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
 
   useEffect(() => {
     switch (opType) {
-    case 'add':
-      getVars();
-      break;
-    default:
-      break;
+      case 'add':
+        getVars();
+        break;
+      default:
+        break;
     }
   }, [opType]);
 
@@ -140,16 +144,18 @@ const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
       if (res.code !== 200) {
         throw new Error(res.message);
       }
-      setCtData(preCtData => set(preCtData, 'variable.variables', res.result || []));
+      setCtData(preCtData =>
+        set(preCtData, 'variable.variables', res.result || []),
+      );
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  const changeStep = (index) => {
+  const changeStep = index => {
     if (opType === 'add' || !stepRef.current) {
       return;
     }
@@ -164,33 +170,34 @@ const CTFormSteps = ({ orgId, tplId, opType, queryInfo }) => {
       <div className='stepWrapper'>
         <Steps current={stepIndex}>
           {steps.map((it, index) => (
-            <Step style={{ cursor: opType === 'add' ? 'default' : 'pointer' }} title={it.title} onClick={() => changeStep(index)}/>
+            <Step
+              style={{ cursor: opType === 'add' ? 'default' : 'pointer' }}
+              title={it.title}
+              onClick={() => changeStep(index)}
+            />
           ))}
         </Steps>
       </div>
-      {
-        steps.map((it, index) => (
-          stepIndex === index ? (
-            <it.Component
-              childRef={stepRef}
-              stepHelper={stepHelper()}
-              ctData={ctData}
-              orgId={orgId}
-              type={it.type}
-              tplId={tplId}
-              opType={opType}
-              goCTlist={goCTlist}
-              isShow={stepIndex === index}
-              saveLoading={saveLoading}
-              onlineCheckForm={onlineCheckForm}
-              repoInfo={repoInfo}
-            />
-          ) : null
-        ))
-      }
+      {steps.map((it, index) =>
+        stepIndex === index ? (
+          <it.Component
+            childRef={stepRef}
+            stepHelper={stepHelper()}
+            ctData={ctData}
+            orgId={orgId}
+            type={it.type}
+            tplId={tplId}
+            opType={opType}
+            goCTlist={goCTlist}
+            isShow={stepIndex === index}
+            saveLoading={saveLoading}
+            onlineCheckForm={onlineCheckForm}
+            repoInfo={repoInfo}
+          />
+        ) : null,
+      )}
     </div>
   );
 };
 
 export default Eb_WP()(CTFormSteps);
-

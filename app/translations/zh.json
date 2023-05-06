@@ -394,7 +394,7 @@
   "define.policyGroup.form.readme.empty.default": "未获取策略组说明",
   "define.policyGroup.form.readme.empty.registry": "选择策略组、版本查看策略组说明",
   "define.policyGroup.form.readme.empty.vcs": "选择VCS、仓库、分支/标签查看策略组说明",
-  "define.policyGroup.form.step.seting": "策略组设置",
+  "define.policyGroup.form.step.setting": "策略组设置",
   "define.policyGroup.form.step.source": "选择来源",
   "define.policyGroup.search.placeholder": "请输入策略组名称搜索",
   "define.policyGroup.top5": "策略组TOP5",

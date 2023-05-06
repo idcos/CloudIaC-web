@@ -8,11 +8,10 @@ import { t } from 'utils/i18n';
 
 const { Option } = Select;
 
-const OtherVarForm = (props) => {
-
+const OtherVarForm = props => {
   const { otherVarForm, fetchParams, defaultExpandCollapse = true } = props;
-  const [ tfvars, setTfvars ] = useState([]);
-  const [ playbooks, setPlaybooks ] = useState([]);
+  const [tfvars, setTfvars] = useState([]);
+  const [playbooks, setPlaybooks] = useState([]);
 
   useEffect(() => {
     if (fetchParams) {
@@ -22,21 +21,22 @@ const OtherVarForm = (props) => {
   }, [fetchParams]);
 
   // ssh key选项列表
-  const {
-    data: keyOptions = []
-  } = useRequest(
-    () => requestWrapper(
-      keysAPI.list.bind(null, {
-        pageSize: 0
-      })
-    ),
+  const { data: keyOptions = [] } = useRequest(
+    () =>
+      requestWrapper(
+        keysAPI.list.bind(null, {
+          pageSize: 0,
+        }),
+      ),
     {
-      formatResult: data => (data.list || []).map(it => ({ label: it.name, value: it.id }))
-    }
+      formatResult: data =>
+        (data.list || []).map(it => ({ label: it.name, value: it.id })),
+    },
   );
 
   const fetchTfvars = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } =
+      fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listTfvars(params);
@@ -47,13 +47,14 @@ const OtherVarForm = (props) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   const fetchPlaybooks = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } =
+      fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listPlaybook(params);
@@ -64,14 +65,21 @@ const OtherVarForm = (props) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   return (
-    <Collapse defaultActiveKey={defaultExpandCollapse && 'open'} expandIconPosition={'right'}>
-      <Collapse.Panel key='open' header={t('define.varType.other')} forceRender={true}>
+    <Collapse
+      defaultActiveKey={defaultExpandCollapse && 'open'}
+      expandIconPosition={'right'}
+    >
+      <Collapse.Panel
+        key='open'
+        header={t('define.varType.other')}
+        forceRender={true}
+      >
         <Form form={otherVarForm} style={{ margin: '0 8px' }}>
           <Row gutter={24}>
             <Col span={8}>
@@ -81,16 +89,18 @@ const OtherVarForm = (props) => {
                 rules={[
                   {
                     required: false,
-                    message: t('define.form.select.placeholder')
-                  }
+                    message: t('define.form.select.placeholder'),
+                  },
                 ]}
               >
                 <Select
-                  getPopupContainer={triggerNode => triggerNode.parentNode} 
-                  allowClear={true} 
+                  getPopupContainer={triggerNode => triggerNode.parentNode}
+                  allowClear={true}
                   placeholder={t('define.form.select.placeholder')}
                 >
-                  {tfvars.map(it => <Option value={it}>{it}</Option>)}
+                  {tfvars.map(it => (
+                    <Option value={it}>{it}</Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -101,16 +111,18 @@ const OtherVarForm = (props) => {
                 rules={[
                   {
                     required: false,
-                    message: t('define.form.select.placeholder')
-                  }
+                    message: t('define.form.select.placeholder'),
+                  },
                 ]}
               >
-                <Select 
+                <Select
                   getPopupContainer={triggerNode => triggerNode.parentNode}
-                  allowClear={true} 
+                  allowClear={true}
                   placeholder={t('define.form.select.placeholder')}
                 >
-                  {playbooks.map(it => <Option value={it}>{it}</Option>)}
+                  {playbooks.map(it => (
+                    <Option value={it}>{it}</Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -121,12 +133,12 @@ const OtherVarForm = (props) => {
                 rules={[
                   {
                     required: false,
-                    message: t('define.form.select.placeholder')
-                  }
+                    message: t('define.form.select.placeholder'),
+                  },
                 ]}
               >
-                <Select 
-                  allowClear={true} 
+                <Select
+                  allowClear={true}
                   placeholder={t('define.form.select.placeholder')}
                   options={keyOptions}
                   optionFilterProp='label'

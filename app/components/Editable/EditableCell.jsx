@@ -1,12 +1,11 @@
 import React, { useCallback, useRef, useContext, useEffect } from 'react';
-import { FormInstance, FormItemProps } from 'antd/lib/form';
 import isFunction from 'lodash/isFunction';
 import has from 'lodash/has';
 import debounce from 'lodash/debounce';
 import assign from 'lodash/assign';
 import set from 'lodash/set';
 
-import { Input, Form } from 'antd';
+import { Input } from 'antd';
 import FormItem from './FormItem';
 import { EditableRowContext, EditableContext } from './context';
 import FieldWrap from './FieldWrap';
@@ -27,23 +26,22 @@ const EditableCell = ({
   ...restProps
 }) => {
   const inputRef = useRef(null);
-  const { form, addWaitSaveName, removeWaitSaveName } = useContext(
-    EditableRowContext
-  );
+  const { form, addWaitSaveName, removeWaitSaveName } =
+    useContext(EditableRowContext);
   const formRef = useRef({ ...form });
   const { multiple, settingId } = useContext(EditableContext);
-  const name = formItemProps && formItemProps.name || (dataIndex);
+  const name = (formItemProps && formItemProps.name) || dataIndex;
   const triggerStr = typeof trigger === 'string' ? trigger : 'onChange';
 
   const saveFun = useCallback(
-    debounce(async (v) => {
+    debounce(async v => {
       const val = v || form.getFieldValue(name);
       removeWaitSaveName(name);
       setRowsData(set({}, name, val), rowIndex);
     }, 300),
-    [ rowIndex, name ]
+    [rowIndex, name],
   );
-  const save = (v) => {
+  const save = v => {
     addWaitSaveName(name);
     saveFun(v);
   };
@@ -51,32 +49,32 @@ const EditableCell = ({
   useEffect(() => {
     assign(formRef.current, {
       ...form,
-      setFieldsValue: (values) => {
+      setFieldsValue: values => {
         form.setFieldsValue(values);
         // 多行编辑自动更新数据；单行编辑需要手动保存数据；
         if (multiple) {
           setRowsData(
             {
-              ...values
+              ...values,
             },
-            rowIndex
+            rowIndex,
           );
         }
       },
-      resetFields: (fields) => {
+      resetFields: fields => {
         form.resetFields(fields);
         // 多行编辑自动更新数据；单行编辑需要手动保存数据；
         if (multiple) {
           setRowsData(
             {
-              ...form.getFieldsValue()
+              ...form.getFieldsValue(),
             },
-            rowIndex
+            rowIndex,
           );
         }
-      }
+      },
     });
-  }, [ rowIndex, setRowsData ]);
+  }, [rowIndex, setRowsData]);
 
   let childNode = children;
   let fieldNode = (
@@ -92,9 +90,9 @@ const EditableCell = ({
             {
               value: val,
               onChange: onChangeB,
-              rowIndex
+              rowIndex,
             },
-            formRef.current
+            formRef.current,
           );
         }}
       />
@@ -106,13 +104,13 @@ const EditableCell = ({
       <FormItem {...formItemProps} name={name}>
         {React.cloneElement(fieldNode, {
           ...fieldNode.props,
-          [triggerStr]: (val) => {
+          [triggerStr]: val => {
             if (isFunction(fieldNode.props[triggerStr])) {
-              fieldNode.props[triggerStr](val); 
+              fieldNode.props[triggerStr](val);
             }
             // 单行编辑模式通过保存按钮保存内容；
             if (!multiple) {
-              return; 
+              return;
             }
             if (triggerStr !== 'onChange') {
               save();
@@ -121,7 +119,7 @@ const EditableCell = ({
             } else {
               save(val);
             }
-          }
+          },
         })}
       </FormItem>
     );

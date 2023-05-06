@@ -1,4 +1,5 @@
-import find from "lodash/find";
+/* eslint-disable no-undef */
+import find from 'lodash/find';
 import { matchPath } from 'react-router-dom';
 
 /**
@@ -17,9 +18,15 @@ export function flatObj(obj) {
     return 0;
   };
   const keys = Object.keys(obj).sort(compare);
-  let res = keys.map(key => {
-    return `${key}${(obj[key] !== null && typeof obj[key] === 'object') ? JSON.stringify(obj[key]) : obj[key]}`;
-  }).join('');
+  let res = keys
+    .map(key => {
+      return `${key}${
+        obj[key] !== null && typeof obj[key] === 'object'
+          ? JSON.stringify(obj[key])
+          : obj[key]
+      }`;
+    })
+    .join('');
   return res;
 }
 
@@ -29,35 +36,36 @@ export function flatObj(obj) {
  */
 export function formatImgUrl(url) {
   // eslint-disable-next-line no-undef
-  return window.__POWERED_BY_QIANKUN__ ? `${__webpack_public_path__}/${url}` : url;
+  return window.__POWERED_BY_QIANKUN__
+    ? `${__webpack_public_path__}/${url}`
+    : url;
 }
 
-export const statusTextCls = (status) => {
+export const statusTextCls = status => {
   let cls = '',
     color = 'blue';
   switch (status) {
-  case 'failed':
-    cls = 'danger';
-    color = 'red';
-    break;
-  case 'pending':
-    cls = 'normal';
-    color = 'green';
-    break;
-  default:
-    break;
+    case 'failed':
+      cls = 'danger';
+      color = 'red';
+      break;
+    case 'pending':
+      cls = 'normal';
+      color = 'green';
+      break;
+    default:
+      break;
   }
   return {
     cls,
-    color
+    color,
   };
 };
 
 export const formatCTRunner = (ctRunnerList, cTRunnerId) => {
-  const { Tags } = find(ctRunnerList || [], [ 'ID', cTRunnerId ]) || {};
-  return Tags && Tags.join() || cTRunnerId;
+  const { Tags } = find(ctRunnerList || [], ['ID', cTRunnerId]) || {};
+  return (Tags && Tags.join()) || cTRunnerId;
 };
-
 
 /**
  * 通过一个名字数组在另一个全量数组中找到指定的objName值并返回另一个数组
@@ -65,14 +73,14 @@ export const formatCTRunner = (ctRunnerList, cTRunnerId) => {
  */
 export const changeArrByObj = (valueArr, allObjArr, objName) => {
   return valueArr.reduce((pro, currentValue) => {
-    let k = ((allObjArr.filter(d => d.name === currentValue) || [])[0])[objName];
+    let k = (allObjArr.filter(d => d.name === currentValue) || [])[0][objName];
     let array = [k];
     return array.concat(pro);
   }, []);
 };
 
 // 计算正整数的位数
-export const getNumLen = (num) => {
+export const getNumLen = num => {
   let len = 0;
   while (num >= 1) {
     num = num / 10;
@@ -112,10 +120,10 @@ export const safeJsonStringify = (nativeParam, emptyData = '') => {
 
 /**
  * 校验是否是Json字符串
- * @param {string} str 
+ * @param {string} str
  * @returns {boolean}
  */
-export const isJsonString = (str) => {
+export const isJsonString = str => {
   if (typeof str !== 'string') {
     return false;
   }
@@ -127,15 +135,14 @@ export const isJsonString = (str) => {
   }
 };
 
-
 export const ellipsisText = (text, maxLen = 15) => {
   text = text || '';
-  return text.length > maxLen ? (text.slice(0, maxLen) + '...') : text;
+  return text.length > maxLen ? text.slice(0, maxLen) + '...' : text;
 };
 
 // 导出文件
 
-export const downloadImportTemplate = async(downloadApi, opts) => {
+export const downloadImportTemplate = async (downloadApi, opts) => {
   try {
     const token = localStorage['accessToken'];
     const res = await fetch(downloadApi, {
@@ -144,14 +151,19 @@ export const downloadImportTemplate = async(downloadApi, opts) => {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': token,
+        Authorization: token,
         'IaC-Org-Id': opts.orgId || '',
-        'IaC-Project-Id': opts['IaC-Project-Id'] || ''
-      }
+        'IaC-Project-Id': opts['IaC-Project-Id'] || '',
+      },
     });
-    const fileNameEncode = res.headers.get('content-disposition').split('filename="')[1];
-    const fileNameDecode = decodeURIComponent(fileNameEncode).replace(/^\"|\"$/g, '');
-    if (res.status == 200) {
+    const fileNameEncode = res.headers
+      .get('content-disposition')
+      .split('filename="')[1];
+    const fileNameDecode = decodeURIComponent(fileNameEncode).replace(
+      /^"|"$/g,
+      '',
+    );
+    if (res.status === 200) {
       let filename = fileNameDecode;
       res.blob().then(blob => {
         let link = document.createElement('a');
@@ -166,11 +178,14 @@ export const downloadImportTemplate = async(downloadApi, opts) => {
   } catch (error) {
     console.log(error);
   }
-
 };
 
 export const getMatchParams = () => {
-  const match = matchPath(window.location.pathname, [ '/org/:orgId/project/:projectId', '/org/:orgId' ]) || {};
+  const match =
+    matchPath(window.location.pathname, [
+      '/org/:orgId/project/:projectId',
+      '/org/:orgId',
+    ]) || {};
   const { orgId, projectId } = match.params || {};
   return { orgId, projectId };
 };
@@ -182,5 +197,7 @@ export const getStackIconUrl = (exchangeUrl, logo) => {
   if (logo.startsWith('/api/v1')) {
     return exchangeUrl + logo;
   }
-  return (logo.startsWith('/') || logo.startsWith('http')) ? logo : `${exchangeUrl}/api/v1/icons?path=${logo}`;
+  return logo.startsWith('/') || logo.startsWith('http')
+    ? logo
+    : `${exchangeUrl}/api/v1/icons?path=${logo}`;
 };

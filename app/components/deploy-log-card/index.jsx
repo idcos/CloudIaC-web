@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Button,
   Card,
@@ -9,52 +9,60 @@ import {
   notification,
   Space,
   Tag,
-  Tooltip
-} from "antd";
+  Tooltip,
+} from 'antd';
 import {
   CheckCircleFilled,
   CloseCircleFilled,
-  CopyOutlined,
   FullscreenExitOutlined,
   FullscreenOutlined,
   InfoCircleFilled,
-  PauseOutlined,
   SearchOutlined,
-  SyncOutlined
-} from "@ant-design/icons";
-import { connect } from "react-redux";
-import classNames from "classnames";
-import { useFullscreen, useRequest, useScroll } from "ahooks";
-import { requestWrapper } from "utils/request";
-import getPermission from "utils/permission";
+  SyncOutlined,
+} from '@ant-design/icons';
+import { connect } from 'react-redux';
+import classNames from 'classnames';
+import { useFullscreen, useRequest, useScroll } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import getPermission from 'utils/permission';
 import {
   END_TASK_STATUS_LIST,
   TASK_STATUS,
-  TASK_STATUS_COLOR
-} from "constants/types";
-import envAPI from "services/env";
-import taskAPI from "services/task";
-import history from "utils/history";
-import { timeUtils } from "utils/time";
-import SearchByKeyWord from "components/coder/ansi-coder-card/dom-event";
+  TASK_STATUS_COLOR,
+} from 'constants/types';
+import envAPI from 'services/env';
+import taskAPI from 'services/task';
+import history from 'utils/history';
+import { timeUtils } from 'utils/time';
+import SearchByKeyWord from 'components/coder/ansi-coder-card/dom-event';
 import { LoadingIcon } from 'components/lottie-icon';
-import DeployLog from "./deploy-log";
-import styles from "./styles.less";
-import AuditModal from "./auditModal";
+import DeployLog from './deploy-log';
+import styles from './styles.less';
+import AuditModal from './auditModal';
 import { ApproveIcon, SuspendIcon } from 'components/iconfont';
 import { t } from 'utils/i18n';
 
 const { Panel } = Collapse;
 const searchService = new SearchByKeyWord({
   searchWrapperSelect: '.ansi-coder-content',
-  excludeSearchClassNameList: [
-    'line-index'
-  ]
+  excludeSearchClassNameList: ['line-index'],
 });
-const enableStatusList = [ 'complete', 'failed', 'timeout', 'running' ];
-const suspendStatusList = new Set([ 'rejected', 'failed', 'aborted', 'complete' ]); // 中止按钮隐藏的状态
+const enableStatusList = ['complete', 'failed', 'timeout', 'running'];
+const suspendStatusList = new Set([
+  'rejected',
+  'failed',
+  'aborted',
+  'complete',
+]); // 中止按钮隐藏的状态
 
-const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, sysConfigSwitches }) => {
+const DeployLogCard = ({
+  taskInfo,
+  userInfo,
+  reload,
+  envInfo = {},
+  planResult,
+  sysConfigSwitches,
+}) => {
   const [form] = Form.useForm();
 
   const searchRef = useRef();
@@ -64,13 +72,22 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
   const scrollRef = useRef(null);
 
   const { top: scrollRefTop } = useScroll(scrollRef);
-  const [ isFullscreen, { toggleFull }] = useFullscreen(ref);
-  const { orgId, projectId, envId, id: taskId, startAt, endAt, type, status, aborting } = taskInfo || {};
+  const [isFullscreen, { toggleFull }] = useFullscreen(ref);
+  const {
+    orgId,
+    projectId,
+    envId,
+    id: taskId,
+    startAt,
+    endAt,
+    type,
+    status,
+    aborting,
+  } = taskInfo || {};
   const { PROJECT_OPERATOR, PROJECT_APPROVER } = getPermission(userInfo);
-  const [ activeKey, setActiveKey ] = useState([]);
-  const [ canAutoScroll, setCanAutoScroll ] = useState(true);
-  const [ auditModalVisible, setAuditModalVisible ] = useState(false);
-  const [ canShowAbort, setCanShowAbort ] = useState(false);
+  const [activeKey, setActiveKey] = useState([]);
+  const [canAutoScroll, setCanAutoScroll] = useState(true);
+  const [auditModalVisible, setAuditModalVisible] = useState(false);
   const taskHasEnd = END_TASK_STATUS_LIST.includes(status);
   const autoScroll = !taskHasEnd && canAutoScroll;
 
@@ -93,17 +110,17 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
 
   useEffect(() => {
     // 给页面绑定鼠标滚轮事件,针对火狐的非标准事件
-    scrollRef.current.addEventListener("DOMMouseScroll", scrollFunc);
+    scrollRef.current.addEventListener('DOMMouseScroll', scrollFunc);
     // 给页面绑定鼠标滚轮事件，针对Google，mousewheel非标准事件已被弃用，请使用 wheel事件代替
-    scrollRef.current.addEventListener("wheel", scrollFunc);
+    scrollRef.current.addEventListener('wheel', scrollFunc);
     // ie不支持wheel事件，若一定要兼容，可使用mousewheel
-    scrollRef.current.addEventListener("mousewheel", scrollFunc);
+    scrollRef.current.addEventListener('mousewheel', scrollFunc);
     return () => {
-      scrollRef.current.removeEventListener("DOMMouseScroll", scrollFunc);
+      scrollRef.current.removeEventListener('DOMMouseScroll', scrollFunc);
       //    给页面绑定鼠标滚轮事件，针对Google，mousewheel非标准事件已被弃用，请使用 wheel事件代替
-      scrollRef.current.removeEventListener("wheel", scrollFunc);
+      scrollRef.current.removeEventListener('wheel', scrollFunc);
       //    ie不支持wheel事件，若一定要兼容，可使用mousewheel
-      scrollRef.current.removeEventListener("mousewheel", scrollFunc);
+      scrollRef.current.removeEventListener('mousewheel', scrollFunc);
     };
   }, []);
 
@@ -115,7 +132,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
     }
   }, [scrollRefTop]);
 
-  const scrollFunc = (e) => {
+  const scrollFunc = e => {
     e = e || window.event;
     if (e.wheelDelta) {
       if (e.wheelDelta > 0) {
@@ -128,23 +145,22 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
     }
   };
 
-
-
   // 任务步骤列表查询
   const {
     data: taskSteps = [],
     run: runLoop,
-    cancel: cancelLoop
+    cancel: cancelLoop,
   } = useRequest(
-    () => requestWrapper(
-      taskAPI.getTaskSteps.bind(null, { orgId, projectId, taskId })
-    ),
+    () =>
+      requestWrapper(
+        taskAPI.getTaskSteps.bind(null, { orgId, projectId, taskId }),
+      ),
     {
       formatResult: res => res || [],
       ready: !!taskId,
       pollingInterval: 3000,
       pollingWhenHidden: false,
-      onSuccess: (data) => {
+      onSuccess: data => {
         if (autoScroll) {
           const activeKey = getAutoActiveKey(data);
           setActiveKey(activeKey);
@@ -152,13 +168,13 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
         if (stopLoopRef.current) {
           cancelLoop();
         }
-      }
-    }
+      },
+    },
   );
 
-  const getAutoActiveKey = (data) => {
+  const getAutoActiveKey = data => {
     let activeKey = [];
-    data.forEach((item) => {
+    data.forEach(item => {
       if (enableStatusList.includes(item.status)) {
         activeKey.push(item.id);
       }
@@ -172,23 +188,28 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
   };
 
   // 执行部署
-  const {
-    run: applyTask,
-    loading: applyTaskLoading
-  } = useRequest(
-    () => requestWrapper(
-      envAPI.envRedeploy.bind(null, { orgId, projectId, envId, taskType: 'apply' }),
-      {
-        autoSuccess: true
-      }
-    ),
+  const { run: applyTask, loading: applyTaskLoading } = useRequest(
+    () =>
+      requestWrapper(
+        envAPI.envRedeploy.bind(null, {
+          orgId,
+          projectId,
+          envId,
+          taskType: 'apply',
+        }),
+        {
+          autoSuccess: true,
+        },
+      ),
     {
       manual: true,
-      onSuccess: (data) => {
+      onSuccess: data => {
         const { taskId } = data;
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${taskId}`);
-      }
-    }
+        history.push(
+          `/org/${orgId}/project/${projectId}/m-project-env/detail/${envId}/task/${taskId}`,
+        );
+      },
+    },
   );
 
   // 审批操作
@@ -196,27 +217,28 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
     run: passOrRejecy,
     fetches: {
       approved: { loading: approvedLoading = false } = {},
-      rejected: { loading: rejectedLoading = false } = {}
-    }
+      rejected: { loading: rejectedLoading = false } = {},
+    },
   } = useRequest(
-    (action) => requestWrapper(
-      taskAPI.approve.bind(null, { orgId, taskId, projectId, action }),
-      {
-        autoSuccess: true
-      }
-    ),
+    action =>
+      requestWrapper(
+        taskAPI.approve.bind(null, { orgId, taskId, projectId, action }),
+        {
+          autoSuccess: true,
+        },
+      ),
     {
-      fetchKey: (action) => action,
+      fetchKey: action => action,
       manual: true,
       onSuccess: () => {
         reload && reload();
         setCanAutoScroll(true);
         setAuditModalVisible(false);
-      }
-    }
+      },
+    },
   );
 
-  const manualChangeActiveKey = (keys) => {
+  const manualChangeActiveKey = keys => {
     setActiveKey(keys);
   };
 
@@ -224,7 +246,12 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
   const suspend = () => {
     Modal.confirm({
       width: 480,
-      title: <>{t('define.task.abort.name')}&nbsp;“{envInfo.name && envInfo.name.replace(' ', '\u00A0')}” </>,
+      title: (
+        <>
+          {t('define.task.abort.name')}&nbsp;“
+          {envInfo.name && envInfo.name.replace(' ', '\u00A0')}”{' '}
+        </>
+      ),
       icon: <InfoCircleFilled />,
       getContainer: () => ref.current,
       content: (
@@ -237,16 +264,19 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
               label={t('define.task.abort.confirmAbort')}
               style={{ fontWeight: 600, marginBottom: 0 }}
               name='name'
-              rules={[{
-                required: true,
-                message: t('define.task.abort.env.placeholder')
-              }, {
-                validator: async (rule, value) => {
-                  if (value && value !== envInfo.name) {
-                    throw new Error(t('define.task.abort.env.diffError'));
-                  }
-                }
-              }]}
+              rules={[
+                {
+                  required: true,
+                  message: t('define.task.abort.env.placeholder'),
+                },
+                {
+                  validator: async (rule, value) => {
+                    if (value && value !== envInfo.name) {
+                      throw new Error(t('define.task.abort.env.diffError'));
+                    }
+                  },
+                },
+              ]}
             >
               <Input placeholder={t('define.task.abort.env.placeholder')} />
             </Form.Item>
@@ -254,25 +284,25 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
         </div>
       ),
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
       onOk: async () => {
         await form.validateFields();
         const res = await taskAPI.abortTask({ orgId, projectId, taskId });
-        if (res.code != 200) {
+        if (res.code !== 200) {
           notification.error({
             message: t('define.message.opFail'),
-            description: res.message
+            description: res.message,
           });
           return;
         }
         notification.success({
-          message: t('define.message.opSuccess')
+          message: t('define.message.opSuccess'),
         });
         reload && reload();
         form.resetFields();
       },
-      onCancel: () => form.resetFields()
+      onCancel: () => form.resetFields(),
     });
   };
 
@@ -290,36 +320,37 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
             {TASK_STATUS[status]}
           </Tag>
         )}
-        {taskInfo.status === "failed" && taskInfo.message ? (
+        {taskInfo.status === 'failed' && taskInfo.message ? (
           <Tooltip title={taskInfo.message}>
-            <InfoCircleFilled
-              style={{ color: "#ff4d4f", fontSize: 14 }}
-            />
+            <InfoCircleFilled style={{ color: '#ff4d4f', fontSize: 14 }} />
           </Tooltip>
         ) : null}
       </div>
       <Card
         className='deploy-log-card'
-        bodyStyle={{ background: "#24292F", padding: 0 }}
+        bodyStyle={{ background: '#24292F', padding: 0 }}
         title={
           <div className='card-title'>
-            {t('task.deployLog.totalTime')}{timeUtils.diff(endAt, startAt, "-")}
+            {t('task.deployLog.totalTime')}
+            {timeUtils.diff(endAt, startAt, '-')}
           </div>
         }
         extra={
           <Space size={24}>
             {PROJECT_OPERATOR && (
               <Space size={8}>
-                { status && !suspendStatusList.has(status) && sysConfigSwitches.abortStatus && (
-                  <Button
-                    onClick={() => suspend()}
-                    disabled={aborting}
-                    icon={<SuspendIcon />}
-                  >
-                    {t('task.deployLog.action.abort')}
-                  </Button>
-                )}
-                {(type === "plan" && status === "complete") && (
+                {status &&
+                  !suspendStatusList.has(status) &&
+                  sysConfigSwitches.abortStatus && (
+                    <Button
+                      onClick={() => suspend()}
+                      disabled={aborting}
+                      icon={<SuspendIcon />}
+                    >
+                      {t('task.deployLog.action.abort')}
+                    </Button>
+                  )}
+                {type === 'plan' && status === 'complete' && (
                   <Button
                     type='primary'
                     onClick={applyTask}
@@ -328,7 +359,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
                     {t('task.deployLog.action.deploy')}
                   </Button>
                 )}
-                {taskInfo.status === "approving" && (
+                {taskInfo.status === 'approving' && (
                   <Button
                     icon={<ApproveIcon />}
                     onClick={() => setAuditModalVisible(true)}
@@ -342,7 +373,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
               prefix={<SearchOutlined />}
               ref={searchRef}
               placeholder={t('define.coder.ansi.search.placeholder')}
-              onPressEnter={(e) => {
+              onPressEnter={e => {
                 searchService.search(e.target.value);
                 searchRef.current.focus();
               }}
@@ -352,12 +383,16 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
               {isFullscreen ? (
                 <>
                   <FullscreenExitOutlined className='tool-icon' />
-                  <span className='tool-text'>{t('define.action.exitFullScreen')}</span>
+                  <span className='tool-text'>
+                    {t('define.action.exitFullScreen')}
+                  </span>
                 </>
               ) : (
                 <>
                   <FullscreenOutlined className='tool-icon' />
-                  <span className='tool-text'>{t('define.action.fullScreen')}</span>
+                  <span className='tool-text'>
+                    {t('define.action.fullScreen')}
+                  </span>
                 </>
               )}
             </span>
@@ -365,7 +400,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
         }
       >
         <div
-          className={classNames("card-body-scroll", { isFullscreen })}
+          className={classNames('card-body-scroll', { isFullscreen })}
           ref={scrollRef}
         >
           <Collapse
@@ -377,25 +412,25 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
             {taskSteps.map(
               ({ name, id, startAt, type, endAt, status }, index) => (
                 <Panel
-                  className={"log-panel-" + index}
+                  className={'log-panel-' + index}
                   collapsible={
-                    ![ "complete", "failed", "timeout", "running" ].includes(
-                      status
-                    ) && "disabled"
+                    !['complete', 'failed', 'timeout', 'running'].includes(
+                      status,
+                    ) && 'disabled'
                   }
                   header={
                     <Space>
-                      <span>{name || type || "-"}</span>
-                      {status === "complete" && (
-                        <CheckCircleFilled style={{ color: "#45BC13" }} />
+                      <span>{name || type || '-'}</span>
+                      {status === 'complete' && (
+                        <CheckCircleFilled style={{ color: '#45BC13' }} />
                       )}
-                      {(status === "failed" || status === "timeout") && (
-                        <CloseCircleFilled style={{ color: "#F23C3C" }} />
+                      {(status === 'failed' || status === 'timeout') && (
+                        <CloseCircleFilled style={{ color: '#F23C3C' }} />
                       )}
-                      {status === "running" && (
+                      {status === 'running' && (
                         <SyncOutlined
                           spin={true}
-                          style={{ color: "#ffffff" }}
+                          style={{ color: '#ffffff' }}
                         />
                       )}
                     </Space>
@@ -412,7 +447,7 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
                     stepStatus={status}
                   />
                 </Panel>
-              )
+              ),
             )}
           </Collapse>
         </div>
@@ -431,10 +466,9 @@ const DeployLogCard = ({ taskInfo, userInfo, reload, envInfo = {}, planResult, s
   );
 };
 
-
-export default connect((state) => {
+export default connect(state => {
   return {
     sysConfigSwitches: state.global.get('sysConfigSwitches').toJS(),
-    userInfo: state.global.get('userInfo').toJS()
+    userInfo: state.global.get('userInfo').toJS(),
   };
 })(DeployLogCard);

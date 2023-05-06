@@ -1,6 +1,5 @@
 // 定义用户角色权限
-const getPermission = (userInfo) => {
-
+const getPermission = userInfo => {
   const { isAdmin, role: orgRole, projectRole } = userInfo || {};
 
   return {
@@ -11,11 +10,19 @@ const getPermission = (userInfo) => {
     // 项目设置权限
     PROJECT_SET: isAdmin || orgRole === 'admin' || projectRole === 'manager',
     // 项目审批权限
-    PROJECT_APPROVER: isAdmin || orgRole === 'admin' || projectRole === 'manager' || projectRole === 'approver',
+    PROJECT_APPROVER:
+      isAdmin ||
+      orgRole === 'admin' ||
+      projectRole === 'manager' ||
+      projectRole === 'approver',
     // 项目操作权限
-    PROJECT_OPERATOR: isAdmin || orgRole === 'admin' || projectRole === 'manager' || projectRole === 'approver' || projectRole === 'operator'
+    PROJECT_OPERATOR:
+      isAdmin ||
+      orgRole === 'admin' ||
+      projectRole === 'manager' ||
+      projectRole === 'approver' ||
+      projectRole === 'operator',
   };
-
 };
 
 export default getPermission;

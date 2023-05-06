@@ -1,11 +1,12 @@
+/* eslint-disable no-control-regex */
 /**
  * Form item code editor.
  */
-import React, { useEffect, useState, useImperativeHandle } from "react";
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/neo.css";
-import "codemirror/mode/markdown/markdown";
-import "codemirror/mode/javascript/javascript";
+import React, { useEffect, useState, useImperativeHandle } from 'react';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/neo.css';
+import 'codemirror/mode/markdown/markdown';
+import 'codemirror/mode/javascript/javascript';
 
 /**
  * defineMode
@@ -23,19 +24,19 @@ import 'codemirror-rego/key-map';
 /**
  * search
  */
-import "codemirror/addon/scroll/annotatescrollbar.js";
-import "codemirror/addon/search/matchesonscrollbar.js";
-import "codemirror/addon/search/match-highlighter.js";
-import "codemirror/addon/search/jump-to-line.js";
-import "codemirror/addon/dialog/dialog.js";
-import "codemirror/addon/dialog/dialog.css";
-import "codemirror/addon/search/searchcursor.js";
-import "codemirror/addon/search/search.js";
+import 'codemirror/addon/scroll/annotatescrollbar.js';
+import 'codemirror/addon/search/matchesonscrollbar.js';
+import 'codemirror/addon/search/match-highlighter.js';
+import 'codemirror/addon/search/jump-to-line.js';
+import 'codemirror/addon/dialog/dialog.js';
+import 'codemirror/addon/dialog/dialog.css';
+import 'codemirror/addon/search/searchcursor.js';
+import 'codemirror/addon/search/search.js';
 
-import "./mode/error-text";
-import { Controlled as ControlledEditor } from "react-codemirror2";
-import styled from "styled-components";
-import get from "lodash/get";
+import './mode/error-text';
+import { Controlled as ControlledEditor } from 'react-codemirror2';
+import styled from 'styled-components';
+import get from 'lodash/get';
 import noop from 'lodash/noop';
 
 const Container = styled.div`
@@ -58,9 +59,9 @@ const FormCoder = ({
   selfClassName,
   hight,
   options,
-  autoScrollToBottom // 是否开启自动滚动至最后一行
+  autoScrollToBottom, // 是否开启自动滚动至最后一行
 }) => {
-  const [ codemirror, setCodemirror ] = useState();
+  const [codemirror, setCodemirror] = useState();
 
   useEffect(() => {
     setTimeout(() => {
@@ -72,15 +73,15 @@ const FormCoder = ({
     lineNumbers: true, // show linenumbers
     lineWrapping: true, // auto wrap
     lint: true, // auto lint code
-    theme: "neo", // now we only support one theme
+    theme: 'neo', // now we only support one theme
     indentUnit: 2, // 2 space indent
     tabSize: 2, // one tab size equals to 2 whitespace
-    mode: "application/json",
+    mode: 'application/json',
     specialChars: /\u001B/,
     specialCharPlaceholder: function (char) {
-      return document.createElement("span");
+      return document.createElement('span');
     },
-    ...options
+    ...options,
   };
 
   const autoScrollToBottomFn = () => {
@@ -89,29 +90,31 @@ const FormCoder = ({
     }
     setTimeout(scrollToBottom); // 延迟效果为了dom加载出来再滚到底部
   };
-  
+
   const scrollToTop = () => {
-    const vert = get(codemirror, "display.scrollbars.vert", {});
-    vert.scrollTo && vert.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    const vert = get(codemirror, 'display.scrollbars.vert', {});
+    vert.scrollTo &&
+      vert.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
   };
 
   const scrollToBottom = () => {
-    const vert = get(codemirror, "display.scrollbars.vert", {});
-    vert.scrollTo && vert.scrollTo({
-      top: vert.scrollHeight,
-      behavior: 'smooth'
-    });
+    const vert = get(codemirror, 'display.scrollbars.vert', {});
+    vert.scrollTo &&
+      vert.scrollTo({
+        top: vert.scrollHeight,
+        behavior: 'smooth',
+      });
   };
 
-  const editorDidMount = (editor) => {
+  const editorDidMount = editor => {
     setCodemirror(editor);
   };
 
   useImperativeHandle(childRef, () => ({
-    search: (keyword) => {
+    search: keyword => {
       if (!codemirror) {
         throw new Error('编辑器还未装载完成');
       }
@@ -124,16 +127,20 @@ const FormCoder = ({
         throw new Error('编辑器搜索功能异常');
       }
     },
-    execCommand: (type) => {
+    execCommand: type => {
       codemirror.execCommand(type);
     },
     scrollToTop,
-    scrollToBottom
+    scrollToBottom,
   }));
 
-
   return (
-    <Container ref={domRef} style={style} hight={hight} className={selfClassName}>
+    <Container
+      ref={domRef}
+      style={style}
+      hight={hight}
+      className={selfClassName}
+    >
       <ControlledEditor
         onChange={autoScrollToBottomFn}
         editorDidMount={editorDidMount}

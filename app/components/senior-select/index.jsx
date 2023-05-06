@@ -8,15 +8,14 @@ import styles from './styles.less';
 
 const { Option } = Select;
 
-export default (props) => {
-
+const SeniorSelect = props => {
   const {
     placeholder = t('define.form.select.placeholder'),
     style = {},
     onChange = noop,
     lablePropsNames = {
       name: 'name',
-      description: 'description'
+      description: 'description',
     },
     searchKey = lablePropsNames.name,
     valuePropName = 'value',
@@ -26,23 +25,25 @@ export default (props) => {
     searchPlaceholder = '',
     maxLen,
     seniorSelectfooter = null,
-    formatOptionLabel = (t) => t,
+    formatOptionLabel = t => t,
     options = [],
-    dropdownMatchSelectWidth
+    dropdownMatchSelectWidth,
   } = props || {};
 
-  const [ showOptions, setShowOptions ] = useState([]);
-  const [ searchValue, setSearchValue ] = useState('');
+  const [showOptions, setShowOptions] = useState([]);
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     setShowOptions(options.slice(0, maxLen));
-  }, [ maxLen, options ]);
+  }, [maxLen, options]);
 
-  const onSearch = (e) => {
+  const onSearch = e => {
     const keyword = e.target.value;
     setSearchValue(keyword);
     const reg = new RegExp(keyword, 'gi');
-    const filterOptions = options.filter((it) => !keyword || reg.test(it[searchKey]));
+    const filterOptions = options.filter(
+      it => !keyword || reg.test(it[searchKey]),
+    );
     setShowOptions(filterOptions.slice(0, maxLen));
   };
 
@@ -50,67 +51,72 @@ export default (props) => {
     <Select
       className={styles.senior_select}
       getPopupContainer={triggerNode => triggerNode.parentNode}
-      style={style} 
+      style={style}
       listHeight={listHeight}
       optionLabelProp={lablePropsNames.name}
       filterOption={false}
       placeholder={placeholder}
-      showArrow={false} 
+      showArrow={false}
       showSearch={false}
-      onChange={(value) => {
+      onChange={value => {
         setSearchValue('');
         onChange(value);
       }}
       value={value}
       dropdownMatchSelectWidth={dropdownMatchSelectWidth}
       dropdownRender={menu => {
-        const showFlattenOptions = intersectionWith(menu.props.flattenOptions, showOptions, (flattenOption, showOption) => {
-          return flattenOption.key === showOption[valuePropName];
-        });
+        const showFlattenOptions = intersectionWith(
+          menu.props.flattenOptions,
+          showOptions,
+          (flattenOption, showOption) => {
+            return flattenOption.key === showOption[valuePropName];
+          },
+        );
         return (
           <div className={styles.seniorSelectList}>
-            {
-              showSearch && (
-                <div className='senior-select-header'>
-                  <Input value={searchValue} placeholder={searchPlaceholder} suffix={<SearchOutlined />} onChange={onSearch} />
-                </div>
-              )
-            }
+            {showSearch && (
+              <div className='senior-select-header'>
+                <Input
+                  value={searchValue}
+                  placeholder={searchPlaceholder}
+                  suffix={<SearchOutlined />}
+                  onChange={onSearch}
+                />
+              </div>
+            )}
             {React.cloneElement(menu, { flattenOptions: showFlattenOptions })}
-            {
-              seniorSelectfooter ? (
-                <div className='footer'>
-                  {seniorSelectfooter}
-                </div>
-              ) : null
-            }
+            {seniorSelectfooter ? (
+              <div className='footer'>{seniorSelectfooter}</div>
+            ) : null}
           </div>
         );
       }}
     >
-      {
-        options.map((option) => {
-          const { [lablePropsNames.name]: name, [valuePropName]: itemValue, disabled } = option;
-          return (
-            <Option 
-              {
-                ...{
-                  [lablePropsNames.name]: formatOptionLabel(name)
-                }
-              }
-              value={itemValue} 
-              disabled={disabled}
-            >
-              <div className='content'>
-                <span className='name idcos-text-ellipsis'>{name}</span>
-                {
-                  itemValue === value && <CheckOutlined className='selected-icon'/>
-                }
-              </div>
-            </Option>
-          );
-        })
-      }
+      {options.map(option => {
+        const {
+          [lablePropsNames.name]: name,
+          [valuePropName]: itemValue,
+          disabled,
+        } = option;
+        return (
+          <Option
+            {...{
+              [lablePropsNames.name]: formatOptionLabel(name),
+            }}
+            value={itemValue}
+            disabled={disabled}
+          >
+            <div className='content'>
+              <span className='name idcos-text-ellipsis'>{name}</span>
+              {itemValue === value && (
+                <CheckOutlined className='selected-icon' />
+              )}
+            </div>
+          </Option>
+        );
+      })}
     </Select>
   );
 };
+
+export default SeniorSelect;

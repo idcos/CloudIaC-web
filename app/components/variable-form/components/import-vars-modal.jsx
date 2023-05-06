@@ -3,81 +3,102 @@ import { Modal, Table, Collapse } from 'antd';
 import { t } from 'utils/i18n';
 const { Panel } = Collapse;
 
-export default (props) => {
-
-  const { visible, defaultScope, varList, importVars = [], onClose, onFinish } = props;
-  const [ selectedListVital, setSelectedListVital ] = useState({
+const ImportVarsModal = props => {
+  const {
+    visible,
+    defaultScope,
+    varList,
+    importVars = [],
+    onClose,
+    onFinish,
+  } = props;
+  const [selectedListVital, setSelectedListVital] = useState({
     keys: [],
-    rows: []
+    rows: [],
   });
-  const [ selectedListRest, setSelectedListRest ] = useState({
+  const [selectedListRest, setSelectedListRest] = useState({
     keys: [],
-    rows: []
+    rows: [],
   });
 
-  const importVarsVital = importVars && importVars.filter((v) => {
-    return !!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '' || !!v.required;
-  });
+  const importVarsVital =
+    importVars &&
+    importVars.filter(v => {
+      return (
+        (!!v.description &&
+          (v.description.indexOf('(必填)') !== -1 ||
+            v.description.indexOf('（必填）') !== -1)) ||
+        v.value === '' ||
+        !!v.required
+      );
+    });
 
-  const importVarsRest = importVars && importVars.filter((v) => {
-    return !(!!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '' || !!v.required);
-  });
+  const importVarsRest =
+    importVars &&
+    importVars.filter(v => {
+      return !(
+        (!!v.description &&
+          (v.description.indexOf('(必填)') !== -1 ||
+            v.description.indexOf('（必填）') !== -1)) ||
+        v.value === '' ||
+        !!v.required
+      );
+    });
   const columns = [
     {
       title: 'name',
       dataIndex: 'name',
       width: 180,
-      ellipsis: true
-    }, 
+      ellipsis: true,
+    },
     {
       title: 'value',
       dataIndex: 'value',
       width: 180,
-      ellipsis: true
-    }, 
+      ellipsis: true,
+    },
     {
       title: t('define.des'),
       dataIndex: 'description',
       width: 180,
-      ellipsis: true
-    } 
+      ellipsis: true,
+    },
   ];
 
   const rowSelectionVital = {
     columnWidth: 26,
     selectedRowKeys: selectedListVital.keys,
-    getCheckboxProps: (record) => {
+    getCheckboxProps: record => {
       const hasSameName = !!varList.find(it => it.name === record.name);
       if (hasSameName) {
         return { disabled: true };
-      } 
+      }
       return null;
     },
     onChange: (keys, rows) => {
       setSelectedListVital({
         keys,
-        rows
+        rows,
       });
-    }
+    },
   };
-
 
   const rowSelectionRest = {
     columnWidth: 26,
     selectedRowKeys: selectedListRest.keys,
-    getCheckboxProps: (record) => {
+    getCheckboxProps: record => {
       const hasSameName = !!varList.find(it => it.name === record.name);
       if (hasSameName) {
         return { disabled: true };
-      } 
+      }
       return null;
     },
     onChange: (keys, rows) => {
       setSelectedListRest({
         keys,
-        rows
+        rows,
       });
-    }
+    },
   };
 
   const onCancel = () => {
@@ -86,19 +107,19 @@ export default (props) => {
   };
 
   const onOk = () => {
-    const paramsVital = selectedListVital.rows.map((it) => ({
+    const paramsVital = selectedListVital.rows.map(it => ({
       type: 'terraform',
       sensitive: false,
       scope: defaultScope,
-      ...it
+      ...it,
     }));
-    const paramsRest = selectedListRest.rows.map((it) => ({
+    const paramsRest = selectedListRest.rows.map(it => ({
       type: 'terraform',
       sensitive: false,
       scope: defaultScope,
-      ...it
+      ...it,
     }));
-    onFinish([ ...paramsVital, ...paramsRest ], () => {
+    onFinish([...paramsVital, ...paramsRest], () => {
       reset();
       onClose();
     });
@@ -107,42 +128,42 @@ export default (props) => {
   const reset = () => {
     setSelectedListVital({
       keys: [],
-      rows: []
+      rows: [],
     });
     setSelectedListRest({
       keys: [],
-      rows: []
+      rows: [],
     });
   };
-  
+
   return (
-    <Modal 
-      width={720} 
+    <Modal
+      width={720}
       title={t('define.import')}
-      visible={visible} 
-      onCancel={onCancel} 
+      visible={visible}
+      onCancel={onCancel}
       onOk={onOk}
       className='antd-modal-type-table'
-      cancelButtonProps={{ 
-        className: 'ant-btn-tertiary' 
+      cancelButtonProps={{
+        className: 'ant-btn-tertiary',
       }}
     >
-      <Table 
-        columns={columns} 
+      <Table
+        columns={columns}
         dataSource={importVarsVital}
-        scroll={{ x: 'min-content', y: 350 }} 
-        pagination={false} 
-        rowKey={(record) => record.name}
+        scroll={{ x: 'min-content', y: 350 }}
+        pagination={false}
+        rowKey={record => record.name}
         rowSelection={rowSelectionVital}
       />
       <Collapse ghost={true}>
         <Panel header={t('define.variable.rest')} forceRender={true}>
-          <Table 
-            columns={columns} 
+          <Table
+            columns={columns}
             dataSource={importVarsRest}
-            scroll={{ x: 'min-content', y: 350 }} 
-            pagination={false} 
-            rowKey={(record) => record.name}
+            scroll={{ x: 'min-content', y: 350 }}
+            pagination={false}
+            rowKey={record => record.name}
             rowSelection={rowSelectionRest}
           />
         </Panel>
@@ -150,3 +171,5 @@ export default (props) => {
     </Modal>
   );
 };
+
+export default ImportVarsModal;

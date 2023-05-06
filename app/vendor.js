@@ -23,7 +23,7 @@ const libs = {
   lodash,
   ReactIntl,
   Reselect,
-  moment
+  moment,
 };
 
 Object.keys(libs).forEach(key => {

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { Button, notification, Table, Divider, Popconfirm } from 'antd';
 import notificationsAPI from 'services/notifications';
@@ -6,57 +7,56 @@ import moment from 'moment';
 import { t } from 'utils/i18n';
 import AddModal from './components/notificationModal';
 
-export default ({ orgId }) => {
-  const [ loading, setLoading ] = useState(false),
-    [ visible, setVisible ] = useState(false),
-    [ notificationId, setNotificationId ] = useState(),
-    [ resultMap, setResultMap ] = useState({
+const Notification = ({ orgId }) => {
+  const [loading, setLoading] = useState(false),
+    [visible, setVisible] = useState(false),
+    [notificationId, setNotificationId] = useState(),
+    [resultMap, setResultMap] = useState({
       list: [],
-      total: 0
+      total: 0,
     }),
-    [ query, setQuery ] = useState({
+    [query, setQuery] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
     });
 
   useEffect(() => {
     fetchList();
   }, [query]);
 
-
   const fetchList = async () => {
     try {
       setLoading(true);
       const res = await notificationsAPI.notificationList({
         ...query,
-        orgId
+        orgId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: t('define.status.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  const changeQuery = (payload) => {
+  const changeQuery = payload => {
     setQuery({
       ...query,
-      ...payload
+      ...payload,
     });
   };
 
   const toggleVisible = () => {
-    setVisible(false); 
+    setVisible(false);
     setNotificationId();
   };
 
@@ -65,127 +65,136 @@ export default ({ orgId }) => {
       dataIndex: 'name',
       title: t('define.name'),
       width: 165,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'notificationType',
       title: t('define.type'),
       width: 149,
       ellipsis: true,
-      render: (text) => ORG_USER.notificationType[text]
+      render: text => ORG_USER.notificationType[text],
     },
     {
       dataIndex: 'eventType',
       title: t('define.notification.field.eventType'),
       width: 277,
       ellipsis: true,
-      render: (text) => (text || []).map(it => ORG_USER.eventType[it]).join('、')
+      render: text => (text || []).map(it => ORG_USER.eventType[it]).join('、'),
     },
     {
       dataIndex: 'creatorName',
       title: t('define.creator'),
       width: 169,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'createdAt',
       title: t('define.createdAt'),
       width: 219,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
-      render: (_, record) => <span>
-        <a
-          onClick={() => {
-            setVisible(true);
-            setNotificationId(record.id);
-          }}
-        >
-          {t('define.action.modify')}
-        </a>
-        <Divider type={'vertical'}/>
-        <Popconfirm
-          title={t('define.notification.action.delete.confirm.title')}
-          onConfirm={() => operation({ doWhat: 'del', payload: { id: record.id } })}
-        >
-          <a>
-            {t('define.action.delete')}
+      render: (_, record) => (
+        <span>
+          <a
+            onClick={() => {
+              setVisible(true);
+              setNotificationId(record.id);
+            }}
+          >
+            {t('define.action.modify')}
           </a>
-        </Popconfirm>
-      </span> 
-    }
+          <Divider type={'vertical'} />
+          <Popconfirm
+            title={t('define.notification.action.delete.confirm.title')}
+            onConfirm={() =>
+              operation({ doWhat: 'del', payload: { id: record.id } })
+            }
+          >
+            <a>{t('define.action.delete')}</a>
+          </Popconfirm>
+        </span>
+      ),
+    },
   ];
 
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => notificationsAPI.createNotification(param),
-        edit: (param) => notificationsAPI.updateNotification(param),
-        del: ({ orgId, id }) => notificationsAPI.delNotification({ orgId, id })
+        add: param => notificationsAPI.createNotification(param),
+        edit: param => notificationsAPI.updateNotification(param),
+        del: ({ orgId, id }) => notificationsAPI.delNotification({ orgId, id }),
       };
       const res = await method[doWhat]({
         orgId,
-        ...payload
+        ...payload,
       });
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
       fetchList();
       cb && cb();
     } catch (e) {
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  return <div>
-    <div style={{ marginBottom: 20 }}>
-      <Button 
-        type='primary'
-        onClick={() => {
-          setVisible(true);
+  return (
+    <div>
+      <div style={{ marginBottom: 20 }}>
+        <Button
+          type='primary'
+          onClick={() => {
+            setVisible(true);
+          }}
+        >
+          {t('define.notification.action.add')}
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={resultMap.list}
+        loading={loading}
+        scroll={{ x: 'min-content' }}
+        pagination={{
+          current: query.pageNo,
+          pageSize: query.pageSize,
+          total: resultMap.total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: total =>
+            t('define.pagination.showTotal', { values: { total } }),
+          onChange: (page, pageSize) => {
+            changeQuery({
+              pageNo: page,
+              pageSize,
+            });
+          },
         }}
-      >{t('define.notification.action.add')}</Button>
-    </div>
-    <Table
-      columns={columns}
-      dataSource={resultMap.list}
-      loading={loading}
-      scroll={{ x: 'min-content' }}
-      pagination={{
-        current: query.pageNo,
-        pageSize: query.pageSize,
-        total: resultMap.total,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-        onChange: (page, pageSize) => {
-          changeQuery({
-            pageNo: page,
-            pageSize
-          });
-        }
-      }}
-    />
-    {
-      visible && <AddModal
-        orgId={orgId}
-        reload={fetchList}
-        operation={operation}
-        visible={visible}
-        toggleVisible={toggleVisible}
-        notificationId={notificationId}
       />
-    }
-  </div>;
+      {visible && (
+        <AddModal
+          orgId={orgId}
+          reload={fetchList}
+          operation={operation}
+          visible={visible}
+          toggleVisible={toggleVisible}
+          notificationId={notificationId}
+        />
+      )}
+    </div>
+  );
 };
+
+export default Notification;

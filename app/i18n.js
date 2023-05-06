@@ -36,7 +36,7 @@ const formatTranslationMessages = (locale, messages) => {
 
 const translationMessages = {
   en: formatTranslationMessages('en', enTranslationMessages),
-  zh: formatTranslationMessages('en', zhTranslationMessages)
+  zh: formatTranslationMessages('en', zhTranslationMessages),
 };
 
 exports.formatTranslationMessages = formatTranslationMessages;

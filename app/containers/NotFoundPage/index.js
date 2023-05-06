@@ -11,16 +11,16 @@ export default function NotFound() {
       status='404'
       title='404'
       subTitle={t('define.page.NotFound.subTitle')}
-      extra={(
+      extra={
         <Button
-          onClick={() => { 
+          onClick={() => {
             window.location.href = '/';
           }}
           type='primary'
         >
           {t('define.action.backHome')}
         </Button>
-      )}
+      }
     />
   );
 }

@@ -15,7 +15,7 @@ import { IntlProvider } from 'react-intl';
 import { makeSelectLocale } from './selectors';
 
 const stateSelector = createSelector(makeSelectLocale(), locale => ({
-  locale
+  locale,
 }));
 
 export default function LanguageProvider(props) {
@@ -29,5 +29,5 @@ export default function LanguageProvider(props) {
 
 LanguageProvider.propTypes = {
   messages: PropTypes.object,
-  children: PropTypes.element.isRequired
+  children: PropTypes.element.isRequired,
 };

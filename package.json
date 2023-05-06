@@ -37,6 +37,7 @@
     "create:ver": "node ./internals/scripts/reversion.js",
     "npmcheckversion": "node ./internals/scripts/npmcheckversion.js",
     "preinstall": "npm run npmcheckversion",
+    "prettier:fix": "prettier --write",
     "postinstall": "npm run create:ver"
   },
   "lint-staged": {
@@ -44,7 +45,8 @@
       "npm run lint:eslint:fix",
       "git add --force"
     ],
-    "*.{md,json}": [
+    "*.{less,md,json}": [
+      "npm run prettier:fix",
       "git add --force"
     ]
   },
@@ -108,8 +110,10 @@
     "webpack-bundle-analyzer": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.12.1",
-    "@babel/core": "7.7.4",
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.8",
+    "@babel/eslint-parser": "^7.21.8",
+    "@babel/eslint-plugin": "^7.19.1",
     "@babel/plugin-proposal-class-properties": "7.7.4",
     "@babel/plugin-syntax-dynamic-import": "7.7.4",
     "@babel/plugin-transform-modules-commonjs": "7.7.4",
@@ -133,12 +137,13 @@
     "copy-webpack-plugin": "6.3.1",
     "css-loader": "3.2.0",
     "error-overlay-webpack-plugin": "0.4.1",
-    "eslint": "7.13.0",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-react": "7.21.5",
-    "eslint-plugin-react-hooks": "4.2.0",
-    "eslint-plugin-redux-saga": "1.2.1",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "file-loader": "4.3.0",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
@@ -151,6 +156,7 @@
     "node-plop": "0.26.2",
     "null-loader": "3.0.0",
     "plop": "2.7.4",
+    "prettier": "^2.8.8",
     "progress-bar-webpack-plugin": "2.1.0",
     "rimraf": "3.0.0",
     "shelljs": "0.8.3",

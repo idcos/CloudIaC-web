@@ -3,7 +3,7 @@ import RoutesList from 'components/routes-list';
 import routes from 'routes';
 import reducer from './reducer';
 import saga from './saga';
-import { useInjectReducer, useInjectSaga } from "redux-injectors";
+import { useInjectReducer, useInjectSaga } from 'redux-injectors';
 
 import { withRouter } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ function App(props) {
   const { pathname, search } = location;
   useInjectReducer({ key: KEY, reducer });
   useInjectSaga({ key: KEY, saga });
-  
+
   useEffect(() => {
     freeLoginCheck();
   }, []);
@@ -34,11 +34,8 @@ function App(props) {
 
   return (
     <div className='idcos-app'>
-      <AppHeader
-        theme='dark'
-        locationPathName={pathname}
-      />
-      <RoutesList routes={routes()}/>
+      <AppHeader theme='dark' locationPathName={pathname} />
+      <RoutesList routes={routes()} />
     </div>
   );
 }

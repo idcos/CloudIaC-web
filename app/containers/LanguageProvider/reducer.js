@@ -10,7 +10,7 @@ import { CHANGE_LOCALE } from './constants';
 import { DEFAULT_LOCALE } from '../../locales';
 
 export const initialState = {
-  locale: DEFAULT_LOCALE
+  locale: DEFAULT_LOCALE,
 };
 
 /* eslint-disable default-case, no-param-reassign */

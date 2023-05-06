@@ -36,7 +36,7 @@ const ConnectedApp = props => (
 );
 
 ConnectedApp.propTypes = {
-  messages: PropTypes.object
+  messages: PropTypes.object,
 };
 
 const render = messages => {
@@ -52,7 +52,6 @@ if (module.hot) {
     render(translationMessages);
   });
 }
-
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
@@ -70,25 +69,27 @@ if (!window.Intl) {
 
 const fetchGlobal = () => {
   store.dispatch({
-    type: 'global/getSysConfigSwitches'
+    type: 'global/getSysConfigSwitches',
   });
   store.dispatch({
     type: 'global/getOrgs',
     payload: {
-      status: 'enable'
-    }
+      status: 'enable',
+    },
   });
   store.dispatch({
-    type: 'global/getUserInfo'
+    type: 'global/getUserInfo',
   });
 };
 
-if (!window.__POWERED_BY_QIANKUN__) { // do sth not in qiankun
+if (!window.__POWERED_BY_QIANKUN__) {
+  // do sth not in qiankun
   fetchGlobal();
   render(translationMessages);
 }
 
-export async function bootstrap() { // do sth in qiankun
+export async function bootstrap() {
+  // do sth in qiankun
   // console.log('[boilerplate] react app bootstraped');
 }
 

@@ -1,37 +1,52 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Card, Row, Col, Space, Spin, Table, Badge } from 'antd';
+import { Card, Row, Col, Space, Spin, Table } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import { chartUtils } from 'components/charts-cfg';
 import { t } from 'utils/i18n';
 
-export default ({ orgId, projectId, envId }) => {
+const CostReport = ({ orgId, projectId, envId }) => {
   const cost_type_pie = useRef();
   const cost_stacked_area = useRef();
-  const [ list, setList ] = useState([]);
+  const [list, setList] = useState([]);
 
   const wrapperRef = useRef();
   let CHART = useRef([
-    { key: 'cost_type_pie', domRef: cost_type_pie, ins: null, title: t('define.resource.curMonthCostType') },
-    { key: 'cost_stacked_area', domRef: cost_stacked_area, ins: null, title: t('define.resource.environmentCostTrend') }
+    {
+      key: 'cost_type_pie',
+      domRef: cost_type_pie,
+      ins: null,
+      title: t('define.resource.curMonthCostType'),
+    },
+    {
+      key: 'cost_stacked_area',
+      domRef: cost_stacked_area,
+      ins: null,
+      title: t('define.resource.environmentCostTrend'),
+    },
   ]);
-  const resizeHelper = chartUtils.resizeEventOfDomRef(CHART.current, wrapperRef);
+  const resizeHelper = chartUtils.resizeEventOfDomRef(
+    CHART.current,
+    wrapperRef,
+  );
 
-  const { loading: reportLoading, run: getReportData } = useRequest(
-    () => requestWrapper(
-      envAPI.envStatistics.bind(null, { orgId, projectId, envId })
-    ),
+  const { loading: reportLoading } = useRequest(
+    () =>
+      requestWrapper(
+        envAPI.envStatistics.bind(null, { orgId, projectId, envId }),
+      ),
     {
       ready: !!envId,
-      onSuccess: (data) => {
+      onSuccess: data => {
         const { costTypeStat = [], costTrendStat = [], costList } = data || {};
-        chartUtils.updateBatch(CHART.current, { 
-          costTypeStat, 
-          costTrendStat });
+        chartUtils.updateBatch(CHART.current, {
+          costTypeStat,
+          costTrendStat,
+        });
         setList(costList);
-      }
-    }
+      },
+    },
   );
 
   useEffect(() => {
@@ -47,49 +62,56 @@ export default ({ orgId, projectId, envId }) => {
       dataIndex: 'resType',
       title: t('env.resource.mode.type'),
       width: 150,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'resAttr',
       title: t('define.resource.props'),
       width: 150,
       ellipsis: true,
-      render: (text) => text || '-'
+      render: text => text || '-',
     },
     {
       dataIndex: 'instanceId',
       title: t('define.resource.instanceID'),
       width: 150,
       ellipsis: true,
-      render: (text) => text || '-'
+      render: text => text || '-',
     },
     {
       dataIndex: 'curMonthCost',
       title: t('define.resource.curMonthCost'),
       width: 80,
       ellipsis: true,
-      render: (text) => text || '-'
+      render: text => text || '-',
     },
     {
       dataIndex: 'totalCost',
       title: t('define.resource.totalCost'),
       width: 80,
       ellipsis: true,
-      render: (text) => text || '-'
-    }
+      render: text => text || '-',
+    },
   ];
   return (
-    <Space direction='vertical' size='middle' style={{ width: '100%', display: 'flex' }}>
+    <Space
+      direction='vertical'
+      size='middle'
+      style={{ width: '100%', display: 'flex' }}
+    >
       <Spin spinning={reportLoading}>
-        <Row gutter={[ 16, 16 ]} ref={wrapperRef}>
-          {CHART.current.map(chart => 
+        <Row gutter={[16, 16]} ref={wrapperRef}>
+          {CHART.current.map(chart => (
             <Col span={12}>
               <div className='title'>{chart.title}</div>
               <Card style={{ borderRadius: 4 }}>
-                <div ref={chart.domRef} style={{ width: '100%', height: 300 }}/>
+                <div
+                  ref={chart.domRef}
+                  style={{ width: '100%', height: 300 }}
+                />
               </Card>
             </Col>
-          )}
+          ))}
         </Row>
       </Spin>
       <div className='title'>{t('define.resource.activeExpenses')}</div>
@@ -103,3 +125,5 @@ export default ({ orgId, projectId, envId }) => {
     </Space>
   );
 };
+
+export default CostReport;

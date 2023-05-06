@@ -1,21 +1,27 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Form, Modal, notification, Select } from "antd";
+import React, { useState, useEffect } from 'react';
+import { Form, Modal, notification, Select } from 'antd';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import cenvAPI from 'services/cenv';
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
-import EllipsisText from 'components/EllipsisText';
 import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 7 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 16 },
 };
 
-export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds }) => {
-
-  const [ submitLoading, setSubmitLoading ] = useState(false);
+const BindPolicyGroupModal = ({
+  title,
+  visible,
+  onClose,
+  id,
+  tplId,
+  onSuccess,
+  policyGroupIds,
+}) => {
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -23,26 +29,28 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
   }, []);
 
   // Stack绑定策略组查询
-  const { data: ctPoliciesGroups = [] } = useRequest(
-    () => requestWrapper(
-      ctplAPI.listBindPoliciesGroups.bind(null, { id: tplId, pageSize: 0 }),
-      {
-        formatDataFn: (res) => (res.result || {}).list || []
-      }
-    ),
+  useRequest(
+    () =>
+      requestWrapper(
+        ctplAPI.listBindPoliciesGroups.bind(null, { id: tplId, pageSize: 0 }),
+        {
+          formatDataFn: res => (res.result || {}).list || [],
+        },
+      ),
     {
-      ready: !!tplId
-    }
+      ready: !!tplId,
+    },
   );
 
   // 策略组选项列表查询
-  const { data: policiesGroupOptions = [] } = useRequest(
-    () => requestWrapper(
-      cgroupsAPI.list.bind(null, { pageSize: 0 }),
-      {
-        formatDataFn: (res) => ((res.result || {}).list || []).map(({ name, id }) => ({ label: name, value: id }))
-      }
-    )
+  const { data: policiesGroupOptions = [] } = useRequest(() =>
+    requestWrapper(cgroupsAPI.list.bind(null, { pageSize: 0 }), {
+      formatDataFn: res =>
+        ((res.result || {}).list || []).map(({ name, id }) => ({
+          label: name,
+          value: id,
+        })),
+    }),
   );
 
   const onOk = async () => {
@@ -51,7 +59,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     try {
       const res = await cenvAPI.update({
         ...values,
-        envId: id
+        envId: id,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -63,7 +71,7 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
       setSubmitLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -75,29 +83,26 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
       visible={visible}
       onCancel={onClose}
       okButtonProps={{
-        loading: submitLoading
+        loading: submitLoading,
       }}
-      cancelButtonProps={{ 
-        className: 'ant-btn-tertiary' 
+      cancelButtonProps={{
+        className: 'ant-btn-tertiary',
       }}
       className='antd-modal-type-form'
       onOk={onOk}
     >
-      <Form
-        {...FL}
-        form={form}
-      >
+      <Form {...FL} form={form}>
         <Form.Item
           label={t('define.ct.field.policyGroup')}
           name='policyGroupIds'
           rules={[
             {
               required: true,
-              message: t('define.ct.field.policyGroup')
-            }
+              message: t('define.ct.field.policyGroup'),
+            },
           ]}
         >
-          <Select 
+          <Select
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder={t('define.ct.field.policyGroup')}
             showArrow={true}
@@ -111,3 +116,4 @@ export default ({ title, visible, onClose, id, tplId, onSuccess, policyGroupIds 
     </Modal>
   );
 };
+export default BindPolicyGroupModal;

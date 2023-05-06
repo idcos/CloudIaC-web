@@ -1,4 +1,5 @@
-import React, { useState, useRef, useImperativeHandle, useEffect } from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState, useRef, useImperativeHandle } from 'react';
 import { Space, Form, Anchor, Affix } from 'antd';
 import { GLOBAL_SCROLL_DOM_ID } from 'constants/types';
 import differenceBy from 'lodash/differenceBy';
@@ -17,72 +18,84 @@ import styles from './styles.less';
 
 const { Link } = Anchor;
 
-const VariableForm = ({ 
-  varRef, 
-  defaultData, 
-  fetchParams, 
-  canImportTerraformVar = false, 
-  defaultScope, 
+const VariableForm = ({
+  varRef,
+  defaultData,
+  fetchParams,
+  canImportTerraformVar = false,
+  defaultScope,
   showOtherVars = false,
   hasAnchor = false,
   defaultExpandCollapse = true,
   readOnly = false,
   showVarGroupList = true,
-  event$
+  event$,
 }) => {
   fetchParams = isEmpty(fetchParams) ? null : fetchParams;
   const terraformVarRef = useRef();
   const envVarRef = useRef();
   const [otherVarForm] = Form.useForm();
-  const [ terraformVarList, setTerraformVarList ] = useState([]);
-  const [ defalutTerraformVarList, setDefalutTerraformVarList ] = useState([]);
-  const [ envVarList, setEnvVarList ] = useState([]);
-  const [ defalutEnvVarList, setDefalutEnvVarList ] = useState([]);
-  const [ envVarGroupList, setEnvVarGroupList ] = useState([]);
-  const [ defalutEnvVarGroupList, setDefalutEnvVarGroupList ] = useState([]);
-  const [ expandCollapseCfg, setExpandCollapseCfg ] = useState({
+  const [terraformVarList, setTerraformVarList] = useState([]);
+  const [defalutTerraformVarList, setDefalutTerraformVarList] = useState([]);
+  const [envVarList, setEnvVarList] = useState([]);
+  const [defalutEnvVarList, setDefalutEnvVarList] = useState([]);
+  const [envVarGroupList, setEnvVarGroupList] = useState([]);
+  const [defalutEnvVarGroupList, setDefalutEnvVarGroupList] = useState([]);
+  const [expandCollapseCfg, setExpandCollapseCfg] = useState({
     terraform: defaultExpandCollapse,
-    environment: defaultExpandCollapse
+    environment: defaultExpandCollapse,
   });
 
-  event$ && event$.useSubscription(({ type }) => {
-    switch (type) {
-    case 'fetchVarGroupList':
-      fetchVarGroupList();
-      break;
-    default:
-      break;
-    }
-  });
+  event$ &&
+    event$.useSubscription(({ type }) => {
+      switch (type) {
+        case 'fetchVarGroupList':
+          fetchVarGroupList();
+          break;
+        default:
+          break;
+      }
+    });
 
   // 资源账号变量组列表查询
-  const {
-    run: fetchVarGroupList
-  } = useRequest(
+  const { run: fetchVarGroupList } = useRequest(
     () => {
-      const { orgId, tplId, projectId, envId, objectType = defaultScope } = fetchParams;
+      const {
+        orgId,
+        tplId,
+        projectId,
+        envId,
+        objectType = defaultScope,
+      } = fetchParams;
       const params = { orgId, tplId, projectId, envId, objectType: objectType };
-      return requestWrapper(
-        varGroupAPI.listRelationship.bind(null, params)
-      );
+      return requestWrapper(varGroupAPI.listRelationship.bind(null, params));
     },
     {
       ready: !!fetchParams && showVarGroupList,
-      onSuccess: (data) => {
+      onSuccess: data => {
         data = data || [];
         setDefalutEnvVarGroupList(data);
-        const sameScopeVarGroupList = data.filter((it) => it.objectType === defaultScope);
-        const otherScopeVarGroupList = data.filter((it) => {
+        const sameScopeVarGroupList = data.filter(
+          it => it.objectType === defaultScope,
+        );
+        const otherScopeVarGroupList = data.filter(it => {
           const sameScope = it.objectType !== defaultScope;
           if (!sameScope) {
             return false;
           }
-          const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+          const hasSameVarName = !!sameScopeVarGroupList.find(
+            sameScopeVarGroup =>
+              intersectionBy(sameScopeVarGroup.variables, it.variables, 'name')
+                .length > 0,
+          );
           return !hasSameVarName;
         });
-        setEnvVarGroupList([ ...otherScopeVarGroupList, ...sameScopeVarGroupList ]);
-      }
-    }
+        setEnvVarGroupList([
+          ...otherScopeVarGroupList,
+          ...sameScopeVarGroupList,
+        ]);
+      },
+    },
   );
 
   useDeepCompareEffect(() => {
@@ -90,24 +103,32 @@ const VariableForm = ({
       return;
     }
     const { variables = [], tfVarsFile, playbook, keyId } = defaultData;
-    const defaultTerraformVars = variables.filter(it => it.type === 'terraform').map(it => {
-      if (defaultScope !== it.scope) {
-        it.overwrites = { ...it };
-      }
-      return it;
-    });
-    const defaultEnvVars = variables.filter(it => it.type === 'environment').map(it => {
-      if (defaultScope !== it.scope) {
-        it.overwrites = { ...it };
-      }
-      return it;
-    });
+    const defaultTerraformVars = variables
+      .filter(it => it.type === 'terraform')
+      .map(it => {
+        if (defaultScope !== it.scope) {
+          it.overwrites = { ...it };
+        }
+        return it;
+      });
+    const defaultEnvVars = variables
+      .filter(it => it.type === 'environment')
+      .map(it => {
+        if (defaultScope !== it.scope) {
+          it.overwrites = { ...it };
+        }
+        return it;
+      });
     setDefalutTerraformVarList(defaultTerraformVars);
     setDefalutEnvVarList(defaultEnvVars);
     setTerraformVarList(defaultTerraformVars);
     setEnvVarList(defaultEnvVars);
     if (showOtherVars) {
-      otherVarForm.setFieldsValue({ tfVarsFile: tfVarsFile || undefined, playbook: playbook || undefined, keyId: keyId || undefined });
+      otherVarForm.setFieldsValue({
+        tfVarsFile: tfVarsFile || undefined,
+        playbook: playbook || undefined,
+        keyId: keyId || undefined,
+      });
     }
   }, [defaultData]);
 
@@ -115,45 +136,61 @@ const VariableForm = ({
     validateForm: () => {
       return new Promise((resolve, reject) => {
         let formValidates = [
-          terraformVarRef.current.handleValidate().catch((err) => {
-            setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: true }));
+          terraformVarRef.current.handleValidate().catch(err => {
+            setExpandCollapseCfg(preValue => ({
+              ...preValue,
+              terraform: true,
+            }));
             reject(err);
           }),
-          envVarRef.current.handleValidate().catch((err) => {
-            setExpandCollapseCfg((preValue) => ({ ...preValue, environment: true }));
+          envVarRef.current.handleValidate().catch(err => {
+            setExpandCollapseCfg(preValue => ({
+              ...preValue,
+              environment: true,
+            }));
             reject(err);
-          })
+          }),
         ];
         if (showOtherVars) {
-          formValidates.push(
-            otherVarForm.validateFields()
-          );
+          formValidates.push(otherVarForm.validateFields());
         }
         Promise.all(formValidates).then(
-          ([ , , otherVars ]) => {
+          ([, , otherVars]) => {
             if (otherVars) {
               otherVars.tfVarsFile = otherVars.tfVarsFile || '';
               otherVars.playbook = otherVars.playbook || '';
               otherVars.keyId = otherVars.keyId || '';
             }
-            const startVarGroupList = defalutEnvVarGroupList.filter(it => it.objectType === defaultScope);
-            const endVarGroupList = envVarGroupList.filter(it => it.objectType === defaultScope);
-            const varGroupIds = differenceBy(endVarGroupList, startVarGroupList, 'varGroupId').map(it => it.varGroupId);
-            const delVarGroupIds = differenceBy(startVarGroupList, endVarGroupList, 'varGroupId').map(it => it.varGroupId);
+            const startVarGroupList = defalutEnvVarGroupList.filter(
+              it => it.objectType === defaultScope,
+            );
+            const endVarGroupList = envVarGroupList.filter(
+              it => it.objectType === defaultScope,
+            );
+            const varGroupIds = differenceBy(
+              endVarGroupList,
+              startVarGroupList,
+              'varGroupId',
+            ).map(it => it.varGroupId);
+            const delVarGroupIds = differenceBy(
+              startVarGroupList,
+              endVarGroupList,
+              'varGroupId',
+            ).map(it => it.varGroupId);
             const data = {
-              variables: [ ...terraformVarList, ...envVarList ],
+              variables: [...terraformVarList, ...envVarList],
               ...otherVars,
               varGroupIds,
-              delVarGroupIds
+              delVarGroupIds,
             };
             resolve(data);
           },
-          (err) => {
+          err => {
             reject(err);
-          }
+          },
         );
       });
-    }
+    },
   }));
 
   return (
@@ -161,14 +198,19 @@ const VariableForm = ({
       <div className={`variable-content ${hasAnchor ? 'hasAnchor' : ''}`}>
         <Space style={{ width: '100%' }} direction='vertical' size={24}>
           <a id='terraform-var'>
-            <VarFormTable 
+            <VarFormTable
               formVarRef={terraformVarRef}
               varList={terraformVarList}
               setVarList={setTerraformVarList}
               defaultScope={defaultScope}
               defalutVarList={defalutTerraformVarList}
               expandCollapse={expandCollapseCfg.terraform}
-              setExpandCollapse={(expandCollapse) => setExpandCollapseCfg((preValue) => ({ ...preValue, terraform: expandCollapse }))}
+              setExpandCollapse={expandCollapse =>
+                setExpandCollapseCfg(preValue => ({
+                  ...preValue,
+                  terraform: expandCollapse,
+                }))
+              }
               fetchParams={fetchParams}
               canImportVar={canImportTerraformVar}
               type='terraform'
@@ -177,14 +219,19 @@ const VariableForm = ({
             />
           </a>
           <a id='env-var'>
-            <VarFormTable 
+            <VarFormTable
               formVarRef={envVarRef}
               varList={envVarList}
               setVarList={setEnvVarList}
               defaultScope={defaultScope}
               defalutVarList={defalutEnvVarList}
               expandCollapse={expandCollapseCfg.environment}
-              setExpandCollapse={(expandCollapse) => setExpandCollapseCfg((preValue) => ({ ...preValue, environment: expandCollapse }))}
+              setExpandCollapse={expandCollapse =>
+                setExpandCollapseCfg(preValue => ({
+                  ...preValue,
+                  environment: expandCollapse,
+                }))
+              }
               fetchParams={fetchParams}
               canImportResourceAccount={showVarGroupList}
               defalutVarGroupList={defalutEnvVarGroupList}
@@ -195,39 +242,43 @@ const VariableForm = ({
               readOnly={readOnly}
             />
           </a>
-          { 
-            showOtherVars ? (
-              <a id='other-var'>
-                <OtherVarForm 
-                  otherVarForm={otherVarForm}
-                  fetchParams={fetchParams}
-                  defaultExpandCollapse={defaultExpandCollapse}
-                />
-              </a>
-            ) : null 
-          }
+          {showOtherVars ? (
+            <a id='other-var'>
+              <OtherVarForm
+                otherVarForm={otherVarForm}
+                fetchParams={fetchParams}
+                defaultExpandCollapse={defaultExpandCollapse}
+              />
+            </a>
+          ) : null}
         </Space>
       </div>
-      {
-        hasAnchor ? (
-          <Affix offsetTop={20} target={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}>
-            <div className='variable-anchor'>
-              <Anchor
-                onClick={e => e.preventDefault()}
-                offsetTop={20}
-                affix={false}
-                bounds={50}
-                showInkInFixed={true}
-                getContainer={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
-              >
-                <Link href='#terraform-var' title={t('define.varType.terraform')} />
-                <Link href='#env-var' title={t('define.varType.environment')} />
-                { showOtherVars ? <Link href='#other-var' title={t('define.varType.other')} /> : null }
-              </Anchor>
-            </div>
-          </Affix>
-        ) : null
-      }
+      {hasAnchor ? (
+        <Affix
+          offsetTop={20}
+          target={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
+        >
+          <div className='variable-anchor'>
+            <Anchor
+              onClick={e => e.preventDefault()}
+              offsetTop={20}
+              affix={false}
+              bounds={50}
+              showInkInFixed={true}
+              getContainer={() => document.getElementById(GLOBAL_SCROLL_DOM_ID)}
+            >
+              <Link
+                href='#terraform-var'
+                title={t('define.varType.terraform')}
+              />
+              <Link href='#env-var' title={t('define.varType.environment')} />
+              {showOtherVars ? (
+                <Link href='#other-var' title={t('define.varType.other')} />
+              ) : null}
+            </Anchor>
+          </div>
+        </Affix>
+      ) : null}
     </div>
   );
 };
@@ -235,16 +286,13 @@ const VariableForm = ({
 // 格式化变量组件数据作为请求入参
 export const formatVariableRequestParams = (data, defaultScope) => {
   const { variables, ...params } = cloneDeep(data);
-  const newVariables = variables.filter(
-    ({ scope }) => scope === defaultScope
-  ).map(
-    (it) => omit(it, [ 'isNew', '_key_id', 'overwrites' ])
-  );
+  const newVariables = variables
+    .filter(({ scope }) => scope === defaultScope)
+    .map(it => omit(it, ['isNew', '_key_id', 'overwrites']));
   return {
     variables: newVariables,
-    ...params
+    ...params,
   };
 };
 
 export default VariableForm;
-

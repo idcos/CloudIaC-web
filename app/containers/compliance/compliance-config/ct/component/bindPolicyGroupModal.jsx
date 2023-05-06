@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Modal, notification, Select } from "antd";
-import isEmpty from 'lodash/isEmpty';
+import { Form, Modal, notification, Select } from 'antd';
 import ctplAPI from 'services/ctpl';
 import cgroupsAPI from 'services/cgroups';
 import { t } from 'utils/i18n';
@@ -8,13 +7,19 @@ import { t } from 'utils/i18n';
 const { Option } = Select;
 const FL = {
   labelCol: { span: 7 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 16 },
 };
 
-export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
-
-  const [ submitLoading, setSubmitLoading ] = useState(false);
-  const [ list, setList ] = useState([]);
+const BindPolicyGroupModal = ({
+  title,
+  visible,
+  onClose,
+  id,
+  onSuccess,
+  policyGroupIds,
+}) => {
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [list, setList] = useState([]);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -25,7 +30,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
   const fetchList = async () => {
     try {
       const res = await cgroupsAPI.list({
-        pageSize: 0
+        pageSize: 0,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -34,7 +39,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -45,7 +50,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
     try {
       const res = await ctplAPI.update({
         ...values,
-        tplId: id
+        tplId: id,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -57,7 +62,7 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
       setSubmitLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -69,23 +74,20 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
       visible={visible}
       onCancel={onClose}
       okButtonProps={{
-        loading: submitLoading
+        loading: submitLoading,
       }}
-      cancelButtonProps={{ 
-        className: 'ant-btn-tertiary' 
+      cancelButtonProps={{
+        className: 'ant-btn-tertiary',
       }}
       className='antd-modal-type-form'
       onOk={onOk}
     >
-      <Form
-        {...FL}
-        form={form}
-      >
+      <Form {...FL} form={form}>
         <Form.Item
           label={t('define.ct.field.policyGroup')}
           name='policyGroupIds'
         >
-          <Select 
+          <Select
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder={t('define.ct.field.policyGroup')}
             mode={'multiple'}
@@ -93,10 +95,14 @@ export default ({ title, visible, onClose, id, onSuccess, policyGroupIds }) => {
             showArrow={true}
             optionFilterProp='children'
           >
-            {list.map(it => <Option value={it.id}>{it.name}</Option>)}
+            {list.map(it => (
+              <Option value={it.id}>{it.name}</Option>
+            ))}
           </Select>
         </Form.Item>
       </Form>
     </Modal>
   );
 };
+
+export default BindPolicyGroupModal;

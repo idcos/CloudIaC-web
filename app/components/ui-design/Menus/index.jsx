@@ -3,19 +3,22 @@ import classNames from 'classnames';
 import noop from 'lodash/noop';
 import styles from './styles.less';
 
-export default ({ menus = [], activeKey, onChange = noop, className = '', ...props }) => {
-
+const Menus = ({
+  menus = [],
+  activeKey,
+  onChange = noop,
+  className = '',
+  ...props
+}) => {
   return (
     <div className={classNames(styles.menus, className)} {...props}>
       {menus.map(menu => {
         const { type, name, key, icon, title, disabled } = menu;
         if (type === 'title') {
-          return (
-            <div className='menu-title'>{title}</div>
-          );
+          return <div className='menu-title'>{title}</div>;
         }
         return (
-          <div 
+          <div
             className={classNames('menu-item', { active: key === activeKey })}
             onClick={() => {
               if (key !== activeKey && !disabled) {
@@ -31,3 +34,5 @@ export default ({ menus = [], activeKey, onChange = noop, className = '', ...pro
     </div>
   );
 };
+
+export default Menus;

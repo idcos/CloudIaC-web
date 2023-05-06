@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useEventSource } from "utils/hooks";
+import { useEventSource } from 'utils/hooks';
 import queryString from 'query-string';
-import AnsiCoderCard from "components/coder/ansi-coder-card";
+import AnsiCoderCard from 'components/coder/ansi-coder-card';
 
-export default ({ id, orgId, projectId, failLogParams }) => {
-
-  
-  const [ taskLog, setTaskLog ] = useState([]);
-  const [ evtSource, evtSourceInit ] = useEventSource();
+const FailLog = ({ id, orgId, projectId, failLogParams }) => {
+  const [taskLog, setTaskLog] = useState([]);
+  const [evtSource, evtSourceInit] = useEventSource();
 
   useEffect(() => {
     fetchSse();
@@ -22,33 +20,31 @@ export default ({ id, orgId, projectId, failLogParams }) => {
   const fetchSse = () => {
     const fetchUrl = queryString.stringifyUrl({
       url: `/api/v1/tasks/${id}/log/sse`,
-      query: failLogParams
+      query: failLogParams,
     });
     evtSourceInit(
       {
-        onmessage: (data) => {
-          setTaskLog((prevLog) => [ ...prevLog, data ]);
-        }
+        onmessage: data => {
+          setTaskLog(prevLog => [...prevLog, data]);
+        },
       },
       {
         url: fetchUrl,
-        options: 
-        { 
+        options: {
           withCredentials: true,
           headers: {
             'IaC-Org-Id': orgId,
             'IaC-Project-Id': projectId,
-            'Authorization': window.localStorage.getItem('accessToken')
-          }
-        }
-      }
+            Authorization: window.localStorage.getItem('accessToken'),
+          },
+        },
+      },
     );
   };
 
   return (
-    <AnsiCoderCard  
-      value={taskLog} 
-      style={{ height: 600, width: '100%' }}
-    />
+    <AnsiCoderCard value={taskLog} style={{ height: 600, width: '100%' }} />
   );
 };
+
+export default FailLog;

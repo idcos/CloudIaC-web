@@ -14,24 +14,24 @@ const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 const User = ({ orgId, projectId, sysConfigSwitches }) => {
-  const [ loading, setLoading ] = useState(false),
-    [ tabKey, setTabKey ] = useState('user'),
-    [ visible, setVisible ] = useState(false),
-    [ resultMap, setResultMap ] = useState({
+  const [loading, setLoading] = useState(false),
+    [tabKey, setTabKey] = useState('user'),
+    [visible, setVisible] = useState(false),
+    [resultMap, setResultMap] = useState({
       list: [],
-      total: 0
+      total: 0,
     }),
-    [ query, setQuery ] = useState({
+    [query, setQuery] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
     }),
-    [ ouResultMap, setOuResultMap ] = useState({
+    [ouResultMap, setOuResultMap] = useState({
       list: [],
-      total: 0
+      total: 0,
     }),
-    [ ouQuery, setOuQuery ] = useState({
+    [ouQuery, setOuQuery] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
     });
 
   useEffect(() => {
@@ -43,39 +43,39 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
   }, [ouQuery]);
 
   // 移除用户接口
-  const {
-    run: removeUser
-  } = useRequest(
-    (userId) => requestWrapper(
-      projectAPI.removeUser.bind(null, { orgId, projectId, userId }),
-      {
-        autoSuccess: true
-      }
-    ), {
+  const { run: removeUser } = useRequest(
+    userId =>
+      requestWrapper(
+        projectAPI.removeUser.bind(null, { orgId, projectId, userId }),
+        {
+          autoSuccess: true,
+        },
+      ),
+    {
       manual: true,
       onSuccess: () => {
         setTabKey('user');
         fetchList();
-      }
-    }
+      },
+    },
   );
 
   // 移除Ou接口
-  const {
-    run: removeOu
-  } = useRequest(
-    (id) => requestWrapper(
-      ldapAPI.delProjectOu.bind(null, { orgId, projectId, id }),
-      {
-        autoSuccess: true
-      }
-    ), {
+  const { run: removeOu } = useRequest(
+    id =>
+      requestWrapper(
+        ldapAPI.delProjectOu.bind(null, { orgId, projectId, id }),
+        {
+          autoSuccess: true,
+        },
+      ),
+    {
       manual: true,
       onSuccess: () => {
         setTabKey('ou');
         fetchOuList();
-      }
-    }
+      },
+    },
   );
 
   const fetchOuList = async () => {
@@ -85,21 +85,21 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
         currentPage: ouQuery.pageNo,
         pageSize: ouQuery.pageSize,
         orgId,
-        projectId
+        projectId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setOuResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -111,76 +111,76 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
         currentPage: query.pageNo,
         pageSize: query.pageSize,
         orgId,
-        projectId
+        projectId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   const toggleVisible = () => setVisible(!visible);
 
-  const changeQuery = (payload) => {
+  const changeQuery = payload => {
     setQuery({
       ...query,
-      ...payload
+      ...payload,
     });
   };
 
-  const changeOuQuery = (payload) => {
+  const changeOuQuery = payload => {
     setOuQuery({
       ...ouQuery,
-      ...payload
+      ...payload,
     });
   };
 
-  const onChangeRole = (payload) => {
-    operation({ 
-      doWhat: 'changeRole', 
-      payload
+  const onChangeRole = payload => {
+    operation({
+      doWhat: 'changeRole',
+      payload,
     });
   };
 
-  const onChangeOuRole = (payload) => {
-    operation({ 
-      doWhat: 'changeOuRole', 
-      payload
+  const onChangeOuRole = payload => {
+    operation({
+      doWhat: 'changeOuRole',
+      payload,
     });
   };
 
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        changeRole: (param) => projectAPI.updateUserRole(param),
-        add: (param) => projectAPI.createUser(param),
+        changeRole: param => projectAPI.updateUserRole(param),
+        add: param => projectAPI.createUser(param),
         // ldap ou apis
-        addOu: (param) => ldapAPI.addProjectOu(param),
-        changeOuRole: (param) => ldapAPI.updateProjectOu(param)
+        addOu: param => ldapAPI.addProjectOu(param),
+        changeOuRole: param => ldapAPI.updateProjectOu(param),
       };
       const res = await method[doWhat]({
-        ...payload, 
+        ...payload,
         orgId,
-        projectId
+        projectId,
       });
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
-      if ([ 'addOu', 'changeOuRole' ].includes(doWhat)) {
+      if (['addOu', 'changeOuRole'].includes(doWhat)) {
         setTabKey('ou');
         fetchOuList();
       } else {
@@ -192,7 +192,7 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
       cb && cb(e);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -200,38 +200,42 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
   const remove = ({ id, name }) => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
+      title: `${t(
+        'define.org.user.action.remove.confirm.title.prefix',
+      )} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
       content: t('define.project.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
       okText: t('define.org.user.action.remove'),
       okButtonProps: {
-        danger: true
+        danger: true,
       },
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
       onOk: () => {
         return removeUser(id);
-      }
+      },
     });
   };
 
   const removeOU = ({ id, ou }) => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${ou} ?`,
+      title: `${t(
+        'define.org.user.action.remove.confirm.title.prefix',
+      )} ${ou} ?`,
       content: t('define.project.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
       okText: t('define.org.user.action.remove'),
       okButtonProps: {
-        danger: true
+        danger: true,
       },
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
       onOk: () => {
         return removeOu(id);
-      }
+      },
     });
   };
 
@@ -240,43 +244,45 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
       dataIndex: 'name',
       title: t('define.page.userSet.basic.field.name'),
       ellipsis: true,
-      width: 165
+      width: 165,
     },
     {
       dataIndex: 'email',
       title: t('define.page.userSet.basic.field.email'),
       ellipsis: true,
-      width: 256
+      width: 256,
     },
     {
       dataIndex: 'phone',
       title: t('define.page.userSet.basic.field.phone'),
       ellipsis: true,
-      width: 180
+      width: 180,
     },
     {
       dataIndex: 'updatedAt',
       title: t('define.org.user.createdAt'),
       ellipsis: true,
       width: 180,
-      render: (text) => moment(text).format(dateFormat)
+      render: text => moment(text).format(dateFormat),
     },
     {
       title: t('define.org.user.role'),
       ellipsis: true,
       width: 180,
-      render: (record) => {
+      render: record => {
         const { role, id } = record;
         return (
-          <Select 
+          <Select
             style={{ width: '100%' }}
             value={role}
-            onChange={(role) => onChangeRole({ role, userId: id })}
+            onChange={role => onChangeRole({ role, userId: id })}
           >
-            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
+            {Object.keys(PROJECT_ROLE).map(it => (
+              <Option value={it}>{PROJECT_ROLE[it]}</Option>
+            ))}
           </Select>
         );
-      }
+      },
     },
     {
       title: t('define.action'),
@@ -284,11 +290,13 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
       render: (_text, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' onClick={() => remove(record)}>{t('define.org.user.action.remove')}</Button>
+            <Button type='link' onClick={() => remove(record)}>
+              {t('define.org.user.action.remove')}
+            </Button>
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
   const OUColumns = [
@@ -296,31 +304,33 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
       dataIndex: 'ou',
       title: 'OU',
       ellipsis: true,
-      width: 165
+      width: 165,
     },
     {
       title: t('define.org.user.role'),
       ellipsis: true,
       width: 180,
-      render: (record) => {
+      render: record => {
         const { role, id } = record;
         return (
-          <Select 
+          <Select
             style={{ width: '100%' }}
             value={role}
-            onChange={(role) => onChangeOuRole({ role, id })}
+            onChange={role => onChangeOuRole({ role, id })}
           >
-            {Object.keys(PROJECT_ROLE).map(it => <Option value={it}>{PROJECT_ROLE[it]}</Option>)}
+            {Object.keys(PROJECT_ROLE).map(it => (
+              <Option value={it}>{PROJECT_ROLE[it]}</Option>
+            ))}
           </Select>
         );
-      }
+      },
     },
     {
       dataIndex: 'updatedAt',
       title: t('define.org.user.createdAt'),
       ellipsis: true,
       width: 180,
-      render: (text) => moment(text).format(dateFormat)
+      render: text => moment(text).format(dateFormat),
     },
     {
       title: t('define.action'),
@@ -328,80 +338,92 @@ const User = ({ orgId, projectId, sysConfigSwitches }) => {
       render: (_text, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' onClick={() => removeOU(record)}>{t('define.org.user.action.remove')}</Button>
+            <Button type='link' onClick={() => removeOU(record)}>
+              {t('define.org.user.action.remove')}
+            </Button>
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
-  return <>
-    <div style={{ marginBottom: 20 }}>
-      <Button 
-        type='primary'
-        onClick={() => {
-          toggleVisible();
-        }}
-      >{t('define.project.user.action.add')}</Button>
-    </div>
-    <Tabs activeKey={tabKey} onChange={setTabKey}>
-      <Tabs.TabPane tab={t('define.user')} key='user'>
-        <Table
-          columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          scroll={{ x: 'min-content' }}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-            onChange: (page, pageSize) => {
-              changeQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
+  return (
+    <>
+      <div style={{ marginBottom: 20 }}>
+        <Button
+          type='primary'
+          onClick={() => {
+            toggleVisible();
           }}
+        >
+          {t('define.project.user.action.add')}
+        </Button>
+      </div>
+      <Tabs activeKey={tabKey} onChange={setTabKey}>
+        <Tabs.TabPane tab={t('define.user')} key='user'>
+          <Table
+            columns={columns}
+            dataSource={resultMap.list}
+            loading={loading}
+            scroll={{ x: 'min-content' }}
+            pagination={{
+              current: query.pageNo,
+              pageSize: query.pageSize,
+              total: resultMap.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: total =>
+                t('define.pagination.showTotal', { values: { total } }),
+              onChange: (page, pageSize) => {
+                changeQuery({
+                  pageNo: page,
+                  pageSize,
+                });
+              },
+            }}
+          />
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab='OU'
+          key='ou'
+          disabled={!sysConfigSwitches.enableLdap}
+        >
+          <Table
+            columns={OUColumns}
+            dataSource={ouResultMap.list}
+            loading={loading}
+            scroll={{ x: 'min-content' }}
+            pagination={{
+              current: ouQuery.pageNo,
+              pageSize: ouQuery.pageSize,
+              total: ouResultMap.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: total =>
+                t('define.pagination.showTotal', { values: { total } }),
+              onChange: (page, pageSize) => {
+                changeOuQuery({
+                  pageNo: page,
+                  pageSize,
+                });
+              },
+            }}
+          />
+        </Tabs.TabPane>
+      </Tabs>
+      {visible && (
+        <AddModal
+          orgId={orgId}
+          projectId={projectId}
+          reload={fetchList}
+          operation={operation}
+          visible={visible}
+          toggleVisible={toggleVisible}
+          sysConfigSwitches={sysConfigSwitches}
         />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab='OU' key='ou' disabled={!sysConfigSwitches.enableLdap}>
-        <Table
-          columns={OUColumns}
-          dataSource={ouResultMap.list}
-          loading={loading}
-          scroll={{ x: 'min-content' }}
-          pagination={{
-            current: ouQuery.pageNo,
-            pageSize: ouQuery.pageSize,
-            total: ouResultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-            onChange: (page, pageSize) => {
-              changeOuQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
-          }}
-        />
-      </Tabs.TabPane>
-    </Tabs>
-    {
-      visible && <AddModal
-        orgId={orgId}
-        projectId={projectId}
-        reload={fetchList}
-        operation={operation}
-        visible={visible}
-        toggleVisible={toggleVisible}
-        sysConfigSwitches={sysConfigSwitches}
-      />
-    }
-  </>;
+      )}
+    </>
+  );
 };
 
 export default User;

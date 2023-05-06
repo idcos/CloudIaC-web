@@ -2,7 +2,7 @@
  * 方便做权限路由用
  */
 import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 class PrivateRoute extends Component {
   render() {
@@ -13,7 +13,9 @@ class PrivateRoute extends Component {
         path={path}
         {...restProps}
         render={props => {
-          return <Wrapper {...props} routes={routes} routesParams={routesParams} />;
+          return (
+            <Wrapper {...props} routes={routes} routesParams={routesParams} />
+          );
         }}
       />
     );

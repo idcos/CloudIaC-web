@@ -394,7 +394,7 @@
   "define.policyGroup.form.readme.empty.default": "Policy group description not obtained",
   "define.policyGroup.form.readme.empty.registry": "Select a policy group and version to view the policy group description",
   "define.policyGroup.form.readme.empty.vcs": "Select VCS, warehouse, branch / label to view the policy group description",
-  "define.policyGroup.form.step.seting": "Policy group settings",
+  "define.policyGroup.form.step.setting": "Policy group settings",
   "define.policyGroup.form.step.source": "Select source",
   "define.policyGroup.search.placeholder": "Search by policy group name",
   "define.policyGroup.top5": "Group top5",

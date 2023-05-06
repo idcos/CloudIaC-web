@@ -2,18 +2,18 @@ import React from 'react';
 import { Modal } from 'antd';
 import Coder from 'components/coder';
 
-export default ({
+const ViewFileModal = ({
   width = 680,
   footer = null,
-  title, 
-  visible, 
-  content, 
+  title,
+  visible,
+  content,
   onClose,
   bodyStyle,
   ...props
 }) => {
   return (
-    <Modal 
+    <Modal
       width={width}
       footer={footer}
       title={title}
@@ -25,4 +25,6 @@ export default ({
       <Coder value={content} style={{ height: 350 }} />
     </Modal>
   );
-}
+};
+
+export default ViewFileModal;

@@ -8,20 +8,24 @@ import { Eb_WP } from 'components/error-boundary';
 import DetailPageContext from '../detail-page-context';
 
 const Variable = () => {
-
-  const { taskInfo, type, orgId, projectId, envId } = useContext(DetailPageContext);
-  const [ variables, setVariables ] = useState([]);
+  const { taskInfo, type, orgId, projectId, envId } =
+    useContext(DetailPageContext);
+  const [variables, setVariables] = useState([]);
   const { loading, run: fetchVariables } = useRequest(
-    () => requestWrapper(
-      envAPI.getVariables.bind(null, {
-        orgId, projectId, envId
-      })
-    ), {
+    () =>
+      requestWrapper(
+        envAPI.getVariables.bind(null, {
+          orgId,
+          projectId,
+          envId,
+        }),
+      ),
+    {
       manual: true,
-      onSuccess: (data) => {
+      onSuccess: data => {
         setVariables(data || []);
-      }
-    }
+      },
+    },
   );
 
   useEffect(() => {
@@ -34,8 +38,8 @@ const Variable = () => {
 
   return (
     <Spin spinning={loading}>
-      <VariableForm 
-        fetchParams={{ orgId, projectId, envId }} 
+      <VariableForm
+        fetchParams={{ orgId, projectId, envId }}
         defaultScope='env'
         defaultData={{ variables }}
         readOnly={true}

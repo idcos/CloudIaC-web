@@ -1,9 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useRef,
-  useCallback
-} from 'react';
+import React, { useContext, useEffect, useRef, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 import get from 'lodash/get';
 import pick from 'lodash/pick';
@@ -21,23 +16,18 @@ const EditableRow = ({
 }) => {
   const [form] = Form.useForm();
   const recordPreRef = useRef();
-  const {
-    fieldNames,
-    setRowsData,
-    isSetting,
-    multiple,
-    settingId
-  } = useContext(EditableContext);
+  const { fieldNames, setRowsData, isSetting, multiple, settingId } =
+    useContext(EditableContext);
   const waitSaveNamesRef = useRef([]);
-  const addWaitSaveName = useCallback((name) => {
+  const addWaitSaveName = useCallback(name => {
     if (name && waitSaveNamesRef.current.findIndex(n => n === name) === -1) {
       waitSaveNamesRef.current.push(name);
     }
   }, []);
-  const removeWaitSaveName = useCallback((name) => {
+  const removeWaitSaveName = useCallback(name => {
     const index = waitSaveNamesRef.current.findIndex(n => n === name);
     if (index >= 0) {
-      waitSaveNamesRef.current.splice(index, 1); 
+      waitSaveNamesRef.current.splice(index, 1);
     }
   }, []);
 
@@ -84,7 +74,7 @@ const EditableRow = ({
 
     // 更新保存上一个记录值；
     recordPreRef.current = record;
-  }, [ record, isSetting, multiple ]);
+  }, [record, isSetting, multiple]);
   return (
     <Form
       name={`editable_${record && record._key_id}_`}
@@ -95,11 +85,11 @@ const EditableRow = ({
             rowIndex: index,
             record: {
               ...record,
-              ...values
+              ...values,
             },
             setRowsData: (row, rowI = index) => {
               setRowsData(row, rowI);
-            }
+            },
           });
         }
       }}
@@ -111,7 +101,7 @@ const EditableRow = ({
           waitSaveNames: waitSaveNamesRef.current,
           addWaitSaveName,
           removeWaitSaveName,
-          rowId: record && record._key_id
+          rowId: record && record._key_id,
         }}
       >
         <tr {...props} />
