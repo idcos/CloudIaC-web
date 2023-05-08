@@ -40,6 +40,11 @@
     "prettier:fix": "prettier --write",
     "postinstall": "npm run create:ver"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx}": [
       "npm run lint:eslint:fix",
