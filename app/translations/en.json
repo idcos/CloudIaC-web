@@ -473,6 +473,7 @@
   "define.resource.list": "Resources List",
   "define.resource.mode": "Mode",
   "define.resource.props": "Resource properties",
+  "define.resource.region": "Region",
   "define.resource.specification": "Resource specification",
   "define.resource.subscriptionType": "Subscription type",
   "define.resource.subscriptionType.PayAsYouGo": "PayAsYouGo",
