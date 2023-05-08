@@ -3,10 +3,10 @@ module.exports = {
     [
       '@babel/preset-env',
       {
-        modules: false
-      }
+        modules: false,
+      },
     ],
-    '@babel/preset-react'
+    '@babel/preset-react',
   ],
   plugins: [
     'react-hot-loader/babel',
@@ -18,25 +18,25 @@ module.exports = {
       {
         libraryName: 'antd',
         libraryDirectory: 'es',
-        style: true
-      }
-    ]
+        style: true,
+      },
+    ],
   ],
   env: {
     production: {
-      only: [ 'app', 'login', 'register', 'activation', 'find-password' ],
+      only: ['app', 'login', 'register', 'activation', 'find-password'],
       plugins: [
         'lodash',
         'transform-react-remove-prop-types',
         '@babel/plugin-transform-react-inline-elements',
-        '@babel/plugin-transform-react-constant-elements'
-      ]
+        '@babel/plugin-transform-react-constant-elements',
+      ],
     },
     test: {
       plugins: [
         '@babel/plugin-transform-modules-commonjs',
-        'dynamic-import-node'
-      ]
-    }
-  }
+        'dynamic-import-node',
+      ],
+    },
+  },
 };

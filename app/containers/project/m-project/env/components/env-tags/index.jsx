@@ -6,9 +6,20 @@ import noop from 'lodash/noop';
 import styles from './styles.less';
 import classNames from 'classnames';
 import { t } from 'utils/i18n';
+import _isArray from 'lodash/isArray';
 
 const EnvTags = ({ tags, canEdit = false, update = noop }) => {
-  const data = tags || [];
+  const _data = tags || [];
+  let data = [];
+  if (_isArray(_data)) {
+    data = _data;
+  } else {
+    data = _data.split(',').map(value => ({
+      value,
+      protection: false,
+    }));
+  }
+  console.log('data', data);
   const [isEdit, setIsEdit] = useState(false);
   const editInputRef = useRef();
 
