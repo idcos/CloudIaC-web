@@ -124,7 +124,7 @@ const EnvList = props => {
                   data.status,
                 )
                   ? 'deployJournal'
-                  : 'resource';
+                  : 'overview';
                 history.push(
                   `/org/${orgId}/project/${projectId}/m-project-env/detail/${data.id}?tabKey=${tabKey}`,
                 );
