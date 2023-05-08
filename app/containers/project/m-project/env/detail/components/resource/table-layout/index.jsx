@@ -8,6 +8,7 @@ import taskAPI from 'services/task';
 import { t } from 'utils/i18n';
 import DetailPageContext from '../../../detail-page-context';
 import DetailDrawer from '../components/detail-drawer';
+import { RESOURCE_MODE_ENUM } from 'constants/types'; 
 
 const TableLayout = ({ setMode }) => {
 
@@ -91,6 +92,16 @@ const TableLayout = ({ setMode }) => {
       title: t('define.resource.field.provider'),
       ellipsis: true,
       width: 220
+    },
+    {
+      dataIndex: 'mode',
+      title: t('define.resource.mode'),
+      ellipsis: true,
+      width: 180,
+      render: (value) => {
+        const renderTag = RESOURCE_MODE_ENUM[value];
+        return (!!renderTag ? <Tag>{renderTag}</Tag> : null);
+      }
     },
     {
       dataIndex: 'type',

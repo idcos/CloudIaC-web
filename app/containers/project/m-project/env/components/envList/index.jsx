@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Card, Descriptions, Tag, Space, Empty, Spin, Collapse, Tooltip } from 'antd';
+import { Card, Descriptions, Tag, Space, Empty, Spin, Collapse, Tooltip, Pagination } from 'antd';
 import { DownOutlined, RightOutlined, LockOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useRequest } from 'ahooks';
@@ -16,7 +16,7 @@ import styles from './styles.less';
 
 const EnvList = (props) => {
 
-  const { match, panel, query } = props;
+  const { match, panel, query, changeQuery } = props;
   const { params: { orgId, projectId } } = match;
   const {
     data: resultMap = {
@@ -171,15 +171,35 @@ const EnvList = (props) => {
   };
 
   return (
-    <Spin spinning={loading}>
-      {
-        resultMap.list.length === 0 ? (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
-        ) : (
-          resultMap.list.map(data => <EnvCard data={data}/>)
-        )
-      }
-    </Spin>
+    <>
+      <Spin spinning={loading}>
+        {
+          resultMap.list.length === 0 ? (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
+          ) : (
+            resultMap.list.map(data => <EnvCard data={data}/>)
+          )
+        }
+      </Spin>
+      <div className={styles.pagination}>
+        <Pagination 
+          size='default'
+          total={resultMap.total} 
+          hideOnSinglePage={true}
+          pageSize={query.pageSize}
+          current={query.currentPage}
+          onChange={(currentPage, pageSize) => {
+            changeQuery({
+              currentPage,
+              pageSize
+            });
+          }}
+          showTotal={(total) => t('define.pagination.showTotal', { values: { total } })}
+        />
+      </div>
+      
+    </>
+   
   );
 };
 

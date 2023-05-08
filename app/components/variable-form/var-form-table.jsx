@@ -163,10 +163,6 @@ const VarFormTable = (props) => {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const { sensitive, id } = form.getFieldsValue();
-                  if (!(sensitive && id) && !value) {
-                    reject(new Error(t('define.form.input.placeholder')));
-                  }
                   resolve();
                 }, 300);
               });

@@ -48,7 +48,7 @@ const breadcrumbNameMap = {
   'm-org-overview': { text: t('define.orgOverview') },
   'createCT': { text: t('define.addTemplate') },
   'updateCT': { text: t('define.modifyTemplate') },
-  'importCT-exchange': { text: t('define.import.fromExchange') }, 
+  'importCT-exchange': { text: t('define.import.fromIaCStore') }, 
   'exchange-createCT': { text: t('define.addTemplate') }, 
   'deploy': { 
     render: ({ params, isLastOne, url, index }) => {

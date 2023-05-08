@@ -265,7 +265,7 @@ const CTList = ({ match = {} }) => {
         <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
           <Space>
             <Button type='primary' onClick={createCT}>{t('define.addTemplate')}</Button>
-            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromExchange')}</Button>}
+            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromIaCStore')}</Button>}
             <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
           </Space>
           <Space>
@@ -276,11 +276,11 @@ const CTList = ({ match = {} }) => {
               prefix={<SearchOutlined />}
               onPressEnter={(e) => {
                 const q = e.target.value;
-                changeQuery({ q });
+                changeQuery({ q, pageNo: 1 });
               }}
             />
-            {/* <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
-            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button> */}
+            <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
+            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button>
           </Space>
         </Space>
         <Table

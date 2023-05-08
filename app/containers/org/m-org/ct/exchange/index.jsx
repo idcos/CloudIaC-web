@@ -49,10 +49,10 @@ export default ({ match = {} }) => {
           q: query.q
         }),
         {
-          errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+          errorJudgeFn: (res) => (res && res.code !== 0 && (res.code === 404 || res.code === 500))
         }
       ).then((res) => {
-        const { list, total } = res;
+        const { list = [], total = 0 } = res;
         setTotal(total);
         setList(list);
       });
@@ -69,12 +69,14 @@ export default ({ match = {} }) => {
           q: query.q
         }),
         {
-          errorJudgeFn: (res) => (res.code === 404 || res.code === 500)
+          errorJudgeFn: (res) => (res && res.code !== 0 && (res.code === 404 || res.code === 500))
         }
       ).then((res) => {
         const { list, total } = res;
         setTotal(total);
         setList(list);
+      }).catch((e) => {
+        console.log(e);
       });
     }
     
@@ -138,12 +140,12 @@ export default ({ match = {} }) => {
     <Layout
       extraHeader={
         <PageHeader 
-          title={t('define.import.fromExchange')} 
+          title={t('define.import.fromIaCStore')} 
           breadcrumb={true}
           subDes={<Input
             style={{ width: 300 }}
             allowClear={true}
-            placeholder={t('define.exchange.search.placeholder')}
+            placeholder={t('define.iacStore.search.placeholder')}
             prefix={<SearchOutlined />}
             defaultValue={query.q}
             onPressEnter={(e) => {

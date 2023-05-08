@@ -1,6 +1,6 @@
 {
   "name": "cloudiac-web",
-  "version": "v1.1.0",
+  "version": "v1.3.6",
   "description": "cloudiac-web",
   "repository": {
     "type": "git",
@@ -36,7 +36,8 @@
     "lint:eslint:fix": "eslint --ext .jsx,.js ./app --fix",
     "create:ver": "node ./internals/scripts/reversion.js",
     "npmcheckversion": "node ./internals/scripts/npmcheckversion.js",
-    "preinstall": "npm run npmcheckversion"
+    "preinstall": "npm run npmcheckversion",
+    "postinstall": "npm run create:ver"
   },
   "lint-staged": {
     "*.{js,jsx}": [

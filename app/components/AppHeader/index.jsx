@@ -233,10 +233,10 @@ const AppHeader = (props) => {
           )}
           <Tooltip 
             placement='bottomRight'
-            title={t('define.page.toExchange')} 
+            title={t('define.page.toIaCStore')} 
             color='#08857C'
           >
-            <span onClick={() => window.open('https://exchange.cloudiac.org/')}>{ <ToExchangeIcon />}</span>
+            <span onClick={() => window.open('https://store.cloudiac.org/')}>{ <ToExchangeIcon />}</span>
           </Tooltip>
           {
             language === 'zh' ? 

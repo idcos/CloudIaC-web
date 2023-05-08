@@ -22,7 +22,7 @@ const FL = {
 };
 const { Option } = Select;
 
-const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfvars, playbooks, repoObj }) => {
+const Index = ({ configRef, data, orgId, tplInfo, envId, runner, keys = [], tfvars, playbooks, repoObj }) => {
   const { repoRevision, workdir } = repoObj;
   const { vcsId, repoId } = tplInfo;
   const { locked } = data;
@@ -43,15 +43,14 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
   }, [envId]);
 
   useEffect(() => {
-    if (!envId && runnner.length) {
+    if (!envId && runner.length) {
       form.setFieldsValue({
-        runnerTags: runnner.slice(0, 1)
+        runnerTags: runner.slice(0, 1)
       });
     }
-  }, [ envId, runnner ]);
+  }, [ envId, runner ]);
 
   useEffect(() => {
-
     if (!envId && tplInfo.isDemo) {
       setFormValues({
         ...tplInfo,
@@ -76,13 +75,17 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
     } else {
       _setValue = { ...tplInfo };
     }
-    if (!!_setValue.autoDestroyAt) {
-      _setValue.type = 'time';
-      setFormValues({ destroyAt: moment(_setValue.autoDestroyAt) });
-    } else if (((_setValue.ttl === '' || _setValue.ttl === null || _setValue.ttl == 0) && !_setValue.autoDestroyAt || !envId)) {
-      _setValue.type = 'infinite';
-    } else if (!_setValue.autoDestroyAt) {
-      _setValue.type = 'timequantum';
+    if (!!_setValue.autoDeployCron || !!_setValue.autoDestroyCron) {
+      _setValue.type = 'cycle';
+    } else {
+      if (!!_setValue.ttl && _setValue.ttl !== '0') {
+        _setValue.type = 'timequantum';
+      } else if (!!_setValue.autoDestroyAt) {
+        _setValue.type = 'time';
+        setFormValues({ destroyAt: moment(_setValue.autoDestroyAt) });
+      } else {
+        _setValue.type = 'infinite';
+      }
     }
     setFormValues(_setValue);
   }, [ envId, data, tplInfo ]);
@@ -468,6 +471,18 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           {
                             required: true,
                             message: t('define.form.select.placeholder')
+                          },
+                          {
+                            validator(_, value) {
+                              if (runner && runner.length) {
+                                for (let i = 0; i < value.length; i++) {
+                                  if (!runner.includes(value[i])) {
+                                    return Promise.reject(new Error(t('define.env.deploy.advanced.execute.notFound.runnerTag')));
+                                  }
+                                }
+                              }
+                              return Promise.resolve();
+                            }
                           }
                         ]}
                       >
@@ -478,7 +493,7 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                           style={{ width: '100%' }}
                           disabled={locked}
                         >
-                          {runnner.map(it => <Option value={it}>{it}</Option>)}
+                          {runner.map(it => <Option value={it}>{it}</Option>)}
                         </Select>
                       </Form.Item>
                     </Col>
@@ -527,6 +542,31 @@ const Index = ({ configRef, data, orgId, tplInfo, envId, runnner, keys = [], tfv
                                   >
                                     <DatePicker disabled={locked} style={{ width: '100%' }} format='YYYY-MM-DD HH:mm' showTime={{ format: 'HH:mm' }}/>
                                   </Form.Item>;
+                                }
+                                if (type === 'cycle') {
+                                  return <div style={{
+                                    marginLeft: '10px'
+                                  }}
+                                  >
+                                    <Form.Item
+                                      name='autoDeployCron'
+                                      label={t('define.deploy')}
+                                      style={{ marginBottom: 0 }}
+                                      shouldUpdate={true}
+                                      rules={[{ required: false, message: t('define.form.input.placeholder') }]}
+                                    >
+                                      <Input disabled={locked} placeholder={t('define.env.field.autoDeployCron.placeholder')} /> 
+                                    </Form.Item>
+                                    <Form.Item
+                                      name='autoDestroyCron'
+                                      label={t('define.destroy')}
+                                      style={{ marginBottom: 0 }}
+                                      shouldUpdate={true}
+                                      rules={[{ required: false, message: t('define.form.input.placeholder') }]}
+                                    >
+                                      <Input disabled={locked} placeholder={t('define.env.field.autoDestroyCron.placeholder')} /> 
+                                    </Form.Item>
+                                  </div>;
                                 }
                               }}
                             </Form.Item>

@@ -85,7 +85,7 @@ const ComplianceWrapper = ({ routes, curOrg, match = {} }) => {
           <span className='icon' onClick={() => setCollapsed(!collapsed)}>
             <MenuOutlined />
           </span>
-          <span className='text'>v{versionCfg.version || ''}</span>
+          <span className='text'>{versionCfg.version || ''}</span>
         </div>
       </div>
       <div className='right-content'>

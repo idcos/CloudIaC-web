@@ -300,7 +300,7 @@ const Repo = ({ sourceRef, onlineCheckForm, goCTlist, childRef, stepHelper, orgI
             }
           ]}
         >
-          {t('define.import.fromExchange')}
+          {t('define.import.fromIaCStore')}
         </Form.Item>
       )}
       <Form.Item

@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
-import { Modal, Table } from 'antd';
+import { Modal, Table, Collapse } from 'antd';
 import { t } from 'utils/i18n';
+const { Panel } = Collapse;
 
 export default (props) => {
 
-  const { visible, defaultScope, varList, importVars, onClose, onFinish } = props;
-  const [ selectedList, setSelectedList ] = useState({
+  const { visible, defaultScope, varList, importVars = [], onClose, onFinish } = props;
+  const [ selectedListVital, setSelectedListVital ] = useState({
     keys: [],
     rows: []
   });
-  
+  const [ selectedListRest, setSelectedListRest ] = useState({
+    keys: [],
+    rows: []
+  });
+
+  const importVarsVital = importVars && importVars.filter((v) => {
+    return !!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '' || !!v.required;
+  });
+
+  const importVarsRest = importVars && importVars.filter((v) => {
+    return !(!!v.description && (v.description.indexOf('(必填)') != -1 || v.description.indexOf('（必填）') != -1) || v.value === '' || !!v.required);
+  });
   const columns = [
     {
       title: 'name',
@@ -31,9 +43,9 @@ export default (props) => {
     } 
   ];
 
-  const rowSelection = {
+  const rowSelectionVital = {
     columnWidth: 26,
-    selectedRowKeys: selectedList.keys,
+    selectedRowKeys: selectedListVital.keys,
     getCheckboxProps: (record) => {
       const hasSameName = !!varList.find(it => it.name === record.name);
       if (hasSameName) {
@@ -42,7 +54,26 @@ export default (props) => {
       return null;
     },
     onChange: (keys, rows) => {
-      setSelectedList({
+      setSelectedListVital({
+        keys,
+        rows
+      });
+    }
+  };
+
+
+  const rowSelectionRest = {
+    columnWidth: 26,
+    selectedRowKeys: selectedListRest.keys,
+    getCheckboxProps: (record) => {
+      const hasSameName = !!varList.find(it => it.name === record.name);
+      if (hasSameName) {
+        return { disabled: true };
+      } 
+      return null;
+    },
+    onChange: (keys, rows) => {
+      setSelectedListRest({
         keys,
         rows
       });
@@ -55,20 +86,30 @@ export default (props) => {
   };
 
   const onOk = () => {
-    const params = selectedList.rows.map((it) => ({
+    const paramsVital = selectedListVital.rows.map((it) => ({
       type: 'terraform',
       sensitive: false,
       scope: defaultScope,
       ...it
     }));
-    onFinish(params, () => {
+    const paramsRest = selectedListRest.rows.map((it) => ({
+      type: 'terraform',
+      sensitive: false,
+      scope: defaultScope,
+      ...it
+    }));
+    onFinish([ ...paramsVital, ...paramsRest ], () => {
       reset();
       onClose();
     });
   };
 
   const reset = () => {
-    setSelectedList({
+    setSelectedListVital({
+      keys: [],
+      rows: []
+    });
+    setSelectedListRest({
       keys: [],
       rows: []
     });
@@ -88,12 +129,24 @@ export default (props) => {
     >
       <Table 
         columns={columns} 
-        dataSource={importVars}
+        dataSource={importVarsVital}
         scroll={{ x: 'min-content', y: 350 }} 
         pagination={false} 
         rowKey={(record) => record.name}
-        rowSelection={rowSelection}
+        rowSelection={rowSelectionVital}
       />
+      <Collapse ghost={true}>
+        <Panel header={t('define.variable.rest')} forceRender={true}>
+          <Table 
+            columns={columns} 
+            dataSource={importVarsRest}
+            scroll={{ x: 'min-content', y: 350 }} 
+            pagination={false} 
+            rowKey={(record) => record.name}
+            rowSelection={rowSelectionRest}
+          />
+        </Panel>
+      </Collapse>
     </Modal>
   );
 };

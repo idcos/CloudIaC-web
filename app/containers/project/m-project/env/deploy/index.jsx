@@ -31,7 +31,7 @@ const Index = ({ match = {} }) => {
   const [ applyLoading, setApplyLoading ] = useState(false);
   const [ planLoading, setPlanLoading ] = useState(false);
   const [ vars, setVars ] = useState([]);
-  const [ runnner, setRunnner ] = useState([]);
+  const [ runner, setRunner ] = useState([]);
   const [ keys, setKeys ] = useState([]);
   const [ branch, setBranch ] = useState([]);
   const [ tag, setTag ] = useState([]);
@@ -166,7 +166,7 @@ const Index = ({ match = {} }) => {
       });
       let runnerTags = res.result.tags || [];
       if (res.code === 200) {
-        setRunnner(runnerTags);
+        setRunner(runnerTags);
       }
       if (res.code != 200) {
         throw new Error(res.message);
@@ -261,6 +261,9 @@ const Index = ({ match = {} }) => {
           description: t('define.form.error.variable')
         };
       });
+      if (!configData.keyId) {
+        configData.keyId = '';
+      }
       let values = { ...value, ...configData };
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
@@ -386,7 +389,7 @@ const Index = ({ match = {} }) => {
             data={info}
             orgId={orgId}
             envId={envId}
-            runnner={runnner}
+            runner={runner}
             keys={keys}
             tfvars={tfvars}
             playbooks={playbooks}
@@ -402,8 +405,8 @@ const Index = ({ match = {} }) => {
             defaultExpandCollapse={false}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button htmlType='submit' disabled={applyLoading} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >{t('define.env.action.plan')}</Button>
-            <Button htmlType='submit' disabled={planLoading || info.locked} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >{t('define.env.action.deploy')}</Button>
+            <Button htmlType='submit' disabled={applyLoading || (envId && !info.id)} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >{t('define.env.action.plan')}</Button>
+            <Button htmlType='submit' disabled={planLoading || info.locked || (envId && !info.id)} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >{t('define.env.action.deploy')}</Button>
           </Row>
         </Form>
       </div>

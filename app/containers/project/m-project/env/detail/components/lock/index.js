@@ -46,7 +46,7 @@ export default ({ toggleVisible, lockType, reload, envInfo, orgId, projectId, en
     title={
       <span>
         <InfoCircleFilled style={{ color: '#DD2B0E', marginRight: 8, fontSize: 21 }} />
-        <span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`${lockType === 'lock' ? t('define.env.action.lock') : t('define.env.action.unlock')} “${envInfo.name}”`}</span>
+        <span style={{ color: 'rgba(36, 41, 47, 100)' }}>{`${lockType === 'lock' ? t('define.env.action.lock') : t('define.env.action.unlock')} “${envInfo.name && envInfo.name.replace(' ', '\u00A0')}”`}</span>
       </span>
     }
     visible={true}
