@@ -109,6 +109,7 @@ const CostReport = ({ orgId, projectId, envId }) => {
                 {text || '-'}
               </span>
             );
+          case 'alicloud_disk':
           case 'alicloud_ecs_disk':
             return (
               <span>
@@ -124,6 +125,7 @@ const CostReport = ({ orgId, projectId, envId }) => {
                 {text || '-'}
               </span>
             );
+          case 'alicloud_slb':
           case 'alicloud_slb_load_balancer':
             return (
               <span>
@@ -139,21 +141,7 @@ const CostReport = ({ orgId, projectId, envId }) => {
                 {text || '-'}
               </span>
             );
-          case 'alicloud_eip_address':
-            return (
-              <span>
-                {!!record.instanceId && (
-                  <a
-                    href={`https://vpc.console.aliyun.com/eip/${record.region}/eips/${record.instanceId}`}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <LinkOutlined style={{ marginRight: '5px' }} />
-                  </a>
-                )}
-                {text || '-'}
-              </span>
-            );
+
           default:
             return <span>{text || '-'}</span>;
         }
