@@ -8,7 +8,12 @@ import classNames from 'classnames';
 import { t } from 'utils/i18n';
 import _isArray from 'lodash/isArray';
 
-const EnvTags = ({ tags, canEdit = false, update = noop }) => {
+const EnvTags = ({
+  tags,
+  canEdit = false,
+  fromList = false,
+  update = noop,
+}) => {
   const _data = tags || [];
   let data = [];
   if (_isArray(_data)) {
@@ -19,7 +24,7 @@ const EnvTags = ({ tags, canEdit = false, update = noop }) => {
       protection: false,
     }));
   }
-  console.log('data', data);
+
   const [isEdit, setIsEdit] = useState(false);
   const editInputRef = useRef();
 
@@ -67,7 +72,9 @@ const EnvTags = ({ tags, canEdit = false, update = noop }) => {
         return (
           <EditTag
             tag={tag.value}
-            canEdit={canEdit && !tag.protection}
+            canEdit={canEdit}
+            protection={tag.protection}
+            fromList={fromList}
             delTag={() => delTag(index)}
             saveTag={value => saveTag(value, index)}
           />
@@ -99,13 +106,20 @@ const EnvTags = ({ tags, canEdit = false, update = noop }) => {
   );
 };
 
-export const EditTag = ({ canEdit, tag, delTag, saveTag }) => {
+export const EditTag = ({
+  canEdit,
+  fromList,
+  protection,
+  tag,
+  delTag,
+  saveTag,
+}) => {
   const [isEdit, setIsEdit] = useState(false);
   const editInputRef = useRef();
 
   const editTag = e => {
     e.preventDefault();
-    if (canEdit) {
+    if (canEdit && !protection) {
       setIsEdit(true);
       setTimeout(() => {
         editInputRef.current && editInputRef.current.focus();
@@ -129,8 +143,11 @@ export const EditTag = ({ canEdit, tag, delTag, saveTag }) => {
     />
   ) : (
     <Tag
-      className={classNames({ 'can-edit': canEdit, 'cannot-edit': !canEdit })}
-      closable={canEdit}
+      className={classNames({
+        'can-edit': canEdit && !protection,
+        'cannot-edit': !!protection || (!canEdit && !fromList),
+      })}
+      closable={canEdit && !protection}
       onClose={e => {
         e.preventDefault();
         delTag();

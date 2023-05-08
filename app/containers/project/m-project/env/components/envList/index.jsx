@@ -166,7 +166,7 @@ const EnvList = props => {
                   policyStatus={data.policyStatus}
                   onlyShowResultStatus={true}
                 />
-                <EnvTags tags={data.tags} />
+                <EnvTags tags={data.tags} fromList={true} />
               </div>
             </Space>
           }

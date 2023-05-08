@@ -423,8 +423,9 @@ const EnvDetail = props => {
                   tags={envInfo.tags}
                   canEdit={PROJECT_OPERATOR}
                   update={data => {
-                    updateTag(data.join(','));
+                    updateTag([...data]);
                   }}
+                  fromList={false}
                 />
               </Space>
             }
