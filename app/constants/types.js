@@ -258,3 +258,21 @@ export const RESOURCE_MODE_ENUM = {
   managed: 'Resource',
   data: 'Data Source',
 };
+
+export const SUBSCRIPTION_TYPE_ENUM = {
+  PayAsYouGo: t('define.resource.subscriptionType.PayAsYouGo'),
+  Subscription: t('define.resource.subscriptionType.Subscription'),
+  PayByTraffic: t('define.resource.subscriptionType.PayByTraffic'),
+  PayByBandwidth: t('define.resource.subscriptionType.PayByBandwidth'),
+  PostPaid: t('define.resource.subscriptionType.PostPaid'),
+  PrePaid: t('define.resource.subscriptionType.PrePaid'),
+  Spot: t('define.resource.subscriptionType.Spot'),
+};
+
+export const DISK_TYPE_ENUM = {
+  cloud: t('define.resource.diskType.cloud'),
+  cloud_efficiency: t('define.resource.diskType.cloud_efficiency'),
+  cloud_ssd: t('define.resource.diskType.cloud_ssd'),
+  cloud_essd: t('define.resource.diskType.cloud_essd'),
+  ephemeral_ssd: t('define.resource.diskType.ephemeral_ssd'),
+};

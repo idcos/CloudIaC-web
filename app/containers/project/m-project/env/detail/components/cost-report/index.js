@@ -5,6 +5,7 @@ import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import { chartUtils } from 'components/charts-cfg';
 import { t } from 'utils/i18n';
+import { SUBSCRIPTION_TYPE_ENUM, DISK_TYPE_ENUM } from 'constants/types';
 
 const CostReport = ({ orgId, projectId, envId }) => {
   const cost_type_pie = useRef();
@@ -65,12 +66,20 @@ const CostReport = ({ orgId, projectId, envId }) => {
       ellipsis: true,
     },
     {
-      dataIndex: 'resAttr',
-      title: t('define.resource.props'),
+      dataIndex: 'instanceSpec',
+      title: t('env.resource.instanceSpec'),
       width: 150,
       ellipsis: true,
-      render: text => text || '-',
+      render: text => (text && DISK_TYPE_ENUM[text]) || text || '-',
     },
+    {
+      dataIndex: 'subscriptionType',
+      title: t('env.resource.subscriptionType'),
+      width: 80,
+      ellipsis: true,
+      render: text => (text && SUBSCRIPTION_TYPE_ENUM[text]) || text || '-',
+    },
+
     {
       dataIndex: 'instanceId',
       title: t('define.resource.instanceID'),
