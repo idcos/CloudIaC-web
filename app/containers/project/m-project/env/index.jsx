@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import EnvList from './components/envList';
+import EnvList from './components/env-list';
 import history from 'utils/history';
 import getPermission from 'utils/permission';
 import { t } from 'utils/i18n';
