@@ -266,7 +266,9 @@ const EnvInfo = () => {
             contentStyle={{ color: '#57606A' }}
           >
             <Descriptions.Item span={3} label={t('define.creator')}>
-              {envInfo.creator || '-'}
+              {envInfo.creator && envInfo.tokenName
+                ? `${envInfo.creator}(${envInfo.tokenName})`
+                : envInfo.creator || '-'}
             </Descriptions.Item>
             <Descriptions.Item span={3} label={t('define.createdAt')}>
               {timeUtils.format(envInfo.createdAt) || '-'}

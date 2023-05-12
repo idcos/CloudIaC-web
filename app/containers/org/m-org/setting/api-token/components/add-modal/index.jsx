@@ -42,6 +42,18 @@ const AddModal = ({ orgId, toggleVisible, operation, visible }) => {
     >
       <Form {...FL} form={form}>
         <Form.Item
+          label={t('define.name')}
+          name='name'
+          rules={[
+            {
+              required: true,
+              message: t('define.form.input.placeholder'),
+            },
+          ]}
+        >
+          <Input placeholder={t('define.form.input.placeholder')} />
+        </Form.Item>
+        <Form.Item
           label={t('define.des')}
           name='description'
           rules={[

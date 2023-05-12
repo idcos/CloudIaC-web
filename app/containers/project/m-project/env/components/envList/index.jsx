@@ -227,7 +227,9 @@ const EnvList = props => {
                     : t('define.no')}
                 </Descriptions.Item>
                 <Descriptions.Item label={t('define.creator')}>
-                  {data.creator || '-'}
+                  {data.creator && data.tokenName
+                    ? `${data.creator}(${data.tokenName})`
+                    : data.creator || '-'}
                 </Descriptions.Item>
                 <Descriptions.Item label={t('define.createdAt')}>
                   {timeUtils.format(data.createdAt) || '-'}

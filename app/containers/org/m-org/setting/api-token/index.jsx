@@ -1,12 +1,45 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+
 import React, { useState, useEffect } from 'react';
-import { Button, Divider, notification, Popconfirm, Space, Table } from 'antd';
+import {
+  Button,
+  Divider,
+  notification,
+  Popconfirm,
+  Space,
+  Table,
+  Card,
+  Input,
+  Tooltip,
+} from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
+import copy from 'copy-to-clipboard';
 import moment from 'moment';
+import styled from 'styled-components';
 import tokensAPI from 'services/tokens';
 import TokenForm from './components/add-modal';
 import { t } from 'utils/i18n';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  .item-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .item-title {
+    width: 100px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 20px;
+  }
+  .item-content {
+    width: 100%;
+  }
+`;
 
 const ApiToken = ({ orgId }) => {
   const [loading, setLoading] = useState(false),
@@ -15,6 +48,9 @@ const ApiToken = ({ orgId }) => {
       list: [],
       total: 0,
     }),
+    [newKey, setNewKey] = useState(''),
+    [newKeyName, setNewKeyName] = useState('-'),
+    [showNewKey, setShowNewKey] = useState(false),
     [query, setQuery] = useState({
       pageNo: 1,
       pageSize: 10,
@@ -58,6 +94,17 @@ const ApiToken = ({ orgId }) => {
     });
   };
 
+  const showResult = result => {
+    console.log(result);
+    const { key, name } = result;
+    setNewKey(key);
+    setNewKeyName(name);
+    setShowNewKey(true);
+    notification.success({
+      message: t('define.token.action.add.success.alart'),
+    });
+  };
+
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
@@ -75,6 +122,9 @@ const ApiToken = ({ orgId }) => {
       notification.success({
         message: t('define.message.opSuccess'),
       });
+      if (doWhat === 'add') {
+        showResult(res.result);
+      }
       fetchList();
       cb && cb();
     } catch (e) {
@@ -88,14 +138,15 @@ const ApiToken = ({ orgId }) => {
 
   const columns = [
     {
-      dataIndex: 'key',
-      title: 'Token',
-      width: 286,
+      dataIndex: 'name',
+      title: t('define.name'),
+      width: 200,
+      render: text => text || '-',
     },
     {
       dataIndex: 'description',
       title: t('define.des'),
-      width: 200,
+      width: 286,
       ellipsis: true,
     },
     {
@@ -187,6 +238,45 @@ const ApiToken = ({ orgId }) => {
 
   return (
     <>
+      {showNewKey && (
+        <Card
+          title={t('define.token.newToken.title')}
+          style={{ marginBottom: '20px' }}
+        >
+          <CardContent>
+            <div className='item-container'>
+              <div className='item-title'>{`${t('define.name')}:`}</div>
+              <div className='item-content'>{newKeyName || '-'}</div>
+            </div>
+            <div className='item-container'>
+              <div className='item-content'>
+                <Input.Group compact>
+                  <Input
+                    style={{ width: '400px' }}
+                    value={newKey}
+                    disabled={true}
+                  />
+                  <Tooltip title={t('define.action.copyContent')}>
+                    <Button
+                      icon={<CopyOutlined />}
+                      onClick={() => {
+                        copy(newKey);
+                      }}
+                    />
+                  </Tooltip>
+                </Input.Group>
+              </div>
+            </div>
+          </CardContent>
+
+          <div
+            style={{ marginBottom: '4px', fontSize: '14px', color: '#5e5e5e' }}
+          >
+            {t('define.token.newToken.hint')}
+          </div>
+        </Card>
+      )}
+
       <div style={{ marginBottom: 20 }}>
         <Button
           type='primary'
