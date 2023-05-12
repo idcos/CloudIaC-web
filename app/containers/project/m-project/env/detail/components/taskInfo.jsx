@@ -116,7 +116,9 @@ const TaskInfo = props => {
             {timeUtils.diff(taskInfo.endAt, taskInfo.startAt) || '-'}
           </Descriptions.Item>
           <Descriptions.Item label={t('define.task.field.creator')}>
-            {taskInfo.creator || '-'}
+            {taskInfo.creator && taskInfo.tokenName
+              ? `${taskInfo.creator}(${taskInfo.tokenName})`
+              : taskInfo.creator || '-'}
           </Descriptions.Item>
           <Descriptions.Item label={t('define.task.field.result')}>
             <ChangeInfo {...taskInfo.result} />

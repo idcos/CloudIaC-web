@@ -119,6 +119,11 @@ const DeployHistory = () => {
       title: t('define.task.field.creator'),
       width: 120,
       ellipsis: true,
+      render: (_, r) => {
+        return r.creator && r.tokenName
+          ? `${r.creator}(${r.tokenName})`
+          : r.creator || '-';
+      },
     },
     {
       dataIndex: 'action',
