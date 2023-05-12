@@ -2,13 +2,14 @@ import React, { useState, useEffect, memo } from 'react';
 import { Descriptions, Tag, Space, Collapse, Tooltip } from 'antd';
 import { DownOutlined, RightOutlined, LockOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
 import history from 'utils/history';
 import { ENV_STATUS, AUTO_DESTROY, ENV_STATUS_COLOR } from 'constants/types';
 import { timeUtils } from 'utils/time';
 import PolicyStatus from 'components/policy-status';
 import { Eb_WP } from 'components/error-boundary';
 import { t } from 'utils/i18n';
-import EnvTags from '../env-tags';
+import EnvTagsPanal from '../env-tags-panal';
 import styles from './styles.less';
 
 const EnvCard = props => {
@@ -18,6 +19,9 @@ const EnvCard = props => {
   } = match;
   const [open, setOpen] = useState(false);
   const [now, setNow] = useState(moment());
+
+  const isEnvTagsEmpty = isEmpty(data.envTags);
+  const isUserTagsEmpty = isEmpty(data.userTags);
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -121,14 +125,23 @@ const EnvCard = props => {
                 policyStatus={data.policyStatus}
                 onlyShowResultStatus={true}
               />
-              <EnvTags tags={data.tags} fromList={true} />
             </div>
           </Space>
         }
       >
+        {!isEnvTagsEmpty && !isUserTagsEmpty && (
+          <div style={{ marginTop: '-16px', marginBottom: '10px' }}>
+            {!isEnvTagsEmpty && (
+              <EnvTagsPanal tags={data.envTags} title={data.tokenName} />
+            )}
+            {!isUserTagsEmpty && (
+              <EnvTagsPanal tags={data.userTags} title={'USER'} />
+            )}
+          </div>
+        )}
         <Descriptions
           column={4}
-          style={{ marginBottom: -16 }}
+          style={{ marginBottom: '-16px', marginLeft: '60px' }}
           labelStyle={{ color: '#24292F' }}
           contentStyle={{ color: '#57606A' }}
         >
