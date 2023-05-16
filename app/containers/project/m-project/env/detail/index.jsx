@@ -37,6 +37,7 @@ import DeployJournal from './components/deployJournal';
 import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
+import Tags from './components/tags';
 import EnvTags from '../components/env-tags';
 import Lock from './components/lock';
 import { createBrowserHistory } from 'history';
@@ -46,12 +47,13 @@ import { t } from 'utils/i18n';
 const subNavs = {
   overview: t('define.overview'),
   resource: t('define.resource'),
-  output: 'Output',
+  output: t('define.output'),
   deployJournal: t('task.deployLog.name'),
   deployHistory: t('define.deployHistory'),
   variable: t('define.variable'),
   compInfo: t('policy.detection.complianceStatus'),
   setting: t('define.setting'),
+  tags: t('define.tag'),
 };
 
 const EnvDetail = props => {
@@ -296,6 +298,7 @@ const EnvDetail = props => {
       variable: () => <Variable />,
       setting: () => <Setting />,
       compInfo: () => <ComplianceInfo />,
+      tags: () => <Tags />,
     };
     return PAGES[panel]();
   }, [panel]);

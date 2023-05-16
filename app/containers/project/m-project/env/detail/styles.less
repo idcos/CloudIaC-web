@@ -2,16 +2,15 @@
 
 .depolyDetail {
   :global {
-
-    .ant-tabs-top>.ant-tabs-nav::before,
-    .ant-tabs-bottom>.ant-tabs-nav::before,
-    .ant-tabs-top>div>.ant-tabs-nav::before,
-    .ant-tabs-bottom>div>.ant-tabs-nav::before {
+    .ant-tabs-top > .ant-tabs-nav::before,
+    .ant-tabs-bottom > .ant-tabs-nav::before,
+    .ant-tabs-top > div > .ant-tabs-nav::before,
+    .ant-tabs-bottom > div > .ant-tabs-nav::before {
       border-bottom: none;
     }
 
-    .ant-tabs-card.ant-tabs-top>.ant-tabs-nav .ant-tabs-tab-active,
-    .ant-tabs-card.ant-tabs-top>div>.ant-tabs-nav .ant-tabs-tab-active {
+    .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+    .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
       border-bottom-color: #ebebeb;
     }
   }
@@ -23,7 +22,7 @@
 
   :global {
     .setting-tabs {
-      border: 2px solid #E1E4E8;
+      border: 2px solid #e1e4e8;
 
       .ant-tabs-tab {
         border-radius: 0 !important;
@@ -112,7 +111,6 @@
 
 .deployJournal {
   :global {
-
     .title {
       color: @gray-9;
       font-weight: bold;
@@ -133,9 +131,9 @@
 }
 
 .linkToPage {
-  text-decoration: underline dashed #08857C;
+  text-decoration: underline dashed #08857c;
   &:hover {
-    color: #08857C;
+    color: #08857c;
     cursor: pointer;
   }
 }
@@ -159,10 +157,7 @@
   }
 }
 
-
 :global {
-
-
   .envInfoBox {
     display: flex;
 
@@ -176,9 +171,6 @@
     .cost-report {
       margin-left: 20px;
       width: calc(100% - 278px);
-
-      .cost-report-border {}
-
     }
 
     .isBillingStyle {
