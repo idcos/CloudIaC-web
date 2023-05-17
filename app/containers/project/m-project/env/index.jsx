@@ -7,6 +7,8 @@ import Layout from 'components/common/layout';
 import EnvList from './components/env-list';
 import history from 'utils/history';
 import getPermission from 'utils/permission';
+import queryString from 'query-string';
+import { createBrowserHistory } from 'history';
 import { t } from 'utils/i18n';
 
 const envNavs = {
@@ -20,19 +22,24 @@ const envNavs = {
 
 const Envs = props => {
   const { match, userInfo, location } = props;
-  const { tplName } = location.state || {};
   const { PROJECT_OPERATOR } = getPermission(userInfo);
+  const { currentPage = 1, q = '' } = queryString.parse(location.search);
   const {
     params: { orgId, projectId },
   } = match;
   const [panel, setPanel] = useState('');
   const [query, setQuery] = useState({
-    q: tplName,
-    currentPage: 1,
+    q: q,
+    currentPage: Number.parseInt(currentPage),
     pageSize: 10,
   });
 
   const changeQuery = payload => {
+    const history = createBrowserHistory({ forceRefresh: false });
+    const { q = '', currentPage = 1 } = payload;
+    history.replace({
+      search: `?currentPage=${currentPage}&q=${q}`,
+    });
     setQuery({
       ...query,
       ...payload,

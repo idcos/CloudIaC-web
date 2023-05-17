@@ -111,9 +111,7 @@ const CTList = ({ userInfo, match = {}, location }) => {
           onClick={() =>
             history.push({
               pathname: `/org/${orgId}/project/${projectId}/m-project-env`,
-              state: {
-                tplName: record.name,
-              },
+              search: `?q=${record.name}`,
             })
           }
         >
