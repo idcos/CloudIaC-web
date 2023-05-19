@@ -38,7 +38,6 @@ import DeployHistory from './components/deployHistory';
 import Variable from './components/variable';
 import Setting from './components/setting';
 import Tags from './components/tags';
-import EnvTags from '../components/env-tags';
 import Lock from './components/lock';
 import { createBrowserHistory } from 'history';
 import DetailPageContext from './detail-page-context';
@@ -112,28 +111,6 @@ const EnvDetail = props => {
     {
       ready: !!envInfo.tplId,
       formatResult: data => data || {},
-    },
-  );
-
-  // 更新tag
-  const { run: updateTag } = useRequest(
-    tags =>
-      requestWrapper(
-        envAPI.updateTag.bind(null, {
-          tags,
-          orgId,
-          projectId,
-          envId,
-        }),
-        {
-          autoSuccess: true,
-        },
-      ),
-    {
-      manual: true,
-      onSuccess: () => {
-        fetchEnvInfo();
-      },
     },
   );
 
@@ -422,14 +399,6 @@ const EnvDetail = props => {
                     onlyShowResultStatus={true}
                   />
                 </div>
-                <EnvTags
-                  tags={envInfo.tags}
-                  canEdit={PROJECT_OPERATOR}
-                  update={data => {
-                    updateTag([...data]);
-                  }}
-                  fromList={false}
-                />
               </Space>
             }
             subDes={

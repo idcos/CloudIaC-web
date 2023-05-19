@@ -27,7 +27,6 @@ const TagModal = props => {
         setSubmitLoading(false);
         if (!hasError) {
           toggleVisible();
-          reload();
         }
       },
     );

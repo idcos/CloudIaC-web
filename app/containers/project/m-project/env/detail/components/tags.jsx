@@ -10,6 +10,7 @@ import { t } from 'utils/i18n';
 import DetailPageContext from '../detail-page-context';
 import styled from 'styled-components';
 import TagModal from 'components/tag-modal';
+import tagsAPI from 'services/tags';
 
 const TagsContainer = styled.div`
   border-radius: 3px;
@@ -51,23 +52,120 @@ const TagsContainer = styled.div`
 
 const Tags = props => {
   const { envInfo = {}, userInfo = {}, reload } = useContext(DetailPageContext);
-  const [tagModalVsible, setTagModalVsible] = useState(true);
+  const [tagModalVsible, setTagModalVsible] = useState(false);
   const [opt, setOpt] = useState('add');
   const [curRecord, setCurRecord] = useState({});
   const { userTags = [], envTags = [], tokenName } = envInfo;
+
+  const _userTags = (userTags || []).map(tag => ({
+    ...tag,
+    type: 'user',
+    sourceName: 'USER',
+  }));
+  const _envTags = (envTags || []).map(tag => ({
+    ...tag,
+    type: 'env',
+    sourceName: tokenName,
+  }));
+  const tags = [..._userTags, ..._envTags];
+
+  // const tags = [
+  //   {
+  //     key: 'key1',
+  //     value: 'value1',
+  //     type: 'env',
+  //     sourceName: 'YDD',
+  //     keyId: '5dsfweW',
+  //     valueId: '7Y6534QT',
+  //   },
+  //   {
+  //     key: 'key2',
+  //     value: 'value3',
+  //     type: 'env',
+  //     sourceName: 'YDD',
+  //     keyId: 'i8uyuftw',
+  //     valueId: 'ne12341weq',
+  //   },
+  //   {
+  //     key: 'key3',
+  //     value: 'value3',
+  //     type: 'user',
+  //     sourceName: 'USER',
+  //     keyId: 'zxf314wr',
+  //     valueId: '03thisa',
+  //   },
+  //   {
+  //     key: 'key4',
+  //     value: 'value4',
+  //     type: 'user',
+  //     sourceName: 'USER',
+  //     keyId: 'o02ri0j',
+  //     valueId: 'gersdfd',
+  //   },
+  // ];
+
+  // 更新tag
+  const { run: updateTag } = useRequest(
+    tag =>
+      requestWrapper(tagsAPI.updateTag.bind(null, tag), {
+        autoSuccess: true,
+      }),
+    {
+      manual: true,
+    },
+  );
+
+  // 删除tag
+  const { run: deleteTag } = useRequest(
+    tag =>
+      requestWrapper(tagsAPI.deleteTag.bind(null, tag), {
+        autoSuccess: true,
+      }),
+    {
+      manual: true,
+    },
+  );
+
+  // 增加tag
+  const { run: addTag } = useRequest(
+    tag =>
+      requestWrapper(tagsAPI.addTag.bind(null, tag), {
+        autoSuccess: true,
+      }),
+    {
+      manual: true,
+    },
+  );
 
   const toggleTagModalVsible = () => {
     setTagModalVsible(!tagModalVsible);
   };
 
-  const handleDeleteTag = () => {
-    console.log('Delete Tag');
+  const handleDeleteTag = param => {
+    const requestParam = {
+      ...param,
+      objectType: 'env',
+      objectId: envInfo.id,
+    };
+    return deleteTag(requestParam);
   };
-  const handleEditTag = value => {
-    console.log('Edit Tag', value);
+  const handleEditTag = param => {
+    const requestParam = {
+      ...param,
+      objectType: 'env',
+      objectId: envInfo.id,
+      keyId: curRecord.keyId,
+      valueId: curRecord.valueId,
+    };
+    return updateTag(requestParam);
   };
-  const handleaAddTag = value => {
-    console.log('Add Tag', value);
+  const handleaAddTag = param => {
+    const requestParam = {
+      ...param,
+      objectType: 'env',
+      objectId: envInfo.id,
+    };
+    return addTag(requestParam);
   };
   const operation = async ({ action, payload }, cb) => {
     try {
@@ -80,14 +178,14 @@ const Tags = props => {
         ...payload,
       };
       const res = await method[action](params);
-      // if (res.code !== 200) {
-      //   throw new Error(res.message_detail || res.message);
-      // }
+      if (res.code !== 200) {
+        throw new Error(res.message_detail || res.message);
+      }
 
       notification.success({
         message: t('define.message.opSuccess'),
       });
-      // const { result } = res;
+      reload();
       cb && cb();
     } catch (e) {
       cb && cb(e);
@@ -97,32 +195,6 @@ const Tags = props => {
       });
     }
   };
-  const tags = [
-    {
-      key: 'key1',
-      value: 'value1',
-      type: 'env',
-      source: 'YDD',
-    },
-    {
-      key: 'key2',
-      value: 'value3',
-      type: 'env',
-      source: 'YDD',
-    },
-    {
-      key: 'key3',
-      value: 'value3',
-      type: 'user',
-      source: 'USER',
-    },
-    {
-      key: 'key4',
-      value: 'value4',
-      type: 'user',
-      source: 'USER',
-    },
-  ];
   const { PROJECT_OPERATOR } = getPermission(userInfo);
   const columns = [
     {
@@ -141,8 +213,8 @@ const Tags = props => {
     },
     {
       title: <span className='column-title'>{t('define.source')}</span>,
-      dataIndex: 'source',
-      key: 'source',
+      dataIndex: 'sourceName',
+      key: 'sourceName',
       width: 300,
       render: text => <span className='column-main'>{text}</span>,
     },
@@ -165,6 +237,10 @@ const Tags = props => {
               onConfirm={() =>
                 operation({
                   action: 'delete',
+                  payload: {
+                    keyId: record.keyId,
+                    valueId: record.valueId,
+                  },
                 })
               }
             >
@@ -180,16 +256,18 @@ const Tags = props => {
     <TagsContainer>
       <div className='header'>
         <div className='title'>{t('define.tag')}</div>
-        <Button
-          onClick={() => {
-            setOpt('add');
-            toggleTagModalVsible();
-            setCurRecord({});
-          }}
-        >
-          <EditOutlined />
-          {t('define.addTag')}
-        </Button>
+        {PROJECT_OPERATOR && (
+          <Button
+            onClick={() => {
+              setOpt('add');
+              toggleTagModalVsible();
+              setCurRecord({});
+            }}
+          >
+            <EditOutlined />
+            {t('define.addTag')}
+          </Button>
+        )}
       </div>
       <div className='content'>
         <Table columns={columns} dataSource={tags} pagination={false} />
