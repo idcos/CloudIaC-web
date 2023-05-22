@@ -573,6 +573,7 @@
   "define.token.action.add.success.alart": "Your new token has been created.",
   "define.token.action.delete.confirm.title": "Are you sure to delete this token?",
   "define.token.action.disabled.confirm.title": "Are you sure you want to disable this token?",
+  "define.token.action.edit": "Edit Token",
   "define.token.action.enable.confirm.title": "Are you sure you want to enable this token?",
   "define.token.newToken.title": "Your new token",
   "define.token.newToken.hint": "Make sure you save it - you won't be able to access it again.",

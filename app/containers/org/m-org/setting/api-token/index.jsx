@@ -18,6 +18,7 @@ import moment from 'moment';
 import styled from 'styled-components';
 import tokensAPI from 'services/tokens';
 import TokenForm from './components/add-modal';
+import EditTokenForm from './components/edit-modal';
 import { t } from 'utils/i18n';
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -44,6 +45,8 @@ const CardContent = styled.div`
 const ApiToken = ({ orgId }) => {
   const [loading, setLoading] = useState(false),
     [visible, setVisible] = useState(false),
+    [editVisible, setEditVisible] = useState(false),
+    [curRecord, setCurRecord] = useState({}),
     [resultMap, setResultMap] = useState({
       list: [],
       total: 0,
@@ -84,7 +87,7 @@ const ApiToken = ({ orgId }) => {
       });
     }
   };
-
+  const toggleEditVsible = () => setEditVisible(!editVisible);
   const toggleVisible = () => setVisible(!visible);
 
   const changeQuery = payload => {
@@ -100,9 +103,6 @@ const ApiToken = ({ orgId }) => {
     setNewKey(key);
     setNewKeyName(name);
     setShowNewKey(true);
-    notification.success({
-      message: t('define.token.action.add.success.alart'),
-    });
   };
 
   const operation = async ({ doWhat, payload }, cb) => {
@@ -222,6 +222,15 @@ const ApiToken = ({ orgId }) => {
                   <a>{t('define.status.disabled')}</a>
                 </Popconfirm>
               ))}
+            <a
+              onClick={() => {
+                setCurRecord(record);
+                toggleEditVsible();
+              }}
+            >
+              {t('define.action.modify')}
+            </a>
+
             <Popconfirm
               title={t('define.token.action.delete.confirm.title')}
               onConfirm={() =>
@@ -293,6 +302,15 @@ const ApiToken = ({ orgId }) => {
             operation={operation}
             toggleVisible={toggleVisible}
             visible={visible}
+          />
+        )}
+        {editVisible && (
+          <EditTokenForm
+            reload={fetchList}
+            operation={operation}
+            toggleVisible={toggleEditVsible}
+            visible={editVisible}
+            record={curRecord}
           />
         )}
       </div>
