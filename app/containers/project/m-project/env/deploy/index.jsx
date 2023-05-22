@@ -293,6 +293,10 @@ const Index = ({ match = {} }) => {
         configData.keyId = '';
       }
       let values = { ...value, ...configData };
+      if (!!envId) {
+        values.envTags = info.envTags;
+        values.userTags = info.userTags;
+      }
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
       const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({
