@@ -129,7 +129,7 @@ const EnvCard = props => {
           </Space>
         }
       >
-        {!isEnvTagsEmpty && !isUserTagsEmpty && (
+        {(!isEnvTagsEmpty || !isUserTagsEmpty) && (
           <div style={{ marginTop: '-16px', marginBottom: '10px' }}>
             {!isEnvTagsEmpty && (
               <EnvTagsPanal tags={data.envTags} title={data.tokenName} />
