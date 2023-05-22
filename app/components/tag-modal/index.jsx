@@ -8,7 +8,7 @@ const FL = {
 };
 
 const TagModal = props => {
-  const { visible, opt, toggleVisible, operation, reload, curRecord } = props;
+  const { visible, opt, toggleVisible, operation, curRecord } = props;
   const [submitLoading, setSubmitLoading] = useState(false);
 
   const [form] = Form.useForm();

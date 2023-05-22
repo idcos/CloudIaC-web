@@ -2,8 +2,6 @@
 import React, { memo, useState, useEffect, useContext } from 'react';
 import { Button, Space, Divider, Table, Popconfirm, notification } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
-import { useRequest } from 'ahooks';
-import { requestWrapper } from 'utils/request';
 import { Eb_WP } from 'components/error-boundary';
 import getPermission from 'utils/permission';
 import { t } from 'utils/i18n';
@@ -69,74 +67,6 @@ const Tags = props => {
   }));
   const tags = [..._userTags, ..._envTags];
 
-  // const tags = [
-  //   {
-  //     key: 'key1',
-  //     value: 'value1',
-  //     type: 'env',
-  //     sourceName: 'YDD',
-  //     keyId: '5dsfweW',
-  //     valueId: '7Y6534QT',
-  //   },
-  //   {
-  //     key: 'key2',
-  //     value: 'value3',
-  //     type: 'env',
-  //     sourceName: 'YDD',
-  //     keyId: 'i8uyuftw',
-  //     valueId: 'ne12341weq',
-  //   },
-  //   {
-  //     key: 'key3',
-  //     value: 'value3',
-  //     type: 'user',
-  //     sourceName: 'USER',
-  //     keyId: 'zxf314wr',
-  //     valueId: '03thisa',
-  //   },
-  //   {
-  //     key: 'key4',
-  //     value: 'value4',
-  //     type: 'user',
-  //     sourceName: 'USER',
-  //     keyId: 'o02ri0j',
-  //     valueId: 'gersdfd',
-  //   },
-  // ];
-
-  // 更新tag
-  const { run: updateTag } = useRequest(
-    tag =>
-      requestWrapper(tagsAPI.updateTag.bind(null, tag), {
-        autoSuccess: true,
-      }),
-    {
-      manual: true,
-    },
-  );
-
-  // 删除tag
-  const { run: deleteTag } = useRequest(
-    tag =>
-      requestWrapper(tagsAPI.deleteTag.bind(null, tag), {
-        autoSuccess: true,
-      }),
-    {
-      manual: true,
-    },
-  );
-
-  // 增加tag
-  const { run: addTag } = useRequest(
-    tag =>
-      requestWrapper(tagsAPI.addTag.bind(null, tag), {
-        autoSuccess: true,
-      }),
-    {
-      manual: true,
-    },
-  );
-
   const toggleTagModalVsible = () => {
     setTagModalVsible(!tagModalVsible);
   };
@@ -147,7 +77,7 @@ const Tags = props => {
       objectType: 'env',
       objectId: envInfo.id,
     };
-    return deleteTag(requestParam);
+    return tagsAPI.deleteTag(requestParam);
   };
   const handleEditTag = param => {
     const requestParam = {
@@ -157,7 +87,7 @@ const Tags = props => {
       keyId: curRecord.keyId,
       valueId: curRecord.valueId,
     };
-    return updateTag(requestParam);
+    return tagsAPI.updateTag(requestParam);
   };
   const handleaAddTag = param => {
     const requestParam = {
@@ -165,7 +95,7 @@ const Tags = props => {
       objectType: 'env',
       objectId: envInfo.id,
     };
-    return addTag(requestParam);
+    return tagsAPI.addTag(requestParam);
   };
   const operation = async ({ action, payload }, cb) => {
     try {
@@ -178,10 +108,10 @@ const Tags = props => {
         ...payload,
       };
       const res = await method[action](params);
+      console.log(res);
       if (res.code !== 200) {
         throw new Error(res.message_detail || res.message);
       }
-
       notification.success({
         message: t('define.message.opSuccess'),
       });
@@ -234,15 +164,16 @@ const Tags = props => {
             </a>
             <Popconfirm
               title={t('define.tag.action.delete.confirm.title')}
-              onConfirm={() =>
+              onConfirm={() => {
+                console.log(record);
                 operation({
                   action: 'delete',
                   payload: {
                     keyId: record.keyId,
                     valueId: record.valueId,
                   },
-                })
-              }
+                });
+              }}
             >
               <a>{t('define.action.delete')}</a>
             </Popconfirm>

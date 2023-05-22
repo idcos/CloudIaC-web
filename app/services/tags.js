@@ -1,11 +1,11 @@
-import { post, del, getWithArgs } from 'utils/xFetch2';
+import { post, put, del, getWithArgs } from 'utils/xFetch2';
 const tagsAPI = {
   addTag: ({ objectType, objectId, key, value }) => {
     return post('/api/v1/tags', { objectType, objectId, key, value });
   },
 
   updateTag: ({ objectType, objectId, key, value, keyId, valueId }) => {
-    return post('/api/v1/tags', {
+    return put('/api/v1/tags', {
       objectType,
       objectId,
       key,
