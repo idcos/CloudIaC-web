@@ -23,8 +23,8 @@ const tagsAPI = {
     return getWithArgs('/api/v1/tags', { q });
   },
 
-  queryEnvTags: (envId, q) => {
-    return getWithArgs(`/api/v1/envs/${envId}/tags`, { q });
+  queryEnvTags: ({ envId, q }) => {
+    return getWithArgs(`/api/v1/envs/${envId}/tags`, { q, pageSize: 100 });
   },
 };
 export default tagsAPI;

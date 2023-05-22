@@ -7,6 +7,8 @@ import getPermission from 'utils/permission';
 import { t } from 'utils/i18n';
 import DetailPageContext from '../detail-page-context';
 import styled from 'styled-components';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
 import TagModal from 'components/tag-modal';
 import tagsAPI from 'services/tags';
 
@@ -49,23 +51,42 @@ const TagsContainer = styled.div`
 `;
 
 const Tags = props => {
-  const { envInfo = {}, userInfo = {}, reload } = useContext(DetailPageContext);
+  const { userInfo = {}, reload, envInfo } = useContext(DetailPageContext);
   const [tagModalVsible, setTagModalVsible] = useState(false);
   const [opt, setOpt] = useState('add');
   const [curRecord, setCurRecord] = useState({});
-  const { userTags = [], envTags = [], tokenName } = envInfo;
+  const [tags, setTags] = useState([]);
+  const { data: tagsInfo } = useRequest(
+    () =>
+      requestWrapper(tagsAPI.queryEnvTags.bind(null, { envId: envInfo.id }), {
+        formatDataFn: res => res.result || {},
+      }),
+    {
+      ready: !!envInfo && !!envInfo.id,
+      refreshDeps: [envInfo],
+    },
+  );
 
-  const _userTags = (userTags || []).map(tag => ({
-    ...tag,
-    type: 'user',
-    sourceName: 'USER',
-  }));
-  const _envTags = (envTags || []).map(tag => ({
-    ...tag,
-    type: 'env',
-    sourceName: tokenName,
-  }));
-  const tags = [..._userTags, ..._envTags];
+  useEffect(() => {
+    const { tokenName } = envInfo;
+    const { list = [] } = tagsInfo || {};
+    const _tags = list.map(tag => {
+      if (tag.source === 'user') {
+        return {
+          ...tag,
+          type: 'user',
+          sourceName: 'USER',
+        };
+      } else {
+        return {
+          ...tag,
+          type: 'env',
+          sourceName: tokenName,
+        };
+      }
+    });
+    setTags(_tags);
+  }, [tagsInfo]);
 
   const toggleTagModalVsible = () => {
     setTagModalVsible(!tagModalVsible);
@@ -108,7 +129,6 @@ const Tags = props => {
         ...payload,
       };
       const res = await method[action](params);
-      console.log(res);
       if (res.code !== 200) {
         throw new Error(res.message_detail || res.message);
       }
