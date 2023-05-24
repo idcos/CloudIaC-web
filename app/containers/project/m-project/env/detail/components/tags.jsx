@@ -174,6 +174,7 @@ const Tags = props => {
         PROJECT_OPERATOR && record.type === 'user' ? (
           <Space split={<Divider type='vertical' />}>
             <a
+              style={{ whiteSpace: 'nowrap' }}
               onClick={() => {
                 setOpt('edit');
                 toggleTagModalVsible();
@@ -195,7 +196,9 @@ const Tags = props => {
                 });
               }}
             >
-              <a>{t('define.action.delete')}</a>
+              <a style={{ whiteSpace: 'nowrap' }}>
+                {t('define.action.delete')}
+              </a>
             </Popconfirm>
           </Space>
         ) : (
