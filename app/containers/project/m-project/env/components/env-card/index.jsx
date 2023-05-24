@@ -193,7 +193,7 @@ const EnvCard = props => {
                   : t('define.no')}
               </Descriptions.Item>
               <Descriptions.Item label={t('define.creator')}>
-                {data.creator && data.tokenName
+                {data.creator && data.tokenName && data.creator === 'System'
                   ? `${data.creator}(${data.tokenName})`
                   : data.creator || '-'}
               </Descriptions.Item>
