@@ -57,8 +57,7 @@ const EditModal = ({ record, toggleVisible, operation, visible }) => {
           name='description'
           rules={[
             {
-              required: true,
-              message: t('define.form.input.placeholder'),
+              required: false,
             },
           ]}
         >
