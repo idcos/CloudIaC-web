@@ -19,6 +19,7 @@ import { Eb_WP } from 'components/error-boundary';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
 import PolicyStatus from 'components/policy-status';
+import EnvTags from '../components/env-tags';
 import {
   END_TASK_STATUS_LIST,
   ENV_STATUS,
@@ -398,6 +399,7 @@ const EnvDetail = props => {
                     policyStatus={envInfo.policyStatus}
                     onlyShowResultStatus={true}
                   />
+                  <EnvTags tags={envInfo.tags} />
                 </div>
               </Space>
             }

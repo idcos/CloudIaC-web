@@ -9,6 +9,7 @@ import { timeUtils } from 'utils/time';
 import PolicyStatus from 'components/policy-status';
 import { Eb_WP } from 'components/error-boundary';
 import { t } from 'utils/i18n';
+import EnvTags from '../env-tags';
 import EnvTagsPanal from '../env-tags-panal';
 import styles from './styles.less';
 
@@ -125,6 +126,7 @@ const EnvCard = props => {
                 policyStatus={data.policyStatus}
                 onlyShowResultStatus={true}
               />
+              <EnvTags tags={data.tags} />
             </div>
           </Space>
         }
