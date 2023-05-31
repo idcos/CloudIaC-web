@@ -1,61 +1,79 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useContext } from 'react';
 import { Table, Input, Space, Button, Row, Tag } from 'antd';
 import { useRequest } from 'ahooks';
-import { FundViewOutlined } from "@ant-design/icons";
+import { FundViewOutlined } from '@ant-design/icons';
 import { requestWrapper } from 'utils/request';
 import envAPI from 'services/env';
 import taskAPI from 'services/task';
 import { t } from 'utils/i18n';
 import DetailPageContext from '../../../detail-page-context';
 import DetailDrawer from '../components/detail-drawer';
-import { RESOURCE_MODE_ENUM } from 'constants/types'; 
+import { RESOURCE_MODE_ENUM } from 'constants/types';
 
 const TableLayout = ({ setMode }) => {
-
-  const { taskId, type, orgId, projectId, envId } = useContext(DetailPageContext);
-  const [ expandedRowKeys, setExpandedRowKeys ] = useState([]);
-  const [ search, setSearch ] = useState('');
-  const [ detailDrawerProps, setDetailDrawerProps ] = useState({
-    visible: false
+  const { taskId, type, orgId, projectId, envId } =
+    useContext(DetailPageContext);
+  const [expandedRowKeys, setExpandedRowKeys] = useState([]);
+  const [search, setSearch] = useState('');
+  const [detailDrawerProps, setDetailDrawerProps] = useState({
+    visible: false,
   });
- 
+
   useEffect(() => {
     fetchResourceData();
   }, [search]);
-  
-  const { data: resourceData = [], run: fetchResourceData, loading } = useRequest(
+
+  const {
+    data: resourceData = [],
+    run: fetchResourceData,
+    loading,
+  } = useRequest(
     () => {
       const resourcesApis = {
-        env: envAPI.getResourcesList.bind(null, { orgId, projectId, envId, q: search }),
-        task: taskAPI.getResourcesList.bind(null, { orgId, projectId, taskId, q: search })
+        env: envAPI.getResourcesList.bind(null, {
+          orgId,
+          projectId,
+          envId,
+          q: search,
+        }),
+        task: taskAPI.getResourcesList.bind(null, {
+          orgId,
+          projectId,
+          taskId,
+          q: search,
+        }),
       };
       return requestWrapper(resourcesApis[type]);
-    }, {
+    },
+    {
       manual: true,
-      formatResult: (res) => resetList(res.list),
-      onSuccess: (data) => {
+      formatResult: res => resetList(res.list),
+      onSuccess: data => {
         if (data[0]) {
           setExpandedRowKeys([data[0].provider]);
         }
-      }
-    }
+      },
+    },
   );
 
-  const resetList = (list) => {
+  const resetList = list => {
     if (list.length) {
       let typeList = [...new Set(list.map(d => d.provider))];
       let ll = [];
       typeList.forEach(d => {
         let obj = {
-          isDrift: false
+          isDrift: false,
         };
-        let children = list.filter(t => t.provider === d).map(it => {
-          it.count = 1;
-          if (it.isDrift) {
-            obj.isDrift = true;
-          }
-          return it;
-        });
+        let children = list
+          .filter(t => t.provider === d)
+          .map(it => {
+            it.count = 1;
+            if (it.isDrift) {
+              obj.isDrift = true;
+            }
+            return it;
+          });
         obj.provider = d;
         obj.count = children.length;
         obj.children = children;
@@ -69,16 +87,18 @@ const TableLayout = ({ setMode }) => {
 
   const onExpand = (expanded, record) => {
     if (expanded) {
-      setExpandedRowKeys([ ...expandedRowKeys, record.provider ]);
+      setExpandedRowKeys([...expandedRowKeys, record.provider]);
     } else {
-      setExpandedRowKeys((expandedRowKeys.filter(d => d !== record.provider) || []));
+      setExpandedRowKeys(
+        expandedRowKeys.filter(d => d !== record.provider) || [],
+      );
     }
   };
 
-  const onOpenDetailDrawer = (id) => {
+  const onOpenDetailDrawer = id => {
     setDetailDrawerProps({
-      visible: true, 
-      id
+      visible: true,
+      id,
     });
   };
 
@@ -91,29 +111,29 @@ const TableLayout = ({ setMode }) => {
       dataIndex: 'provider',
       title: t('define.resource.field.provider'),
       ellipsis: true,
-      width: 220
+      width: 220,
     },
     {
       dataIndex: 'mode',
       title: t('define.resource.mode'),
       ellipsis: true,
       width: 180,
-      render: (value) => {
+      render: value => {
         const renderTag = RESOURCE_MODE_ENUM[value];
-        return (!!renderTag ? <Tag>{renderTag}</Tag> : null);
-      }
+        return !!renderTag ? <Tag>{renderTag}</Tag> : null;
+      },
     },
     {
       dataIndex: 'type',
       title: t('define.type'),
       ellipsis: true,
-      width: 180
+      width: 180,
     },
     {
       dataIndex: 'count',
       title: t('define.count'),
       ellipsis: true,
-      width: 80
+      width: 80,
     },
     {
       dataIndex: 'name',
@@ -122,26 +142,27 @@ const TableLayout = ({ setMode }) => {
       width: 200,
       render: (text, record) => {
         const { id } = record;
-        return (
-          <a onClick={() => onOpenDetailDrawer(id)}>
-            {text}
-          </a>
-        );
-      }
+        return <a onClick={() => onOpenDetailDrawer(id)}>{text}</a>;
+      },
     },
     {
       dataIndex: 'module',
       title: t('define.resource.field.module'),
       ellipsis: true,
-      width: 200
+      width: 200,
     },
     {
       dataIndex: 'isDrift',
       title: t('define.resource.field.isDrift'),
       ellipsis: true,
       width: 120,
-      render: T => T ? <Tag color='green'>{t('define.yes')}</Tag> : <Tag>{t('define.no')}</Tag>
-    }
+      render: T =>
+        T ? (
+          <Tag color='green'>{t('define.yes')}</Tag>
+        ) : (
+          <Tag>{t('define.no')}</Tag>
+        ),
+    },
   ];
 
   return (
@@ -154,7 +175,12 @@ const TableLayout = ({ setMode }) => {
             onSearch={v => setSearch(v)}
           />
           {type === 'env' && (
-            <Button onClick={() => setMode('graph')} icon={<FundViewOutlined />}>{t('define.resource.action.changeGraphMode')}</Button>
+            <Button
+              onClick={() => setMode('graph')}
+              icon={<FundViewOutlined />}
+            >
+              {t('define.resource.action.changeGraphMode')}
+            </Button>
           )}
         </Row>
         <Table
@@ -166,10 +192,17 @@ const TableLayout = ({ setMode }) => {
           pagination={false}
           expandedRowKeys={expandedRowKeys}
           onExpand={onExpand}
-        /> 
+        />
       </Space>
       {detailDrawerProps.visible && (
-        <DetailDrawer {...detailDrawerProps} onClose={onCloseDetailDrawer} orgId={orgId} projectId={projectId} envId={envId} type={type}/>
+        <DetailDrawer
+          {...detailDrawerProps}
+          onClose={onCloseDetailDrawer}
+          orgId={orgId}
+          projectId={projectId}
+          envId={envId}
+          type={type}
+        />
       )}
     </>
   );

@@ -8,18 +8,26 @@ import { requestWrapper } from 'utils/request';
 import varGroupAPI from 'services/var-group';
 import { t } from 'utils/i18n';
 
-export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
-
+const ImportResourceAccountModal = ({
+  event$,
+  fetchParams,
+  defaultScope,
+  varGroupList = [],
+}) => {
   const { orgId, projectId } = fetchParams || {};
-  const [ visible, setVisible ] = useState(false);
-  const [ selectedRows, setSelectedRows ] = useState([]);
-  const [ disabledKeys, setDisabledKeys ] = useState([]);
-  const [ popoverVisibleKey, setPopoverVisibleKey ] = useState();
+  const [visible, setVisible] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [disabledKeys, setDisabledKeys] = useState([]);
+  const [popoverVisibleKey, setPopoverVisibleKey] = useState();
 
   useEffect(() => {
     if (visible) {
-      const selectedRows = varGroupList.filter(varGroup => varGroup.objectType === defaultScope);
-      const disabledKeys = varGroupList.filter(varGroup => varGroup.objectType !== defaultScope).map(it => it.varGroupId);
+      const selectedRows = varGroupList.filter(
+        varGroup => varGroup.objectType === defaultScope,
+      );
+      const disabledKeys = varGroupList
+        .filter(varGroup => varGroup.objectType !== defaultScope)
+        .map(it => it.varGroupId);
       setSelectedRows(selectedRows);
       setDisabledKeys(disabledKeys);
     }
@@ -30,21 +38,28 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
     loading: tableLoading,
     data: dataSource = [],
     run: fetchList,
-    mutate: mutateDataSource
+    mutate: mutateDataSource,
   } = useRequest(
-    (params) => requestWrapper(
-      varGroupAPI.list.bind(null, { orgId, projectId, type: 'environment', ...params })
-    ), {
+    params =>
+      requestWrapper(
+        varGroupAPI.list.bind(null, {
+          orgId,
+          projectId,
+          type: 'environment',
+          ...params,
+        }),
+      ),
+    {
       manual: true,
-      formatResult: (res) => {
+      formatResult: res => {
         return (res.list || []).map(it => {
           it.objectType = defaultScope;
           it.varGroupId = it.id;
           delete it.id;
           return it;
         });
-      }
-    }
+      },
+    },
   );
 
   const onOpen = () => {
@@ -58,11 +73,11 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
   };
 
   const onOk = () => {
-    event$.emit({ 
+    event$.emit({
       type: 'import-resource-account',
       data: {
-        importResourceAccountList: selectedRows
-      } 
+        importResourceAccountList: selectedRows,
+      },
     });
     setSelectedRows([]);
     setVisible(false);
@@ -73,46 +88,46 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
       dataIndex: 'name',
       title: t('define.resourceAccount.accountDes'),
       width: 200,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'creator',
       title: t('define.creator'),
       width: 140,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'updatedAt',
       title: t('define.updateTime'),
       width: 200,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD hh:mm')
-    }
+      render: text => moment(text).format('YYYY-MM-DD hh:mm'),
+    },
   ];
 
   event$.useSubscription(({ type }) => {
     switch (type) {
-    case 'open-import-resource-account-modal':
-      onOpen();
-      break;
-    default:
-      break;
+      case 'open-import-resource-account-modal':
+        onOpen();
+        break;
+      default:
+        break;
     }
   });
 
   return (
-    <Modal 
+    <Modal
       title={t('define.resourceAccount.title')}
-      visible={visible} 
-      onCancel={onCancel} 
+      visible={visible}
+      onCancel={onCancel}
       className='antd-modal-type-table'
-      cancelButtonProps={{ 
-        className: 'ant-btn-tertiary' 
+      cancelButtonProps={{
+        className: 'ant-btn-tertiary',
       }}
       onOk={onOk}
       width={680}
     >
-      <Table 
+      <Table
         style={{ marginBottom: 14 }}
         columns={columns}
         scroll={{ x: 'min-content', y: 258 }}
@@ -124,14 +139,20 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
           columnWidth: 26,
           hideSelectAll: true,
           selectedRowKeys: selectedRows.map(({ varGroupId }) => varGroupId),
-          getCheckboxProps: (record) => ({
-            disabled: disabledKeys.includes(record.varGroupId)
+          getCheckboxProps: record => ({
+            disabled: disabledKeys.includes(record.varGroupId),
           }),
           onSelect: (record, selected, selectedRows) => {
             let _selectedRows = selectedRows;
             if (selected) {
-              const otherRows = selectedRows.filter(it => it.varGroupId !== record.varGroupId);
-              const hasSameVarNameRecord = otherRows.find((otherRow) => intersectionBy(otherRow.variables, record.variables, 'name').length > 0);
+              const otherRows = selectedRows.filter(
+                it => it.varGroupId !== record.varGroupId,
+              );
+              const hasSameVarNameRecord = otherRows.find(
+                otherRow =>
+                  intersectionBy(otherRow.variables, record.variables, 'name')
+                    .length > 0,
+              );
               if (hasSameVarNameRecord) {
                 setPopoverVisibleKey(record.varGroupId);
                 _selectedRows = otherRows;
@@ -141,19 +162,28 @@ export default ({ event$, fetchParams, defaultScope, varGroupList = [] }) => {
           },
           renderCell: (_checked, record, _index, originNode) => {
             return (
-              <Popover 
+              <Popover
                 placement='topLeft'
                 trigger='click'
-                content={<><CloseCircleFilled style={{ color: '#F23C3C', marginRight: 8 }}/>{t('define.resourceAccount.sameKeyError')}</>} 
+                content={
+                  <>
+                    <CloseCircleFilled
+                      style={{ color: '#F23C3C', marginRight: 8 }}
+                    />
+                    {t('define.resourceAccount.sameKeyError')}
+                  </>
+                }
                 visible={popoverVisibleKey === record.varGroupId}
-                onVisibleChange={(visible) => !visible && setPopoverVisibleKey()} 
+                onVisibleChange={visible => !visible && setPopoverVisibleKey()}
               >
                 <span>{originNode}</span>
               </Popover>
             );
-          }
+          },
         }}
       />
     </Modal>
   );
 };
+
+export default ImportResourceAccountModal;

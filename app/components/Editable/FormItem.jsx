@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Popover } from 'antd';
 import { Field } from 'rc-field-form';
 
-const Error = (props) => {
+const Error = props => {
   const hasError = !!(props.errors && props.errors.length);
-  const [ visible, setVisible ] = useState(false);
+  const [visible, setVisible] = useState(false);
   let children = props.children;
 
   if (React.isValidElement(props.children)) {
     children = React.cloneElement(props.children, {
-      ...props.children.props
+      ...props.children.props,
     });
   }
 
@@ -41,9 +41,7 @@ const Error = (props) => {
           </div>
         }
       >
-        <div>
-          {children}
-        </div>
+        <div>{children}</div>
       </Popover>
     </div>
   );
@@ -60,12 +58,12 @@ const FormItem = props => {
           childNode = React.cloneElement(children, {
             [trigger]: value,
             ...children.props,
-            onChange: (val) => {
+            onChange: val => {
               onChange(val);
               if (typeof children.props.onChange === 'function') {
                 children.props.onChange(val);
               }
-            }
+            },
           });
         }
         return <Error errors={errors}>{childNode}</Error>;

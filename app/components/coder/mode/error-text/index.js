@@ -1,11 +1,11 @@
 import CodeMirror from 'codemirror';
 import './style.css';
 
-CodeMirror.defineMode('error-message', function() {
+CodeMirror.defineMode('error-message', function () {
   return {
-    token: function(stream) {
+    token: function (stream) {
       stream.next();
       return 'error-text';
-    }
+    },
   };
 });

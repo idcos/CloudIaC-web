@@ -1,11 +1,9 @@
-
 import React, {
-  useContext,
   useMemo,
   useRef,
   useCallback,
   useEffect,
-  useState
+  useState,
 } from 'react';
 
 import pick from 'lodash/pick';
@@ -26,11 +24,11 @@ import {
   OptionEdit,
   OptionCancel,
   OptionSave,
-  OptionSequence
+  OptionSequence,
 } from './options';
 import styles from './styles.less';
 
-const EditableTable = (props) => {
+const EditableTable = props => {
   const {
     tableProps,
     fields,
@@ -52,14 +50,11 @@ const EditableTable = (props) => {
     sortMode = false,
     onDeleteRow, // eslint-disable-line
     footer,
-    readOnly = false
+    readOnly = false,
   } = props;
 
-  const {
-    addValidateFun,
-    removeValidateFun,
-    notifyObservers
-  } = useValidateObservers();
+  const { addValidateFun, removeValidateFun, notifyObservers } =
+    useValidateObservers();
 
   // 多行编辑和单行编辑不支持动态切换，因为切换之后有问题，后期可能会支持动态切换；
   const [multiple] = useState(mult);
@@ -69,7 +64,7 @@ const EditableTable = (props) => {
     handleAdd: () => {}, // eslint-disable-line
     handleDelete: () => {}, // eslint-disable-line
     handleEdit: () => {}, // eslint-disable-line
-    handleValidate: notifyObservers
+    handleValidate: notifyObservers,
   });
 
   // 区分设置value为undefined和未设置值的情况
@@ -86,14 +81,14 @@ const EditableTable = (props) => {
     setSequenceId,
     errorMap,
     addErrorMapItem,
-    removeErrorMapItem
+    removeErrorMapItem,
   } = useEditableState({
     value: has(props, 'value') && !value ? [] : value,
     defaultValue,
     defaultData,
     onChange,
     onDeleteRow,
-    max
+    max,
   });
   const showAddBtn = !hideAddBtn && (!max || max > state.length);
 
@@ -102,13 +97,13 @@ const EditableTable = (props) => {
       handleAdd,
       setRowsData,
       handleDelete,
-      handleEdit
+      handleEdit,
     });
-  }, [ handleAdd, setRowsData ]);
+  }, [handleAdd, setRowsData]);
 
   useEffect(() => {
     if (isFunction(getActionRef)) {
-      getActionRef(actionRef); 
+      getActionRef(actionRef);
     }
   }, []);
 
@@ -119,14 +114,13 @@ const EditableTable = (props) => {
       ...(col && col.column),
       children: isArray(col && col.children)
         ? col.children.map(getColumnByField)
-        : undefined
+        : undefined,
     };
     if (!col.editable) {
-      tableColumn;
     } else {
       const formItemProps = {
         name: col.id,
-        ...col.formItemProps
+        ...col.formItemProps,
       };
       // 可编辑单元格存储表单name字段；
       if (fieldNamesRef.current.indexOf(formItemProps.name) === -1) {
@@ -139,12 +133,12 @@ const EditableTable = (props) => {
           'title',
           'renderFormInput',
           'formFieldProps',
-          'trigger'
+          'trigger',
         ]),
         formItemProps,
         rowIndex,
         handleSave: () => {}, // eslint-disable-line
-        setRowsData
+        setRowsData,
       });
     }
     return tableColumn;
@@ -184,14 +178,14 @@ const EditableTable = (props) => {
               id={row.editable_id}
               buttonProps={props.cancelBtnProps}
               buttonText={props.cancelBtnText}
-            />
+            />,
           ];
           if (isFunction(optionRender)) {
             return optionRender(row, {
               delete: optionsNode[2],
               edit: optionsNode[1],
               cancel: optionsNode[3],
-              save: optionsNode[0]
+              save: optionsNode[0],
             });
           }
           if (isFunction(optionExtraBefore)) {
@@ -215,7 +209,7 @@ const EditableTable = (props) => {
             );
           }
           return optionsNode;
-        }
+        },
       });
     }
     // 气泡排序
@@ -226,11 +220,11 @@ const EditableTable = (props) => {
         width: 80,
         render: (_, record, index) => {
           return <OptionSequence id={record.editable_id} rowIndex={index} />;
-        }
+        },
       });
     }
     return list;
-  }, [ sortMode, fields, multiple ]);
+  }, [sortMode, fields, multiple]);
 
   return (
     <EditableContext.Provider
@@ -248,7 +242,7 @@ const EditableTable = (props) => {
         sequenceId,
         errorMap,
         addErrorMapItem,
-        removeErrorMapItem
+        removeErrorMapItem,
       }}
     >
       <div className={styles.editableTable}>
@@ -261,8 +255,8 @@ const EditableTable = (props) => {
           components={{
             body: {
               row: EditableRow,
-              cell: EditableCell
-            }
+              cell: EditableCell,
+            },
           }}
           dataSource={state}
           columns={columns}
@@ -272,7 +266,7 @@ const EditableTable = (props) => {
               index,
               onRowValuesChange,
               addValidateFun,
-              removeValidateFun
+              removeValidateFun,
             };
           }}
         />
@@ -285,7 +279,7 @@ const EditableTable = (props) => {
             style={{
               marginBottom: 16,
               marginTop: 16,
-              ...(addBtnProps && addBtnProps.style)
+              ...(addBtnProps && addBtnProps.style),
             }}
             onClick={e => {
               if (isFunction(addBtnProps && addBtnProps.onClick)) {

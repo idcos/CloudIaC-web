@@ -1,24 +1,35 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import { notification, Select, Form, Input, Button, Row, Col, Space } from "antd";
+/* eslint-disable no-throw-literal */
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  notification,
+  Select,
+  Form,
+  Input,
+  Button,
+  Row,
+  Col,
+  Space,
+} from 'antd';
 import { LayoutOutlined } from '@ant-design/icons';
 import get from 'lodash/get';
-import PageHeader from "components/pageHeader";
+import PageHeader from 'components/pageHeader';
 import history from 'utils/history';
-import VariableForm, { formatVariableRequestParams } from 'components/variable-form';
+import VariableForm, {
+  formatVariableRequestParams,
+} from 'components/variable-form';
 import AdvancedConfig from './advanced-config';
-import Layout from "components/common/layout";
+import Layout from 'components/common/layout';
 import sysAPI from 'services/sys';
 import envAPI from 'services/env';
 import tplAPI from 'services/tpl';
 import keysAPI from 'services/keys';
 import vcsAPI from 'services/vcs';
 import varsAPI from 'services/variables';
-import isEmpty from "lodash/isEmpty";
 import { t } from 'utils/i18n';
 
 const FL = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 const { Option, OptGroup } = Select;
 const defaultScope = 'env';
@@ -28,29 +39,34 @@ const Index = ({ match = {} }) => {
   const varRef = useRef();
   const configRef = useRef({});
   const [form] = Form.useForm();
-  const [ applyLoading, setApplyLoading ] = useState(false);
-  const [ planLoading, setPlanLoading ] = useState(false);
-  const [ vars, setVars ] = useState([]);
-  const [ runner, setRunner ] = useState([]);
-  const [ keys, setKeys ] = useState([]);
-  const [ branch, setBranch ] = useState([]);
-  const [ tag, setTag ] = useState([]);
-  const [ info, setInfo ] = useState({});
-  const [ tplInfo, setTplInfo ] = useState({});
-  const [ tfvars, setTfvars ] = useState([]);
-  const [ playbooks, setPlaybooks ] = useState([]);
-  const [ fetchParams, setFetchParams ] = useState({});
-  const [ repoObj, setRepoObj ] = useState({});
+  const [applyLoading, setApplyLoading] = useState(false);
+  const [planLoading, setPlanLoading] = useState(false);
+  const [vars, setVars] = useState([]);
+  const [runner, setRunner] = useState([]);
+  const [keys, setKeys] = useState([]);
+  const [branch, setBranch] = useState([]);
+  const [tag, setTag] = useState([]);
+  const [info, setInfo] = useState({});
+  const [tplInfo, setTplInfo] = useState({});
+  const [tfvars, setTfvars] = useState([]);
+  const [playbooks, setPlaybooks] = useState([]);
+  const [fetchParams, setFetchParams] = useState({});
+  const [repoObj, setRepoObj] = useState({});
 
   useEffect(() => {
     fetchInfo();
     getVars();
   }, []);
 
-
   const getVars = async () => {
     try {
-      const res = await varsAPI.search({ orgId, projectId, tplId, envId, scope: 'env' });
+      const res = await varsAPI.search({
+        orgId,
+        projectId,
+        tplId,
+        envId,
+        scope: 'env',
+      });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
@@ -58,7 +74,7 @@ const Index = ({ match = {} }) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -67,14 +83,24 @@ const Index = ({ match = {} }) => {
   const fetchInfo = async () => {
     try {
       const res = await tplAPI.detail({
-        orgId, tplId
+        orgId,
+        tplId,
       });
       const tplInfoRes = res.result || {};
       setTplInfo(tplInfoRes);
-      let fetchParams = { ...tplInfoRes, orgId, projectId, tplId, envId, objectType: 'env' };
+      let fetchParams = {
+        ...tplInfoRes,
+        orgId,
+        projectId,
+        tplId,
+        envId,
+        objectType: 'env',
+      };
       if (envId) {
         const infores = await envAPI.envsInfo({
-          orgId, projectId, envId
+          orgId,
+          projectId,
+          envId,
         });
         let data = infores.result || {};
         form.setFieldsValue(data);
@@ -84,7 +110,7 @@ const Index = ({ match = {} }) => {
         setRepoObj({
           ...repoObj,
           repoRevision: data.revision || '',
-          workdir: data.workdir
+          workdir: data.workdir,
         });
       } else {
         const { repoRevision, workdir } = tplInfoRes;
@@ -92,7 +118,7 @@ const Index = ({ match = {} }) => {
         setRepoObj({
           ...repoObj,
           repoRevision,
-          workdir
+          workdir,
         });
       }
       setFetchParams(fetchParams);
@@ -105,55 +131,55 @@ const Index = ({ match = {} }) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   // 获取分支数据
-  const fetchRepoBranch = async (fetchParams) => {
+  const fetchRepoBranch = async fetchParams => {
     const { vcsId, repoId } = fetchParams;
     try {
       const res = await vcsAPI.listRepoBranch({
         orgId,
         vcsId,
-        repoId
+        repoId,
       });
       if (res.code === 200) {
         setBranch(res.result || []);
       }
 
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   // 获取标签数据
-  const fetchRepoTag = async (fetchParams) => {
+  const fetchRepoTag = async fetchParams => {
     const { vcsId, repoId } = fetchParams;
     try {
       const res = await vcsAPI.listRepoTag({
         orgId,
         vcsId,
-        repoId
+        repoId,
       });
 
       if (res.code === 200) {
         setTag(res.result || []);
       }
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -162,48 +188,49 @@ const Index = ({ match = {} }) => {
   const fetchRunner = async () => {
     try {
       const res = await sysAPI.listCTRunnerTag({
-        orgId
+        orgId,
       });
       let runnerTags = res.result.tags || [];
       if (res.code === 200) {
         setRunner(runnerTags);
       }
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   // 获取密钥数据
-  const fetchKeys = async (fetchParams) => {
-    const { orgId, repoRevision, repoId, repoType, vcsId } = fetchParams;
+  const fetchKeys = async fetchParams => {
+    const { orgId } = fetchParams;
     try {
       const res = await keysAPI.list({
         orgId,
-        pageSize: 0
+        pageSize: 0,
       });
       if (res.code === 200) {
         setKeys(res.result.list || []);
       }
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   // 获取Tfvars文件
-  const fetchTfvars = async (fetchParams) => {
-    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+  const fetchTfvars = async fetchParams => {
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } =
+      fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listTfvars(params);
@@ -215,14 +242,15 @@ const Index = ({ match = {} }) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
   // 获取Playbook文件
-  const fetchPlaybooks = async (fetchParams) => {
-    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+  const fetchPlaybooks = async fetchParams => {
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } =
+      fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await vcsAPI.listPlaybook(params);
@@ -234,54 +262,73 @@ const Index = ({ match = {} }) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  const onFinish = async (taskType) => {
+  const onFinish = async taskType => {
     try {
-      const value = await form.validateFields().catch((err) => {
+      const value = await form.validateFields().catch(err => {
         const errInfo = get(err, 'errorFields[0].errors[0]', '');
         throw {
           message: t('define.form.error'),
-          description: errInfo
+          description: errInfo,
         };
       });
-      const configData = await configRef.current.onfinish().catch((err) => {
+      const configData = await configRef.current.onfinish().catch(err => {
         const errInfo = get(err, 'errorFields[0].errors[0]', '');
         throw {
           message: t('define.form.error'),
-          description: errInfo
+          description: errInfo,
         };
       });
       const varData = await varRef.current.validateForm().catch(() => {
         throw {
           message: t('define.form.error'),
-          description: t('define.form.error.variable')
+          description: t('define.form.error.variable'),
         };
       });
       if (!configData.keyId) {
         configData.keyId = '';
       }
       let values = { ...value, ...configData };
+      if (!!envId) {
+        values.envTags = info.envTags;
+        values.userTags = info.userTags;
+      }
       taskType === 'plan' && setPlanLoading(true);
       taskType === 'apply' && setApplyLoading(true);
-      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({ orgId, projectId, ...formatVariableRequestParams(varData, defaultScope), ...values, tplId, taskType, envId: envId ? envId : undefined, ...configData });
+      const res = await envAPI[!!envId ? 'envRedeploy' : 'createEnv']({
+        orgId,
+        projectId,
+        ...formatVariableRequestParams(varData, defaultScope),
+        ...values,
+        tplId,
+        taskType,
+        envId: envId ? envId : undefined,
+        ...configData,
+      });
       if (res.code !== 200) {
         throw {
           message: res.message,
-          description: res.message_detail
+          description: res.message_detail,
         };
       }
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
       const envInfo = res.result || {};
-      if (envId) { // 重新部署环境，跳部署历史详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`);
-      } else { // 创建部署环境，跳环境详情
-        history.push(`/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`);
+      if (envId) {
+        // 重新部署环境，跳部署历史详情
+        history.push(
+          `/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}/task/${envInfo.taskId}`,
+        );
+      } else {
+        // 创建部署环境，跳环境详情
+        history.push(
+          `/org/${orgId}/project/${projectId}/m-project-env/detail/${envInfo.id}?tabKey=deployJournal`,
+        );
       }
       taskType === 'plan' && setPlanLoading(false);
       taskType === 'apply' && setApplyLoading(false);
@@ -292,7 +339,7 @@ const Index = ({ match = {} }) => {
     }
   };
 
-  const changeVcsFetchParams = (params) => {
+  const changeVcsFetchParams = params => {
     const newFetchParams = { ...fetchParams, ...params };
     setFetchParams(newFetchParams);
     fetchTfvars(newFetchParams);
@@ -305,10 +352,20 @@ const Index = ({ match = {} }) => {
         <PageHeader
           title={
             <Space size='middle' align='center'>
-              <span>{!!envId ? t('define.redeployment') : t('define.deployEnv')}</span>
+              <span>
+                {!!envId ? t('define.redeployment') : t('define.deployEnv')}
+              </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
-                <LayoutOutlined style={{ color: '#000', fontSize: 16 }}/>
-                <span style={{ color: '#57606A', fontSize: 12, fontWeight: 'normal' }}>{tplInfo.name}</span>
+                <LayoutOutlined style={{ color: '#000', fontSize: 16 }} />
+                <span
+                  style={{
+                    color: '#57606A',
+                    fontSize: 12,
+                    fontWeight: 'normal',
+                  }}
+                >
+                  {tplInfo.name}
+                </span>
               </div>
             </Space>
           }
@@ -317,12 +374,7 @@ const Index = ({ match = {} }) => {
       }
     >
       <div className='idcos-card'>
-        <Form
-          scrollToFirstError={true}
-          colon={true}
-          form={form}
-          {...FL}
-        >
+        <Form scrollToFirstError={true} colon={true} form={form} {...FL}>
           <Row justify='space-between' style={{ marginBottom: 24 }}>
             <Col span={7}>
               <Form.Item
@@ -331,12 +383,20 @@ const Index = ({ match = {} }) => {
                 rules={[
                   {
                     required: true,
-                    message: t('define.form.input.placeholder')
-                  }
+                    message: t('define.form.input.placeholder'),
+                  },
                 ]}
                 initialValue={info.name || undefined}
               >
-                <Input disabled={info.locked} value={info.name} placeholder={t('define.form.input.placeholder')} style={{ width: '100%' }} onBlur={(e) => form.setFieldsValue({ name: e.target.value.trim() })}/>
+                <Input
+                  disabled={info.locked}
+                  value={info.name}
+                  placeholder={t('define.form.input.placeholder')}
+                  style={{ width: '100%' }}
+                  onBlur={e =>
+                    form.setFieldsValue({ name: e.target.value.trim() })
+                  }
+                />
               </Form.Item>
             </Col>
             <Col span={7}>
@@ -346,39 +406,40 @@ const Index = ({ match = {} }) => {
                 rules={[
                   {
                     required: true,
-                    message: t('define.form.select.placeholder')
-                  }
+                    message: t('define.form.select.placeholder'),
+                  },
                 ]}
               >
                 <Select
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
                   style={{ width: '100%' }}
-                  onChange={(value) => {
+                  onChange={value => {
                     changeVcsFetchParams({ repoRevision: value });
-                    setRepoObj({ ... repoObj, repoRevision: value });
+                    setRepoObj({ ...repoObj, repoRevision: value });
                   }}
                   disabled={info.locked}
                 >
                   <OptGroup label={t('define.branch')}>
-                    {branch.map(it => <Option value={it.name}>{it.name}</Option>)}
+                    {branch.map(it => (
+                      <Option value={it.name}>{it.name}</Option>
+                    ))}
                   </OptGroup>
                   <OptGroup label={t('define.tag')}>
-                    {tag.map(it => <Option value={it.name}>{it.name}</Option>)}
+                    {tag.map(it => (
+                      <Option value={it.name}>{it.name}</Option>
+                    ))}
                   </OptGroup>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={7}>
-              <Form.Item
-                label={t('define.workdir')}
-                name='workdir'
-              >
+              <Form.Item label={t('define.workdir')} name='workdir'>
                 <Input
                   placeholder={t('define.form.input.placeholder')}
-                  onBlur={(e) => {
+                  onBlur={e => {
                     changeVcsFetchParams({ workdir: e.target.value });
-                    setRepoObj({ ... repoObj, workdir: e.target.value });
+                    setRepoObj({ ...repoObj, workdir: e.target.value });
                   }}
                 />
               </Form.Item>
@@ -405,8 +466,25 @@ const Index = ({ match = {} }) => {
             defaultExpandCollapse={false}
           />
           <Row style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button htmlType='submit' disabled={applyLoading || (envId && !info.id)} loading={planLoading} onClick={() => onFinish('plan')} style={{ marginTop: 20 }} >{t('define.env.action.plan')}</Button>
-            <Button htmlType='submit' disabled={planLoading || info.locked || (envId && !info.id)} loading={applyLoading} onClick={() => onFinish('apply')} style={{ marginTop: 20, marginLeft: 20 }} type='primary' >{t('define.env.action.deploy')}</Button>
+            <Button
+              htmlType='submit'
+              disabled={applyLoading || (envId && !info.id)}
+              loading={planLoading}
+              onClick={() => onFinish('plan')}
+              style={{ marginTop: 20 }}
+            >
+              {t('define.env.action.plan')}
+            </Button>
+            <Button
+              htmlType='submit'
+              disabled={planLoading || info.locked || (envId && !info.id)}
+              loading={applyLoading}
+              onClick={() => onFinish('apply')}
+              style={{ marginTop: 20, marginLeft: 20 }}
+              type='primary'
+            >
+              {t('define.env.action.deploy')}
+            </Button>
           </Row>
         </Form>
       </div>

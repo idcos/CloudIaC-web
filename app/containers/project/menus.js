@@ -1,5 +1,13 @@
-import { CodeOutlined, LayoutOutlined, InteractionOutlined, SettingOutlined, ControlOutlined, ProjectOutlined, FormOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import getPermission from "utils/permission";
+import {
+  CodeOutlined,
+  LayoutOutlined,
+  InteractionOutlined,
+  SettingOutlined,
+  ControlOutlined,
+  PlusSquareOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import getPermission from 'utils/permission';
 import { t } from 'utils/i18n';
 
 const getMenus = (userInfo, { projectList }) => {
@@ -13,44 +21,44 @@ const getMenus = (userInfo, { projectList }) => {
         {
           name: t('define.createProject'),
           key: 'm-project-create',
-          icon: <PlusSquareOutlined />
-        }
+          icon: <PlusSquareOutlined />,
+        },
       ],
       menuList: [
         {
           name: t('define.overview'),
           key: 'm-project-overview',
-          icon: <ControlOutlined />
+          icon: <ControlOutlined />,
         },
         {
           name: t('define.scope.env'),
           key: 'm-project-env',
-          icon: <CodeOutlined />
+          icon: <CodeOutlined />,
         },
         {
           name: t('define.scope.template'),
           key: 'm-project-ct',
-          icon: <LayoutOutlined />
+          icon: <LayoutOutlined />,
         },
         {
           name: t('define.variable'),
           key: 'm-project-variable',
-          icon: <InteractionOutlined />
+          icon: <InteractionOutlined />,
         },
         {
           name: t('define.setting'),
           isHide: !PROJECT_SET,
           key: 'm-project-setting',
-          icon: <SettingOutlined />
+          icon: <SettingOutlined />,
         },
         {
           name: t('define.resourceQuery'),
           isHide: !PROJECT_SET,
           key: 'm-project-resource',
-          icon: <SearchOutlined />
-        }
-      ]
-    }
+          icon: <SearchOutlined />,
+        },
+      ],
+    },
   ].filter(it => !it.isHide);
 };
 

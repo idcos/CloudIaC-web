@@ -8,7 +8,7 @@ import { chartUtils } from 'components/charts-cfg';
 import { POLICIES_DETECTION, POLICIES_DETECTION_COLOR } from 'constants/types';
 import { t } from 'utils/i18n';
 
-export default ({ policyId }) => {
+const Report = ({ policyId }) => {
   const proportion_of_results = useRef();
   const source_has_been_executed = useRef();
   const policy_running_trend = useRef();
@@ -16,49 +16,52 @@ export default ({ policyId }) => {
 
   let CHART = useRef([
     { key: 'proportion_of_results', domRef: proportion_of_results, ins: null },
-    { key: 'source_has_been_executed', domRef: source_has_been_executed, ins: null },
+    {
+      key: 'source_has_been_executed',
+      domRef: source_has_been_executed,
+      ins: null,
+    },
     { key: 'policy_running_trend', domRef: policy_running_trend, ins: null },
-    { key: 'detect_pass_rate', domRef: detect_pass_rate, ins: null }
+    { key: 'detect_pass_rate', domRef: detect_pass_rate, ins: null },
   ]);
   const resizeHelper = chartUtils.resizeEvent(CHART.current);
 
   const { loading: reportLoading } = useRequest(
-    () => requestWrapper(
-      policiesAPI.report.bind(null, policyId)
-    ),
+    () => requestWrapper(policiesAPI.report.bind(null, policyId)),
     {
       ready: !!policyId,
-      onSuccess: (data) => {
-        const { policyPassedRate, policyScanCount, scanCount, total } = data || {};
+      onSuccess: data => {
+        const { policyPassedRate, policyScanCount, scanCount, total } =
+          data || {};
         chartUtils.updateBatch(CHART.current, [
           total,
           scanCount,
           policyScanCount,
-          policyPassedRate
+          policyPassedRate,
         ]);
-      }
-    }
+      },
+    },
   );
 
-  const { data: tableData, loading: tableLoading, run: fetchErrorList } = useRequest(
-    (params) => requestWrapper(
-      policiesAPI.error.bind(null, params)
-    ),
+  const {
+    data: tableData,
+    loading: tableLoading,
+    run: fetchErrorList,
+  } = useRequest(
+    params => requestWrapper(policiesAPI.error.bind(null, params)),
     {
-      manual: true
-    }
+      manual: true,
+    },
   );
 
   // 表单搜索和table关联hooks
-  const { 
-    tableProps
-  } = useSearchFormAndTable({
+  const { tableProps } = useSearchFormAndTable({
     tableData,
     pagination: { hideOnSinglePage: true },
-    onSearch: (params) => {
+    onSearch: params => {
       const { current: currentPage, ...restParams } = params;
       fetchErrorList({ currentPage, ...restParams, policyId });
-    }
+    },
   });
 
   useEffect(() => {
@@ -74,45 +77,68 @@ export default ({ policyId }) => {
       dataIndex: 'templateName',
       title: t('define.ct.name'),
       width: 280,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'envName',
       title: t('define.env.name'),
       width: 280,
       ellipsis: true,
-      render: (text) => text || '-'
+      render: text => text || '-',
     },
     {
       dataIndex: 'status',
       title: t('define.status'),
       width: 120,
       ellipsis: true,
-      render: (text) => text ? <Badge color={POLICIES_DETECTION_COLOR[text]} text={POLICIES_DETECTION[text]} /> : '-'
-    }
+      render: text =>
+        text ? (
+          <Badge
+            color={POLICIES_DETECTION_COLOR[text]}
+            text={POLICIES_DETECTION[text]}
+          />
+        ) : (
+          '-'
+        ),
+    },
   ];
 
   return (
-    <Space direction='vertical' size='middle' style={{ width: '100%', display: 'flex' }}>
-      <Card 
+    <Space
+      direction='vertical'
+      size='middle'
+      style={{ width: '100%', display: 'flex' }}
+    >
+      <Card
         title={t('define.report.content')}
-        type='inner' 
-        headStyle={{ borderBottom: 'none', marginBottom: 0 }} 
-        bodyStyle={{ minHeight: 300, backgroundColor: 'rgba(230, 240, 240, 0.7)', padding: '16px 16px 0' }}
+        type='inner'
+        headStyle={{ borderBottom: 'none', marginBottom: 0 }}
+        bodyStyle={{
+          minHeight: 300,
+          backgroundColor: 'rgba(230, 240, 240, 0.7)',
+          padding: '16px 16px 0',
+        }}
       >
         <Spin spinning={reportLoading}>
-          <Row gutter={[ 16, 16 ]}>
-            {CHART.current.map(chart => 
+          <Row gutter={[16, 16]}>
+            {CHART.current.map(chart => (
               <Col span={12}>
                 <Card bordered={false}>
-                  <div ref={chart.domRef} style={{ width: '100%', height: 300 }}></div>
+                  <div
+                    ref={chart.domRef}
+                    style={{ width: '100%', height: 300 }}
+                  ></div>
                 </Card>
               </Col>
-            )}
+            ))}
           </Row>
         </Spin>
       </Card>
-      <Card title={t('define.error.table')} type='inner' bodyStyle={{ minHeight: 300 }}>
+      <Card
+        title={t('define.error.table')}
+        type='inner'
+        bodyStyle={{ minHeight: 300 }}
+      >
         <Table
           columns={columns}
           scroll={{ x: 'min-content' }}
@@ -123,3 +149,5 @@ export default ({ policyId }) => {
     </Space>
   );
 };
+
+export default Report;

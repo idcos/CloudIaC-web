@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-constructor */
 import React from 'react';
 import { Switch } from 'react-router-dom';
 import PT from 'prop-types';
@@ -14,7 +15,7 @@ class RoutesList extends React.Component {
     return (
       <Switch>
         {routes.map((item, index) => (
-          <PrivateRoute key={index} {...item} routesParams={routesParams}/>
+          <PrivateRoute key={index} {...item} routesParams={routesParams} />
         ))}
       </Switch>
     );
@@ -22,11 +23,11 @@ class RoutesList extends React.Component {
 }
 
 RoutesList.propTypes = {
-  routes: PT.array.isRequired
+  routes: PT.array.isRequired,
 };
 
 RoutesList.defaultProps = {
-  routes: []
+  routes: [],
 };
 
 export default RoutesList;

@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Table, notification, Space, Dropdown, Popconfirm, Modal, Menu, Tabs, Select } from 'antd';
+import {
+  Button,
+  Table,
+  notification,
+  Space,
+  Dropdown,
+  Popconfirm,
+  Modal,
+  Menu,
+  Tabs,
+  Select,
+} from 'antd';
 import { InfoCircleFilled, DownOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import orgsAPI from 'services/orgs';
@@ -7,36 +18,35 @@ import userAPI from 'services/user';
 import ldapAPI from 'services/ldap';
 import { ORG_USER } from 'constants/types';
 import EllipsisText from 'components/EllipsisText';
-import getPermission from "utils/permission";
+import getPermission from 'utils/permission';
 import { t } from 'utils/i18n';
 import OpModal from './components/memberModal';
 import LdapModal from './components/ldapModal';
 
-export default ({ userInfo, orgId, sysConfigSwitches }) => {
-
+const UserRole = ({ userInfo, orgId, sysConfigSwitches }) => {
   const { ORG_SET } = getPermission(userInfo);
-  const [ loading, setLoading ] = useState(false),
-    [ visible, setVisible ] = useState(false),
-    [ tabKey, setTabKey ] = useState('user'),
-    [ ldapVisible, setLdapVisible ] = useState(false),
-    [ isBatch, setIsBatch ] = useState(false),
-    [ opt, setOpt ] = useState(null),
-    [ curRecord, setCurRecord ] = useState(null),
-    [ resultMap, setResultMap ] = useState({
+  const [loading, setLoading] = useState(false),
+    [visible, setVisible] = useState(false),
+    [tabKey, setTabKey] = useState('user'),
+    [ldapVisible, setLdapVisible] = useState(false),
+    [isBatch, setIsBatch] = useState(false),
+    [opt, setOpt] = useState(null),
+    [curRecord, setCurRecord] = useState(null),
+    [resultMap, setResultMap] = useState({
       list: [],
-      total: 0
+      total: 0,
     }),
-    [ ouResultMap, setOuResultMap ] = useState({
+    [ouResultMap, setOuResultMap] = useState({
       list: [],
-      total: 0
+      total: 0,
     }),
-    [ query, setQuery ] = useState({
+    [query, setQuery] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
     }),
-    [ ouQuery, setOuQuery ] = useState({
+    [ouQuery, setOuQuery] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
     });
 
   useEffect(() => {
@@ -53,21 +63,21 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       const res = await ldapAPI.orgOus({
         pageSize: ouQuery.pageSize,
         currentPage: ouQuery.pageNo,
-        orgId
+        orgId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setOuResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -78,65 +88,66 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       const res = await userAPI.list({
         pageSize: query.pageSize,
         currentPage: query.pageNo,
-        orgId
+        orgId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  const changeQuery = (payload) => {
+  const changeQuery = payload => {
     setQuery({
       ...query,
-      ...payload
+      ...payload,
     });
   };
 
-  const changeOuQuery = (payload) => {
+  const changeOuQuery = payload => {
     setOuQuery({
       ...ouQuery,
-      ...payload
+      ...payload,
     });
   };
 
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        edit: (param) => orgsAPI.updateUser(param),
-        add: (param) => orgsAPI.inviteUser(param),
-        batchAdd: (param) => orgsAPI.batchInviteUser(param),
+        edit: param => orgsAPI.updateUser(param),
+        add: param => orgsAPI.inviteUser(param),
+        batchAdd: param => orgsAPI.batchInviteUser(param),
         resetUserPwd: ({ orgId, id }) => userAPI.resetUserPwd({ orgId, id }),
         removeUser: ({ orgId, id }) => orgsAPI.removeUser({ orgId, id }),
-        removeLdapUser: ({ orgId, id }) => orgsAPI.removeLdapUser({ orgId, id }),
+        removeLdapUser: ({ orgId, id }) =>
+          orgsAPI.removeLdapUser({ orgId, id }),
         // ldap apis
-        addLdapOU: (param) => ldapAPI.addOrgOu(param),
-        addLdapUser: (param) => ldapAPI.addOrgUser(param),
-        delOrgOu: (param) => ldapAPI.delOrgOu(param),
-        updateOrgOu: (param) => ldapAPI.updateOrgOu(param)
+        addLdapOU: param => ldapAPI.addOrgOu(param),
+        addLdapUser: param => ldapAPI.addOrgUser(param),
+        delOrgOu: param => ldapAPI.delOrgOu(param),
+        updateOrgOu: param => ldapAPI.updateOrgOu(param),
       };
       const res = await method[doWhat]({
         orgId,
-        ...payload
+        ...payload,
       });
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
-      if ([ 'addLdapOU', 'delOrgOu', 'updateOrgOu' ].includes(doWhat)) {
+      if (['addLdapOU', 'delOrgOu', 'updateOrgOu'].includes(doWhat)) {
         setTabKey('ou');
         fetchOuList();
       } else {
@@ -148,7 +159,7 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       cb && cb(e);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -172,38 +183,42 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
   const remove = ({ id, name }) => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
+      title: `${t(
+        'define.org.user.action.remove.confirm.title.prefix',
+      )} ${name} ${t('define.org.user.action.remove.confirm.title.suffix')}`,
       content: t('define.org.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
       okText: t('define.org.user.action.remove'),
       okButtonProps: {
-        danger: true
+        danger: true,
       },
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
       onOk: () => {
         return operation({ doWhat: 'removeUser', payload: { id } });
-      }
+      },
     });
   };
 
   const removeOU = ({ id, ou }) => {
     Modal.confirm({
       width: 480,
-      title: `${t('define.org.user.action.remove.confirm.title.prefix')} ${ou} ?`,
+      title: `${t(
+        'define.org.user.action.remove.confirm.title.prefix',
+      )} ${ou} ?`,
       content: t('define.org.user.action.remove.confirm.content'),
       icon: <InfoCircleFilled />,
       okText: t('define.org.user.action.remove'),
       okButtonProps: {
-        danger: true
+        danger: true,
       },
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
       onOk: () => {
         return operation({ doWhat: 'delOrgOu', payload: { id } });
-      }
+      },
     });
   };
 
@@ -213,30 +228,36 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       title: t('define.page.userSet.basic.field.name'),
       width: 268,
       ellipsis: true,
-      render: (_, record) => <div className='tableRender'>
-        <h2 className='reset-styles'><EllipsisText>{record.name}</EllipsisText></h2>
-        <p className='reset-styles'><EllipsisText>{record.email}</EllipsisText></p>
-      </div>
+      render: (_, record) => (
+        <div className='tableRender'>
+          <h2 className='reset-styles'>
+            <EllipsisText>{record.name}</EllipsisText>
+          </h2>
+          <p className='reset-styles'>
+            <EllipsisText>{record.email}</EllipsisText>
+          </p>
+        </div>
+      ),
     },
     {
       dataIndex: 'phone',
       title: t('define.page.userSet.basic.field.phone'),
       width: 178,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'createdAt',
       title: t('define.org.user.createdAt'),
       width: 212,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       dataIndex: 'role',
       title: t('define.org.user.role'),
       width: 160,
       ellipsis: true,
-      render: (text) => ORG_USER.role[text]
+      render: text => ORG_USER.role[text],
     },
     {
       title: t('define.action'),
@@ -246,8 +267,8 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       render: (_, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button 
-              type='link' 
+            <Button
+              type='link'
               disabled={!ORG_SET}
               onClick={() => {
                 setOpt('edit');
@@ -255,19 +276,34 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
                 toggleVisible();
                 setIsBatch(false);
               }}
-            >{t('define.action.modify')}</Button>
+            >
+              {t('define.action.modify')}
+            </Button>
             <Popconfirm
               title={t('define.org.user.action.resetPwd.confirm.title')}
-              onConfirm={() => operation({ doWhat: 'resetUserPwd', payload: { id: record.id } })}
+              onConfirm={() =>
+                operation({
+                  doWhat: 'resetUserPwd',
+                  payload: { id: record.id },
+                })
+              }
               disabled={!ORG_SET}
             >
-              <Button type='link' disabled={!ORG_SET}>{t('define.org.user.action.resetPwd')}</Button>
+              <Button type='link' disabled={!ORG_SET}>
+                {t('define.org.user.action.resetPwd')}
+              </Button>
             </Popconfirm>
-            <Button type='link' disabled={!ORG_SET} onClick={() => remove(record)}>{t('define.org.user.action.remove')}</Button>
+            <Button
+              type='link'
+              disabled={!ORG_SET}
+              onClick={() => remove(record)}
+            >
+              {t('define.org.user.action.remove')}
+            </Button>
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
   const OUColumns = [
@@ -275,7 +311,7 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       dataIndex: 'ou',
       title: 'OU',
       width: 268,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'role',
@@ -285,23 +321,27 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       render: (text, record) => {
         const { role, id } = record;
         return (
-          <Select 
+          <Select
             style={{ width: '100%' }}
             value={role}
             disabled={!ORG_SET}
-            onChange={(role) => operation({ doWhat: 'updateOrgOu', payload: { role, id } })}
+            onChange={role =>
+              operation({ doWhat: 'updateOrgOu', payload: { role, id } })
+            }
           >
-            {Object.keys(ORG_USER.role).map(it => <Select.Option value={it}>{ORG_USER.role[it]}</Select.Option>)}
+            {Object.keys(ORG_USER.role).map(it => (
+              <Select.Option value={it}>{ORG_USER.role[it]}</Select.Option>
+            ))}
           </Select>
         );
-      }
+      },
     },
     {
       dataIndex: 'createdAt',
       title: t('define.org.user.createdAt'),
       width: 212,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: t('define.action'),
@@ -311,125 +351,142 @@ export default ({ userInfo, orgId, sysConfigSwitches }) => {
       render: (_, record) => {
         return (
           <div className='common-table-btn-wrapper'>
-            <Button type='link' disabled={!ORG_SET} onClick={() => removeOU(record)}>{t('define.org.user.action.remove')}</Button>
+            <Button
+              type='link'
+              disabled={!ORG_SET}
+              onClick={() => removeOU(record)}
+            >
+              {t('define.org.user.action.remove')}
+            </Button>
           </div>
         );
-      }
-    }
+      },
+    },
   ];
 
-
-
-  const invitation = (e) => {
+  const invitation = e => {
     switch (e.key) {
-    case 'invitation':
-      setOpt('add');
-      toggleVisible();
-      setIsBatch(false);
-      break;
-    case 'batch-invitation':
-      setOpt('add');
-      toggleVisible();
-      setIsBatch(true);
-      break;
-    case 'ldap-invitation':
-      setOpt('ldapAdd');
-      toggleLdapVisible();
-      break;
-    default:
-      break;
+      case 'invitation':
+        setOpt('add');
+        toggleVisible();
+        setIsBatch(false);
+        break;
+      case 'batch-invitation':
+        setOpt('add');
+        toggleVisible();
+        setIsBatch(true);
+        break;
+      case 'ldap-invitation':
+        setOpt('ldapAdd');
+        toggleLdapVisible();
+        break;
+      default:
+        break;
     }
   };
 
   const menu = (
     <Menu onClick={invitation}>
       <Menu.Item key='invitation'>{t('define.org.user.action.add')}</Menu.Item>
-      <Menu.Item key='batch-invitation'>{t('define.org.user.action.batchAdd')}</Menu.Item>
-      <Menu.Item key='ldap-invitation' disabled={!sysConfigSwitches.enableLdap}>{t('define.org.user.action.ldapAdd')}</Menu.Item>
+      <Menu.Item key='batch-invitation'>
+        {t('define.org.user.action.batchAdd')}
+      </Menu.Item>
+      <Menu.Item key='ldap-invitation' disabled={!sysConfigSwitches.enableLdap}>
+        {t('define.org.user.action.ldapAdd')}
+      </Menu.Item>
     </Menu>
   );
 
-  return <div>
-    <div style={{ marginBottom: 20 }}>
-      <Dropdown overlay={menu}>
-        <Button>
-          <Space>
-            {t('define.org.user.action.addWrapper')}
-            <DownOutlined />
-          </Space>
-        </Button>
-      </Dropdown>
+  return (
+    <div>
+      <div style={{ marginBottom: 20 }}>
+        <Dropdown overlay={menu}>
+          <Button>
+            <Space>
+              {t('define.org.user.action.addWrapper')}
+              <DownOutlined />
+            </Space>
+          </Button>
+        </Dropdown>
+      </div>
+      <Tabs activeKey={tabKey} onChange={setTabKey}>
+        <Tabs.TabPane tab={t('define.user')} key='user'>
+          <Table
+            columns={columns}
+            dataSource={resultMap.list}
+            loading={loading}
+            scroll={{ x: 'min-content' }}
+            pagination={{
+              current: query.pageNo,
+              pageSize: query.pageSize,
+              total: resultMap.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: total =>
+                t('define.pagination.showTotal', { values: { total } }),
+              onChange: (page, pageSize) => {
+                changeQuery({
+                  pageNo: page,
+                  pageSize,
+                });
+              },
+            }}
+          />
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab='LDAP/OU'
+          key='ou'
+          disabled={!sysConfigSwitches.enableLdap}
+        >
+          <Table
+            columns={OUColumns}
+            dataSource={ouResultMap.list}
+            loading={loading}
+            scroll={{ x: 'min-content' }}
+            pagination={{
+              current: ouQuery.pageNo,
+              pageSize: ouQuery.pageSize,
+              total: ouResultMap.total,
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: total =>
+                t('define.pagination.showTotal', { values: { total } }),
+              onChange: (page, pageSize) => {
+                changeOuQuery({
+                  pageNo: page,
+                  pageSize,
+                });
+              },
+            }}
+          />
+        </Tabs.TabPane>
+      </Tabs>
+
+      {visible && (
+        <OpModal
+          visible={visible}
+          toggleVisible={toggleVisible}
+          opt={opt}
+          curRecord={curRecord}
+          operation={operation}
+          isBatch={isBatch}
+          ORG_SET={ORG_SET}
+        />
+      )}
+      {ldapVisible && (
+        <LdapModal
+          orgId={orgId}
+          visible={ldapVisible}
+          toggleVisible={toggleLdapVisible}
+          opt={opt}
+          curRecord={curRecord}
+          operation={operation}
+          isBatch={isBatch}
+          ORG_SET={ORG_SET}
+        />
+      )}
     </div>
-    <Tabs activeKey={tabKey} onChange={setTabKey}>
-      <Tabs.TabPane tab={t('define.user')} key='user'>
-        <Table
-          columns={columns}
-          dataSource={resultMap.list}
-          loading={loading}
-          scroll={{ x: 'min-content' }}
-          pagination={{
-            current: query.pageNo,
-            pageSize: query.pageSize,
-            total: resultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-            onChange: (page, pageSize) => {
-              changeQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
-          }}
-        />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab='LDAP/OU' key='ou' disabled={!sysConfigSwitches.enableLdap}>
-        <Table
-          columns={OUColumns}
-          dataSource={ouResultMap.list}
-          loading={loading}
-          scroll={{ x: 'min-content' }}
-          pagination={{
-            current: ouQuery.pageNo,
-            pageSize: ouQuery.pageSize,
-            total: ouResultMap.total,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-            onChange: (page, pageSize) => {
-              changeOuQuery({
-                pageNo: page,
-                pageSize
-              });
-            }
-          }}
-        />
-      </Tabs.TabPane>
-    </Tabs>
-   
-    {
-      visible && <OpModal
-        visible={visible}
-        toggleVisible={toggleVisible}
-        opt={opt}
-        curRecord={curRecord}
-        operation={operation}
-        isBatch={isBatch}
-        ORG_SET={ORG_SET}
-      />
-    }
-    {
-      ldapVisible && <LdapModal
-        orgId={orgId}
-        visible={ldapVisible}
-        toggleVisible={toggleLdapVisible}
-        opt={opt}
-        curRecord={curRecord}
-        operation={operation}
-        isBatch={isBatch}
-        ORG_SET={ORG_SET}
-      />
-    }
-  </div>;
+  );
 };
 
+export default UserRole;

@@ -13,15 +13,15 @@ export const useEditableState = ({
   defaultValue = [],
   onChange,
   onDeleteRow,
-  max
+  max,
 }) => {
   const keyIdRef = useRef(1);
   const errorMapRef = useRef({});
-  const [ _state, setState ] = useState(
-    Array.isArray(defaultValue) ? defaultValue : []
+  const [_state, setState] = useState(
+    Array.isArray(defaultValue) ? defaultValue : [],
   );
-  const [ settingId, setSettingId ] = useState();
-  const [ sequenceId, setSequenceId ] = useState();
+  const [settingId, setSettingId] = useState();
+  const [sequenceId, setSequenceId] = useState();
   const stateRef = useRef([]);
 
   stateRef.current = useMemo(() => {
@@ -30,41 +30,39 @@ export const useEditableState = ({
     return list.slice(0, end).map((item, index) => ({
       ...item,
       editable_id: getEditableIdByIndex(index),
-      _key_id: get(item, '_key_id') || keyIdRef.current++
+      _key_id: get(item, '_key_id') || keyIdRef.current++,
     }));
-  }, [ value, _state ]);
+  }, [value, _state]);
 
-  const handleChange = (val) => {
+  const handleChange = val => {
     const end = max || val.length;
     if (isFunction(onChange)) {
-      onChange(val.slice(0, end).map(item => omit(item, ['editable_id']))); 
+      onChange(val.slice(0, end).map(item => omit(item, ['editable_id'])));
     }
 
     setState(val.slice(0, end));
   };
 
-  const handleAdd = useCallback((data) => {
+  const handleAdd = useCallback(data => {
     const newData = data || defaultData || {};
-    handleChange([ ...stateRef.current, newData ]);
+    handleChange([...stateRef.current, newData]);
   }, []);
 
-  const handleDelete = useCallback((key) => {
+  const handleDelete = useCallback(key => {
     const k = getEditableIdByIndex(key);
     if (isFunction(onDeleteRow)) {
       onDeleteRow({
-        row: stateRef.current.find((item) => item.editable_id === k),
+        row: stateRef.current.find(item => item.editable_id === k),
         rows: stateRef.current,
         k,
-        handleChange
+        handleChange,
       });
       return;
     }
-    handleChange(
-      stateRef.current.filter((item) => item.editable_id !== k)
-    );
+    handleChange(stateRef.current.filter(item => item.editable_id !== k));
   }, []);
 
-  const handleEdit = useCallback((key) => {
+  const handleEdit = useCallback(key => {
     const k = getEditableIdByIndex(key);
     setSettingId(k);
   }, []);
@@ -73,7 +71,7 @@ export const useEditableState = ({
     const index = getIndexByEditableId(id);
     const newRowData = {
       ...stateRef.current[index],
-      ...omit(rowData, ['editable_id'])
+      ...omit(rowData, ['editable_id']),
     };
     const list = [...stateRef.current];
     list[index] = newRowData;
@@ -83,7 +81,7 @@ export const useEditableState = ({
   const move = (id, toIndex) => {
     const rowIndex = getIndexByEditableId(id);
     if (toIndex === rowIndex || !isNumber(rowIndex) || !isNumber(toIndex)) {
-      return; 
+      return;
     }
     const list = [...stateRef.current];
     const item = list.splice(rowIndex, 1)[0];
@@ -96,7 +94,7 @@ export const useEditableState = ({
   const addErrorMapItem = useCallback((id, errors) => {
     set(errorMapRef.current, id, errors);
   }, []);
-  const removeErrorMapItem = useCallback((id) => {
+  const removeErrorMapItem = useCallback(id => {
     delete errorMapRef.current[id];
   }, []);
 
@@ -111,32 +109,28 @@ export const useEditableState = ({
     sequenceId,
     setSequenceId,
     isSetting:
-      stateRef.current.findIndex(
-        (record) => record.editable_id === settingId
-      ) >= 0,
+      stateRef.current.findIndex(record => record.editable_id === settingId) >=
+      0,
     errorMap: errorMapRef.current,
     addErrorMapItem,
-    removeErrorMapItem
+    removeErrorMapItem,
   };
 };
 
 export const useValidateObservers = () => {
   const validatesRef = useRef([]);
 
-  const addValidateFun = useCallback((fun) => {
+  const addValidateFun = useCallback(fun => {
     if (validatesRef.current.findIndex(f => f === fun) === -1) {
       validatesRef.current.push(fun);
     }
   }, []);
-  const removeValidateFun = useCallback(
-    (fun) => {
-      const index = validatesRef.current.findIndex(f => f === fun);
-      if (index >= 0) {
-        validatesRef.current.splice(index, 1);
-      }
-    },
-    []
-  );
+  const removeValidateFun = useCallback(fun => {
+    const index = validatesRef.current.findIndex(f => f === fun);
+    if (index >= 0) {
+      validatesRef.current.splice(index, 1);
+    }
+  }, []);
 
   const notifyObservers = useCallback(async () => {
     const errors = (
@@ -146,7 +140,7 @@ export const useValidateObservers = () => {
             .then(() => null)
             .catch(err => err);
           return res;
-        })
+        }),
       )
     ).filter(item => item);
     if (errors && errors.length) {
@@ -158,6 +152,6 @@ export const useValidateObservers = () => {
   return {
     addValidateFun,
     removeValidateFun,
-    notifyObservers
+    notifyObservers,
   };
 };

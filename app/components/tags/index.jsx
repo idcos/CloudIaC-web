@@ -1,29 +1,29 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Tag, Input } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import React, { useState, useRef, useEffect } from 'react';
+import { Tag, Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import styles from './styles.less';
 import cloneDeep from 'lodash/cloneDeep';
 import { t } from 'utils/i18n';
 
-export default ({ data, canEdit = false, update }) => {
-  const [ isEdit, setIsEdit ] = useState(false);
-  const [ editValue, setEditValue ] = useState('');
+const Tags = ({ data, canEdit = false, update }) => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [editValue, setEditValue] = useState('');
   const editInputRef = useRef();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     setEditValue(e.target.value);
   };
 
   // 新增标签
   const handleInputConfirm = () => {
     if (editValue && update) {
-      update([ ...data, editValue ]);
-    } 
+      update([...data, editValue]);
+    }
     resetEdit();
   };
 
   // 删除标签
-  const delTag = (index) => {
+  const delTag = index => {
     let newTags = cloneDeep(data);
     newTags.splice(index, 1);
     update(newTags);
@@ -50,7 +50,7 @@ export default ({ data, canEdit = false, update }) => {
       {data.map((tag, index) => (
         <Tag
           closable={canEdit}
-          onClose={(e) => {
+          onClose={e => {
             e.preventDefault();
             delTag(index);
           }}
@@ -58,7 +58,7 @@ export default ({ data, canEdit = false, update }) => {
           {tag}
         </Tag>
       ))}
-      {(canEdit && isEdit) ? (
+      {canEdit && isEdit ? (
         <Input
           ref={editInputRef}
           type='text'
@@ -70,7 +70,7 @@ export default ({ data, canEdit = false, update }) => {
           onPressEnter={handleInputConfirm}
         />
       ) : null}
-      {(canEdit && !isEdit) ? (
+      {canEdit && !isEdit ? (
         <Tag className={styles.siteTagPlus} onClick={showEditInput}>
           <PlusOutlined /> {t('define.addTag')}
         </Tag>
@@ -78,3 +78,5 @@ export default ({ data, canEdit = false, update }) => {
     </>
   );
 };
+
+export default Tags;

@@ -1,12 +1,12 @@
-import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
+import { getWithArgs } from 'utils/xFetch2';
 
 const registryAPI = {
-  policyGroups: (params) => {
+  policyGroups: params => {
     return getWithArgs('/api/v1/registry/policy_groups', params);
   },
-  policyGroupVersions: (params) => {
+  policyGroupVersions: params => {
     return getWithArgs('/api/v1/registry/policy_groups/versions', params);
-  }
+  },
 };
 
 export default registryAPI;

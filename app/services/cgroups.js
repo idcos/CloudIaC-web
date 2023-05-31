@@ -27,20 +27,32 @@ const cgroupsAPI = {
   },
   // 策略组最近扫描内容
   lastTasksList: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/last_tasks`, restParams, {});
+    return getWithArgs(
+      `/api/v1/policies/groups/${policyGroupId}/last_tasks`,
+      restParams,
+      {},
+    );
   },
   // 策略详情-报表
   report: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/report`, restParams, { isEncodeParams: true });
+    return getWithArgs(
+      `/api/v1/policies/groups/${policyGroupId}/report`,
+      restParams,
+      { isEncodeParams: true },
+    );
   },
   // 查询策略组关联的策略或未关联策略组的策略
   isBind: ({ policyGroupId, ...restParams }) => {
-    return getWithArgs(`/api/v1/policies/groups/${policyGroupId}/policies`, restParams, {});
+    return getWithArgs(
+      `/api/v1/policies/groups/${policyGroupId}/policies`,
+      restParams,
+      {},
+    );
   },
   // 校验策略组表单
-  checks: (params) => {
-    return post(`/api/v1/policies/groups/checks`, params, {});
-  }
+  checks: params => {
+    return post('/api/v1/policies/groups/checks', params, {});
+  },
 };
 
 export default cgroupsAPI;

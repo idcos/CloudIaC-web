@@ -1,31 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Form, Input, Button, notification, Row, Col } from 'antd';
-import queryString from 'query-string';
+import { notification, Row, Col } from 'antd';
 import { matchPath } from 'react-router-dom';
 import { LangIcon } from 'components/iconfont';
 import { t, getLanguage, setLanguage } from 'utils/i18n';
 import styles from './styles.less';
 import { activationAPI } from '../services/activation';
 
-const layout = {
-  labelCol: { span: 5 },
-  wrapperCol: { span: 19 }
-};
-const tailLayout = {
-  wrapperCol: { span: 24 }
-};
-
-export default () => {
-
+const ActivationPage = () => {
   const language = getLanguage();
-  const [ activationState, setActivationState ] = useState();
+  const [activationState, setActivationState] = useState();
   const restSeconds = useRef(3);
-  const [ seconds, setSeconds ] = useState(3);
+  const [seconds, setSeconds] = useState(3);
   const timerIns = useRef(null);
   useEffect(async () => {
-    const match = matchPath(window.location.pathname, ['/activation/:token']) || {};
+    const match =
+      matchPath(window.location.pathname, ['/activation/:token']) || {};
     const { token } = match.params || {};
-    const httpRes = await activationAPI.activation({}, { headers: { Authorization: token } });
+    const httpRes = await activationAPI.activation(
+      {},
+      { headers: { Authorization: token } },
+    );
     if (httpRes.httpCode === 401) {
       setActivationState('expired');
     } else if (httpRes.httpCode === 200) {
@@ -43,36 +37,38 @@ export default () => {
     return () => {
       timerIns.current && clearInterval(timerIns.current);
     };
-
   }, []);
 
-  const handleResend = async() => {
-    const match = matchPath(window.location.pathname, ['/activation/:token']) || {};
+  const handleResend = async () => {
+    const match =
+      matchPath(window.location.pathname, ['/activation/:token']) || {};
     const { token } = match.params || {};
-    const httpRes = await activationAPI.retry({ headers: { Authorization: token } });
+    const httpRes = await activationAPI.retry({
+      headers: { Authorization: token },
+    });
     if (httpRes.httpCode === 200) {
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
       setTimeout(() => {
         redirectToLogin();
       }, 1500);
     } else {
       notification.error({
-        message: t('define.message.opFail')
+        message: t('define.message.opFail'),
       });
     }
   };
 
   const redirectToLogin = () => {
-    window.location.href = `/login`;
+    window.location.href = '/login';
   };
 
   return (
     <Row wrap={false} className={styles.activation}>
       <Col span={14} className='left'>
         <div className='logo'>
-          <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
+          <img src='/assets/logo/iac-logo-light.svg' alt='logo' />
         </div>
         <div className='content'>
           <div className='title'>
@@ -87,46 +83,59 @@ export default () => {
         {language === 'zh' ? (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
-            <span>产品使用语言</span> 
-            <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
+            <span>产品使用语言</span>
+            <span
+              className='change-language-btn'
+              onClick={() => setLanguage('en')}
+            >
+              EN?
+            </span>
           </div>
         ) : (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
             <span>View this page in</span>
-            <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
+            <span
+              className='change-language-btn'
+              onClick={() => setLanguage('zh')}
+            >
+              中文?
+            </span>
           </div>
         )}
         <div className='activationFormWrapper'>
           <div className='title'>{t('define.activationPage.activation')}</div>
           <div className='main'>
-            {
-              activationState === '' && <></>
-            }
-            {
-              activationState === 'expired' && 
+            {activationState === '' && <></>}
+            {activationState === 'expired' && (
               <div className='line'>
                 <span>{t('define.activationPage.activation.expired')}</span>
-                <span className='click' onClick={handleResend}>{t('define.activationPage.activation.resend')}</span>
+                <span className='click' onClick={handleResend}>
+                  {t('define.activationPage.activation.resend')}
+                </span>
               </div>
-            }
-            {
-              activationState === 'success' && (
-                <>
-                  <div className='line'>
-                    <span>{t('define.activationPage.activation.success')}</span>
-                    <span>{seconds}</span>
-                    <span>{t('define.activationPage.activation.autoRedirect')}</span>
-                  </div>
-                  <div className='line'>
-                    <span className='click' onClick={redirectToLogin}>{t('define.activationPage.activation.clickJumpLogin')}</span>
-                  </div>
-                </>
-              )
-            }
+            )}
+            {activationState === 'success' && (
+              <>
+                <div className='line'>
+                  <span>{t('define.activationPage.activation.success')}</span>
+                  <span>{seconds}</span>
+                  <span>
+                    {t('define.activationPage.activation.autoRedirect')}
+                  </span>
+                </div>
+                <div className='line'>
+                  <span className='click' onClick={redirectToLogin}>
+                    {t('define.activationPage.activation.clickJumpLogin')}
+                  </span>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </Col>
     </Row>
   );
 };
+
+export default ActivationPage;

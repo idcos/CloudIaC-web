@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Modal,
-  Row, Col,
-  Select
-} from 'antd';
-import { 
-  SearchOutlined,
-  FileUnknownOutlined,
-  LeftOutlined,
+/* eslint-disable jsx-a11y/alt-text */
+import React from 'react';
+import { Modal, Row, Col, Select } from 'antd';
+import {
   UserOutlined,
   CodeOutlined,
-  ClockCircleOutlined,
   DownloadOutlined,
-  CaretDownOutlined
+  CaretDownOutlined,
 } from '@ant-design/icons';
-import { TierOfficialIcon, TierVerifiedIcon } from 'components/iconfont';
-import MarkdownDoc from "components/markdown-doc";
+
+import MarkdownDoc from 'components/markdown-doc';
 import styles from './index.less';
 import { formatNumber } from 'utils/format';
 import { getStackIconUrl } from 'utils/util';
@@ -23,7 +16,7 @@ import queryString from 'query-string';
 import history from 'utils/history';
 import { t } from 'utils/i18n';
 import { TIER_ENUM, TIER_ICON_ENUM } from 'constants/types';
-export default ({
+const StackDetail = ({
   exchangeUrl,
   toggleVisible,
   visible,
@@ -32,8 +25,8 @@ export default ({
   versionList,
   readme,
   currentVersion,
-  setCurrentVersion
-}) => { 
+  setCurrentVersion,
+}) => {
   const {
     categoryNames,
     description,
@@ -41,16 +34,17 @@ export default ({
     id,
     stackKey,
     logo,
-    name,
     title,
-    namespace
+    namespace,
   } = detail;
-  const genLabel = (item) => {
+  const genLabel = item => {
     if (item.verified === true) {
-      return <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div>{item.version}</div>
-        <img src='/assets/img/yunji_auth.svg' style={{ marginLeft: 4 }} />
-      </div>;
+      return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div>{item.version}</div>
+          <img src='/assets/img/yunji_auth.svg' style={{ marginLeft: 4 }} />
+        </div>
+      );
     }
     return <span>{item.version}</span>;
   };
@@ -62,31 +56,45 @@ export default ({
       centered={true}
       okText={t('define.createCT')}
       okButtonProps={{
-        disabled: !currentVersion
+        disabled: !currentVersion,
       }}
       onCancel={() => {
         toggleVisible();
       }}
       onOk={() => {
-        const search = queryString.stringify({ repoFullName: exchangeRepoPath, repoId: exchangeRepoPath, repoRevision: currentVersion });
+        const search = queryString.stringify({
+          repoFullName: exchangeRepoPath,
+          repoId: exchangeRepoPath,
+          repoRevision: currentVersion,
+        });
         history.push({
           pathname: `/org/${orgId}/m-org-ct/importCT-exchange/exchange-createCT`,
-          search: search
+          search: search,
         });
       }}
     >
       <div className={styles.detail}>
         <div className={'content'}>
           <div className='icon-container'>
-            <img width={64} height={64}src={getStackIconUrl(exchangeUrl, logo)} />
+            <img
+              width={64}
+              height={64}
+              src={getStackIconUrl(exchangeUrl, logo)}
+            />
           </div>
           <div className='main-content'>
             <div className='content-header'>
               <div className='title'>{title}</div>
-              {TIER_ICON_ENUM[detail.tier] && <div className='yunji'>
-                {TIER_ICON_ENUM[detail.tier] ? TIER_ICON_ENUM[detail.tier] : null}
-                {TIER_ICON_ENUM[detail.tier] ? <div>{TIER_ENUM[detail.tier]}</div> : null}
-              </div>}
+              {TIER_ICON_ENUM[detail.tier] && (
+                <div className='yunji'>
+                  {TIER_ICON_ENUM[detail.tier]
+                    ? TIER_ICON_ENUM[detail.tier]
+                    : null}
+                  {TIER_ICON_ENUM[detail.tier] ? (
+                    <div>{TIER_ENUM[detail.tier]}</div>
+                  ) : null}
+                </div>
+              )}
             </div>
             <div className='content-description'>{description || '-'}</div>
             <div className='info-container'>
@@ -102,7 +110,9 @@ export default ({
                   <div className='info'>
                     <DownloadOutlined className='label' />
                     <span className='label'>{t('define.download')}</span>
-                    <span className='normal'>{formatNumber(detail.downloadCount)}</span>
+                    <span className='normal'>
+                      {formatNumber(detail.downloadCount)}
+                    </span>
                   </div>
                 </Col>
               </Row>
@@ -111,15 +121,24 @@ export default ({
                   <div className='info'>
                     <CodeOutlined className='label' />
                     <span className='label'>{t('define.stack.id')}</span>
-                    <a href={`https://exchange.cloudiac.org/stack/detail?id=${id}`} target='_blank'>{stackKey}</a>
+                    <a
+                      href={`https://exchange.cloudiac.org/stack/detail?id=${id}`}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      {stackKey}
+                    </a>
                   </div>
                 </Col>
               </Row>
             </div>
-            {categoryNames && <div className='tags'>
-              { (categoryNames ? categoryNames.split(',') : []).map(item => <div className='tag'>{item}</div>)}
-            </div>}
-            
+            {categoryNames && (
+              <div className='tags'>
+                {(categoryNames ? categoryNames.split(',') : []).map(item => (
+                  <div className='tag'>{item}</div>
+                ))}
+              </div>
+            )}
           </div>
           <div className='select-container'>
             <Select
@@ -127,10 +146,13 @@ export default ({
               style={{ width: 209, height: 34 }}
               placeholder={t('define.iacStore.select.placeholder')}
               dropdownStyle={{ width: 280 }}
-              onChange={(version) => {
+              onChange={version => {
                 setCurrentVersion(version);
               }}
-              options={versionList.map(item => ({ label: genLabel(item), value: item.version }))}
+              options={versionList.map(item => ({
+                label: genLabel(item),
+                value: item.version,
+              }))}
               value={currentVersion}
             />
           </div>
@@ -139,9 +161,8 @@ export default ({
           <MarkdownDoc mdText={readme} />
         </div>
       </div>
-        
-
-
     </Modal>
   );
 };
+
+export default StackDetail;

@@ -1,7 +1,4 @@
 import xFetch, { xFetch_nologin } from './xFetch';
-import md5 from 'blueimp-md5';
-import { flatObj } from './util';
-import secretKey from './sk';
 
 export function get(url, options) {
   return xFetch(url, options);
@@ -12,7 +9,6 @@ export function get_nologin(url, options) {
 }
 
 export function getWithArgs(url, args, options) {
-
   args = args || {};
 
   for (const attr in args) {
@@ -40,10 +36,10 @@ export function post(url, data, options) {
     cache: 'no-cache',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     ...options,
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
   return xFetch(url, opts);
 }
@@ -54,10 +50,10 @@ export function post_nologin(url, data, options) {
     cache: 'no-cache',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     ...options,
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
   return xFetch_nologin(url, opts);
 }
@@ -67,9 +63,8 @@ export function postFile(url, data, options) {
     ...options,
     method: 'POST',
     cache: 'no-cache',
-    headers: {
-    },
-    body: data
+    headers: {},
+    body: data,
   };
   return xFetch(url, opts);
 }
@@ -80,9 +75,9 @@ export function del(url, data = {}, options) {
     method: 'DELETE',
     cache: 'no-cache',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
   return xFetch(url, opts);
 }
@@ -95,18 +90,9 @@ export function put(url, data, options) {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      ...(options || {}).headers
+      ...(options || {}).headers,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
   return xFetch(url, opts);
-}
-
-
-function injectSign (rawData) {
-  const requestTime = new Date() - 0;
-  const shallowData = JSON.parse(JSON.stringify(rawData));
-  shallowData.requestTime = requestTime;
-  shallowData.sign = md5(flatObj(shallowData) + (secretKey.sk || ''));
-  return shallowData;
 }

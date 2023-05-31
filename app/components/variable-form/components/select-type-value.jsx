@@ -20,8 +20,8 @@ const SelectTypeValue = ({
   form,
   ...props
 }) => {
-  const [ options, setOptions ] = useState([]);
-  const [ inputValue, setInputValue ] = useState();
+  const [options, setOptions] = useState([]);
+  const [inputValue, setInputValue] = useState();
 
   useEffect(() => {
     if (!isEmpty(inputOptions)) {
@@ -30,7 +30,7 @@ const SelectTypeValue = ({
   }, [inputOptions]);
 
   const addOption = () => {
-    const newOptions = [ ...options, inputValue ];
+    const newOptions = [...options, inputValue];
     setOptions(newOptions);
     setInputValue();
     form.setFieldsValue({ options: newOptions });
@@ -58,37 +58,44 @@ const SelectTypeValue = ({
       dropdownRender={menu => (
         <div>
           {menu}
-          {
-            isSameScope && (
-              <>
-                <Divider style={{ margin: '4px 0' }} />
-                <Space style={{ padding: 8 }}>
-                  <Input value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
-                  <Button
-                    type='link'
-                    style={{ padding: 0 }}
-                    disabled={!inputValue || options.includes(inputValue)}
-                    onClick={addOption}
-                  >
-                    {t('define.action.add')}
-                  </Button>
-                </Space>
-              </>
-            )
-          }
+          {isSameScope && (
+            <>
+              <Divider style={{ margin: '4px 0' }} />
+              <Space style={{ padding: 8 }}>
+                <Input
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                />
+                <Button
+                  type='link'
+                  style={{ padding: 0 }}
+                  disabled={!inputValue || options.includes(inputValue)}
+                  onClick={addOption}
+                >
+                  {t('define.action.add')}
+                </Button>
+              </Space>
+            </>
+          )}
         </div>
       )}
     >
-      {
-        options.map(item => (
-          <Select.Option key={item} value={item}>
-            <OptionWrapper>
-              <EllipsisText style={{ width: 142 }}>{item}</EllipsisText>
-              {isSameScope && <Button type='link' style={{ padding: 0 }} onClick={(e) => delOption(e, item)}>{t('define.action.delete')}</Button>}
-            </OptionWrapper>
-          </Select.Option>
-        ))
-      }
+      {options.map(item => (
+        <Select.Option key={item} value={item}>
+          <OptionWrapper>
+            <EllipsisText style={{ width: 142 }}>{item}</EllipsisText>
+            {isSameScope && (
+              <Button
+                type='link'
+                style={{ padding: 0 }}
+                onClick={e => delOption(e, item)}
+              >
+                {t('define.action.delete')}
+              </Button>
+            )}
+          </OptionWrapper>
+        </Select.Option>
+      ))}
     </Select>
   );
 };

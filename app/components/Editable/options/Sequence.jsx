@@ -7,20 +7,14 @@ import { EditableContext } from '../context';
 const Sequence = props => {
   const { rowIndex, id } = props;
 
-  const {
-    state,
-    move,
-    isSetting,
-    multiple,
-    setSequenceId,
-    sequenceId
-  } = useContext(EditableContext);
-  const [ visible, toogleVisible ] = useState(false);
-  const [ count, setCount ] = useState();
+  const { state, move, isSetting, multiple, setSequenceId, sequenceId } =
+    useContext(EditableContext);
+  const [visible, toogleVisible] = useState(false);
+  const [count, setCount] = useState();
 
-  const handleToogleVisible = (vis) => {
+  const handleToogleVisible = vis => {
     if (!sequenceId || !vis) {
-      toogleVisible(vis); 
+      toogleVisible(vis);
     }
     if (vis) {
       setSequenceId(id);
@@ -64,7 +58,7 @@ const Sequence = props => {
               size='small'
               onClick={() => {
                 if (typeof count === 'number') {
-                  move(id, count - 1); 
+                  move(id, count - 1);
                 }
                 handleToogleVisible(false);
               }}

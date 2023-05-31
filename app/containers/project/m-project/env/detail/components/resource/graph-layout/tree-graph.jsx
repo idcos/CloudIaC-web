@@ -10,7 +10,7 @@ import { t } from 'utils/i18n';
 import { filterTreeData } from './util';
 
 registerNode('self-tree-node');
-const autoZoom = (graph) => {
+const autoZoom = graph => {
   graph.fitView();
   const height = graph.get('height');
   const viewController = graph.get('viewController');
@@ -18,7 +18,7 @@ const autoZoom = (graph) => {
   // 左对齐， 水平居中
   const viewLeftCenter = {
     x: padding[3],
-    y: (height - padding[0] - padding[2]) / 2 + padding[0]
+    y: (height - padding[0] - padding[2]) / 2 + padding[0],
   };
   const group = graph.get('group');
   // group.resetMatrix();
@@ -28,15 +28,18 @@ const autoZoom = (graph) => {
     x: bbox.x,
     y: bbox.y + bbox.height / 2,
   };
-  graph.translate(viewLeftCenter.x - groupLeftCenter.x, viewLeftCenter.y - groupLeftCenter.y);
+  graph.translate(
+    viewLeftCenter.x - groupLeftCenter.x,
+    viewLeftCenter.y - groupLeftCenter.y,
+  );
 };
-const realZoom = (graph) => {
+const realZoom = graph => {
   const viewController = graph.get('viewController');
   const padding = viewController.getFormatPadding();
   graph.zoomTo(1);
   const width = graph.get('width');
   graph.focusItem('rootNode', false);
-  graph.translate(-width/2 + padding[3], 0);
+  graph.translate(-width / 2 + padding[3], 0);
 };
 const toolbar = new G6.ToolBar({
   getContent: () => {
@@ -66,7 +69,7 @@ const toolbar = new G6.ToolBar({
   handleClick: (code, graph) => {
     switch (code) {
       case 'zoomOut':
-        graph.zoom(1/0.9);
+        graph.zoom(1 / 0.9);
         break;
       case 'zoomIn':
         graph.zoom(0.9);
@@ -80,22 +83,27 @@ const toolbar = new G6.ToolBar({
       default:
         break;
     }
-  }
+  },
 });
 const tooltip = new G6.Tooltip({
   itemTypes: ['node'],
-  shouldBegin: (ev) => {
+  shouldBegin: ev => {
     const { customNodeType } = ev.target.cfg || {};
     return customNodeType === 'resource-cell';
   },
-  getContent: (ev) => {
+  getContent: ev => {
     const { name } = ev.target.cfg || {};
     return String(name);
-  }
+  },
 });
 
-const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawer }) => {
-
+const TreeGraph = ({
+  search,
+  graphData,
+  loading,
+  isFullscreen,
+  onOpenDetailDrawer,
+}) => {
   const containerRef = useRef();
   const graphRef = useRef();
 
@@ -113,12 +121,12 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
   useEffect(() => {
     if (!graphData) {
       return;
-    } 
+    }
     const data = filterTreeData(graphData, search);
     renderGraph(data);
   }, [graphData, search]);
 
-  const renderGraph = (data) => {
+  const renderGraph = data => {
     if (!isEmpty(data)) {
       // 确保图标实例化成功再渲染
       graphRef.current.changeData(data);
@@ -142,25 +150,22 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
         duration: 500, // Number，一次动画的时长
         easing: 'linearEasing', // String，动画函数
       },
-      plugins: [
-        tooltip,
-        toolbar
-      ],
+      plugins: [tooltip, toolbar],
       modes: {
         default: [
           {
             type: 'collapse-expand',
-            shouldBegin: (e) => {
+            shouldBegin: e => {
               const { customNodeType } = e.target.cfg;
               return customNodeType === 'collapse-expand-btn';
-            }
+            },
           },
           'drag-canvas',
           // 'zoom-canvas',
         ],
       },
       defaultNode: {
-        type: 'self-tree-node'
+        type: 'self-tree-node',
       },
       defaultEdge: {
         type: 'cubic-horizontal',
@@ -174,35 +179,38 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
         getWidth: function getWidth() {
           return 400;
         },
-        getHeight: getNodeHeight
-      }
+        getHeight: getNodeHeight,
+      },
     });
     graphRef.current.node(function (node) {
       const { id, children, isRoot, resourcesList } = node;
       return {
-        id: isRoot ? 'rootNode' : id, children, isRoot, resourcesList 
+        id: isRoot ? 'rootNode' : id,
+        children,
+        isRoot,
+        resourcesList,
       };
     });
-    graphRef.current.on('itemcollapsed', (e) => {
+    graphRef.current.on('itemcollapsed', e => {
       graphRef.current.updateItem(e.item, {
         collapsed: e.collapsed,
       });
     });
     // 鼠标进入节点
-    graphRef.current.on('node:mouseenter', (ev) => {
-      const { customNodeType, id } = ev.target.cfg || {};
+    graphRef.current.on('node:mouseenter', ev => {
+      const { customNodeType } = ev.target.cfg || {};
       if (customNodeType === 'resource-cell') {
         // ev.target.attrs.fill = '#ccc';
       }
     });
     // 鼠标离开节点
-    graphRef.current.on('node:mouseleave', (ev) => {
-      const { customNodeType, id } = ev.target.cfg || {};
+    graphRef.current.on('node:mouseleave', ev => {
+      const { customNodeType } = ev.target.cfg || {};
       if (customNodeType === 'resource-cell') {
         // ev.target.attrs.fill = '#000';
       }
     });
-    graphRef.current.on('node:click', (ev) => {
+    graphRef.current.on('node:click', ev => {
       const { customNodeType, id } = ev.target.cfg || {};
       if (customNodeType === 'resource-cell') {
         onOpenDetailDrawer(id);
@@ -227,7 +235,12 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
   };
 
   return (
-    <div ref={containerRef} className={classNames(styles.resourceTreeContainer, { [styles.isFullscreen]: isFullscreen })}>
+    <div
+      ref={containerRef}
+      className={classNames(styles.resourceTreeContainer, {
+        [styles.isFullscreen]: isFullscreen,
+      })}
+    >
       <Space className='explain' size={16}>
         <div className='explain-item resource'>
           <span className='icon'></span>
@@ -238,8 +251,7 @@ const TreeGraph = ({ search, graphData, loading, isFullscreen, onOpenDetailDrawe
           <span className='text'>{t('define.drift')}</span>
         </div>
       </Space>
-      <Spin spinning={loading} style={{ width: '100%', marginTop: 100 }}>
-      </Spin>
+      <Spin spinning={loading} style={{ width: '100%', marginTop: 100 }}></Spin>
     </div>
   );
 };

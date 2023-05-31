@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { Transfer, Switch, Table, Tag } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Transfer, Table } from 'antd';
 import difference from 'lodash/difference';
 
 // Customize Table Transfer
@@ -11,7 +11,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
       onItemSelectAll,
       onItemSelect,
       selectedKeys: listSelectedKeys,
-      disabled: listDisabled
+      disabled: listDisabled,
     }) => {
       const columns = direction === 'left' ? leftColumns : rightColumns;
 
@@ -30,7 +30,7 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
         onSelect({ key }, selected) {
           onItemSelect(key, selected);
         },
-        selectedRowKeys: listSelectedKeys
+        selectedRowKeys: listSelectedKeys,
       };
 
       return (
@@ -41,14 +41,17 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
           dataSource={filteredItems}
           size='small'
           pagination={false}
-          style={{ pointerEvents: listDisabled ? 'none' : null, minHeight: 335 }}
+          style={{
+            pointerEvents: listDisabled ? 'none' : null,
+            minHeight: 335,
+          }}
           onRow={({ key, disabled: itemDisabled }) => ({
             onClick: () => {
               if (itemDisabled || listDisabled) {
-                return; 
+                return;
               }
               onItemSelect(key, !listSelectedKeys.includes(key));
-            }
+            },
           })}
         />
       );
@@ -56,10 +59,17 @@ const TableTransfer = ({ leftColumns, rightColumns, ...restProps }) => (
   </Transfer>
 );
 
-const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, value, locale, ...propsDemo }) => {
+const Index = ({
+  leftTableColumns,
+  rightTableColumns,
+  onChange,
+  dataScourt,
+  value,
+  locale,
+  ...propsDemo
+}) => {
+  const [targetKeys, setTargetKeys] = useState(value || []);
 
-  const [ targetKeys, setTargetKeys ] = useState(value || []);
-  
   useEffect(() => {
     setTargetKeys(value || []);
   }, [value]);
@@ -70,12 +80,12 @@ const Index = ({ leftTableColumns, rightTableColumns, onChange, dataScourt, valu
         dataSource={dataScourt || []}
         targetKeys={targetKeys}
         showSearch={true}
-        onChange={(nextTargetKeys) => {
-          onChange(nextTargetKeys); 
+        onChange={nextTargetKeys => {
+          onChange(nextTargetKeys);
           setTargetKeys(nextTargetKeys);
         }}
         filterOption={(inputValue, item) =>
-          item.name.indexOf(inputValue) !== -1 
+          item.name.indexOf(inputValue) !== -1
         }
         locale={locale}
         leftColumns={leftTableColumns}

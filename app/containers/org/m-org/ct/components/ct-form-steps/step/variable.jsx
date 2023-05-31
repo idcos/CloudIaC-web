@@ -1,29 +1,38 @@
 import React, { useRef, useMemo, useImperativeHandle } from 'react';
-import { Button, Space } from "antd";
+import { Button, Space } from 'antd';
 import { t } from 'utils/i18n';
 import VariableForm from 'components/variable-form';
 
-export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, orgId, saveLoading }) => {
-
+const Variable = ({
+  tplId,
+  goCTlist,
+  childRef,
+  stepHelper,
+  type,
+  opType,
+  ctData,
+  orgId,
+  saveLoading,
+}) => {
   const varRef = useRef();
 
   useImperativeHandle(childRef, () => ({
-    onFinish: async (index) => {
+    onFinish: async index => {
       const varData = await varRef.current.validateForm();
       stepHelper.updateData({
-        type, 
-        data: varData
+        type,
+        data: varData,
       });
       stepHelper.go(index);
-    }
+    },
   }));
 
   const onFinish = async () => {
     const varData = await varRef.current.validateForm();
     stepHelper.updateData({
-      type, 
+      type,
       data: varData,
-      isSubmit: opType === 'edit'
+      isSubmit: opType === 'edit',
     });
     opType === 'add' && stepHelper.next();
   };
@@ -33,35 +42,51 @@ export default ({ tplId, goCTlist, childRef, stepHelper, type, opType, ctData, o
       return null;
     }
     return {
-      ...ctData.repo, orgId, tplId, objectType: opType === 'add' ? 'org' : 'template'
+      ...ctData.repo,
+      orgId,
+      tplId,
+      objectType: opType === 'add' ? 'org' : 'template',
     };
-  }, [ ctData.repo, orgId ]);
+  }, [ctData.repo, orgId]);
 
-  return <div className='form-wrapper'>
-    <VariableForm 
-      varRef={varRef} 
-      showOtherVars={true} 
-      canImportTerraformVar={true}
-      defaultScope='template' 
-      defaultData={ctData[type]} 
-      fetchParams={fetchParams}
-    />
-    <div className='btn-wrapper'>
-      <Space size={24}>
-        {
-          opType === 'add' ? (
+  return (
+    <div className='form-wrapper'>
+      <VariableForm
+        varRef={varRef}
+        showOtherVars={true}
+        canImportTerraformVar={true}
+        defaultScope='template'
+        defaultData={ctData[type]}
+        fetchParams={fetchParams}
+      />
+      <div className='btn-wrapper'>
+        <Space size={24}>
+          {opType === 'add' ? (
             <>
-              <Button className='ant-btn-tertiary' onClick={() => stepHelper.prev()}>{t('define.action.prev')}</Button>
-              <Button type='primary' onClick={onFinish}>{t('define.action.next')}</Button>
+              <Button
+                className='ant-btn-tertiary'
+                onClick={() => stepHelper.prev()}
+              >
+                {t('define.action.prev')}
+              </Button>
+              <Button type='primary' onClick={onFinish}>
+                {t('define.action.next')}
+              </Button>
             </>
           ) : (
             <>
-              <Button className='ant-btn-tertiary' onClick={goCTlist}>{t('define.action.cancel')}</Button>
-              <Button type='primary' onClick={onFinish} loading={saveLoading}>{t('define.action.submit')}</Button>
+              <Button className='ant-btn-tertiary' onClick={goCTlist}>
+                {t('define.action.cancel')}
+              </Button>
+              <Button type='primary' onClick={onFinish} loading={saveLoading}>
+                {t('define.action.submit')}
+              </Button>
             </>
-          )
-        }
-      </Space>
+          )}
+        </Space>
+      </div>
     </div>
-  </div>;
+  );
 };
+
+export default Variable;

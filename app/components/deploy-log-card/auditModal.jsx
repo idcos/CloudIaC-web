@@ -1,8 +1,12 @@
-import React from "react";
-import { Button, Modal } from "antd";
-import { CheckCircleFilled, ExclamationCircleFilled, InfoCircleFilled } from '@ant-design/icons'
+import React from 'react';
+import { Button, Modal } from 'antd';
+import {
+  CheckCircleFilled,
+  ExclamationCircleFilled,
+  InfoCircleFilled,
+} from '@ant-design/icons';
 import { t } from 'utils/i18n';
-import styles from "./styles.less";
+import styles from './styles.less';
 
 /**
  * 审批弹窗
@@ -17,8 +21,16 @@ import styles from "./styles.less";
  * @constructor
  */
 function AuditModal(props) {
-  const { visible, setVisible, passOrReject, data, envInfo, loading, PROJECT_APPROVER } = props;
-  const { resAdded, resChanged, resDestroyed, resAddedCost, resUpdatedCost, resDestroyedCost } = data['planResult'] || {};
+  const { visible, setVisible, passOrReject, data, loading, PROJECT_APPROVER } =
+    props;
+  const {
+    resAdded,
+    resChanged,
+    resDestroyed,
+    resAddedCost,
+    resUpdatedCost,
+    resDestroyedCost,
+  } = data['planResult'] || {};
 
   return (
     <div className={styles.auditModal}>
@@ -32,19 +44,19 @@ function AuditModal(props) {
         footer={[
           <Button
             disabled={!PROJECT_APPROVER || loading.approvedLoading}
-            onClick={() => passOrReject("rejected")}
+            onClick={() => passOrReject('rejected')}
             loading={loading.rejectedLoading}
           >
             {t('task.audit.rejected')}
           </Button>,
           <Button
-            onClick={() => passOrReject("approved")}
-            type={"primary"}
+            onClick={() => passOrReject('approved')}
+            type={'primary'}
             loading={loading.approvedLoading}
             disabled={!PROJECT_APPROVER || loading.rejectedLoading}
           >
             {t('task.audit.approved')}
-          </Button>
+          </Button>,
         ]}
       >
         <div className={styles.changedTip}>{t('task.audit.title')}</div>
@@ -64,32 +76,36 @@ function AuditModal(props) {
         {!!(resAddedCost || resUpdatedCost || resDestroyedCost) && (
           <>
             <div className={styles.cost}>
-              <CheckCircleFilled style={{ color: "#00A870" }} />
+              <CheckCircleFilled style={{ color: '#00A870' }} />
               <span>
                 <span>{t('task.audit.addResourceCost')}: ￥</span>
-                <span style={{ color: '#08857C' }}>{(resAddedCost || 0).toFixed(2)}&nbsp;</span>
+                <span style={{ color: '#08857C' }}>
+                  {(resAddedCost || 0).toFixed(2)}&nbsp;
+                </span>
                 <span>{t('define.unit.money')}</span>
               </span>
             </div>
             <div className={styles.cost}>
-              <InfoCircleFilled style={{ color: "#FCAA37" }} />
+              <InfoCircleFilled style={{ color: '#FCAA37' }} />
               <span>
                 <span>{t('task.audit.modifyResourceCost')}: ￥</span>
-                <span style={{ color: '#08857C' }}>{(resUpdatedCost || 0).toFixed(2)}&nbsp;</span>
+                <span style={{ color: '#08857C' }}>
+                  {(resUpdatedCost || 0).toFixed(2)}&nbsp;
+                </span>
                 <span>{t('define.unit.money')}</span>
               </span>
             </div>
             <div className={styles.cost}>
-              <ExclamationCircleFilled style={{ color: "#E34D59" }} />
+              <ExclamationCircleFilled style={{ color: '#E34D59' }} />
               <span>
                 <span>{t('task.audit.deleteResourceCost')}: ￥</span>
-                <span style={{ color: '#08857C' }}>{(resDestroyedCost || 0).toFixed(2)}&nbsp;</span>
+                <span style={{ color: '#08857C' }}>
+                  {(resDestroyedCost || 0).toFixed(2)}&nbsp;
+                </span>
                 <span>{t('define.unit.money')}</span>
               </span>
             </div>
-            <div className={styles.tip}>
-              {t('task.audit.tip.cost')}
-            </div>
+            <div className={styles.tip}>{t('task.audit.tip.cost')}</div>
           </>
         )}
       </Modal>

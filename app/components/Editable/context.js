@@ -1,4 +1,3 @@
-import { FormInstance } from 'antd/lib/form';
 import React from 'react';
 
 // 默认函数，在正常使用时，默认值会被覆盖，所以在注册值之前使用可给出统一的警告；
@@ -14,7 +13,7 @@ export const EditableContext = React.createContext({
   state: [],
   errorMap: {},
   addErrorMapItem: defaultFun,
-  removeErrorMapItem: defaultFun
+  removeErrorMapItem: defaultFun,
 });
 
 export const EditableRowContext = React.createContext({
@@ -22,5 +21,5 @@ export const EditableRowContext = React.createContext({
   waitSaveNames: [],
   addWaitSaveName: () => {}, // eslint-disable-line
   removeWaitSaveName: () => {}, // eslint-disable-line
-  rowId: ''
+  rowId: '',
 });

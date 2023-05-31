@@ -8,20 +8,20 @@ export default class Eb extends React.Component {
     super(props);
     this.state = {
       error: null,
-      errorInfo: null
+      errorInfo: null,
     };
   }
 
   componentDidCatch(error, info) {
     this.setState({
       error: error,
-      errorInfo: info
+      errorInfo: info,
     });
   }
 
   handleClick = () => {
     window.location.href = '/';
-  }
+  };
 
   render() {
     const { errorInfo, error } = this.state;
@@ -34,10 +34,11 @@ export default class Eb extends React.Component {
             title={t('define.errPage.result.title')}
             subTitle={t('define.errPage.result.subTitle')}
             extra={[
-              <Button type='primary' onClick={this.handleClick}>{t('define.action.backHome')}</Button>
+              <Button type='primary' onClick={this.handleClick}>
+                {t('define.action.backHome')}
+              </Button>,
             ]}
-          >
-          </Result>
+          ></Result>
         </div>
       );
     }
@@ -45,16 +46,19 @@ export default class Eb extends React.Component {
   }
 }
 
-
 /**
  * 包装函数，避免了直接在render中return最外层包装
  * @return {function(*=)}
  * @constructor
  */
-export const Eb_WP = () => (WrapperC) => {
+export const Eb_WP = () => WrapperC => {
   class WithEbC extends React.Component {
     render() {
-      return <Eb><WrapperC {...this.props}/></Eb>;
+      return (
+        <Eb>
+          <WrapperC {...this.props} />
+        </Eb>
+      );
     }
   }
   return hoistNonReactStatics(WithEbC, WrapperC);

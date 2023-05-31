@@ -1,6 +1,14 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { 
-  Collapse, Input, Checkbox, Tag, notification, Button, Space, Dropdown, Menu
+import {
+  Collapse,
+  Input,
+  Checkbox,
+  Tag,
+  notification,
+  Button,
+  Space,
+  Dropdown,
+  Menu,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -24,8 +32,7 @@ const EditableTableFooter = styled.div`
   text-align: right;
 `;
 
-const VarFormTable = (props) => {
-
+const VarFormTable = props => {
   const {
     formVarRef,
     varList,
@@ -41,13 +48,13 @@ const VarFormTable = (props) => {
     canImportVar = false,
     canImportResourceAccount = false,
     expandCollapse,
-    setExpandCollapse
+    setExpandCollapse,
   } = props;
 
   const defalutVarListRef = useRef([]);
   const varDataRef = useRef(varList);
-  const [ importVars, setImportVars ] = useState([]);
-  const [ importModalVisible, setImportModalVisible ] = useState(false);
+  const [importVars, setImportVars] = useState([]);
+  const [importModalVisible, setImportModalVisible] = useState(false);
 
   useEffect(() => {
     varDataRef.current = varList;
@@ -61,10 +68,11 @@ const VarFormTable = (props) => {
     if (canImportVar && fetchParams) {
       fetchImportVars();
     }
-  }, [ fetchParams, canImportVar ]);
+  }, [fetchParams, canImportVar]);
 
   const fetchImportVars = async () => {
-    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } = fetchParams;
+    const { orgId, repoRevision, repoId, repoType, vcsId, workdir } =
+      fetchParams;
     const params = { orgId, repoRevision, repoId, repoType, vcsId, workdir };
     try {
       const res = await tplAPI.listImportVars(params);
@@ -75,7 +83,7 @@ const VarFormTable = (props) => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
@@ -86,49 +94,54 @@ const VarFormTable = (props) => {
       editable: true,
       column: {
         className: 'fn-hide-column',
-        width: 0
-      }
+        width: 0,
+      },
     },
     {
       id: 'options',
       editable: true,
       column: {
         className: 'fn-hide-column',
-        width: 0
-      }
+        width: 0,
+      },
     },
     {
       id: 'overwrites',
       editable: true,
       column: {
         className: 'fn-hide-column',
-        width: 0
-      }
+        width: 0,
+      },
     },
     {
       title: t('define.variable.objectType'),
       id: 'scope',
       column: {
         width: 200,
-        render: (text) => {
+        render: text => {
           return (
             <div style={{ width: 110 }}>
               <Tag style={{ marginRight: 0 }}>{SCOPE_ENUM[text]}</Tag>
             </div>
           );
-        }
-      }
+        },
+      },
     },
     {
       title: 'key',
       id: 'name',
       editable: true,
       column: {
-        width: 200
+        width: 200,
       },
-      renderFormInput: (record) => {
+      renderFormInput: record => {
         const { overwrites } = record;
-        return <Input placeholder={t('define.form.input.placeholder')} disabled={overwrites || readOnly} />;
+        return (
+          <Input
+            placeholder={t('define.form.input.placeholder')}
+            disabled={overwrites || readOnly}
+          />
+        );
       },
       formItemProps: {
         rules: [
@@ -137,38 +150,40 @@ const VarFormTable = (props) => {
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                  const sameList = (varDataRef.current || []).filter(it => it.name === value);
+                  const sameList = (varDataRef.current || []).filter(
+                    it => it.name === value,
+                  );
                   if (value && sameList.length > 1) {
                     reject(new Error(t('define.variable.sameKeyError')));
                   }
                   resolve();
                 }, 300);
               });
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     },
     {
       title: 'value',
       id: 'value',
       editable: true,
       column: {
-        width: 210
+        width: 210,
       },
       formItemProps: {
-        dependencies: [ 'sensitive', 'description' ],
+        dependencies: ['sensitive', 'description'],
         rules: [
-          (form) => ({
+          form => ({
             validator(_, value) {
               return new Promise((resolve, reject) => {
                 setTimeout(() => {
                   resolve();
                 }, 300);
               });
-            }
-          })
-        ]
+            },
+          }),
+        ],
       },
       renderFormInput: (record, { value, onChange }, form) => {
         const { id, sensitive, options, scope } = record;
@@ -177,48 +192,53 @@ const VarFormTable = (props) => {
             <Input.Password
               value={readOnly ? '******' : value}
               autoComplete='new-password'
-              placeholder={id ? t('define.emptyValueSave.placeholder') : t('define.form.input.placeholder')}
+              placeholder={
+                id
+                  ? t('define.emptyValueSave.placeholder')
+                  : t('define.form.input.placeholder')
+              }
               visibilityToggle={false}
               disabled={readOnly}
             />
           );
         } else {
-          return (
-            isArray(options) ? (
-              <SelectTypeValue
-                disabled={readOnly}
-                form={form}
-                inputOptions={options}
-                isSameScope={scope === defaultScope}
-                value={value}
-                onChange={onChange}
-                placeholder={t('define.form.select.placeholder')}
-              />
-            ) : (
-              <Input placeholder={t('define.form.input.placeholder')} disabled={readOnly}/>
-            )
+          return isArray(options) ? (
+            <SelectTypeValue
+              disabled={readOnly}
+              form={form}
+              inputOptions={options}
+              isSameScope={scope === defaultScope}
+              value={value}
+              onChange={onChange}
+              placeholder={t('define.form.select.placeholder')}
+            />
+          ) : (
+            <Input
+              placeholder={t('define.form.input.placeholder')}
+              disabled={readOnly}
+            />
           );
         }
-      }
+      },
     },
     {
       title: t('define.des'),
       id: 'description',
       editable: true,
       column: {
-        width: 260
+        width: 260,
       },
       formFieldProps: {
         placeholder: t('define.form.input.placeholder'),
-        disabled: readOnly
-      }
+        disabled: readOnly,
+      },
     },
     {
       title: t('define.variable.isSensitive'),
       id: 'sensitive',
       editable: true,
       column: {
-        width: 116
+        width: 116,
       },
       renderFormInput: (record, { value, onChange }) => {
         const { options } = record;
@@ -235,65 +255,74 @@ const VarFormTable = (props) => {
             {t('define.variable.sensitive')}
           </Checkbox>
         );
-      }
-    }
+      },
+    },
   ];
 
   const optionRender = (record, optionNodes) => {
     const { scope } = record;
     const DeleteBtn = React.cloneElement(optionNodes.delete, {
-      buttonProps: { disabled: scope !== defaultScope, type: 'link' }
+      buttonProps: { disabled: scope !== defaultScope, type: 'link' },
     });
-    return (
-      DeleteBtn
-    );
+    return DeleteBtn;
   };
 
   const onDeleteRow = ({ row, rows, k, handleChange }) => {
     const { overwrites, editable_id, _key_id } = row;
     if (overwrites) {
       handleChange(
-        rows.map((item) => {
+        rows.map(item => {
           if (item.editable_id === k) {
             return { ...overwrites, editable_id, _key_id, overwrites };
           }
           return item;
-        })
+        }),
       );
     } else {
-      handleChange(
-        rows.filter((item) => item.editable_id !== k)
-      );
+      handleChange(rows.filter(item => item.editable_id !== k));
     }
     formVarRef.current.handleValidate();
   };
 
-  const onChangeEditableTable = (list) => {
+  const onChangeEditableTable = list => {
     list = list.map(it => {
-      if (it.isNew) { // 全新数据,不处理
+      if (it.isNew) {
+        // 全新数据,不处理
         return it;
       }
       // 如来源不同 则对比数据
-      const sameNameData = defalutVarListRef.current.find(v => v.name === it.name);
-      if (!sameNameData) { // 修改名称的数据
+      const sameNameData = defalutVarListRef.current.find(
+        v => v.name === it.name,
+      );
+      if (!sameNameData) {
+        // 修改名称的数据
         return it;
       }
-      if (sameNameData.scope === defaultScope && it.scope === defaultScope && it.id) { // 旧的同域数据,不处理
+      if (
+        sameNameData.scope === defaultScope &&
+        it.scope === defaultScope &&
+        it.id
+      ) {
+        // 旧的同域数据,不处理
         return it;
       }
-      const parentSameNameData = sameNameData.scope !== defaultScope ? sameNameData : sameNameData.overwrites;
-      if (!parentSameNameData) { // 没有同名的继承数据，不处理
+      const parentSameNameData =
+        sameNameData.scope !== defaultScope
+          ? sameNameData
+          : sameNameData.overwrites;
+      if (!parentSameNameData) {
+        // 没有同名的继承数据，不处理
         return it;
       }
       const pickFindIt = {
         value: parentSameNameData.value || '',
         description: parentSameNameData.description || '',
-        sensitive: !!parentSameNameData.sensitive
+        sensitive: !!parentSameNameData.sensitive,
       };
       const pickIt = {
         value: it.value || '',
         description: it.description || '',
-        sensitive: !!it.sensitive
+        sensitive: !!it.sensitive,
       };
       // 数据不同 则来源置为默认来源 反之就恢复默认数据
       if (!isEqual(pickFindIt, pickIt)) {
@@ -308,91 +337,111 @@ const VarFormTable = (props) => {
   };
 
   const onImportFinish = (params, cb) => {
-    setVarList((preList) => [ ...preList, ...params ]);
+    setVarList(preList => [...preList, ...params]);
     cb && cb();
   };
 
-  const pushVar = (isSelectType) => {
-    setVarList((preList) => [
-      ...preList, {
+  const pushVar = isSelectType => {
+    setVarList(preList => [
+      ...preList,
+      {
         scope: defaultScope,
         sensitive: false,
         type,
         isNew: true,
-        options: isSelectType ? [] : null // 选择型变量options为数组 普通型变量options始终为null
-      }
+        options: isSelectType ? [] : null, // 选择型变量options为数组 普通型变量options始终为null
+      },
     ]);
   };
 
   const importResourceAccount = ({ importResourceAccountList }) => {
-    setVarGroupList((preValue) => {
-      const preSameScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope);
-      const sameScopeVarGroupList = importResourceAccountList.map((it) => {
-        const sameVarGroup = preSameScopeVarGroupList.find(defaultIt => defaultIt.varGroupId === it.varGroupId);
+    setVarGroupList(preValue => {
+      const preSameScopeVarGroupList = preValue.filter(
+        it => it.objectType === defaultScope,
+      );
+      const sameScopeVarGroupList = importResourceAccountList.map(it => {
+        const sameVarGroup = preSameScopeVarGroupList.find(
+          defaultIt => defaultIt.varGroupId === it.varGroupId,
+        );
         return sameVarGroup || it;
       });
-      const otherScopeVarGroupList = defalutVarGroupList.filter((it) => {
+      const otherScopeVarGroupList = defalutVarGroupList.filter(it => {
         const sameScope = it.objectType !== defaultScope;
         if (!sameScope) {
           return false;
         }
-        const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+        const hasSameVarName = !!sameScopeVarGroupList.find(
+          sameScopeVarGroup =>
+            intersectionBy(sameScopeVarGroup.variables, it.variables, 'name')
+              .length > 0,
+        );
         return !hasSameVarName;
       });
-      return [
-        ...otherScopeVarGroupList,
-        ...sameScopeVarGroupList
-      ];
+      return [...otherScopeVarGroupList, ...sameScopeVarGroupList];
     });
   };
 
   const removeResourceAccount = ({ varGroupIds }) => {
-    setVarGroupList((preValue) => {
-      const sameScopeVarGroupList = preValue.filter((it) => it.objectType === defaultScope && !varGroupIds.includes(it.varGroupId));
-      const otherScopeVarGroupList = defalutVarGroupList.filter((it) => {
+    setVarGroupList(preValue => {
+      const sameScopeVarGroupList = preValue.filter(
+        it =>
+          it.objectType === defaultScope &&
+          !varGroupIds.includes(it.varGroupId),
+      );
+      const otherScopeVarGroupList = defalutVarGroupList.filter(it => {
         const sameScope = it.objectType !== defaultScope;
         if (!sameScope) {
           return false;
         }
-        const hasSameVarName = !!sameScopeVarGroupList.find(sameScopeVarGroup => intersectionBy(sameScopeVarGroup.variables, it.variables, 'name').length > 0);
+        const hasSameVarName = !!sameScopeVarGroupList.find(
+          sameScopeVarGroup =>
+            intersectionBy(sameScopeVarGroup.variables, it.variables, 'name')
+              .length > 0,
+        );
         return !hasSameVarName;
       });
-      return [
-        ...otherScopeVarGroupList,
-        ...sameScopeVarGroupList
-      ];
+      return [...otherScopeVarGroupList, ...sameScopeVarGroupList];
     });
   };
 
   const event$ = useEventEmitter();
   event$.useSubscription(({ type, data }) => {
     switch (type) {
-    case 'import-resource-account':
-      importResourceAccount(data);
-      break;
-    case 'remove-resource-account':
-      removeResourceAccount(data);
-      break;
-    default:
-      break;
+      case 'import-resource-account':
+        importResourceAccount(data);
+        break;
+      case 'remove-resource-account':
+        removeResourceAccount(data);
+        break;
+      default:
+        break;
     }
   });
 
   const scrollTableWrapperClassName = `listen-table-scroll-${type}`;
 
   return (
-    <Collapse 
+    <Collapse
       activeKey={expandCollapse && 'open'}
-      expandIconPosition={'right'} 
-      onChange={(keys) => {
+      expandIconPosition={'right'}
+      onChange={keys => {
         const expandCollapse = keys.includes('open');
         setExpandCollapse(expandCollapse);
       }}
     >
-      <Collapse.Panel key='open' header={VAR_TYPE_ENUM[type]} forceRender={true}>
+      <Collapse.Panel
+        key='open'
+        header={VAR_TYPE_ENUM[type]}
+        forceRender={true}
+      >
         <EditableTable
           getActionRef={ref => (formVarRef.current = ref.current)}
-          defaultData={{ scope: defaultScope, sensitive: false, type, isNew: true }}
+          defaultData={{
+            scope: defaultScope,
+            sensitive: false,
+            type,
+            isNew: true,
+          }}
           value={varList}
           fields={fields}
           onDeleteRow={onDeleteRow}
@@ -403,45 +452,70 @@ const VarFormTable = (props) => {
           optionRender={optionRender}
           tableProps={{
             className: classnames(
-              scrollTableWrapperClassName, 'top-dom', 
+              scrollTableWrapperClassName,
+              'top-dom',
               // varList为空resourceAccountList不为空则隐藏varList的table-tbody
-              { 'fn-hide-table-tbody': !isEmpty(varGroupList) && isEmpty(varList) },
+              {
+                'fn-hide-table-tbody':
+                  !isEmpty(varGroupList) && isEmpty(varList),
+              },
               // varList和resourceAccountList都不为空则隐藏varList的横向滚动条
-              { 'fn-hide-table-tbody-scroll': !isEmpty(varGroupList) && !isEmpty(varList) }
-            ) 
+              {
+                'fn-hide-table-tbody-scroll':
+                  !isEmpty(varGroupList) && !isEmpty(varList),
+              },
+            ),
           }}
           footer={
             <>
-              <ResourceAccountFormTable 
-                scrollTableWrapperClassName={scrollTableWrapperClassName} 
-                dataSource={varGroupList} 
+              <ResourceAccountFormTable
+                scrollTableWrapperClassName={scrollTableWrapperClassName}
+                dataSource={varGroupList}
                 defaultScope={defaultScope}
                 event$={event$}
                 readOnly={readOnly}
               />
-              {
-                !readOnly && (
-                  <EditableTableFooter>
-                    <Space>
-                      {!!canImportVar && <Button onClick={() => setImportModalVisible(true)}>{t('define.import')}</Button>}
-                      <Dropdown 
-                        overlay={
-                          <Menu>
-                            <Menu.Item onClick={() => pushVar()}>{t('define.variable.action.addCommonVar')}</Menu.Item>
-                            <Menu.Item onClick={() => pushVar(true)}>{t('define.variable.action.addSelectVar')}</Menu.Item>
-                            {!!canImportResourceAccount && (
-                              <Menu.Item onClick={() => event$.emit({ type: 'open-import-resource-account-modal' })}>{t('define.variable.action.importResourceAccount')}</Menu.Item>
-                            )}
-                          </Menu>
-                        }
-                      >
-                        <Button>{t('define.variable.action.addVar')}<DownOutlined /></Button>
-                      </Dropdown>
-                    </Space>
-                  </EditableTableFooter>
-                )
-              }
-              
+              {!readOnly && (
+                <EditableTableFooter>
+                  <Space>
+                    {!!canImportVar && (
+                      <Button onClick={() => setImportModalVisible(true)}>
+                        {t('define.import')}
+                      </Button>
+                    )}
+                    <Dropdown
+                      overlay={
+                        <Menu>
+                          <Menu.Item onClick={() => pushVar()}>
+                            {t('define.variable.action.addCommonVar')}
+                          </Menu.Item>
+                          <Menu.Item onClick={() => pushVar(true)}>
+                            {t('define.variable.action.addSelectVar')}
+                          </Menu.Item>
+                          {!!canImportResourceAccount && (
+                            <Menu.Item
+                              onClick={() =>
+                                event$.emit({
+                                  type: 'open-import-resource-account-modal',
+                                })
+                              }
+                            >
+                              {t(
+                                'define.variable.action.importResourceAccount',
+                              )}
+                            </Menu.Item>
+                          )}
+                        </Menu>
+                      }
+                    >
+                      <Button>
+                        {t('define.variable.action.addVar')}
+                        <DownOutlined />
+                      </Button>
+                    </Dropdown>
+                  </Space>
+                </EditableTableFooter>
+              )}
             </>
           }
         />
@@ -453,7 +527,12 @@ const VarFormTable = (props) => {
           defaultScope={defaultScope}
           onFinish={onImportFinish}
         />
-        <ImportResourceAccountModal event$={event$} fetchParams={fetchParams} varGroupList={varGroupList} defaultScope={defaultScope}/>
+        <ImportResourceAccountModal
+          event$={event$}
+          fetchParams={fetchParams}
+          varGroupList={varGroupList}
+          defaultScope={defaultScope}
+        />
       </Collapse.Panel>
     </Collapse>
   );

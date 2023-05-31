@@ -9,30 +9,31 @@ import messages from './messages';
 export const t = (path, props) => {
   if (!props) {
     const language = getLanguage();
-    const translation = {
-      zh: ZhTranslation,
-      en: EnTranslation
-    }[language] || ZhTranslation;
+    const translation =
+      {
+        zh: ZhTranslation,
+        en: EnTranslation,
+      }[language] || ZhTranslation;
     return get(translation, path);
   }
-  return (
-    <FormattedMessage {...get(messages, path)} {...props} />
-  );
+  return <FormattedMessage {...get(messages, path)} {...props} />;
 };
 
 export const getLanguage = () => {
   return window.localStorage.getItem('IAC_LOCALE') || 'zh';
 };
 
-export const setLanguage = (language) => {
+export const setLanguage = language => {
   window.localStorage.setItem('IAC_LOCALE', language || 'zh');
   window.location.reload();
 };
 
 export const getAntdLocale = () => {
   const language = getLanguage();
-  return {
-    zh: zhCN,
-    en: enUS
-  }[language] || zhCN;
+  return (
+    {
+      zh: zhCN,
+      en: enUS,
+    }[language] || zhCN
+  );
 };

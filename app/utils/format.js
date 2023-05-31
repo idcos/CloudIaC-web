@@ -1,15 +1,15 @@
-import moment from "moment";
+import moment from 'moment';
 
-export const formatDate = (time) => {
-  const day = moment().diff(time, "day");
+export const formatDate = time => {
+  const day = moment().diff(time, 'day');
   if (day < 25) {
     return moment(time).fromNow();
   } else {
-    return moment(time).format("YYYY-MM-DD HH:mm:ss");
+    return moment(time).format('YYYY-MM-DD HH:mm:ss');
   }
 };
 
-export const formatNumber = (val) => {
+export const formatNumber = val => {
   val = val ? Number(val) : 0;
   if (val <= 10) {
     return val;
@@ -35,4 +35,3 @@ export const formatNumber = (val) => {
     return '10000+';
   }
 };
- 

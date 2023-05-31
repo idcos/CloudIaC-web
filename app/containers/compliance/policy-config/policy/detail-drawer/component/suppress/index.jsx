@@ -10,75 +10,73 @@ import SuppressFormDrawer from './suppress-form-drawer';
 import { TARGET_TYPE_ENUM, SUPPRESS_TYPE_ENUM } from 'constants/types';
 import { t } from 'utils/i18n';
 
-export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndList }) => {
+const Suppress = ({
+  policyId,
+  detailInfo: { enabled } = {},
+  reloadPolicyDetailAndList,
+}) => {
+  const [visible, setVisible] = useState(false);
 
-  const [ visible, setVisible ] = useState(false);
-  
   // 屏蔽列表查询
   const {
     loading: tableLoading,
     data: tableData,
     run: fetchList,
   } = useRequest(
-    (params) => requestWrapper(
-      policiesAPI.listSuppress.bind(null, params)
-    ),
+    params => requestWrapper(policiesAPI.listSuppress.bind(null, params)),
     {
-      manual: true
-    }
+      manual: true,
+    },
   );
 
   // 表单搜索和table关联hooks
-  const { 
-    tableProps,
-    resetPageCurrent
-  } = useSearchFormAndTable({
+  const { tableProps, resetPageCurrent } = useSearchFormAndTable({
     tableData,
     pagination: { hideOnSinglePage: true },
-    onSearch: (params) => {
+    onSearch: params => {
       const { current: currentPage, ...restParams } = params;
       fetchList({ currentPage, ...restParams, policyId });
-    }
+    },
   });
 
   // 屏蔽此策略
-  const {
-    run: suppressPolicy
-  } = useRequest(
-    () => requestWrapper(
-      policiesAPI.updateSuppress.bind(null, { policyId, addTargetIds: [policyId] }),
-      {
-        autoSuccess: true
-      }
-    ),
+  const { run: suppressPolicy } = useRequest(
+    () =>
+      requestWrapper(
+        policiesAPI.updateSuppress.bind(null, {
+          policyId,
+          addTargetIds: [policyId],
+        }),
+        {
+          autoSuccess: true,
+        },
+      ),
     {
       manual: true,
       onSuccess: () => {
         reloadSuppressList();
         reloadPolicyDetailAndList();
-      }
-    }
+      },
+    },
   );
 
   // 删除单条屏蔽
-  const {
-    run: delOneSuppress,
-    fetches: delOneSuppressFetches
-  } = useRequest(
-    (suppressId) => requestWrapper(
-      policiesAPI.delOneSuppress.bind(null, { policyId, suppressId }),
-      {
-        autoSuccess: true
-      }
-    ),
+  const { run: delOneSuppress, fetches: delOneSuppressFetches } = useRequest(
+    suppressId =>
+      requestWrapper(
+        policiesAPI.delOneSuppress.bind(null, { policyId, suppressId }),
+        {
+          autoSuccess: true,
+        },
+      ),
     {
       manual: true,
-      fetchKey: (suppressId) => suppressId,
+      fetchKey: suppressId => suppressId,
       onSuccess: () => {
         reloadSuppressList();
         reloadPolicyDetailAndList();
-      }
-    }
+      },
+    },
   );
 
   // 重新加载屏蔽列表
@@ -91,57 +89,65 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
       dataIndex: 'targetName',
       title: t('define.name'),
       width: 170,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'targetType',
       title: t('define.type'),
       width: 75,
       ellipsis: true,
-      render: (text) => TARGET_TYPE_ENUM[text]
+      render: text => TARGET_TYPE_ENUM[text],
     },
     {
       dataIndex: 'type',
       title: t('define.suppress.field.type'),
       width: 120,
       ellipsis: true,
-      render: (text) => SUPPRESS_TYPE_ENUM[text]
+      render: text => SUPPRESS_TYPE_ENUM[text],
     },
     {
       dataIndex: 'reason',
       title: t('define.suppress.field.reason'),
       width: 149,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'creator',
       title: t('define.suppress.field.creator'),
       width: 72,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'createdAt',
       title: t('define.suppress.field.createdAt'),
       width: 123,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm'),
     },
     {
       title: t('define.action'),
       width: 50,
       ellipsis: true,
       fixed: 'right',
-      render: (record) => {
+      render: record => {
         const { id } = record;
         const { loading: delLoading } = delOneSuppressFetches[id] || {};
-        return <Popconfirm
-          title={t('define.suppress.action.delete.confirm.title')}
-          onConfirm={() => delOneSuppress(id)}
-        >
-          <Button type='link' style={{ padding: 0, fontSize: 12 }} loading={delLoading}>{t('define.action.delete')}</Button>
-        </Popconfirm>
-      }
-    }
+        return (
+          <Popconfirm
+            title={t('define.suppress.action.delete.confirm.title')}
+            onConfirm={() => delOneSuppress(id)}
+          >
+            <Button
+              type='link'
+              style={{ padding: 0, fontSize: 12 }}
+              loading={delLoading}
+            >
+              {t('define.action.delete')}
+            </Button>
+          </Popconfirm>
+        );
+      },
+    },
   ];
 
   const openSuppressFormDrawer = () => setVisible(true);
@@ -155,14 +161,18 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
       content: t('define.suppress.confirm.content'),
       icon: <InfoCircleFilled />,
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
-      onOk: suppressPolicy
+      onOk: suppressPolicy,
     });
   };
 
   return (
-    <Card title={t('define.suppress.title')} bodyStyle={{ minHeight: 300 }} type='inner'>
+    <Card
+      title={t('define.suppress.title')}
+      bodyStyle={{ minHeight: 300 }}
+      type='inner'
+    >
       <Space direction='vertical' size='middle' style={{ width: '100%' }}>
         <Space>
           <Button type='primary' onClick={onSuppressPolicy} disabled={!enabled}>
@@ -179,9 +189,16 @@ export default ({ policyId, detailInfo: { enabled } = {}, reloadPolicyDetailAndL
           {...tableProps}
         />
       </Space>
-      {
-        visible && <SuppressFormDrawer policyId={policyId} visible={visible} reload={reloadSuppressList} onClose={closeSuppressFormDrawer}/>
-      }
+      {visible && (
+        <SuppressFormDrawer
+          policyId={policyId}
+          visible={visible}
+          reload={reloadSuppressList}
+          onClose={closeSuppressFormDrawer}
+        />
+      )}
     </Card>
   );
 };
+
+export default Suppress;

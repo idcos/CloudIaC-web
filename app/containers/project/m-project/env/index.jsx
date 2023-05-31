@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Button, Tabs, Input } from "antd";
+import { Button, Tabs, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import PageHeader from 'components/pageHeader';
 import Layout from 'components/common/layout';
-import EnvList from './components/envList';
+import EnvList from './components/env-list';
 import history from 'utils/history';
-import getPermission from "utils/permission";
+import getPermission from 'utils/permission';
+import queryString from 'query-string';
+import { createBrowserHistory } from 'history';
 import { t } from 'utils/i18n';
 
 const envNavs = {
@@ -15,45 +17,57 @@ const envNavs = {
   active: t('env.status.active'),
   approving: t('env.status.approving'),
   inactive: t('env.status.inactive'),
-  failed: t('env.status.failed')
+  failed: t('env.status.failed'),
 };
 
-const Envs = (props) => {
-
+const Envs = props => {
   const { match, userInfo, location } = props;
-  const { tplName } = location.state || {};
   const { PROJECT_OPERATOR } = getPermission(userInfo);
-  const { params: { orgId, projectId } } = match; 
-  const [ panel, setPanel ] = useState('');
-  const [ query, setQuery ] = useState({ 
-    q: tplName,
-    currentPage: 1,
-    pageSize: 10
+  const { currentPage = 1, q = '' } = queryString.parse(location.search);
+  const {
+    params: { orgId, projectId },
+  } = match;
+  const [panel, setPanel] = useState('');
+  const [query, setQuery] = useState({
+    q: q,
+    currentPage: Number.parseInt(currentPage),
+    pageSize: 10,
   });
 
-  const changeQuery = (payload) => {
+  const changeQuery = payload => {
+    const history = createBrowserHistory({ forceRefresh: false });
+    const { q = '', currentPage = 1 } = payload;
+    history.replace({
+      search: `?currentPage=${currentPage}&q=${q}`,
+    });
     setQuery({
       ...query,
-      ...payload
+      ...payload,
     });
   };
 
   return (
     <Layout
-      extraHeader={<PageHeader
-        title={t('define.scope.env')}
-        breadcrumb={true}
-        subDes={(
-          PROJECT_OPERATOR ? (
-            <Button 
-              onClick={() => {
-                history.push(`/org/${orgId}/project/${projectId}/m-project-ct`);
-              }} 
-              type='primary'
-            >{t('define.deployEnv')}</Button>
-          ) : null
-        )}
-      />}
+      extraHeader={
+        <PageHeader
+          title={t('define.scope.env')}
+          breadcrumb={true}
+          subDes={
+            PROJECT_OPERATOR ? (
+              <Button
+                onClick={() => {
+                  history.push(
+                    `/org/${orgId}/project/${projectId}/m-project-ct`,
+                  );
+                }}
+                type='primary'
+              >
+                {t('define.deployEnv')}
+              </Button>
+            ) : null
+          }
+        />
+      }
     >
       <div className='idcos-card'>
         <Tabs
@@ -68,10 +82,10 @@ const Envs = (props) => {
             );
           }}
           activeKey={panel}
-          onChange={(k) => {
+          onChange={k => {
             setPanel(k);
             changeQuery({
-              currentPage: 1
+              currentPage: 1,
             });
           }}
           destroyInactiveTabPane={true}
@@ -82,21 +96,23 @@ const Envs = (props) => {
               placeholder={t('define.env.search.placeholder')}
               prefix={<SearchOutlined />}
               defaultValue={query.q}
-              onPressEnter={(e) => {
+              onPressEnter={e => {
                 changeQuery({
                   q: e.target.value,
-                  currentPage: 1
+                  currentPage: 1,
                 });
               }}
             />
           }
         >
-          {Object.keys(envNavs).map((it) => (
-            <Tabs.TabPane
-              tab={envNavs[it]}
-              key={it}
-            > 
-              <EnvList {...props} panel={panel} query={query} changeQuery={changeQuery} />
+          {Object.keys(envNavs).map(it => (
+            <Tabs.TabPane tab={envNavs[it]} key={it}>
+              <EnvList
+                {...props}
+                panel={panel}
+                query={query}
+                changeQuery={changeQuery}
+              />
             </Tabs.TabPane>
           ))}
         </Tabs>
@@ -105,8 +121,8 @@ const Envs = (props) => {
   );
 };
 
-export default connect((state) => {
+export default connect(state => {
   return {
-    userInfo: state.global.get('userInfo').toJS()
+    userInfo: state.global.get('userInfo').toJS(),
   };
 })(Envs);

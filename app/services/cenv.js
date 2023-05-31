@@ -1,4 +1,4 @@
-import { get, post, put, del, getWithArgs } from 'utils/xFetch2';
+import { post, put, getWithArgs } from 'utils/xFetch2';
 
 const cenvAPI = {
   // 查询环境策略配置
@@ -24,7 +24,7 @@ const cenvAPI = {
   // 启用/禁用Stack扫描
   enabled: ({ id, ...restParams }) => {
     return put(`/api/v1/policies/envs/${id}/enabled`, restParams, {});
-  }
+  },
 };
 
 export default cenvAPI;

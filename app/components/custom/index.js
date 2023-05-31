@@ -1,5 +1,3 @@
 import CustomTag from './tag';
 
-export {
-  CustomTag
-};
+export { CustomTag };

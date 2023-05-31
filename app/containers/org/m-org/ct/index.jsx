@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button, Table, notification, Space, Popconfirm, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
@@ -7,8 +8,6 @@ import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
 import EllipsisText from 'components/EllipsisText';
 import { Eb_WP } from 'components/error-boundary';
-import PageHeader from 'components/pageHeader';
-import Layout from 'components/common/layout';
 import ImportModal from './components/importModal';
 import DetectionDrawer from './components/detection-drawer';
 import tplAPI from 'services/tpl';
@@ -22,36 +21,35 @@ import { UploadIcon, DownIcon } from 'components/iconfont';
 import PolicyStatus from 'components/policy-status';
 import isEmpty from 'lodash/isEmpty';
 
-
 const CTList = ({ match = {} }) => {
   const { check, loopRequesting } = useLoopPolicyStatus();
   const { orgId } = match.params || {};
-  const [ visible, setVisible ] = useState(false),
-    [ selectedRowKeys, setSelectedRowKeys ] = useState([]),
-    [ selectedRows, setSelectedRows ] = useState([]),
-    [ query, setQuery ] = useState({
+  const [visible, setVisible] = useState(false),
+    [selectedRowKeys, setSelectedRowKeys] = useState([]),
+    [selectedRows, setSelectedRows] = useState([]),
+    [query, setQuery] = useState({
       pageNo: 1,
-      pageSize: 10
+      pageSize: 10,
     });
-  const [ exchangeUrl, setExchangeUrl ] = useState('');
-  const [ detectionDrawerProps, setDetectionDrawerProps ] = useState({
+  const [exchangeUrl, setExchangeUrl] = useState('');
+  const [detectionDrawerProps, setDetectionDrawerProps] = useState({
     visible: false,
-    id: null
+    id: null,
   });
 
   useEffect(() => {
     fetchList();
   }, [query]);
-  
+
   useEffect(() => {
-    sysAPI.getRegistryAddr().then((res) => {
+    sysAPI.getRegistryAddr().then(res => {
       const { registryAddrDB, registryAddrCfg } = res.result || {};
       let url = registryAddrDB || registryAddrCfg || '';
       if (url.endsWith('/')) {
         url = url.slice(0, -1);
       }
       if (!url) {
-        return (new Error(`url:'${url}' invalid`));
+        return new Error(`url:'${url}' invalid`);
       }
       setExchangeUrl(url);
     });
@@ -61,49 +59,51 @@ const CTList = ({ match = {} }) => {
   const {
     data: resultMap = {
       list: [],
-      total: 0
+      total: 0,
     },
     run: fetchList,
-    loading
+    loading,
   } = useRequest(
-    () => requestWrapper(
-      tplAPI.list.bind(null, { 
-        currentPage: query.pageNo,
-        pageSize: query.pageSize,
-        q: query.q,
-        orgId
-      })
-    ), {
+    () =>
+      requestWrapper(
+        tplAPI.list.bind(null, {
+          currentPage: query.pageNo,
+          pageSize: query.pageSize,
+          q: query.q,
+          orgId,
+        }),
+      ),
+    {
       manual: true,
-      formatResult: (data) => ({
+      formatResult: data => ({
         list: data.list || [],
-        total: data.total || 0
+        total: data.total || 0,
       }),
-      onSuccess: (data) => {
-        check({ 
+      onSuccess: data => {
+        check({
           list: data.list,
-          loopFn: () => fetchList()
+          loopFn: () => fetchList(),
         });
-      }
-    }
+      },
+    },
   );
 
-
   // 批量扫描合规检测
-  const {
-    run: batchScan
-  } = useRequest(
-    () => requestWrapper(
-      ctplAPI.runBatchScan.bind(null, { ids: selectedRows.map(it => it.id) }), {
-        autoSuccess: true
-      }
-    ), {
+  const { run: batchScan } = useRequest(
+    () =>
+      requestWrapper(
+        ctplAPI.runBatchScan.bind(null, { ids: selectedRows.map(it => it.id) }),
+        {
+          autoSuccess: true,
+        },
+      ),
+    {
       manual: true,
       onSuccess: () => {
         fetchList();
         clearSelected();
-      }
-    }
+      },
+    },
   );
 
   const clearSelected = () => {
@@ -114,7 +114,7 @@ const CTList = ({ match = {} }) => {
   const openDetectionDrawer = ({ id }) => {
     setDetectionDrawerProps({
       id,
-      visible: true
+      visible: true,
     });
   };
 
@@ -122,7 +122,7 @@ const CTList = ({ match = {} }) => {
   const closeDetectionDrawer = () => {
     setDetectionDrawerProps({
       id: null,
-      visible: false
+      visible: false,
     });
   };
 
@@ -131,26 +131,30 @@ const CTList = ({ match = {} }) => {
       dataIndex: 'name',
       title: t('define.name'),
       width: 180,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'description',
       title: t('define.des'),
       width: 180,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'activeEnvironment',
       title: t('define.activeEnvironment'),
       width: 78,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'repoAddr',
       title: t('define.repo'),
       width: 249,
       ellipsis: true,
-      render: (text) => <a href={text} target='_blank'><EllipsisText>{text}</EllipsisText></a>
+      render: text => (
+        <a href={text} target='_blank' rel='noreferrer'>
+          <EllipsisText>{text}</EllipsisText>
+        </a>
+      ),
     },
     {
       dataIndex: 'policyStatus',
@@ -160,53 +164,61 @@ const CTList = ({ match = {} }) => {
       render: (policyStatus, record) => {
         const clickProps = {
           style: { cursor: 'pointer' },
-          onClick: () => openDetectionDrawer(record)
+          onClick: () => openDetectionDrawer(record),
         };
-        return <PolicyStatus policyStatus={policyStatus} clickProps={clickProps} empty='-' />;
-      }
+        return (
+          <PolicyStatus
+            policyStatus={policyStatus}
+            clickProps={clickProps}
+            empty='-'
+          />
+        );
+      },
     },
     {
       dataIndex: 'creator',
       title: t('define.creator'),
       width: 70,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'createdAt',
       title: t('define.createdAt'),
       width: 152,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: t('define.action'),
       width: 120,
       ellipsis: true,
       fixed: 'right',
-      render: (record) => {
-        return (
-          record.isDemo ? 
-            <></> :
-            <Space>
-              <a type='link' onClick={() => updateCT(record.id)}>{t('define.action.modify')}</a>
-              <Popconfirm
-                placement='left'
-                title={t('define.ct.delete.confirm.title')}
-                onConfirm={() => onDel(record.id)}
-              >
-                <a type='link'>{t('define.action.delete')}</a>
-              </Popconfirm>
-            </Space>
+      render: record => {
+        return record.isDemo ? (
+          <></>
+        ) : (
+          <Space>
+            <a type='link' onClick={() => updateCT(record.id)}>
+              {t('define.action.modify')}
+            </a>
+            <Popconfirm
+              placement='left'
+              title={t('define.ct.delete.confirm.title')}
+              onConfirm={() => onDel(record.id)}
+            >
+              <a type='link'>{t('define.action.delete')}</a>
+            </Popconfirm>
+          </Space>
         );
-      }
-    }
+      },
+    },
   ];
 
   const createCT = () => {
     history.push(`/org/${orgId}/m-org-ct/createCT`);
   };
 
-  const updateCT = (tplId) => {
+  const updateCT = tplId => {
     history.push(`/org/${orgId}/m-org-ct/updateCT/${tplId}`);
   };
 
@@ -214,31 +226,31 @@ const CTList = ({ match = {} }) => {
     history.push(`/org/${orgId}/m-org-ct/importCT-exchange`);
   };
 
-  const onDel = async (tplId) => {
+  const onDel = async tplId => {
     try {
       const res = await tplAPI.del({
         tplId,
-        orgId
+        orgId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
       fetchList();
     } catch (e) {
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  const changeQuery = (payload) => {
+  const changeQuery = payload => {
     setQuery({
       ...query,
-      ...payload
+      ...payload,
     });
   };
 
@@ -246,27 +258,48 @@ const CTList = ({ match = {} }) => {
     const ids = selectedRowKeys;
     let keys;
     if (selectedRowKeys && !isEmpty(selectedRowKeys)) {
-      keys = selectedRowKeys.map(key => {
-        return `ids=${key}`;
-      }).join('&');
+      keys = selectedRowKeys
+        .map(key => {
+          return `ids=${key}`;
+        })
+        .join('&');
     }
-    let url = `/api/v1/templates/export?download=true${!isEmpty(ids) && ('&' + keys) || ''}`;
+    let url = `/api/v1/templates/export?download=true${
+      (!isEmpty(ids) && '&' + keys) || ''
+    }`;
     await downloadImportTemplate(url, { orgId });
     clearSelected();
   };
 
   const batchScanDisabled = useMemo(() => {
-    return !selectedRows.length || selectedRows.find(it => SCAN_DISABLE_STATUS.includes(it.policyStatus));
+    return (
+      !selectedRows.length ||
+      selectedRows.find(it => SCAN_DISABLE_STATUS.includes(it.policyStatus))
+    );
   });
 
   return (
     <div style={{ padding: '36px 24px' }}>
       <div>
-        <Space style={{ marginBottom: 20, display: 'flex', justifyContent: 'space-between' }}>
+        <Space
+          style={{
+            marginBottom: 20,
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
           <Space>
-            <Button type='primary' onClick={createCT}>{t('define.addTemplate')}</Button>
-            {exchangeUrl && <Button onClick={importFromExchange}>{t('define.import.fromIaCStore')}</Button>}
-            <Button disabled={batchScanDisabled} onClick={batchScan}>{t('define.complianceScan')}</Button>
+            <Button type='primary' onClick={createCT}>
+              {t('define.addTemplate')}
+            </Button>
+            {exchangeUrl && (
+              <Button onClick={importFromExchange}>
+                {t('define.import.fromIaCStore')}
+              </Button>
+            )}
+            <Button disabled={batchScanDisabled} onClick={batchScan}>
+              {t('define.complianceScan')}
+            </Button>
           </Space>
           <Space>
             <Input
@@ -274,13 +307,21 @@ const CTList = ({ match = {} }) => {
               allowClear={true}
               placeholder={t('define.ct.search.placeholder')}
               prefix={<SearchOutlined />}
-              onPressEnter={(e) => {
+              onPressEnter={e => {
                 const q = e.target.value;
                 changeQuery({ q, pageNo: 1 });
               }}
             />
-            <Button icon={<DownIcon />} onClick={() => setVisible(true)}>{t('define.import')}</Button>
-            <Button disabled={selectedRowKeys.length === 0} icon={<UploadIcon />} onClick={() => download()}>{t('define.export')}</Button>
+            <Button icon={<DownIcon />} onClick={() => setVisible(true)}>
+              {t('define.import')}
+            </Button>
+            <Button
+              disabled={selectedRowKeys.length === 0}
+              icon={<UploadIcon />}
+              onClick={() => download()}
+            >
+              {t('define.export')}
+            </Button>
           </Space>
         </Space>
         <Table
@@ -295,35 +336,42 @@ const CTList = ({ match = {} }) => {
             total: resultMap.total,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
+            showTotal: total =>
+              t('define.pagination.showTotal', { values: { total } }),
             onChange: (pageNo, pageSize) => {
               changeQuery({
                 pageNo,
-                pageSize
+                pageSize,
               });
-            }
+            },
           }}
-          rowSelection={
-            {
-              columnWidth: 26,
-              fixed: true,
-              selectedRowKeys,
-              onChange: (keys, rows) => {
-                setSelectedRowKeys(keys);
-                setSelectedRows(rows);
-              },
-              getCheckboxProps: (R) => ({
-                disabled: R.internal || R.isDemo
-              })
-            }
-          }
+          rowSelection={{
+            columnWidth: 26,
+            fixed: true,
+            selectedRowKeys,
+            onChange: (keys, rows) => {
+              setSelectedRowKeys(keys);
+              setSelectedRows(rows);
+            },
+            getCheckboxProps: R => ({
+              disabled: R.internal || R.isDemo,
+            }),
+          }}
         />
       </div>
-      {detectionDrawerProps.visible && <DetectionDrawer 
-        {...detectionDrawerProps}
-        onClose={closeDetectionDrawer}
-      />} 
-      {visible && <ImportModal orgId={orgId} reload={() => fetchList()} toggleVisible={() => setVisible(false)}/>}
+      {detectionDrawerProps.visible && (
+        <DetectionDrawer
+          {...detectionDrawerProps}
+          onClose={closeDetectionDrawer}
+        />
+      )}
+      {visible && (
+        <ImportModal
+          orgId={orgId}
+          reload={() => fetchList()}
+          toggleVisible={() => setVisible(false)}
+        />
+      )}
     </div>
   );
 };

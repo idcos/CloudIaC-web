@@ -3,12 +3,11 @@ import { Button, Space, Tooltip } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { t } from 'utils/i18n';
 
-export default ({ text, disabled, copyRequest, style }) => {
+const Copy = ({ text, disabled, copyRequest, style }) => {
+  const [isCopied, setIsCopied] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
-  const [ isCopied, setIsCopied] = useState(false);
-  const [ copySuccess, setCopySuccess ] = useState(false);
-
-  const runCopy = (copyText) => {
+  const runCopy = copyText => {
     try {
       const copyEle = document.createElement('div');
       copyEle.innerText = copyText;
@@ -17,7 +16,7 @@ export default ({ text, disabled, copyRequest, style }) => {
       window.getSelection().removeAllRanges(); //清除页面中已有的selection
       range.selectNode(copyEle); // 选中需要复制的节点
       window.getSelection().addRange(range); // 执行选中元素
-      const copyStatus = document.execCommand("Copy"); // 执行copy操作
+      const copyStatus = document.execCommand('Copy'); // 执行copy操作
       setIsCopied(true);
       setCopySuccess(!!copyStatus);
       setTimeout(() => {
@@ -38,7 +37,7 @@ export default ({ text, disabled, copyRequest, style }) => {
 
   const copy = () => {
     if (copyRequest) {
-      copyRequest().then((text) => {
+      copyRequest().then(text => {
         runCopy(text);
       });
     } else {
@@ -47,19 +46,24 @@ export default ({ text, disabled, copyRequest, style }) => {
   };
 
   return (
-    <Button type='link' onClick={copy} disabled={disabled} style={{ padding: 0, ...style }}>
+    <Button
+      type='link'
+      onClick={copy}
+      disabled={disabled}
+      style={{ padding: 0, ...style }}
+    >
       <Space size={4}>
         <Tooltip title={t('define.message.copyTooltip')}>
           <CopyOutlined />
         </Tooltip>
-        {isCopied && (
-          copySuccess ? (
+        {isCopied &&
+          (copySuccess ? (
             <span>{t('define.message.copySuccess')}!</span>
           ) : (
             <span className='danger-text'>{t('define.message.copyFail')}!</span>
-          )
-        )}
+          ))}
       </Space>
     </Button>
   );
 };
+export default Copy;

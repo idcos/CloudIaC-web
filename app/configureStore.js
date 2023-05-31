@@ -17,7 +17,7 @@ export default function configureStore(initialState = {}, history) {
   if (process.env.NODE_ENV !== 'production' && typeof window === 'object') {
     /* eslint-disable no-underscore-dangle */
     if (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
-      composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({}); 
+      composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({});
     }
 
     // NOTE: Uncomment the code below to restore support for Redux Saga
@@ -35,20 +35,20 @@ export default function configureStore(initialState = {}, history) {
   // Create the store with two middlewares
   // 1. sagaMiddleware: Makes redux-sagas work
   // 2. routerMiddleware: Syncs the location/URL path to the state
-  const middlewares = [ sagaMiddleware, routerMiddleware(history) ];
+  const middlewares = [sagaMiddleware, routerMiddleware(history)];
 
   const enhancers = [
     applyMiddleware(...middlewares),
     createInjectorsEnhancer({
       createReducer,
-      runSaga
-    })
+      runSaga,
+    }),
   ];
 
   const store = createStore(
     createReducer(),
     initialState,
-    composeEnhancers(...enhancers)
+    composeEnhancers(...enhancers),
   );
 
   // Make reducers hot reloadable, see http://mxs.is/googmo

@@ -9,10 +9,13 @@ import { safeJsonParse, getMatchParams } from 'utils/util';
 import queryString from 'query-string';
 function* getOrgs(action) {
   try {
-    const { isDemo } = queryString.parse(location.search);
+    const { isDemo } = queryString.parse(window.location.search);
     let res;
     if (isDemo === 'true') {
-      res = yield call(orgsAPI.allEnableOrgs, { ...action.payload, isDemo: true });
+      res = yield call(orgsAPI.allEnableOrgs, {
+        ...action.payload,
+        isDemo: true,
+      });
     } else {
       res = yield call(orgsAPI.allEnableOrgs, action.payload);
     }
@@ -21,7 +24,7 @@ function* getOrgs(action) {
     }
     yield put({
       type: 'global/set-orgs',
-      payload: res.result || {}
+      payload: res.result || {},
     });
     //url中默认存在orgId
     const { orgId } = getMatchParams();
@@ -29,13 +32,13 @@ function* getOrgs(action) {
       yield put({
         type: 'global/set-curOrg',
         payload: {
-          orgId
-        }
+          orgId,
+        },
       });
     }
   } catch (err) {
     notification.error({
-      message: err.message
+      message: err.message,
     });
   }
 }
@@ -49,7 +52,7 @@ function* getProjects(action) {
     const projects = res.result || {};
     yield put({
       type: 'global/set-projects',
-      payload: projects
+      payload: projects,
     });
     const { projectId } = getMatchParams();
     const localCurProject = safeJsonParse([localStorage.getItem('curProject')]);
@@ -59,22 +62,24 @@ function* getProjects(action) {
       yield put({
         type: 'global/set-curProject',
         payload: {
-          projectId: null
-        }
+          projectId: null,
+        },
       });
     } else if (projectId) {
       yield put({
         type: 'global/set-curProject',
         payload: {
-          projectId: projectId
-        }
+          projectId: projectId,
+        },
       });
-    } else if (projectList.find(it => localProjectId && localProjectId === it.id)) {
+    } else if (
+      projectList.find(it => localProjectId && localProjectId === it.id)
+    ) {
       yield put({
         type: 'global/set-curProject',
         payload: {
-          projectId: localProjectId
-        }
+          projectId: localProjectId,
+        },
       });
     } else {
       // yield put({
@@ -86,7 +91,7 @@ function* getProjects(action) {
     }
   } catch (err) {
     notification.error({
-      message: err.message
+      message: err.message,
     });
   }
 }
@@ -99,11 +104,11 @@ function* getUserInfo({ payload } = {}) {
     }
     yield put({
       type: 'global/set-userInfo',
-      payload: res.result || {}
+      payload: res.result || {},
     });
   } catch (err) {
     notification.error({
-      message: err.message
+      message: err.message,
     });
   }
 }
@@ -115,17 +120,17 @@ function* updateUserInfo({ payload, cb }) {
       throw new Error(res.message);
     }
     notification.success({
-      message: t('define.message.opSuccess')
+      message: t('define.message.opSuccess'),
     });
     yield put({
       type: 'global/getUserInfo',
-      payload
+      payload,
     });
     cb && cb();
   } catch (err) {
     cb && cb(err);
     notification.error({
-      message: err.message
+      message: err.message,
     });
   }
 }
@@ -138,11 +143,11 @@ function* getSysConfigSwitches({ payload } = {}) {
     }
     yield put({
       type: 'global/set-sysConfigSwitches',
-      payload: res.result || {}
+      payload: res.result || {},
     });
   } catch (err) {
     notification.error({
-      message: err.message
+      message: err.message,
     });
   }
 }

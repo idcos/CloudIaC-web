@@ -9,63 +9,69 @@ import ldapAPI from 'services/ldap';
 const { Option } = Select;
 const FL = {
   labelCol: { span: 4 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 16 },
 };
 
-export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, orgId }) => {
-
-  const [ submitLoading, setSubmitLoading ] = useState(false);
+const LdapModal = ({
+  visible,
+  toggleVisible,
+  operation,
+  opt,
+  curRecord,
+  ORG_SET,
+  orgId,
+}) => {
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
-  
-  const {
-    data: ous = []
-  } = useRequest(
-    () => requestWrapper(
-      ldapAPI.ous.bind(null, { orgId })
-    ), {
-      formatResult: res => loopTree(res ? [res] : [])
-    }
+
+  const { data: ous = [] } = useRequest(
+    () => requestWrapper(ldapAPI.ous.bind(null, { orgId })),
+    {
+      formatResult: res => loopTree(res ? [res] : []),
+    },
   );
 
-  const loopTree = (data) => {
+  const loopTree = data => {
     if (!data) {
       return [];
     }
-    return data.map((it) => {
+    return data.map(it => {
       return {
         label: it.ou,
         value: it.dn,
-        children: loopTree(it.children)
+        children: loopTree(it.children),
       };
     });
   };
 
-  const {
-    data: users = [],
-    run: searchUsers
-  } = useRequest(
-    (params) => requestWrapper(
-      ldapAPI.users.bind(null, { orgId, count: 1000, ...params })
-    ), {
+  const { data: users = [], run: searchUsers } = useRequest(
+    params =>
+      requestWrapper(
+        ldapAPI.users.bind(null, { orgId, count: 1000, ...params }),
+      ),
+    {
       manual: true,
       debounceInterval: 1000,
-      formatResult: res => (res && res.ldapUsers) || []
-    }
+      formatResult: res => (res && res.ldapUsers) || [],
+    },
   );
-  
+
   const onOk = async () => {
     const values = await form.validateFields();
     const { type, ...formValues } = values || {};
     setSubmitLoading(true);
-    operation({
-      doWhat: type === 'LDAP/OU' ? 'addLdapOU' : 'addLdapUser',
-      payload: {
-        ...formValues
-      }
-    }, (hasError) => {
-      setSubmitLoading(false);
-      !hasError && toggleVisible();
-    });
+    operation(
+      {
+        doWhat: type === 'LDAP/OU' ? 'addLdapOU' : 'addLdapUser',
+        payload: {
+          ...formValues,
+        },
+      },
+      hasError => {
+        setSubmitLoading(false);
+        !hasError && toggleVisible();
+      },
+    );
   };
 
   return (
@@ -76,17 +82,14 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
       onCancel={toggleVisible}
       className='antd-modal-type-form'
       okButtonProps={{
-        loading: submitLoading
+        loading: submitLoading,
       }}
-      cancelButtonProps={{ 
-        className: 'ant-btn-tertiary' 
+      cancelButtonProps={{
+        className: 'ant-btn-tertiary',
       }}
       onOk={onOk}
     >
-      <Form
-        {...FL}
-        form={form}
-      >
+      <Form {...FL} form={form}>
         <Form.Item
           label={t('define.page.userSet.basic.field.type')}
           name='type'
@@ -99,15 +102,11 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
           </Radio.Group>
         </Form.Item>
         <Form.Item noStyle={true} shouldUpdate={true}>
-          {(form) => {
+          {form => {
             const { type } = form.getFieldsValue();
             return type === 'LDAP/OU' ? (
-              <Form.Item
-                label='OU'
-                name='dn'
-                required={true}
-              >
-                <TreeSelect 
+              <Form.Item label='OU' name='dn' required={true}>
+                <TreeSelect
                   showArrow={true}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
@@ -117,20 +116,19 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
                 />
               </Form.Item>
             ) : (
-              <Form.Item
-                label='User'
-                name='email'
-                required={true}
-              >
-                <Select 
+              <Form.Item label='User' name='email' required={true}>
+                <Select
                   showArrow={true}
                   mode='multiple'
                   filterOption={false}
-                  onSearch={(val) => searchUsers({ q: val })}
+                  onSearch={val => searchUsers({ q: val })}
                   onFocus={() => searchUsers()}
                   getPopupContainer={triggerNode => triggerNode.parentNode}
                   placeholder={t('define.form.select.placeholder')}
-                  options={users.map((it) => ({ label: it.displayName, value: it.email }))}
+                  options={users.map(it => ({
+                    label: it.displayName,
+                    value: it.email,
+                  }))}
                 />
               </Form.Item>
             );
@@ -142,16 +140,18 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
           rules={[
             {
               required: true,
-              message: t('define.form.select.placeholder')
-            }
+              message: t('define.form.select.placeholder'),
+            },
           ]}
         >
-          <Select 
+          <Select
             getPopupContainer={triggerNode => triggerNode.parentNode}
             placeholder={t('define.form.select.placeholder')}
           >
             {ORG_SET ? (
-              Object.keys(ORG_USER.role).map(it => <Option value={it}>{ORG_USER.role[it]}</Option>)
+              Object.keys(ORG_USER.role).map(it => (
+                <Option value={it}>{ORG_USER.role[it]}</Option>
+              ))
             ) : (
               <Option value='member'>{t('org.role.member')}</Option>
             )}
@@ -161,3 +161,5 @@ export default ({ visible, toggleVisible, operation, opt, curRecord, ORG_SET, or
     </Modal>
   );
 };
+
+export default LdapModal;

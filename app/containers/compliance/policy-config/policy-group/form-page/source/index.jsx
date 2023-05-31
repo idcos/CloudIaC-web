@@ -1,5 +1,20 @@
-import React, { useState, useContext, useEffect, useImperativeHandle } from 'react';
-import { Form, Row, Col, Radio, Select, Input, Button, Spin, Space } from 'antd';
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+} from 'react';
+import {
+  Form,
+  Row,
+  Col,
+  Radio,
+  Select,
+  Input,
+  Button,
+  Spin,
+  Space,
+} from 'antd';
 import intersection from 'lodash/intersection';
 import { useRequest } from 'ahooks';
 import { requestWrapper } from 'utils/request';
@@ -7,36 +22,33 @@ import { useRegistryCfg } from 'utils/hooks';
 import vcsAPI from 'services/vcs';
 import cgroupsAPI from 'services/cgroups';
 import registryAPI from 'services/registry';
-import Coder from "components/coder";
+import Coder from 'components/coder';
 import { t } from 'utils/i18n';
 import FormPageContext from '../form-page-context';
 import styles from './styles.less';
 
 const FL = {
   labelCol: { span: 5 },
-  wrapperCol: { span: 19 }
+  wrapperCol: { span: 19 },
 };
 
-export default () => {
-
-  const { 
-    isCreate, 
-    type, 
-    formData, 
-    setFormData, 
-    setCurrent, 
-    stepRef, 
-    formDataToParams, 
-    linkToPolicyGroupList, 
-    create,
-    createLoading,
+const Source = () => {
+  const {
+    isCreate,
+    type,
+    formData,
+    setFormData,
+    setCurrent,
+    stepRef,
+    formDataToParams,
+    linkToPolicyGroupList,
     update,
     updateLoading,
-    ready
+    ready,
   } = useContext(FormPageContext);
   const [form] = Form.useForm();
   const { flag: registryFlag } = useRegistryCfg();
-  const [ checkErrMsg, setCheckErrMsg ] = useState();
+  const [checkErrMsg, setCheckErrMsg] = useState();
 
   useEffect(() => {
     if (ready) {
@@ -45,44 +57,44 @@ export default () => {
       initFetchInfo(formValues);
       form.validateFields(['source']);
     }
-  }, [ ready, registryFlag ]);
+  }, [ready, registryFlag]);
 
   // 校验策略组表单
-  const {
-    run: check
-  } = useRequest(
-    (params) => requestWrapper(
-      cgroupsAPI.checks.bind(null, params), {
-        autoError: false
-      }
-    ), {
-      manual: true, 
+  const { run: check } = useRequest(
+    params =>
+      requestWrapper(cgroupsAPI.checks.bind(null, params), {
+        autoError: false,
+      }),
+    {
+      manual: true,
       debounceInterval: 500,
       onSuccess: () => {
         setCheckErrMsg();
-        form.validateFields([ 'repoRevision', 'dir' ]);
+        form.validateFields(['repoRevision', 'dir']);
       },
-      onError: (err) => {
-        setCheckErrMsg(err.message || t('define.policyGroup.form.error.online'));
-        form.validateFields([ 'repoRevision', 'dir' ]);
-      }
-    }
+      onError: err => {
+        setCheckErrMsg(
+          err.message || t('define.policyGroup.form.error.online'),
+        );
+        form.validateFields(['repoRevision', 'dir']);
+      },
+    },
   );
 
   // vcs选项
-  const {
-    data: vcsOptions = [],
-    loading: vcsLoading
-  } = useRequest(
-    () => requestWrapper(
-      vcsAPI.searchVcs.bind(null, { 
-        status: 'enable',
-        isShowDefaultVcs: true,
-        pageSize: 0
-      })
-    ), {
-      formatResult: res => (res.list || []).map(it => ({ label: it.name, value: it.id }))
-    }
+  const { data: vcsOptions = [], loading: vcsLoading } = useRequest(
+    () =>
+      requestWrapper(
+        vcsAPI.searchVcs.bind(null, {
+          status: 'enable',
+          isShowDefaultVcs: true,
+          pageSize: 0,
+        }),
+      ),
+    {
+      formatResult: res =>
+        (res.list || []).map(it => ({ label: it.name, value: it.id })),
+    },
   );
 
   // 仓库选项
@@ -90,29 +102,35 @@ export default () => {
     data: repoOptions = [],
     loading: repoLoading,
     run: fetchRepoOptions,
-    mutate: mutateRepoOptions
+    mutate: mutateRepoOptions,
   } = useRequest(
-    ({ vcsId, q }) => requestWrapper(
-      vcsAPI.listRepo.bind(null, {
-        vcsId,
-        currentPage: 1,
-        pageSize: 50,
-        q
-      })
-    ),
+    ({ vcsId, q }) =>
+      requestWrapper(
+        vcsAPI.listRepo.bind(null, {
+          vcsId,
+          currentPage: 1,
+          pageSize: 50,
+          q,
+        }),
+      ),
     {
       manual: true,
       debounceInterval: 300,
       formatResult: data => {
         const { repoId, repoFullName } = form.getFieldsValue();
-        const hasSelectedItem = (data.list || []).find((it) => it.id === repoId);
+        const hasSelectedItem = (data.list || []).find(it => it.id === repoId);
         if (repoId && repoFullName && !hasSelectedItem) {
-          return [ ...data.list, { id: repoId, fullName: repoFullName }].map(it => ({ label: it.fullName, value: it.id }));
+          return [...data.list, { id: repoId, fullName: repoFullName }].map(
+            it => ({ label: it.fullName, value: it.id }),
+          );
         } else {
-          return (data.list || []).map(it => ({ label: it.fullName, value: it.id }));
+          return (data.list || []).map(it => ({
+            label: it.fullName,
+            value: it.id,
+          }));
         }
-      }
-    }
+      },
+    },
   );
 
   // 仓库分支选项
@@ -120,18 +138,20 @@ export default () => {
     data: repoBranchOptions = [],
     loading: repoBranchLoading,
     run: fetchRepoBranchOptions,
-    mutate: mutateRepoBranchOptions
+    mutate: mutateRepoBranchOptions,
   } = useRequest(
-    ({ vcsId, repoId }) => requestWrapper(
-      vcsAPI.listRepoBranch.bind(null, {
-        vcsId,
-        repoId
-      })
-    ),
+    ({ vcsId, repoId }) =>
+      requestWrapper(
+        vcsAPI.listRepoBranch.bind(null, {
+          vcsId,
+          repoId,
+        }),
+      ),
     {
       manual: true,
-      formatResult: data => (data || []).map(it => ({ label: it.name, value: it.name }))
-    }
+      formatResult: data =>
+        (data || []).map(it => ({ label: it.name, value: it.name })),
+    },
   );
 
   // 仓库标签选项
@@ -139,56 +159,60 @@ export default () => {
     data: repoTagOptions = [],
     loading: repoTagLoading,
     run: fetchRepoTagOptions,
-    mutate: mutateRepoTagOptions
+    mutate: mutateRepoTagOptions,
   } = useRequest(
-    ({ vcsId, repoId }) => requestWrapper(
-      vcsAPI.listRepoTag.bind(null, {
-        vcsId,
-        repoId
-      })
-    ),
+    ({ vcsId, repoId }) =>
+      requestWrapper(
+        vcsAPI.listRepoTag.bind(null, {
+          vcsId,
+          repoId,
+        }),
+      ),
     {
       manual: true,
-      formatResult: data => (data || []).map(it => ({ label: it.name, value: it.name }))
-    }
+      formatResult: data =>
+        (data || []).map(it => ({ label: it.name, value: it.name })),
+    },
   );
 
   // registry策略组列表
   const {
     data: policyGroupOptions = [],
     loading: policyGroupLoading,
-    run: fetchPolicyGroupOptions
+    run: fetchPolicyGroupOptions,
   } = useRequest(
-    () => requestWrapper(
-      registryAPI.policyGroups.bind(null, { 
-        pageSize: 0
-      })
-    ), {
+    () =>
+      requestWrapper(
+        registryAPI.policyGroups.bind(null, {
+          pageSize: 0,
+        }),
+      ),
+    {
       manual: true,
-      formatResult: res => (res.list || []).map(
-        ({ groupName, repoId, namespace, vcsId }) => ({ 
+      formatResult: res =>
+        (res.list || []).map(({ groupName, repoId, namespace, vcsId }) => ({
           vcsId,
           namespace,
           groupName,
-          label: namespace + '/' + groupName, 
-          value: repoId
-        })
-      )
-    }
+          label: namespace + '/' + groupName,
+          value: repoId,
+        })),
+    },
   );
 
   // registry策略组版本列表
   const {
     data: policyGroupVersionOptions = [],
     loading: policyGroupVersionLoading,
-    run: fetchPolicyGroupVersionOptions
+    run: fetchPolicyGroupVersionOptions,
   } = useRequest(
-    (params) => requestWrapper(
-      registryAPI.policyGroupVersions.bind(null, params)
-    ), {
+    params =>
+      requestWrapper(registryAPI.policyGroupVersions.bind(null, params)),
+    {
       manual: true,
-      formatResult: res => (res.gitTags || []).map(it => ({ label: it, value: it }))
-    }
+      formatResult: res =>
+        (res.gitTags || []).map(it => ({ label: it, value: it })),
+    },
   );
 
   // 查询readme信息
@@ -196,65 +220,67 @@ export default () => {
     data: readmeText = undefined,
     loading: readmeTextLoading,
     run: fetchReadmeText,
-    mutate: mutateReadmeText
+    mutate: mutateReadmeText,
   } = useRequest(
-    ({ vcsId, repoId, repoRevision, dir }) => requestWrapper(
-      vcsAPI.readme.bind(null, {
-        vcsId,
-        repoId,
-        repoRevision,
-        dir
-      })
-    ),
+    ({ vcsId, repoId, repoRevision, dir }) =>
+      requestWrapper(
+        vcsAPI.readme.bind(null, {
+          vcsId,
+          repoId,
+          repoRevision,
+          dir,
+        }),
+      ),
     {
       manual: true,
       debounceInterval: 500,
-      formatResult: data => data.content || ''
-    }
+      formatResult: data => data.content || '',
+    },
   );
 
-  const initFetchInfo = (formValues) => {
+  const initFetchInfo = formValues => {
     const { source, vcsId, repoId, repoRevision, gitTags, dir } = formValues;
     switch (source) {
-    case 'vcs':
-      if (vcsId) {
-        fetchRepoOptions({ vcsId });
-      }
-      if (vcsId && repoId) {
-        fetchRepoBranchOptions({ vcsId, repoId });
-        fetchRepoTagOptions({ vcsId, repoId });
-      }
-      if (vcsId && repoId && repoRevision) {
-        fetchReadmeText({
-          vcsId, 
-          repoId, 
-          repoRevision,
-          dir
-        });
-      }
-      break;
-    case 'registry':
-      if (registryFlag) {
-        fetchPolicyGroupOptions().then((data) => {
-          if (repoId) {
-            const { namespace, groupName } = data.find(it => it.value === repoId) || {};
-            fetchPolicyGroupVersionOptions({
-              gn: groupName,
-              ns: namespace
-            });
-          }
-        });
-        if (vcsId && repoId && gitTags) {
+      case 'vcs':
+        if (vcsId) {
+          fetchRepoOptions({ vcsId });
+        }
+        if (vcsId && repoId) {
+          fetchRepoBranchOptions({ vcsId, repoId });
+          fetchRepoTagOptions({ vcsId, repoId });
+        }
+        if (vcsId && repoId && repoRevision) {
           fetchReadmeText({
-            vcsId, 
-            repoId, 
-            repoRevision: gitTags
+            vcsId,
+            repoId,
+            repoRevision,
+            dir,
           });
         }
-      }
-      break;
-    default:
-      break;
+        break;
+      case 'registry':
+        if (registryFlag) {
+          fetchPolicyGroupOptions().then(data => {
+            if (repoId) {
+              const { namespace, groupName } =
+                data.find(it => it.value === repoId) || {};
+              fetchPolicyGroupVersionOptions({
+                gn: groupName,
+                ns: namespace,
+              });
+            }
+          });
+          if (vcsId && repoId && gitTags) {
+            fetchReadmeText({
+              vcsId,
+              repoId,
+              repoRevision: gitTags,
+            });
+          }
+        }
+        break;
+      default:
+        break;
     }
   };
 
@@ -262,91 +288,105 @@ export default () => {
     const changedKeys = Object.keys(changedValues);
     const { source, vcsId, repoId, repoRevision, dir } = allValues || {};
     switch (source) {
-    case 'vcs':
-      if (changedKeys.includes('vcsId')) {
-        // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
-        !!repoOptions.lenngth && mutateRepoOptions([]);
-        !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
-        !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
-        form.setFieldsValue({
-          repoId: undefined,
-          repoFullName: undefined,
-          repoRevision: undefined,
-          branch: undefined,
-          gitTags: undefined,
-          dir: undefined
-        });
-        if (vcsId) {
-          fetchRepoOptions({ vcsId });
-        }
-      }
-      if (changedKeys.includes('repoId')) {
-        // 切换仓库需要将关联的数据源【分支、标签】清空 ，再重新查询数据源
-        !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
-        !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
-        form.setFieldsValue({
-          repoFullName: (repoOptions.find(it => it.value === changedValues.repoId) || {}).label,
-          repoRevision: undefined,
-          branch: undefined,
-          gitTags: undefined,
-          dir: undefined
-        });
-        if (vcsId && repoId) {
-          fetchRepoBranchOptions({ vcsId, repoId });
-          fetchRepoTagOptions({ vcsId, repoId });
-        }
-      }
-      // readme参数依赖是否变化
-      const readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'repoRevision', 'dir' ]).length > 0;
-      if (readmeParamsChange) {
-        if (intersection(changedKeys, [ 'repoRevision', 'dir' ]).length > 0 && repoRevision) {
-          fetchReadmeText({
-            vcsId, 
-            repoId, 
-            repoRevision,
-            dir
+      case 'vcs':
+        if (changedKeys.includes('vcsId')) {
+          // 切换vcs需要将关联的数据源【仓库、分支、标签】清空 ，再重新查询数据源
+          !!repoOptions.lenngth && mutateRepoOptions([]);
+          !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
+          !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
+          form.setFieldsValue({
+            repoId: undefined,
+            repoFullName: undefined,
+            repoRevision: undefined,
+            branch: undefined,
+            gitTags: undefined,
+            dir: undefined,
           });
-        } else {
-          readmeText !== undefined && mutateReadmeText(undefined);
+          if (vcsId) {
+            fetchRepoOptions({ vcsId });
+          }
         }
-      }
-      // 触发check接口的依赖
-      const checkParamsChange = intersection(changedKeys, [ 'repoRevision', 'dir' ]).length > 0;
-      if (checkParamsChange) {
-        const params = formDataToParams({ ...formData, [type]: allValues });
-        check(params);
-      }
-      break;
-    case 'registry':
-      if (registryFlag) {
+        if (changedKeys.includes('repoId')) {
+          // 切换仓库需要将关联的数据源【分支、标签】清空 ，再重新查询数据源
+          !!repoBranchOptions.lenngth && mutateRepoBranchOptions([]);
+          !!repoTagOptions.lenngth && mutateRepoTagOptions([]);
+          form.setFieldsValue({
+            repoFullName: (
+              repoOptions.find(it => it.value === changedValues.repoId) || {}
+            ).label,
+            repoRevision: undefined,
+            branch: undefined,
+            gitTags: undefined,
+            dir: undefined,
+          });
+          if (vcsId && repoId) {
+            fetchRepoBranchOptions({ vcsId, repoId });
+            fetchRepoTagOptions({ vcsId, repoId });
+          }
+        }
         // readme参数依赖是否变化
-        const _readmeParamsChange = intersection(changedKeys, [ 'source', 'vcsId', 'repoId', 'gitTags' ]).length > 0;
-        if (_readmeParamsChange) {
-          if (changedValues.gitTags) {
+        const readmeParamsChange =
+          intersection(changedKeys, [
+            'source',
+            'vcsId',
+            'repoId',
+            'repoRevision',
+            'dir',
+          ]).length > 0;
+        if (readmeParamsChange) {
+          if (
+            intersection(changedKeys, ['repoRevision', 'dir']).length > 0 &&
+            repoRevision
+          ) {
             fetchReadmeText({
-              vcsId, 
-              repoId, 
-              repoRevision: changedValues.gitTags
+              vcsId,
+              repoId,
+              repoRevision,
+              dir,
             });
           } else {
             readmeText !== undefined && mutateReadmeText(undefined);
           }
         }
-      }
-      break;
-    default:
-      break;
+        // 触发check接口的依赖
+        const checkParamsChange =
+          intersection(changedKeys, ['repoRevision', 'dir']).length > 0;
+        if (checkParamsChange) {
+          const params = formDataToParams({ ...formData, [type]: allValues });
+          check(params);
+        }
+        break;
+      case 'registry':
+        if (registryFlag) {
+          // readme参数依赖是否变化
+          const _readmeParamsChange =
+            intersection(changedKeys, ['source', 'vcsId', 'repoId', 'gitTags'])
+              .length > 0;
+          if (_readmeParamsChange) {
+            if (changedValues.gitTags) {
+              fetchReadmeText({
+                vcsId,
+                repoId,
+                repoRevision: changedValues.gitTags,
+              });
+            } else {
+              readmeText !== undefined && mutateReadmeText(undefined);
+            }
+          }
+        }
+        break;
+      default:
+        break;
     }
   };
 
-  const onSearchRepos = (value) => {
+  const onSearchRepos = value => {
     const vcsId = form.getFieldValue('vcsId');
     vcsId && fetchRepoOptions({ vcsId, q: value });
   };
 
   const next = async () => {
     const formValues = await form.validateFields();
-    const params = formDataToParams({ ...formData, [type]: formValues });
     setFormData(preValue => ({ ...preValue, [type]: formValues }));
     setCurrent(preValue => preValue + 1);
   };
@@ -358,20 +398,19 @@ export default () => {
   };
 
   useImperativeHandle(stepRef, () => ({
-    onFinish: async (index) => {
+    onFinish: async index => {
       const formValues = await form.validateFields();
-      const params = formDataToParams({ ...formData, [type]: formValues });
       setFormData(preValue => ({ ...preValue, [type]: formValues }));
       setCurrent(index);
-    }
+    },
   }));
 
   return (
     <Form form={form} {...FL} onValuesChange={onValuesChange}>
       <Row gutter={36} className={styles.sourceForm}>
         <Col span={11}>
-          <Form.Item 
-            name='source' 
+          <Form.Item
+            name='source'
             wrapperCol={{ offset: 5, span: 19 }}
             initialValue='vcs'
             shouldUpdate={true}
@@ -379,19 +418,21 @@ export default () => {
               {
                 validator(_, value) {
                   if (!registryFlag && value === 'registry') {
-                    return Promise.reject(new Error(t('define.policyGroup.form.error.noRegistry')));
+                    return Promise.reject(
+                      new Error(t('define.policyGroup.form.error.noRegistry')),
+                    );
                   }
                   return Promise.resolve();
-                }
-              }
+                },
+              },
             ]}
           >
-            <Radio.Group 
-              onChange={(e) => {
+            <Radio.Group
+              onChange={e => {
                 const source = e.target.value;
                 form.resetFields();
                 form.setFieldsValue({
-                  source
+                  source,
                 });
                 form.validateFields(['source']);
                 if (source === 'registry' && registryFlag) {
@@ -407,183 +448,232 @@ export default () => {
             {({ getFieldValue }) => {
               const source = getFieldValue('source');
               switch (source) {
-              case 'vcs':
-                return (
-                  <>
-                    <Form.Item 
-                      label='VCS'
-                      name='vcsId' 
-                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
-                    >
-                      <Select 
-                        placeholder={t('define.form.select.placeholder')}
-                        optionFilterProp='label'
-                        showSearch={true}
-                        loading={vcsLoading}
-                        options={vcsOptions}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label={t('define.repo')}
-                      name='repoId'
-                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
-                    >
-                      <Select 
-                        loading={repoLoading}
-                        optionFilterProp='label'
-                        options={repoOptions}
-                        showSearch={true}
-                        filterOption={false}
-                        onDropdownVisibleChange={(open) => open && onSearchRepos()}
-                        onSearch={onSearchRepos}
-                        placeholder={t('define.searchByRepoName')}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name='repoFullName'
-                      hidden={true}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item 
-                      label={`${t('define.branch')}/${t('define.tag')}`}
-                      name='repoRevision'
-                      dependencies={['dir']}
-                      rules={[
-                        { required: true, message: t('define.form.select.placeholder') },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            const dir = getFieldValue('dir');
-                            if (value && !dir && checkErrMsg) {
-                              return Promise.reject(new Error(checkErrMsg));
-                            }
-                            return Promise.resolve();
-                          }
-                        })
-                      ]}
-                    >
-                      <Select 
-                        placeholder={t('define.form.select.placeholder')}
-                        loading={repoBranchLoading || repoTagLoading}
-                        onChange={(value, option) => {
-                          if (option.type === 'branch') {
-                            form.setFieldsValue({ branch: value, gitTags: '' });
-                          } else {
-                            form.setFieldsValue({ gitTags: value, branch: '' });
-                          }
-                        }}
+                case 'vcs':
+                  return (
+                    <>
+                      <Form.Item
+                        label='VCS'
+                        name='vcsId'
+                        rules={[
+                          {
+                            required: true,
+                            message: t('define.form.select.placeholder'),
+                          },
+                        ]}
                       >
-                        <Select.OptGroup label={t('define.branch')}>
-                          {repoBranchOptions.map(it => <Select.Option value={it.value} type='branch'>{it.label}</Select.Option>)}
-                        </Select.OptGroup>
-                        <Select.OptGroup label={t('define.tag')}>
-                          {repoTagOptions.map(it => <Select.Option value={it.value} type='gitTags'>{it.label}</Select.Option>)}
-                        </Select.OptGroup>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item 
-                      label={t('define.branch')}
-                      name='branch'
-                      hidden={true}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item 
-                      label={t('define.tag')}
-                      name='gitTags'
-                      hidden={true}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item 
-                      label={t('define.workdir')}
-                      name='dir'
-                      rules={[
-                        {
-                          validator(_, value) {
-                            if (value && checkErrMsg) {
-                              return Promise.reject(new Error(checkErrMsg));
-                            }
-                            return Promise.resolve();
+                        <Select
+                          placeholder={t('define.form.select.placeholder')}
+                          optionFilterProp='label'
+                          showSearch={true}
+                          loading={vcsLoading}
+                          options={vcsOptions}
+                        />
+                      </Form.Item>
+                      <Form.Item
+                        label={t('define.repo')}
+                        name='repoId'
+                        rules={[
+                          {
+                            required: true,
+                            message: t('define.form.select.placeholder'),
+                          },
+                        ]}
+                      >
+                        <Select
+                          loading={repoLoading}
+                          optionFilterProp='label'
+                          options={repoOptions}
+                          showSearch={true}
+                          filterOption={false}
+                          onDropdownVisibleChange={open =>
+                            open && onSearchRepos()
                           }
-                        }
-                      ]}
-                    >
-                      <Input placeholder={t('define.form.input.placeholder')} />
-                    </Form.Item>
-                  </>
-                );
-              case 'registry':
-                return (
-                  <>
-                    <Form.Item 
-                      label={t('define.policyGroup')}
-                      name='repoId'
-                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
-                    >
-                      <Select 
-                        placeholder={t('define.form.select.placeholder')}
-                        optionFilterProp='label'
-                        showSearch={true}
-                        loading={policyGroupLoading}
-                        options={policyGroupOptions}
-                        onChange={(value, option) => {
-                          const { vcsId, groupName, namespace } = option;
-                          form.setFieldsValue({
-                            vcsId: vcsId,
-                            gitTags: undefined
-                          });
-                          registryFlag && fetchPolicyGroupVersionOptions({
-                            gn: groupName,
-                            ns: namespace
-                          });
-                        }}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label='vcs'
-                      name='vcsId'
-                      hidden={true}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item 
-                      label={t('define.version')}
-                      name='gitTags'
-                      rules={[{ required: true, message: t('define.form.select.placeholder') }]}
-                    >
-                      <Select 
-                        placeholder={t('define.form.select.placeholder')}
-                        optionFilterProp='label'
-                        showSearch={true}
-                        loading={policyGroupVersionLoading}
-                        options={policyGroupVersionOptions}
-                      />
-                    </Form.Item>
-                  </>
-                );
-              default:
-                return;
+                          onSearch={onSearchRepos}
+                          placeholder={t('define.searchByRepoName')}
+                        />
+                      </Form.Item>
+                      <Form.Item name='repoFullName' hidden={true}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label={`${t('define.branch')}/${t('define.tag')}`}
+                        name='repoRevision'
+                        dependencies={['dir']}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('define.form.select.placeholder'),
+                          },
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              const dir = getFieldValue('dir');
+                              if (value && !dir && checkErrMsg) {
+                                return Promise.reject(new Error(checkErrMsg));
+                              }
+                              return Promise.resolve();
+                            },
+                          }),
+                        ]}
+                      >
+                        <Select
+                          placeholder={t('define.form.select.placeholder')}
+                          loading={repoBranchLoading || repoTagLoading}
+                          onChange={(value, option) => {
+                            if (option.type === 'branch') {
+                              form.setFieldsValue({
+                                branch: value,
+                                gitTags: '',
+                              });
+                            } else {
+                              form.setFieldsValue({
+                                gitTags: value,
+                                branch: '',
+                              });
+                            }
+                          }}
+                        >
+                          <Select.OptGroup label={t('define.branch')}>
+                            {repoBranchOptions.map(it => (
+                              <Select.Option value={it.value} type='branch'>
+                                {it.label}
+                              </Select.Option>
+                            ))}
+                          </Select.OptGroup>
+                          <Select.OptGroup label={t('define.tag')}>
+                            {repoTagOptions.map(it => (
+                              <Select.Option value={it.value} type='gitTags'>
+                                {it.label}
+                              </Select.Option>
+                            ))}
+                          </Select.OptGroup>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item
+                        label={t('define.branch')}
+                        name='branch'
+                        hidden={true}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label={t('define.tag')}
+                        name='gitTags'
+                        hidden={true}
+                      >
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label={t('define.workdir')}
+                        name='dir'
+                        rules={[
+                          {
+                            validator(_, value) {
+                              if (value && checkErrMsg) {
+                                return Promise.reject(new Error(checkErrMsg));
+                              }
+                              return Promise.resolve();
+                            },
+                          },
+                        ]}
+                      >
+                        <Input
+                          placeholder={t('define.form.input.placeholder')}
+                        />
+                      </Form.Item>
+                    </>
+                  );
+                case 'registry':
+                  return (
+                    <>
+                      <Form.Item
+                        label={t('define.policyGroup')}
+                        name='repoId'
+                        rules={[
+                          {
+                            required: true,
+                            message: t('define.form.select.placeholder'),
+                          },
+                        ]}
+                      >
+                        <Select
+                          placeholder={t('define.form.select.placeholder')}
+                          optionFilterProp='label'
+                          showSearch={true}
+                          loading={policyGroupLoading}
+                          options={policyGroupOptions}
+                          onChange={(value, option) => {
+                            const { vcsId, groupName, namespace } = option;
+                            form.setFieldsValue({
+                              vcsId: vcsId,
+                              gitTags: undefined,
+                            });
+                            registryFlag &&
+                              fetchPolicyGroupVersionOptions({
+                                gn: groupName,
+                                ns: namespace,
+                              });
+                          }}
+                        />
+                      </Form.Item>
+                      <Form.Item label='vcs' name='vcsId' hidden={true}>
+                        <Input />
+                      </Form.Item>
+                      <Form.Item
+                        label={t('define.version')}
+                        name='gitTags'
+                        rules={[
+                          {
+                            required: true,
+                            message: t('define.form.select.placeholder'),
+                          },
+                        ]}
+                      >
+                        <Select
+                          placeholder={t('define.form.select.placeholder')}
+                          optionFilterProp='label'
+                          showSearch={true}
+                          loading={policyGroupVersionLoading}
+                          options={policyGroupVersionOptions}
+                        />
+                      </Form.Item>
+                    </>
+                  );
+                default:
+                  return;
               }
             }}
           </Form.Item>
-          <Form.Item 
+          <Form.Item
             wrapperCol={{ span: 19, offset: 5 }}
             shouldUpdate={true}
             style={{ paddingTop: 24 }}
           >
             {({ getFieldsError }) => {
-              const hasErr = !!(getFieldsError().find((it) => {
+              const hasErr = !!getFieldsError().find(it => {
                 return it.errors && it.errors.length > 0;
-              }));
+              });
               return isCreate ? (
                 <Space>
-                  <Button disabled={hasErr} type='primary' onClick={next}>{t('define.action.next')}</Button>
+                  <Button disabled={hasErr} type='primary' onClick={next}>
+                    {t('define.action.next')}
+                  </Button>
                 </Space>
               ) : (
                 <Space>
-                  <Button className='ant-btn-tertiary' onClick={linkToPolicyGroupList}>{t('define.action.cancel')}</Button>     
-                  <Button disabled={hasErr} type='primary' onClick={onUpdate} loading={updateLoading}>{t('define.action.submit')}</Button>     
+                  <Button
+                    className='ant-btn-tertiary'
+                    onClick={linkToPolicyGroupList}
+                  >
+                    {t('define.action.cancel')}
+                  </Button>
+                  <Button
+                    disabled={hasErr}
+                    type='primary'
+                    onClick={onUpdate}
+                    loading={updateLoading}
+                  >
+                    {t('define.action.submit')}
+                  </Button>
                 </Space>
               );
             }}
@@ -597,22 +687,30 @@ export default () => {
                 <>
                   <div className='title'>Readme</div>
                   <div className='code-wrapper'>
-                    {readmeTextLoading ? <Spin /> : (
-                      readmeText ? (
-                        <Coder value={readmeText} style={{ height: '100%' }} />
-                      ) : (
-                        <div className='empty-text'>
-                          {readmeText === undefined ? (
-                            source === 'vcs' ? (
-                              <span>{t('define.policyGroup.form.readme.empty.vcs')}</span>
-                            ) : (
-                              <span>{t('define.policyGroup.form.readme.empty.registry')}</span>
-                            )
+                    {readmeTextLoading ? (
+                      <Spin />
+                    ) : readmeText ? (
+                      <Coder value={readmeText} style={{ height: '100%' }} />
+                    ) : (
+                      <div className='empty-text'>
+                        {readmeText === undefined ? (
+                          source === 'vcs' ? (
+                            <span>
+                              {t('define.policyGroup.form.readme.empty.vcs')}
+                            </span>
                           ) : (
-                            <span>{t('define.policyGroup.form.readme.empty.default')}</span>
-                          )}
-                        </div>
-                      )
+                            <span>
+                              {t(
+                                'define.policyGroup.form.readme.empty.registry',
+                              )}
+                            </span>
+                          )
+                        ) : (
+                          <span>
+                            {t('define.policyGroup.form.readme.empty.default')}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
                 </>
@@ -624,3 +722,5 @@ export default () => {
     </Form>
   );
 };
+
+export default Source;

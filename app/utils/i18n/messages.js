@@ -5,7 +5,7 @@ import zhJson from 'translations/zh.json';
 const messageProps = mapValues(zhJson, (value, key) => {
   return {
     id: key,
-    defaultMessage: value
+    defaultMessage: value,
   };
 });
 

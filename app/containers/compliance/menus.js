@@ -1,9 +1,9 @@
-import { 
-  CloudOutlined, 
-  LayoutOutlined, 
-  ClusterOutlined, 
+import {
+  CloudOutlined,
+  LayoutOutlined,
+  ClusterOutlined,
   ControlOutlined,
-  GatewayOutlined
+  GatewayOutlined,
 } from '@ant-design/icons';
 import { t } from 'utils/i18n';
 
@@ -16,9 +16,10 @@ export const getComplianceMenus = () => {
         {
           name: t('define.overview'),
           key: 'dashboard',
-          icon: <ControlOutlined />
-        }],
-      icon: <ControlOutlined />
+          icon: <ControlOutlined />,
+        },
+      ],
+      icon: <ControlOutlined />,
     },
     {
       subName: t('define.complianceConfig'),
@@ -28,14 +29,14 @@ export const getComplianceMenus = () => {
         {
           name: t('define.scope.template'),
           key: 'ct',
-          icon: <LayoutOutlined />
+          icon: <LayoutOutlined />,
         },
         {
           name: t('define.scope.env'),
           key: 'env',
-          icon: <CloudOutlined />
-        }
-      ]
+          icon: <CloudOutlined />,
+        },
+      ],
     },
     {
       subName: t('define.policyManagement'),
@@ -45,14 +46,14 @@ export const getComplianceMenus = () => {
         {
           name: t('define.policyGroup'),
           key: 'policy-group',
-          icon: <ClusterOutlined />
+          icon: <ClusterOutlined />,
         },
         {
           name: t('define.policy'),
           key: 'policy',
-          icon: <GatewayOutlined />
-        }
-      ]
-    }
+          icon: <GatewayOutlined />,
+        },
+      ],
+    },
   ];
 };

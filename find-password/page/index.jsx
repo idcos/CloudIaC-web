@@ -1,43 +1,44 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Form, Input, Button, notification, Row, Col, Space } from "antd";
-import queryString from "query-string";
+import React, { useEffect, useRef, useState } from 'react';
+import { Form, Input, Button, notification, Row, Col, Space } from 'antd';
+import queryString from 'query-string';
 import { matchPath } from 'react-router-dom';
-import { LangIcon } from "components/iconfont";
-import { t, getLanguage, setLanguage } from "utils/i18n";
-import { useRequest } from "ahooks";
-import { requestWrapper } from "utils/request";
-import { authAPI } from "../services/auth";
-import styles from "./styles.less";
+import { LangIcon } from 'components/iconfont';
+import { t, getLanguage, setLanguage } from 'utils/i18n';
+import { useRequest } from 'ahooks';
+import { requestWrapper } from 'utils/request';
+import { authAPI } from '../services/auth';
+import styles from './styles.less';
 
 const layout = {
   labelCol: { span: 5 },
-  wrapperCol: { span: 19 }
+  wrapperCol: { span: 19 },
 };
 const tailLayout = {
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
-const specialWordResp = '\!\"#$%&\'\(\)*+\,-./:;<=>?@\[\\\]\^_`\{\|\}~';
+const specialWordResp = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
 
 export default () => {
   const language = getLanguage();
   const { callbackUrl, redirectToExchange } = queryString.parse(
-    window.location.search
+    window.location.search,
   );
   const [form] = Form.useForm();
-  const [ currentStep, setCurrentStep ] = useState("sendEmail");
-  const [ token, setToken ] = useState();
-  const [ showErrorMessage, setShowErrorMessage ] = useState(false);
+  const [currentStep, setCurrentStep] = useState('sendEmail');
+  const [token, setToken] = useState();
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   useRequest(() => requestWrapper(authAPI.getSysConfigSwitches.bind(null)), {
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (!(data.enableRegister || false) && currentStep === 'sendEmail') {
         redirectToLogin();
       }
-    }
+    },
   });
 
   useEffect(() => {
-    const match = matchPath(window.location.pathname, ['/find-password/:token']) || {};
+    const match =
+      matchPath(window.location.pathname, ['/find-password/:token']) || {};
     const { token } = match.params || {};
     if (token) {
       setToken(token);
@@ -59,9 +60,10 @@ export default () => {
       }
       setCurrentStep('checkEmail');
     } catch (err) {
-      err.message && notification.error({
-        message: err.message
-      });
+      err.message &&
+        notification.error({
+          message: err.message,
+        });
     }
   };
 
@@ -75,20 +77,21 @@ export default () => {
       notification.success({ message: t('define.message.opSuccess') });
       setTimeout(() => redirectToLogin(), 500);
     } catch (err) {
-      err.message && notification.error({
-        message: err.message
-      });
+      err.message &&
+        notification.error({
+          message: err.message,
+        });
     }
   };
 
-  const setUserConfig = (updateUserInfo) => {
+  const setUserConfig = updateUserInfo => {
     const { devManual = 0 } = updateUserInfo.newbieGuide || {};
     localStorage.newbieGuide_devManual = devManual <= 3;
   };
 
   useEffect(() => {
     if (localStorage.accessToken) {
-      if (redirectToExchange === "y") {
+      if (redirectToExchange === 'y') {
         redirectToExchangePage();
       } else {
         redirectToIndex();
@@ -98,29 +101,38 @@ export default () => {
 
   const handleCheckEmail = async (rules, value) => {
     if (value === undefined) {
-      return Promise.reject(new Error(t("define.registerPage.email.disabled")));
+      return Promise.reject(new Error(t('define.registerPage.email.disabled')));
     }
     const email_res = await authAPI.email({ email: value });
     if (email_res.code != 200) {
-      return Promise.reject(new Error(email_res.message_detail || email_res.message));
+      return Promise.reject(
+        new Error(email_res.message_detail || email_res.message),
+      );
     }
     const { result: email_result = {} } = email_res;
     const { activeStatus, email } = email_result;
-    if (email && activeStatus !== "active") {
-      return Promise.reject(new Error(t("define.registerPage.email.disabled")));
+    if (email && activeStatus !== 'active') {
+      return Promise.reject(new Error(t('define.registerPage.email.disabled')));
     } else {
       return Promise.resolve();
     }
   };
 
   const handleValidatorNewPassword = async (rules, value) => {
-    const reg = new RegExp(`^(?![0-9]+$)(?![${specialWordResp}]+$)(?![a-zA-Z]+$)(?![^${specialWordResp}a-zA-Z]+$)(?![^0-9a-zA-Z]+$)(?![^${specialWordResp}0-9a-zA-Z]+$).{6,30}$`, 'g');
+    const reg = new RegExp(
+      `^(?![0-9]+$)(?![${specialWordResp}]+$)(?![a-zA-Z]+$)(?![^${specialWordResp}a-zA-Z]+$)(?![^0-9a-zA-Z]+$)(?![^${specialWordResp}0-9a-zA-Z]+$).{6,30}$`,
+      'g',
+    );
     if (value == undefined || value === '') {
       setShowErrorMessage(true);
-      return Promise.reject(new Error(t('define.registerPage.password.placeholder')));
+      return Promise.reject(
+        new Error(t('define.registerPage.password.placeholder')),
+      );
     } else if (!reg.test(value)) {
       setShowErrorMessage(true);
-      return Promise.reject(new Error(t('define.page.userSet.pwd.field.newPassword.rule')));
+      return Promise.reject(
+        new Error(t('define.page.userSet.pwd.field.newPassword.rule')),
+      );
     } else {
       setShowErrorMessage(false);
       return Promise.resolve();
@@ -129,7 +141,7 @@ export default () => {
 
   const redirectToExchangePage = async () => {
     const { url, query } = queryString.parseUrl(
-      decodeURIComponent(callbackUrl)
+      decodeURIComponent(callbackUrl),
     );
     const res = await authAPI.getSsoToken();
     const { token } = (res && res.result) || {};
@@ -137,127 +149,164 @@ export default () => {
       url,
       query: {
         ...query,
-        accessToken: token
-      }
+        accessToken: token,
+      },
     });
     window.location.href = redirectToUrl;
   };
 
   const redirectToOfficialWebsite = () => {
-    window.location.href = "https://www.cloudiac.org";
+    window.location.href = 'https://www.cloudiac.org';
   };
 
   const redirectToIndex = () => {
-    window.location.href = "/";
+    window.location.href = '/';
   };
 
   const renderFormItems = () => {
     switch (currentStep) {
-    case "sendEmail":
-      return (<>
-        <div>
-          <Form.Item
-            className='format-form-item'
-            label={
-              <>
-                <span>{t('define.registerPage.email')}</span>
-              </>
-            }
-            name='email'
-            validateTrigger={'onBlur'}
-            rules={[
-              {
-                validator: (rules, value) => {
-                  return handleCheckEmail(rules, value);
+      case 'sendEmail':
+        return (
+          <>
+            <div>
+              <Form.Item
+                className='format-form-item'
+                label={
+                  <>
+                    <span>{t('define.registerPage.email')}</span>
+                  </>
                 }
-              }
-            ]}
-            getValueFromEvent={(e) => e.target.value.trim()}
-          >
-            <Input placeholder={t('define.registerPage.email.placeholder')} />
-          </Form.Item>
-        </div>
+                name='email'
+                validateTrigger={'onBlur'}
+                rules={[
+                  {
+                    validator: (rules, value) => {
+                      return handleCheckEmail(rules, value);
+                    },
+                  },
+                ]}
+                getValueFromEvent={e => e.target.value.trim()}
+              >
+                <Input
+                  placeholder={t('define.registerPage.email.placeholder')}
+                />
+              </Form.Item>
+            </div>
 
-        <div className='bottom-actions-container'>
-          <Button onClick={redirectToLogin} style={{ width: 140, height: 36 }}>
-            {t('define.action.cancel')}
-          </Button>
-          <Button type='primary' onClick={handleSendEmail} style={{ width: 140, height: 36 }}>
-            {t('define.findPassword.find')}
-          </Button>
-        </div>
-      </>);
-    case "checkEmail":
-      return <>
-        <div className='message-container'>
-          <div>{t('define.findPassword.sendEmail.message_1')}</div>
-          <div>{t('define.findPassword.sendEmail.message_2')}</div>
-        </div>
-        <div className='bottom-actions-container'>
-          <Button onClick={redirectToLogin} style={{ width: '100%' }}>
-            {t('define.findPassword.sendEmail.back')}
-          </Button>
-        </div>
-      </>;
-    case "resetPassword":
-      return <>
-        <Form.Item
-          className='format-form-item'
-          label={t('define.page.userSet.pwd.field.newPassword')}
-          name='newPassword'
-          validateTrigger={'onBlur'}
-          rules={[
-            {
-              validator: (rules, value) => {
-                return handleValidatorNewPassword(rules, value);
+            <div className='bottom-actions-container'>
+              <Button
+                onClick={redirectToLogin}
+                style={{ width: 140, height: 36 }}
+              >
+                {t('define.action.cancel')}
+              </Button>
+              <Button
+                type='primary'
+                onClick={handleSendEmail}
+                style={{ width: 140, height: 36 }}
+              >
+                {t('define.findPassword.find')}
+              </Button>
+            </div>
+          </>
+        );
+      case 'checkEmail':
+        return (
+          <>
+            <div className='message-container'>
+              <div>{t('define.findPassword.sendEmail.message_1')}</div>
+              <div>{t('define.findPassword.sendEmail.message_2')}</div>
+            </div>
+            <div className='bottom-actions-container'>
+              <Button onClick={redirectToLogin} style={{ width: '100%' }}>
+                {t('define.findPassword.sendEmail.back')}
+              </Button>
+            </div>
+          </>
+        );
+      case 'resetPassword':
+        return (
+          <>
+            <Form.Item
+              className='format-form-item'
+              label={t('define.page.userSet.pwd.field.newPassword')}
+              name='newPassword'
+              validateTrigger={'onBlur'}
+              rules={[
+                {
+                  validator: (rules, value) => {
+                    return handleValidatorNewPassword(rules, value);
+                  },
+                },
+              ]}
+              getValueFromEvent={e => e.target.value.trim()}
+              extra={
+                !showErrorMessage &&
+                t('define.page.userSet.pwd.field.newPassword.rule')
               }
-            }
-          ]}
-          getValueFromEvent={(e) => e.target.value.trim()}
-          extra={!showErrorMessage && t('define.page.userSet.pwd.field.newPassword.rule')}
-          style={{ marginBottom: 48 }}
-        >
-          <Input.Password placeholder={t('define.registerPage.password.placeholder')} />
-        </Form.Item>
-        <Form.Item
-          className='format-form-item'
-          label={t('define.findPassword.resetPassword.confirmPassword')}
-          name='reNewPassword'
-          dependencies={['newPassword']}
-          hasFeedback={true}
-          rules={[
-            {
-              required: true,
-              message: t('define.form.input.placeholder')
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('newPassword') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error(t('define.page.userSet.pwd.field.reNewPassword.error.noSame')));
-              }
-            })
-          ]}
-        >
-          <Input.Password placeholder={t('define.registerPage.password.placeholder')} autoComplete='new-password'/>
-        </Form.Item>
-        <div className='bottom-actions-container'>
-          <Button type='primary' onClick={handleResetPassword} style={{ width: '100%' }}>
-            {t('define.action.confirm')}
-          </Button>
-        </div>
-      </>;
-    default:
-      break;
+              style={{ marginBottom: 48 }}
+            >
+              <Input.Password
+                placeholder={t('define.registerPage.password.placeholder')}
+              />
+            </Form.Item>
+            <Form.Item
+              className='format-form-item'
+              label={t('define.findPassword.resetPassword.confirmPassword')}
+              name='reNewPassword'
+              dependencies={['newPassword']}
+              hasFeedback={true}
+              rules={[
+                {
+                  required: true,
+                  message: t('define.form.input.placeholder'),
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('newPassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        t(
+                          'define.page.userSet.pwd.field.reNewPassword.error.noSame',
+                        ),
+                      ),
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                placeholder={t('define.registerPage.password.placeholder')}
+                autoComplete='new-password'
+              />
+            </Form.Item>
+            <div className='bottom-actions-container'>
+              <Button
+                type='primary'
+                onClick={handleResetPassword}
+                style={{ width: '100%' }}
+              >
+                {t('define.action.confirm')}
+              </Button>
+            </div>
+          </>
+        );
+      default:
+        break;
     }
   };
 
   const renderTitle = () => {
     if (currentStep === 'resetPassword') {
-      return <div className='title-small-margin'>{t("define.findPassword.resetPassword")}</div>;
+      return (
+        <div className='title-small-margin'>
+          {t('define.findPassword.resetPassword')}
+        </div>
+      );
     }
-    return <div className='title'>{t("define.findPassword")}</div>;
+    return <div className='title'>{t('define.findPassword')}</div>;
   };
 
   return (
@@ -266,7 +315,7 @@ export default () => {
         <div className='center-card'>
           <div className='header-container'>
             <div className='logo' onClick={redirectToOfficialWebsite}>
-              <img src='/assets/logo/iac-logo-light.svg' alt='logo'/>
+              <img src='/assets/logo/iac-logo-light.svg' alt='logo' />
             </div>
           </div>
           <div className='loginFormWrapper'>
@@ -280,13 +329,23 @@ export default () => {
           <div className='change-language'>
             <LangIcon className='lang-icon' />
             <span>产品使用语言</span>
-            <span className='change-language-btn' onClick={() => setLanguage('en')}>EN?</span>
+            <span
+              className='change-language-btn'
+              onClick={() => setLanguage('en')}
+            >
+              EN?
+            </span>
           </div>
         ) : (
           <div className='change-language'>
             <LangIcon className='lang-icon' />
             <span>View this page in</span>
-            <span className='change-language-btn' onClick={() => setLanguage('zh')}>中文?</span>
+            <span
+              className='change-language-btn'
+              onClick={() => setLanguage('zh')}
+            >
+              中文?
+            </span>
           </div>
         )}
       </div>

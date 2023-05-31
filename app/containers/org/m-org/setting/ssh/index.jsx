@@ -1,26 +1,26 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { Button, Divider, notification, Space, Table, Modal } from 'antd';
 import { InfoCircleFilled } from '@ant-design/icons';
 import moment from 'moment';
 import keysAPI from 'services/keys';
-import getPermission from "utils/permission";
+import getPermission from 'utils/permission';
 import OpModal from './components/op-modal';
 import { t } from 'utils/i18n';
 
-export default ({ orgId, userInfo }) => {
-
+const SSH = ({ orgId, userInfo }) => {
   const { ORG_SET } = getPermission(userInfo);
-  const [ loading, setLoading ] = useState(false),
-    [ visible, setVisible ] = useState(false),
-    [ opt, setOpt ] = useState(null),
-    [ curRecord, setCurRecord ] = useState(null),
-    [ resultMap, setResultMap ] = useState({
+  const [loading, setLoading] = useState(false),
+    [visible, setVisible] = useState(false),
+    [opt, setOpt] = useState(null),
+    [curRecord, setCurRecord] = useState(null),
+    [resultMap, setResultMap] = useState({
       list: [],
-      total: 0
+      total: 0,
     }),
-    [ query, setQuery ] = useState({
+    [query, setQuery] = useState({
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
     });
 
   useEffect(() => {
@@ -32,29 +32,29 @@ export default ({ orgId, userInfo }) => {
       setLoading(true);
       const res = await keysAPI.list({
         ...query,
-        orgId
+        orgId,
       });
       if (res.code !== 200) {
         throw new Error(res.message);
       }
       setResultMap({
         list: res.result.list || [],
-        total: res.result.total || 0
+        total: res.result.total || 0,
       });
       setLoading(false);
     } catch (e) {
       setLoading(false);
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  const changeQuery = (payload) => {
+  const changeQuery = payload => {
     setQuery({
       ...query,
-      ...payload
+      ...payload,
     });
   };
 
@@ -71,68 +71,72 @@ export default ({ orgId, userInfo }) => {
       dataIndex: 'name',
       title: t('define.name'),
       width: 300,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'creator',
       title: t('define.creator'),
       width: 169,
-      ellipsis: true
+      ellipsis: true,
     },
     {
       dataIndex: 'createdAt',
       title: t('define.createdAt'),
       width: 169,
       ellipsis: true,
-      render: (text) => moment(text).format('YYYY-MM-DD HH:mm:ss')
+      render: text => moment(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       title: t('define.action'),
       width: 169,
       ellipsis: true,
       fixed: 'right',
-      render: (record) => {
+      render: record => {
         const creatorIsSelf = record.creatorId === userInfo.id;
         return (
           <Space split={<Divider type='vertical' />}>
-            <a 
+            <a
               disabled={!ORG_SET && !creatorIsSelf}
               onClick={() => del(record)}
-            >{t('define.action.delete')}</a>
+            >
+              {t('define.action.delete')}
+            </a>
           </Space>
         );
-      }
-    }
+      },
+    },
   ];
 
-  const del = (record) => {
+  const del = record => {
     const { id, name } = record;
     Modal.confirm({
       title: t('define.action.delete.confirm.title'),
-      content: `${t('define.action.delete.confirm.content.prefix')} “${name}” ${t('define.action.delete.confirm.content.suffix')}`,
+      content: `${t(
+        'define.action.delete.confirm.content.prefix',
+      )} “${name}” ${t('define.action.delete.confirm.content.suffix')}`,
       icon: <InfoCircleFilled />,
       cancelButtonProps: {
-        className: 'ant-btn-tertiary' 
+        className: 'ant-btn-tertiary',
       },
-      onOk: () => operation({ doWhat: 'del', payload: { id } })
+      onOk: () => operation({ doWhat: 'del', payload: { id } }),
     });
   };
 
   const operation = async ({ doWhat, payload }, cb) => {
     try {
       const method = {
-        add: (param) => keysAPI.create(param),
-        del: ({ orgId, id }) => keysAPI.del({ orgId, keyId: id })
+        add: param => keysAPI.create(param),
+        del: ({ orgId, id }) => keysAPI.del({ orgId, keyId: id }),
       };
       const res = await method[doWhat]({
         orgId,
-        ...payload
+        ...payload,
       });
-      if (res.code != 200) {
+      if (res.code !== 200) {
         throw new Error(res.message);
       }
       notification.success({
-        message: t('define.message.opSuccess')
+        message: t('define.message.opSuccess'),
       });
       fetchList();
       cb && cb();
@@ -140,49 +144,56 @@ export default ({ orgId, userInfo }) => {
       cb && cb(e);
       notification.error({
         message: t('define.message.opFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  return <div>
-    <div style={{ marginBottom: 20 }}>
-      <Button 
-        type='primary'
-        onClick={() => {
-          setOpt('add');
-          toggleVisible();
+  return (
+    <div>
+      <div style={{ marginBottom: 20 }}>
+        <Button
+          type='primary'
+          onClick={() => {
+            setOpt('add');
+            toggleVisible();
+          }}
+        >
+          {t('define.ssh.action.add')}
+        </Button>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={resultMap.list}
+        loading={loading}
+        scroll={{ x: 'min-content' }}
+        pagination={{
+          current: query.currentPage,
+          pageSize: query.pageSize,
+          total: resultMap.total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: total =>
+            t('define.pagination.showTotal', { values: { total } }),
+          onChange: (page, pageSize) => {
+            changeQuery({
+              currentPage: page,
+              pageSize,
+            });
+          },
         }}
-      >{t('define.ssh.action.add')}</Button>
-    </div>
-    <Table
-      columns={columns}
-      dataSource={resultMap.list}
-      loading={loading}
-      scroll={{ x: 'min-content' }}
-      pagination={{
-        current: query.currentPage,
-        pageSize: query.pageSize,
-        total: resultMap.total,
-        showSizeChanger: true,
-        showQuickJumper: true,
-        showTotal: (total) => t('define.pagination.showTotal', { values: { total } }),
-        onChange: (page, pageSize) => {
-          changeQuery({
-            currentPage: page,
-            pageSize
-          });
-        }
-      }}
-    />
-    {
-      visible && <OpModal
-        visible={visible}
-        opt={opt}
-        toggleVisible={toggleVisible}
-        operation={operation}
-        curRecord={curRecord}
       />
-    }
-  </div>;
+      {visible && (
+        <OpModal
+          visible={visible}
+          opt={opt}
+          toggleVisible={toggleVisible}
+          operation={operation}
+          curRecord={curRecord}
+        />
+      )}
+    </div>
+  );
 };
+
+export default SSH;

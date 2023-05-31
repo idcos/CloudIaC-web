@@ -9,14 +9,14 @@ import PolicyGroup from './component/policy-group';
 import { t } from 'utils/i18n';
 
 const PolicyGroupList = () => {
-  const [ summaryData, setSummaryData ] = useState({});
+  const [summaryData, setSummaryData] = useState({});
 
   useEffect(() => {
     fetchSummary();
   }, []);
 
-  const fetchSummary = async(value, record) => {
-    try { 
+  const fetchSummary = async (value, record) => {
+    try {
       const res = await policiesAPI.policiesSummary();
       if (res.code !== 200) {
         throw new Error(res.message);
@@ -25,29 +25,31 @@ const PolicyGroupList = () => {
     } catch (e) {
       notification.error({
         message: t('define.message.getFail'),
-        description: e.message
+        description: e.message,
       });
     }
   };
 
-  return <div className={styles.dashboard}>
-    <Row>
-      <Col span={16} style={{ paddingRight: 24 }}>
-        <Active summaryData={summaryData.activePolicy}/>
-      </Col>
-      <Col span={8}>
-        <Unsolved summaryData={summaryData.unresolvedPolicy}/>
-      </Col>
-    </Row>
-    <Row style={{ paddingTop: 24 }}>
-      <Col span={12} style={{ paddingRight: 12 }}>
-        <Policy summaryData={summaryData.policyViolated || []}/>
-      </Col>
-      <Col span={12} style={{ paddingLeft: 12 }}>
-        <PolicyGroup summaryData={summaryData.policyGroupViolated || []}/>
-      </Col>
-    </Row>
-  </div>;
+  return (
+    <div className={styles.dashboard}>
+      <Row>
+        <Col span={16} style={{ paddingRight: 24 }}>
+          <Active summaryData={summaryData.activePolicy} />
+        </Col>
+        <Col span={8}>
+          <Unsolved summaryData={summaryData.unresolvedPolicy} />
+        </Col>
+      </Row>
+      <Row style={{ paddingTop: 24 }}>
+        <Col span={12} style={{ paddingRight: 12 }}>
+          <Policy summaryData={summaryData.policyViolated || []} />
+        </Col>
+        <Col span={12} style={{ paddingLeft: 12 }}>
+          <PolicyGroup summaryData={summaryData.policyGroupViolated || []} />
+        </Col>
+      </Row>
+    </div>
+  );
 };
 
 export default PolicyGroupList;
